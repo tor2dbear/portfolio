@@ -1,0 +1,12 @@
+.times-header {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 4em;
+  font-weight: 400;
+  line-height: auto;
+
+}
+
+.grid-1-8 {
+  grid-column: 1 / 8;
+
+}

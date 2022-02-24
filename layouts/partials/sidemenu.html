@@ -4,8 +4,7 @@
   <span></span>
 </a>
 <div id="menu">
-
-  {{ partial "brand.html" . }}
+  <div id="menu-content">
 
   <div class="pure-menu">
     <ul class="pure-menu-list">
@@ -29,7 +28,10 @@
     </ul>
   </div>
 
+  {{ partial "tags_menu.html" . }}
+  
   {{ partial "social.html" . }}
 
   {{ partial "copyright.html" . }}
+</div>
 </div>

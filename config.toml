@@ -1,9 +1,9 @@
-baseurl = "/"
+baseurl = "http://localhost:1313/"
 languageCode = "en-us"
-title = "Blackburn Theme Demo"
+title = "TB portfolio"
 theme = "blackburn"
-author = "Yoshiharu Yamashita"
-copyright = "&copy; 2016. All rights reserved."
+author = "Torbjörn Hedberg"
+copyright = "&copy; 2022. All rights reserved."
 canonifyurls = true
 paginate = 10
 
@@ -13,8 +13,8 @@ paginate = 10
 
 [params]
   # Shown in the home page
-  subtitle = "A Hugo Theme"
-  brand = "Blackburn"
+  subtitle = "Portfolio"
+  brand = "tor-bjorn.com"
   googleAnalytics = "Your Google Analytics tracking ID"
   disqus = "Your Disqus shortname"
   # CSS name for highlight.js
@@ -24,25 +24,21 @@ paginate = 10
 [menu]
   # Shown in the side menu.
   [[menu.main]]
-    name = "Home"
-    pre = "<i class='fa fa-home fa-fw'></i>"
+    name = "Start"
     weight = 1
     identifier = "home"
     url = "/"
   [[menu.main]]
-    name = "Posts"
-    pre = "<i class='fa fa-list fa-fw'></i>"
+    name = "All"
     weight = 2
     identifier = "post"
     url = "/post/"
-  [[menu.main]]
+  [[menu.top]]
     name = "About"
-    pre = "<i class='fa fa-user fa-fw'></i>"
     weight = 3
     identifier = "about"
     url = "/about/"
-  [[menu.main]]
+  [[menu.top]]
     name = "Contact"
-    pre = "<i class='fa fa-phone fa-fw'></i>"
     weight = 4
     url = "/contact/"

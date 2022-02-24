@@ -4,10 +4,15 @@ date: 2014-09-28
 linktitle: Creating a New Theme
 title: Creating a New Theme
 weight: 10
+tags: ["testtagg01", "testtagg02"]
+description: beskrivning av inlägget
+header_image: /img/test.jpg
 ---
 
 
 ## Introduction
+
+![header_image](/img/test.jpg)
 
 This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I'll explain how Hugo uses templates and how you can organize your templates to create a theme. I won't cover using CSS to style your theme.
 

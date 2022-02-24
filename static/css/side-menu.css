@@ -1,5 +1,7 @@
 body {
-    color: #777;
+    color: #171717;
+    font-family: HelveticaNeue;
+    margin: 0px;
 }
 
 .pure-img-responsive {
@@ -24,9 +26,10 @@ Add transition to containers so they can push in and out.
 This is the parent `<div>` that contains the menu and the content area.
 */
 #layout {
-    display: grid;
-    grid-template-columns: repeat(12, [col-start] 1fr);
-    column-gap: 32px;
+    margin: 0 32px;
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
 }
     #layout.active #menu {
         
@@ -39,16 +42,20 @@ This is the parent `<div>` that contains the menu and the content area.
 The content `<div>` is where all your content goes.
 */
 .content {
-    grid-column: col-start 4 / span 9;
     margin-bottom: 50px;
     line-height: 1.6em;
+    padding-top: 80px;
+    grid-column: 1 /span 12;
 }
 #main {
-    grid-column: span 12;
-    display: grid;
     grid-template-columns: repeat(12, [col-start] 1fr);
     column-gap: 32px;
-}
+    margin-left: 32px;
+    width:calc(100% - 320px - 32px); 
+	float: right;
+    display: grid;
+    }
+
 .header {
      margin: 0;
      color: #333;
@@ -75,7 +82,38 @@ The content `<div>` is where all your content goes.
     color: #888;
 }
 
+#topmenu {
+    position:sticky;
+    top:0px;
+    z-index: 100;
+	height: auto;
+	width:100%;
+	margin: 0px;
+    display: flex;
+    background: #fff;
+    padding: 30px 0;
+}
 
+ul.top-menu-list {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+li.top-menu-item:not(:first-child) {
+    margin-left: 32px;
+}
+li.top-menu-item {
+    flex: 1;
+    display: ;
+}
+a.pure-menu-heading {
+    flex: 1;
+    text-transform: lowercase;
+}
+.pure-menu-disabled, .pure-menu-heading, .pure-menu-link {
+    padding: 0;
+}
 
 /*
 The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
@@ -83,21 +121,45 @@ appears on the left side of the page.
 */
 
 #menu {
-    grid-column: span 3;
-    z-index: 1000; /* so the menu or its navicon stays above all content */
-    grid-area: nav;
+    width: 320px;
+    display: block;
+	/*flex-grow: 0;
+	flex-shrink: 0;
+    height: 100vh;
+    position: sticky;
+    top: 0;*/
+    z-index: 99; /* so the menu or its navicon stays above all content */
+    transform: translateX(0) !important;
+}
+#menu #menu-content {
+    position: sticky;
+    top: calc(78px + 80px); /* spacing + header */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+ul.pure-menu-list {
+    list-style-type: none;
+    padding: 0 0 2rem;
+    margin: 0;
+}
+li.pure-menu-item {
+    list-style-type: none;
+    padding: 0 0 1rem;
+    margin: 0;
 }
     /*
     All anchors inside the menu should be styled like this.
     */
+    #topmenu a,
     #menu a {
-        color: #999;
+        color: #000;
         border: none;
-        padding: 0.6em 0 0.6em 0.6em;
+
     }
 
     /*
-    Remove all background/borders, since we are applying them to #menu test!!!!.
+    Remove all background/borders, since we are applying them to #menu.
     */
      #menu .pure-menu,
      #menu .pure-menu ul {
@@ -110,14 +172,17 @@ appears on the left side of the page.
     */
     #menu .pure-menu ul,
     #menu .pure-menu .menu-item-divided {
-        border-top: 1px solid #333;
+        
+    }
+    .pure-menu-active>.pure-menu-link, .pure-menu-link:focus, .pure-menu-link:hover {
+        background-color: transparent;
     }
         /*
         Change color of the anchor links on hover/focus.
         */
         #menu .pure-menu li a:hover,
         #menu .pure-menu li a:focus {
-            background: #333;
+            text-decoration: underline;
         }
 
     /*
@@ -125,13 +190,13 @@ appears on the left side of the page.
     */
     #menu .pure-menu-selected,
     #menu .pure-menu-heading {
-        background: #1f8dd6;
+        
     }
         /*
         This styles a link within a selected menu item `<li>`.
         */
         #menu .pure-menu-selected a {
-            color: #fff;
+           
         }
 
     /*
@@ -139,11 +204,12 @@ appears on the left side of the page.
     */
     #menu .pure-menu-heading {
         font-size: 110%;
-        color: #fff;
+        color: #000;
         margin: 0;
     }
 
-/* -- Dynamic Button For Responsive Menu -------------------------------------*/
+
+    /* -- Dynamic Button For Responsive Menu -------------------------------------*/
 
 /*
 The button to open/close the Menu is custom-made and not part of Pure. Here's
@@ -218,7 +284,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 
     .menu-link {
-       
+       display: none;
     }
 
     #layout.active .menu-link {

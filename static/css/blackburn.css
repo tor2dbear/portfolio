@@ -1,5 +1,5 @@
 .header {
-  font-family: "Raleway", Helvetica, Arial, sans-serif
+  font-family: "Helvetica Neue", Arial, sans-serif
 }
 
 a {
@@ -16,7 +16,7 @@ a:visited {
 
 .small-print {
   font-size: 0.8em;
-  margin: 0.6em;
+  margin: 0.6em 0;
 }
 
 .post-meta {
@@ -47,16 +47,12 @@ article > footer {
   overflow: hidden;
 }
 
-#menu {
-  overflow-y: auto;
-}
-
 #menu a {
-  padding: 0.6em;
+  padding: 0.6em 0;
 }
 
 #menu .brand {
-  font-family: Raleway;
+  font-family: "Helvetica Neue";
   font-weight: bold;
   font-size: 1em;
   letter-spacing: 0.1em;
@@ -66,8 +62,14 @@ article > footer {
   margin: 0.5em 0;
 }
 
+.pure-menu-heading {
+  font-size: 1.5em;
+  font-weight: 600;
+}
+#topmenu .top-menu,
 #menu .pure-menu {
-  font-size: 0.9em;
+  font-size: 1.14em;
+  font-weight: 600;
 }
 
 #menu .pure-menu ul.pure-menu-children {
@@ -86,4 +88,7 @@ i {
 
 .pagination a {
   color: #265778;
+}
+.post-tags {
+  font-family: 'Courier New', Courier, monospace;
 }

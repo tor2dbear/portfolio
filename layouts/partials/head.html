@@ -11,8 +11,8 @@
     {{ end }}
 
   <!-- CSS -->
-  {{ $purecss := "https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/" }}
-  <link rel="stylesheet" href="{{ $purecss }}pure-min.css">
+    <!-- {{ $purecss := "https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/" }}
+  <link rel="stylesheet" href="{{ $purecss }}pure-min.css"> -->
 
   {{ "<!--[if lte IE 8]>" | safeHTML }}
   <link rel="stylesheet" href="{{ $purecss }}grids-responsive-old-ie-min.css">
@@ -29,13 +29,7 @@
   {{ "<!--<![endif]-->" | safeHTML }}
 
   <link rel="stylesheet" href="/css/blackburn.css">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/typography.css">
 
   <!-- MathJax -->
   <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>

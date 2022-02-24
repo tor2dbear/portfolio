@@ -1,16 +1,15 @@
 {{ partial "header.html" . }}
 
 <div class="header">
-  <h1>{{ .Title }}</h1>
+  <h3>{{ .Title }}</h3>
 </div>
+
 <div class="content">
-  {{ range .Data.Pages.GroupByDate "2006" }}
-  <h2>{{ .Key }}</h2>
-  <ul>
-  {{ range .Pages }}
-    {{ .Render "li" }}
-  {{ end }}
-  </ul>
+<div class="header-image">
+{{ .Params.header_image }}
+</div> 
+  {{ range .Data.Pages }}
+    {{ .Render "summary"}}
   {{ end }}
 </div>
 
