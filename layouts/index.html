@@ -1,15 +1,14 @@
 {{ partial "header.html" . }}
 
-<div class="caption grid-1-8">
-  <h1 class="times-header">Torbjörn Hedberg is a multi-disciplinary designer based in Gothenburg, Sweden.</h1>
-</div>
+{{ partial "startpage.html" . }}
 
-<div class="content">
-  {{ range ( .Paginate (where .Site.RegularPages "Type" "post")).Pages }}
+<div class="content startpage">
+  <div class="post-header mb-8">
+    <h2 class="type-headline-small">Featured</h2>
+  </div>
+  {{ range first 3 (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) }}
     {{ .Render "summary"}}
   {{ end }}
-
-  {{ partial "pagination.html" . }}
 
 </div>
 

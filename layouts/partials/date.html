@@ -1,6 +1,6 @@
 <div class="post-date">
 
   <div>
-    <time>{{ with .Site.Params.dateFormat }}{{ $.Date.Format . }}{{ else }}{{ .Date.Format "02 Jan 2006, 15:04" }}{{ end }}</time>
+    <time>{{ with .Site.Params.dateFormat }}{{ $.Date | time.Format ":date_full" }}{{ else }}{{ .Date.Format "02 Jan 2006, 15:04" }}{{ end }}</time>
   </div>
 </div>

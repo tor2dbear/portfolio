@@ -9,27 +9,15 @@
     {{ if .Params.canonical }}
     <link rel="canonical" href="{{ .Params.canonical }}">
     {{ end }}
+    
+  <!-- Fonts -->
+    <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
   <!-- CSS -->
-    <!-- {{ $purecss := "https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/" }}
-  <link rel="stylesheet" href="{{ $purecss }}pure-min.css"> -->
-
-  {{ "<!--[if lte IE 8]>" | safeHTML }}
-  <link rel="stylesheet" href="{{ $purecss }}grids-responsive-old-ie-min.css">
-  {{ "<![endif]-->" | safeHTML }}
-  {{ "<!--[if gt IE 8]><!-->" | safeHTML }}
-  <link rel="stylesheet" href="{{ $purecss }}grids-responsive-min.css">
-  {{ "<!--<![endif]-->" | safeHTML }}
-
-  {{ "<!--[if lte IE 8]>" | safeHTML }}
-  <link rel="stylesheet" href="/css/side-menu-old-ie.css">
-  {{ "<![endif]-->" | safeHTML }}
-  {{ "<!--[if gt IE 8]><!-->" | safeHTML }}
-  <link rel="stylesheet" href="/css/side-menu.css">
-  {{ "<!--<![endif]-->" | safeHTML }}
-
-  <link rel="stylesheet" href="/css/blackburn.css">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/atoms.css"> 
   <link rel="stylesheet" href="/css/typography.css">
+  <link rel="stylesheet" href="/css/style.css">
 
   <!-- MathJax -->
   <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>

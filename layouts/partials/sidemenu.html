@@ -1,36 +1,55 @@
-<!-- Menu toggle -->
-<a href="#menu" id="menuLink" class="menu-link">
-  <!-- Hamburger icon -->
-  <span></span>
-</a>
 <div id="menu">
   <div id="menu-content">
-
-  <div class="pure-menu">
-    <ul class="pure-menu-list">
-      {{ range .Site.Menus.main }}
+  <div class="menu">
+    <ul class="menu-list">
+      {{ range .Site.Menus.start }}
       {{ if .HasChildren }}
-        <li class="pure-menu-item pure-menu-has-children">
-          <a class="pure-menu-link" href="#">{{ .Pre }}{{ .Name }}</a>
-          <ul class="pure-menu-children">
+        <li class="menu-item menu-has-children">
+          <a class="menu-link" href="#">{{ .Pre }}{{ .Name }}</a>
+          <ul class="menu-children">
             {{ range .Children }}
-            <li class="pure-menu-item">
-              <a class="pure-menu-link" href="{{ .URL }}">{{ .Name }}</a>
+            <li class="menu-item">
+              <a class="menu-link" href="{{ .URL }}">{{ .Name }}</a>
             </li>
             {{ end }}
           </ul>
       {{else}}
-        <li class="pure-menu-item">
-          <a class="pure-menu-link" {{ printf "href=%q" .URL | safeHTMLAttr }}>{{ .Pre }}{{ .Name }}</a>
+        <li class="menu-item">
+          <a class="menu-link" {{ printf "href=%q" .URL | safeHTMLAttr }}>{{ .Pre }}{{ .Name }}</a>
+      {{end}}
+        </li>
+      {{end}}
+    </ul>
+    <h2 class="type-headline-small">Works</h2>
+    <ul class="menu-list">
+      {{ range .Site.Menus.all }}
+      {{ if .HasChildren }}
+        <li class="menu-item menu-has-children">
+          <a class="menu-link" href="#">{{ .Pre }}{{ .Name }}</a>
+          <ul class="menu-children">
+            {{ range .Children }}
+            <li class="menu-item">
+              <a class="menu-link" href="{{ .URL }}">{{ .Name }}</a>
+            </li>
+            {{ end }}
+          </ul>
+      {{else}}
+        <li class="menu-item">
+          <a class="menu-link" {{ printf "href=%q" .URL | safeHTMLAttr }}>{{ .Pre }}{{ .Name }}</a>
       {{end}}
         </li>
       {{end}}
     </ul>
   </div>
 
+
   {{ partial "tags_menu.html" . }}
   
   {{ partial "social.html" . }}
+
+  {{ partial "topmenu-items.html" . }}
+
+  {{ partial "theme.html" . }}
 
   {{ partial "copyright.html" . }}
 </div>

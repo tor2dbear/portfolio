@@ -1,10 +1,10 @@
 {{ partial "header.html" . }}
 
 
-<div class="content">
-  <h1>{{ .Title }}</h1>
+<div class="content post">
+  <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}</h1>
   {{ partial "date.html" . }}
-  <h2>{{ .Description }}</h2>
+  <h2 class="type-caption">{{ .Description }}</h2>
   {{ partial "post_tags.html" . }}
  
   {{ .Content }}

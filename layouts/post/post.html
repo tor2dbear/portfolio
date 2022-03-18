@@ -1,13 +1,9 @@
 {{ partial "header.html" . }}
 
-<div class="header">
-  <h3>{{ .Title }}</h3>
-</div>
-
 <div class="content">
-<div class="header-image">
-{{ .Params.header_image }}
-</div> 
+  <div class="post-header">
+    <h2>{{ .Title }}</h2>
+  </div>
   {{ range .Data.Pages }}
     {{ .Render "summary"}}
   {{ end }}

@@ -1,8 +1,10 @@
-<div class="pure-menu tags">
-  <ul class="pure-menu-list">
+<div class="menu tags">
+  <ul class="menu-list">
 
     {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
-    <li class="pure-menu-item"><a class="pure-menu-link" href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a></li>
+    <li class="menu-item">
+      <a class="menu-link" href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a>
+    </li>
   {{ end }}
 
   </ul>

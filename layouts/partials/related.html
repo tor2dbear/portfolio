@@ -1,0 +1,15 @@
+{{ $related := .Site.RegularPages.Related . | first 3 }}
+{{ with $related }}
+<h3 class="mt-64 mb-8 type-headline-small">Related:</h3>
+	{{ range . }}
+	<article id="related">
+	<div class="related-image">
+		<a href="{{ .Permalink }}"><img src="{{ $.Params.header_image }}"></a>
+		</div>
+		<header class="related-title">
+		<h2 class="type-headline-4"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+		</header>
+		  {{ partial "post_tags.html" . }}
+		</article>
+		{{ end }}
+{{ end }}

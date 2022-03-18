@@ -1,0 +1,38 @@
+{{ partial "header.html" . }}
+
+
+<div class="content post">
+  <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}</h1>
+  <h2 class="type-caption mb-16 mt-16">{{ .Description }}</h2>
+  <div class="type-information text-color-lighter mt-0 mb-16"> {{ partial "date.html" . }}</div>
+  <div class="mt-0 mb-16"> {{ partial "post_tags.html" . }}</div>
+ 
+  {{ .Content }}
+
+  <div class="client-box">
+    {{ if .Params.client }}
+    <div class="client">
+    <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Client</h4>
+    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ .Params.client }}</p>
+    {{end}}
+    {{ if .Params.clientweb }}
+    <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Website</h4>
+    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16"><a href={{ printf "%s" $.Params.clientweb }}>{{ .Params.clientweb }}</a></p>
+    {{end}}
+  </div>
+    {{ if .Params.clientabout }}
+    <div class="clientabout">
+    <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">About</h4>
+    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ .Params.clientabout }}</p>
+  </div>
+    {{end}}
+  </div>
+
+  {{ partial "related.html" . }}
+
+  {{ partial "prev_next_post.html" . }}
+  
+
+</div>
+
+{{ partial "footer.html" . }}

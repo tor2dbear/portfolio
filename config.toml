@@ -1,14 +1,16 @@
 baseurl = "http://localhost:1313/"
 languageCode = "en-us"
 title = "TB portfolio"
-theme = "blackburn"
+theme = "t2"
 author = "Torbjörn Hedberg"
 copyright = "&copy; 2022. All rights reserved."
 canonifyurls = true
 paginate = 10
 
-[indexes]
+[taxonomies]
   tag = "tags"
+  category = "categories"
+  client = "clients"
   topic = "topics"
 
 [params]
@@ -20,19 +22,20 @@ paginate = 10
   # CSS name for highlight.js
   highlightjs = "androidstudio"
   dateFormat = "02 Jan 2006, 15:04"
+  mainSections = ['blog', 'docs']
 
 [menu]
   # Shown in the side menu.
-  [[menu.main]]
+  [[menu.start]]
     name = "Start"
     weight = 1
     identifier = "home"
     url = "/"
-  [[menu.main]]
-    name = "All"
+  [[menu.all]]
+    name = "all"
     weight = 2
-    identifier = "post"
-    url = "/post/"
+    identifier = "worls"
+    url = "/works/"
   [[menu.top]]
     name = "About"
     weight = 3

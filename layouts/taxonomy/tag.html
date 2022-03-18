@@ -1,10 +1,9 @@
 {{ partial "header.html" . }}
 
-<div class="header">
-  <h1>{{ .Title }}</h1>
-</div>
-
 <div class="content">
+  <div class="tag-header mb-8">
+    <h2 class="type-headline-small">{{ .Title }}</h2>
+  </div>
   {{ range .Data.Pages }}
     {{ .Render "summary"}}
   {{ end }}

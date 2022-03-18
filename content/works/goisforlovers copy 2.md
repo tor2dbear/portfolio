@@ -1,19 +1,19 @@
-+++
-title = "(Hu)go Template Primer"
-description = ""
-tags = [
-    "go",
-    "golang",
-    "templates",
-    "themes",
-    "development",
+---
+author: "Torbjörn Hedberg"
+date: 2022-02-24
+linktitle: Hopfab — Branding and Web Design
+title: Hopfab — Branding and Web Design
+weight: 10
+tags: [
+    "books",
+    "design",
+    "editorial design",
+    "illustrations",
+    "ui/ux",
 ]
-date = "2014-04-02"
-categories = [
-    "Development",
-    "golang",
-]
-+++
+description: A 360 campaign to shift perceptions of the world’s catalogue of ideas.
+header_image: /img/test.jpg
+---
 
 Hugo uses the excellent [go][] [html/template][gohtmltemplate] library for
 its template engine. It is an extremely lightweight engine that provides a very

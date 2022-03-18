@@ -28,9 +28,9 @@
         var active = 'active';
 
         e.preventDefault();
-        toggleClass(layout, active);
-        toggleClass(menu, active);
-        toggleClass(menuLink, active);
+        toggleClass(layout,active);
+        toggleClass(menu,active);
+        toggleClass(menuLink,active);
     }
 
     menuLink.onclick = function (e) {
