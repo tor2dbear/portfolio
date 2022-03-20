@@ -116,7 +116,8 @@ The content `<div>` is where all your content goes.
 .content.post > * {
   grid-column: 1 / span 10;
 }
-.content.post > figure.headerimg {
+.content.post > figure.headerimg,
+.content.post > .prev-next-post {
   grid-column: 1 / 13;
 }
 
@@ -228,52 +229,6 @@ li.pure-menu-item {
 #menu .topmenuitems {
   display: none;
 }
-  /*
-  All anchors inside the menu should be styled like this.
-  */
-  
-  /*
-  Remove all background/borders, since we are applying them to #menu.
-  */
-   #menu .pure-menu,
-   #menu .pure-menu ul {
-      border: none;
-      background: transparent;
-  }
-
-  /*
-  Add that light border to separate items into groups.
-  */
-  #menu .pure-menu ul,
-  #menu .pure-menu .menu-item-divided {
-      
-  }
-  .pure-menu-active>.pure-menu-link, .pure-menu-link:focus, .pure-menu-link:hover {
-      background-color: transparent;
-  }
-      /*
-      Change color of the anchor links on hover/focus.
-      */
-      #menu .pure-menu li a:hover,
-      #menu .pure-menu li a:focus,
-      #menu .pure-menu li a:active {
-          text-decoration: underline !important;
-      }
-
-  /*
-  This styles the selected menu item `<li>`.
-  */
-  #menu .pure-menu-selected,
-  #menu .pure-menu-heading {
-      
-  }
-      /*
-      This styles a link within a selected menu item `<li>`.
-      */
-      #menu .pure-menu-selected a {
-         
-      }
-
   /*
   This styles the menu heading.
   */
@@ -438,7 +393,7 @@ img {
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
 /* 1280px */
-@media (max-width: 80rem) {
+@media (max-width: 80em) {
   #menu {
     width: calc(var(--menu-width-large) - 5px);
   }
@@ -448,7 +403,7 @@ img {
 }
 
 /* 1024px */
-@media (max-width: 64rem) {
+@media (max-width: 64em) {
   #menu {
     width: calc(var(--menu-width-medium) - 5px);
   }
@@ -458,7 +413,7 @@ img {
 }
 
 /* 768px */
-@media (max-width: 48rem) {
+@media (max-width: 48em) {
   #menu {
     visibility: hidden;
     position: fixed;
