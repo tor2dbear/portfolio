@@ -1,0 +1,16 @@
+<article>
+  <div class="header-image">
+    <img src="{{ $.Params.header_image }}">
+    </div> 
+  <header class="summary">
+    <h2 class="type-headline-2"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+
+    <h4 class="type-headline-4">{{ partial "date.html" . }}</h4>
+
+  </header>
+
+  <p class="type-caption">
+    {{ .Description }}
+  </p>
+  {{ partial "post_tags.html" . }}
+</article>

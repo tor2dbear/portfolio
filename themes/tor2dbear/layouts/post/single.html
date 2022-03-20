@@ -1,0 +1,17 @@
+{{ partial "header.html" . }}
+
+
+<div class="content">
+  <h1>{{ .Title }}</h1>
+  {{ partial "date.html" . }}
+  <h2>{{ .Description }}</h2>
+  {{ partial "post_tags.html" . }}
+ 
+  {{ .Content }}
+
+  {{ partial "prev_next_post.html" . }}
+  
+
+</div>
+
+{{ partial "footer.html" . }}
