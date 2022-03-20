@@ -1,4 +1,4 @@
-baseurl = "http://localhost:1313/"
+baseurl = "https://tor2dbear.github.io/portfolio/"
 languageCode = "en-us"
 title = "TB portfolio"
 author = "Torbjörn Hedberg"
