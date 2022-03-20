@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on TB portfolio</title>
+    <link>http://localhost:1313/tags/</link>
+    <description>Recent content in Tags on TB portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2022. All rights reserved.</copyright>
+    <lastBuildDate>Tue, 01 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>branding</title>
+      <link>http://localhost:1313/tags/branding/</link>
+      <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/branding/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>graphic design</title>
+      <link>http://localhost:1313/tags/graphic-design/</link>
+      <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/graphic-design/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>books</title>
+      <link>http://localhost:1313/tags/books/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/books/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>design</title>
+      <link>http://localhost:1313/tags/design/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/design/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>editorial design</title>
+      <link>http://localhost:1313/tags/editorial-design/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/editorial-design/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>illustrations</title>
+      <link>http://localhost:1313/tags/illustrations/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/illustrations/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ui/ux</title>
+      <link>http://localhost:1313/tags/ui/ux/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/ui/ux/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

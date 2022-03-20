@@ -3,11 +3,12 @@
 <h3 class="mt-64 mb-8 type-headline-small">Related:</h3>
 	{{ range . }}
 	<article id="related">
-	<div class="related-image">
+	<div class="related-image line-height-tighter">
 		<a href="{{ .Permalink }}"><img src="{{ $.Params.header_image }}"></a>
 		</div>
 		<header class="related-title">
-		<h2 class="type-headline-4"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+		<h2 class="type-headline-4 mt-12"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+		<h4 class="type-information text-color-lighter mb-12 mt-12">{{ partial "date.html" . }}</h4>
 		</header>
 		  {{ partial "post_tags.html" . }}
 		</article>
