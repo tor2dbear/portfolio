@@ -1,7 +1,6 @@
 baseurl = "http://localhost:1313/"
 languageCode = "en-us"
 title = "TB portfolio"
-theme = "t2"
 author = "Torbjörn Hedberg"
 copyright = "&copy; 2022. All rights reserved."
 canonifyurls = true
