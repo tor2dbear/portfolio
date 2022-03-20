@@ -1,1 +1,6 @@
-themes
+# Ignore everything:
+*
+
+# Except for the themes directories:
+
+!public/
