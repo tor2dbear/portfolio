@@ -251,35 +251,7 @@ a:visited {
 
 /* ================= END HYPERLINKS ================= */
 
-/* ================= GRID ================= */
 
-.grid-1-8 {
-  grid-column: 1 / 10;
-}
 
-/* ================= END GRID ================= */
 
-/* ================= LAYOUT ================= */
-
-.header-image {
-  line-height: 0;
-}
-.header-image img {
-  width: 100%;
-} 
-.content > .post-date {
-  margin-bottom: 1rem;
-}
-article {
-  margin-bottom: 48px;
-}
-.content.post > * {
-  grid-column: 1 / 10;
-}
-/* Layout topmenu alignment*/
-#topmenu .menu {
-  margin-top: 0.275rem;
-}
-
-/* ================= END: LAYOUT ================= */
 
