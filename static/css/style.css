@@ -233,7 +233,6 @@ appears on the left side of the page.
   display: block;
   padding: 0 2rem;
   z-index: 99; /* so the menu or its navicon stays above all content */
-  transform: translateX(0) !important;
 }
 a.menu-link {
   display: block;
@@ -452,19 +451,21 @@ img {
 /* 768px */
 @media (max-width: 48em) {
   #menu {
-    visibility: hidden;
     position: fixed;
     top: 0;
-    left: -100%;
+    bottom: 0;
+    transform: translateX(-100vw);
     width: 100%;
-    height: 100%;
     background-color: var(--bg-color);
-    padding: 0px 10px;
-    box-sizing: border-box;
+    margin-top: 0;
+    padding: 0;
+    overflow-y: scroll;
+  }
+  #menu-content {
+    padding: var(--spacing-96) 0;
   }
   #menu.active{
-    visibility: visible;
-    left: 0;
+    transform: translate(0px, 0px);
     padding: 0 2rem;
   }
   #topmenu li.menu-menubutton {
