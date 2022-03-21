@@ -35,8 +35,6 @@ article > footer {
   overflow: hidden;
 }
 
-
-
 i {
   display: inline-block;
   margin-right: 0.2em;
@@ -133,18 +131,23 @@ The content `<div>` is where all your content goes.
 .header-image {
   line-height: 0;
 }
+
 .header-image img {
   width: 100%;
-} 
-.content > .post-date {
+}
+
+.content>.post-date {
   margin-bottom: 1rem;
 }
+
 article {
   margin-bottom: 48px;
 }
-.content.post > * {
+
+.content.post>* {
   grid-column: 1 / span 5;
 }
+
 /* Layout topmenu alignment*/
 #topmenu .menu {
   margin-top: 0.275rem;
