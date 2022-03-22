@@ -225,10 +225,17 @@ body a.menu-link:active {
 .content.post h3,
 .content.post h4,
 .content.post h5,
-.content.post h6 {
+.content.post h6,
+.content.page h1,
+.content.page h2,
+.content.page h3,
+.content.page h4,
+.content.page h5,
+.content.page h6 {
   margin-bottom: var(--spacing-16);
 }
-.content.post p {
+.content.post p,
+.content.page p {
   margin-bottom: var(--spacing-32);
 }
 
