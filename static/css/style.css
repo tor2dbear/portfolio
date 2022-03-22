@@ -408,10 +408,16 @@ li.top-menu-menubutton {
   height: 1.5rem;
   width: 1.5rem;
   background-color: var(--text-color);
-  mask-image: url('https://tor2dbear.github.io/portfolio/img/navigation-menu.svg');
-  -webkit-mask-image: url('https://tor2dbear.github.io/portfolio/img/navigation-menu.svg');
   transition: all 0.3s ease;
-} 
+}
+a.menu-link .hamburgare {
+  mask-image: url('/img/navigation-menu.svg');
+  -webkit-mask-image: url('/img/navigation-menu.svg');
+}
+a.menu-link.active .hamburgare {
+  mask-image: url('/img/close.svg');
+  -webkit-mask-image: url('/img/close.svg');
+}
 
 /* The progress container (grey background) */
 .progress-container {
