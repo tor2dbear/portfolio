@@ -507,6 +507,28 @@ img {
   #layout.active > #main {
     transform: translate(100vw, 0px);
   }
+  #layout.active :is(#topmenu, #menu) {
+    background-color: var(--colors-accent-500);
+    transition-duration: 0.5s;
+    transition-property: transform, background-color;
+    transition-delay: 0s, 0.2s;
+    transition-timing-function: ease;
+  }
+  #layout.active :is(#topmenu, #menu) :is(a, h2, .brand-hyphen, .progress-bar) {
+    color: #eee;
+    transition: color 0.5s ease;
+    transition-delay: 0.5s;
+  }
+  #layout.active :is(#topmenu, #menu) :is(.brand-hyphen, .progress-bar) {
+    background: #eee;
+    transition: background 0.5s ease;
+    transition-delay: 0.5s;
+  }
+  #layout.active :is(#topmenu, #menu) :is(.hamburgare, .d-block-light, .d-block-dark) {
+    background-color: #eee;
+    transition: background-color 0.5s ease;
+    transition-delay: 0.5s;
+  }
   #topmenu li.menu-menubutton {
     display: block;
   }
