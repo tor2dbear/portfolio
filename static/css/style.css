@@ -75,6 +75,7 @@ Add transition to containers so they can push in and out.
   -ms-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
+  transition: transform 0.5s ease;
 }
 
 /*
@@ -91,9 +92,9 @@ This is the parent `<div>` that contains the menu and the content area.
 The content `<div>` is where all your content goes.
 */
 .content {
-  margin-bottom: 50px;
+  margin-bottom: 4rem;
   line-height: 1.6em;
-  padding-top: 80px;
+  padding-top: 5rem;
   grid-column: 1 / span 6;
 }
 .startpage-heading {
@@ -240,7 +241,7 @@ a.menu-link {
 }
 #menu #menu-content {
   position: sticky;
-  top: calc(78px + 80px); /* spacing + header */
+  transform: translateY(5rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -273,6 +274,7 @@ li.pure-menu-item {
   }
   a.menu-heading:hover {
     text-decoration: none;
+    color: var(--text-color);
   }
 
 /* Client box end of post */
@@ -409,7 +411,6 @@ li.top-menu-menubutton {
   height: 1.5rem;
   width: 1.5rem;
   background-color: var(--text-color);
-  transition: all 0.3s ease;
 }
 a.menu-link .hamburgare {
   mask-image: url('https://tor2dbear.github.io/portfolio/img/navigation-menu.svg');
@@ -502,6 +503,9 @@ img {
   #menu.active{
     transform: translate(0px, 0px);
     padding: 0 2rem;
+  }
+  #layout.active > #main {
+    transform: translate(100vw, 0px);
   }
   #topmenu li.menu-menubutton {
     display: block;

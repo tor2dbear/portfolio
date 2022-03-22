@@ -1,21 +1,10 @@
 {{ partial "header.html" . }}
 
-<div class="header">
-  <h1>{{ .Title }}</h1>
-  <h2>{{ .Description }}</h2>
-</div>
-<article>
-
-  {{ $reAltIn := "<p><img src=\"([^\"]+)\" alt=\"([^\"]+)\" /></p>" }}
-  {{ $reAltOut := "<figure><img src=\"$1\" alt=\"$2\"><figcaption>$2</figcaption></figure>" }}
-  {{ $altContent := .Content | replaceRE $reAltIn $reAltOut | safeHTML }}
-
-  {{ $reAltTitleIn := "<p><img src=\"([^\"]+)\" alt=\"([^\"]+)\" title=\"([^\"]+)\" /></p>" }}
-  {{ $reAltTitleOut := "<figure><img src=\"$1\" alt=\"$2\" title=\"$3\"><figcaption>$2</figcaption></figure>" }}
-  {{ $finalContent := $altContent | replaceRE $reAltTitleIn $reAltTitleOut | safeHTML }}
-
-  {{ $finalContent }}
-
-</article>
+  <div class="content page">
+    <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}</h1>
+    <h2 class="type-caption mb-16 mt-16">{{ .Description }}</h2>
+   
+    {{ .Content }}
+  </div>
 
 {{ partial "footer.html" . }}
