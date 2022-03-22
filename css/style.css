@@ -191,6 +191,7 @@ margin: 0px;
   display: flex;
   background: var(--bg-color);
   padding: 1.5rem 2rem;
+  transition: 0.5s;
 }
 
 #topmenu ul.menu-list {
@@ -537,5 +538,18 @@ img {
   .content.post > .client-box {
     grid-template-columns: 1fr;
   }
+  #topmenu .menu,
+  #topmenu li.menu-menubutton {
+    margin-top: 0;
+  }
   
+}
+@media (max-width: 25.5em) {
+  .progress-bar {
+    display: none;
+  }
+  .brand-hyphen {
+    width: 100%;
+    margin-right: 0.08rem;
+  }
 }
