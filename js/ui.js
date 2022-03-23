@@ -4,6 +4,7 @@
         menu     = document.getElementById('menu'),
         menuLink = document.getElementById('menuLink'),
         content  = document.getElementById('main');
+        body = document.body;
 
     function toggleClass(element, className) {
         var classes = element.className.split(/\s+/),
@@ -31,6 +32,7 @@
         toggleClass(layout,active);
         toggleClass(menu,active);
         toggleClass(menuLink,active);
+        toggleClass(body,active);
     }
 
     menuLink.onclick = function (e) {
