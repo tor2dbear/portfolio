@@ -56,6 +56,7 @@ OLD SIDE-MENU CSS
 
 body {
   background-color: var(--bg-color);
+  overflow-x: hidden;
 }
 img,
 .pure-img-responsive {
@@ -83,7 +84,6 @@ This is the parent `<div>` that contains the menu and the content area.
   flex-wrap: wrap;
   height: auto;
   flex-basis: auto;
-  overflow: hidden;
 }
 
 /*
@@ -164,7 +164,6 @@ article {
   display: flex;
   background-color: var(--bg-color);
   padding: 1.5rem 2rem;
-  transition: top 0.5s;
 }
 
 #topmenu ul.menu-list {
@@ -399,13 +398,13 @@ a.menu-link.active .hamburgare {
 /* The progress bar (scroll indicator) */
 .progress-bar {
   height: 0.21875rem;
-  background: var(--text-color);
+  background-color: var(--text-color);
   margin-top: 0.25rem;
   margin-right: 0.08rem;
 }
 .brand-hyphen {
   height: 0.21875rem;
-  background: var(--text-color);
+  background-color: var(--text-color);
   width: 0.6rem;
   margin-top: 0.25rem;
 }
@@ -480,28 +479,21 @@ img {
 
   /* Menu color */
   #topmenu, #menu, #main, body {
-    transition: background-color 0.5s ease, transform 0.2s ease;
+    transition: background-color 0.5s ease, transform 0.2s ease, top 0.5s ease;
   }
   #layout.active :is(#topmenu, #menu, #main) {
     background-color: var(--background-color-menu);
     transition: background-color 0.5s ease 0.5s, transform 0.2s ease;
 
   }
-  #layout.active :is(#topmenu, #menu) :is(a, h2, .brand-hyphen, .progress-bar, button#theme-toggle, .type-information) {
+  #layout.active :is(#topmenu, #menu) :is(a, h2, button#theme-toggle, .type-information) {
     color: var(--text-color-menu);
     transition-duration: 0.5s;
     transition-property: color;
     transition-delay: 0.5s;
     transition-timing-function: ease;
   }
-  #layout.active :is(#topmenu, #menu) :is(.brand-hyphen, .progress-bar) {
-    background: var(--text-color-menu);
-    transition-duration: 0.5s;
-    transition-property: background;
-    transition-delay: 0.5s;
-    transition-timing-function: ease;
-  }
-  #layout.active :is(#topmenu, #menu) :is(.hamburgare, .d-block-light, .d-block-dark) {
+  #layout.active :is(#topmenu, #menu) :is(.hamburgare, .d-block-light, .d-block-dark, .brand-hyphen, .progress-bar) {
     background-color: var(--text-color-menu);
     transition-duration: 0.5s;
     transition-property: background-color;
@@ -548,14 +540,15 @@ img {
   #topmenu li.menu-menubutton {
     margin-top: 0;
   }
-  
-}
-@media (max-width: 25.5em) {
   .progress-bar {
     display: none;
   }
   .brand-hyphen {
-    width: 100%;
+    width: 1rem;
     margin-right: 0.08rem;
   }
+  
+}
+@media (max-width: 25.5em) {
+  
 }
