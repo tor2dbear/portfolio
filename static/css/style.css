@@ -452,6 +452,9 @@ img {
 
 /* 768px */
 @media (max-width: 48em) {
+  body.active {
+    overflow: hidden;
+  }
 
   #menu {
     position: fixed;
@@ -475,7 +478,7 @@ img {
   #layout.active > #main {
     transform: translate(100vw, 0px);
   }
-  #topmenu.bottom-line{    
+  :not(body.active) #topmenu.bottom-line {    
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: var(--border-header);
