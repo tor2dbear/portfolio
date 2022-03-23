@@ -56,7 +56,6 @@ OLD SIDE-MENU CSS
 
 body {
   background-color: var(--bg-color);
-  overflow-x: hidden;
 }
 img,
 .pure-img-responsive {
@@ -108,7 +107,7 @@ The content `<div>` is where all your content goes.
 #main {
   padding: 0 2rem;
   float: right;
-  width:calc(100% - var(--menu-width-xlarge) - 2rem*4); 
+  width: calc(100% - var(--menu-width-xlarge) - 2rem*2); 
 }
 .content.post > * {
   grid-column: 1 / span 5;
@@ -165,13 +164,6 @@ article {
   background-color: var(--bg-color);
   padding: 1.5rem 2rem;
 }
-#topmenu.bottom-line{    
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-color: var(--border-header);
-}
-
-
 
 #topmenu ul.menu-list {
   display: flex;
@@ -199,9 +191,9 @@ a.menu-heading {
 }
 
 :root {
-  --menu-width-xlarge: 20rem; /* 320 px */
-  --menu-width-large: 16rem; /* 256 px */
-  --menu-width-medium: 12rem; /* 192 px */
+  --menu-width-xlarge: 24rem; /* 320 px + padding 2x2rem */
+  --menu-width-large: 20rem; /* 256 px + padding 2x2rem */
+  --menu-width-medium: 16rem; /* 192 px + padding 2x2rem */
 }
 #menu {
   width: var(--menu-width-xlarge);
@@ -215,7 +207,7 @@ a.menu-link {
 }
 #menu #menu-content {
   position: sticky;
-  transform: translateY(5rem);
+  top: calc(77px + 5rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -438,20 +430,20 @@ img {
 /* 1280px */
 @media (max-width: 80em) {
   #menu {
-    width: calc(var(--menu-width-large) - 5px);
+    width: var(--menu-width-large);
   }
   #main {
-    width: calc(100% - var(--menu-width-large) - 2rem*4);
+    width: calc(100% - var(--menu-width-large) - 2rem*2);
   }
 }
 
 /* 1024px */
 @media (max-width: 64em) {
   #menu {
-    width: calc(var(--menu-width-medium) - 5px);
+    width: var(--menu-width-medium);
   }
   #main {
-    width: calc(100% - var(--menu-width-medium) - 2rem*4);
+    width: calc(100% - var(--menu-width-medium) - 2rem*2);
   }
   .content.post > * {
     grid-column: 1 / span 6;
@@ -460,6 +452,7 @@ img {
 
 /* 768px */
 @media (max-width: 48em) {
+
   #menu {
     position: fixed;
     top: 0;
@@ -482,14 +475,15 @@ img {
   #layout.active > #main {
     transform: translate(100vw, 0px);
   }
-  
+  #topmenu.bottom-line{    
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--border-header);
+  }
 
   /* Menu color */
   #topmenu, #menu, #main, body {
     transition: background-color 0.5s ease, transform 0.2s ease, top 0.5s ease;
-  }
-  #layout.active {
-    overflow: hidden;
   }
   #layout.active #topmenu {
     top: 0px !important;
@@ -517,7 +511,7 @@ img {
   #topmenu li.menu-menubutton {
     display: block;
   }
-  #topmenu > .topmenuitems {
+  #topmenu .topmenuitems {
     display: none;
   }
   #menu ul.menu-list {
