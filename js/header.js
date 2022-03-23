@@ -1,5 +1,5 @@
 // Create a condition that targets viewports at least 768px wide
-const mediaQuery = window.matchMedia('(max-width: 25.5em)')
+const mediaQuery = window.matchMedia('(max-width: 48em)')
 
 function handleTabletChange(e) {
     // Check if the media query is true
