@@ -65,18 +65,15 @@ img,
 
 /*
 Add transition to containers so they can push in and out.
-*/
+
 #main,
 #layout,
 #menu,
 .menu-link {
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -ms-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
-  transition: transform 0.5s ease;
+    transition: background-color 0.2s ease,
+    transform 0.5s ease-in-out;
 }
+*/
 
 /*
 This is the parent `<div>` that contains the menu and the content area.
@@ -86,6 +83,7 @@ This is the parent `<div>` that contains the menu and the content area.
   flex-wrap: wrap;
   height: auto;
   flex-basis: auto;
+  overflow: hidden;
 }
 
 /*
@@ -98,7 +96,7 @@ The content `<div>` is where all your content goes.
   grid-column: 1 / span 6;
 }
 .startpage-heading {
-  padding-top: 80px;
+  padding-top: 5rem;
 }
 #main,
 .content.startpage,
@@ -142,7 +140,7 @@ The content `<div>` is where all your content goes.
 }
 
 article {
-  margin-bottom: 48px;
+  margin-bottom: 3rem;
 }
 
 .content.post>* {
@@ -156,32 +154,6 @@ article {
 
 /* ================= END: LAYOUT ================= */
 
-.header {
-   margin: 0;
-   color: #333;
-   text-align: center;
-   padding: 2.5em 2em 0;
-   border-bottom: 1px solid #eee;
-   grid-column: span 6;
-}
-  .header h1 {
-      margin: 0.2em 0;
-      font-size: 3em;
-      font-weight: 300;
-  }
-   .header h2 {
-      font-weight: 300;
-      color: #ccc;
-      padding: 0;
-      margin-top: 0;
-  }
-
-.content-subhead {
-  margin: 50px 0 20px 0;
-  font-weight: 300;
-  color: #888;
-}
-
 #topmenu {
   position:sticky;
   top:0px;
@@ -190,7 +162,7 @@ article {
   width:100%;
   margin: 0px;
   display: flex;
-  background: var(--bg-color);
+  background-color: var(--bg-color);
   padding: 1.5rem 2rem;
   transition: top 0.5s;
 }
@@ -220,11 +192,6 @@ a.menu-heading {
   padding: 0;
 }
 
-/*
-The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
-appears on the left side of the page.
-*/
-
 :root {
   --menu-width-xlarge: 20rem; /* 320 px */
   --menu-width-large: 16rem; /* 256 px */
@@ -235,6 +202,7 @@ appears on the left side of the page.
   display: block;
   padding: 0 2rem;
   z-index: 99; /* so the menu or its navicon stays above all content */
+  box-sizing: border-box;
 }
 a.menu-link {
   display: block;
@@ -424,22 +392,22 @@ a.menu-link.active .hamburgare {
 /* The progress container (grey background) */
 .progress-container {
   width: 100%;
-  height: 8px;
+  height: 0.5rem;
   background: #ccc;
 }
 
 /* The progress bar (scroll indicator) */
 .progress-bar {
-  height: 3.5px;
+  height: 0.21875rem;
   background: var(--text-color);
-  margin-top: 4px;
+  margin-top: 0.25rem;
   margin-right: 0.08rem;
 }
 .brand-hyphen {
-  height: 3.5px;
+  height: 0.21875rem;
   background: var(--text-color);
   width: 0.6rem;
-  margin-top: 4px;
+  margin-top: 0.25rem;
 }
 .brandcontainer {
   display: flex;
@@ -490,7 +458,7 @@ img {
     position: fixed;
     top: 0;
     bottom: 0;
-    transform: translateX(-100vw);
+    transform: translate(-100vw, 0px);
     width: 100%;
     background-color: var(--bg-color);
     margin-top: 0;
@@ -504,31 +472,43 @@ img {
     transform: translate(0px, 0px);
     padding: 0 2rem;
   }
+
   #layout.active > #main {
     transform: translate(100vw, 0px);
   }
-  #layout.active :is(#topmenu, #menu) {
-    background-color: var(--colors-accent-500);
+  
+
+  /* Menu color */
+  #topmenu, #menu, #main, body {
+    transition: background-color 0.5s ease, transform 0.2s ease;
+  }
+  #layout.active :is(#topmenu, #menu, #main) {
+    background-color: var(--background-color-menu);
+    transition: background-color 0.5s ease 0.5s, transform 0.2s ease;
+
+  }
+  #layout.active :is(#topmenu, #menu) :is(a, h2, .brand-hyphen, .progress-bar, button#theme-toggle, .type-information) {
+    color: var(--text-color-menu);
     transition-duration: 0.5s;
-    transition-property: transform, background-color;
-    transition-delay: 0s, 0.2s;
+    transition-property: color;
+    transition-delay: 0.5s;
     transition-timing-function: ease;
   }
-  #layout.active :is(#topmenu, #menu) :is(a, h2, .brand-hyphen, .progress-bar) {
-    color: #eee;
-    transition: color 0.5s ease;
-    transition-delay: 0.5s;
-  }
   #layout.active :is(#topmenu, #menu) :is(.brand-hyphen, .progress-bar) {
-    background: #eee;
-    transition: background 0.5s ease;
+    background: var(--text-color-menu);
+    transition-duration: 0.5s;
+    transition-property: background;
     transition-delay: 0.5s;
+    transition-timing-function: ease;
   }
   #layout.active :is(#topmenu, #menu) :is(.hamburgare, .d-block-light, .d-block-dark) {
-    background-color: #eee;
-    transition: background-color 0.5s ease;
+    background-color: var(--text-color-menu);
+    transition-duration: 0.5s;
+    transition-property: background-color;
     transition-delay: 0.5s;
+    transition-timing-function: ease;
   }
+
   #topmenu li.menu-menubutton {
     display: block;
   }
