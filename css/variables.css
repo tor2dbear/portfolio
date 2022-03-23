@@ -146,7 +146,7 @@
   --text-color: var(--colors-accent-700);
   --text-color-accent: var(--colors-accent-500);
   --text-color-hover: var(--colors-accent-500);
-  --text-color-menu: var(--colors-accent-50);
+  --text-color-menu: var(--colors-accent-900);
   --bg-color: var(--colors-accent-200);
   --bg-tag: var(--colors-accent-300);
   --bg-tag-hover: var(--colors-accent-400);
@@ -154,8 +154,8 @@
   --img-grayscale: 100%;
   --img-blend-mode: luminosity;
   --box-background: var(--colors-accent-300);
-  --background-color-menu: var(--colors-accent-600);
-  --border-header: var(--colors-accent-200);
+  --background-color-menu: var(--colors-accent-400);
+  --border-header: var(--colors-accent-300);
 }
 :root[data-theme="dark"][data-mode="pant"] {
   --primary-color: var(--colors-accent-500);
