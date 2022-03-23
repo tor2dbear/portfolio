@@ -165,6 +165,13 @@ article {
   background-color: var(--bg-color);
   padding: 1.5rem 2rem;
 }
+#topmenu.bottom-line{    
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: var(--border-header);
+}
+
+
 
 #topmenu ul.menu-list {
   display: flex;
@@ -480,6 +487,12 @@ img {
   /* Menu color */
   #topmenu, #menu, #main, body {
     transition: background-color 0.5s ease, transform 0.2s ease, top 0.5s ease;
+  }
+  #layout.active {
+    overflow: hidden;
+  }
+  #layout.active #topmenu {
+    top: 0px !important;
   }
   #layout.active :is(#topmenu, #menu, #main) {
     background-color: var(--background-color-menu);
