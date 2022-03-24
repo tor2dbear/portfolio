@@ -399,10 +399,12 @@ a.menu-link.active .hamburgare {
 
 /* The progress bar (scroll indicator) */
 .progress-bar {
-  height: 0.21875rem;
+  height: 1.5px;
   background-color: var(--text-color);
   margin-top: 0.25rem;
-  margin-right: 0.08rem;
+}
+.curl {
+  transform: translateY(-5.5px);
 }
 .brand-hyphen {
   height: 0.21875rem;
