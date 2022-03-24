@@ -101,7 +101,8 @@ The content `<div>` is where all your content goes.
 .content.startpage,
 .content.post {
   grid-template-columns: repeat(6, 1fr);
-  column-gap: 1.5rem;
+  -moz-column-gap: 1.5rem;
+       column-gap: 1.5rem;
   display: grid;
 }
 #main {
@@ -154,6 +155,7 @@ article {
 /* ================= END: LAYOUT ================= */
 
 #topmenu {
+  position:-webkit-sticky;
   position:sticky;
   top:0px;
   z-index: 100;
@@ -206,6 +208,7 @@ a.menu-link {
   display: block;
 }
 #menu #menu-content {
+  position: -webkit-sticky;
   position: sticky;
   top: calc(77px + 5rem);
   display: flex;
@@ -486,29 +489,14 @@ img {
 
   /* Menu color */
   #topmenu, #menu, #main, body {
-    transition: background-color 0.5s ease, transform 0.2s ease, top 0.5s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease, top 0.5s ease;
+  }
+  #layout.active, body.active {
+    --text-color: var(--text-color-menu);
+    --bg-color: var(--background-color-menu);
   }
   #layout.active #topmenu {
     top: 0px !important;
-  }
-  #layout.active :is(#topmenu, #menu, #main) {
-    background-color: var(--background-color-menu);
-    transition: background-color 0.5s ease 0.5s, transform 0.2s ease;
-
-  }
-  #layout.active :is(#topmenu, #menu) :is(a, h2, button#theme-toggle, .type-information) {
-    color: var(--text-color-menu);
-    transition-duration: 0.5s;
-    transition-property: color;
-    transition-delay: 0.5s;
-    transition-timing-function: ease;
-  }
-  #layout.active :is(#topmenu, #menu) :is(.hamburgare, .d-block-light, .d-block-dark, .brand-hyphen, .progress-bar) {
-    background-color: var(--text-color-menu);
-    transition-duration: 0.5s;
-    transition-property: background-color;
-    transition-delay: 0.5s;
-    transition-timing-function: ease;
   }
 
   #topmenu li.menu-menubutton {
