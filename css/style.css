@@ -2,10 +2,6 @@
   font-family: "Helvetica Neue", Arial, sans-serif
 }
 
-#menu, #main, body, #topmenu, path.hyphen {
-  transition: stroke 0.2s ease, color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
-}
-
 .small-print {
   font-size: 0.8em;
   margin: 0.6em 0;
@@ -67,17 +63,15 @@ img,
   height: auto;
 }
 
-/*
-Add transition to containers so they can push in and out.
 
-#main,
-#layout,
-#menu,
-.menu-link {
-    transition: background-color 0.2s ease,
-    transform 0.5s ease-in-out;
+/* Add transition to containers so they can push in and out. */
+
+:is(#menu, #main, body, #topmenu, path.hyphen, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
+  transition: stroke 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
+    color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
+    background-color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000);
 }
-*/
+
 
 /*
 This is the parent `<div>` that contains the menu and the content area.
@@ -214,10 +208,10 @@ a.menu-link {
 #menu #menu-content {
   position: -webkit-sticky;
   position: sticky;
-  top: calc(77px + 5rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding-top: 6rem;
 }
 #menu li.menu-list,
 ul.pure-menu-list {
@@ -340,7 +334,7 @@ button#darkmode-toggle {
   height: 1.5rem;
   width: 1.5rem;
   background-color: var(--text-color);
-  transition: background-color 0.3s ease;
+  /*transition: background-color 0.3s ease;*/
 } 
 .d-block-light {
   mask-image: url('https://tor2dbear.github.io/portfolio/img/light-mode-dark-light.svg');
@@ -405,16 +399,15 @@ a.menu-link.active .hamburgare {
 .progress-bar {
   height: 1.5px;
   background-color: var(--text-color);
-  margin-top: 0.25rem;
+}
+#hyphen-left {
+  margin-bottom: 1px;
+}
+#hyphen-right {
+  margin-top: 0.5px;
 }
 .curl {
-  transform: translateY(-5.5px);
-}
-.brand-hyphen {
-  height: 0.21875rem;
-  background-color: var(--text-color);
-  width: 0.6rem;
-  margin-top: 0.25rem;
+  
 }
 .brandcontainer {
   display: flex;
@@ -470,7 +463,7 @@ img {
     top: 0;
     bottom: 0;
     transform: translate(-100vw, 0px);
-    width: 100%;
+    width: 100vw;
     background-color: var(--bg-color);
     margin-top: 0;
     padding: 0;
@@ -482,28 +475,32 @@ img {
     padding: 0 2rem;
   }
 
-  #layout.active > #main {
-    transform: translate(100vw, 0px);
-  }
   :not(body.active) #topmenu.bottom-line {    
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: var(--border-header);
   }
 
-  /* Menu color */
- #menu, #main, body {
-    transition: background-color 0.2s ease, transform 0.2s ease;
+  /* Menu transitions 
+ #menu, body, #topmenu {
+    transition: background-color 0.2s ease;
   }
-  #topmenu {
-    transition: background-color 0.2s ease, transform 0.2s ease, top 0.2s ease; /* top for menu hide/show */
+  #menu, #main {
+    transition: transform 0.2s ease;
   }
-  #layout.active, body.active {
+  path.hyphen {
+    transition: stroke 0.2s ease
+  }
+    #topmenu {
+    transition: top 0.2s ease;
+  }
+  */
+  body.active {
     --text-color: var(--text-color-menu);
     --bg-color: var(--background-color-menu);
   }
-  #layout.active #topmenu {
-    top: 0px !important;
+  #menu #menu-content {
+    padding-top: 10rem;
   }
 
   #topmenu li.menu-menubutton {
