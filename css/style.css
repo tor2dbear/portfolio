@@ -470,9 +470,7 @@ img {
     padding: 0;
     overflow-y: scroll;
   }
-  #menu-content {
-    padding: var(--spacing-96) 0;
-  }
+  
   #menu.active{
     transform: translate(0px, 0px);
     padding: 0 2rem;
@@ -488,8 +486,11 @@ img {
   }
 
   /* Menu color */
-  #topmenu, #menu, #main, body {
-    transition: background-color 0.2s ease, transform 0.2s ease, top 0.5s ease;
+ #menu, #main, body {
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  #topmenu {
+    transition: background-color 0.2s ease, transform 0.2s ease, top 0.5s ease; /* top for menu hide/show */
   }
   #layout.active, body.active {
     --text-color: var(--text-color-menu);
