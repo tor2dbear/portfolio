@@ -2,6 +2,10 @@
   font-family: "Helvetica Neue", Arial, sans-serif
 }
 
+#menu, #main, body, #topmenu, path.hyphen {
+  transition: stroke 0.2s ease, color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
 .small-print {
   font-size: 0.8em;
   margin: 0.6em 0;
@@ -336,7 +340,7 @@ button#darkmode-toggle {
   height: 1.5rem;
   width: 1.5rem;
   background-color: var(--text-color);
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 } 
 .d-block-light {
   mask-image: url('https://tor2dbear.github.io/portfolio/img/light-mode-dark-light.svg');
@@ -492,7 +496,7 @@ img {
     transition: background-color 0.2s ease, transform 0.2s ease;
   }
   #topmenu {
-    transition: background-color 0.2s ease, transform 0.2s ease, top 0.5s ease; /* top for menu hide/show */
+    transition: background-color 0.2s ease, transform 0.2s ease, top 0.2s ease; /* top for menu hide/show */
   }
   #layout.active, body.active {
     --text-color: var(--text-color-menu);
