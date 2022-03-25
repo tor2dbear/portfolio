@@ -66,7 +66,7 @@ img,
 
 /* Add transition to containers so they can push in and out. */
 
-:is(#menu, #main, body, #topmenu, path.hyphen, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
+body, :is(#menu, #main, #topmenu, path.hyphen, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
   transition: stroke 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
     color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
     background-color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000);
@@ -194,6 +194,7 @@ a.menu-heading {
   --menu-width-xlarge: 24rem; /* 320 px + padding 2x2rem */
   --menu-width-large: 20rem; /* 256 px + padding 2x2rem */
   --menu-width-medium: 16rem; /* 192 px + padding 2x2rem */
+  --header-height: 4.775rem;
 }
 #menu {
   width: var(--menu-width-xlarge);
@@ -211,7 +212,11 @@ a.menu-link {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 6rem;
+  padding-top: 5rem;
+  top: var(--header-height);
+}
+#topmenu .brandcontainer {
+  height: 1.5rem;
 }
 #menu li.menu-list,
 ul.pure-menu-list {
@@ -397,14 +402,14 @@ a.menu-link.active .hamburgare {
 
 /* The progress bar (scroll indicator) */
 .progress-bar {
-  height: 1.5px;
+  height: 2px;
   background-color: var(--text-color);
 }
 #hyphen-left {
-  margin-bottom: 1px;
+  margin-top: 13px;
 }
 #hyphen-right {
-  margin-top: 0.5px;
+  margin-top: 15px;
 }
 .curl {
   
@@ -412,7 +417,6 @@ a.menu-link.active .hamburgare {
 .brandcontainer {
   display: flex;
   flex-direction: row;
-  align-items: center;
 }
 
 /* Images */
@@ -501,6 +505,7 @@ img {
   }
   #menu #menu-content {
     padding-top: 10rem;
+    padding-bottom: 5rem;
   }
 
   #topmenu li.menu-menubutton {
