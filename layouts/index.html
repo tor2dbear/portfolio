@@ -6,9 +6,11 @@
   <div class="post-header mb-8">
     <h2 class="type-headline-small">Featured</h2>
   </div>
-  {{ range first 3 (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) }}
+  {{ range first 6 (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) }}
     {{ .Render "summary"}}
   {{ end }}
+
+  {{ partial "subscribe.html" . }}
 
 </div>
 

@@ -5,6 +5,7 @@ author = "Torbjörn Hedberg"
 copyright = "&copy; 2022. All rights reserved."
 canonifyurls = true
 paginate = 10
+relativeURLs = true
 
 [taxonomies]
   tag = "tags"
@@ -44,3 +45,8 @@ paginate = 10
     name = "Contact"
     weight = 4
     url = "/contact/"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

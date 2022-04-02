@@ -1,14 +1,18 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2022-02-24
-linktitle: Hopfab — Branding and Web Design
-title: Hopfab — Branding and Web Design
+linktitle: gothenburg-poster
+title: Gothenburg Poster
 weight: 10
-tags: ["branding", "graphic design"]
+tags: ["graphic design"]
 topics: ["topic01", "topic02"]
 clients: ["topic01", "topic02"]
-description: A 360 campaign to shift perceptions of the world’s catalogue of ideas.
-header_image: /img/a-cut-up-world/cut-up-world11.webp
+description: Self initiated project. A poster with some of the landmarks and symbols representing the city of Gothenburg.
+header_image: /img/gothenburg-poster/gbg_poster08.webp
+featured: true
+client: Self initiated project
+clientweb:
+clientabout: A poster with some of the landmarks and symbols representing the city of Gothenburg.
 ---
 
 
