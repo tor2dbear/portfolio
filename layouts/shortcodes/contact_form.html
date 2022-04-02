@@ -1,7 +1,7 @@
 <div class="contact-form mb-64 grid-1-8">
 <script type="text/javascript">var submitted=false;</script>
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" 
-onload="if(submitted) {window.location='/thankyou';}"></iframe>
+onload="if(submitted) {window.location='{{ .Site.BaseURL }}/thankyou';}"></iframe>
 
 <form action="https://docs.google.com/forms/d/e/1FAIpQLSeKHQgkqMvOnUbTYaTILCzLO9fcdjGX8IWofk1qwKQodCPNzw/formResponse" 
 method="post" target="hidden_iframe" onsubmit="submitted=true;">
