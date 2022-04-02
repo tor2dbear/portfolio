@@ -105,6 +105,7 @@
   --box-background: var(--colors-accent-50);
   --background-color-menu: var(--colors-accent-600);
   --border-header: var(--colors-gray-200);
+
 }
 
 :root[data-theme="light"] {
@@ -123,6 +124,14 @@
     --box-background: var(--colors-accent-50);
     --background-color-menu: var(--colors-accent-600);
     --border-header: var(--colors-gray-200);
+    --form-bg: var(--colors-gray-100);
+    --form-border: transparent;
+    --form-placeholder: var(--colors-gray-300);
+    --newsletter-signup-bg: var(--colors-accent-800);
+    --newsletter-illustration-bg: var(--colors-accent-200);
+    --newsletter-color: var(--colors-accent-100);
+    --newsletter-button-background: var(--colors-accent-300);
+    --newsletter-button-color: var(--colors-accent-800);
 }
 :root[data-theme="dark"] {
     --primary-color: var(--colors-accent-500);
@@ -140,6 +149,14 @@
     --box-background: var(--colors-gray-800);
     --background-color-menu: var(--colors-accent-900);
     --border-header: var(--colors-gray-700);
+    --form-bg: var(--colors-gray-800);
+    --form-border: transparent;
+    --form-placeholder: var(--colors-gray-500);
+    --newsletter-signup-bg: var(--colors-accent-800);
+    --newsletter-illustration-bg: var(--colors-accent-300);
+    --newsletter-color: var(--colors-accent-100);
+    --newsletter-button-background: var(--colors-accent-300);
+    --newsletter-button-color: var(--colors-accent-800);
 }
 :root[data-theme="light"][data-mode="pant"] {
   --primary-color: var(--colors-accent-500);
@@ -155,7 +172,15 @@
   --img-blend-mode: luminosity;
   --box-background: var(--colors-accent-300);
   --background-color-menu: var(--colors-accent-400);
-  --border-header: var(--colors-accent-300);
+  --border-header: var(--colors-accent-400);
+  --form-bg: var(--colors-accent-100);
+  --form-border: transparent;
+  --form-placeholder: var(--colors-accent-300);
+  --newsletter-signup-bg: var(--colors-accent-800);
+  --newsletter-illustration-bg: var(--colors-accent-300);
+  --newsletter-color: var(--colors-accent-100);
+  --newsletter-button-background: var(--colors-accent-300);
+  --newsletter-button-color: var(--colors-accent-800);
 }
 :root[data-theme="dark"][data-mode="pant"] {
   --primary-color: var(--colors-accent-500);
@@ -172,4 +197,12 @@
   --box-background: var(--colors-accent-800);
   --background-color-menu: var(--colors-accent-800);
   --border-header: var(--colors-accent-700);
+  --form-bg: var(--colors-accent-600);
+  --form-border: transparent;
+  --form-placeholder: var(--colors-accent-500);
+  --newsletter-signup-bg: var(--colors-accent-800);
+  --newsletter-illustration-bg: var(--colors-accent-300);
+  --newsletter-color: var(--colors-accent-100);
+  --newsletter-button-background: var(--colors-accent-300);
+  --newsletter-button-color: var(--colors-accent-800);
 }

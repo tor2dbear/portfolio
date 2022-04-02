@@ -40,6 +40,7 @@
 #layout .text-color-default {color: var(--text-color);}
 #layout .text-color-lighter {color: var(--text-color-lighter)}
 #layout .text-color-accent {color: var(--text-color-accent);}
+#layout .text-color-neg {color: var(--bg-color);}
 
 /* Letter spacing */
 .tracking-tighter {letter-spacing: var(--tracking-tighter);}
@@ -60,6 +61,7 @@
 #layout .mb-16, .mb-16 {margin-bottom: var(--spacing-16);}
 #layout .mb-24, .mb-24 {margin-bottom: var(--spacing-24);}
 #layout .mb-32, .mb-32 {margin-bottom: var(--spacing-32);}
+#layout .mb-64, .mb-64 {margin-bottom: var(--spacing-64);}
 
 /* Margin top */
 #layout .mt-0, .mt-0 {margin-top: 0rem;}

@@ -1,4 +1,4 @@
-// Create a condition that targets viewports at least 768px wide
+// Create a condition that targets viewports max 768px wide
 const mediaQuery = window.matchMedia('(max-width: 48em)')
 
 function handleTabletChange(e) {
@@ -9,14 +9,26 @@ function handleTabletChange(e) {
         window.onscroll = function () {
             var currentScrollPos = window.pageYOffset;
             if (prevScrollpos > currentScrollPos) {
-                document.getElementById("topmenu").style.top = "0";
+                document.getElementById("topmenu").style.transform = "translateY(0)";
             } else {
-                document.getElementById("topmenu").style.top = "-77px";
+                document.getElementById("topmenu").style.transform = "translateY(-77px)";
             }
             prevScrollpos = currentScrollPos;
         }
     } else {
-        // do nothing
+        // Show navbar when window is larger than 48em
+        document.getElementById("topmenu").style.transform = "translateY(0)";
+        console.log('The window is now over 48em');
+        var prevScrollpos = window.pageYOffset;
+        window.onscroll = function () {
+            var currentScrollPos = window.pageYOffset;
+            if (prevScrollpos > currentScrollPos) {
+                document.getElementById("topmenu").style.transform = "translateY(0)";
+            } else {
+                document.getElementById("topmenu").style.transform = "translateY(0)";
+            }
+            prevScrollpos = currentScrollPos;
+        }
     }
 }
 

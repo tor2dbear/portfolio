@@ -241,6 +241,36 @@ body a.menu-link:active {
 
 /* ================= END: TYPOGRAPHY ================= */
 
+@media (max-width: 25.5em) {
+  h1,
+  .type-headline-1 {
+    font-size: var(--text-4xl);
+    color: var(--text-color);
+    font-weight: var(--sans-weight-bold);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--tracking-normal);
+  }
+  /* Font: Headline 2 */
+
+  h2,
+.type-headline-2 {
+  font-size: var(--text-2xl);
+  color: var(--text-color);
+  font-weight: var(--sans-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
+}
+/* Font: Headline 3 */
+h3,
+.type-headline-3 {
+  font-size: var(--text-2xl);
+  color: var(--text-color);
+  font-weight: var(--sans-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
+}
+}
+
 /* ================= HYPERLINKS ================= */
 a {
   color: var(--text-color);
