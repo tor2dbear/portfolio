@@ -150,7 +150,7 @@ p,
   letter-spacing: var(--tracking-nomrmal);
 }
 /* Font: Body small */
-.type-body {
+.type-body-sm {
   font-size: var(--text-sm);
   line-height: var(--line-height-normal);
   color: var(--text-color);
