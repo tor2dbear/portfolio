@@ -466,6 +466,7 @@ label {
   color: var(--text-color);
   margin-bottom: var(--spacing-8);
   display: inline-block;
+  line-height: var(--line-height-normal);
 }
 input,
 .form-input {
