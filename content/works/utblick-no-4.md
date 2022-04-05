@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2022-02-24
-linktitle: Hopfab — Branding and Web Design
-title: Hopfab — Branding and Web Design
+linktitle: Utblick no.4
+title: Utblick no.4 — Editorial design
 weight: 10
 tags: ["design", "editorial design", "illustrations"]
 description: Publication design for the Utblick magazine, published by Society of International Affairs in Gothenburg.

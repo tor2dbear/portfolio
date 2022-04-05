@@ -1,22 +1,19 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2022-02-24
-linktitle: Hopfab — Branding and Web Design
-title: Hopfab — Branding and Web Design
+linktitle: Things in a Conversation
+title: Things in a Conversation
 weight: 10
 tags: [
     "books",
-    "design",
-    "editorial design",
-    "illustrations",
-    "ui/ux",
+    "design"
 ]
-description: A 360 campaign to shift perceptions of the world’s catalogue of ideas.
+description: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
 header_image: /img/things-in-a-conversation/things08.webp
 featured: true
-client: Society of International Affairs
-clientweb: https://www.tor-bjorn.com
-clientabout: Utblick is a student magazine under the umbrella of the Society of International Affairs in Gothenburg (Utrikespolitiska Föreningen), but we write for everyone, in and beyond Gothenburg, who are interested in international politics. The society is party politically and religiously unaffiliated and the main goal is to question and debate. We are however not afraid of taking a political stance in relation to human rights as has been declared by the UN declaration of human rights, as well as specifically the rights of women, LGBT, and BIPOC to be respected.
+client: Self initiated project
+clientweb:
+clientabout: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
 ---
 
 Hugo uses the excellent [go][] [html/template][gohtmltemplate] library for
