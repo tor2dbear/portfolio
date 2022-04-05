@@ -189,7 +189,9 @@ a.menu-heading {
   --menu-width-xlarge: 24rem; /* 320 px + padding 2x2rem */
   --menu-width-large: 20rem; /* 256 px + padding 2x2rem */
   --menu-width-medium: 16rem; /* 192 px + padding 2x2rem */
-  --header-height: 4.775rem;
+  --header-height: 4.5rem;
+  --header-height-neg: 0rem;
+  --progressbarcorrection: 5.4; /* Rem occupied by tor, bjorn.com and curl */
 }
 #menu {
   width: var(--menu-width-xlarge);
@@ -425,9 +427,7 @@ a.menu-link.active .hamburgare {
 #hyphen-right {
   margin-top: 15px;
 }
-.curl {
-  
-}
+
 .brandcontainer {
   display: flex;
   flex-direction: row;
@@ -524,10 +524,6 @@ font-weight: var(--sans-weight-bold);
 
 /* Contact form */
 
-.contact-form {
-
-}
-
 /* Newsletter */
 
 div#newsletter-container {
@@ -564,7 +560,6 @@ div#newsletter-signup :is(p, h2, label) {
   -webkit-mask-position: center;
   mask-repeat: no-repeat;
   mask-position: center;
-
 }
 
 /* Input button */
@@ -575,6 +570,7 @@ input#mc-embedded-subscribe {
   padding: 0.5rem 1rem;
   -webkit-appearance: none;
   -webkit-border-radius: 0;
+  border-radius: 0;
 }
 
 div#newsletter-container {
@@ -630,6 +626,7 @@ div#mce-responses {
   .contact-form.grid-1-3 {
     grid-column: 1 / span 4;
   }
+}
 
 /* min 768px Small */
 @media (max-width: 63.9375em) {
@@ -722,6 +719,13 @@ div#mce-responses {
 
 /* X-Small */
 @media (max-width: 47.9375em) {
+  :root {
+    --header-height-neg: -4.5rem;
+  }
+ #topmenu:not(.bottom-line) {
+    transform: translateX(0) !important;
+  }
+  
   .content.startpage article:nth-of-type(n+1) {
     grid-column: 1 / span 6;
   }
@@ -751,5 +755,4 @@ div#mce-responses {
   .contact-info.grid-5-6 {
     grid-column: 3 / span 4;
   }
-
 }
