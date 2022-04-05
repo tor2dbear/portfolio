@@ -73,7 +73,7 @@ This is the parent `<div>` that contains the menu and the content area.
 The content `<div>` is where all your content goes.
 */
 .content {
-  margin-bottom: 4rem;
+  margin-bottom: var(--spacing-160);
   line-height: 1.6em;
   padding-top: 5rem;
   grid-column: 1 / span 6;
@@ -140,11 +140,6 @@ article {
   grid-column: 1 / span 5;
 }
 
-/* Layout topmenu alignment*/
-#topmenu .menu {
-  margin-top: 0.275rem;
-}
-
 /* ================= END: LAYOUT ================= */
 
 #topmenu {
@@ -152,12 +147,17 @@ article {
   position:sticky;
   top:0px;
   z-index: 100;
-  height: auto;
+  height: 4.5rem;
   width:100%;
   margin: 0px;
   display: flex;
   background-color: var(--bg-color);
   padding: 1.5rem 2rem;
+  align-items: baseline;
+  box-sizing: border-box;
+}
+#topmenu :is(.menu.topmenuitems, .brandcontainer) {
+  transform: translateY(-0.3125rem);
 }
 
 #topmenu ul.menu-list {
@@ -209,9 +209,6 @@ a.menu-link {
   justify-content: space-between;
   padding-top: 5rem;
   top: var(--header-height);
-}
-#topmenu .brandcontainer {
-  height: 1.5rem;
 }
 #menu li.menu-list,
 ul.pure-menu-list {
@@ -575,6 +572,8 @@ input#mc-embedded-subscribe {
   background-color: var(--newsletter-button-background);
   color: var(--newsletter-button-color);
   padding: 0.5rem 1rem;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
 }
 
 div#newsletter-container {
@@ -708,9 +707,6 @@ div#mce-responses {
   #topmenu li.menu-menubutton {
     margin-top: 0;
   }
-  .progress-bar {
-    display: none;
-  }
   .brand-hyphen {
     width: 1rem;
     margin-right: 0.08rem;
@@ -723,7 +719,7 @@ div#mce-responses {
   }
 }
 
-/* min 408px X-Small */
+/* X-Small */
 @media (max-width: 47.9375em) {
   .content.startpage article:nth-of-type(n+1) {
     grid-column: 1 / span 6;
@@ -731,7 +727,9 @@ div#mce-responses {
   article#related:nth-of-type(n+1) {
     grid-column: 1 / span 6;
   }
-
+  .progress-bar {
+    display: none;
+  }
   #topmenu .topmenuitems {
     display: none;
   }
