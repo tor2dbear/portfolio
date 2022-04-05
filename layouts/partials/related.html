@@ -4,7 +4,7 @@
 	{{ range . }}
 	<article id="related">
 	<div class="related-image line-height-tighter">
-		<a href="{{ .Permalink }}"><img src="{{ $.Params.header_image }}"></a>
+		<a href="{{ .Permalink }}"><img src="{{ .Params.header_image }}"></a>
 		</div>
 		<header class="related-title">
 		<h2 class="type-headline-4 mt-12"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>

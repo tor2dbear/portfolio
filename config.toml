@@ -17,7 +17,7 @@ relativeURLs = true
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
-  googleAnalytics = "Your Google Analytics tracking ID"
+  googleAnalytics = "G-B270MQG9GZ"
   disqus = "Your Disqus shortname"
   # CSS name for highlight.js
   highlightjs = "androidstudio"
