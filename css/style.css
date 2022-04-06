@@ -82,7 +82,7 @@ The content `<div>` is where all your content goes.
   padding-top: 5rem;
 }
 #main,
-.content:is(.startpage, .post, .page) {
+.content:is(.startpage, .post, .page, .list) {
   grid-template-columns: repeat(6, 1fr);
   -moz-column-gap: 1.5rem;
        column-gap: 1.5rem;
@@ -183,6 +183,12 @@ a.menu-heading {
 }
 .pure-menu-disabled, .menu-heading, .pure-menu-link {
   padding: 0;
+}
+#menu .menu-link.active::after {
+  content: "/";
+  margin-left: 0.25rem;
+  color: var(--text-color);
+  font-family: var(--font-serif);
 }
 
 :root {
@@ -289,6 +295,14 @@ li.pure-menu-item {
 .content.startpage article:nth-of-type(3) h2.text-2xl,
 .content.startpage article:nth-of-type(6) h2.text-2xl {
   font-size: var(--text-xl);
+}
+
+/* Listpage articles */
+.content.list article:nth-of-type(odd) {
+  grid-column: 1 / span 3;
+}
+.content.list article:nth-of-type(even) {
+  grid-column: 4 / span 3;
 }
 
 /* Icons */
