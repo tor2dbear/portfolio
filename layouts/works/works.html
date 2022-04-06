@@ -1,11 +1,11 @@
 {{ partial "header.html" . }}
 
-<div class="content">
+<div class="content list">
   <div class="post-header mb-8">
     <h2 class="type-headline-small">{{ .Title }}</h2>
   </div>
   {{ range .Data.Pages }}
-    {{ .Render "summary-listpage"}}
+    {{ .Render "summary"}}
   {{ end }}
 </div>
 

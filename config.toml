@@ -6,6 +6,7 @@ copyright = "&copy; 2022. All rights reserved."
 canonifyurls = true
 paginate = 10
 relativeURLs = true
+preserveTaxonomyNames = true
 
 [taxonomies]
   tag = "tags"

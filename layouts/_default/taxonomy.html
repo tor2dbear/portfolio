@@ -4,7 +4,7 @@
   <h4>{{ .Title }}</h4>
 </div>
 
-<div class="content">
+<div class="content list">
   {{ range .Data.Pages }}
     {{ .Render "summary"}}
   {{ end }}
