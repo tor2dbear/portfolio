@@ -2,7 +2,6 @@
   <ul class="menu-list">
     {{ range .Site.Menus.top }}
     
-{{ $url := .URL }}
     {{ range .Site.Menus.all }}
       <li class="menu-item">
         <a class="menu-link" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
