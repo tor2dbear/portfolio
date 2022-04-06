@@ -4,10 +4,10 @@
     <ul class="menu-list">
 
 
-      {{ $url := .URL }}
+      {{ $urlall := .URL }}
     {{ range .Site.Menus.all }}
       <li class="menu-item">
-        <a class="menu-link {{ if eq $url .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
+        <a class="menu-link {{ if eq $urlall .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
       </li>
     {{end}}
 
