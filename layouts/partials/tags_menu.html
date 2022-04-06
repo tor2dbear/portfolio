@@ -11,48 +11,12 @@
       </li>
     {{end}}
 
-
-
-    <!-- {{- $firstUrlElement := print "/" (index (split .URL "/") 1) "/" -}}
-    {{- range .Site.Menus.main -}}
-        <li><a class="{{if eq ($firstUrlElement|lower) (.URL|lower) }}active{{end}}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a></li>
-    {{ end }} -->
-
-    <!-- {{ $currentURL := .URL }}
-    {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
-    
-    <li class="menu-item">
-      <a class="menu-link {{ if in $currentURL "books" }}active{{ end }}" href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}">{{ replace $name "-" " " }}</a>
-    </li>
-  {{ end }} -->
-  {{ $currentURL := .URL }}
+  {{ $currentURL := .Permalink }}
   {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
         {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
-            <li class="menu-item testing"><a class="menu-link {{ if eq $currentURL .URL }}active{{ end }}" href="{{ .Permalink }}">{{ $name }}</a></li>
+            <li class="menu-item testiiiing"><a class="menu-link {{ if eq $currentURL .Permalink }}active{{ end }}" href="{{ .Permalink }}">{{ $name }}</a></li>
         {{ end }}
     {{ end }}
-  
-
-  <!-- {{ $currentURL := .URL }} 
-  <div class="row"> 
-    <div class="col-md-4"> 
-      <ul class="help-side-nav"> 
-        {{ range $name, $taxonomy := .Site.Taxonomies.tags }} 
-        <li> {{ $name }} </li> 
-        <ul class="help-side-subnav"> 
-          {{ range $taxonomy.Pages }} 
-          <li hugo-nav="{{ .RelPermalink}}">
-            <a {{ if eq $currentURL .URL}} class="active" {{ end}} href="{{ .Permalink}}">{{ .LinkTitle }}</a>
-          </li> 
-          {{ end }} 
-        </ul> 
-        {{ end }} 
-      </ul> 
-    </div> 
-    <div class="col-md-8">
-      {{ .Content }}
-    </div> 
-  </div> -->
 
   </ul>
 </div>

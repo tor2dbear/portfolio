@@ -184,8 +184,11 @@ a.menu-heading {
 .pure-menu-disabled, .menu-heading, .pure-menu-link {
   padding: 0;
 }
-.menu-link.active {
-  color: greenyellow;
+#menu .menu-link.active::after {
+  content: "/";
+  margin-left: 0.25rem;
+  color: var(--text-color);
+  font-family: var(--font-serif);
 }
 
 :root {
