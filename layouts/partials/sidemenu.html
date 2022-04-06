@@ -2,10 +2,10 @@
   <div id="menu-content">
   <div class="menu">
     <ul class="menu-list">
-      {{ $url := .URL }}
+      {{ $urlstart := .URL }}
       {{ range .Site.Menus.start }}
         <li class="menu-item">
-          <a class="menu-link {{ if eq $url .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
+          <a class="menu-link {{ if eq $urlstart .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
         </li>
       {{end}}
       {{ partial "topmenu-items.html" . }}

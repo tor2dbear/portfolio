@@ -2,8 +2,8 @@
   <ul class="menu-list">
     
     
-{{ $urltop := .URL }}
-{{ range .Site.Menus.top }}
+    {{ $urltop := .URL }}
+    {{ range .Site.Menus.top }}
       <li class="menu-item">
         <a class="menu-link {{ if eq $urltop .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
       </li>
