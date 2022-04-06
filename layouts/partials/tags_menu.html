@@ -4,14 +4,14 @@
     <ul class="menu-list">
 
 
-    <!-- {{ $urlall := .URL }}
+    {{ $urlall := .URL }}
     {{ range .Site.Menus.all }}
       <li class="menu-item">
         <a class="menu-link {{ if eq $urlall .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
       </li>
-    {{end}} -->
+    {{end}}
 
-    {{ range .Site.Menus.all }}
+    <!-- {{ range .Site.Menus.all }}
     {{ if .HasChildren }}
       <li class="menu-item menu-has-children">
         <a class="menu-link" href="#">{{ .Pre }}{{ .Name }}</a>
@@ -27,9 +27,15 @@
         <a class="menu-link" {{ printf "href=%q" .URL | safeHTMLAttr }}>{{ .Pre }}{{ .Name }}</a>
     {{end}}
       </li>
-    {{end}}
+    {{end}} -->
 
 
+    {{ $currentURL := .Permalink }}
+    {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+        {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+            <li class="menu-item testiiiing"><a class="menu-link {{ if eq $currentURL .Permalink }}active{{ end }}" href="{{ .Permalink }}">{{ $name }}</a></li>
+        {{ end }}
+    {{ end }}
 
   </ul>
 </div>
