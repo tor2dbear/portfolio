@@ -4,9 +4,9 @@
     <ul class="menu-list">
       {{ $urlstart := .URL }}
       {{ range .Site.Menus.start }}
-        <li class="menu-item">
-          <a class="menu-link {{ if eq $urlstart .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
-        </li>
+      <li class="menu-item">
+        <a class="menu-link" {{ printf "href=%q" .URL | safeHTMLAttr }}>{{ .Pre }}{{ .Name }}</a>
+      </li>
       {{end}}
       {{ partial "topmenu-items.html" . }}
     </ul>
