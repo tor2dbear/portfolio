@@ -5,7 +5,7 @@
 
 
     
-    {{ $urlall := .URL }}
+    {{ $urlall := .Permalink }}
     {{ range .Site.Menus.all }}
         <li class="menu-item">
           <a class="menu-link {{ if eq $urlall .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
