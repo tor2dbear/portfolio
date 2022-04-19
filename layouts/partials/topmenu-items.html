@@ -1,6 +1,6 @@
 <div class="menu topmenuitems">
   <ul class="menu-list">
-    {{ $urltop := .Permalink }}
+    {{ $urltop := .RelPermalink }}
   {{ range .Site.Menus.top }}
       <li class="menu-item">
         <a class="menu-link {{ if eq $urltop .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>

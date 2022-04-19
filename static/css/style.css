@@ -186,6 +186,23 @@ a.menu-heading {
 }
 
 /* MENU LINKS */
+
+
+#menu .menu-start .menu-link.active::after {
+  content: "☺️";
+  margin-left: 0.25rem;
+  color: var(--text-color);
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+}
+
+#menu .menu-tag .menu-link.active::after {
+  content: "/";
+  margin-left: 0.25rem;
+  color: var(--text-color);
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+}
 #menu .menu-tag .menu-link.active::after {
   content: "/";
   margin-left: 0.25rem;
