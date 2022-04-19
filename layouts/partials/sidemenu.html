@@ -2,28 +2,17 @@
   <div id="menu-content">
   <div class="menu">
     <ul class="menu-list">
+      {{ $urlstart := .Permalink }}
       {{ range .Site.Menus.start }}
-      {{ if .HasChildren }}
-        <li class="menu-item menu-has-children">
-          <a class="menu-link" href="#">{{ .Pre }}{{ .Name }}</a>
-          <ul class="menu-children">
-            {{ range .Children }}
-            <li class="menu-item">
-              <a class="menu-link" href="{{ .URL }}">{{ .Name }}</a>
-            </li>
-            {{ end }}
-          </ul>
-      {{else}}
-        <li class="menu-item">
-          <a class="menu-link" {{ printf "href=%q" .URL | safeHTMLAttr }}>{{ .Pre }}{{ .Name }}</a>
+          <li class="menu-item">
+            <a class="menu-link {{ if eq $urlstart .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
+          </li>
       {{end}}
-        </li>
-      {{end}}
-      {{ partial "topmenu-items.html" . }}
     </ul>
 
   </div>
 
+  {{ partial "topmenu-items.html" . }}
 
   {{ partial "tags_menu.html" . }}
   
