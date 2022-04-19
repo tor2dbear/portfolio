@@ -187,9 +187,8 @@ a.menu-heading {
 
 /* MENU LINKS */
 
-
 #menu .menu-start .menu-link.active::after {
-  content: "☺️";
+  content: "+";
   margin-left: 0.25rem;
   color: var(--text-color);
   font-family: var(--font-sans);
@@ -223,7 +222,7 @@ a.menu-heading {
 #menu .menu-tag .menu-link::after {
   content: "/";
   margin-left: 0rem;
-  color: var(--bg-color);
+  color: transparent;
   font-family: var(--font-sans);
   font-weight: var(--sans-weight-regular);
   transition: all 0.3s ease;
@@ -774,8 +773,11 @@ div#mce-responses {
     --header-height-neg: -4.5rem;
   }
  #topmenu:not(.bottom-line) {
-    transform: translateX(0) !important;
+    transform: translateY(0) !important;
   }
+  #topmenu.hide {
+    transform: translateY(var(--header-height-neg));
+  } 
   
   .content.startpage article:nth-of-type(n+1) {
     grid-column: 1 / span 6;
