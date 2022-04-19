@@ -5,20 +5,20 @@
 
 
     
-      {{ $urlall := .URL }}
-      {{ range .Site.Menus.all }}
+    {{ $urlall := .URL }}
+    {{ range .Site.Menus.all }}
         <li class="menu-item">
           <a class="menu-link {{ if eq $urlall .URL }}active{{ end }}" title="{{ .Name }}" href="{{.URL}}">{{ .Name }}</a>
         </li>
-      {{end}}
+    {{end}}
 
 
-      {{ $currentURL := .Permalink }}
-      {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
-          {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
-              <li class="menu-item testiiiing"><a class="menu-link {{ if eq $currentURL .Permalink }}active{{ end }}" href="{{ .Permalink }}">{{ $name }}</a></li>
-          {{ end }}
-      {{ end }}
+    {{ $currentURL := .Permalink }}
+    {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+        {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+            <li class="menu-item testiiiing"><a class="menu-link {{ if eq $currentURL .Permalink }}active{{ end }}" href="{{ .Permalink }}">{{ $name }}</a></li>
+        {{ end }}
+    {{ end }}
 
   </ul>
 </div>
