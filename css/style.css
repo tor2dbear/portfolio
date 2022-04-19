@@ -157,7 +157,7 @@ article {
   box-sizing: border-box;
 }
 #topmenu :is(.menu.topmenuitems, .brandcontainer) {
-  transform: translateY(-0.3125rem);
+  transform: translate3d(0, -0.3125rem, 0);
 }
 
 #topmenu ul.menu-list {
@@ -184,11 +184,32 @@ a.menu-heading {
 .pure-menu-disabled, .menu-heading, .pure-menu-link {
   padding: 0;
 }
-#menu .menu-link.active::after {
+
+/* MENU LINKS */
+#menu .menu-tag .menu-link.active::after {
   content: "/";
   margin-left: 0.25rem;
   color: var(--text-color);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+}
+#menu .menu-tag .menu-link:hover::after {
+  content: "/";
+  margin-left: 0.25rem;
+  color: var(--text-color);
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+}
+#menu .menu-link:hover {
+  color: var(--text-color);
+}
+#menu .menu-tag .menu-link::after {
+  content: "/";
+  margin-left: 0rem;
+  color: var(--bg-color);
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+  transition: all 0.3s ease;
 }
 
 :root {
@@ -240,7 +261,6 @@ li.pure-menu-item {
   This styles the menu heading.
   */
   #menu .menu-heading {
-      font-size: 110%;
       color: var(--text-color);
       margin: 0;
   }
