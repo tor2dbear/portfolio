@@ -53,7 +53,7 @@ img,
 
 /* Darkmode transition. */
 
-body.darkmodeTransition, body.darkmodeTransition :is(#menu, #main, #topmenu, path.hyphen, .curl svg path, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
+body.darkmodeTransition, body.darkmodeTransition :is(#menu, #main, #topmenu, path.hyphen, .curl-icon-bold, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
   transition: stroke 1s cubic-bezier(0.075, 0.820, 0.165, 1.000),
     border-color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000),
     color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
@@ -203,23 +203,16 @@ a.menu-heading {
   font-family: var(--font-sans);
   font-weight: var(--sans-weight-regular);
 }
-#menu .menu-tag .menu-link.active::after {
-  content: "/";
-  margin-left: 0.25rem;
-  color: var(--text-color);
-  font-family: var(--font-sans);
-  font-weight: var(--sans-weight-regular);
-}
 #menu .menu-tag .menu-link:hover::after {
   content: "/";
   margin-left: 0.25rem;
-  color: var(--text-color);
+  color: var(--text-color-hover);
   font-family: var(--font-sans);
   font-weight: var(--sans-weight-regular);
 }
-#menu .menu-link:hover {
+/* #menu .menu-link:hover {
   color: var(--text-color);
-}
+} */
 #menu .menu-tag .menu-link::after {
   content: "/";
   margin-left: 0rem;
@@ -343,16 +336,22 @@ li.pure-menu-item {
 }
 
 /* Icons */
-.curl-icon {
+.curl-icon,
+.curl-icon-bold {
   display: block;
   content: ' ';
   background-size: 1.5rem 1.5rem;
   height: 1.5rem;
   width: 1.5rem;
   background-color: var(--text-color);
-  /*transition: background-color 0.3s ease;*/
+}
+.curl-icon {
   mask-image: url('/portfolio/img/svg/curl-icon.svg');
   -webkit-mask-image: url('/portfolio/img/svg/curl-icon.svg');
+}
+.curl-icon-bold {
+  mask-image: url('/portfolio/img/svg/curl-icon-bold.svg');
+  -webkit-mask-image: url('/portfolio/img/svg/curl-icon-bold.svg');
 }
 
 /* Button */
@@ -696,6 +695,15 @@ div#mce-responses {
     padding: 0;
     overflow-y: auto;
   }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  #menu::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  #menu {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
   
   #menu.active{
     transform: translate(0px, 0px);
@@ -705,7 +713,19 @@ div#mce-responses {
     transform: translate(100vw, 0px);
   }
 
-  :not(#layout.active) > #topmenu.bottom-line {    
+  /* MENU LINKS */
+
+  #menu .menu-start .menu-link.active::after,
+  #menu .menu-tag .menu-link.active::after,
+  #menu .menu-tag .menu-link:hover::after,
+  #menu .menu-tag .menu-link::after {
+    content: "";
+  }
+  body a.menu-link:hover {
+    color: var(--text-color-menu-hover);
+  }
+
+  :not(#layout.active) > #topmenu.bottom-line {
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: var(--border-header);
@@ -772,7 +792,7 @@ div#mce-responses {
 
   /* Menu transition. */
 
-  body.menuTransition, body.menuTransition :is(#menu, #topmenu, #main, .curl svg path) {
+  body.menuTransition, body.menuTransition :is(#menu, #topmenu, #main, .curl-icon-bold) {
     transition: transform 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
       border-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
       color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000), 

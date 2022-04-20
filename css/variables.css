@@ -115,6 +115,7 @@
     --text-color-lighter: var(--colors-gray-500);
     --text-color-hover: var(--colors-accent-500);
     --text-color-menu: var(--colors-white);
+    --text-color-menu-hover: var(--colors-accent-100);
     --bg-color: var(--colors-white);
     --bg-tag: var(--colors-accent-50);
     --bg-tag-hover: var(--colors-accent-100);
@@ -140,6 +141,7 @@
     --text-color-lighter: var(--colors-gray-400);
     --text-color-hover: var(--colors-accent-500);
     --text-color-menu: var(--colors-accent-300);
+    --text-color-menu-hover: var(--colors-accent-400);
     --bg-color: var(--colors-gray-900);
     --bg-tag: var(--colors-gray-700);
     --bg-tag-hover: var(--colors-gray-600);
@@ -164,6 +166,7 @@
   --text-color-accent: var(--colors-accent-500);
   --text-color-hover: var(--colors-accent-500);
   --text-color-menu: var(--colors-accent-900);
+  --text-color-menu-hover: var(--colors-accent-800);
   --bg-color: var(--colors-accent-200);
   --bg-tag: var(--colors-accent-300);
   --bg-tag-hover: var(--colors-accent-400);
@@ -188,6 +191,7 @@
   --text-color-accent: var(--colors-accent-500);
   --text-color-hover: var(--colors-accent-500);
   --text-color-menu: var(--colors-accent-300);
+  --text-color-menu-hover: var(--colors-accent-400);
   --bg-color: var(--colors-accent-900);
   --bg-tag: var(--colors-accent-400);
   --bg-tag-hover: var(--colors-accent-300);
