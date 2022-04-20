@@ -172,7 +172,7 @@ p,
   letter-spacing: var(--tracking-wider);
   transition: all 0.3s ease;
   white-space: nowrap;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   font-family: var( --font-sans);
   font-size: var(--text-xs);
   font-weight: var(--sans-weight-regular);
