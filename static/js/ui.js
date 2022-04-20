@@ -37,6 +37,10 @@
 
     menuLink.onclick = function (e) {
         toggleAll(e);
+        body.classList.add("menuTransition");
+            setTimeout(function() {
+                body.classList.remove("menuTransition");
+            }, 1000);
     };
 
     content.onclick = function(e) {

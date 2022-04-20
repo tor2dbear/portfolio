@@ -51,14 +51,15 @@ img,
 }
 
 
-/* Add transition to containers so they can push in and out. */
-/*
-body, :is(#menu, #main, #topmenu, path.hyphen, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
-  transition: stroke 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
+/* Darkmode transition. */
+
+body.darkmodeTransition, body.darkmodeTransition :is(#menu, #main, #topmenu, path.hyphen, .curl svg path, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
+  transition: stroke 1s cubic-bezier(0.075, 0.820, 0.165, 1.000),
+    border-color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000),
     color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
     background-color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000);
 }
-*/
+
 /*
 This is the parent `<div>` that contains the menu and the content area.
 */
@@ -361,7 +362,7 @@ li.pure-menu-item {
 }
 
 button {
-  background: var(--text-color);
+  background-color: var(--text-color);
   color: var(--bg-color);
   padding: 0.5rem 1rem;
   border: 0;
@@ -483,7 +484,7 @@ a.menu-link.active .hamburgare {
   flex-direction: row;
 }
 
-:not(body.active) #topmenu.bottom-line {    
+:not(#layout.active) > #topmenu.bottom-line {    
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-color: var(--border-header);
@@ -693,15 +694,18 @@ div#mce-responses {
     background-color: var(--bg-color);
     margin-top: 0;
     padding: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   
   #menu.active{
     transform: translate(0px, 0px);
     padding: 0 2rem;
   }
+  #layout.active #main {
+    transform: translate(100vw, 0px);
+  }
 
-  :not(body.active) #topmenu.bottom-line {    
+  :not(#layout.active) > #topmenu.bottom-line {    
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-color: var(--border-header);
@@ -764,6 +768,16 @@ div#mce-responses {
   }
   .newsletter-illustration {
     width: 33.33%;
+  }
+
+  /* Menu transition. */
+
+  body.menuTransition, body.menuTransition :is(#menu, #topmenu, #main, .curl svg path) {
+    transition: transform 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
+      border-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
+      color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
+      background-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
+      stroke 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000);
   }
 }
 
