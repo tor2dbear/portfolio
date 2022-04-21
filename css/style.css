@@ -53,7 +53,7 @@ img,
 
 /* Darkmode transition. */
 
-body.darkmodeTransition, body.darkmodeTransition :is(#menu, #main, #topmenu, path.hyphen, .curl-icon-bold, #menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
+body.darkmodeTransition, body.darkmodeTransition :is(#menu, #main, #topmenu, path.hyphen, .curl-icon-bold, button, .progress-bar ,#menu :is(a.menu-link, small, .type-headline-small, #button#theme-toggle)) {
   transition: stroke 1s cubic-bezier(0.075, 0.820, 0.165, 1.000),
     border-color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000),
     color 1s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
@@ -368,7 +368,7 @@ button {
   display: flex;
   flex-direction: row;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: margin-left 0.3s ease, padding 0.3s ease;
 }
 button.icon:after {
   display: block;
@@ -380,7 +380,7 @@ button.icon:after {
   mask-image: url('https://tor2dbear.github.io/portfolio/img/arrow-right.svg');
   -webkit-mask-image: url('https://tor2dbear.github.io/portfolio/img/arrow-right.svg');
   margin-left: 0.75rem;
-  transition: all 0.3s ease;
+  transition: margin-left 0.3s ease, padding 0.3s ease;
 } 
 button:hover {
   padding-right: 0.75rem;
@@ -457,13 +457,6 @@ a.menu-link .hamburgare {
 a.menu-link.active .hamburgare {
   mask-image: url('https://tor2dbear.github.io/portfolio/img/close.svg');
   -webkit-mask-image: url('https://tor2dbear.github.io/portfolio/img/close.svg');
-}
-
-/* The progress container (grey background) */
-.progress-container {
-  width: 100%;
-  height: 0.5rem;
-  background: #ccc;
 }
 
 /* The progress bar (scroll indicator) */
@@ -688,7 +681,7 @@ div#mce-responses {
     position: fixed;
     top: 0;
     bottom: 0;
-    transform: translate(-100vw, 0px);
+    transform: translate3d(-100vw, 0, 0);
     width: 100vw;
     background-color: var(--bg-color);
     margin-top: 0;
@@ -706,11 +699,11 @@ div#mce-responses {
   }
   
   #menu.active{
-    transform: translate(0px, 0px);
+    transform: translate3d(0, 0, 0);
     padding: 0 2rem;
   }
   #layout.active #main {
-    transform: translate(100vw, 0px);
+    transform: translate3d(100vw, 0, 0);
   }
 
   /* MENU LINKS */
@@ -792,12 +785,12 @@ div#mce-responses {
 
   /* Menu transition. */
 
-  body.menuTransition, body.menuTransition :is(#menu, #topmenu, #main, .curl-icon-bold) {
-    transition: transform 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
+  body.menuTransition, body.menuTransition :is(#menu, #topmenu, #main, .curl-icon-bold, .progress-bar) {
+    transition: 
+      color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
+      transform 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
       border-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
-      color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000), 
-      background-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
-      stroke 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000);
+      background-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000);
   }
 }
 
