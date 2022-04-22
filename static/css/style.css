@@ -642,9 +642,6 @@ input#mce-EMAIL.mce_inline_error {
   background-color: var(--color-error-light);
   mix-blend-mode: normal;
 }
-#layout input:is(.mce_inline_error, .valid) {
-  
-}
 div.mce_inline_error,
 div#mce-responses {
   font-size: var(--text-xs);
@@ -739,7 +736,7 @@ div#mce-responses {
   #menu .menu-tag .menu-link::after {
     content: "";
   }
-  body a.menu-link:hover {
+  body #menu a.menu-link:hover {
     color: var(--text-color-menu-hover);
   }
 
