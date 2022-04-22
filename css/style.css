@@ -334,6 +334,9 @@ li.pure-menu-item {
 .content.list article:nth-of-type(even) {
   grid-column: 4 / span 3;
 }
+.content.list article:nth-last-of-type(1):nth-of-type(odd) {
+  grid-column: 1 / span 6;
+}
 
 /* Icons */
 .curl-icon,
@@ -854,5 +857,9 @@ div#mce-responses {
   }
   .contact-info.grid-5-6 {
     grid-column: 3 / span 4;
+  }
+  .content.list article:nth-last-of-type(odd),
+  .content.list article:nth-last-of-type(even) {
+    grid-column: 1 / span 6;
   }
 }
