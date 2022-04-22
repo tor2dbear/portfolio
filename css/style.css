@@ -190,7 +190,7 @@ a.menu-heading {
 /* MENU LINKS */
 
 #menu .menu-start .menu-link.active::after {
-  content: "+";
+  content: "~";
   margin-left: 0.25rem;
   color: var(--text-color);
   font-family: var(--font-sans);
@@ -300,6 +300,15 @@ li.pure-menu-item {
   }
   article#related:nth-of-type(3) {
     grid-column: 5 / span 2;
+  }
+
+/* Startpage articles */
+  header.summary:hover a {
+    color: var(--text-color-hover);
+  }
+  header.summary:hover .header-image {
+    filter: saturate(0.75);
+    transition: filter 1s ease;
   }
 
 /* Startpage articles */
@@ -862,4 +871,9 @@ div#mce-responses {
   .content.list article:nth-last-of-type(even) {
     grid-column: 1 / span 6;
   }
+  #layout .content.startpage article h2.text-2xl,
+  #layout .content.list.tag article h2.text-2xl {
+    font-size: var(--text-xl);
+  }
+
 }
