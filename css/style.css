@@ -92,7 +92,8 @@ The content `<div>` is where all your content goes.
 #main {
   padding: 0 2rem;
   float: right;
-  width: calc(100% - var(--menu-width-xlarge) - 2rem*2); 
+  width: calc(100% - var(--menu-width-xlarge) - 2rem*2);
+  opacity: 1;
 }
 .content.post > * {
   grid-column: 1 / span 5;
@@ -727,6 +728,7 @@ div#mce-responses {
   }
   #layout.active #main {
     transform: translate3d(100vw, 0, 0);
+    opacity: 0;
   }
 
   /* MENU LINKS */
@@ -813,7 +815,8 @@ div#mce-responses {
       color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
       transform 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
       border-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
-      background-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000);
+      background-color 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000),
+      opacity 0.75s cubic-bezier(0.075, 0.820, 0.165, 1.000);
   }
 }
 
