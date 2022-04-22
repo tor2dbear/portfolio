@@ -133,6 +133,8 @@
     --newsletter-color: var(--colors-accent-100);
     --newsletter-button-background: var(--colors-accent-300);
     --newsletter-button-color: var(--colors-accent-800);
+    --color-error: red;
+    --color-error-light: rgb(218, 172, 172);
 }
 :root[data-theme="dark"] {
     --primary-color: var(--colors-accent-500);
@@ -159,6 +161,8 @@
     --newsletter-color: var(--colors-accent-100);
     --newsletter-button-background: var(--colors-accent-300);
     --newsletter-button-color: var(--colors-accent-800);
+    --color-error: red;
+    --color-error-light: rgb(133, 58, 58);
 }
 :root[data-theme="light"][data-mode="pant"] {
   --primary-color: var(--colors-accent-500);
@@ -184,6 +188,8 @@
   --newsletter-color: var(--colors-accent-100);
   --newsletter-button-background: var(--colors-accent-300);
   --newsletter-button-color: var(--colors-accent-800);
+  --color-error: red;
+  --color-error-light: rgb(218, 172, 172);
 }
 :root[data-theme="dark"][data-mode="pant"] {
   --primary-color: var(--colors-accent-500);
@@ -209,4 +215,6 @@
   --newsletter-color: var(--colors-accent-100);
   --newsletter-button-background: var(--colors-accent-300);
   --newsletter-button-color: var(--colors-accent-800);
+  --color-error: red;
+  --color-error-light: rgb(133, 58, 58);
 }
