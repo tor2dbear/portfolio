@@ -223,6 +223,15 @@ a.menu-heading {
   transition: all 0.3s ease;
 }
 
+  @media (hover: hover) and (pointer: fine) {
+    #menu .menu-tag .menu-link:hover::after { 
+      content: "";
+      margin-left: 0rem;
+      color: var(--text-color);
+    } 
+  }
+}
+
 :root {
   --menu-width-xlarge: 24rem; /* 320 px + padding 2x2rem */
   --menu-width-large: 20rem; /* 256 px + padding 2x2rem */
