@@ -257,7 +257,7 @@ p,
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: var(--sans-weight-regular);
-  line-height: var(--line-height-tight);
+  line-height: var(--line-height-wider);
   letter-spacing: var(--tracking-wider);
 }
 .post-tags a.post-taxonomy-tag,

@@ -139,13 +139,21 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: red;
   --color-error-light: rgb(218, 172, 172);
+  --theme-toggle-bg: var(--colors-gray-300);
+  --theme-toggle-bg-active: var(--text-color);
+  --theme-toggle-menu-bg-active: var(--background-color-menu);
+  --theme-toggle-menu-bg: var(--colors-accent-500);
+  --theme-toggle-text-active: var(--theme-toggle-bg);
+  --theme-toggle-text-passive: var(--text-color);
+  --theme-toggle-menu-text-active: var(--text-color-menu);
+  --theme-toggle-menu-text-passive: var(--text-color-menu);
 }
 :root[data-theme="dark"] {
   --primary-color: var(--colors-accent-500);
   --text-color: var(--colors-gray-100);
   --text-color-accent: var(--colors-accent-400);
   --text-color-lighter: var(--colors-gray-400);
-  --text-color-hover: var(--colors-accent-500);
+  --text-color-hover: var(--colors-accent-400);
   --text-color-menu: var(--colors-accent-300);
   --text-color-menu-hover: var(--colors-accent-400);
   --bg-color: var(--colors-gray-900);
@@ -167,11 +175,20 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: red;
   --color-error-light: rgb(133, 58, 58);
+  --theme-toggle-bg: var(--colors-gray-300);
+  --theme-toggle-bg-active: var(--bg-color);
+  --theme-toggle-menu-bg-active: var(--background-color-menu);
+  --theme-toggle-menu-bg: var(--colors-accent-300);
+  --theme-toggle-text-active: var(--theme-toggle-bg);
+  --theme-toggle-text-passive: var(--bg-color);
+  --theme-toggle-menu-text-active: var(--text-color-menu);
+  --theme-toggle-menu-text-passive: var(--background-color-menu);
 }
 :root[data-theme="light"][data-mode="pant"] {
   --primary-color: var(--colors-accent-500);
   --text-color: var(--colors-accent-700);
   --text-color-accent: var(--colors-accent-500);
+  --text-color-lighter: var(--colors-accent-500);
   --text-color-hover: var(--colors-accent-500);
   --text-color-menu: var(--colors-accent-900);
   --text-color-menu-hover: var(--colors-accent-800);
@@ -194,12 +211,20 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: red;
   --color-error-light: rgb(218, 172, 172);
+  --theme-toggle-bg: var(--colors-accent-300);
+  --theme-toggle-bg-active: var(--text-color);
+  --theme-toggle-menu-bg: var(--colors-accent-900);
+  --theme-toggle-menu-bg-active: var(--background-color-menu);
+  --theme-toggle-text-active: var(--theme-toggle-bg);
+  --theme-toggle-text-passive: var(--text-color);
+  --theme-toggle-menu-text-active: var(--text-color-menu);
+  --theme-toggle-menu-text-passive: var(--background-color-menu);
 }
 :root[data-theme="dark"][data-mode="pant"] {
   --primary-color: var(--colors-accent-500);
   --text-color: var(--colors-accent-300);
   --text-color-accent: var(--colors-accent-500);
-  --text-color-hover: var(--colors-accent-500);
+  --text-color-hover: var(--colors-accent-400);
   --text-color-menu: var(--colors-accent-300);
   --text-color-menu-hover: var(--colors-accent-400);
   --bg-color: var(--colors-accent-900);
@@ -221,4 +246,12 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: red;
   --color-error-light: rgb(133, 58, 58);
+  --theme-toggle-bg: var(--colors-accent-300);
+  --theme-toggle-bg-active: var(--bg-color);
+  --theme-toggle-menu-bg: var(--colors-accent-300);
+  --theme-toggle-menu-bg-active: var(--background-color-menu);
+  --theme-toggle-text-active: var(--theme-toggle-bg);
+  --theme-toggle-text-passive: var(--bg-color);
+  --theme-toggle-menu-text-active: var(--text-color-menu);
+  --theme-toggle-menu-text-passive: var(--background-color-menu);
 }
