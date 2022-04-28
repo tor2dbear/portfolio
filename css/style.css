@@ -100,6 +100,7 @@ The content `<div>` is where all your content goes.
   grid-column: 1 / span 5;
 }
 .content.post > figure.headerimg,
+#main .content.post > p:first-of-type,
 .content.post > .prev-next-post {
   grid-column: 1 / span 6;
 }
@@ -917,12 +918,7 @@ div#mce-responses {
   .content.startpage article:nth-of-type(even) {
     grid-column: 4 / span 3;
   }
-  .content.startpage article:nth-of-type(odd) h2.text-2xl,
-  .content.startpage article:nth-of-type(even) h2.text-2xl,
-  .content.list article:nth-of-type(odd) h2.text-2xl,
-  .content.list article:nth-of-type(even) h2.text-2xl {
-    font-size: var(--text-xl);
-  }
+
   .content.post > * {
     grid-column: 1 / span 6;
   }

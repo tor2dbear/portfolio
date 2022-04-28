@@ -325,7 +325,19 @@ body a.menu-link:active {
 
 /* ================= END: TYPOGRAPHY ================= */
 
-@media (max-width: 25.5em) {
+/* ================= MEDIA SCREEN SIZE ================= */
+/* min 768px Small */
+@media (max-width: 63.9375em) {
+  .content.startpage article:nth-of-type(odd) h2.text-2xl,
+  .content.startpage article:nth-of-type(even) h2.text-2xl,
+  .content.list article:nth-of-type(odd) h2.text-2xl,
+  .content.list article:nth-of-type(even) h2.text-2xl {
+    font-size: var(--text-xl);
+  }
+}
+
+/* X-Small */
+@media (max-width: 47.9375em) {
   h1,
   .type-headline-1 {
     font-size: var(--text-4xl);
@@ -354,6 +366,8 @@ body a.menu-link:active {
     letter-spacing: var(--tracking-normal);
   }
 }
+
+/* ================= END: MEDIA SCREEN SIZE ================= */
 
 /* ================= HYPERLINKS ================= */
 a {

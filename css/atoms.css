@@ -1,6 +1,6 @@
-/* ================= ATOM CLASSES ================= */
+/* #region ================= ATOM CLASSES ================= */
 
-/* Font size */
+/* #region Font size */
 .text-xs {
   font-size: var(--text-xs); /* 12px */
 }
@@ -40,8 +40,9 @@
 .text-9xl {
   font-size: var(--text-9xl); /* 128px */
 }
+/* #endregion */
 
-/* Font type */
+/* #region Font type */
 .font-sans {
   font-family: var(--font-sans);
 }
@@ -51,8 +52,9 @@
 .font-mono {
   font-family: var(--font-mono);
 }
+/* #endregion */
 
-/* Font weight */
+/* #region Font weight */
 .font-thin {
   font-weight: 100;
 }
@@ -80,8 +82,9 @@
 .font-black {
   font-weight: 900;
 }
+/* #endregion */
 
-/* Line height */
+/* #region Line height */
 .line-height-tighter {
   line-height: var(--line-height-tighter);
 }
@@ -91,8 +94,9 @@
 .line-height-normal {
   line-height: var(--line-height-normal);
 }
+/* #endregion */
 
-/* Text color */
+/* #region Text color */
 #layout .text-color-default {
   color: var(--text-color);
 }
@@ -105,8 +109,9 @@
 #layout .text-color-neg {
   color: var(--bg-color);
 }
+/* #endregion */
 
-/* Letter spacing */
+/* #region Letter spacing */
 .tracking-tighter {
   letter-spacing: var(--tracking-tighter);
 }
@@ -124,17 +129,18 @@
 }
 .tracking-widest {
   letter-spacing: var(--tracking-widest);
-}
+}/* #endregion */
 
-/* Text transform */
+/* #region Text transform */
 .text-uppercase {
   text-transform: uppercase;
 }
 .text-capitalize {
   text-transform: capitalize;
 }
+/* #endregion */
 
-/* Margin buttom */
+/* #region Margin buttom */
 #layout .mb-0,
 .mb-0 {
   margin-bottom: 0rem;
@@ -167,8 +173,9 @@
 .mb-80 {
   margin-bottom: var(--spacing-80);
 }
+/* #endregion */
 
-/* Margin top */
+/* #region Margin top */
 #layout .mt-0,
 .mt-0 {
   margin-top: 0rem;
@@ -205,3 +212,7 @@
 .mt-80 {
   margin-top: var(--spacing-80);
 }
+/* #endregion */
+
+/* #endregion */
+
