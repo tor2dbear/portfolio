@@ -1,26 +1,26 @@
 {{.Scratch.Set "src" (.Resources.GetMatch (printf "%s*" .Params.header_image)) }}
-			{{ $src := .Scratch.Get "src" }}
-			
-			{{ .Scratch.Set "small" ($src.Resize "414x webp") }}
-			{{ .Scratch.Set "medium" ($src.Resize "680x webp") }}
-			{{ .Scratch.Set "large" ($src.Resize "1500x webp") }}
-			
-			{{ $small := .Scratch.Get "small" }}
-			{{ $medium := .Scratch.Get "medium" }}
-			{{ $large := .Scratch.Get "large" }}
+{{ $src := .Scratch.Get "src" }}
+	
+	{{ .Scratch.Set "small" ($src.Resize "414x webp") }}
+	{{ .Scratch.Set "medium" ($src.Resize "680x webp") }}
+	{{ .Scratch.Set "large" ($src.Resize "1500x webp") }}
+	
+	{{ $small := .Scratch.Get "small" }}
+	{{ $medium := .Scratch.Get "medium" }}
+	{{ $large := .Scratch.Get "large" }}
 
-			<picture>
+<picture>
     
-    	<source media="(max-width: 414px)" 
-        	srcset="{{ $small.RelPermalink }} 414w">
-		<source media="(max-width: 680px)" 
-        	srcset="{{ $medium.RelPermalink }} 680w">
-		<source media="(max-width: 1500px)" 
-        	srcset="{{ $large.RelPermalink }} 1500w">
+	<source media="(max-width: 414px)" 
+		srcset="{{ $small.RelPermalink }} 414w">
+	<source media="(max-width: 680px)" 
+		srcset="{{ $medium.RelPermalink }} 680w">
+	<source media="(max-width: 1500px)" 
+		srcset="{{ $large.RelPermalink }} 1500w">
 
-		<img 
+	<img 
 
-   alt="{{ .Title }}" title="{{ .Title }}" src="{{ $medium.RelPermalink }}" 
-   height="{{ $src.Height}}" width="{{ $src.Width }}" class="img-fluid">
+		alt="{{ .Title }}" title="{{ .Title }}" src="{{ $medium.RelPermalink }}" 
+		height="{{ $src.Height}}" width="{{ $src.Width }}" class="img-fluid">
 
 </picture>
