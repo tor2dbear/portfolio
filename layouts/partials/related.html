@@ -4,7 +4,23 @@
 	{{ range . }}
 	<article id="related">
 	<div class="related-image line-height-tighter">
-		<a href="{{ .Permalink }}"><img src="{{ .Params.header_image }}"></a>
+		<a href="{{ .Permalink }}">
+			{{.Scratch.Set "src" (.Resources.GetMatch (printf "*%s*" .Params.header_image)) }}
+			{{ $src := .Scratch.Get "src" }}
+			
+			{{ .Scratch.Set "small" ($src.Resize "414x") }}
+			{{ .Scratch.Set "medium" ($src.Resize "680x") }}
+			
+			{{ $small := .Scratch.Get "small" }}
+			{{ $medium := .Scratch.Get "medium" }}
+			
+			<img
+			  itemprop="image"
+			  sizes="(max-width: 414px) 414px, 680px"
+			  srcset="{{ $small.RelPermalink }} 414w, {{ $medium.RelPermalink }} 680w, {{ $src.RelPermalink }} 2x"
+			  alt="{{ .Title }}" 
+			  scr="{{ .Params.header_image }}"
+			  /></a>
 		</div>
 		<header class="related-title">
 		<h2 class="type-headline-4 mt-12"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
