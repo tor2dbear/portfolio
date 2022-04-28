@@ -19,18 +19,18 @@ clientabout: Utblick is a student magazine under the umbrella of the Society of 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
-![Example image](/img/utblick-no2/utblick_no2-0005.jpeg)
+![Example image](utblick_no2-0005.jpeg)
 
-![Example image]("/img/utblick-no2/utblick_no2-0006.jpeg")
+![Example image](utblick_no2-0006.jpeg)
 
-![Example image](/img/utblick-no2/utblick_no2-0008.jpeg)
+![Example image](utblick_no2-0008.jpeg)
 
-![Example image](/img/utblick-no2/utblick_no2-0009.jpeg)
+![Example image](utblick_no2-0009.jpeg)
 
-![Example image](/img/utblick-no2/utblick_no2-0010.jpeg)
+![Example image](utblick_no2-0010.jpeg)
 
-![Example image](/img/utblick-no2/utblick_no2-0011.jpeg)
+![Example image](utblick_no2-0011.jpeg)
 
-![Example image](/img/utblick-no2/utblick_no2-0012.jpeg)
+![Example image](utblick_no2-0012.jpeg)
 
-![Example image](/img/utblick-no2/utblick_no2-0013.jpeg)
+![Example image](utblick_no2-0013.jpeg)
