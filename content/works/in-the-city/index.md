@@ -8,12 +8,13 @@ tags: ["branding", "graphic design"]
 topics: ["topic01", "topic02"]
 clients: ["topic01", "topic02"]
 description: Publication design. A magazine that expands from a stroll through the city.
-header_image: /img/in-the-city/in-the-city-0002-2.webp
+header_image: in-the-city-0002-2.webp
 featured: true
 client: Self initiated project
 clientweb:
 clientabout: Publication design. A magazine that expands from a stroll through the city.
 ---
 
+![Header example](in-the-city-0002-2.webp)
 
 sdafas

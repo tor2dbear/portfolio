@@ -10,12 +10,14 @@ tags: [
     "ui/ux"
 ]
 description: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
-header_image: /img/things-in-a-conversation/things08.webp
+header_image: things08.webp
 featured: true
 client: Self initiated project
 clientweb:
 clientabout: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
 ---
+
+![Header example](things08.webp)
 
 Hugo uses the excellent [go][] [html/template][gohtmltemplate] library for
 its template engine. It is an extremely lightweight engine that provides a very

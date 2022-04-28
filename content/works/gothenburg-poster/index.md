@@ -8,13 +8,14 @@ tags: ["graphic design"]
 topics: ["topic01", "topic02"]
 clients: ["topic01", "topic02"]
 description: Self initiated project. A poster with some of the landmarks and symbols representing the city of Gothenburg.
-header_image: /img/gothenburg-poster/gbg_poster08.webp
+header_image: gbg_poster08.webp
 featured: true
 client: Self initiated project
 clientweb:
 clientabout: A poster with some of the landmarks and symbols representing the city of Gothenburg.
 ---
 
+![Header example](gbg_poster08.webp)
 
 ## Introduction
 
