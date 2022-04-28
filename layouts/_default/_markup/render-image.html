@@ -12,6 +12,7 @@
 {{ $smallw := default "800x webp" }}
 {{ $mediumw := default "1200x webp" }}
 {{ $largew := default "1500x webp" }}
+{{ $fallbackw := default "1200x jpg" }}
 
 {{/* resize the src image to the given sizes */}}
 {{/* We create a a temp scratch because it's not available in this context */}}
@@ -20,6 +21,7 @@
 {{ $data.Set "small" ($src.Resize $smallw) }}
 {{ $data.Set "medium" ($src.Resize $mediumw) }}
 {{ $data.Set "large" ($src.Resize $largew) }}
+{{ $data.Set "fallback" ($src.Resize $fallbackw) }}
 
 {{/* add the processed images to the scratch */}}
 
@@ -27,6 +29,7 @@
 {{ $small := $data.Get "small" }}
 {{ $medium := $data.Get "medium" }}
 {{ $large := $data.Get "large" }}
+{{ $fallback := $data.Get "fallback" }}
 
 {{/* only use images smaller than or equal to the src (original) 
 image size, as Hugo will upscale small images */}}
@@ -49,7 +52,7 @@ image size, as Hugo will upscale small images */}}
     
     <img 
  
-   alt="{{ $alt }}" title="{{ $alt }}" src="{{ $src }}" 
+   alt="{{ $alt }}" title="{{ $alt }}" src="{{ $fallback.RelPermalink }}" 
    height="{{ $src.Height}}" width="{{ $src.Width }}" class="img-fluid">
 
 </picture>

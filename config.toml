@@ -14,6 +14,10 @@ preserveTaxonomyNames = true
   client = "clients"
   topic = "topics"
 
+[minify]
+  disableXML = true
+  minifyOutput = true
+
 [params]
   # Shown in the home page
   subtitle = "Portfolio"
