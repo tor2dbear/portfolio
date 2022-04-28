@@ -1,16 +1,20 @@
 {{.Scratch.Set "src" (.Resources.GetMatch (printf "*%s*" .Params.header_image)) }}
-{{ $src := .Scratch.Get "src" }}
+			{{ $src := .Scratch.Get "src" }}
 
-{{ .Scratch.Set "small" ($src.Resize "414x") }}
-{{ .Scratch.Set "medium" ($src.Resize "680x") }}
+            {{ $small := default "500x webp" }}
+            {{ $medium := default "800x webp" }}
+			
+			{{ .Scratch.Set "small" ($src.Resize "414x") }}
+			{{ .Scratch.Set "medium" ($src.Resize "680x") }}
+			
+			{{ $small := .Scratch.Get "small" }}
+			{{ $medium := .Scratch.Get "medium" }}
 
-{{ $small := .Scratch.Get "small" }}
-{{ $medium := .Scratch.Get "medium" }}
-
-<img
-  itemprop="image"
-  sizes="(max-width: 414px) 414px, 680px"
-  srcset="{{ $small.RelPermalink }} 414w, {{ $medium.RelPermalink }} 680w, {{ $src.RelPermalink }} 2x"
-  alt="{{ .Title }}" 
-  scr="{{ $.Params.header_image }}"
-  />
+			
+			<img
+			  itemprop="image"
+			  sizes="(max-width: 414px) 414px, 680px"
+			  srcset="{{ $small.RelPermalink }} 414w, {{ $medium.RelPermalink }} 680w, {{ $src.RelPermalink }} 2x"
+			  alt="{{ .Title }}" 
+			  scr="{{ .Params.header_image }}"
+			  />
