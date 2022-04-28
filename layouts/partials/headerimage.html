@@ -1,8 +1,8 @@
 {{.Scratch.Set "src" (.Resources.GetMatch (printf "*%s*" .Params.header_image)) }}
 			{{ $src := .Scratch.Get "src" }}
 
-            {{ $small := default "500x webp" }}
-            {{ $medium := default "800x webp" }}
+            {{ $small := default "414x webp" }}
+            {{ $medium := default "680x webp" }}
 			
 			{{ .Scratch.Set "small" ($src.Resize "414x") }}
 			{{ .Scratch.Set "medium" ($src.Resize "680x") }}
