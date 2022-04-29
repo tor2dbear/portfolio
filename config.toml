@@ -8,6 +8,12 @@ paginate = 10
 relativeURLs = true
 preserveTaxonomyNames = true
 
+[module]
+
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+
 [taxonomies]
   tag = "tags"
   category = "categories"

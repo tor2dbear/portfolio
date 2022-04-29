@@ -11,13 +11,16 @@
     {{ end }}
     
   <!-- Fonts -->
-    <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
+  <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="/css/variables.css">
-  <link rel="stylesheet" href="/css/atoms.css"> 
-  <link rel="stylesheet" href="/css/typography.css">
-  <link rel="stylesheet" href="/css/style.css">
+  {{ $stylea := resources.Get "css/variables.css" }}
+  {{ $styleb := resources.Get "css/atoms.css" }}
+  {{ $stylec := resources.Get "css/typography.css" }}
+  {{ $styled := resources.Get "css/style.css" }}
+  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "style.css" | minify }}
+  <link rel="stylesheet" href="{{ $css.Permalink }}">
+
 
   <!-- MathJax -->
   <!-- <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
