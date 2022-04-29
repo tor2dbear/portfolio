@@ -1,2 +1,41 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>topic02 on TB portfolio</title><link>https://tor2dbear.github.io/portfolio/topics/topic02/</link><description>Recent content in topic02 on TB portfolio</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&amp;copy; 2022. All rights reserved.</copyright><lastBuildDate>Tue, 01 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tor2dbear.github.io/portfolio/topics/topic02/index.xml" rel="self" type="application/rss+xml"/><item><title>Utblick no.2 — Editorial design</title><link>https://tor2dbear.github.io/portfolio/works/utblick-no-2/</link><pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate><guid>https://tor2dbear.github.io/portfolio/works/utblick-no-2/</guid><description> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</description></item><item><title>Utblick no.3 — Editorial design</title><link>https://tor2dbear.github.io/portfolio/works/utblick-no-3/</link><pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate><guid>https://tor2dbear.github.io/portfolio/works/utblick-no-3/</guid><description> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</description></item><item><title>Gothenburg Poster</title><link>https://tor2dbear.github.io/portfolio/works/gothenburg-poster/</link><pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate><guid>https://tor2dbear.github.io/portfolio/works/gothenburg-poster/</guid><description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
-We&amp;rsquo;ll start with creating a new site with a very basic template.</description></item><item><title>In the City</title><link>https://tor2dbear.github.io/portfolio/works/in-the-city/</link><pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate><guid>https://tor2dbear.github.io/portfolio/works/in-the-city/</guid><description>sdafas</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>topic02 on TB portfolio</title>
+    <link>https://tor2dbear.github.io/portfolio/topics/topic02/</link>
+    <description>Recent content in topic02 on TB portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2022. All rights reserved.</copyright>
+    <lastBuildDate>Tue, 01 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tor2dbear.github.io/portfolio/topics/topic02/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Utblick no.2 — Editorial design</title>
+      <link>https://tor2dbear.github.io/portfolio/works/utblick-no-2/</link>
+      <pubDate>Tue, 01 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/works/utblick-no-2/</guid>
+      <description>   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </description>
+    </item>
+    
+    <item>
+      <title>Gothenburg Poster</title>
+      <link>https://tor2dbear.github.io/portfolio/works/gothenburg-poster/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/works/gothenburg-poster/</guid>
+      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
+We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
+    </item>
+    
+    <item>
+      <title>In the City</title>
+      <link>https://tor2dbear.github.io/portfolio/works/in-the-city/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/works/in-the-city/</guid>
+      <description>sdafas</description>
+    </item>
+    
+  </channel>
+</rss>
