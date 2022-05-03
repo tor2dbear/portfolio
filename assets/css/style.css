@@ -134,13 +134,16 @@ img {
   width: 100%;
 }
 
-.img {
+img {
   width: 100%;
   max-width: 100%;
   height: auto;
 }
 .header-image {
   line-height: 0;
+  mix-blend-mode: var(--img-blend-mode);
+  filter: contrast(1);
+  transition: filter 0.5s ease;
 }
 
 .header-image img {
@@ -336,7 +339,8 @@ header.summary:hover a {
   color: var(--text-color-hover);
 }
 header.summary:hover .header-image {
-  filter: saturate(0.75);
+  mix-blend-mode: var(--img-blend-mode);
+  filter: contrast(1.2);
   transition: filter 1s ease;
 }
 
