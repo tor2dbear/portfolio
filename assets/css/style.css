@@ -135,6 +135,10 @@ The content `<div>` is where all your content goes.
   grid-column: 1 / span 6;
 }
 
+tag-header {
+  grid-column: inherit;
+}
+
 /* ================= END GRID ================= */
 
 /* Images */
