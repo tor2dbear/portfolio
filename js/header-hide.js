@@ -60,9 +60,14 @@
   
       var toggleHeader = function() { 
           toggled = true;
-          if(curDirection === 2 && (curScroll-lastY) > downThreshold) {
+          //test 
+          if(curDirection === 2 && curScroll < 10) {
               lastY=curScroll
               header.classList.add('hide');
+          }
+          else if(curDirection === 2 && (curScroll-lastY) > downThreshold) {
+            lastY=curScroll
+            header.classList.add('hide');
           }
           else if (curDirection === 1 && (lastY-curScroll) > upThreshold) {
               lastY=curScroll
