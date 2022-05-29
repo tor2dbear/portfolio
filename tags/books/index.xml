@@ -14,8 +14,9 @@
       <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
       
       <guid>https://tor2dbear.github.io/portfolio/works/a-cut-up-world/</guid>
-      <description>   A description of our time and the borderland between two worlds. How they differ but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.
-                   </description>
+      <description>   About An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.
+Role Graphic designer
+                     </description>
     </item>
     
     <item>
@@ -24,7 +25,12 @@
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>https://tor2dbear.github.io/portfolio/works/things-in-a-conversation/</guid>
-      <description>Hugo uses the excellent [go][] [html/template][gohtmltemplate] library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic. In our experience that it is just the right amount of logic to be able to create a good static website. If you have used other template systems from different languages or frameworks you will find a lot of similarities in go templates.</description>
+      <description>Hugo uses the excellent [go][] [html/template][gohtmltemplate] library for
+its template engine. It is an extremely lightweight engine that provides a very
+small amount of logic. In our experience that it is just the right amount of
+logic to be able to create a good static website. If you have used other
+template systems from different languages or frameworks you will find a lot of
+similarities in go templates.</description>
     </item>
     
   </channel>
