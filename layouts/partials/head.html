@@ -1,6 +1,6 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}">
   {{hugo.Generator}}
 
@@ -36,14 +36,14 @@
     href='{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}' />
   {{ end }}
 
-  {{ with .Site.Params.highlightjs }}
+  {{/*  {{ with .Site.Params.highlightjs }}
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/{{ . }}.min.css">
   <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
   {{ range $.Site.Params.highlightjs_extra_languages }}
   <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/languages/{{ . }}.min.js"></script>
   {{ end }}
   <script>hljs.initHighlightingOnLoad();</script>
-  {{ end }}
+  {{ end }}  */}}
 
   {{ partial "favicon.html" . }}
 

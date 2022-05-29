@@ -17,7 +17,7 @@
     {{end}}
     {{ if .Params.clientweb }}
     <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Website</h4>
-    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16"><a href={{ printf "%s" $.Params.clientweb }}>{{ .Params.clientweb }}</a></p>
+    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16"><a href={{ printf "%s" $.Params.clientweb }} target="_blank">{{ .Params.clientweb }}</a></p>
     {{end}}
   </div>
     {{ if .Params.clientabout }}

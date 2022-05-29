@@ -11,7 +11,7 @@
 {{/* IF svg  */}}
 {{ if eq $ext "svg" }}
 
-<picture>
+<picture class="{{ if in $src "header-img" }}header-img{{ end }}">
 <img
     alt="{{ $alt }}" title="{{ $alt }}" src="{{ $src }}" class="img-fluid-svg">
 </picture>
@@ -24,6 +24,14 @@
    alt="{{ $alt }}" title="{{ $alt }}" src="{{ $src }}" 
    height="{{ $src.Height}}" width="{{ $src.Width }}" class="img-fluid">   
 </picture>
+
+{{/* IF mp4  */}}
+{{ else if eq $ext "mp4" }}
+
+<video width="100%" height="auto" autoplay muted>>
+	<source src="{{ $src.RelPermalink }}" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 {{/* So for posts that aren't setup in the page bundles, it doesn't fail  */}}
 {{else}}
@@ -55,6 +63,33 @@
 {{/* only use images smaller than or equal to the src (original) 
 image size, as Hugo will upscale small images */}}
 
+{{ if .Title }}
+<figure class="{{ if in $src "header-img" }}header-img{{ end }}">
+    <picture>
+    
+        <source media="(max-width: 376px)" 
+            srcset="{{with $tiny.RelPermalink }}{{.}}{{ end }}">
+    
+        <source media="(max-width: 992px)" 
+            srcset="{{with $small.RelPermalink }}{{.}}{{ end }}">
+    
+        <source media="(max-width: 1400px)" 
+            srcset="{{with $medium.RelPermalink }}{{.}}{{ end }}">
+    
+        <source media="(min-width: 1600px)" 
+            srcset="{{with $large.RelPermalink }}{{.}}{{ end }}">
+        
+        <img 
+     
+       alt="{{ $alt }}" title="{{ .Title }}" src="{{ $fallback.RelPermalink }}" 
+       height="{{ $src.Height}}" width="{{ $src.Width }}" class="img-fluid">
+    
+    </picture>
+    <figcaption>{{ .Title }}</figcaption>
+  </figure>
+
+{{ else }}
+<figure class="{{ if in $src "header-img" }}header-img{{ end }}">
 <picture>
     
     <source media="(max-width: 376px)" 
@@ -75,6 +110,11 @@ image size, as Hugo will upscale small images */}}
    height="{{ $src.Height}}" width="{{ $src.Width }}" class="img-fluid">
 
 </picture>
+</figure>
+
+{{ end }}
+
+
 
   {{/* Since I do image-response class, the only thing that really 
   matters is the height and width matches the image aspect ratio */}}

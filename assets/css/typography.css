@@ -276,6 +276,26 @@ code {
 .tag-header {
   white-space: nowrap;
 }
+
+figcaption {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  color: var(--text-color-lighter);
+  font-style: italic;
+}
+blockquote,
+blockquote > p {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  color: var(--text-color);
+  line-height: var(--line-height-tight);
+}
+blockquote {
+  width: 66.67%;
+  margin-top: var(--spacing-32);
+  margin-bottom: var(--spacing-32);
+}
+
 /* Font: Menu */
 .menu-heading {
   font-size: var(--text-2xl);
@@ -316,7 +336,7 @@ body a.menu-link:active {
 .content.page h4,
 .content.page h5,
 .content.page h6 {
-  margin-bottom: var(--spacing-16);
+  margin-bottom: var(--spacing-8);
 }
 .content.post p,
 .content.page p {

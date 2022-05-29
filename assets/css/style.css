@@ -36,6 +36,11 @@ i {
   color: #265778;
 }
 
+/* Remove empty p-tags */
+p:empty {
+  display: none;
+}
+
 /*
 OLD SIDE-MENU CSS
 */
@@ -79,12 +84,14 @@ The content `<div>` is where all your content goes.
   line-height: 1.6em;
   padding-top: 5rem;
   grid-column: 1 / span 6;
+  grid-auto-rows: max-content;
 }
 .startpage-heading {
   padding-top: 5rem;
 }
 #main,
-.content:is(.startpage, .post, .page, .list) {
+.content:is(.startpage, .post, .page, .list, .about, .thankyou),
+.about-cv  {
   grid-template-columns: repeat(6, 1fr);
   -moz-column-gap: 1.5rem;
   column-gap: 1.5rem;
@@ -95,29 +102,37 @@ The content `<div>` is where all your content goes.
   float: right;
   width: calc(100% - var(--menu-width-xlarge) - 2rem * 2);
   opacity: 1;
+  position: relative;
 }
 .content.post > * {
   grid-column: 1 / span 5;
 }
 .content.post > figure.headerimg,
-#main .content.post > p:first-of-type,
+#main .content.post > figure:first-of-type,
 .content.post > .prev-next-post {
   grid-column: 1 / span 6;
 }
 /* ================= GRID ================= */
-
-.grid-1-5 {
-  grid-column: 1 / span 5;
+.grid-1-2 {
+  grid-column: 1 / span 2;
 }
-.grid-1-4 {
-  grid-column: 1 / span 4;
+.grid-3-4 {
+  grid-column: 3 / span 2;
+}
+.grid-5-6 {
+  grid-column: 5 / span 2;
 }
 .grid-1-3 {
   grid-column: 1 / span 3;
 }
-
-.grid-5-6 {
-  grid-column: 5 / span 2;
+.grid-1-4 {
+  grid-column: 1 / span 4;
+}
+.grid-1-5 {
+  grid-column: 1 / span 5;
+}
+.grid-1-6 {
+  grid-column: 1 / span 6;
 }
 
 /* ================= END GRID ================= */
@@ -149,6 +164,19 @@ img {
 .header-image img {
   width: 100%;
 }
+picture > img {
+  display: block;
+}
+.post figure {
+  margin-bottom: var(--spacing-32);
+}
+
+.content.about > figure {
+  grid-column: 4 / span 3;
+}
+.content.about > figure img {
+  filter: grayscale(1);
+}
 
 /* ================= LAYOUT ================= */
 
@@ -159,9 +187,15 @@ img {
 article {
   margin-bottom: 3rem;
 }
-
+.content.post {
+  max-width: 64rem;
+}
 .content.post > * {
   grid-column: 1 / span 5;
+}
+
+.about-cv {
+  grid-column: 1 / span 6;
 }
 
 /* ================= END: LAYOUT ================= */
@@ -832,7 +866,7 @@ div#mce-responses {
     position: fixed;
     top: 0;
     bottom: 0;
-    transform: translate3d(-100vw, 0, 0);
+    transform: translate(-100vw, 0px);
     width: 100vw;
     background-color: var(--bg-color);
     margin-top: 0;
@@ -850,11 +884,11 @@ div#mce-responses {
   }
 
   #menu.active {
-    transform: translate3d(0, 0, 0);
+    transform: translate(0px, 0px);
     padding: 0 2rem;
   }
   #layout.active #main {
-    transform: translate3d(100vw, 0, 0);
+    transform: translate(100vw, 0px);
     opacity: 0;
   }
 

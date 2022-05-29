@@ -9,7 +9,6 @@ relativeURLs = true
 preserveTaxonomyNames = true
 
 [module]
-
   [[module.mounts]]
     source = "static"
     target = "static"
@@ -59,5 +58,22 @@ preserveTaxonomyNames = true
 
 [markup]
   [markup.goldmark]
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      linkifyProtocol = 'https'
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+    [markup.goldmark.parser]
+      autoHeadingID = true
+      autoHeadingIDType = 'github'
+      [markup.goldmark.parser.attribute]
+        block = true
+        title = true
     [markup.goldmark.renderer]
-      unsafe = true
+      hardWraps = true
+      unsafe = false
+      xhtml = false
