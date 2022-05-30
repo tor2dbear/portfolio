@@ -1029,8 +1029,11 @@ div#mce-responses {
   :root {
     --header-height-neg: -4.5rem;
   }
-  #topmenu:not(.bottom-line) {
+  /* #topmenu:not(.bottom-line) {
     transform: translateY(0) !important;
+  } */
+  #topmenu.relative {
+    position: relative;
   }
   #topmenu.hide {
     transform: translateY(var(--header-height-neg));
@@ -1079,6 +1082,6 @@ div#mce-responses {
   }
   /* Topmenu zoom fix menu active */
   #layout.active > div#topmenu {
-    position: relative;
+    position: fixed;
   }
 }

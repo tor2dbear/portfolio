@@ -60,18 +60,25 @@
   
       var toggleHeader = function() { 
           toggled = true;
-          //test 
-          if(curDirection === 2 && curScroll < 10) {
+          //remove hide when menu active
+          if(document.getElementById("layout").classList.contains("active")){
+            lastY=curScroll
+            header.classList.remove('hide');
+          }
+          //trigger faster on top
+          else if(curDirection === 2 && curScroll < 10) {
               lastY=curScroll
-              header.classList.add('hide');
+              header.classList.add('relative');
           }
           else if(curDirection === 2 && (curScroll-lastY) > downThreshold) {
             lastY=curScroll
             header.classList.add('hide');
+            header.classList.remove('relative');
           }
           else if (curDirection === 1 && (lastY-curScroll) > upThreshold) {
               lastY=curScroll
               header.classList.remove('hide');
+              header.classList.remove('relative');
           }
           else {
               toggled = false;
@@ -82,4 +89,3 @@
       window.addEventListener('scroll', checkScroll);
   
   })();
-    
