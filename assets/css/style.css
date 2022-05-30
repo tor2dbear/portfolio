@@ -1073,7 +1073,12 @@ div#mce-responses {
   #layout .content.list.tag article h2.text-2xl {
     font-size: var(--text-xl);
   }
+  /* Disable zoom out on menu active */
   #layout.active {
     overflow: hidden;
+  }
+  /* Topmenu zoom fix menu active */
+  #layout.active > div#topmenu {
+    position: relative;
   }
 }
