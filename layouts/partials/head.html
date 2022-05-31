@@ -19,12 +19,15 @@
   <link rel="stylesheet" href="assets/css/typography.css">
   <link rel="stylesheet" href="assets/css/style.css">  */}}
 
+  <!-- CSS minify -->
   {{ $stylea := resources.Get "css/variables.css" }}
   {{ $styleb := resources.Get "css/atoms.css" }}
   {{ $stylec := resources.Get "css/typography.css" }}
   {{ $styled := resources.Get "css/style.css" }}
-  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "styletest.css" | minify | fingerprint "md5" }}
-  <link rel="stylesheet" href="{{ $css.Permalink }}">
+  {{/*  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "allstyle.css" | minify | fingerprint }}  */}}
+  {{/*  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media='all' />  */}}
+  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "allstyle.css" }}
+  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media='all' />
 
 
   <!-- MathJax -->
