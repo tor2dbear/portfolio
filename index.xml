@@ -14,10 +14,10 @@
       <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
       
       <guid>https://tor2dbear.github.io/portfolio/works/utblick-no-2/</guid>
-      <description>Description of heroimage  About The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
+      <description>Description of heroimage About The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
 The magazine was printed on a uncoated paper using two Pantone colors and black.
 Role Art Direction and Illustration
-   Title here      My quote Ullamco aliqua quis consequat duis proident eu laborum.</description>
+Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
     </item>
     
     <item>
@@ -26,9 +26,8 @@ Role Art Direction and Illustration
       <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
       
       <guid>https://tor2dbear.github.io/portfolio/works/a-cut-up-world/</guid>
-      <description>   About An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.
-Role Graphic designer
-                     </description>
+      <description>About An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.
+Role Graphic designer</description>
     </item>
     
     <item>
@@ -70,7 +69,7 @@ similarities in go templates.</description>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>https://tor2dbear.github.io/portfolio/works/utblick-no-4/</guid>
-      <description>    </description>
+      <description> </description>
     </item>
     
     <item>
@@ -89,19 +88,10 @@ Through my work as a designer I tackle problems on different levels; always with
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
       <guid>https://tor2dbear.github.io/portfolio/contact/</guid>
-      <description>var submitted=false;  Send me a message  Name* Email* Subject* Message  Send    Torbjörn Hedberg Guldpokalsgatan 6b 417 12 Göteborg
+      <description> Send me a message Name* Email* Subject* Message Send Torbjörn Hedberg Guldpokalsgatan 6b 417 12 Göteborg
 hej@tor-bjorn.com +46 (0) 702 - 56 20 90
- Newsletter Subscribe to newsletter for news and update when new content is added to the site.
-Email Address           (function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]=&#39;EMAIL&#39;;ftypes[0]=&#39;email&#39;;fnames[1]=&#39;FNAME&#39;;ftypes[1]=&#39;text&#39;;fnames[2]=&#39;LNAME&#39;;ftypes[2]=&#39;text&#39;;fnames[3]=&#39;ADDRESS&#39;;ftypes[3]=&#39;address&#39;;fnames[4]=&#39;PHONE&#39;;ftypes[4]=&#39;phone&#39;;fnames[5]=&#39;BIRTHDAY&#39;;ftypes[5]=&#39;birthday&#39;;fnames[6]=&#39;NAME&#39;;ftypes[6]=&#39;text&#39;;}(jQuery));var $mcj = jQuery.</description>
-    </item>
-    
-    <item>
-      <title>Thank you</title>
-      <link>https://tor2dbear.github.io/portfolio/newsletter/</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://tor2dbear.github.io/portfolio/newsletter/</guid>
-      <description>Subscribe to my newsletter for news and be notified when new content is added to the site. </description>
+Newsletter Subscribe to newsletter for news and update when new content is added to the site.
+Email Address </description>
     </item>
     
     <item>
@@ -111,7 +101,16 @@ Email Address           (function($) {window.fnames = new Array(); window.ftypes
       
       <guid>https://tor2dbear.github.io/portfolio/thankyou/</guid>
       <description>Thank you for getting in touch! I’ll get back to you as soon as possible. Newsletter Subscribe to newsletter for news and update when new content is added to the site.
-Email Address           (function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]=&#39;EMAIL&#39;;ftypes[0]=&#39;email&#39;;fnames[1]=&#39;FNAME&#39;;ftypes[1]=&#39;text&#39;;fnames[2]=&#39;LNAME&#39;;ftypes[2]=&#39;text&#39;;fnames[3]=&#39;ADDRESS&#39;;ftypes[3]=&#39;address&#39;;fnames[4]=&#39;PHONE&#39;;ftypes[4]=&#39;phone&#39;;fnames[5]=&#39;BIRTHDAY&#39;;ftypes[5]=&#39;birthday&#39;;fnames[6]=&#39;NAME&#39;;ftypes[6]=&#39;text&#39;;}(jQuery));var $mcj = jQuery.noConflict(true);    </description>
+Email Address </description>
+    </item>
+    
+    <item>
+      <title>Newsletter</title>
+      <link>https://tor2dbear.github.io/portfolio/newsletter/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/newsletter/</guid>
+      <description>Subscribe to my newsletter for news and be notified when new content is added to the site. </description>
     </item>
     
   </channel>
