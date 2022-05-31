@@ -1,8 +1,7 @@
 +++
-title = "Thank you"
-date = "2014-04-09"
+title = "Newsletter"
 sidemenu = "true"
-description = "Thank you for signing up to the newsletter."
+description = "Subscribe to my newsletter."
 layout = "newsletter"
 +++
 

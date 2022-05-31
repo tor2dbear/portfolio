@@ -197,7 +197,7 @@
   --bg-tag-hover: var(--colors-accent-400);
   --text-color-tag: var(--colors-accent-600);
   --img-grayscale: 100%;
-  --img-blend-mode: luminosity;
+  --img-blend-mode: screen;
   --box-background: var(--colors-accent-300);
   --background-color-menu: var(--colors-accent-400);
   --border-header: var(--colors-accent-400);
