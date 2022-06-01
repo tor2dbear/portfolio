@@ -1037,6 +1037,7 @@ img {
 }
 picture {
   position: relative;
+  display: block;
 }
 picture::after {
   content: " ";
