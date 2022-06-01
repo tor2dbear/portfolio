@@ -2,6 +2,7 @@
 author: "Torbjörn Hedberg"
 date: 2022-02-24
 linktitle: gothenburg-poster
+translationKey: gothenburg-poster
 title: Gothenburg Poster
 weight: 10
 tags: ["graphic design"]

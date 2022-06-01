@@ -9,7 +9,7 @@
   {{ if gt $count 0 }}
   <div>
     {{ range $k, $v := .Params.tags }}
-      <a class="post-taxonomy-tag" href="{{ $baseUrl }}tags/{{ . | urlize }}">{{ . }}</a>{{ if lt $k (sub $count 1) }} {{ end }}
+      <a class="post-taxonomy-tag" href="{{ $baseUrl | relLangURL}}/tags/{{ . | urlize }}">{{ . }}</a>{{ if lt $k (sub $count 1) }} {{ end }}
     {{ end }}
   </div>
   {{ end }}

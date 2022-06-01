@@ -5,11 +5,10 @@
         {{ $urlstart := .RelPermalink }} {{ range .Site.Menus.start }}
         <li class="menu-item menu-start">
           <a
-            class="menu-link {{ if eq $urlstart .URL }}active{{ end }}"
+            class="menu-link {{ if eq $urlstart .URL | relLangURL }}active{{ end }}"
             title="{{ .Name }}"
-            href="{{.URL}}"
-            >{{ .Name }}</a
-          >
+            href="{{ .URL | relLangURL }}"
+            >{{ .Name }}</a>
         </li>
         {{end}}
       </ul>

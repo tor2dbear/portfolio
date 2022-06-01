@@ -1,9 +1,13 @@
 <div class="menu tags">
   
-  <h2 class="type-headline-small">Works</h2>
+  <h2 class="type-headline-small">{{ i18n "Works"}}</h2>
     <ul class="menu-list">
 
-
+      {{ $data := index .Site.Data .Site.Language.Lang }}
+      {{ range $data.team }}
+        <a href="{{ .url }}">{{ .name }}</a>
+      {{ end }}
+      
     
     {{ $urlall := .RelPermalink }}
     {{ range .Site.Menus.all }}
@@ -15,7 +19,7 @@
 
     {{ $currentURL := .Permalink }}
     {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
-        {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+        {{ with $.Site.GetPage  (printf "/tags/%s" $name) }}
             <li class="menu-item menu-tag"><a class="menu-link {{ if eq $currentURL .Permalink }}active{{ end }}" title="{{ replace $name "-" " " }}" href="{{ .Permalink }}">{{ replace $name "-" " " }}</a></li>
         {{ end }}
     {{ end }}

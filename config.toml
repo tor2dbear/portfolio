@@ -23,38 +23,68 @@ preserveTaxonomyNames = true
   disableXML = true
   minifyOutput = true
 
+DefaultContentLanguage = "en"
+
+[languages]
+  [languages.en]
+    title = "TB´s English portfolio"
+    languageName = "English"
+    weight = 1
+    contentDir = "content/english"
+    [[languages.en.menu.start]]
+      name = "start"
+      weight = 1
+      identifier = "home"
+      url = "/"
+    [[languages.en.menu.all]]
+      name = "all"
+      weight = 2
+      identifier = "works"
+      url = "/works/"
+    [[languages.en.menu.top]]
+      name = "about"
+      weight = 3
+      identifier = "about"
+      url = "/about/"
+    [[languages.en.menu.top]]
+      name = "contact"
+      weight = 4
+      url = "/contact/"
+  [languages.sv]
+    title = "TBs svenska portfolio"
+    languageName = "Svenska"
+    weight = 2
+    contentDir = "content/swedish"
+    [[languages.sv.menu.start]]
+      name = "start"
+      weight = 1
+      identifier = "home"
+      url = "/"
+    [[languages.sv.menu.all]]
+      name = "alla"
+      weight = 2
+      identifier = "works"
+      url = "/works/"
+    [[languages.sv.menu.top]]
+      name = "om"
+      weight = 3
+      identifier = "about"
+      url = "/om/"
+    [[languages.sv.menu.top]]
+      name = "kontakt"
+      weight = 4
+      url = "/kontakt/"
+
+
 [params]
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
   googleAnalytics = "G-B270MQG9GZ"
-  disqus = "Your Disqus shortname"
   # CSS name for highlight.js
   highlightjs = "androidstudio"
   dateFormat = "02 Jan 2006, 15:04"
   mainSections = ['blog', 'docs']
-
-[menu]
-  # Shown in the side menu.
-  [[menu.start]]
-    name = "start"
-    weight = 1
-    identifier = "home"
-    url = "/"
-  [[menu.all]]
-    name = "all"
-    weight = 2
-    identifier = "works"
-    url = "/works/"
-  [[menu.top]]
-    name = "about"
-    weight = 3
-    identifier = "about"
-    url = "/about/"
-  [[menu.top]]
-    name = "contact"
-    weight = 4
-    url = "/contact/"
 
 [markup]
   [markup.goldmark]

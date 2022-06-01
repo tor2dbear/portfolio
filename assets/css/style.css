@@ -541,7 +541,7 @@ button#darkmode-toggle {
 }
 
 /* Theme and languge buttons */
-
+ul.lang-toggle a,
 button#lang-toggle,
 button#theme-toggle {
   padding: 0;
@@ -549,7 +549,9 @@ button#theme-toggle {
   color: var(--text-color);
   font-size: var(--text-sm);
   text-align: start;
+  font-weight: var(--sans-weight-bold);
 }
+ul.lang-toggle a:before,
 button#lang-toggle:before,
 button#theme-toggle:before {
   display: block;
@@ -563,6 +565,7 @@ button#theme-toggle:before {
   margin-right: 0.5rem;
   transition: margin-left 0.3s ease, padding 0.3s ease;
 }
+ul.lang-toggle a:before,
 button#lang-toggle:before {
   mask-image: url("/portfolio/img/svg/lang-icon-16.svg");
   -webkit-mask-image: url("/portfolio/img/svg/lang-icon-16.svg");
@@ -576,6 +579,12 @@ button#lang-toggle > .d-block-standard {
 }
 button#lang-toggle > .d-block-pant {
   display: none;
+}
+ul.lang-toggle .d-none {
+  display: none;
+}
+ul.lang-toggle a {
+  display: flex;
 }
 
 

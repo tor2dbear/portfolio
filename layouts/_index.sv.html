@@ -1,10 +1,10 @@
 {{ partial "header.html" . }}
 
-{{ partial "startpage.html" . }}
+{{ partial "startpage.sv.html" . }}
 
 <div class="content startpage">
   <div class="post-header mb-8">
-    <h2 class="type-headline-small">{{ i18n "Featured" }}</h2>
+    <h2 class="type-headline-small">Framlyfta</h2>
   </div>
   {{ range first 6 (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) }}
     {{ .Render "summary"}}
