@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Clients on TBs svenska portfolio</title>
+    <link>https://tor2dbear.github.io/portfolio/sv/clients/</link>
+    <description>Recent content in Clients on TBs svenska portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2022. All rights reserved.</copyright>
+    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tor2dbear.github.io/portfolio/sv/clients/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>topic01</title>
+      <link>https://tor2dbear.github.io/portfolio/sv/clients/topic01/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/clients/topic01/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>topic02</title>
+      <link>https://tor2dbear.github.io/portfolio/sv/clients/topic02/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/clients/topic02/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>clients01</title>
+      <link>https://tor2dbear.github.io/portfolio/sv/clients/clients01/</link>
+      <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/clients/clients01/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>clients02</title>
+      <link>https://tor2dbear.github.io/portfolio/sv/clients/clients02/</link>
+      <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/clients/clients02/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>volvo</title>
+      <link>https://tor2dbear.github.io/portfolio/sv/clients/volvo/</link>
+      <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/clients/volvo/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
