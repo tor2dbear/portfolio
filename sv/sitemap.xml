@@ -96,6 +96,19 @@
                 href="https://tor2dbear.github.io/portfolio/sv/tags/design/"
                 />
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/graphic-design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/tags/illustrationer/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -147,9 +160,6 @@
                 hreflang="sv"
                 href="https://tor2dbear.github.io/portfolio/sv/clients/"
                 />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/tags/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
@@ -305,18 +315,6 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://tor2dbear.github.io/portfolio/sv/thankyou/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/tags/graphic-design/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/categories/</loc>

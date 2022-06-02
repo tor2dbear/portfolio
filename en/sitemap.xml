@@ -109,6 +109,32 @@
                 href="https://tor2dbear.github.io/portfolio/tags/design/"
                 />
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/tags/editorial-design/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/editorial-design/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/tags/graphic-design/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/graphic-design/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/illustrations/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -134,12 +160,6 @@
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/clients/"
                 />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/tags/editorial-design/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/tags/graphic-design/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
@@ -321,30 +341,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/thankyou/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/tags/editorial-design/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/tags/editorial-design/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/tags/graphic-design/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/tags/graphic-design/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/categories/</loc>
