@@ -6,10 +6,9 @@
     <description>Recent content in Tags on TBs svenska portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2022. All rights reserved.</copyright>
     <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tor2dbear.github.io/portfolio/sv/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>böcker</title>
+      <title></title>
       <link>https://tor2dbear.github.io/portfolio/sv/tags/b%C3%B6cker/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
@@ -18,11 +17,38 @@
     </item>
     
     <item>
-      <title>design</title>
+      <title></title>
       <link>https://tor2dbear.github.io/portfolio/sv/tags/design/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
       <guid>https://tor2dbear.github.io/portfolio/sv/tags/design/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://tor2dbear.github.io/portfolio/sv/tags/illustrationer/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/tags/illustrationer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/</guid>
       <description></description>
     </item>
     
@@ -36,29 +62,11 @@
     </item>
     
     <item>
-      <title>illustrationer</title>
-      <link>https://tor2dbear.github.io/portfolio/sv/tags/illustrationer/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <title></title>
+      <link>https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/sv/tags/illustrationer/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>redaktionellt</title>
-      <link>https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>varumärke</title>
-      <link>https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/</guid>
       <description></description>
     </item>
     

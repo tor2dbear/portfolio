@@ -2,17 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://tor2dbear.github.io/portfolio/works/utblick-no-2/</loc>
+    <loc>https://tor2dbear.github.io/portfolio/works/utblick-no.2/</loc>
     <lastmod>2015-05-16T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/works/utblick-nr-2/"
+                href="https://tor2dbear.github.io/portfolio/sv/arbeten/utblick-nr.2/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/works/utblick-no-2/"
+                href="https://tor2dbear.github.io/portfolio/works/utblick-no.2/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/works/a-cut-up-world/</loc>
@@ -20,7 +20,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/works/a-cut-up-world/"
+                href="https://tor2dbear.github.io/portfolio/sv/arbeten/a-cut-up-world/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -30,23 +30,13 @@
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/works/gothenburg-poster/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/works/gothenburg-poster/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/works/gothenburg-poster/"
-                />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/works/in-the-city/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/works/in-the-city/"
+                href="https://tor2dbear.github.io/portfolio/sv/arbeten/in-the-city/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -59,7 +49,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/works/things-in-a-conversation/"
+                href="https://tor2dbear.github.io/portfolio/sv/arbeten/things-in-a-conversation/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -67,36 +57,43 @@
                 href="https://tor2dbear.github.io/portfolio/works/things-in-a-conversation/"
                 />
   </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/works/utblick-no-4/</loc>
+    <loc>https://tor2dbear.github.io/portfolio/works/utblick-no.4/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/works/utblick-no-4/"
+                href="https://tor2dbear.github.io/portfolio/sv/arbeten/utblick-no.4/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/works/utblick-no-4/"
+                href="https://tor2dbear.github.io/portfolio/works/utblick-no.4/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/books/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/tags/branding/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/clients/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/clients/"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/b%C3%B6cker/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/clients/"
+                href="https://tor2dbear.github.io/portfolio/tags/books/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/tags/branding/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/branding/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/design/</loc>
@@ -112,13 +109,36 @@
                 href="https://tor2dbear.github.io/portfolio/tags/design/"
                 />
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/tags/illustrations/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/illustrationer/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/illustrations/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/clients/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/clients/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/clients/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/editorial-design/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/graphic-design/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/tags/illustrations/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/</loc>
@@ -301,6 +321,30 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/thankyou/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/tags/editorial-design/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/editorial-design/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/tags/graphic-design/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/grafisk-design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/graphic-design/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/categories/</loc>
