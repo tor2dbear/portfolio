@@ -83,6 +83,19 @@
                 href="https://tor2dbear.github.io/portfolio/sv/tags/b%C3%B6cker/"
                 />
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/sv/clients/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/clients/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/clients/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/tags/design/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -133,32 +146,6 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://tor2dbear.github.io/portfolio/sv/tags/redaktionellt/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/tags/branding/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/sv/clients/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/clients/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/clients/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/tags/</loc>
@@ -250,6 +237,19 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://tor2dbear.github.io/portfolio/sv/topics/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/tags/branding/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tags/varum%C3%A4rke/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/works/</loc>
