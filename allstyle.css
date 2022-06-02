@@ -1427,6 +1427,7 @@ ul.lang-toggle a,
 button#lang-toggle,
 button#theme-toggle {
   padding: 0;
+  margin: 0;
   background-color: transparent;
   color: var(--text-color);
   font-size: var(--text-sm);
