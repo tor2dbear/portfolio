@@ -2,7 +2,7 @@
 
 
 <div class="content post">
-  <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}</h1>
+  <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
   <h2 class="type-caption mb-16 mt-16">{{ .Description }}</h2>
   <div class="type-information text-color-lighter mt-0 mb-16"> {{ partial "date.html" . }}</div>
   <div class="mt-0 mb-16"> {{ partial "post_tags.html" . }}</div>

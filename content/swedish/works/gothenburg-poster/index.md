@@ -2,8 +2,8 @@
 author: "Torbjörn Hedberg"
 date: 2022-02-24
 linktitle: gothenburg-poster
-translationKey: gothenburg-poster
-title: Gothenburg Poster
+title: Göteborgsaffisch
+slug: arbeten
 weight: 10
 tags: ["grafisk design"]
 topics: ["topic01", "topic02"]

@@ -3,6 +3,7 @@ author: "Torbjörn Hedberg"
 date: 2022-02-24
 linktitle: In the City
 title: In the City
+slug: works
 weight: 10
 tags: ["branding", "graphic design"]
 topics: ["topic01", "topic02"]

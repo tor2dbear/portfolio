@@ -4,6 +4,7 @@ date: 2022-02-24
 linktitle: gothenburg-poster
 translationKey: gothenburg-poster
 title: Gothenburg Poster
+slug: works
 weight: 10
 tags: ["graphic design"]
 topics: ["topic01", "topic02"]

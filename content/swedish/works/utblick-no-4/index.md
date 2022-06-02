@@ -2,7 +2,9 @@
 author: "Torbjörn Hedberg"
 date: 2022-02-24
 linktitle: Utblick no.4
-title: Utblick no.4 — Editorial design
+title: Utblick no.4
+subtitle: Redaktionell design
+slug: arbeten
 weight: 10
 tags: ["design", "redaktionellt", "illustrationer"]
 description: Publication design for the Utblick magazine, published by Society of International Affairs in Gothenburg.

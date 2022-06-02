@@ -2,7 +2,6 @@ baseurl = "https://tor2dbear.github.io/portfolio/"
 languageCode = "en-us"
 title = "TB portfolio"
 author = "Torbjörn Hedberg"
-copyright = "&copy; 2022. All rights reserved."
 canonifyurls = true
 paginate = 10
 relativeURLs = true
@@ -75,6 +74,8 @@ DefaultContentLanguage = "en"
       weight = 4
       url = "/kontakt/"
 
+[permalinks]
+  works = '/:slug/:title/'
 
 [params]
   # Shown in the home page

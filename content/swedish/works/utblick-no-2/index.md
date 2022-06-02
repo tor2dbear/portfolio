@@ -2,8 +2,9 @@
 author: "Torbjörn Hedberg"
 date: 2015-05-16
 linktitle: Utblick nr.2
-title: Utblick nr.2 — Redaktionell design
-slug: utblick-nr-2
+title: Utblick nr.2
+subtitle: Redaktionell design
+slug: arbeten
 weight: 1
 tags: ["redaktionellt", "grafisk design", "illustrationer"]
 topics: ["topic01", "topic02"]

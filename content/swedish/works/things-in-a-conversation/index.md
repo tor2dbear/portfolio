@@ -3,6 +3,7 @@ author: "Torbjörn Hedberg"
 date: 2022-02-24
 linktitle: Things in a Conversation
 title: Things in a Conversation
+slug: arbeten
 weight: 10
 tags: [
     "böcker",

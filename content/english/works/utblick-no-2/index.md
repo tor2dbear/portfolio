@@ -2,7 +2,9 @@
 author: "Torbjörn Hedberg"
 date: 2015-05-16
 linktitle: Utblick no.2
-title: Utblick no.2 — Editorial design
+title: Utblick no.2
+subtitle: Editorial design
+slug: works
 weight: 1
 tags: ["editorial design", "graphic design", "illustrations"]
 topics: ["topic01", "topic02"]

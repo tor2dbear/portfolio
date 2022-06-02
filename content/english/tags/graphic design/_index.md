@@ -1,0 +1,3 @@
+---
+translationKey: "graphic design"
+---

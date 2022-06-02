@@ -8,7 +8,7 @@
       style="font-weight: var(--sans-weight-bold)"
       class="text-2xl line-height-normal text-color-default tracking-normal mt-12 mb-12"
     >
-      <a href="{{ .Permalink }}">{{ .Title }}</a>
+      <a href="{{ .Permalink }}">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</a>
     </h2>
 
     <h4
