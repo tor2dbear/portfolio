@@ -1,3 +1,4 @@
 ---
 translationKey: "branding"
+title: Varumärke
 ---

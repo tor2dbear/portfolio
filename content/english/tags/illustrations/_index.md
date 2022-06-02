@@ -1,3 +1,4 @@
 ---
 translationKey: "illustrations"
+title: Illustrations
 ---

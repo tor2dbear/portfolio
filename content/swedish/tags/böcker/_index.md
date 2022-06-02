@@ -1,3 +1,4 @@
 ---
 translationKey: "books"
+title: Böcker
 ---
