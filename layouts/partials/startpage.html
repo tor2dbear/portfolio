@@ -3,7 +3,7 @@
     <span class="text-color-accent">Torbjörn Hedberg</span> {{ i18n "startpage" }}.
   </h1>
   <button class="icon text-lg font-sans font-medium"
-  onclick="window.location.href = '{{ .Site.BaseURL }}/contact/';">
+  onclick="window.location.href = '{{ "contact" | absLangURL }}';">
   {{ i18n "get_in_touch" }}
   </button>
 </div>
