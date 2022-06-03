@@ -1,9 +1,25 @@
 {{ partial "header.html" . }}
 
 <div class="content client">
-  <div class="client-header">
-    <h2>{{ .Title }}</h2>
+  <div class="client-header grid-1-6">
+    <h1 class="type-headline-small">{{ .Title }}</h1>
   </div>
+  <h2 class="type-heading mt-24 mb-24 grid-1-5">
+   {{ .Params.preamble }}
+  </h2>
+  <p class="grid-1-5 mb-24">{{ .Params.body }}</p>
+  <ul class="grid-1-6 mb-24">
+    <li>
+      <p>CV</p>
+    </li>
+    <li>
+      <p>Portfolio</p>
+    </li>
+    <li>
+      <p>Letter</p>
+    </li>
+  </ul>
+  <h3 class="type-headline-small mb-8">Selected work</h3>
   {{ range .Data.Pages }}
     {{ .Render "summary"}}
   {{ end }}

@@ -91,7 +91,7 @@ The content `<div>` is where all your content goes.
   padding-top: 5rem;
 }
 #main,
-.content:is(.startpage, .post, .page, .list, .about, .thankyou),
+.content:is(.startpage, .post, .page, .list, .about, .thankyou, .client),
 .about-cv  {
   grid-template-columns: repeat(6, 1fr);
   -moz-column-gap: 1.5rem;
@@ -437,6 +437,11 @@ header.summary:hover .header-image {
 }
 .content.list article:nth-last-of-type(1):nth-of-type(odd) {
   grid-column: 1 / span 6;
+}
+
+/* Listpage article */
+.content.client article {
+  grid-column: 1 /span 6;
 }
 
 /* Icons */
