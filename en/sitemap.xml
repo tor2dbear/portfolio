@@ -70,6 +70,20 @@
                 href="https://tor2dbear.github.io/portfolio/works/utblick-no.4/"
                 />
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/clients/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/clients/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/clients/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/books/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -94,19 +108,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/tags/branding/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/clients/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/clients/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/clients/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/tags/design/</loc>
@@ -303,6 +304,9 @@
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/clients/volvo/"
                 />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/clients/deg17/</loc>
+    <lastmod>2015-05-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/about/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
