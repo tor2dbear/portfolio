@@ -24,8 +24,11 @@ other = "Prenumerera på nyhetsbrevet för nyheter och uppdateringar om när nyt
 [Email_Address]
 other = "E-postadress"
 
-[works]
-other = "arbeten"
+[works_url]
+other = "/arbeten"
+
+[Works]
+other = "Arbeten"
 
 [Subscribe]
 other = "Prenumerera"
