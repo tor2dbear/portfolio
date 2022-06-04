@@ -9,64 +9,64 @@
     <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://tor2dbear.github.io/portfolio/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Books</title>
-      <link>https://tor2dbear.github.io/portfolio/tags/books/</link>
+      <link>https://tor2dbear.github.io/portfolio/works/tags/books/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/tags/books/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/works/tags/books/</guid>
       <description>{{ range .Pages }}</description>
     </item>
     
     <item>
       <title>Branding</title>
-      <link>https://tor2dbear.github.io/portfolio/tags/branding/</link>
+      <link>https://tor2dbear.github.io/portfolio/works/tags/branding/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/tags/branding/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/works/tags/branding/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Design</title>
-      <link>https://tor2dbear.github.io/portfolio/tags/design/</link>
+      <link>https://tor2dbear.github.io/portfolio/works/tags/design/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/tags/design/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/works/tags/design/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Editorial Design</title>
-      <link>https://tor2dbear.github.io/portfolio/tags/editorial-design/</link>
+      <link>https://tor2dbear.github.io/portfolio/works/tags/editorial-design/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/tags/editorial-design/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/works/tags/editorial-design/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Graphic Design</title>
-      <link>https://tor2dbear.github.io/portfolio/tags/graphic-design/</link>
+      <link>https://tor2dbear.github.io/portfolio/works/tags/graphic-design/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/tags/graphic-design/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/works/tags/graphic-design/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Illustrations</title>
-      <link>https://tor2dbear.github.io/portfolio/tags/illustrations/</link>
+      <link>https://tor2dbear.github.io/portfolio/works/tags/illustrations/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/tags/illustrations/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/works/tags/illustrations/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>ui/ux</title>
-      <link>https://tor2dbear.github.io/portfolio/tags/ui/ux/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <title>UI/UX</title>
+      <link>https://tor2dbear.github.io/portfolio/works/tags/ui-ux/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://tor2dbear.github.io/portfolio/tags/ui/ux/</guid>
+      <guid>https://tor2dbear.github.io/portfolio/works/tags/ui-ux/</guid>
       <description></description>
     </item>
     
