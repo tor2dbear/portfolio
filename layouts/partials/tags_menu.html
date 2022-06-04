@@ -17,7 +17,9 @@
     {{ $currentURL := .Permalink }}
     {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
         {{ with $.Site.GetPage  (printf "/tags/%s" $name) }}
-            <li class="menu-item menu-tag"><a class="menu-link {{ if eq $currentURL .Permalink }}active{{ end }}" title="{{ replace $name "-" " " }}" href="{{ .Permalink }}">{{ replace $name "-" " " }}</a></li>
+            <li class="menu-item menu-tag"><a class="menu-link {{ if eq $currentURL .Permalink }}active{{ end }}" title="{{ replace $name "-" " " }}" href="{{ .Permalink }}">{{ lower .Title }}
+              </a>
+            </li>
         {{ end }}
     {{ end }}
 

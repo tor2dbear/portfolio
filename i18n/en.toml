@@ -22,8 +22,8 @@ other = "Subscribe to newsletter for news and update when new content is added t
 [Email_Address]
 other = "Email Address"
 
-[Works]
-other = "Works"
+[works]
+other = "works"
 
 [Subscribe]
 other = "Subscribe"

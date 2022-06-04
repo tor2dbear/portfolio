@@ -1,6 +1,7 @@
 ---
 title: Books
 translationKey: "books"
+slug: works
 ---
 {{ range .Pages }}
 <div class="tag-header mb-8">

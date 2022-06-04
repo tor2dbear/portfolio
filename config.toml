@@ -63,7 +63,7 @@ DefaultContentLanguage = "en"
       name = "alla"
       weight = 2
       identifier = "works"
-      url = "/works/"
+      url = "/arbeten/"
     [[languages.sv.menu.top]]
       name = "om"
       weight = 3
@@ -76,6 +76,7 @@ DefaultContentLanguage = "en"
 
 [permalinks]
   works = '/:slug/:title/'
+  tags = "/:slug/tags/:title/"
 
 [params]
   # Shown in the home page
