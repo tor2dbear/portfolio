@@ -272,9 +272,9 @@ a.menu-heading {
 #menu .menu-start .menu-link.active::after,
 #menu .menu-start .menu-link:hover::after,
 #menu .menu-tag .menu-link.active::after,
-#menu .menu-tag .menu-link:hover::after {
+#menu .menu-tag .menu-link:hover::after,
+#menu .menu-tag .menu-link.active:hover::after {
   margin-left: 0.25rem;
-
   font-family: var(--font-sans);
   font-weight: var(--sans-weight-regular);
   transition: all 0.3s ease;
@@ -296,8 +296,13 @@ a.menu-heading {
 #menu .menu-link:hover::after {
   color: var(--text-color-hover);
 }
+#layout #menu .menu-tag .menu-link.active:hover::after {
+  color: var(--text-color-hover);
+  margin-left: 0.25rem;
+}
 
-#menu .menu-link::after {
+#menu .menu-link::after,
+#menu ul.menu-list:hover .menu-link.active::after {
   margin-left: 0rem;
   color: transparent;
   transition: all 0.3s ease;

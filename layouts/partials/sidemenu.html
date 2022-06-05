@@ -2,10 +2,11 @@
   <div id="menu-content">
     <div class="menu">
       <ul class="menu-list">
-        {{ $urlstart := .RelPermalink }} {{ range .Site.Menus.start }}
+        {{ $urlstart := .RelPermalink }} 
+        {{ range .Site.Menus.start }}
         <li class="menu-item menu-start">
           <a
-            class="menu-link {{ if eq $urlstart .URL | relLangURL }}active{{ end }}"
+            class="menu-link {{ if eq $urlstart (.URL | relLangURL) }}active{{ end }}"
             title="{{ .Name }}"
             href="{{ .URL | relLangURL }}"
             >{{ .Name }}</a>
