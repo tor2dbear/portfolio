@@ -1,6 +1,7 @@
 window.matchMedia('(orientation: portrait)').addListener(function(m) {
     let layoutRot   = document.getElementById('layout');
     let menuRot     = document.getElementById('menu');
+    let menuLinkRot = document.getElementById('menuLink');
     let contentRot  = document.getElementById('main');
     let bodyRot = document.body;
     if (m.matches) {
@@ -11,6 +12,7 @@ window.matchMedia('(orientation: portrait)').addListener(function(m) {
             layoutRot.classList.remove('portrait');
             layoutRot.classList.remove('active');
             menuRot.classList.remove('active');
+            menuLinkRot.classList.remove('active');
             contentRot.classList.remove('active');
             bodyRot.classList.remove('active');
          }
