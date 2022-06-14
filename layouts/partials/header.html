@@ -7,6 +7,13 @@
 <div id="layout">
 
   {{ partial "topmenu.html" . }}
+  
+  {{ $urlclient := .Permalink }}
+  {{ if in $urlclient "main"}}
+  {{ else }}
   {{ partial "sidemenu.html" . }}
+  {{ end }}
+
+  
 
   <div id="main">

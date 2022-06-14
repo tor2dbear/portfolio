@@ -1,10 +1,10 @@
-{{ $related := site.RegularPages.RelatedIndices . "tags" | first 3 }}
+{{ $related := site.RegularPages.RelatedIndices . "clients" }}
 {{ with $related }}
-<h3 class="mt-64 mb-8 type-headline-small hide-on-client">Related</h3>
+<h3 class="mt-64 mb-8 type-headline-small show-on-client">More from portfoilo</h3>
 	{{ range . }}
-	<article id="related" class="hide-on-client">
+	<article id="related" class="show-on-client">
 	<div class="related-image line-height-tighter">
-		<a href="{{ .Permalink }}">{{ partial "headerimage.html" . }}</a>
+		<a href="{{ .Permalink }}?source=client">{{ partial "headerimage.html" . }}</a>
 		</div>
 		<header class="related-title">
 		<h2 class="type-headline-4 mt-12"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>

@@ -105,6 +105,9 @@ The content `<div>` is where all your content goes.
   opacity: 1;
   position: relative;
 }
+#main.client-main {
+  width:100%;
+}
 .content.post > * {
   grid-column: 1 / span 5;
 }
@@ -113,28 +116,7 @@ The content `<div>` is where all your content goes.
 .content.post > .prev-next-post {
   grid-column: 1 / span 6;
 }
-/* ================= GRID ================= */
-.grid-1-2 {
-  grid-column: 1 / span 2;
-}
-.grid-3-4 {
-  grid-column: 3 / span 2;
-}
-.grid-5-6 {
-  grid-column: 5 / span 2;
-}
-.grid-1-3 {
-  grid-column: 1 / span 3;
-}
-.grid-1-4 {
-  grid-column: 1 / span 4;
-}
-.grid-1-5 {
-  grid-column: 1 / span 5;
-}
-.grid-1-6 {
-  grid-column: 1 / span 6;
-}
+
 
 .tag-header {
   grid-column: inherit;
@@ -315,6 +297,13 @@ a.menu-heading {
     color: var(--text-color);
   }
 }
+/* Table of content */
+:target {
+  display: block;
+  position: relative;
+  top: -4.5rem; 
+  visibility: hidden;
+}
 
 :root {
   --menu-width-xlarge: 24rem; /* 320 px + padding 2x2rem */
@@ -383,6 +372,61 @@ a.menu-heading:hover {
   grid-column-gap: 2rem;
 }
 
+/* Download box on client page */
+.download-box {
+  padding: 1rem 1.5rem;
+  background-color: var(--box-background);
+}
+.download-box > * {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.download-box:hover > div {
+  background-color: var(--text-color-hover);
+  transition: background-color 0.3s ease;
+}
+.download-box:hover > .download-item {
+  color: var(--text-color-hover);
+  transition: color 0.3s ease;
+}
+.download-container {
+  grid-row: span 5;
+}
+p.download-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Client page */
+#layout.clientpage > div#menu {
+  display: none;
+}
+
+#layout.clientpage .hide-on-client {
+  display: none;
+}
+#layout:not(.clientpage) .show-on-client {
+  display: none;
+}
+#layout.clientpage #main {
+  width: 100%;
+}
+.client-sidebar {
+  margin-left: 1.5rem;
+}
+#layout .content.client .about-cv {
+  margin-top: 0;
+}
+.content.client .about-cv .curl-icon {
+  display: none;
+}
+#layout .content.client .contact-form {
+  margin: 0;
+}
+.clientpage .content.post {
+  margin: 0 auto;
+}
+
 /* Related works articles */
 
 article#related:first-of-type {
@@ -408,28 +452,28 @@ header.summary:hover .header-image {
 }
 
 /* Startpage articles */
-.content.startpage article:nth-of-type(1),
-.content.startpage article:nth-of-type(5) {
+.content:is(.startpage) article:nth-of-type(1),
+.content:is(.startpage) article:nth-of-type(5) {
   grid-column: 1 / span 4;
 }
-.content.startpage article:nth-of-type(4) {
+.content:is(.startpage) article:nth-of-type(4) {
   grid-column: 3 / span 4;
 }
-.content.startpage article:nth-of-type(1) h2.text-2xl,
-.content.startpage article:nth-of-type(4) h2.text-2xl,
-.content.startpage article:nth-of-type(5) h2.text-2xl {
+.content:is(.startpage) article:nth-of-type(1) h2.text-2xl,
+.content:is(.startpage) article:nth-of-type(4) h2.text-2xl,
+.content:is(.startpage) article:nth-of-type(5) h2.text-2xl {
   font-size: var(--text-2xl);
 }
-.content.startpage article:nth-of-type(2),
-.content.startpage article:nth-of-type(6) {
+.content:is(.startpage) article:nth-of-type(2),
+.content:is(.startpage) article:nth-of-type(6) {
   grid-column: 5 / span 2;
 }
-.content.startpage article:nth-of-type(3) {
+.content:is(.startpage) article:nth-of-type(3) {
   grid-column: 1 / span 2;
 }
-.content.startpage article:nth-of-type(2) h2.text-2xl,
-.content.startpage article:nth-of-type(3) h2.text-2xl,
-.content.startpage article:nth-of-type(6) h2.text-2xl {
+.content:is(.startpage) article:nth-of-type(2) h2.text-2xl,
+.content:is(.startpage) article:nth-of-type(3) h2.text-2xl,
+.content:is(.startpage) article:nth-of-type(6) h2.text-2xl {
   font-size: var(--text-xl);
 }
 
@@ -444,12 +488,17 @@ header.summary:hover .header-image {
   grid-column: 1 / span 6;
 }
 
-/* Listpage article */
-.content.client article {
-  grid-column: 1 /span 6;
+/* Clientpage article */
+.content.client article:nth-of-type(odd) {
+  grid-column: 1 / span 1;
+}
+.content.client article:nth-of-type(even) {
+  grid-column: 2 / span 1;
 }
 
 /* Icons */
+.download-icon,
+.pdf-icon,
 .theme-icon,
 .curl-icon,
 .curl-icon-bold {
@@ -471,6 +520,14 @@ header.summary:hover .header-image {
 .theme-icon {
   mask-image: url("/portfolio/img/svg/theme-icon-16.svg");
   -webkit-mask-image: url("/portfolio/img/svg/theme-icon-16.svg");
+}
+.pdf-icon {
+  mask-image: url("/portfolio/img/svg/pdf.svg");
+  -webkit-mask-image: url("/portfolio/img/svg/pdf.svg");
+}
+.download-icon {
+  mask-image: url("/portfolio/img/svg/download.svg");
+  -webkit-mask-image: url("/portfolio/img/svg/download.svg");
 }
 
 /* Button */
@@ -823,6 +880,9 @@ div#mce-responses {
   #main {
     width: calc(100% - var(--menu-width-large) - 2rem * 2);
   }
+  #main.client-main {
+    width:100%;
+  }
 }
 
 /* min 1024px Medium */
@@ -832,6 +892,9 @@ div#mce-responses {
   }
   #main {
     width: calc(100% - var(--menu-width-medium) - 2rem * 2);
+  }
+  #main.client-main {
+    width:100%;
   }
   #layout.active #menu {
     transform: translate(0px, 0px) !important; /* !important for ipad rotation */
@@ -953,10 +1016,10 @@ div#mce-responses {
 
   /* Startpage articles */
 
-  .content.startpage article:nth-of-type(odd) {
+  .content:is(.startpage) article:nth-of-type(odd) {
     grid-column: 1 / span 3;
   }
-  .content.startpage article:nth-of-type(even) {
+  .content:is(.startpage) article:nth-of-type(even) {
     grid-column: 4 / span 3;
   }
 
@@ -979,6 +1042,13 @@ div#mce-responses {
   }
   .newsletter-illustration {
     width: 33.33%;
+  }
+
+  /* Clientpage */
+  .client-maincolumn,
+  .client-sidebar {
+    margin-left: 0;
+    grid-column: span 6;
   }
 
   /* Menu transition. */
@@ -1009,8 +1079,11 @@ div#mce-responses {
     transform: translateY(var(--header-height-neg));
   }
 
-  .content.startpage article:nth-of-type(n + 1) {
+  .content:is(.startpage) article:nth-of-type(n + 1) {
     grid-column: 1 / span 6;
+  }
+  .content.client article:nth-of-type(n + 1) {
+    grid-column: 1 / span 2;
   }
   .about-main.grid-1-3,
   .about-cv :is(.grid-1-2, .grid-3-4, .grid-5-6),
@@ -1044,7 +1117,7 @@ div#mce-responses {
   .content.list article:nth-last-of-type(even) {
     grid-column: 1 / span 6;
   }
-  #layout .content.startpage article h2.text-2xl,
+  #layout .content:is(.startpage) article h2.text-2xl,
   #layout .content.list.tag article h2.text-2xl {
     font-size: var(--text-xl);
   }

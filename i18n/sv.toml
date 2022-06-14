@@ -1,10 +1,14 @@
 [startpage]
 other = "är en multidisiplinär designer, verksam i Göteborg"
 
+[contact_header_start]
+other = "Om du har några frågor eller förslag på hur vi kan sammarbeta, vänligen"
+
+[contact_header_end]
+other = "kontakta mig"
+
 [branding]
 other = "Varumärke"
-
-
 
 [get_in_touch]
 other = "Kontakta mig"
@@ -128,6 +132,9 @@ other = "En kort rubrik"
 
 [contact_message]
 other = "Meddelande"
+
+[contact_send_message]
+other = "Skicka ett meddelande"
 
 [contact_message_placeholder]
 other = "Meddelandet skrivs här…"

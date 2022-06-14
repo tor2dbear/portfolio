@@ -1,6 +1,12 @@
 [startpage]
 other = "is a multi-disciplinary designer based in Gothenburg, Sweden"
 
+[contact_header_start]
+other = "If you have any questions or suggestions on how we could work together, please"
+
+[contact_header_end]
+other = "get in touch"
+
 [branding]
 other = "Branding"
 
@@ -124,8 +130,11 @@ other = "A short subject"
 [contact_message]
 other = "Message"
 
+[contact_send_message]
+other = "Send me a message"
+
 [contact_message_placeholder]
-other = "The messages goes here…"
+other = "The messages goes here"
 
 [contact_submit]
 other = "Send message"

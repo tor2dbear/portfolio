@@ -1,0 +1,24 @@
+<div class="contact-form mt-80 mb-64 grid-1-3">
+<script type="text/javascript">var submitted=false;</script>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" 
+onload="if(submitted) {window.location='{{ .Site.BaseURL }}/thankyou';}"></iframe>
+<h2 class="type-headline-3 mb-16">Send me a message</h2>
+<form action="https://docs.google.com/forms/d/e/1FAIpQLSeKHQgkqMvOnUbTYaTILCzLO9fcdjGX8IWofk1qwKQodCPNzw/formResponse" 
+method="post" target="hidden_iframe" onsubmit="submitted=true;">
+</form>
+<form action="https://docs.google.com/forms/d/e/1FAIpQLSeKHQgkqMvOnUbTYaTILCzLO9fcdjGX8IWofk1qwKQodCPNzw/formResponse" method="post" target="hidden_iframe" onsubmit="submitted=true">
+  <label>Name*</label>
+        <input type="text" placeholder="Your name" class="form-input" name="entry.2022972415" required>
+
+  <label>Email*</label>
+        <input type="email" placeholder="Email address" class="form-input" name="entry.1998719079" required>
+
+   <label>Subject*</label>
+        <input type="text" placeholder="Enter a subject" class="form-input" name="entry.549781090" required>
+
+   <label>Message</label>
+        <textarea rows="5" placeholder="Leave a message" class="form-input" name="entry.1646039502" ></textarea>
+
+   <button type="submit" class="icon text-lg font-sans font-medium">Send</button>
+</form>
+</div>

@@ -123,6 +123,8 @@
   --bg-color: var(--colors-white);
   --bg-tag: var(--colors-accent-50);
   --bg-tag-hover: var(--colors-accent-100);
+  --bg-section-headline: var(--colors-accent-700);
+  --text-section-headline: var(--colors-accent-50);
   --text-color-tag: var(--colors-accent-500);
   --img-grayscale: 0%;
   --img-blend-mode: normal;
@@ -159,6 +161,8 @@
   --bg-color: var(--colors-gray-900);
   --bg-tag: var(--colors-gray-700);
   --bg-tag-hover: var(--colors-gray-600);
+  --bg-section-headline: var(--colors-accent-700);
+  --text-section-headline: var(--colors-accent-50);
   --text-color-tag: var(--colors-gray-300);
   --img-grayscale: 0%;
   --img-blend-mode: normal;
@@ -195,6 +199,8 @@
   --bg-color: var(--colors-accent-200);
   --bg-tag: var(--colors-accent-300);
   --bg-tag-hover: var(--colors-accent-400);
+  --bg-section-headline: var(--colors-accent-700);
+  --text-section-headline: var(--colors-accent-50);
   --text-color-tag: var(--colors-accent-600);
   --img-grayscale: 100%;
   --img-blend-mode: screen;
@@ -230,6 +236,8 @@
   --bg-color: var(--colors-accent-900);
   --bg-tag: var(--colors-accent-400);
   --bg-tag-hover: var(--colors-accent-300);
+  --bg-section-headline: var(--colors-accent-700);
+  --text-section-headline: var(--colors-accent-50);
   --text-color-tag: var(--colors-accent-700);
   --img-grayscale: 100%;
   --img-blend-mode: screen;

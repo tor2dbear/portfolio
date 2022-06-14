@@ -1,9 +1,7 @@
 {{ partial "header.html" . }}
 
   <div class="content page">
-    <!-- <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}</h1> -->
-    <h2 class="type-heading mb-80 grid-1-5">If you have any questions or suggestions on how we could work together, please <span class="text-color-accent">get in touch</span>.</h2>
-   
+    <h2 class="type-heading mb-80 grid-1-5">{{ i18n "contact_header_start" }} <span class="text-color-accent">{{ i18n "contact_header_end" }}</span>.</h2>
     {{ .Content }}
   </div>
 

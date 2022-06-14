@@ -7,6 +7,7 @@ subtitle: Editorial design
 slug: works
 weight: 10
 tags: ["design", "editorial design", "illustrations"]
+clients: ["deg17", "topic02"]
 description: Publication design for the Utblick magazine, published by Society of International Affairs in Gothenburg.
 header_image: utblick_africa-0005.webp
 featured: true

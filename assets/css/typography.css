@@ -229,6 +229,7 @@ p,
   color: var(--text-color);
   font-family: var(--font-serif);
   letter-spacing: var(--tracking-nomrmal);
+  max-width: 70ch;
 }
 /* Font: Body small */
 .type-body-sm {
@@ -294,6 +295,12 @@ blockquote {
   width: 66.67%;
   margin-top: var(--spacing-32);
   margin-bottom: var(--spacing-32);
+}
+.section-headline {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--bg-section-headline);
+  color: var(--text-section-headline);
+  display: inline-block;
 }
 
 /* Font: Menu */
