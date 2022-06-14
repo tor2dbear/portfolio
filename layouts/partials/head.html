@@ -2,6 +2,12 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}">
+  {{ if eq .Params.index false }}
+  <meta name = "robots" content = "noindex">
+  {{ end }}
+  
+  {{ if not .Params.Index }}  
+  {{ end }}
   {{hugo.Generator}}
 
   <title>{{ if .IsHome }}{{ .Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Title }}{{ end }}</title>

@@ -13,4 +13,5 @@ taxonomy_indexes: true
 attach_cv: "/images/cv.pdf"
 attach_portfolio: "/images/portfolio_20220812.pdf"
 attach_letter: "/images/letter.pdf"
+index: false
 ---
