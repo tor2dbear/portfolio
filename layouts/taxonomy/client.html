@@ -7,11 +7,11 @@
     <li class="font-sans text-base text-color-lighter"><a href="#portfolio">Portfolio</a></li>
     <li class="font-sans text-base text-color-lighter"><a href="#cv">CV</a></li>
     <li class="font-sans text-base text-color-lighter"><a href="#contact">Contact</a></li>
-  </ul>
+    </ul>
 
 <div class="grid-1-4 client-maincolumn">
 
-  <div class="client-letter grid-2 mb-32">
+  <div class="client-letter grid-2 mb-64">
     <!-- put this just above the section you wanna go to -->
     <a id="letter"></a>
     <h3 class="type-headline-small mb-16 section-headline">Letter</h3>
@@ -24,7 +24,7 @@
     <p>{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
   </div>
   
-  <div class="client-portfolio grid-2 mb-32">
+  <div class="client-portfolio grid-2 mb-64">
   <!-- put this just above the section you wanna go to -->
   <a id="portfolio"></a>
   <h3 class="type-headline-small mb-8 section-headline">Portfolio</h3>
@@ -35,7 +35,7 @@
   </div>
   </div>
 
-  <div class="client-cv grid-2 mb-32">
+  <div class="client-cv grid-2 mb-64">
   <!-- put this just above the section you wanna go to -->
   <a id="cv" class="grid-2"></a>
   <h3 class="type-headline-small mb-8 grid-2 section-headline">CV</h3>
@@ -43,8 +43,8 @@
   </div>
 </div>
 
-<div class="grid-5-6 client-sidebar">
-  <div class="download-container mb-32">
+<div class="grid-5-6 client-sidebar"
+  <div class="download-container mb-64">
     <h3 class="type-headline-small mb-16 grid-4 section-headline">Download</h3>
   {{ if .Params.attach_letter }}
   <a href={{ printf "%s" $.Params.attach_letter }} target="_blank" class="download-box grid-2 flex">

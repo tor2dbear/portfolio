@@ -1,3 +1,3 @@
-# My portfolio
+# portfolio-template-hugo
 
-test 2
+Personal portfolio template for Hugo. Work in progress.
