@@ -1,1 +1,0 @@
-{{ range (where .Data.Pages "Params.index" "eq" nil) | union (where .Data.Pages "Params.index" "eq" true) }}
