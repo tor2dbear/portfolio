@@ -72,7 +72,6 @@
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/clients/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <priority>0</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
@@ -266,9 +265,6 @@
                 href="https://tor2dbear.github.io/portfolio/works/tags/ui-ux/"
                 />
   </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/clients/deg17/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/works/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -320,6 +316,9 @@
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/clients/volvo/"
                 />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/clients/deg17/</loc>
+    <lastmod>2014-06-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/about/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
