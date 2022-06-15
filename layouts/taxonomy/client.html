@@ -1,79 +1,112 @@
 {{ partial "header-client.html" . }}
 
+
 <div class="content client">
   <ul class="table-of-content mb-64 grid-6">
     <li><h3 class="type-headline-small mb-8">Table of content</h3></li>
-    <li class="font-sans text-base text-color-lighter"><a href="#letter">Letter</a></li>
-    <li class="font-sans text-base text-color-lighter"><a href="#portfolio">Portfolio</a></li>
+    <li class="font-sans text-base text-color-lighter">
+      <a href="#letter">Letter</a>
+    </li>
+    <li class="font-sans text-base text-color-lighter">
+      <a href="#portfolio">Portfolio</a>
+    </li>
     <li class="font-sans text-base text-color-lighter"><a href="#cv">CV</a></li>
-    <li class="font-sans text-base text-color-lighter"><a href="#contact">Contact</a></li>
-    </ul>
+    <li class="font-sans text-base text-color-lighter">
+      <a href="#contact">Contact</a>
+    </li>
+  </ul>
 
-<div class="grid-1-4 client-maincolumn">
-
-  <div class="client-letter grid-2 mb-64">
-    <!-- put this just above the section you wanna go to -->
-    <a id="letter"></a>
-    <h3 class="type-headline-small mb-16 section-headline">Letter</h3>
-    <div class="client-header">
-      <h1 class="mb-16 type-headline-2">{{ .Title }}</h1>
+  <div class="grid-1-4 client-maincolumn">
+    <div class="client-letter grid-2 mb-64">
+      <!-- put this just above the section you wanna go to -->
+      <a id="letter"></a>
+      <h3 class="type-headline-small mb-16 section-headline">Letter</h3>
+      <div class="client-header">
+        <h1 class="mb-16 type-headline-2">{{ .Title }}</h1>
+      </div>
+      <h2 class="mb-32 type-caption">
+        {{ .Params.preamble }}
+      </h2>
+      <p>{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
+      <p>{{ partial "date.html" . }}</p>
     </div>
-    <h2 class="mb-32 type-caption">
-    {{ .Params.preamble }}
-    </h2>
-    <p>{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
-  </div>
-  
-  <div class="client-portfolio grid-2 mb-64">
-  <!-- put this just above the section you wanna go to -->
-  <a id="portfolio"></a>
-  <h3 class="type-headline-small mb-8 section-headline">Portfolio</h3>
-  <div class="client-portfolio-container grid-template-2-col">
-  {{ range .Data.Pages }}
-    {{ .Render "summary-client"}}
-  {{ end }}
-  </div>
+
+    <div class="client-portfolio grid-2 mb-64">
+      <!-- put this just above the section you wanna go to -->
+      <a id="portfolio"></a>
+      <h3 class="type-headline-small mb-16 section-headline">Portfolio</h3>
+      <div class="client-portfolio-container grid-template-2-col">
+        {{ range .Data.Pages }}
+          {{ .Render "summary-client" }}
+        {{ end }}
+      </div>
+    </div>
+
+    <div class="client-cv grid-2 mb-64">
+      <!-- put this just above the section you wanna go to -->
+      <a id="cv" class="grid-2"></a>
+      <h3 class="type-headline-small mb-16 grid-2 section-headline">CV</h3>
+      <div class="grid-2">{{ partial "about_cv.html" . }}</div>
+    </div>
   </div>
 
-  <div class="client-cv grid-2 mb-64">
-  <!-- put this just above the section you wanna go to -->
-  <a id="cv" class="grid-2"></a>
-  <h3 class="type-headline-small mb-8 grid-2 section-headline">CV</h3>
-  <div class="grid-2">{{ partial "about_cv.html" . }}</div>
+  <div class="grid-5-6 client-sidebar">
+    <div class="download-container mb-64">
+      <h3 class="type-headline-small mb-16 grid-4 section-headline">
+        Download
+      </h3>
+      {{ if .Params.attach_letter }}
+        <a
+          href="{{ printf "%s" $.Params.attach_letter }}"
+          target="_blank"
+          class="download-box grid-2 flex"
+        >
+          <div class="pdf-icon"></div>
+          <p class="download-item flex-grow">
+            {{ path.Base .Params.attach_letter }}
+          </p>
+          <div class="download-icon"></div>
+        </a>
+      {{ end }}
+
+      {{ if .Params.attach_portfolio }}
+        <a
+          href="{{ printf "%s" $.Params.attach_portfolio }}"
+          target="_blank"
+          class="download-box mt-16 grid-2 flex"
+        >
+          <div class="pdf-icon"></div>
+          <p class="download-item flex-grow">
+            {{ path.Base .Params.attach_portfolio }}
+          </p>
+          <div class="download-icon"></div>
+        </a>
+      {{ end }}
+
+      {{ if .Params.attach_cv }}
+        <a
+          href="{{ printf "%s" $.Params.attach_cv }}"
+          target="_blank"
+          class="download-box mt-16 grid-2 flex"
+        >
+          <div class="pdf-icon"></div>
+          <p class="download-item flex-grow">
+            {{ path.Base .Params.attach_cv }}
+          </p>
+          <div class="download-icon"></div>
+        </a>
+      {{ end }}
+    </div>
+    <!-- put this just above the section you wanna go to -->
+    <a id="contact" class="grid-4"></a>
+    <h3
+      class="type-headline-small mb-16 grid-2 show-on-client section-headline"
+    >
+      Contact
+    </h3>
+    {{ partial "contact_info.html" . }}
+    {{ partial "contact_form.html" . }}
   </div>
-</div>
-
-<div class="grid-5-6 client-sidebar"
-  <div class="download-container mb-64">
-    <h3 class="type-headline-small mb-16 grid-4 section-headline">Download</h3>
-  {{ if .Params.attach_letter }}
-  <a href={{ printf "%s" $.Params.attach_letter }} target="_blank" class="download-box grid-2 flex">
-    <div class="pdf-icon"></div>
-    <p class="download-item flex-grow">{{ path.Base .Params.attach_letter }}</p>
-    <div class="download-icon"></div>
-  </a>
-  {{end}}
-
-  {{ if .Params.attach_portfolio }}
-  <a href={{ printf "%s" $.Params.attach_portfolio }} target="_blank" class="download-box mt-16 grid-2 flex">
-    <div class="pdf-icon"></div>
-    <p class="download-item flex-grow">{{ path.Base .Params.attach_portfolio }}</p>
-    <div class="download-icon"></div>
-  </a>
-  {{end}}
-
-  {{ if .Params.attach_cv }}
-  <a href={{ printf "%s" $.Params.attach_cv }} target="_blank" class="download-box mt-16 grid-2 flex">
-    <div class="pdf-icon"></div>
-    <p class="download-item flex-grow">{{ path.Base .Params.attach_cv }}</p>
-    <div class="download-icon"></div>
-  </a>
-  {{end}}
-  </div>
-   <!-- put this just above the section you wanna go to -->
-   <a id="contact" class="grid-4"></a>
-   {{ partial "contact_form.html" . }}
-</div>
 </div>
 
 {{ partial "footer.html" . }}

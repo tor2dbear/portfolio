@@ -423,6 +423,11 @@ body a.menu-link:active {
     line-height: var(--line-height-tight);
     letter-spacing: var(--tracking-normal);
   }
+
+  /* Font: Caption */
+  .type-caption {
+    font-size: var(--text-2xl);
+  }
 }
 
 /* ================= END: MEDIA SCREEN SIZE ================= */

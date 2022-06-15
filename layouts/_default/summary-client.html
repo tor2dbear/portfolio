@@ -1,14 +1,20 @@
 <article>
   <header class="summary">
     <div class="header-image">
-      <a href="{{ .Permalink }}?source=client" target="_blank">{{ partial "headerimage.html" . }}</a>
+      <a href="{{ .Permalink }}?source=client" target="_blank"
+        >{{ partial "headerimage.html" . }}</a
+      >
     </div>
 
     <h2
       style="font-weight: var(--sans-weight-bold)"
       class="text-2xl line-height-normal text-color-default tracking-normal mt-12 mb-12"
     >
-      <a href="{{ .Permalink }}?source=client" target="_blank">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</a>
+      <a href="{{ .Permalink }}?source=client" target="_blank"
+        >{{ .Title }}{{ if isset .Params "subtitle" }}
+          –
+        {{ end }}{{ .Params.subtitle }}</a
+      >
     </h2>
 
     <h4

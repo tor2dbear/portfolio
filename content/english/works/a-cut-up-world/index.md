@@ -13,16 +13,18 @@ header_image: cut-up-world11.webp
 featured: true
 client: Self initiated project
 clientweb:
-clientabout: Part of Bachelor, BA project. 
+clientabout: Part of Bachelor, BA project.
 ---
 
 ![Header example](cut-up-world11.webp)
 {.myclass}
 
 ### About
+
 An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.
 
 #### Role
+
 Graphic designer
 
 ![Header example](cut-up-world2.webp)
@@ -34,6 +36,3 @@ Graphic designer
 ![Header example](cutup05-02.svg)
 ![Header example](cut-up-world10.webp)
 ![Header example](sjalvportratt.gif)
-
-
-
