@@ -9,7 +9,7 @@ var cookies = document.cookie
     {}
   );
 
-setInterval(function () {
+window.onload = function setClientUrl() {
   document.getElementById("client-back").innerHTML =
-    '<a href="' + cookies.clientUrl + '">Link</a>';
-}, 300);
+    '<a href="' + cookies.clientUrl + '">Back to application</a>';
+};

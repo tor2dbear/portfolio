@@ -24,11 +24,13 @@
       <div class="client-header">
         <h1 class="mb-16 type-headline-2">{{ .Title }}</h1>
       </div>
-      <h2 class="mb-32 type-caption">
+      <h2 class="mb-16 type-caption">
         {{ .Params.preamble }}
       </h2>
+      <div class="type-information text-color-lighter mt-0 mb-16">
+        {{ partial "date.html" . }}
+      </div>
       <p>{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
-      <p>{{ partial "date.html" . }}</p>
     </div>
 
     <div class="client-portfolio grid-2 mb-64">
