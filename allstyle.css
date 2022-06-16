@@ -1578,6 +1578,47 @@ p.download-item {
 
 .clientpage .content.post {
   margin: 0 auto;
+  margin-bottom: var(--spacing-160);
+}
+
+span#client-back {
+  display: flex;
+  margin-top: var(--spacing-32);
+}
+
+span#client-back::before {
+  display: block;
+  content: " ";
+  background-size: 1.5rem 1.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: var(--text-color);
+  mask-image: url("/portfolio/img/svg/arrow-left.svg");
+  -webkit-mask-image: url("/portfolio/img/svg/arrow-left.svg");
+  margin-right: 0.75rem;
+  transition: margin-right 0.3s ease, padding 0.3s ease;
+}
+
+span#client-back::before {
+  display: block;
+  content: " ";
+  background-size: 1.5rem 1.5rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: var(--text-color);
+  mask-image: url("/portfolio/img/svg/arrow-left.svg");
+  -webkit-mask-image: url("/portfolio/img/svg/arrow-left.svg");
+  margin-right: 0.75rem;
+  transition: margin-right 0.3s ease, padding 0.3s ease;
+}
+
+span#client-back:hover::before {
+  margin-right: 1rem;
+  background-color: var(--text-color-hover);
+}
+
+span#client-back:hover a {
+  color: var(--text-color-hover);
 }
 
 /* Related works articles */
@@ -1663,7 +1704,8 @@ header.summary:hover .header-image {
 .pdf-icon,
 .theme-icon,
 .curl-icon,
-.curl-icon-bold {
+.curl-icon-bold,
+.arrow-left {
   display: block;
   content: " ";
   background-size: 1.5rem 1.5rem;
@@ -1695,6 +1737,11 @@ header.summary:hover .header-image {
 .download-icon {
   mask-image: url("/portfolio/img/svg/download.svg");
   -webkit-mask-image: url("/portfolio/img/svg/download.svg");
+}
+
+.arrow-left {
+  mask-image: url("/portfolio/img/svg/arrow-left.svg");
+  -webkit-mask-image: url("/portfolio/img/svg/arrow-left.svg");
 }
 
 /* Button */
