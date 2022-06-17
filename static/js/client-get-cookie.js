@@ -1,15 +1,9 @@
-var cookies = document.cookie
-  .split(";")
-  .map((cookie) => cookie.split("="))
-  .reduce(
-    (accumulator, [key, value]) => ({
-      ...accumulator,
-      [key.trim()]: decodeURIComponent(value),
-    }),
-    {}
-  );
+const url = localStorage.getItem("lsClientUrl");
+const client = localStorage.getItem("lsClient");
 
 window.onload = function setClientUrl() {
   document.getElementById("client-back").innerHTML =
-    '<a href="' + cookies.clientUrl + '">Back to application</a>';
+    '<a href="' + url + '#portfolio">Back to portfolio</a>';
+  document.getElementById("client-pagination-back").innerHTML =
+    '<a href="' + url + '">' + client + "</a>";
 };

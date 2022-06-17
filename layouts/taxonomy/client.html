@@ -2,6 +2,8 @@
 
 
 <div class="content client">
+  <!-- span company name for localstorage -->
+  <span class="company_name">{{ .Params.company_name }}</span>
   <ul class="table-of-content mb-64 grid-6">
     <li><h3 class="type-headline-small mb-8">Table of content</h3></li>
     <li class="font-sans text-base text-color-lighter">
@@ -22,7 +24,9 @@
       <a id="letter"></a>
       <h3 class="type-headline-small mb-16 section-headline">Letter</h3>
       <div class="client-header">
-        <h1 class="mb-16 type-headline-2">{{ .Title }}</h1>
+        <h1 class="mb-16 type-headline-2">
+          {{ .Title }}
+        </h1>
       </div>
       <h2 class="mb-16 type-caption">
         {{ .Params.preamble }}

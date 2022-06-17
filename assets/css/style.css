@@ -531,6 +531,14 @@ span#client-back:hover a {
   color: var(--text-color-hover);
 }
 
+.client-pagination.flex {
+  gap: var(--spacing-8);
+}
+
+.company_name {
+  display: none;
+}
+
 /* Related works articles */
 
 article#related {
