@@ -1,5 +1,5 @@
 ---
-title: Work application for UI position at
+title: Work application for UI position at Deg17
 company_name: "deg17"
 preamble: "Hi! My name is Torbjörn Hedberg and I’m a multi-disciplinary designer based in Gothenburg, Sweden."
 body: "Lörem ipsum ov difapp inklusive triheten. Pretire susamma öjere, favin revösk. Ris dekara eurare euroliga. Ruvaplaska nysare sedan timåvis presamma decibel. Mikrore prenat: då drevkultur dirosade. 

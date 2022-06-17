@@ -1,11 +1,10 @@
 {{ partial "header.html" . }}
 
-
 <div class="content post">
-  <div class="client-pagination flex text-sm mb-24">
-    <span class="show-on-client text-capitalize" id="client-pagination-back"><a>Back to client</a></span>
-    <span class="show-on-client text-color-default" id="client-pagination-delimiter">/</span>
-    <span class="show-on-client text-color-lighter" id="client-pagination-active">{{ .Title }}</span>
+  <div class="client-pagination flex text-sm mb-24 show-on-client">
+    <span class="text-capitalize" id="client-pagination-back"><a></a></span>
+    <span class="text-color-default" id="client-pagination-delimiter">/</span>
+    <span class="text-color-lighter" id="client-pagination-active">{{ .Title }}</span>
   </div>
   <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
   <h2 class="type-caption mb-16 mt-16">{{ .Description }}</h2>
@@ -36,8 +35,6 @@
   {{ partial "related.html" . }}
   {{/*  {{ partial "prev_next_post.html" . }}  */}}
   <span class="show-on-client menu-link" id="client-back"><a>Back to application</a></span>
-
-  <script src="{{ .Site.BaseURL }}js/client-get-cookie.js"></script>
 
 </div>
 
