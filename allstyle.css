@@ -1632,6 +1632,7 @@ nav.client-breadcrumb ul li {
 nav.client-breadcrumb ul li+li:before {
   content: "/";
   padding: var(--spacing-8);
+  color: var(--text-color-lighter);
 }
 
 .company_name {
