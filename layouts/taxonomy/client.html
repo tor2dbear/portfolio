@@ -2,6 +2,20 @@
 
 
 <div class="content client">
+  <nav class="client-breadcrumb flex text-sm mb-24 show-on-client">
+    <ul>
+      <li class="text-capitalize" id="client-breadcrumb-home">
+        <a href="{{ .Site.BaseURL | relLangURL }}">Start</a>
+      </li>
+      <!-- company_name for localstorage -->
+      <li
+        class="text-color-lighter company_name text-capitalize"
+        id="client-breadcrumb-active"
+      >
+        {{ .Params.company_name }}
+      </li>
+    </ul>
+  </nav>
   <!-- span company name for localstorage -->
   <span class="company_name">{{ .Params.company_name }}</span>
   <ul class="table-of-content mb-64 grid-6">
@@ -123,6 +137,5 @@
 </div>
 
 <script src="{{ .Site.BaseURL }}js/client-set-cookie.js"></script>
-<script src="{{ .Site.BaseURL }}js/client-get-cookie.js"></script>
 
 {{ partial "footer.html" . }}

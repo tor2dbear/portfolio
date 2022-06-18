@@ -3,6 +3,6 @@ aliases:
   - /tags/
   - /clients/
   - /works/tags/
-title: works
+title: Works
 slug: englishwork
 ---

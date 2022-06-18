@@ -1,8 +1,8 @@
 ---
 aliases:
-    - /tags/
-    - /clients/
+  - /tags/
+  - /clients/
 title: arbeten
-slug: arbeten
+slug: Arbeten
 url: "/sv/arbeten"
 ---
