@@ -1621,8 +1621,17 @@ span#client-back:hover a {
   color: var(--text-color-hover);
 }
 
-.client-pagination.flex {
-  gap: var(--spacing-8);
+nav.client-breadcrumb ul {
+  list-style: none;
+}
+
+nav.client-breadcrumb ul li {
+  display: inline;
+}
+
+nav.client-breadcrumb ul li+li:before {
+  content: "/";
+  padding: var(--spacing-8);
 }
 
 .company_name {
