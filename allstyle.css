@@ -1581,46 +1581,6 @@ p.download-item {
   margin-bottom: var(--spacing-160);
 }
 
-span#client-back {
-  display: flex;
-  margin-top: var(--spacing-32);
-}
-
-span#client-back::before {
-  display: block;
-  content: " ";
-  background-size: 1.5rem 1.5rem;
-  height: 1.5rem;
-  width: 1.5rem;
-  background-color: var(--text-color);
-  mask-image: url("/portfolio/img/svg/arrow-left.svg");
-  -webkit-mask-image: url("/portfolio/img/svg/arrow-left.svg");
-  margin-right: 0.75rem;
-  transition: margin-right 0.3s ease, padding 0.3s ease;
-}
-
-span#client-back::before {
-  display: block;
-  content: " ";
-  background-size: 1.5rem 1.5rem;
-  height: 1.5rem;
-  width: 1.5rem;
-  background-color: var(--text-color);
-  mask-image: url("/portfolio/img/svg/arrow-left.svg");
-  -webkit-mask-image: url("/portfolio/img/svg/arrow-left.svg");
-  margin-right: 0.75rem;
-  transition: margin-right 0.3s ease, padding 0.3s ease;
-}
-
-span#client-back:hover::before {
-  margin-right: 1rem;
-  background-color: var(--text-color-hover);
-}
-
-span#client-back:hover a {
-  color: var(--text-color-hover);
-}
-
 nav.client-breadcrumb ul {
   list-style: none;
 }

@@ -174,19 +174,6 @@
                 href="https://tor2dbear.github.io/portfolio/sv/tags/"
                 />
   </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/sv/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/"
-                />
-  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/topics/topic01/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -250,6 +237,19 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://tor2dbear.github.io/portfolio/sv/topics/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/sv/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/arbeten/tags/ui-ux/</loc>
@@ -317,19 +317,6 @@
                 href="https://tor2dbear.github.io/portfolio/sv/clients/volvo/"
                 />
   </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/sv/thankyou/</loc>
-    <lastmod>2014-04-09T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/thankyou/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://tor2dbear.github.io/portfolio/sv/thankyou/"
-                />
-  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/sv/categories/</loc>
     <xhtml:link
                 rel="alternate"
@@ -376,6 +363,18 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://tor2dbear.github.io/portfolio/sv/om/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/sv/tack/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/thankyou/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://tor2dbear.github.io/portfolio/sv/tack/"
                 />
   </url>
 </urlset>
