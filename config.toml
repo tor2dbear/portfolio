@@ -39,7 +39,7 @@ DefaultContentLanguage = "en"
 
 [languages]
   [languages.en]
-    title = "TB´s English portfolio"
+    title = "Torbjörn Hedberg | Designer"
     languageName = "English"
     weight = 1
     contentDir = "content/english"
@@ -63,7 +63,7 @@ DefaultContentLanguage = "en"
       weight = 4
       url = "/contact/"
   [languages.sv]
-    title = "TBs svenska portfolio"
+    title = "Torbjörn Hedberg | Designer"
     languageName = "Svenska"
     weight = 2
     contentDir = "content/swedish"

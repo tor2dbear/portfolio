@@ -6,7 +6,7 @@
     name="hidden_iframe"
     id="hidden_iframe"
     style="display:none;"
-    onload="if(submitted) {window.location='{{ .Site.BaseURL }}/thankyou';}"
+    onload="if(submitted) {window.location='{{ "thankyou/" | absLangURL }}';}"
   ></iframe>
   <h2 class="type-headline-3 mb-16 hide-on-client">
     {{ i18n "contact_send_message" }}
