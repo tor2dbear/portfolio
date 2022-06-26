@@ -1322,15 +1322,13 @@ article {
   height: 4.5rem;
   width: 100%;
   margin: 0px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   background-color: var(--bg-color);
   padding: 1.5rem 2rem;
   align-items: baseline;
   box-sizing: border-box;
-}
-
-#topmenu :is(.menu.topmenuitems, .brandcontainer) {
-  transform: translate3d(0, -0.3125rem, 0);
+  column-gap: 1.5rem;
 }
 
 #topmenu ul.menu-list {
@@ -1340,12 +1338,11 @@ article {
   margin: 0;
 }
 
-#topmenu li.menu-item {
-  margin-left: 32px;
+#topmenu li.menu-item+li.menu-item {
+  margin-left: 1.5rem;
 }
 
 #topmenu li.menu-menubutton {
-  margin-left: 1rem;
   display: none;
   margin-top: 0.24rem;
 }
@@ -1678,6 +1675,9 @@ header.summary:hover .header-image {
 }
 
 /* Icons */
+
+.d-block-light,
+.d-block-dark,
 .download-icon,
 .pdf-icon,
 .theme-icon,
@@ -1690,6 +1690,16 @@ header.summary:hover .header-image {
   height: 1.5rem;
   width: 1.5rem;
   background-color: var(--text-color);
+}
+
+.d-block-dark {
+  mask-image: url("/portfolio/img/svg/brightness.svg");
+  -webkit-mask-image: url("/portfolio/img/svg/brightness.svg");
+}
+
+.d-block-light {
+  mask-image: url("/portfolio/img/svg/light-mode-dark-light.svg");
+  -webkit-mask-image: url("/portfolio/img/svg/light-mode-dark-light.svg");
 }
 
 .curl-icon {
@@ -1770,27 +1780,6 @@ button#darkmode-toggle {
   border: none;
   color: var(--text-color);
   background-color: transparent;
-}
-
-.d-block-light,
-.d-block-dark {
-  display: block;
-  content: " ";
-  background-size: 1.5rem 1.5rem;
-  height: 1.5rem;
-  width: 1.5rem;
-  background-color: var(--text-color);
-  transition: background-color 0.3s ease;
-}
-
-.d-block-light {
-  mask-image: url("https://tor2dbear.github.io/portfolio/img/light-mode-dark-light.svg");
-  -webkit-mask-image: url("https://tor2dbear.github.io/portfolio/img/light-mode-dark-light.svg");
-}
-
-.d-block-dark {
-  mask-image: url("https://tor2dbear.github.io/portfolio/img/brightness.svg");
-  -webkit-mask-image: url("https://tor2dbear.github.io/portfolio/img/brightness.svg");
 }
 
 #darkmode-toggle .d-none {
@@ -1904,6 +1893,13 @@ a.menu-link.active .hamburgare {
 .brandcontainer {
   display: flex;
   flex-direction: row;
+  position: relative;
+}
+
+a#brand-link {
+  height: 2rem;
+  min-width: 11rem;
+  position: absolute;
 }
 
 :not(#layout.active)>#topmenu.bottom-line {
@@ -2324,11 +2320,12 @@ div#mce-responses {
     --header-height-neg: -4.5rem;
   }
 
-  /* #topmenu:not(.bottom-line) {
-    transform: translateY(0) !important;
-  } */
   #topmenu.relative {
     position: relative;
+  }
+
+  #topmenu :is(.brandcontainer) {
+    transform: translate3d(0, -0.3125rem, 0);
   }
 
   #topmenu.hide {
@@ -2351,6 +2348,10 @@ div#mce-responses {
 
   .progress-bar {
     display: none;
+  }
+
+  #brand-link {
+    width: 11rem !important;
   }
 
   #topmenu .topmenuitems {
