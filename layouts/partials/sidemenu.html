@@ -1,22 +1,27 @@
-<div id="menu">
+<menu id="menu">
   <div id="menu-content">
     <div class="menu">
       <ul class="menu-list">
-        {{ $urlstart := .RelPermalink }} 
+        {{ $urlstart := .RelPermalink }}
         {{ range .Site.Menus.start }}
-        <li class="menu-item menu-start">
-          <a
-            class="menu-link {{ if eq $urlstart (.URL | relLangURL) }}active{{ end }}"
-            title="{{ .Name }}"
-            href="{{ .URL | relLangURL }}"
-            >{{ .Name }}</a>
-        </li>
-        {{end}}
+          <li class="menu-item menu-start">
+            <a
+              class="menu-link {{ if eq $urlstart (.URL | relLangURL) }}
+                active
+              {{ end }}"
+              title="{{ .Name }}"
+              href="{{ .URL | relLangURL }}"
+              >{{ .Name }}</a
+            >
+          </li>
+        {{ end }}
       </ul>
     </div>
 
-    {{ partial "topmenu-items.html" . }} {{ partial "tags_menu.html" . }} {{
-    partial "social.html" . }} {{ partial "theme.html" . }} {{ partial
-    "copyright.html" . }}
+    {{ partial "topmenu-items.html" . }} {{ partial "tags_menu.html" . }}
+    {{ partial "social.html" . }} {{ partial "theme.html" . }}
+    {{ partial
+      "copyright.html" .
+    }}
   </div>
-</div>
+</menu>

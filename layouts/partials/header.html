@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+  {{ partial "head.html" . }}
 
-{{ partial "head.html" . }}
 
-<body>
-<div id="layout">
+  <body>
+    <div id="layout">
+      {{ partial "topmenu.html" . }}
 
-  {{ partial "topmenu.html" . }}
-  
-  {{ $urlclient := .Permalink }}
-  {{ if in $urlclient "main"}}
-  {{ else }}
-  {{ partial "sidemenu.html" . }}
-  {{ end }}
+      {{ $urlclient := .Permalink }}
+      {{ if in $urlclient "main" }}
+      {{ else }}
+        {{ partial "sidemenu.html" . }}
+      {{ end }}
 
-  
 
-  <div id="main">
+      <main id="main">
