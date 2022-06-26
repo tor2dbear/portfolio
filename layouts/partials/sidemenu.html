@@ -15,13 +15,23 @@
             >
           </li>
         {{ end }}
+        {{ $urltop := .RelPermalink }}
+        {{ range .Site.Menus.top }}
+          <li class="menu-item hide-on-client topmenuitems">
+            <a
+              class="menu-link {{ if eq $urltop .URL }}active{{ end }}"
+              title="{{ .Name }}"
+              href="{{ .URL | relLangURL }}"
+              >{{ .Name }}</a
+            >
+          </li>
+        {{ end }}
       </ul>
     </div>
 
-    {{ partial "topmenu-items.html" . }} {{ partial "tags_menu.html" . }}
-    {{ partial "social.html" . }} {{ partial "theme.html" . }}
-    {{ partial
-      "copyright.html" .
-    }}
+    {{ partial "tags_menu.html" . }}
+    {{ partial "social.html" . }}
+    {{ partial "theme.html" . }}
+    {{ partial "copyright.html" . }}
   </div>
 </menu>

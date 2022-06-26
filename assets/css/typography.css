@@ -354,6 +354,7 @@ body a.menu-link:active {
   text-transform: none;
   background: transparent;
   text-decoration: none;
+  color: var(--text-color);
 }
 
 /* Font: Post */
