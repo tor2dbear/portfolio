@@ -6,7 +6,7 @@
     <ul class="menu-list">
       {{ $urltop := .RelPermalink }}
       {{ range .Site.Menus.top }}
-        <li class="menu-item hide-on-client topmenuitems hide-on-xs">
+        <li class="menu-item hide-on-client hide-on-xs">
           <a
             class="menu-link {{ if eq $urltop .URL }}active{{ end }}"
             title="{{ .Name }}"
@@ -15,7 +15,7 @@
           >
         </li>
       {{ end }}
-      <li class="menu-item menu-menubutton topmenuitems">
+      <li class="menu-item menu-menubutton">
         <div class="themeswitch">
           <button
             id="darkmode-toggle"
@@ -27,7 +27,7 @@
           </button>
         </div>
       </li>
-      <li class="menu-item menu-menubutton topmenuitems hide-on-client">
+      <li class="menu-item menu-menubutton hide-above-sm hide-on-client">
         <!-- Menu toggle -->
         <a href="#menu" class="menu-link" id="menuLink">
           <span class="hamburgare"></span>

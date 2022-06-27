@@ -139,6 +139,8 @@ body {
   margin: 0px;
 }
 
+/* Type classes */
+
 h1,
 h2,
 h3,
@@ -153,8 +155,23 @@ h6 {
   margin-inline-end: 0px;
 }
 
+.type-heading,
+h1,
+.type-headline-1,
+h2,
+.type-headline-2,
+h3,
+.type-headline-3,
+h4,
+.type-headline-4 {
+  color: var(--text-color);
+  font-weight: var(--sans-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
+  font-family: var(--font-sans);
+}
+
 /* Font: Heading */
-.times-header,
 .type-heading {
   font-family: var(--font-serif);
   font-size: var(--text-6xl);
@@ -164,56 +181,31 @@ h6 {
   letter-spacing: var(--tracking-tight);
 }
 
-/* 768px */
-@media (max-width: 48rem) {
-  .type-heading {
-    font-size: var(--text-5xl);
-  }
-}
-
 /* Font: Headline 1 */
 h1,
 .type-headline-1 {
   font-size: var(--text-5xl);
-  color: var(--text-color);
-  font-weight: var(--sans-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
 }
 
 /* Font: Headline 2 */
 h2,
 .type-headline-2 {
   font-size: var(--text-4xl);
-  color: var(--text-color);
-  font-weight: var(--sans-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
 }
 
 /* Font: Headline 3 */
 h3,
 .type-headline-3 {
   font-size: var(--text-2xl);
-  color: var(--text-color);
-  font-weight: var(--sans-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
 }
 
 /* Font: Headline 4 */
 h4,
 .type-headline-4 {
   font-size: var(--text-lg);
-  color: var(--text-color);
-  font-weight: var(--sans-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
 }
 
 /* Font: Headline small */
-.tag-header h2,
-.post-header h2,
 .type-headline-small {
   font-family: var(--font-sans);
   font-size: var(--text-xs);
@@ -270,7 +262,6 @@ p,
   letter-spacing: var(--tracking-wider);
   transition: all 0.3s ease;
   white-space: nowrap;
-  /* text-transform: capitalize; */
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: var(--sans-weight-regular);
@@ -327,16 +318,74 @@ blockquote {
 }
 
 /* Font: Menu */
-.menu-heading {
+.brand {
   font-size: var(--text-2xl);
+  margin: 0;
+  font-family: var(--font-sans);
   font-weight: var(--sans-weight-bold);
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;
+  background: transparent;
+  text-decoration: none;
+  color: var(--text-color);
 }
 
-#topmenu .menu,
-#menu .menu,
-.menu-link {
+/* MENU LINKS */
+
+a.menu-link {
   font-size: var(--text-xl);
   font-weight: var(--sans-weight-bold);
+  display: block;
+}
+
+#menu .menu-link.active::after,
+#menu .menu-link:hover::after,
+#menu .menu-link.active:hover::after {
+  margin-left: 0.25rem;
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+  transition: all 0.3s ease;
+}
+
+#menu .menu-start .menu-link::after,
+#menu .menu-start .menu-link.active::after,
+#menu .menu-start .menu-link:hover::after {
+  content: "~";
+}
+
+#menu .menu-tag .menu-link::after,
+#menu .menu-tag .menu-link.active::after,
+#menu .menu-tag .menu-link:hover::after {
+  content: "/";
+  line-height: 0;
+}
+
+#menu .menu-link.active::after {
+  color: var(--text-color);
+}
+
+#menu .menu-link:hover::after {
+  color: var(--text-color-hover);
+}
+
+#layout #menu .menu-tag .menu-link.active:hover::after {
+  color: var(--text-color-hover);
+  margin-left: 0.25rem;
+}
+
+#menu .menu-link::after,
+#menu ul.menu-list:hover .menu-link.active::after {
+  margin-left: 0rem;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  #menu .menu-tag .menu-link:hover::after {
+    content: "";
+    margin-left: 0rem;
+    color: var(--text-color);
+  }
 }
 
 body a.menu-link:hover,
@@ -345,31 +394,8 @@ body a.menu-link:active {
   color: var(--text-color-hover);
 }
 
-/* Font: Brand */
-#topmenu .brandcontainer {
-  font-family: var(--font-sans);
-  font-weight: var(--sans-weight-bold);
-  font-size: var(--text-2xl);
-  letter-spacing: var(--tracking-normal);
-  text-transform: none;
-  background: transparent;
-  text-decoration: none;
-  color: var(--text-color);
-}
-
 /* Font: Post */
-.content.post h1:not(.type-headline-1),
-.content.post h2:not(.type-caption):not(.type-headline-4),
-.content.post h3,
-.content.post h4,
-.content.post h5,
-.content.post h6,
-.content.page h1,
-.content.page h2,
-.content.page h3,
-.content.page h4,
-.content.page h5,
-.content.page h6 {
+.content :is(h1, h2, h3, h4, h5, h6) :not(.type-headline-1):not(.type-caption):not(.type-headline-4) {
   margin-bottom: var(--spacing-8);
 }
 
@@ -390,18 +416,26 @@ body a.menu-link:active {
   .content.list article:nth-of-type(even) h2.text-2xl {
     font-size: var(--text-xl);
   }
+
+  /* MENU LINKS */
+  #menu .menu-start .menu-link.active::after,
+  #menu .menu-tag .menu-link.active::after,
+  #menu .menu-tag .menu-link:hover::after,
+  #menu .menu-tag .menu-link::after {
+    content: "";
+  }
 }
 
 /* X-Small */
 @media (max-width: 47.9375em) {
 
+  .type-heading {
+    font-size: var(--text-5xl);
+  }
+
   h1,
   .type-headline-1 {
     font-size: var(--text-4xl);
-    color: var(--text-color);
-    font-weight: var(--sans-weight-bold);
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-normal);
   }
 
   /* Font: Headline 2 */
@@ -409,20 +443,12 @@ body a.menu-link:active {
   h2,
   .type-headline-2 {
     font-size: var(--text-2xl);
-    color: var(--text-color);
-    font-weight: var(--sans-weight-bold);
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-normal);
   }
 
   /* Font: Headline 3 */
   h3,
   .type-headline-3 {
     font-size: var(--text-2xl);
-    color: var(--text-color);
-    font-weight: var(--sans-weight-bold);
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-normal);
   }
 
   /* Font: Caption */
@@ -447,6 +473,11 @@ body a:active {
 }
 
 a:visited {
+  color: var(--text-color);
+}
+
+a.menu-heading:hover {
+  text-decoration: none;
   color: var(--text-color);
 }
 

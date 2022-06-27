@@ -17,7 +17,7 @@
         {{ end }}
         {{ $urltop := .RelPermalink }}
         {{ range .Site.Menus.top }}
-          <li class="menu-item hide-on-client topmenuitems">
+          <li class="menu-item hide-on-client">
             <a
               class="menu-link {{ if eq $urltop .URL }}active{{ end }}"
               title="{{ .Name }}"
