@@ -239,4 +239,12 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: red;
   --color-error-light: rgb(133, 58, 58);
+  --theme-toggle-bg: var(--colors-accent-300);
+  --theme-toggle-bg-active: var(--bg-color);
+  --theme-toggle-menu-bg: var(--colors-accent-300);
+  --theme-toggle-menu-bg-active: var(--background-color-menu);
+  --theme-toggle-text-active: var(--theme-toggle-bg);
+  --theme-toggle-text-passive: var(--bg-color);
+  --theme-toggle-menu-text-active: var(--text-color-menu);
+  --theme-toggle-menu-text-passive: var(--background-color-menu);
 }
