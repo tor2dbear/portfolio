@@ -395,7 +395,7 @@ a.menu-link {
   margin-bottom: var(--spacing-8);
 }
 
-.content :is(.post, .page) p {
+.content:is(.post, .page) p {
   margin-bottom: var(--spacing-32);
 }
 
@@ -440,6 +440,10 @@ a.menu-link {
 
   .type-caption {
     font-size: var(--text-2xl);
+  }
+
+  blockquote {
+    width: 100%;
   }
 }
 
