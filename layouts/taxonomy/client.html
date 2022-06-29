@@ -1,5 +1,15 @@
 {{ partial "header-client.html" . }}
 
+{{ $style := resources.Get "css/clientpage.css" }}
+{{ $css := slice $style | resources.Concat "client.css" }}
+
+
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ $css.Permalink }}"
+  media="all"
+/>
 
 <div class="content client">
   <nav class="client-breadcrumb flex text-sm mb-24 show-on-client">

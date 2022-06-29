@@ -1,6 +1,6 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}">
   {{ if eq .Params.index false }}
   <meta name = "robots" content = "noindex">
@@ -19,21 +19,24 @@
   <!-- Fonts -->
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
-  <!-- CSS -->
-  {{/*  <link rel="stylesheet" href="assets/css/variables.css">
-  <link rel="stylesheet" href="assets/css/atoms.css">
-  <link rel="stylesheet" href="assets/css/typography.css">
-  <link rel="stylesheet" href="assets/css/style.css">  */}}
-
   <!-- CSS minify -->
   {{ $stylea := resources.Get "css/variables.css" }}
   {{ $styleb := resources.Get "css/atoms.css" }}
   {{ $stylec := resources.Get "css/typography.css" }}
   {{ $styled := resources.Get "css/style.css" }}
-  {{/*  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "allstyle.css" | minify | fingerprint }}  */}}
-  {{/*  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media='all' />  */}}
-  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "allstyle.css" }}
+
+  <!-- CSS minify -->
+  {{ if not (in (.Site.BaseURL | string) "localhost") }}
+  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "allstyle.css" | minify | fingerprint }}
+  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media='all' />
+  {{ end }}
+  
+  <!-- CSS development -->
+  {{ if in (.Site.BaseURL | string) "localhost" }}
+  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "localstyle.css" }}
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media='all' />
+  {{ end }}
+  
 
 
   <!-- MathJax -->
