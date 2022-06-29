@@ -40,6 +40,7 @@ DefaultContentLanguage = "en"
 [languages]
   [languages.en]
     title = "Torbjörn Hedberg | Designer"
+    description = "Torbjörn Hedberg is a graphic designer based in Gothenburg, Sweden. Available for freelance work & collaborations."
     languageName = "English"
     weight = 1
     contentDir = "content/english"
@@ -62,8 +63,10 @@ DefaultContentLanguage = "en"
       name = "contact"
       weight = 4
       url = "/contact/"
+
   [languages.sv]
     title = "Torbjörn Hedberg | Designer"
+    description = "Torbjörn Hedberg är en grafiskt designer verksam i Göteborg. Tillgänglig för frilansuppdrag och sammarbeten."
     languageName = "Svenska"
     weight = 2
     contentDir = "content/swedish"
@@ -96,8 +99,6 @@ DefaultContentLanguage = "en"
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
   googleAnalytics = "G-B270MQG9GZ"
-  # CSS name for highlight.js
-  highlightjs = "androidstudio"
   dateFormat = "02 Jan 2006, 15:04"
   mainSections = ['blog', 'docs']
 
