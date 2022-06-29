@@ -29,11 +29,13 @@
 
   <picture>
     <source
-      media="(max-width: 376px) and (max-resolution: 1dppx)"
+      media="(max-width: 376px) and (max-resolution: 1dppx), 
+              (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
       srcset="{{ $small.RelPermalink }}"
     />
     <source
-      media="(max-width: 376px) and (min-resolution: 2dppx)"
+      media="(max-width: 376px) and (min-resolution: 2dppx, 
+              (max-width: 376px) and (-webkit-min-device-pixel-ratio: 2)"
       srcset="{{ $large.RelPermalink }}"
     />
     <source media="(max-width: 992px)" srcset="{{ $medium.RelPermalink }}" />
