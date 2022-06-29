@@ -69,8 +69,12 @@
       <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
         <picture>
           <source
-            media="(max-width: 376px)"
+            media="(max-width: 376px) and (max-resolution: 1dppx)"
             srcset="{{ with $tiny.RelPermalink }}{{ . }}{{ end }}"
+          />
+          <source
+            media="(max-width: 376px) and (min-resolution: 2dppx)"
+            srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
             media="(max-width: 992px)"
