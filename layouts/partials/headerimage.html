@@ -18,12 +18,14 @@
   {{ .Scratch.Set "medium" ($src.Resize "800x webp") }}
   {{ .Scratch.Set "large" ($src.Resize "1200x webp") }}
   {{ .Scratch.Set "xlarge" ($src.Resize "1500x webp") }}
+  {{ .Scratch.Set "xxlarge" ($src.Resize "2000x webp") }}
   {{ .Scratch.Set "fallback" ($src.Resize "1200x jpg") }}
 
   {{ $small := .Scratch.Get "small" }}
   {{ $medium := .Scratch.Get "medium" }}
   {{ $large := .Scratch.Get "large" }}
   {{ $xlarge := .Scratch.Get "xlarge" }}
+  {{ $xxlarge := .Scratch.Get "xxlarge" }}
   {{ $fallback := .Scratch.Get "fallback" }}
 
 
@@ -34,7 +36,7 @@
       srcset="{{ $small.RelPermalink }}"
     />
     <source
-      media="(max-width: 376px) and (min-resolution: 2dppx, 
+      media="(max-width: 376px) and (min-resolution: 2dppx), 
               (max-width: 376px) and (-webkit-min-device-pixel-ratio: 2)"
       srcset="{{ $large.RelPermalink }}"
     />
@@ -44,12 +46,30 @@
       srcset="{{ $medium.RelPermalink }}"
     />
     <source
-      media="(max-width: 992px) and (min-resolution: 2dppx, 
-              (max-width: 376px) and (-webkit-min-device-pixel-ratio: 2)"
+      media="(max-width: 992px) and (min-resolution: 2dppx), 
+              (max-width: 992px) and (-webkit-min-device-pixel-ratio: 2)"
       srcset="{{ $xlarge.RelPermalink }}"
     />
-    <source media="(max-width: 1400px)" srcset="{{ $large.RelPermalink }}" />
-    <source media="(min-width: 1401px)" srcset="{{ $xlarge.RelPermalink }}" />
+    <source
+      media="(max-width: 1400px) and (min-resolution: 1dppx), 
+              (max-width: 1400px) and (-webkit-min-device-pixel-ratio: 1)"
+      srcset="{{ $large.RelPermalink }}"
+    />
+    <source
+      media="(max-width: 1400px) and (min-resolution: 2dppx), 
+              (max-width: 1400px) and (-webkit-min-device-pixel-ratio: 2)"
+      srcset="{{ $xxlarge.RelPermalink }}"
+    />
+    <source
+      media="(min-width: 1401px) and (min-resolution: 1dppx), 
+              (min-width: 1401px) and (-webkit-min-device-pixel-ratio: 1)"
+      srcset="{{ $xlarge.RelPermalink }}"
+    />
+    <source
+      media="(min-width: 1401px) and (min-resolution: 2dppx), 
+              (min-width: 1401px) and (-webkit-min-device-pixel-ratio: 2)"
+      srcset="{{ $xxlarge.RelPermalink }}"
+    />
 
     <img
       alt="{{ .Title }}"

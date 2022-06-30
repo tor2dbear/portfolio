@@ -819,10 +819,20 @@ button#lang-toggle:before {
   -webkit-mask-image: url("/portfolio/img/svg/lang-icon-16.svg");
 }
 
-[data-mode="standard"] .d-block-standard,
+.d-block-standard {
+  display: none;
+}
+
 [data-mode="pant"] .d-block-pant {
   display: none;
 }
+
+[data-mode="standard"] .d-block-pant,
+[data-mode="pant"] .d-block-standard {
+  display: block;
+}
+
+
 
 button#lang-toggle>.d-block-standard {
   display: block;

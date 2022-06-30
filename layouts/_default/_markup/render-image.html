@@ -47,6 +47,7 @@
     {{ $smallw := default "800x webp" }}
     {{ $mediumw := default "1200x webp" }}
     {{ $largew := default "1500x webp" }}
+    {{ $xlargew := default "2000x webp" }}
     {{ $fallbackw := default "1200x jpg" }}
     {{/* resize the src image to the given sizes */}}
     {{/* We create a a temp scratch because it's not available in this context */}}
@@ -55,12 +56,14 @@
     {{ $data.Set "small" ($src.Resize $smallw) }}
     {{ $data.Set "medium" ($src.Resize $mediumw) }}
     {{ $data.Set "large" ($src.Resize $largew) }}
+    {{ $data.Set "xlarge" ($src.Resize $xlargew) }}
     {{ $data.Set "fallback" ($src.Resize $fallbackw) }}
     {{/* add the processed images to the scratch */}}
     {{ $tiny := $data.Get "tiny" }}
     {{ $small := $data.Get "small" }}
     {{ $medium := $data.Get "medium" }}
     {{ $large := $data.Get "large" }}
+    {{ $xlarge := $data.Get "xlarge" }}
     {{ $fallback := $data.Get "fallback" }}
     {{/* only use images smaller than or equal to the src (original)
       image size, as Hugo will upscale small images
@@ -69,24 +72,44 @@
       <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
         <picture>
           <source
-            media="(max-width: 376px) and (max-resolution: 1dppx)"
+            media="(max-width: 376px) and (max-resolution: 1dppx), 
+                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
             srcset="{{ with $tiny.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
-            media="(max-width: 376px) and (min-resolution: 2dppx)"
+            media="(max-width: 376px) and (max-resolution: 2dppx), 
+                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 2)"
             srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
-            media="(max-width: 992px)"
+            media="(max-width: 992px) and (max-resolution: 1dppx), 
+                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 1)"
             srcset="{{ with $small.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
-            media="(max-width: 1400px)"
+            media="(max-width: 992px) and (max-resolution: 2dppx), 
+                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 2)"
+            srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
+          />
+          <source
+            media="(max-width: 1400px) and (max-resolution: 1dppx), 
+                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 1)"
             srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
-            media="(min-width: 1401px)"
+            media="(max-width: 1400px) and (max-resolution: 2dppx), 
+                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 2)"
+            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
+          />
+          <source
+            media="(min-width: 1401px) and (max-resolution: 1dppx), 
+                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 1)"
             srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
+          />
+          <source
+            media="(min-width: 1401px) and (max-resolution: 2dppx), 
+                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 2)"
+            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
           />
           <img
             alt="{{ $alt }}"
