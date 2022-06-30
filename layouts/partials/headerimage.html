@@ -28,13 +28,30 @@
 
 
   <picture>
+    <source
+      media="(max-width: 376px) and (max-resolution: 1dppx), 
+              (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
+      srcset="{{ $small.RelPermalink }}"
+    />
+    <source
+      media="(max-width: 376px) and (min-resolution: 2dppx, 
+              (max-width: 376px) and (-webkit-min-device-pixel-ratio: 2)"
+      srcset="{{ $large.RelPermalink }}"
+    />
+    <source
+      media="(max-width: 992px) and (max-resolution: 1dppx), 
+              (max-width: 992px) and (-webkit-max-device-pixel-ratio: 1)"
+      srcset="{{ $medium.RelPermalink }}"
+    />
+    <source
+      media="(max-width: 992px) and (min-resolution: 2dppx, 
+              (max-width: 376px) and (-webkit-min-device-pixel-ratio: 2)"
+      srcset="{{ $xlarge.RelPermalink }}"
+    />
+    <source media="(max-width: 1400px)" srcset="{{ $large.RelPermalink }}" />
+    <source media="(min-width: 1401px)" srcset="{{ $xlarge.RelPermalink }}" />
+
     <img
-      srcset="
-        {{ $small.RelPermalink }}  500w,
-        {{ $medium.RelPermalink }}  800w,
-        {{ $large.RelPermalink }} 1200w,
-        {{ $xlarge.RelPermalink }} 1600w
-      "
       alt="{{ .Title }}"
       title="{{ .Title }}"
       src="{{ $fallback.RelPermalink }}"
