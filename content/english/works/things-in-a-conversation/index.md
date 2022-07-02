@@ -1,15 +1,11 @@
 ---
 author: "Torbjörn Hedberg"
-date: 2022-02-24
+date: 2016-03-15
 linktitle: Things in a Conversation
 title: Things in a Conversation
 slug: works
 weight: 10
-tags: [
-    "books",
-    "design",
-    "ui-ux"
-]
+tags: ["books", "design", "ui-ux"]
 description: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
 header_image: things08.webp
 featured: true
@@ -20,10 +16,21 @@ clientabout: Conversing is probably not an activity that would be expected betwe
 
 ![Header example](things08.webp)
 
-Hugo uses the excellent [go][] [html/template][gohtmltemplate] library for
-its template engine. It is an extremely lightweight engine that provides a very
-small amount of logic. In our experience that it is just the right amount of
-logic to be able to create a good static website. If you have used other
-template systems from different languages or frameworks you will find a lot of
-similarities in go templates.
+### About
 
+The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
+The magazine was printed on a uncoated paper using two Pantone colors and black.
+
+#### Role
+
+Art Direction and Illustration
+
+![Example image](things.jpg "Title here")
+![Example image](things01.jpg "Title here")
+![Example image](things2.jpg "Title here")
+![Example image](things02.jpg "Title here")
+![Example image](things03.jpg "Title here")
+![Example image](things04.jpg "Title here")
+![Example image](things05.jpg "Title here")
+![Example image](things06.jpg "Title here")
+![Example image](things07.jpg "Title here")
