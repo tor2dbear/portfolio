@@ -45,7 +45,7 @@ DefaultContentLanguage = "en"
     weight = 1
     contentDir = "content/english"
     [[languages.en.menu.start]]
-      name = "start"
+      name = "home"
       weight = 1
       identifier = "home"
       url = "/"
@@ -71,7 +71,7 @@ DefaultContentLanguage = "en"
     weight = 2
     contentDir = "content/swedish"
     [[languages.sv.menu.start]]
-      name = "start"
+      name = "hem"
       weight = 1
       identifier = "home"
       url = "/"
@@ -114,7 +114,7 @@ DefaultContentLanguage = "en"
       taskList = true
       typographer = true
     [markup.goldmark.parser]
-      autoHeadingID = true
+      autoHeadingID = false
       autoHeadingIDType = 'github'
       [markup.goldmark.parser.attribute]
         block = true

@@ -5,25 +5,24 @@ linktitle: Things in a Conversation
 title: Things in a Conversation
 slug: works
 weight: 10
-tags: ["books", "design", "ui-ux"]
-description: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
+tags: ["books", "design"]
+description: An experimental project that investigates our perception of artifacts through speculative design.
 header_image: things08.webp
 featured: true
 client: Self initiated project
-clientweb:
-clientabout: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
+clientweb: https://www.gu.se/en/fine-applied-performing-arts
+clientabout: Speculative design project. Part of MA class at HDK – Academy of Art and Design.
 ---
 
 ![Header example](things08.webp)
 
 ### About
 
-The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
+Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
 
 #### Role
 
-Art Direction and Illustration
+Design and manufacturing of artifacts with CNC and wood work craft tools. Design and production of sprial book.
 
 ![Example image](things.jpg "Title here")
 ![Example image](things01.jpg "Title here")

@@ -513,6 +513,11 @@ p:empty {
   grid-column-gap: 2rem;
 }
 
+.client-box a {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
 /* min 768px Small  */
 @media (max-width: 63.9375em) {
   .content.post>.client-box {

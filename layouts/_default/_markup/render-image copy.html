@@ -126,44 +126,20 @@
       <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
         <picture>
           <source
-            media="(max-width: 376px) and (max-resolution: 1dppx), 
-                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
+            media="(max-width: 376px)"
             srcset="{{ with $tiny.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
-            media="(max-width: 376px) and (max-resolution: 2dppx), 
-                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(max-width: 992px) and (max-resolution: 1dppx), 
-                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 1)"
+            media="(max-width: 992px)"
             srcset="{{ with $small.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
-            media="(max-width: 992px) and (max-resolution: 2dppx), 
-                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(max-width: 1400px) and (max-resolution: 1dppx), 
-                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 1)"
+            media="(max-width: 1400px)"
             srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
           />
           <source
-            media="(max-width: 1400px) and (max-resolution: 2dppx), 
-                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(min-width: 1401px) and (max-resolution: 1dppx), 
-                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 1)"
+            media="(min-width: 1401px)"
             srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(min-width: 1401px) and (max-resolution: 2dppx), 
-                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
           />
           <img
             alt="{{ $alt }}"
