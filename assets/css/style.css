@@ -134,7 +134,7 @@ picture::after {
   display: block;
   width: 100%;
   height: 100%;
-  background-color: var(--colors-accent-900);
+  background-color: var(--img-background);
   top: 0;
   z-index: -1;
 }
@@ -884,7 +884,7 @@ input,
   width: 100%;
   box-sizing: border-box;
   outline: 0;
-  mix-blend-mode: luminosity;
+  /* mix-blend-mode: luminosity; */
 }
 
 input:last-of-type {

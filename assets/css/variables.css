@@ -5,7 +5,7 @@
   --colors-white: #ffffff;
 
   /* Color gray */
-  --colors-gray-50: #fafafa;
+  --colors-gray-50: hsl(0, 0%, 98%);
   --colors-gray-100: #f4f4f5;
   --colors-gray-200: #e4e4e7;
   --colors-gray-300: #d4d4d8;
@@ -16,17 +16,68 @@
   --colors-gray-800: #27272a;
   --colors-gray-900: #18181b;
 
+  /* Neutral */
+  --neutral-900: hsl(239.99, 5.9%, 9.96%);
+  --neutral-800: hsl(240.7, 1.23%, 19.14%);
+  --neutral-700: hsl(240.71, 1.12%, 27.97%);
+  --neutral-600: hsl(240.64, 1.41%, 37.41%);
+  --neutral-500: hsl(240.65, 1.31%, 47.17%);
+  --neutral-400: hsl(240.76, 1.08%, 57.09%);
+  --neutral-300: hsl(240.84, 0.9%, 67.33%);
+  --neutral-200: hsl(240.88, 0.86%, 77.94%);
+  --neutral-100: hsl(240.91, 0.69%, 88.82%);
+  --colors-gray-50: hsl(241, 0.64%, 98%);
+
+  /* Primary */
+  --primary-900: hsl(4.59, 55.75%, 12.52%);
+  --primary-800: hsl(0.47, 51.66%, 22.33%);
+  --primary-700: hsl(0.04, 49.77%, 32.42%);
+  --primary-600: hsl(0.02, 48.04%, 42.99%);
+  --primary-500: hsl(0.03, 64.41%, 58.02%);
+  --primary-400: hsl(2.59, 67.04%, 64.08%);
+  --primary-300: hsl(4.85, 65.73%, 72.99%);
+  --primary-200: hsl(5.91, 61.72%, 81.8%);
+  --primary-100: hsl(6.42, 52.86%, 90.64%);
+
+  /* Secondary */
+  --secondary-900: hsl(216.12, 75.35%, 12.85%);
+  --secondary-800: hsl(212.76, 86.25%, 20.8%);
+  --secondary-700: hsl(211.06, 90.07%, 31.96%);
+  --secondary-600: hsl(210.96, 88.42%, 38.43%);
+  --secondary-500: hsl(210.82, 87.01%, 48.26%);
+  --secondary-400: hsl(217.12, 97.54%, 65.11%);
+  --secondary-300: hsl(221.83, 97.13%, 76.28%);
+  --secondary-200: hsl(224.66, 92.39%, 84.69%);
+  --secondary-100: hsl(226.63, 78.42%, 92.15%);
+
+  /* Tertiary */
+  --tertiary-900: hsl(119.47, 11.88%, 10.19%);
+  --tertiary-800: hsl(119.81, 11.59%, 17.93%);
+  --tertiary-700: hsl(119.91, 11.11%, 26.29%);
+  --tertiary-600: hsl(119.92, 10.69%, 35.13%);
+  --tertiary-500: hsl(119.92, 10.37%, 44.4%);
+  --tertiary-400: hsl(119.92, 11.94%, 54.03%);
+  --tertiary-300: hsl(119.92, 22.02%, 68.86%);
+  --tertiary-200: hsl(119.82, 27.73%, 74.34%);
+  --tertiary-100: hsl(119.05, 40.83%, 86.06%);
+
   /* Color accent */
   --colors-accent-50: #f5f5ff;
-  --colors-accent-100: #ececf6;
-  --colors-accent-200: #e3e3ed;
-  --colors-accent-300: #c0c0d7;
-  --colors-accent-400: #9596c1;
-  --colors-accent-500: #6667ab;
-  --colors-accent-600: #30328d;
-  --colors-accent-700: #06086f;
-  --colors-accent-800: #010351;
-  --colors-accent-900: #000133;
+  --colors-accent-900: hsl(239.57, 30.01%, 14.31%);
+  --colors-accent-800: hsl(238.68, 29.62%, 24.8%);
+  --colors-accent-700: hsl(238.42, 28.84%, 35.87%);
+  --colors-accent-600: hsl(238.43, 27.88%, 47.39%);
+  --colors-accent-500: hsl(239.13, 29.13%, 53.5%);
+  --colors-accent-400: hsl(242.14, 29.31%, 65.21%);
+  --colors-accent-300: hsl(243.48, 29.49%, 73.59%);
+  --colors-accent-200: hsl(244.51, 28.38%, 82.04%);
+  --colors-accent-100: hsl(245.29, 24.98%, 90.7%);
+  --colors-accent-dark: #000133;
+
+  /* Danger */
+  --danger-dark: hsl(6.15, 61.65%, 38.5%);
+  --danger-normal: hsl(6.13, 73.02%, 55.14%);
+  --danger-light: hsl(8.82, 74.01%, 62.47%);
 
   /* Fonts */
   --font-sans: neue-haas-grotesk-text, "Helvetica Neue", Helvetica,
@@ -134,6 +185,7 @@
   --text-color-tag: var(--colors-accent-500);
   --img-grayscale: 0%;
   --img-blend-mode: normal;
+  --img-background: var(--colors-accent-900);
   --box-background: var(--colors-accent-50);
   --background-color-menu: var(--colors-accent-600);
   --border-header: var(--colors-gray-200);
@@ -145,8 +197,8 @@
   --newsletter-color: var(--colors-accent-100);
   --newsletter-button-background: var(--colors-accent-300);
   --newsletter-button-color: var(--colors-accent-800);
-  --color-error: red;
-  --color-error-light: rgb(218, 172, 172);
+  --color-error: var(--danger-normal);
+  --color-error-light: var(--danger-light);
 }
 
 :root[data-theme="dark"] {
@@ -165,6 +217,7 @@
   --text-color-tag: var(--colors-gray-300);
   --img-grayscale: 0%;
   --img-blend-mode: normal;
+  --img-background: var(--colors-accent-900);
   --box-background: var(--colors-gray-800);
   --background-color-menu: var(--colors-accent-900);
   --border-header: var(--colors-gray-700);
@@ -176,8 +229,8 @@
   --newsletter-color: var(--colors-accent-100);
   --newsletter-button-background: var(--colors-accent-300);
   --newsletter-button-color: var(--colors-accent-800);
-  --color-error: red;
-  --color-error-light: rgb(133, 58, 58);
+  --color-error: var(--danger-normal);
+  --color-error-light: var(--danger-dark);
 }
 
 :root[data-theme="light"][data-mode="pant"] {
@@ -188,18 +241,19 @@
   --text-color-hover: var(--colors-accent-500);
   --text-color-menu: var(--colors-accent-900);
   --text-color-menu-hover: var(--colors-accent-800);
-  --bg-color: var(--colors-accent-200);
-  --bg-tag: var(--colors-accent-300);
+  --bg-color: var(--colors-accent-100);
+  --bg-tag: var(--colors-accent-200);
   --bg-tag-hover: var(--colors-accent-400);
   --bg-section-headline: var(--colors-accent-700);
   --text-section-headline: var(--colors-accent-50);
   --text-color-tag: var(--colors-accent-600);
   --img-grayscale: 100%;
   --img-blend-mode: screen;
+  --img-background: #000133;
   --box-background: var(--colors-accent-300);
   --background-color-menu: var(--colors-accent-400);
   --border-header: var(--colors-accent-400);
-  --form-bg: var(--colors-accent-100);
+  --form-bg: var(--colors-accent-200);
   --form-border: transparent;
   --form-placeholder: var(--colors-accent-300);
   --newsletter-signup-bg: var(--colors-accent-800);
@@ -207,8 +261,8 @@
   --newsletter-color: var(--colors-accent-100);
   --newsletter-button-background: var(--colors-accent-300);
   --newsletter-button-color: var(--colors-accent-800);
-  --color-error: red;
-  --color-error-light: rgb(218, 172, 172);
+  --color-error: var(--danger-normal);
+  --color-error-light: var(--danger-light);
 }
 
 :root[data-theme="dark"][data-mode="pant"] {
@@ -223,13 +277,14 @@
   --bg-tag-hover: var(--colors-accent-300);
   --bg-section-headline: var(--colors-accent-700);
   --text-section-headline: var(--colors-accent-50);
-  --text-color-tag: var(--colors-accent-700);
+  --text-color-tag: var(--colors-accent-800);
   --img-grayscale: 100%;
   --img-blend-mode: screen;
+  --img-background: #000133;
   --box-background: var(--colors-accent-800);
   --background-color-menu: var(--colors-accent-800);
   --border-header: var(--colors-accent-700);
-  --form-bg: var(--colors-accent-600);
+  --form-bg: var(--colors-accent-700);
   --form-border: transparent;
   --form-placeholder: var(--colors-accent-500);
   --newsletter-signup-bg: var(--colors-accent-800);
@@ -237,14 +292,38 @@
   --newsletter-color: var(--colors-accent-100);
   --newsletter-button-background: var(--colors-accent-300);
   --newsletter-button-color: var(--colors-accent-800);
-  --color-error: red;
-  --color-error-light: rgb(133, 58, 58);
-  --theme-toggle-bg: var(--colors-accent-300);
-  --theme-toggle-bg-active: var(--bg-color);
-  --theme-toggle-menu-bg: var(--colors-accent-300);
-  --theme-toggle-menu-bg-active: var(--background-color-menu);
-  --theme-toggle-text-active: var(--theme-toggle-bg);
-  --theme-toggle-text-passive: var(--bg-color);
-  --theme-toggle-menu-text-active: var(--text-color-menu);
-  --theme-toggle-menu-text-passive: var(--background-color-menu);
+  --color-error: var(--danger-normal);
+  --color-error-light: var(--danger-dark);
+}
+
+:root[data-theme="light"][data-mode="test"] {
+  --primary-color: var(--primary-500);
+  --text-color: var(--colors-gray-900);
+  --text-color-accent: var(--primary-500);
+  --text-color-lighter: var(--colors-gray-500);
+  --text-color-hover: var(--primary-500);
+  --text-color-menu: var(--colors-white);
+  --text-color-menu-hover: var(--primary-100);
+  --bg-color: var(--colors-white);
+  --bg-tag: var(--primary-100);
+  --bg-tag-hover: var(--primary-200);
+  --bg-section-headline: var(--tertiary-700);
+  --text-section-headline: var(--tertiary-100);
+  --text-color-tag: var(--primary-600);
+  --img-grayscale: 0%;
+  --img-blend-mode: normal;
+  --img-background: var(--colors-accent-900);
+  --box-background: var(--colors-accent-50);
+  --background-color-menu: var(--colors-accent-600);
+  --border-header: var(--colors-gray-200);
+  --form-bg: var(--colors-gray-100);
+  --form-border: transparent;
+  --form-placeholder: var(--colors-gray-300);
+  --newsletter-signup-bg: var(--primary-600);
+  --newsletter-illustration-bg: var(--secondary-700);
+  --newsletter-color: var(--primary-100);
+  --newsletter-button-background: var(--primary-200);
+  --newsletter-button-color: var(--primary-600);
+  --color-error: var(--danger-normal);
+  --color-error-light: var(--danger-light);
 }
