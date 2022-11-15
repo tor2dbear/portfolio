@@ -1,6 +1,6 @@
 baseurl = "https://www.tor-bjorn.com"
 languageCode = "en-us"
-title = "TB portfolio00"
+title = "TB portfolio"
 author = "Torbjörn Hedberg"
 canonifyurls = true
 paginate = 10
