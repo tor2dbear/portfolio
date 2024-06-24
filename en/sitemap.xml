@@ -265,6 +265,19 @@
                 href="https://www.tor-bjorn.com/works/tags/books/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/ui-ux/</loc>
+    <lastmod>2016-03-15T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/ui-ux/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/clients/clients01/</loc>
     <lastmod>2015-05-16T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -369,18 +382,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.tor-bjorn.com/thankyou/"
-                />
-  </url><url>
-    <loc>https://www.tor-bjorn.com/works/tags/ui-ux/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/works/tags/ui-ux/"
                 />
   </url>
 </urlset>
