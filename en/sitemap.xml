@@ -2,19 +2,76 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://www.tor-bjorn.com/categories/</loc>
+    <loc>https://www.tor-bjorn.com/works/utblick-no.2/</loc>
+    <lastmod>2015-05-16T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/categories/"
+                href="https://www.tor-bjorn.com/sv/arbeten/utblick-nr.2/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://www.tor-bjorn.com/categories/"
+                href="https://www.tor-bjorn.com/works/utblick-no.2/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/a-cut-up-world/</loc>
+    <lastmod>2014-06-04T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/a-cut-up-world/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/a-cut-up-world/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/gothenburg-poster/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/in-the-city/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/in-the-city/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/in-the-city/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/utblick-no.4/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/utblick-nr.4/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/utblick-no.4/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/things-in-a-conversation/</loc>
+    <lastmod>2016-03-15T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/things-in-a-conversation/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/things-in-a-conversation/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/clients/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
@@ -26,7 +83,73 @@
                 href="https://www.tor-bjorn.com/clients/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/branding/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/branding/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/design/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/design/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/editorial-design/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/editorial-design/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/graphic-design/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/graphic-design/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/illustrations/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/illustrationer/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/illustrations/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/tags/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
@@ -39,6 +162,7 @@
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
@@ -50,7 +174,60 @@
                 href="https://www.tor-bjorn.com/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/topics/topic01/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/topics/topic01/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/topics/topic01/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/clients/topic01/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/clients/topic01/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/clients/topic01/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/topics/topic02/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/topics/topic02/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/topics/topic02/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/clients/topic02/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/clients/topic02/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/clients/topic02/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/topics/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
@@ -60,6 +237,150 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.tor-bjorn.com/topics/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/books/</loc>
+    <lastmod>2016-03-15T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/books/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/clients/clients01/</loc>
+    <lastmod>2015-05-16T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/clients/clients01/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/clients/clients01/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/clients/clients02/</loc>
+    <lastmod>2015-05-16T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/clients/clients02/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/clients/clients02/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/clients/volvo/</loc>
+    <lastmod>2015-05-16T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/clients/volvo/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/clients/volvo/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/clients/deg17/</loc>
+    <lastmod>2014-06-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.tor-bjorn.com/clients/test01/</loc>
+    <lastmod>2014-06-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.tor-bjorn.com/contact/</loc>
+    <lastmod>2014-04-09T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/kontakt/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/contact/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/about/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/om/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/about/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/categories/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/newsletter/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/nyhetsbrev/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/newsletter/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/thankyou/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/tack/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/thankyou/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/ui-ux/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/ui-ux/"
                 />
   </url>
 </urlset>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Topic02 on TB portfolio</title>
+    <link>https://www.tor-bjorn.com/topics/topic02/</link>
+    <description>Recent content in Topic02 on TB portfolio</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.tor-bjorn.com/topics/topic02/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Utblick no.2</title>
+      <link>https://www.tor-bjorn.com/works/utblick-no.2/</link>
+      <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/works/utblick-no.2/</guid>
+      <description>Description of heroimage About The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Role Art Direction and Illustration&#xA;Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
+    </item>
+    <item>
+      <title>Gothenburg Poster</title>
+      <link>https://www.tor-bjorn.com/works/gothenburg-poster/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/works/gothenburg-poster/</guid>
+      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.&#xA;We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
+    </item>
+    <item>
+      <title>In the City</title>
+      <link>https://www.tor-bjorn.com/works/in-the-city/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/works/in-the-city/</guid>
+      <description> About The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Role Art Direction and Illustration&#xA;Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here Title here </description>
+    </item>
+  </channel>
+</rss>

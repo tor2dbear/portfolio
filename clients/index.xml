@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Clients on TB portfolio</title>
+    <title>TB portfolio</title>
     <link>https://www.tor-bjorn.com/clients/</link>
-    <description>Recent content in Clients on TB portfolio</description>
+    <description>Recent content on TB portfolio</description>
     <generator>Hugo</generator>
     <language>en</language>
+    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.tor-bjorn.com/clients/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Topic01</title>
+      <link>https://www.tor-bjorn.com/clients/topic01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/clients/topic01/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Topic02</title>
+      <link>https://www.tor-bjorn.com/clients/topic02/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/clients/topic02/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Clients01</title>
+      <link>https://www.tor-bjorn.com/clients/clients01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/clients/clients01/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Clients02</title>
+      <link>https://www.tor-bjorn.com/clients/clients02/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/clients/clients02/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Volvo</title>
+      <link>https://www.tor-bjorn.com/clients/volvo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/clients/volvo/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Work application for UI position at Deg17</title>
+      <link>https://www.tor-bjorn.com/clients/deg17/</link>
+      <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/clients/deg17/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Work application for UI position at test01</title>
+      <link>https://www.tor-bjorn.com/clients/test01/</link>
+      <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/clients/test01/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
