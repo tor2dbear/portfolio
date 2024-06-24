@@ -1,52 +1,40 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Grafisk design on Torbjörn Hedberg | Designer</title>
+    <title>Grafisk design on TB portfolio</title>
     <link>https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/</link>
-    <description>Recent content in Grafisk design on Torbjörn Hedberg | Designer</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/index.xml" rel="self" type="application/rss+xml" />
+    <description>Recent content in Grafisk design on TB portfolio</description>
+    <generator>Hugo</generator>
+    <language>sv</language>
+    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Utblick nr.2</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.2/</link>
       <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.2/</guid>
-      <description>Description of heroimage Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
-Roll Art Direction och illustratör
-Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
+      <description>Description of heroimage Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Roll Art Direction och illustratör&#xA;Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
     </item>
-    
     <item>
       <title>A Cut up World</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/a-cut-up-world/</link>
       <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/a-cut-up-world/</guid>
-      <description>About An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.
-Role Graphic designer</description>
+      <description>About An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.&#xA;Role Graphic designer</description>
     </item>
-    
     <item>
       <title>Göteborgsaffisch</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/g%C3%B6teborgsaffisch/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/g%C3%B6teborgsaffisch/</guid>
-      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
-We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
+      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.&#xA;We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
     </item>
-    
     <item>
       <title>In the City</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/in-the-city/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/in-the-city/</guid>
       <description>sdafas</description>
     </item>
-    
   </channel>
 </rss>

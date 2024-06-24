@@ -1,74 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Torbjörn Hedberg | Designer</title>
+    <title>Tags on TB portfolio</title>
     <link>https://www.tor-bjorn.com/tags/</link>
-    <description>Recent content in Tags on Torbjörn Hedberg | Designer</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.tor-bjorn.com/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Branding</title>
-      <link>https://www.tor-bjorn.com/works/tags/branding/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.tor-bjorn.com/works/tags/branding/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Design</title>
-      <link>https://www.tor-bjorn.com/works/tags/design/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.tor-bjorn.com/works/tags/design/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Editorial Design</title>
-      <link>https://www.tor-bjorn.com/works/tags/editorial-design/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.tor-bjorn.com/works/tags/editorial-design/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Graphic Design</title>
-      <link>https://www.tor-bjorn.com/works/tags/graphic-design/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.tor-bjorn.com/works/tags/graphic-design/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Illustrations</title>
-      <link>https://www.tor-bjorn.com/works/tags/illustrations/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.tor-bjorn.com/works/tags/illustrations/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Books</title>
-      <link>https://www.tor-bjorn.com/works/tags/books/</link>
-      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.tor-bjorn.com/works/tags/books/</guid>
-      <description>{{ range .Pages }}</description>
-    </item>
-    
-    <item>
-      <title>UI/UX</title>
-      <link>https://www.tor-bjorn.com/works/tags/ui-ux/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.tor-bjorn.com/works/tags/ui-ux/</guid>
-      <description></description>
-    </item>
-    
+    <description>Recent content in Tags on TB portfolio</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <atom:link href="https://www.tor-bjorn.com/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

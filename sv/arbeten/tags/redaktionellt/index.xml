@@ -1,35 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Redaktionellt on Torbjörn Hedberg | Designer</title>
+    <title>Redaktionellt on TB portfolio</title>
     <link>https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/</link>
-    <description>Recent content in Redaktionellt on Torbjörn Hedberg | Designer</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Fri, 20 Nov 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/index.xml" rel="self" type="application/rss+xml" />
+    <description>Recent content in Redaktionellt on TB portfolio</description>
+    <generator>Hugo</generator>
+    <language>sv</language>
+    <lastBuildDate>Fri, 20 Nov 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Utblick nr.2</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.2/</link>
       <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.2/</guid>
-      <description>Description of heroimage Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
-Roll Art Direction och illustratör
-Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
+      <description>Description of heroimage Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Roll Art Direction och illustratör&#xA;Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
     </item>
-    
     <item>
       <title>Utblick nr.4</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.4/</link>
       <pubDate>Fri, 20 Nov 2015 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.4/</guid>
-      <description>Framsida av publikationen Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
-Roll Art Direction
-Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
+      <description>Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Roll Art Direction&#xA;My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
     </item>
-    
   </channel>
 </rss>

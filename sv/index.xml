@@ -1,118 +1,82 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Torbjörn Hedberg | Designer</title>
+    <title>TB portfolio</title>
     <link>https://www.tor-bjorn.com/sv/</link>
-    <description>Recent content on Torbjörn Hedberg | Designer</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.tor-bjorn.com/sv/index.xml" rel="self" type="application/rss+xml" />
+    <description>Recent content on TB portfolio</description>
+    <generator>Hugo</generator>
+    <language>sv</language>
+    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.tor-bjorn.com/sv/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Utblick nr.2</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.2/</link>
       <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.2/</guid>
-      <description>Description of heroimage Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
-Roll Art Direction och illustratör
-Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
+      <description>Description of heroimage Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Roll Art Direction och illustratör&#xA;Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
     </item>
-    
     <item>
       <title>A Cut up World</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/a-cut-up-world/</link>
       <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/a-cut-up-world/</guid>
-      <description>About An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.
-Role Graphic designer</description>
+      <description>About An exploration of our time and the borderland between two worlds. How they differ; but also how they draw near to one another. An investigation of how the internet and the tools we use daily can be used to create a story.&#xA;Role Graphic designer</description>
     </item>
-    
     <item>
       <title>Göteborgsaffisch</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/g%C3%B6teborgsaffisch/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/g%C3%B6teborgsaffisch/</guid>
-      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
-We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
+      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.&#xA;We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
     </item>
-    
     <item>
       <title>In the City</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/in-the-city/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/in-the-city/</guid>
       <description>sdafas</description>
     </item>
-    
     <item>
       <title>Things in a Conversation</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/things-in-a-conversation/</link>
       <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/things-in-a-conversation/</guid>
-      <description> About The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
-Role Art Direction and Illustration
-Title here Title here Title here Title here Title here Title here Title here Title here Title here </description>
+      <description>About The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Role Art Direction and Illustration</description>
     </item>
-    
     <item>
       <title>Utblick nr.4</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.4/</link>
       <pubDate>Fri, 20 Nov 2015 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/arbeten/utblick-nr.4/</guid>
-      <description>Framsida av publikationen Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
-Roll Art Direction
-Title here My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
+      <description>Om The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&#xA;Roll Art Direction&#xA;My quote Ullamco aliqua quis consequat duis proident eu laborum. Incididunt ad eu cupidatat mollit. Enim duis voluptate exercitation id cupidatat labore nulla esse do consectetur sint.</description>
     </item>
-    
     <item>
       <title>Kontakt</title>
       <link>https://www.tor-bjorn.com/sv/kontakt/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/kontakt/</guid>
-      <description> Skicka ett meddelande Namn E-postadress Rubrik Meddelande Skicka meddelande Torbjörn Hedberg Guldpokalsgatan 6b 417 12 Göteborg
-hej@tor-bjorn.com +46 (0) 702 - 56 20 90
-Nyhetsbrev Prenumerera på nyhetsbrevet för nyheter och uppdateringar om när nytt innehåll läggs upp på sidan.
-E-postadress </description>
+      <description> Skicka ett meddelande Namn E-postadress Rubrik Meddelande Skicka meddelande Torbjörn Hedberg Gökevägen 14 422 43 Hisings Backa&#xA;hej@tor-bjorn.com +46 (0) 702 - 56 20 90&#xA;Nyhetsbrev Prenumerera på nyhetsbrevet för nyheter och uppdateringar om när nytt innehåll läggs upp på sidan.&#xA;E-postadress </description>
     </item>
-    
     <item>
       <title>Nyhetsbrev</title>
       <link>https://www.tor-bjorn.com/sv/nyhetsbrev/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/nyhetsbrev/</guid>
       <description>Subscribe to my newsletter for news and be notified when new content is added to the site. </description>
     </item>
-    
     <item>
       <title>Om</title>
       <link>https://www.tor-bjorn.com/sv/om/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/om/</guid>
-      <description>Produkt
-Product designer based in Gothenburg. Specialized in graphic design with a focus on UI/UX. Hi! My name is Torbjörn Hedberg. As of now, I’m primarily involved in the process of bringing ideas to realization in the form of user interfaces for the web and mobile applications. I do, however, have a rich background in the field of visual communication, working with projects in print design, illustrations and animations.
-Through my work as a designer I tackle problems on different levels; always with the goal of creating a user friendly products and solutions that are joyfull.</description>
+      <description>Produkt&#xA;Product designer based in Gothenburg. Specialized in graphic design with a focus on UI/UX. Hi! My name is Torbjörn Hedberg. As of now, I’m primarily involved in the process of bringing ideas to realization in the form of user interfaces for the web and mobile applications. I do, however, have a rich background in the field of visual communication, working with projects in print design, illustrations and animations.&#xA;Through my work as a designer I tackle problems on different levels; always with the goal of creating a user friendly products and solutions that are joyfull.</description>
     </item>
-    
     <item>
       <title>Tack för ditt meddelande</title>
       <link>https://www.tor-bjorn.com/sv/tack/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>https://www.tor-bjorn.com/sv/tack/</guid>
-      <description>Tack för att du hör av dig. Jag återkommer så snart som möjligt. Nyhetsbrev Prenumerera på nyhetsbrevet för nyheter och uppdateringar om när nytt innehåll läggs upp på sidan.
-E-postadress </description>
+      <description>Tack för att du hör av dig. Jag återkommer så snart som möjligt. Nyhetsbrev Prenumerera på nyhetsbrevet för nyheter och uppdateringar om när nytt innehåll läggs upp på sidan.&#xA;E-postadress </description>
     </item>
-    
   </channel>
 </rss>
