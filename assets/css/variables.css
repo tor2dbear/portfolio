@@ -78,6 +78,7 @@
   --danger-dark: hsl(6.15, 61.65%, 38.5%);
   --danger-normal: hsl(6.13, 73.02%, 55.14%);
   --danger-light: hsl(8.82, 74.01%, 62.47%);
+  --danger-bg: hsl(10, 68%, 88%);
 
   /* Fonts */
   --font-sans: neue-haas-grotesk-text, "Helvetica Neue", Helvetica,
@@ -124,7 +125,7 @@
 
   /* Line height */
   --line-height-tighter: 1;
-  --line-height-tight: 1.15;
+  --line-height-tight: 1.25;
   --line-height-normal: 1.5;
   --line-height-wide: 1.75;
 
@@ -199,6 +200,7 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: var(--danger-normal);
   --color-error-light: var(--danger-light);
+  --color-error-dark: var(--danger-dark);
 }
 
 :root[data-theme="dark"] {
@@ -231,6 +233,7 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: var(--danger-normal);
   --color-error-light: var(--danger-dark);
+  --color-error-dark: var(--danger-light);
 }
 
 :root[data-theme="light"][data-mode="pant"] {
@@ -263,6 +266,7 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: var(--danger-normal);
   --color-error-light: var(--danger-light);
+  --color-error-dark: var(--danger-dark);
 }
 
 :root[data-theme="dark"][data-mode="pant"] {
@@ -294,6 +298,7 @@
   --newsletter-button-color: var(--colors-accent-800);
   --color-error: var(--danger-normal);
   --color-error-light: var(--danger-dark);
+  --color-error-dark: var(--danger-light);
 }
 
 :root[data-theme="light"][data-mode="test"] {

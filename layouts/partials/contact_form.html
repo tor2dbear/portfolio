@@ -6,7 +6,6 @@
     id="contact-form"
     action="https://hook.eu1.make.com/4nl75pnqsbqosb457xis8lno1eysqvxv"
     method="post"
-    onsubmit="submitted=true;"
   >
     <label>{{ i18n "contact_name" }}</label>
     <input
@@ -43,10 +42,21 @@
       class="form-input"
       name="message"
     ></textarea>
+    <p class="type-information mb-16 text-color-lighter">
+      {{ i18n "re_captcha" }}
+      <a href="https://policies.google.com/privacy" class="text-color-lighter"
+        >{{ i18n "privacy_policy" }}</a
+      >
+      {{ i18n "and" }}
+      <a href="https://policies.google.com/terms" class="text-color-lighter"
+        >{{ i18n "terms_of_service" }}</a
+      >
+      {{ i18n "apply" }}.
+    </p>
 
     <input type="hidden" name="recaptchaToken" id="recaptchaToken" />
     <button
-      type="submit"
+      type="button"
       id="submitButton"
       class="g-recaptcha icon text-lg font-sans font-medium"
       data-sitekey="6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"
@@ -56,28 +66,17 @@
     </button>
     <p
       id="successMessage"
-      style="display:none; color:var(--text-color-accent);"
-      class="type-information mt-16"
+      style="display:none;"
+      class="type-information mt-16 message"
     >
-      Message has been sent!
+      {{ i18n "contact_submitted" }}
     </p>
     <p
       id="errorMessage"
-      style="display:none; color:var(--color-error);"
-      class="type-information mt-16"
+      style="display:none;"
+      class="type-information mt-16 message"
     >
-      Form submission failed. Please try again.
+      {{ i18n "contact_error" }}
     </p>
   </form>
-  <p class="type-information mt-16">
-    {{ i18n "re_captcha" }}
-    <a href="https://policies.google.com/privacy"
-      >{{ i18n "privacy_policy" }}</a
-    >
-    {{ i18n "and" }}
-    <a href="https://policies.google.com/terms"
-      >{{ i18n "terms_of_service" }}</a
-    >
-    {{ i18n "apply" }}.
-  </p>
 </div>
