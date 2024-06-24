@@ -39,11 +39,12 @@ DefaultContentLanguage = "en"
 
 [languages]
   [languages.en]
-    title = "Torbjörn Hedberg | Designer"
-    description = "Torbjörn Hedberg is a graphic designer based in Gothenburg, Sweden. Available for freelance work & collaborations."
     languageName = "English"
     weight = 1
-    contentDir = "content/english"
+    contentDir = "content/English"
+    [languages.en.params]
+      title = "Torbjörn Hedberg | Designer"
+      description = "Torbjörn Hedberg is a graphic designer based in Gothenburg, Sweden. Available for freelance work & collaborations."
     [[languages.en.menu.start]]
       name = "home"
       weight = 1
@@ -65,11 +66,12 @@ DefaultContentLanguage = "en"
       url = "/contact/"
 
   [languages.sv]
-    title = "Torbjörn Hedberg | Designer"
-    description = "Torbjörn Hedberg är en grafiskt designer verksam i Göteborg. Tillgänglig för frilansuppdrag och sammarbeten."
     languageName = "Svenska"
     weight = 2
     contentDir = "content/swedish"
+    [languages.sv.params]
+      title = "Torbjörn Hedberg | Designer"
+      description = "Torbjörn Hedberg är en grafiskt designer verksam i Göteborg. Tillgänglig för frilansuppdrag och sammarbeten."
     [[languages.sv.menu.start]]
       name = "hem"
       weight = 1
