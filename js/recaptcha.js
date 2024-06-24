@@ -1,8 +1,3 @@
-function onSubmit(token) {
-  var form = document.getElementById("contact-form");
-  form.submit();
-}
-
 document.addEventListener("DOMContentLoaded", function () {
   grecaptcha.ready(function () {
     document
@@ -16,6 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
           .then(function (token) {
             document.getElementById("recaptchaToken").value = token;
             var form = document.getElementById("contact-form");
+
+            // Prevent default form submission
+            form.addEventListener("submit", function (event) {
+              event.preventDefault();
+            });
 
             // Handle form submission via JavaScript
             var xhr = new XMLHttpRequest();
