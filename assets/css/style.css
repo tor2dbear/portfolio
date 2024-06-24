@@ -1052,3 +1052,8 @@ div#mce-responses {
     overflow: hidden;
   }
 }
+
+/* reCAPTCHA */
+.grecaptcha-badge {
+  visibility: hidden;
+}

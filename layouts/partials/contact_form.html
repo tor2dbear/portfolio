@@ -1,54 +1,68 @@
 <div class="contact-form mt-80 mb-64 grid-1-3">
   <h2 class="type-headline-3 mb-16 hide-on-client">
-      {{ i18n "contact_send_message" }}
+    {{ i18n "contact_send_message" }}
   </h2>
   <form
-      id="contact-form"
-      action="https://hook.eu1.make.com/4nl75pnqsbqosb457xis8lno1eysqvxv"
-      method="post"
-      onsubmit="submitted=true;"
+    id="contact-form"
+    action="https://hook.eu1.make.com/4nl75pnqsbqosb457xis8lno1eysqvxv"
+    method="post"
+    onsubmit="submitted=true;"
   >
-      <label>{{ i18n "contact_name" }}</label>
-      <input
-          type="text"
-          placeholder="{{ i18n "contact_name_placeholder" }}"
-          class="form-input"
-          name="name"
-          required
-      />
+    <label>{{ i18n "contact_name" }}</label>
+    <input
+      type="text"
+      placeholder="{{ i18n "contact_name_placeholder" }}"
+      class="form-input"
+      name="name"
+      required
+    />
 
-      <label>{{ i18n "Email_Address" }}</label>
-      <input
-          type="email"
-          placeholder="{{ i18n "contact_mail_placeholder" }}"
-          class="form-input"
-          name="email"
-          required
-      />
+    <label>{{ i18n "Email_Address" }}</label>
+    <input
+      type="email"
+      placeholder="{{ i18n "contact_mail_placeholder" }}"
+      class="form-input"
+      name="email"
+      required
+    />
 
-      <label for="contact_subject">{{ i18n "contact_subject" }}</label>
-      <input
-          id="contact_subject"
-          type="text"
-          placeholder="{{ i18n "contact_subject_placeholder" }}"
-          class="form-input mb-8"
-          name="subject"
-          required
-      />
+    <label for="contact_subject">{{ i18n "contact_subject" }}</label>
+    <input
+      id="contact_subject"
+      type="text"
+      placeholder="{{ i18n "contact_subject_placeholder" }}"
+      class="form-input mb-8"
+      name="subject"
+      required
+    />
 
-      <label>{{ i18n "contact_message" }}</label>
-      <textarea
-          rows="5"
-          placeholder="{{ i18n "contact_message_placeholder" }}"
-          class="form-input"
-          name="message"
-      ></textarea>
+    <label>{{ i18n "contact_message" }}</label>
+    <textarea
+      rows="5"
+      placeholder="{{ i18n "contact_message_placeholder" }}"
+      class="form-input"
+      name="message"
+    ></textarea>
 
-      <input type="hidden" name="recaptchaToken" id="recaptchaToken">
-      <button type="button" class="g-recaptcha icon text-lg font-sans font-medium" 
-              data-sitekey="6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U" 
-              data-callback='onSubmit'>
-          {{ i18n "contact_submit" }}
-      </button>
+    <input type="hidden" name="recaptchaToken" id="recaptchaToken" />
+    <button
+      type="button"
+      class="g-recaptcha icon text-lg font-sans font-medium"
+      data-sitekey="6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"
+      data-callback="onSubmit"
+    >
+      {{ i18n "contact_submit" }}
+    </button>
   </form>
+  <p class="type-information mt-16">
+    {{ i18n "re_captcha" }}
+    <a href="https://policies.google.com/privacy"
+      >{{ i18n "privacy_policy" }}</a
+    >
+    {{ i18n "and" }}
+    <a href="https://policies.google.com/terms"
+      >{{ i18n "terms_of_service" }}</a
+    >
+    {{ i18n "apply" }}.
+  </p>
 </div>

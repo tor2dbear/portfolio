@@ -156,3 +156,15 @@ other = "Only necessary"
 
 [privacy_policy]
 other = "Privacy policy"
+
+[re_captcha]
+other = "This site is protected by reCAPTCHA and the Google"
+
+[terms_of_service]
+other = "Terms of Service"
+
+[and]
+other = "and"
+
+[apply]
+other = "apply"

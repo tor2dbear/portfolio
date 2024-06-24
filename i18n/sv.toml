@@ -158,4 +158,16 @@ other = "Godkänn alla"
 other = "Bara nödvändiga"
 
 [privacy_policy]
-other = "Personuppgiftsbehandling"
+other = "integritetspolicy"
+
+[re_captcha]
+other = "Den här sidan är skyddad av reCAPTCHA och Googles"
+
+[terms_of_service]
+other = "användarvillkor"
+
+[and]
+other = "och"
+
+[apply]
+other = "gäller"
