@@ -39,8 +39,8 @@ Editorial design</a></h2><div class="text-xs line-height-normal font-normal text
 <label>Message</label>
 <textarea rows=5 placeholder="The messages goes here" class=form-input name=message></textarea>
 <input type=hidden name=recaptchaToken id=recaptchaToken>
-<button type=button class="g-recaptcha icon text-lg font-sans font-medium" data-sitekey=6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U data-callback=onSubmit>
-Send message</button></form><p class="type-information mt-16">This site is protected by reCAPTCHA and the Google
+<button type=submit id=submitButton class="g-recaptcha icon text-lg font-sans font-medium" data-sitekey=6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U data-callback=onSubmit>
+Send message</button><p id=successMessage style=display:none;color:var(--text-color-accent) class="type-information mt-16">Message has been sent!</p><p id=errorMessage style=display:none;color:var(--color-error) class="type-information mt-16">Form submission failed. Please try again.</p></form><p class="type-information mt-16">This site is protected by reCAPTCHA and the Google
 <a href=https://policies.google.com/privacy>Privacy policy</a>
 and
 <a href=https://policies.google.com/terms>Terms of Service</a>
