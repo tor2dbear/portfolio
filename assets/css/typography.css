@@ -255,7 +255,7 @@ p,
 
 /* Font: Tag */
 .post-taxonomy-tag {
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   background-color: var(--bg-tag);
   letter-spacing: var(--tracking-wider);
