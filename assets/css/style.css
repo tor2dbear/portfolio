@@ -812,30 +812,6 @@ button#theme-toggle {
   font-weight: var(--sans-weight-bold);
 }
 
-ul.lang-toggle a:before,
-button#lang-toggle:before,
-button#theme-toggle:before {
-  display: block;
-  content: " ";
-  background-size: 1rem 1rem;
-  height: 1rem;
-  width: 1rem;
-  color: var(--text-color);
-  margin-right: 0.5rem;
-  transition: margin-left 0.3s ease, padding 0.3s ease;
-}
-
-button#theme-toggle:before {
-  mask-image: url("/img/svg/theme-icon-16.svg");
-  -webkit-mask-image: url("/img/svg/theme-icon-16.svg");
-}
-
-ul.lang-toggle a:before,
-button#lang-toggle:before {
-  mask-image: url("/img/svg/lang-icon-16.svg");
-  -webkit-mask-image: url("/img/svg/lang-icon-16.svg");
-}
-
 .d-block-standard {
   display: none;
 }
