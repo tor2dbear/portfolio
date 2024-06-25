@@ -14,8 +14,8 @@ Nibören prel hypa hexagt. Kaning epid. Polysade visa. Proheten prejyde tira om 
 Torbjörn Hedberg"
 date: 2014-06-04
 taxonomy_indexes: true
-attach_cv: "/images/cv.pdf"
+attach_cv: "/images/cvd.pdf"
 attach_portfolio: "/images/portfolio_20220812.pdf"
-attach_letter: "/images/letter.pdf"
+attach_letter:
 index: false
 ---

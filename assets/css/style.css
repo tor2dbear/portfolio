@@ -721,16 +721,6 @@ nav.client-breadcrumb ul li+li:before {
   -webkit-mask-image: url("/img/svg/theme-icon-16.svg");
 }
 
-.pdf-icon {
-  mask-image: url("/img/svg/pdf.svg");
-  -webkit-mask-image: url("/img/svg/pdf.svg");
-}
-
-.download-icon {
-  mask-image: url("/img/svg/download.svg");
-  -webkit-mask-image: url("/img/svg/download.svg");
-}
-
 .arrow-left {
   mask-image: url("/img/svg/arrow-left.svg");
   -webkit-mask-image: url("/img/svg/arrow-left.svg");

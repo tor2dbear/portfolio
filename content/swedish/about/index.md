@@ -9,5 +9,5 @@ description: Produktdesigner based in Gothenburg. Specialized in graphic design 
 layout: about
 ---
 
-{{< about_main >}}![Torbjörn Hedberg](DSCF7894.JPG)
+{{< about_main_sv >}}![Torbjörn Hedberg](DSCF7894.JPG)
 {{< about_cv >}}

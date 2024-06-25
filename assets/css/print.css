@@ -1,0 +1,57 @@
+@media print {
+
+    /* All your print styles go here */
+    #header,
+    #footer,
+    #nav,
+    .client-breadcrumb,
+    .themeswitch,
+    .download-container,
+    .contact-form,
+    .content.post .table-of-content,
+    .client-portfolio,
+    ul.table-of-content :nth-child(3),
+    ul.table-of-content :nth-child(5) {
+        display: none !important;
+    }
+
+    .client-letter {
+        page-break-after: always;
+    }
+
+    #layout .mb-64,
+    .mb-64 {
+        margin-bottom: 1.5rem;
+    }
+
+    p {
+        font-size: 12pt;
+    }
+
+    .text-base {
+        font-size: 10pt;
+    }
+
+    .section-headline {
+        margin-top: 2rem;
+    }
+
+    .section-headline {
+        color: var(--bg-section-headline);
+        display: inline-block;
+        background-color: white;
+        border: 2pt solid var(--bg-section-headline);
+        font-weight: bold;
+    }
+
+    .post-taxonomy-tag {
+        background-color: white;
+        border: 1pt solid var(--text-color-tag);
+    }
+}
+
+
+@page {
+    size: a4;
+    margin: 7mm 5mm;
+}

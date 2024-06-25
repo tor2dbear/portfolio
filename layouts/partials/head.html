@@ -26,16 +26,17 @@
   {{ $styleb := resources.Get "css/atoms.css" }}
   {{ $stylec := resources.Get "css/typography.css" }}
   {{ $styled := resources.Get "css/style.css" }}
+  {{ $stylee := resources.Get "css/print.css" }}
 
   <!-- CSS minify -->
   {{ if not (in (.Site.BaseURL | string) "localhost") }}
-  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "allstyle.css" | minify | fingerprint }}
+  {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "allstyle.css" | minify | fingerprint }}
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media='all' />
   {{ end }}
   
   <!-- CSS development -->
   {{ if in (.Site.BaseURL | string) "localhost" }}
-  {{ $css := slice $stylea $styleb $stylec $styled | resources.Concat "localstyle.css" }}
+  {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "localstyle.css" }}
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media='all' />
   {{ end }}
   
@@ -75,10 +76,11 @@
         <script src="{{ $.Site.BaseURL }}{{ . }}"></script>
     {{ end }}
   {{ end }}
+  
   <!-- reCAPTCHA -->
-  {{ if eq .RelPermalink "/contact/" }}
-  <script src="https://www.google.com/recaptcha/api.js?render=6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"></script>
-  <script src="{{ .Site.BaseURL }}js/recaptcha.js"></script>
+  {{ if or (eq .RelPermalink "/contact/") (strings.Contains .RelPermalink "/clients/") }}
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"></script>
+    <script src="{{ .Site.BaseURL }}js/recaptcha.js"></script>
   {{ end }}
 
 </head>
