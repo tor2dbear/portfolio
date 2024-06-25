@@ -132,19 +132,6 @@
                 href="https://www.tor-bjorn.com/sv/tags/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/"
-                />
-  </url><url>
     <loc>https://www.tor-bjorn.com/sv/topics/topic01/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -208,6 +195,19 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://www.tor-bjorn.com/sv/topics/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/sv/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</loc>
