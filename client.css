@@ -74,12 +74,12 @@
 }
 
 .download-box>* {
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .download-box:hover>div {
-    background-color: var(--text-color-hover);
-    transition: background-color 0.3s ease;
+    color: var(--text-color-hover);
+    transition: color 0.3s ease;
 }
 
 .download-box:hover>.download-item {
