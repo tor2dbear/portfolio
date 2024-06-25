@@ -24,17 +24,3 @@ toggle.onclick = function () {
   document.documentElement.setAttribute("data-mode", targetMode);
   localStorage.setItem("mode", targetMode);
 };
-// Set the meta tag content based on the CSS variable
-// Function to get the value of a CSS variable
-function getCssVariableValue(variableName) {
-  return getComputedStyle(document.documentElement).getPropertyValue(
-    variableName
-  );
-}
-
-// Set the theme color meta tag content to the value of --bg-color
-const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
-themeColorMetaTag.setAttribute(
-  "content",
-  getCssVariableValue("--bg-color").trim()
-);
