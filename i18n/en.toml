@@ -168,3 +168,12 @@ other = "and"
 
 [apply]
 other = "apply"
+
+[light_mode]
+other = "Light mode"
+
+[dark_mode]
+other = "Dark mode"
+
+[system_mode]
+other = "System settings"

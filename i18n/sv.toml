@@ -171,3 +171,12 @@ other = "och"
 
 [apply]
 other = "gäller"
+
+[light_mode]
+other = "Ljust tema"
+
+[dark_mode]
+other = "Mörkt tema"
+
+[system_mode]
+other = "Systeminställning"
