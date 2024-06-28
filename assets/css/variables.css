@@ -1,24 +1,23 @@
 :root {
-
   /* Color base */
   --colors-black: #000000;
   --colors-white: #ffffff;
 
   /* Color gray */
-  --colors-gray-50: #fafafa;
-  --colors-gray-100: #f4f4f5;
-  --colors-gray-200: #e4e4e7;
-  --colors-gray-300: #d4d4d8;
-  --colors-gray-400: #a1a1aa;
-  --colors-gray-500: #71717a;
-  --colors-gray-600: #52525b;
-  --colors-gray-700: #3f3f46;
-  --colors-gray-800: #27272a;
-  --colors-gray-900: #18181b;
+  --colors-gray-50: rgb(250, 250, 250);
+  --colors-gray-100: rgb(244, 244, 245);
+  --colors-gray-200: rgb(228, 228, 231);
+  --colors-gray-300: rgb(212, 212, 216);
+  --colors-gray-400: rgb(161, 161, 170);
+  --colors-gray-500: rgb(113, 113, 122);
+  --colors-gray-600: rgb(82, 82, 91);
+  --colors-gray-700: rgb(63, 63, 70);
+  --colors-gray-800: rgb(39, 39, 42);
+  --colors-gray-900: rgb(24, 24, 27);
 
   /* Neutral */
-  --neutral-900: hsl(239.99, 5.9%, 9.96%);
-  --neutral-800: hsl(240.7, 1.23%, 19.14%);
+  --neutral-900: rgb(24, 24, 27);
+  --neutral-800: rgb(48, 48, 49);
   --neutral-700: hsl(240.71, 1.12%, 27.97%);
   --neutral-600: hsl(240.64, 1.41%, 37.41%);
   --neutral-500: hsl(240.65, 1.31%, 47.17%);
@@ -62,16 +61,16 @@
   --tertiary-100: hsl(119.05, 40.83%, 86.06%);
 
   /* Color accent */
-  --colors-accent-50: #f5f5ff;
-  --colors-accent-900: #19192e;
-  --colors-accent-800: #2d2d52;
-  --colors-accent-700: #414276;
-  --colors-accent-600: #57599b;
-  --colors-accent-500: #6667ab;
-  --colors-accent-400: #8e8cc0;
-  --colors-accent-300: #aaa8d0;
-  --colors-accent-200: #c6c4de;
-  --colors-accent-100: #e2e1ed;
+  --colors-accent-50: rgb(245, 245, 255);
+  --colors-accent-900: rgb(25, 25, 46);
+  --colors-accent-800: rgb(45, 45, 82);
+  --colors-accent-700: rgb(65, 66, 118);
+  --colors-accent-600: rgb(87, 89, 155);
+  --colors-accent-500: hsl(239, 29%, 54%);
+  --colors-accent-400: rgb(142, 140, 192);
+  --colors-accent-300: rgb(170, 168, 208);
+  --colors-accent-200: rgb(198, 196, 222);
+  --colors-accent-100: rgb(226, 225, 237);
   --colors-accent-dark: #000133;
   --colors-accent-darker: #19192e;
   --colors-accent: #6667ab;
@@ -83,11 +82,17 @@
   --danger-light: #e66d58;
   --danger-bg: #f5d3cc;
 
+  /* Alert */
+  --colors-alert-danger-800: #9F3226;
+  --colors-alert-danger-500: #E04A39;
+  --colors-alert-danger-400: #E66D58;
+  --colors-alert-danger-50: #F5D3CC;
+
+
   /* Fonts */
   --font-sans: neue-haas-grotesk-text, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: freight-text-pro, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: ui-monospace, SFMono-Regular, "Courier New", Menlo, Monaco,
-    Consolas, "Liberation Mono", monospace;
+  --font-mono: ui-monospace, SFMono-Regular, "Courier New", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
   /* Fonts weights */
   --sans-weight-bold: 500;
@@ -200,6 +205,36 @@
   --color-error: var(--danger-normal);
   --color-error-light: var(--danger-light);
   --color-error-dark: var(--danger-dark);
+
+  --primary-base: var(--colors-accent-500);
+  --primary-on-base: var(--colors-white);
+  --primary-container: var(--colors-accent-50);
+  --primary-on-container: var(--colors-accent-500);
+
+  --secondary-base: var(--colors-gray-900);
+  --secondary-on-base: var(--colors-white);
+  --secondary-container: var(--colors-gray-100);
+  --secondary-on-container: var(--colors-gray-700);
+
+  --background-base: var(--colors-white);
+  --background-on-base: var(--colors-gray-900);
+
+  --variant-surface: var(--colors-accent-200);
+  --variant-on-surface: var(--colors-accent-800);
+
+  --error-base: var(--colors-alert-danger-500);
+  --error-on-base: var(--colors-white);
+  --error-container: var(--colors-alert-danger-50);
+  --error-on-container: var(--colors-alert-danger-800);
+
+  --state-layer-base-hover: rgba(255, 255, 255, 4%);
+  --state-layer-base-active: rgba(255, 255, 255, 8%);
+  --state-layer-container-hover: rgba(0, 0, 0, 4%);
+  --state-layer-container-active: rgba(0, 0, 0, 8%);
+
+  --outline-neutral: rgba(0, 0, 0, 8%);
+
+  --shadow-01: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 
 :root[data-theme="dark"] {
@@ -233,6 +268,37 @@
   --color-error: var(--danger-normal);
   --color-error-light: var(--danger-dark);
   --color-error-dark: var(--danger-light);
+
+
+  --primary-base: var(--colors-accent-400);
+  --primary-on-base: var(--colors-white);
+  --primary-container: var(--colors-accent-800);
+  --primary-on-container: var(--colors-accent-200);
+
+  --secondary-base: var(--colors-gray-100);
+  --secondary-on-base: var(--colors-gray-900);
+  --secondary-container: var(--colors-gray-800);
+  --secondary-on-container: var(--colors-accent-500);
+
+  --background-base: var(--colors-gray-900);
+  --background-on-base: var(--colors-gray-100);
+
+  --variant-surface: var(--colors-gray-900);
+  --variant-on-surface: var(--colors-gray-100);
+
+  --error-base: var(--colors-alert-danger-50);
+  --error-on-base: var(--colors-alert-danger-800);
+  --error-container: var(--colors-alert-danger-800);
+  --error-on-container: var(--colors-alert-danger-50);
+
+  --state-layer-base-hover: rgba(0, 0, 0, 0.04);
+  --state-layer-base-active: rgba(0, 0, 0, 8%);
+  --state-layer-container-hover: rgba(255, 255, 255, 4%);
+  --state-layer-container-active: rgba(255, 255, 255, 8%);
+
+  --outline-neutral: rgba(255, 255, 255, 8%);
+
+  --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -2px;
 }
 
 :root[data-theme="light"][data-mode="pant"] {

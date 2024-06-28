@@ -21,24 +21,28 @@
   <!-- Fonts -->
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
-  <!-- CSS minify -->
-  {{ $stylea := resources.Get "css/variables.css" }}
-  {{ $styleb := resources.Get "css/atoms.css" }}
-  {{ $stylec := resources.Get "css/typography.css" }}
-  {{ $styled := resources.Get "css/style.css" }}
-  {{ $stylee := resources.Get "css/print.css" }}
+  {{ $styles := slice "css/variables.css" "css/atoms.css" "css/typography.css" "css/style.css" "css/print.css" }}
 
-  <!-- CSS minify -->
-  {{ if not (in (.Site.BaseURL | string) "localhost") }}
-  {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "allstyle.css" | minify | fingerprint }}
-  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media='all' />
-  {{ end }}
-  
+<!-- CSS variables -->
+{{ $stylea := resources.Get "css/variables.css" }}
+{{ $styleb := resources.Get "css/atoms.css" }}
+{{ $stylec := resources.Get "css/typography.css" }}
+{{ $styled := resources.Get "css/style.css" }}
+{{ $stylee := resources.Get "css/print.css" }}
+
+<!-- CSS loading -->
+{{ if .Site.IsServer }}
   <!-- CSS development -->
-  {{ if in (.Site.BaseURL | string) "localhost" }}
-  {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "localstyle.css" }}
-  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media='all' />
-  {{ end }}
+  <link rel="stylesheet" type="text/css" href="{{ $stylea.RelPermalink }}">
+  <link rel="stylesheet" type="text/css" href="{{ $styleb.RelPermalink }}">
+  <link rel="stylesheet" type="text/css" href="{{ $stylec.RelPermalink }}">
+  <link rel="stylesheet" type="text/css" href="{{ $styled.RelPermalink }}">
+  <link rel="stylesheet" type="text/css" href="{{ $stylee.RelPermalink }}">
+{{ else }}
+  <!-- CSS production -->
+  {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "allstyle.css" | minify | fingerprint }}
+  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media="all" />
+{{ end }}
   
 
 

@@ -1,119 +1,362 @@
 <header id="topmenu">
-  {{ partial "brand.html" . }}
-
-
-  <nav class="menu" aria-label="Main">
-    <ul class="menu-list">
-      {{ $urltop := .RelPermalink }}
-      {{ range .Site.Menus.top }}
-        <li class="menu-item hide-on-client hide-on-xs">
-          <a
-            class="menu-link {{ if eq $urltop .URL }}active{{ end }}"
-            title="{{ .Name }}"
-            href="{{ .URL | relLangURL }}"
-            >{{ .Name }}</a
-          >
-        </li>
-      {{ end }}
-      <li class="menu-item menu-menubutton">
-        <div class="themeswitch">
-          <button
-            id="darkmode-toggle"
-            class="btn btn-link btn-sm ms-2 small d-flex"
-            type="button"
-            aria-label="Switch between Dark and Light theme"
-          >
-            <span class="d-block-light d-none">
-              <svg viewBox="0 0 24 24" class="icon">
-                <style>
-                  .b {
-                    stroke-linecap: round;
-                    stroke-width: 1.5;
-                    stroke: currentColor;
-                    fill: none;
-                    stroke-linejoin: round;
-                  }
-                </style>
-                <line x1="12" x2="12" y1="5.25" y2="0.75" class="b" />
-                <line x1="7.23" x2="4.05" y1="7.23" y2="4.05" class="b" />
-                <line x1="5.25" x2="0.75" y1="12" y2="12" class="b" />
-                <line x1="7.23" x2="4.05" y1="16.77" y2="19.95" class="b" />
-                <line x1="12" x2="12" y1="18.75" y2="23.25" class="b" />
-                <line x1="16.77" x2="19.95" y1="16.77" y2="19.95" class="b" />
-                <line x1="18.75" x2="23.25" y1="12" y2="12" class="b" />
-                <line x1="16.77" x2="19.95" y1="7.23" y2="4.05" class="b" />
-                <circle cx="12" cy="12" r="6.75" class="b" />
+  <div class="">
+    {{ partial "brand.html" . }}
+    <nav class="menu" aria-label="Main">
+      <ul class="menu-list">
+        {{ $urltop := .RelPermalink }}
+        {{ range .Site.Menus.top }}
+          <li class="menu-item hide-on-client hide-on-xs">
+            <a
+              class="menu-link {{ if eq $urltop .URL }}active{{ end }}"
+              title="{{ .Name }}"
+              href="{{ .URL | relLangURL }}"
+              >{{ .Name }}</a
+            >
+          </li>
+        {{ end }}
+        <li class="menu-item menu-menubutton">
+          <div class="theme-menu-container" data-visible="false">
+            <button id="theme-menu-toggle" class="btn btn-link">
+              <svg
+                id="theme-menu-icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <!-- Default to the system theme icon initially -->
                 <path
-                  d="M15.75 15h0c-3.73-.01-6.76-3.03-6.76-6.76 0-.87.16-1.72.48-2.52v0C6 7.1 4.33 11.03 5.71 14.5c1.38 3.46 5.31 5.13 8.78 3.75 1.7-.69 3.06-2.05 3.75-3.76h0c-.8.32-1.66.48-2.52.48Z"
-                  class="b"
-                />
+                  d="M5.5 12a6.5 6.5 0 1 0 13 0 6.5 6.5 0 1 0 -13 0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="M12 2.93 12 1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="m12 23 0 -1.93"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="M21.07 12 23 12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="m1 12 1.93 0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="m18.414 5.586 1.364 -1.364"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="m4.222 19.778 1.364 -1.364"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="m18.414 18.414 1.364 1.364"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="m4.222 4.222 1.364 1.364"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
+                <path
+                  d="M12.5 8.5v7a3.5 3.5 0 0 0 0 -7Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                ></path>
               </svg>
-            </span>
-            <span class="d-block-dark d-none">
-              <svg viewBox="0 0 24 24" class="icon">
+            </button>
+            <div id="theme-menu" class="theme-menu">
+              <div class="theme-menu-item" onclick="setTheme('light')">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M5.25 12a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 1 0 -13.5 0Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m12 2.25 0 -1.5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m18.894 5.106 1.061 -1.061"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m21.75 12 1.5 0"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m18.894 18.894 1.061 1.061"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m12 21.75 0 1.5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m5.106 18.894 -1.061 1.061"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m2.25 12 -1.5 0"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M5.106 5.106 4.045 4.045"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                </svg>
+                Light
+              </div>
+              <div class="theme-menu-item" onclick="setTheme('dark')">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M17.6734 16.4621C10.5886 16.4605 5.5204 9.6128 7.5887 2.8366C0.2201 6.233 -0.7085 16.3326 5.9172 21.0158C11.7807 25.1602 19.9814 22.3565 22.0804 15.4898C20.6995 16.1302 19.1956 16.4619 17.6734 16.4621Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M11.9957 3.4844H16.8623"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M14.429 1.0511V5.9177"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M19.2956 8.351H22.5401"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M20.9179 6.7288V9.9732"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                </svg>
+                Dark
+              </div>
+              <div class="theme-menu-item" onclick="setTheme('system')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path
+                    d="M5.5 12a6.5 6.5 0 1 0 13 0 6.5 6.5 0 1 0 -13 0"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M12 2.93 12 1"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m12 23 0 -1.93"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M21.07 12 23 12"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m1 12 1.93 0"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m18.414 5.586 1.364 -1.364"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m4.222 19.778 1.364 -1.364"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m18.414 18.414 1.364 1.364"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="m4.222 4.222 1.364 1.364"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                  <path
+                    d="M12.5 8.5v7a3.5 3.5 0 0 0 0 -7Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  ></path>
+                </svg>
+                System
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="menu-item menu-menubutton hide-above-sm hide-on-client">
+          <!-- Menu toggle -->
+          <a href="#menu" class="menu-link" id="menuLink" title="Menu">
+            <span class="hamburgare">
+              <svg viewBox="0 0 24 24" class="hamburgare">
                 <style>
-                  .b {
+                  .hamburger-line {
                     stroke-linecap: round;
                     stroke-width: 1.5;
                     stroke: currentColor;
                     fill: none;
                     stroke-linejoin: round;
+                    transition: transform 0.3s ease, opacity 0.3s ease;
                   }
                 </style>
-                <circle cx="12.001" cy="12" r="4.5" class="b" />
-                <line x1="12" x2="12" y1="1.5" y2="4.5" class="b" />
-                <line x1="12" x2="12" y1="19.5" y2="22.5" class="b" />
-                <line x1="22.5" x2="19.5" y1="12" y2="12" class="b" />
-                <line x1="4.5" x2="1.5" y1="12" y2="12" class="b" />
-                <line x1="19.42" x2="17.3" y1="4.58" y2="6.7" class="b" />
-                <line x1="6.7" x2="4.58" y1="17.3" y2="19.42" class="b" />
-                <line x1="19.42" x2="17.3" y1="19.42" y2="17.3" class="b" />
-                <line x1="6.7" x2="4.58" y1="6.7" y2="4.58" class="b" />
+                <line
+                  x1="2.25"
+                  x2="21.75"
+                  y1="18"
+                  y2="18"
+                  class="hamburger-line a"
+                ></line>
+                <line
+                  x1="2.25"
+                  x2="21.75"
+                  y1="12"
+                  y2="12"
+                  class="hamburger-line b"
+                ></line>
+                <line
+                  x1="2.25"
+                  x2="21.75"
+                  y1="6"
+                  y2="6"
+                  class="hamburger-line c"
+                ></line>
               </svg>
             </span>
-          </button>
-        </div>
-      </li>
-      <li class="menu-item menu-menubutton hide-above-sm hide-on-client">
-        <!-- Menu toggle -->
-        <a href="#menu" class="menu-link" id="menuLink" title="Menu">
-          <span class="hamburgare">
-            <svg viewBox="0 0 24 24" class="hamburgare">
-              <style>
-                .hamburger-line {
-                  stroke-linecap: round;
-                  stroke-width: 1.5;
-                  stroke: currentColor;
-                  fill: none;
-                  stroke-linejoin: round;
-                  transition: transform 0.3s ease, opacity 0.3s ease;
-                }
-              </style>
-              <line
-                x1="2.25"
-                x2="21.75"
-                y1="18"
-                y2="18"
-                class="hamburger-line a"
-              ></line>
-              <line
-                x1="2.25"
-                x2="21.75"
-                y1="12"
-                y2="12"
-                class="hamburger-line b"
-              ></line>
-              <line
-                x1="2.25"
-                x2="21.75"
-                y1="6"
-                y2="6"
-                class="hamburger-line c"
-              ></line>
-            </svg>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </header>
