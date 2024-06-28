@@ -389,7 +389,6 @@ a#brand-link {
   body.active {
     --text-color: var(--text-color-menu);
     --bg-color: var(--background-color-menu);
-    --
   }
 
   #menu {
