@@ -853,6 +853,7 @@ button.icon:hover:after {
   color: var(--background-on-base);
   cursor: pointer;
   gap: 0.5rem;
+  font-size: var(--text-sm);
 }
 
 .theme-menu .theme-menu-item svg {
@@ -879,6 +880,7 @@ button.icon:hover:after {
 
   .theme-menu .theme-menu-item {
     padding: 1rem var(--page-margins);
+    font-size: var(--text-base);
   }
 
   .theme-menu .theme-menu-item svg {
