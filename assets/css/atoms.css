@@ -5,13 +5,13 @@
   display: none;
 }
 
-/* #layout.clientpage .hide-on-client {
+#layout.clientpage .hide-on-client {
   display: none;
 }
 
 #layout:not(.clientpage) .show-on-client {
   display: none;
-} */
+}
 
 /* min 768px Small  */
 @media (max-width: 63.9375em) {
