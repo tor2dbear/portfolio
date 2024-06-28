@@ -173,10 +173,10 @@ other = "och"
 other = "gäller"
 
 [light_mode]
-other = "Ljust tema"
+other = "Ljust"
 
 [dark_mode]
-other = "Mörkt tema"
+other = "Mörkt"
 
 [system_mode]
-other = "Systeminställning"
+other = "System"

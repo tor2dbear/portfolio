@@ -170,10 +170,10 @@ other = "and"
 other = "apply"
 
 [light_mode]
-other = "Light mode"
+other = "Light"
 
 [dark_mode]
-other = "Dark mode"
+other = "Dark"
 
 [system_mode]
-other = "System settings"
+other = "System"
