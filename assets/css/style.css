@@ -836,14 +836,13 @@ button.icon:hover:after {
   min-width: 200px;
   z-index: 1000;
   margin-top: 0.5rem;
-  box-shadow: var(--shadow-01)
+  box-shadow: var(--shadow-01);
 }
 
 .theme-menu-container[data-visible="true"] {
   background-color: var(--state-layer-container-hover);
   border-radius: 50%;
 }
-
 
 .theme-menu .theme-menu-item {
   display: flex;
@@ -871,10 +870,14 @@ button.icon:hover:after {
     bottom: 0.5rem;
     left: 0.5rem;
     right: 0.5rem;
+    background-color: var(--secondary-container);
     border-radius: 1.5rem;
     padding: 0.75rem 0 1.5rem;
-    transition: transform 0.3s ease-in-out;
+    box-shadow: var(--shadow-01);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
     transform: translateY(100%);
+    opacity: 0;
+    visibility: hidden;
   }
 
   .theme-menu .handle {
@@ -888,6 +891,8 @@ button.icon:hover:after {
   .theme-menu[data-visible="true"] {
     display: block;
     transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
   }
 
   .theme-menu .theme-menu-item {
@@ -923,17 +928,21 @@ button.icon:hover:after {
   background: rgba(0, 0, 0, 0.5);
   z-index: 998;
   opacity: 0;
-  transition: opacity 3s ease-in-out;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
 .overlay[data-visible="true"] {
   display: block;
   opacity: 1;
+  visibility: visible;
 }
 
 body.no-scroll {
   overflow: hidden;
 }
+
+/* Dark mode end */
 
 button#darkmode-toggle {
   padding: 0;
