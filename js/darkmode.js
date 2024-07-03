@@ -109,8 +109,8 @@ function updateMenuIcon(theme) {
 }
 
 function updateThemeColor(theme) {
-  const primaryBase = getComputedStyle(document.documentElement)
-    .getPropertyValue("--primary-base")
+  const backgroundBase = getComputedStyle(document.documentElement)
+    .getPropertyValue("--background-base")
     .trim();
   let themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
 
@@ -121,7 +121,7 @@ function updateThemeColor(theme) {
       : "light";
     themeColorMetaTag.content = systemTheme === "dark" ? "#18181b" : "#FFFFFF";
   } else {
-    themeColorMetaTag.content = primaryBase;
+    themeColorMetaTag.content = backgroundBase;
   }
 }
 
