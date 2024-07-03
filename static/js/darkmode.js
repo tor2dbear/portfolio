@@ -77,6 +77,7 @@ function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
   }
   updateMenuIcon(theme);
+  updateThemeColor(); // Update the theme color meta tag
 }
 
 function updateSystemTheme() {
@@ -84,6 +85,7 @@ function updateSystemTheme() {
     ? "dark"
     : "light";
   document.documentElement.setAttribute("data-theme", systemTheme);
+  updateThemeColor(); // Update the theme color meta tag
 }
 
 function updateMenuIcon(theme) {
@@ -104,6 +106,19 @@ function updateMenuIcon(theme) {
       icon.innerHTML = svg;
       icon.querySelector("svg").style.stroke = "currentColor";
     });
+}
+
+function updateThemeColor() {
+  const primaryBase = getComputedStyle(document.documentElement)
+    .getPropertyValue("--primary-base")
+    .trim();
+  let themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
+  if (!themeColorMetaTag) {
+    themeColorMetaTag = document.createElement("meta");
+    themeColorMetaTag.name = "theme-color";
+    document.head.appendChild(themeColorMetaTag);
+  }
+  themeColorMetaTag.content = primaryBase;
 }
 
 function closeMenu() {
