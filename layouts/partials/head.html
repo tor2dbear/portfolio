@@ -18,7 +18,7 @@
     <link rel="canonical" href="{{ .Params.canonical }}">
     {{ end }}
     
-  <!-- Fonts -->
+  
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
   {{ $styles := slice "css/variables.css" "css/atoms.css" "css/typography.css" "css/style.css" "css/print.css" }}
@@ -44,6 +44,8 @@
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media="all" />
 {{ end }}
   
+<!-- Dark mode -->
+<script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
 
 
   <!-- MathJax -->

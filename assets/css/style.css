@@ -820,8 +820,8 @@ button.icon:hover:after {
 }
 
 #theme-menu-toggle svg {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   color: var(--background-on-base);
 }
 
@@ -868,13 +868,26 @@ button.icon:hover:after {
   .theme-menu {
     display: none;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-radius: 1.5rem 1.5rem 0 0;
-    min-width: 100%;
-    box-sizing: border-box;
-    padding: 2rem 0;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    border-radius: 1.5rem;
+    padding: 0.75rem 0 1.5rem;
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(100%);
+  }
+
+  .theme-menu .handle {
+    width: 50px;
+    height: 5px;
+    background-color: #ccc;
+    border-radius: 2.5px;
+    margin: 0 auto 1rem auto;
+  }
+
+  .theme-menu[data-visible="true"] {
+    display: block;
+    transform: translateY(0);
   }
 
   .theme-menu .theme-menu-item {
@@ -894,6 +907,32 @@ button.icon:hover:after {
   #layout.active #theme-menu-toggle {
     display: none;
   }
+}
+
+.theme-menu[data-visible="true"] {
+  display: block;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 3s ease-in-out;
+}
+
+.overlay[data-visible="true"] {
+  display: block;
+  opacity: 1;
+}
+
+body.no-scroll {
+  overflow: hidden;
 }
 
 button#darkmode-toggle {
