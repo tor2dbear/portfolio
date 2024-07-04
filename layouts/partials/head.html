@@ -73,7 +73,7 @@
   <script src="js/darkmode-initial.js"></script>
 
   <!-- JavaScript resources -->
-  <script src="js/darkmode-initial.js" defer></script>
+  {{/*  <script src="js/darkmode-initial.js" defer></script>
   <script src="js/ui.js" defer></script>
   <script src="js/header-line.js" defer></script>
   <script src="js/header-hide.js" defer></script>
@@ -81,7 +81,34 @@
   <script src="js/darkmode.js" defer></script>
   <script src="js/client-check.js" defer></script>
   <script src="js/progressbar.js" defer></script>
+  {{ $mainJs := resources.Get "js/progressbar.js" | js.Build "main.js" | minify | fingerprint }}
+  <script src="{{ $mainJs.RelPermalink }}" defer></script>  */}}
 
+  <!-- JavaScript resources -->
+  {{ $js1 := resources.Get "js/ui.js" }}
+  {{ $js2 := resources.Get "js/header-line.js" }}
+  {{ $js3 := resources.Get "js/header-hide.js" }}
+  {{ $js4 := resources.Get "js/theme.js" }}
+  {{ $js5 := resources.Get "js/darkmode.js" }}
+  {{ $js6 := resources.Get "js/client-check.js" }}
+  {{ $js7 := resources.Get "js/progressbar.js" }}
+
+  <!-- JavaScript loading -->
+  {{ if hugo.IsServer }}
+    <!-- JavaScript development -->
+    <script src="{{ $js1.RelPermalink }}" defer></script>
+    <script src="{{ $js2.RelPermalink }}" defer></script>
+    <script src="{{ $js3.RelPermalink }}" defer></script>
+    <script src="{{ $js4.RelPermalink }}" defer></script>
+    <script src="{{ $js5.RelPermalink }}" defer></script>
+    <script src="{{ $js6.RelPermalink }}" defer></script>
+    <script src="{{ $js7.RelPermalink }}" defer></script>
+  {{ else }}
+    <!-- JavaScript production -->
+    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 | resources.Concat "all.js" | minify | fingerprint }}
+    <script src="{{ $js.Permalink }}" defer></script>
+  {{ end }}
+  
 
     <!-- Google Analytics -->
     {{ partial "google_analytics.html" . }}
