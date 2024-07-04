@@ -216,9 +216,11 @@ function loadStaticSVGs() {
       const svgElement = new DOMParser()
         .parseFromString(svg, "image/svg+xml")
         .querySelector("svg");
-      lightIcon.innerHTML = "";
-      lightIcon.appendChild(svgElement);
-      svgElement.style.stroke = "currentColor";
+      if (lightIcon) {
+        lightIcon.innerHTML = "";
+        lightIcon.appendChild(svgElement);
+        svgElement.style.stroke = "currentColor";
+      }
     });
 
   fetch("/img/svg/dark.svg")
@@ -227,9 +229,11 @@ function loadStaticSVGs() {
       const svgElement = new DOMParser()
         .parseFromString(svg, "image/svg+xml")
         .querySelector("svg");
-      darkIcon.innerHTML = "";
-      darkIcon.appendChild(svgElement);
-      svgElement.style.stroke = "currentColor";
+      if (darkIcon) {
+        darkIcon.innerHTML = "";
+        darkIcon.appendChild(svgElement);
+        svgElement.style.stroke = "currentColor";
+      }
     });
 
   fetch("/img/svg/system.svg")
@@ -238,9 +242,11 @@ function loadStaticSVGs() {
       const svgElement = new DOMParser()
         .parseFromString(svg, "image/svg+xml")
         .querySelector("svg");
-      systemIcon.innerHTML = "";
-      systemIcon.appendChild(svgElement);
-      svgElement.style.stroke = "currentColor";
+      if (systemIcon) {
+        systemIcon.innerHTML = "";
+        systemIcon.appendChild(svgElement);
+        svgElement.style.stroke = "currentColor";
+      }
     });
 }
 
