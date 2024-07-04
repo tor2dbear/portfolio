@@ -44,14 +44,30 @@
 <!-- Dark mode -->
 <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
 
-<!-- JavaScript files defer -->
-<script src="{{ .Site.BaseURL }}js/ui.js"></script>
-<script src="{{ .Site.BaseURL }}js/header-line.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/header-hide.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/theme.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/darkmode.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/client-check.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/progressbar.js" defer></script>
+{{ $js1 := resources.Get "js/ui.js" | default (resources.Get "js/fallback.js") }}
+{{ $js2 := resources.Get "js/header-line.js" | default (resources.Get "js/fallback.js") }}
+{{ $js3 := resources.Get "js/header-hide.js" | default (resources.Get "js/fallback.js") }}
+{{ $js4 := resources.Get "js/theme.js" | default (resources.Get "js/fallback.js") }}
+{{ $js5 := resources.Get "js/darkmode.js" | default (resources.Get "js/fallback.js") }}
+{{ $js6 := resources.Get "js/client-check.js" | default (resources.Get "js/fallback.js") }}
+{{ $js7 := resources.Get "js/progressbar.js" | default (resources.Get "js/fallback.js") }}
+
+<!-- JavaScript loading -->
+{{ if .Site.IsServer }}
+  <!-- JavaScript development -->
+  <script src="{{ $js1.RelPermalink }}" defer></script>
+  <script src="{{ $js2.RelPermalink }}" defer></script>
+  <script src="{{ $js3.RelPermalink }}" defer></script>
+  <script src="{{ $js4.RelPermalink }}" defer></script>
+  <script src="{{ $js5.RelPermalink }}" defer></script>
+  <script src="{{ $js6.RelPermalink }}" defer></script>
+  <script src="{{ $js7.RelPermalink }}" defer></script>
+{{ else }}
+  <!-- JavaScript production -->
+  {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 | resources.Concat "all.js" | minify | fingerprint }}
+  <script src="{{ $js.Permalink }}" defer integrity="{{ $js.Data.Integrity }}"></script>
+{{ end }}
+
 <!-- Google Analytics -->
 {{ partial "google_analytics.html" . }}
 <!-- Adobe TypeKit -->
