@@ -444,6 +444,10 @@ a#brand-link {
   body #menu a.menu-link:hover {
     color: var(--text-color-menu-hover);
   }
+
+  #layout.active .theme-menu-container {
+    display: none;
+  }
 }
 
 /* || ========== Startpage ------------------------------------- */
