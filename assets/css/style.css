@@ -826,7 +826,6 @@ button.icon:hover:after {
 }
 
 .theme-menu {
-  display: none;
   position: absolute;
   right: 0;
   background-color: var(--secondary-container);
@@ -837,6 +836,7 @@ button.icon:hover:after {
   z-index: 1000;
   margin-top: 0.5rem;
   box-shadow: var(--shadow-01);
+  display: none;
 }
 
 .theme-menu-container[data-visible="true"] {
@@ -865,19 +865,19 @@ button.icon:hover:after {
 
 @media (max-width: 768px) {
   .theme-menu {
-    display: none;
     position: fixed;
     bottom: 0.5rem;
     left: 0.5rem;
     right: 0.5rem;
     background-color: var(--secondary-container);
-    border-radius: 1.5rem;
+    border-radius: 0.25rem;
     padding: 0.75rem 0 1.5rem;
     box-shadow: var(--shadow-01);
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
     transform: translateY(100%);
     opacity: 0;
     visibility: hidden;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    display: block;
   }
 
   .theme-menu .handle {
@@ -889,7 +889,6 @@ button.icon:hover:after {
   }
 
   .theme-menu[data-visible="true"] {
-    display: block;
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
@@ -905,12 +904,26 @@ button.icon:hover:after {
     height: 1.5rem;
   }
 
-  .d-none {
+  #layout[data-no-scroll="true"] #theme-menu-toggle {
     display: none;
   }
 
-  #layout.active #theme-menu-toggle {
-    display: none;
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+
+  .overlay[data-visible="true"] {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -918,27 +931,7 @@ button.icon:hover:after {
   display: block;
 }
 
-.overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 998;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-}
-
-.overlay[data-visible="true"] {
-  display: block;
-  opacity: 1;
-  visibility: visible;
-}
-
-body.no-scroll {
+body[data-no-scroll="true"] {
   overflow: hidden;
 }
 
