@@ -5,114 +5,124 @@
   <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)">
   {{ if eq .Params.index false }}
-  <meta name = "robots" content = "noindex">
+  <meta name="robots" content="noindex">
   {{ end }}
   
   {{ if not .Params.Index }}  
   {{ end }}
-  {{hugo.Generator}}
+  {{ hugo.Generator }}
 
   <title>{{ if .IsHome }}{{ .Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Params.title }}{{ end }}</title>
 
-    {{ if .Params.canonical }}
+  {{ if .Params.canonical }}
     <link rel="canonical" href="{{ .Params.canonical }}">
-    {{ end }}
+  {{ end }}
 
-{{ $styles := slice "css/variables.css" "css/atoms.css" "css/typography.css" "css/style.css" "css/print.css" }}
+  <!-- CSS variables -->
+  {{ $stylea := resources.Get "css/variables.css" }}
+  {{ $styleb := resources.Get "css/atoms.css" }}
+  {{ $stylec := resources.Get "css/typography.css" }}
+  {{ $styled := resources.Get "css/style.css" }}
+  {{ $stylee := resources.Get "css/print.css" }}
 
-<!-- CSS variables -->
-{{ $stylea := resources.Get "css/variables.css" }}
-{{ $styleb := resources.Get "css/atoms.css" }}
-{{ $stylec := resources.Get "css/typography.css" }}
-{{ $styled := resources.Get "css/style.css" }}
-{{ $stylee := resources.Get "css/print.css" }}
-
-<!-- CSS loading -->
-{{ if hugo.IsServer }}
-  <!-- CSS development -->
-  <link rel="stylesheet" type="text/css" href="{{ $stylea.RelPermalink }}">
-  <link rel="stylesheet" type="text/css" href="{{ $styleb.RelPermalink }}">
-  <link rel="stylesheet" type="text/css" href="{{ $stylec.RelPermalink }}">
-  <link rel="stylesheet" type="text/css" href="{{ $styled.RelPermalink }}">
-  <link rel="stylesheet" type="text/css" href="{{ $stylee.RelPermalink }}">
-{{ else }}
-  <!-- CSS production -->
-  {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "allstyle.css" | minify | fingerprint }}
-  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media="all" />
-{{ end }}
+  <!-- CSS loading -->
+  {{ if hugo.IsServer }}
+    <!-- CSS development -->
+    <link rel="stylesheet" type="text/css" href="{{ $stylea.RelPermalink }}">
+    <link rel="stylesheet" type="text/css" href="{{ $styleb.RelPermalink }}">
+    <link rel="stylesheet" type="text/css" href="{{ $stylec.RelPermalink }}">
+    <link rel="stylesheet" type="text/css" href="{{ $styled.RelPermalink }}">
+    <link rel="stylesheet" type="text/css" href="{{ $stylee.RelPermalink }}">
+  {{ else }}
+    <!-- CSS production -->
+    {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "allstyle.css" | minify | fingerprint }}
+    <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media="all" />
+  {{ end }}
   
-<!-- Dark mode -->
-<script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
+  <!-- Dark mode -->
+  <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
 
-{{ $js1 := resources.Get "js/ui.js" | default (resources.Get "js/fallback.js") }}
-{{ $js2 := resources.Get "js/header-line.js" | default (resources.Get "js/fallback.js") }}
-{{ $js3 := resources.Get "js/header-hide.js" | default (resources.Get "js/fallback.js") }}
-{{ $js4 := resources.Get "js/theme.js" | default (resources.Get "js/fallback.js") }}
-{{ $js5 := resources.Get "js/darkmode.js" | default (resources.Get "js/fallback.js") }}
-{{ $js6 := resources.Get "js/client-check.js" | default (resources.Get "js/fallback.js") }}
-{{ $js7 := resources.Get "js/progressbar.js" | default (resources.Get "js/fallback.js") }}
+  {{ $js1 := resources.Get "js/ui.js" }}
+  {{ $js2 := resources.Get "js/header-line.js" }}
+  {{ $js3 := resources.Get "js/header-hide.js" }}
+  {{ $js4 := resources.Get "js/theme.js" }}
+  {{ $js5 := resources.Get "js/darkmode.js" }}
+  {{ $js6 := resources.Get "js/client-check.js" }}
+  {{ $js7 := resources.Get "js/progressbar.js" }}
 
-<!-- JavaScript loading -->
-{{ if hugo.IsServer }}
-  <!-- JavaScript development -->
-  <script src="{{ $js1.RelPermalink }}" defer></script>
-  <script src="{{ $js2.RelPermalink }}" defer></script>
-  <script src="{{ $js3.RelPermalink }}" defer></script>
-  <script src="{{ $js4.RelPermalink }}" defer></script>
-  <script src="{{ $js5.RelPermalink }}" defer></script>
-  <script src="{{ $js6.RelPermalink }}" defer></script>
-  <script src="{{ $js7.RelPermalink }}" defer></script>
-{{ else }}
-  <!-- JavaScript production -->
-  {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 | resources.Concat "all.js" | minify | fingerprint }}
-  <script src="{{ $js.Permalink }}" defer integrity="{{ $js.Data.Integrity }}"></script>
-{{ end }}
+  <!-- Ensure all resources are found before concatenation -->
+  {{ $jsFiles := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 }}
+  {{ $validJsFiles := slice }}
+  {{ range $jsFiles }}
+    {{ if and (not (eq . nil)) (.Permalink) }}
+      {{ $validJsFiles = $validJsFiles | append . }}
+    {{ end }}
+  {{ end }}
 
-<!-- Google Analytics -->
-{{ partial "google_analytics.html" . }}
-<!-- Adobe TypeKit -->
-<link rel="stylesheet" href="https://use.typekit.net/diz3sha.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://use.typekit.net/diz3sha.css"></noscript>
+  <!-- JavaScript loading -->
+  {{ if hugo.IsServer }}
+    <!-- JavaScript development -->
+    {{ range $validJsFiles }}
+      <script src="{{ .RelPermalink }}" defer></script>
+    {{ end }}
+  {{ else }}
+    <!-- JavaScript production -->
+    {{ if gt (len $validJsFiles) 0 }}
+      {{ $js := $validJsFiles | resources.Concat "all.js" | minify | fingerprint }}
+      <script src="{{ $js.Permalink }}" defer integrity="{{ $js.Data.Integrity }}"></script>
+    {{ end }}
+  {{ end }}
+
+  <!-- Google Analytics -->
+  {{ partial "google_analytics.html" . }}
+  <!-- Adobe TypeKit -->
+  <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://use.typekit.net/diz3sha.css"></noscript>
 
   <!-- MathJax -->
   <!-- <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
 
- <!-- RSS -->
+  <!-- RSS -->
   {{ if .OutputFormats.Get "RSS" }}
-  <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}"
-    href='{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}' />
+    <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}"
+      href='{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}' />
   {{ end }}
 
-  {{/*  {{ with .Site.Params.highlightjs }}
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/{{ . }}.min.css">
-  <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
-  {{ range $.Site.Params.highlightjs_extra_languages }}
-  <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/languages/{{ . }}.min.js"></script>
+  <!-- Highlight.js (commented out) -->
+  {{/*
+  {{ with .Site.Params.highlightjs }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/{{ . }}.min.css">
+    <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
+    {{ range $.Site.Params.highlightjs_extra_languages }}
+      <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/languages/{{ . }}.min.js"></script>
+    {{ end }}
+    <script>hljs.initHighlightingOnLoad();</script>
   {{ end }}
-  <script>hljs.initHighlightingOnLoad();</script>
-  {{ end }}  */}}
+  */}}
 
   {{ partial "favicon.html" . }}
 
+  <!-- Custom CSS -->
   {{ range .Site.Params.custom_css }}
     {{ if findRE "https?://" . }}
-        <link rel="stylesheet" href="{{ . }}">
+      <link rel="stylesheet" href="{{ . }}">
     {{ else }}
-        <link rel="stylesheet" href="{{ $.Site.BaseURL }}{{ . }}">
+      <link rel="stylesheet" href="{{ $.Site.BaseURL }}{{ . }}">
     {{ end }}
   {{ end }}
+
+  <!-- Custom JS -->
   {{ range .Site.Params.custom_js }}
     {{ if findRE "https?://" . }}
-        <script src="{{ . }}"></script>
+      <script src="{{ . }}"></script>
     {{ else }}
-        <script src="{{ $.Site.BaseURL }}{{ . }}"></script>
+      <script src="{{ $.Site.BaseURL }}{{ . }}"></script>
     {{ end }}
   {{ end }}
-  
+
   <!-- reCAPTCHA -->
   {{ if or (eq .RelPermalink "/contact/") (strings.Contains .RelPermalink "/clients/") }}
     <script src="https://www.google.com/recaptcha/api.js?render=6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"></script>
     <script src="{{ .Site.BaseURL }}js/recaptcha.js"></script>
   {{ end }}
-
 </head>
