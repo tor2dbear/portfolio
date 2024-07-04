@@ -7,7 +7,7 @@
   {{ if eq .Params.index false }}
   <meta name="robots" content="noindex">
   {{ end }}
-  
+
   {{ hugo.Generator }}
 
   <title>{{ if .IsHome }}{{ .Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Params.title }}{{ end }}</title>
@@ -41,17 +41,16 @@
   <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
 
   <!-- JavaScript resources -->
-  {{ $jsFiles := slice 
-    (resources.Get "js/ui.js") 
-    (resources.Get "js/header-line.js") 
-    (resources.Get "js/header-hide.js") 
-    (resources.Get "js/theme.js") 
-    (resources.Get "js/darkmode.js") 
-    (resources.Get "js/client-check.js") 
-    (resources.Get "js/progressbar.js") 
-  }}
-  
+  {{ $js1 := resources.Get "js/ui.js" }}
+  {{ $js2 := resources.Get "js/header-line.js" }}
+  {{ $js3 := resources.Get "js/header-hide.js" }}
+  {{ $js4 := resources.Get "js/theme.js" }}
+  {{ $js5 := resources.Get "js/darkmode.js" }}
+  {{ $js6 := resources.Get "js/client-check.js" }}
+  {{ $js7 := resources.Get "js/progressbar.js" }}
+
   <!-- Ensure all resources are found before concatenation -->
+  {{ $jsFiles := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 }}
   {{ $validJsFiles := slice }}
   {{ range $jsFiles }}
     {{ if . }}
