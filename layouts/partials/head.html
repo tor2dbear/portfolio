@@ -58,7 +58,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $stylee.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "allstyle.css" | minify | fingerprint }}
+    {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
@@ -105,7 +105,7 @@
     <script src="{{ $js7.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 | resources.Concat "all.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
   
