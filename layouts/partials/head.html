@@ -17,11 +17,8 @@
     {{ if .Params.canonical }}
     <link rel="canonical" href="{{ .Params.canonical }}">
     {{ end }}
-    
-  
-  <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
-  {{ $styles := slice "css/variables.css" "css/atoms.css" "css/typography.css" "css/style.css" "css/print.css" }}
+{{ $styles := slice "css/variables.css" "css/atoms.css" "css/typography.css" "css/style.css" "css/print.css" }}
 
 <!-- CSS variables -->
 {{ $stylea := resources.Get "css/variables.css" }}
@@ -47,6 +44,19 @@
 <!-- Dark mode -->
 <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
 
+<!-- JavaScript files defer -->
+<script src="{{ .Site.BaseURL }}js/ui.js"></script>
+<script src="{{ .Site.BaseURL }}js/header-line.js" defer></script>
+<script src="{{ .Site.BaseURL }}js/header-hide.js" defer></script>
+<script src="{{ .Site.BaseURL }}js/theme.js" defer></script>
+<script src="{{ .Site.BaseURL }}js/darkmode.js" defer></script>
+<script src="{{ .Site.BaseURL }}js/client-check.js" defer></script>
+<script src="{{ .Site.BaseURL }}js/progressbar.js" defer></script>
+<!-- Google Analytics -->
+{{ partial "google_analytics.html" . }}
+<!-- Adobe TypeKit -->
+<link rel="stylesheet" href="https://use.typekit.net/diz3sha.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://use.typekit.net/diz3sha.css"></noscript>
 
   <!-- MathJax -->
   <!-- <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
