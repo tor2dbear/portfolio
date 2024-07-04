@@ -134,8 +134,12 @@ function updateMenuIcon(theme) {
   fetch(svgPath)
     .then((response) => response.text())
     .then((svg) => {
-      icon.innerHTML = svg;
-      icon.querySelector("svg").style.stroke = "currentColor";
+      const svgElement = new DOMParser()
+        .parseFromString(svg, "image/svg+xml")
+        .querySelector("svg");
+      icon.innerHTML = "";
+      icon.appendChild(svgElement);
+      svgElement.style.stroke = "currentColor";
     });
 }
 
@@ -184,25 +188,8 @@ const observer = new MutationObserver(function (mutations) {
   });
 });
 
-// Observe changes to the data-visible attribute
 observer.observe(document.querySelector(".theme-menu-container"), {
   attributes: true,
-});
-
-// Close menu when clicking outside of it (desktop only)
-document.addEventListener("click", function (event) {
-  const menuContainer = document.querySelector(".theme-menu-container");
-  const menu = document.getElementById("theme-menu");
-  const overlay = document.getElementById("overlay");
-  const targetElement = event.target;
-
-  if (
-    !menuContainer.contains(targetElement) &&
-    !menu.contains(targetElement) &&
-    !overlay.contains(targetElement)
-  ) {
-    closeMenu();
-  }
 });
 
 window
@@ -216,3 +203,48 @@ window
 // Initial theme application
 var storedTheme = localStorage.getItem("theme") || "system";
 applyTheme(storedTheme);
+
+// Load static SVGs
+function loadStaticSVGs() {
+  const lightIcon = document.getElementById("light-icon");
+  const darkIcon = document.getElementById("dark-icon");
+  const systemIcon = document.getElementById("system-icon");
+
+  fetch("/img/svg/light.svg")
+    .then((response) => response.text())
+    .then((svg) => {
+      const svgElement = new DOMParser()
+        .parseFromString(svg, "image/svg+xml")
+        .querySelector("svg");
+      lightIcon.innerHTML = "";
+      lightIcon.appendChild(svgElement);
+      svgElement.style.stroke = "currentColor";
+    });
+
+  fetch("/img/svg/dark.svg")
+    .then((response) => response.text())
+    .then((svg) => {
+      const svgElement = new DOMParser()
+        .parseFromString(svg, "image/svg+xml")
+        .querySelector("svg");
+      darkIcon.innerHTML = "";
+      darkIcon.appendChild(svgElement);
+      svgElement.style.stroke = "currentColor";
+    });
+
+  fetch("/img/svg/system.svg")
+    .then((response) => response.text())
+    .then((svg) => {
+      const svgElement = new DOMParser()
+        .parseFromString(svg, "image/svg+xml")
+        .querySelector("svg");
+      systemIcon.innerHTML = "";
+      systemIcon.appendChild(svgElement);
+      svgElement.style.stroke = "currentColor";
+    });
+}
+
+// Load the static SVGs once the document is fully loaded
+document.addEventListener("DOMContentLoaded", function () {
+  loadStaticSVGs();
+});
