@@ -7,7 +7,7 @@
   {{ if eq .Params.index false }}
   <meta name="robots" content="noindex">
   {{ end }}
-
+  
   {{ hugo.Generator }}
 
   <title>{{ if .IsHome }}{{ .Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Params.title }}{{ end }}</title>
@@ -36,40 +36,56 @@
     {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "allstyle.css" | minify | fingerprint }}
     <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" integrity="{{ $css.Data.Integrity }}" media="all" />
   {{ end }}
-
+  
   <!-- Dark mode -->
   <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
 
-  <!-- JavaScript loading -->
-{{ if hugo.IsServer }}
-<!-- JavaScript development -->
-<script src="{{ .Site.BaseURL }}js/ui.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/header-line.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/header-hide.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/theme.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/darkmode.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/client-check.js" defer></script>
-<script src="{{ .Site.BaseURL }}js/progressbar.js" defer></script>
-{{ else }}
-<!-- JavaScript production -->
-{{ $jsFiles := slice (resources.Get "js/ui.js") (resources.Get "js/header-line.js") (resources.Get "js/header-hide.js") (resources.Get "js/theme.js") (resources.Get "js/darkmode.js") (resources.Get "js/client-check.js") (resources.Get "js/progressbar.js") }}
-{{ $validJsFiles := slice }}
-{{ range $jsFiles }}
-  {{ if . }}
-    {{ $validJsFiles = $validJsFiles | append . }}
-  {{ else }}
-    <!-- Debug: Log missing JS file -->
-    <script>console.error("Missing JavaScript file");</script>
+  <!-- JavaScript resources -->
+  {{ $jsFiles := slice 
+    (resources.Get "js/ui.js") 
+    (resources.Get "js/header-line.js") 
+    (resources.Get "js/header-hide.js") 
+    (resources.Get "js/theme.js") 
+    (resources.Get "js/darkmode.js") 
+    (resources.Get "js/client-check.js") 
+    (resources.Get "js/progressbar.js") 
+  }}
+  
+  <!-- Ensure all resources are found before concatenation -->
+  {{ $validJsFiles := slice }}
+  {{ range $jsFiles }}
+    {{ if . }}
+      {{ $validJsFiles = $validJsFiles | append . }}
+    {{ else }}
+      <!-- Debug: Log missing JS file -->
+      <script>console.error("Missing JavaScript file");</script>
+    {{ end }}
   {{ end }}
-{{ end }}
-{{ if gt (len $validJsFiles) 0 }}
-  {{ $js := $validJsFiles | resources.Concat "all.js" | minify | fingerprint }}
-  <script src="{{ $js.Permalink }}" defer integrity="{{ $js.Data.Integrity }}"></script>
-{{ else }}
-  <!-- Debug: Log if no valid JS files found -->
-  <script>console.error("No valid JavaScript files found for concatenation");</script>
-{{ end }}
-{{ end }}
+
+  <!-- Debug: Log valid JavaScript files -->
+  <script>
+    console.log("Valid JavaScript files:");
+    {{ range $validJsFiles }}
+      console.log("{{ .RelPermalink }}");
+    {{ end }}
+  </script>
+
+  <!-- JavaScript loading -->
+  {{ if hugo.IsServer }}
+    <!-- JavaScript development -->
+    {{ range $validJsFiles }}
+      <script src="{{ .RelPermalink }}" defer></script>
+    {{ end }}
+  {{ else }}
+    <!-- JavaScript production -->
+    {{ if gt (len $validJsFiles) 0 }}
+      {{ $js := $validJsFiles | resources.Concat "all.js" | minify | fingerprint }}
+      <script src="{{ $js.Permalink }}" defer integrity="{{ $js.Data.Integrity }}"></script>
+    {{ else }}
+      <!-- Debug: Log if no valid JS files found -->
+      <script>console.error("No valid JavaScript files found for concatenation");</script>
+    {{ end }}
+  {{ end }}
 
   <!-- Google Analytics -->
   {{ partial "google_analytics.html" . }}
