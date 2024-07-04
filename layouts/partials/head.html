@@ -28,7 +28,7 @@
 {{ $stylee := resources.Get "css/print.css" }}
 
 <!-- CSS loading -->
-{{ if .Site.IsServer }}
+{{ if hugo.IsServer }}
   <!-- CSS development -->
   <link rel="stylesheet" type="text/css" href="{{ $stylea.RelPermalink }}">
   <link rel="stylesheet" type="text/css" href="{{ $styleb.RelPermalink }}">
@@ -53,7 +53,7 @@
 {{ $js7 := resources.Get "js/progressbar.js" | default (resources.Get "js/fallback.js") }}
 
 <!-- JavaScript loading -->
-{{ if .Site.IsServer }}
+{{ if hugo.IsServer }}
   <!-- JavaScript development -->
   <script src="{{ $js1.RelPermalink }}" defer></script>
   <script src="{{ $js2.RelPermalink }}" defer></script>
