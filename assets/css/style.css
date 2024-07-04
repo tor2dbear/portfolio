@@ -447,6 +447,7 @@ a#brand-link {
 
   #layout.active .theme-menu-container {
     display: none;
+    /* Hide theme menu button in mobile menu */
   }
 }
 
