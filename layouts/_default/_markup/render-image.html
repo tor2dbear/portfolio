@@ -16,6 +16,7 @@
         title="{{ $alt }}"
         src="{{ $src }}"
         class="img-fluid-svg"
+        loading="lazy"
       />
     </picture>
   </figure>
@@ -30,86 +31,87 @@
         height="{{ $src.Height }}"
         width="{{ $src.Width }}"
         class="img-fluid"
+        loading="lazy"
       />
     </picture>
   </figure>
   {{/* IF mp4 */}}
 {{ else if eq $ext "mp4" }}
   <video width="100%" height="auto" autoplay muted>
-    >
     <source src="{{ $src.RelPermalink }}" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
   {{/* So for posts that aren't setup in the page bundles, it doesn't fail */}}
 {{ else }}
   {{ if $src }}
-    {{ $tinyw := default "500x webp" }}
-    {{ $smallw := default "800x webp" }}
-    {{ $mediumw := default "1200x webp" }}
-    {{ $largew := default "1500x webp" }}
-    {{ $xlargew := default "2000x webp" }}
-    {{ $fallbackw := default "1200x jpg" }}
+    {{ $sizeSmall := "500x webp" }}
+    {{ $sizeMedium := "800x webp" }}
+    {{ $sizeLarge := "1200x webp" }}
+    {{ $sizeXLarge := "1600x webp" }}
+    {{ $sizeXXLarge := "2000x webp" }}
+    {{ $fallbackSize := "1200x jpg" }}
     {{/* resize the src image to the given sizes */}}
     {{/* We create a a temp scratch because it's not available in this context */}}
     {{ $data := newScratch }}
-    {{ $data.Set "tiny" ($src.Resize $tinyw) }}
-    {{ $data.Set "small" ($src.Resize $smallw) }}
-    {{ $data.Set "medium" ($src.Resize $mediumw) }}
-    {{ $data.Set "large" ($src.Resize $largew) }}
-    {{ $data.Set "xlarge" ($src.Resize $xlargew) }}
-    {{ $data.Set "fallback" ($src.Resize $fallbackw) }}
+    {{ $data.Set "small" ($src.Resize $sizeSmall) }}
+    {{ $data.Set "medium" ($src.Resize $sizeMedium) }}
+    {{ $data.Set "large" ($src.Resize $sizeLarge) }}
+    {{ $data.Set "xlarge" ($src.Resize $sizeXLarge) }}
+    {{ $data.Set "xxlarge" ($src.Resize $sizeXXLarge) }}
+    {{ $data.Set "fallback" ($src.Resize $fallbackSize) }}
     {{/* add the processed images to the scratch */}}
-    {{ $tiny := $data.Get "tiny" }}
     {{ $small := $data.Get "small" }}
     {{ $medium := $data.Get "medium" }}
     {{ $large := $data.Get "large" }}
     {{ $xlarge := $data.Get "xlarge" }}
+    {{ $xxlarge := $data.Get "xxlarge" }}
     {{ $fallback := $data.Get "fallback" }}
     {{/* only use images smaller than or equal to the src (original)
       image size, as Hugo will upscale small images
     */}}
+    {{ $sizes := "100vw" }}
     {{ if .Title }}
       <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
         <picture>
           <source
-            media="(max-width: 376px) and (max-resolution: 1dppx), 
-                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $tiny.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 393px)"
+            srcset="
+              {{ with $small.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 393px) 100vw"
           />
           <source
-            media="(max-width: 376px) and (max-resolution: 2dppx), 
-                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 430px)"
+            srcset="
+              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $large.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 430px) 100vw"
           />
           <source
-            media="(max-width: 992px) and (max-resolution: 1dppx), 
-                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $small.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 768px)"
+            srcset="
+              {{ with $large.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 768px) 100vw"
           />
           <source
-            media="(max-width: 992px) and (max-resolution: 2dppx), 
-                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 1400px)"
+            srcset="
+              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 1400px) 100vw"
           />
           <source
-            media="(max-width: 1400px) and (max-resolution: 1dppx), 
-                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(max-width: 1400px) and (max-resolution: 2dppx), 
-                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(min-width: 1401px) and (max-resolution: 1dppx), 
-                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(min-width: 1401px) and (max-resolution: 2dppx), 
-                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
+            media="(min-width: 1401px)"
+            srcset="
+              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="100vw"
           />
           <img
             alt="{{ $alt }}"
@@ -118,6 +120,7 @@
             height="{{ $src.Height }}"
             width="{{ $src.Width }}"
             class="img-fluid"
+            loading="lazy"
           />
         </picture>
         <figcaption>{{- .Title -}}</figcaption>
@@ -126,44 +129,44 @@
       <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
         <picture>
           <source
-            media="(max-width: 376px) and (max-resolution: 1dppx), 
-                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $tiny.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 393px)"
+            srcset="
+              {{ with $small.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 393px) 100vw"
           />
           <source
-            media="(max-width: 376px) and (max-resolution: 2dppx), 
-                    (max-width: 376px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 430px)"
+            srcset="
+              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $large.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 430px) 100vw"
           />
           <source
-            media="(max-width: 992px) and (max-resolution: 1dppx), 
-                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $small.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 768px)"
+            srcset="
+              {{ with $large.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 768px) 100vw"
           />
           <source
-            media="(max-width: 992px) and (max-resolution: 2dppx), 
-                    (max-width: 992px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
+            media="(max-width: 1400px)"
+            srcset="
+              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="(max-width: 1400px) 100vw"
           />
           <source
-            media="(max-width: 1400px) and (max-resolution: 1dppx), 
-                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $medium.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(max-width: 1400px) and (max-resolution: 2dppx), 
-                    (max-width: 1400px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(min-width: 1401px) and (max-resolution: 1dppx), 
-                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 1)"
-            srcset="{{ with $large.RelPermalink }}{{ . }}{{ end }}"
-          />
-          <source
-            media="(min-width: 1401px) and (max-resolution: 2dppx), 
-                    (min-width: 1401px) and (-webkit-max-device-pixel-ratio: 2)"
-            srcset="{{ with $xlarge.RelPermalink }}{{ . }}{{ end }}"
+            media="(min-width: 1401px)"
+            srcset="
+              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 1x,
+              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
+            "
+            sizes="100vw"
           />
           <img
             alt="{{ $alt }}"
@@ -172,6 +175,7 @@
             height="{{ $src.Height }}"
             width="{{ $src.Width }}"
             class="img-fluid"
+            loading="lazy"
           />
         </picture>
       </figure>
