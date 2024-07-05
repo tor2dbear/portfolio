@@ -116,28 +116,28 @@ other = "Det blev ett fel när meddelandet skickades."
 other = "Namn"
 
 [contact_name_placeholder]
-other = "Ditt namn"
+other = "Ange ditt namn"
 
 [contact_mail]
 other = "E-postadress"
 
 [contact_mail_placeholder]
-other = "Din e-postadress"
+other = "Ange din e-postadress"
 
 [contact_subject]
-other = "Rubrik"
+other = "Ämne"
 
 [contact_subject_placeholder]
-other = "En kort rubrik"
+other = "Ange ämnet"
 
 [contact_message]
 other = "Meddelande"
 
 [contact_send_message]
-other = "Skicka ett meddelande"
+other = "Skriv ditt meddelande här"
 
 [contact_message_placeholder]
-other = "Meddelandet skrivs här…"
+other = "Meddelandet skrivs här"
 
 [contact_submit]
 other = "Skicka meddelande"

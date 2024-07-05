@@ -113,19 +113,19 @@ other = "There was an error sending the message."
 other = "Name"
 
 [contact_name_placeholder]
-other = "Your name"
+other = "Enter your name"
 
 [contact_mail]
 other = "E-mail address"
 
 [contact_mail_placeholder]
-other = "Your e-mail address"
+other = "Enter your email address"
 
 [contact_subject]
 other = "Subject"
 
 [contact_subject_placeholder]
-other = "A short subject"
+other = "Enter the subject"
 
 [contact_message]
 other = "Message"
@@ -134,7 +134,7 @@ other = "Message"
 other = "Send me a message"
 
 [contact_message_placeholder]
-other = "The messages goes here"
+other = "Write your message here"
 
 [contact_submit]
 other = "Send message"
