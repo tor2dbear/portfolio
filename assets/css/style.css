@@ -1056,7 +1056,7 @@ input:last-of-type {
 input::placeholder,
 .form-input::placeholder {
   color: var(--placeholder-text-color);
-  opacity: 0.3;
+  opacity: 0.24;
   /* Ensures the placeholder text is not transparent */
 }
 

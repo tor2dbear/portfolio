@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-  function onSubmit(token) {
+  // Define onSubmit globally
+  window.onSubmit = function (token) {
     document.getElementById("recaptchaToken").value = token;
     var form = document.getElementById("contact-form");
 
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     xhr.send(new URLSearchParams(formData).toString());
-  }
+  };
 
   grecaptcha.ready(function () {
     document
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             action: "submit",
           })
           .then(function (token) {
-            onSubmit(token);
+            window.onSubmit(token);
           });
       });
 
