@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Define onSubmit globally
-  window.onSubmit = function (token) {
+  let formSubmitted = false;
+
+  function onSubmit(token) {
+    if (formSubmitted) return;
+    formSubmitted = true;
+
+    var submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true; // Disable the submit button to prevent multiple submissions
     document.getElementById("recaptchaToken").value = token;
     var form = document.getElementById("contact-form");
 
@@ -21,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
         errorMessage.style.display = "block";
         successMessage.style.display = "none";
       }
+      submitButton.disabled = false; // Re-enable the submit button after the response
+      formSubmitted = false;
     };
 
     xhr.onerror = function () {
@@ -28,25 +36,30 @@ document.addEventListener("DOMContentLoaded", function () {
       errorMessage.style.display = "block";
       var successMessage = document.getElementById("successMessage");
       successMessage.style.display = "none";
+      submitButton.disabled = false; // Re-enable the submit button after the error
+      formSubmitted = false;
     };
 
     xhr.send(new URLSearchParams(formData).toString());
-  };
+  }
+
+  // Ensure onSubmit is globally accessible
+  window.onSubmit = onSubmit;
 
   grecaptcha.ready(function () {
-    document
-      .getElementById("submitButton")
-      .addEventListener("click", function (event) {
-        event.preventDefault();
-        grecaptcha
-          .execute("6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U", {
-            action: "submit",
-          })
-          .then(function (token) {
-            window.onSubmit(token);
-          });
-      });
+    var submitButton = document.getElementById("submitButton");
+    submitButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      grecaptcha
+        .execute("6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U", {
+          action: "submit",
+        })
+        .then(function (token) {
+          window.onSubmit(token);
+        });
+    });
 
+    // Prevent the form from submitting the default way
     var form = document.getElementById("contact-form");
     form.addEventListener("submit", function (event) {
       event.preventDefault();
