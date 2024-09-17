@@ -48,7 +48,7 @@
       <link>https://www.tor-bjorn.com/works/tags/books/</link>
       <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/books/</guid>
-      <description>{{ range .Pages }}</description>
+      <description>&lt;p&gt;{{ range .Pages }}&lt;/p&gt;&#xA;&lt;!-- raw HTML omitted --&gt;</description>
     </item>
     <item>
       <title>UI/UX</title>
