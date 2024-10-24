@@ -14,7 +14,7 @@
 
     <!-- SNS microblogging -->
 
-    {{ with .Site.Social.twitter }}
+    {{ with .Site.Params.Social.twitter }}
       <li class="menu-item">
         <a
           class="menu-link"
@@ -25,14 +25,14 @@
         >
       </li>
     {{ end }}
-    {{ with .Site.Social.gnusocial }}
+    {{ with .Site.Params.Social.gnusocial }}
       <li class="menu-item">
         <a class="menu-link" href="{{ . }}" rel="me" target="_blank"
           ><i class="fas fa-comment fa-fw"></i>GNU social</a
         >
       </li>
     {{ end }}
-    {{ with .Site.Social.facebook }}
+    {{ with .Site.Params.Social.facebook }}
       <li class="menu-item">
         <a
           class="menu-link"
@@ -43,7 +43,7 @@
         >
       </li>
     {{ end }}
-    {{ with .Site.Social.weibo }}
+    {{ with .Site.Params.Social.weibo }}
       <li class="menu-item">
         <a
           class="menu-link"
@@ -54,7 +54,7 @@
         >
       </li>
     {{ end }}
-    {{ with .Site.Social.tumblr }}
+    {{ with .Site.Params.Social.tumblr }}
       <li class="menu-item">
         <a
           class="menu-link"
@@ -69,7 +69,7 @@
 
     <!-- SNS photo/video sharing -->
 
-    {{ with .Site.Social.instagram }}
+    {{ with .Site.Params.Social.instagram }}
       <li class="menu-item">
         <a
           class="menu-link"
