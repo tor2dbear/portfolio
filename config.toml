@@ -3,9 +3,11 @@ languageCode = "en-us"
 title = "Torbjörn Hedberg · Designer"
 author = "Torbjörn Hedberg"
 canonifyurls = true
-paginate = 10
 relativeURLs = true
 preserveTaxonomyNames = true
+
+[pagination]
+  pagerSize = 10
 
 [module]
   [[module.mounts]]
