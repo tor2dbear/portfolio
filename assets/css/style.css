@@ -1095,6 +1095,7 @@ form #successMessage.message {
 
 form .message {
   padding: 1rem;
+  max-width: 100%;
 }
 
 /* || ========== Newsletter  -------------------------------------  */
