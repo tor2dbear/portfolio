@@ -53,6 +53,9 @@ module.exports = [
     languageOptions: {
       globals: {
         ...jest.environments.globals.globals,
+        Storage: "readonly",
+        DOMParser: "readonly",
+        getComputedStyle: "readonly",
       },
     },
     rules: {
