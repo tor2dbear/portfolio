@@ -56,6 +56,9 @@ module.exports = [
         Storage: "readonly",
         DOMParser: "readonly",
         getComputedStyle: "readonly",
+        Event: "readonly",
+        KeyboardEvent: "readonly",
+        setTimeout: "readonly",
       },
     },
     rules: {
