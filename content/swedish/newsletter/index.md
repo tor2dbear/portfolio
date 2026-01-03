@@ -1,7 +1,6 @@
 ---
 title: Nyhetsbrev
 linktitle: Nyhetsbrev
-title: Nyhetsbrev
 slug: nyhetsbrev
 url: "/sv/nyhetsbrev"
 sidemenu: true

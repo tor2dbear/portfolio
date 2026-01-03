@@ -3,7 +3,6 @@ title: Tack för ditt meddelande
 description: Tack för ditt meddelande
 layout: thankyou
 linktitle: Tack för ditt meddelande
-title: Tack för ditt meddelande
 slug: tack
 url: "/sv/tack"
 aliases:
