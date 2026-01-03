@@ -1,11 +1,10 @@
 ---
 title: About
 linktitle: About
-title: About
 slug: About
 url: "/about"
 sidemenu: true
-description: Produktdesigner based in Gothenburg. Specialized in graphic design with a focus on UI/UX.
+description: Product Owner & Art Director based in Gothenburg. I bridge design and product strategy.
 layout: about
 ---
 
