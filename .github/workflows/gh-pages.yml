@@ -33,7 +33,7 @@ jobs:
 
       - name: Build (PR Preview)
         if: github.event_name == 'pull_request'
-        run: hugo --minify --baseURL "https://www.tor-bjorn.com/preview/pr-${{ github.event.pull_request.number }}/"
+        run: hugo --minify --baseURL "https://www.tor-bjorn.com/preview/pr-${{ github.event.pull_request.number }}/" --canonifyURLs=false
 
       # Deploy to production (master branch only)
       - name: Deploy to Production
