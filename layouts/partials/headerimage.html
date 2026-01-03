@@ -6,11 +6,21 @@
 {{ $pathLen := len $pathArr }}
 {{ $ext := index $pathArr (sub $pathLen 1) }}
 
+{{/* Helper function to convert RelPermalink to absolute path from site root */}}
+{{/* This ensures images load correctly on list pages and in preview deployments */}}
+{{ define "absPath" }}
+  {{ if strings.HasPrefix . "/" }}
+    {{ . }}
+  {{ else }}
+    {{ printf "%s%s" $.Page.RelPermalink . }}
+  {{ end }}
+{{ end }}
+
 {{/* IF mp4 */}}
 {{ if eq $ext "mp4" }}
   <video width="100%" height="auto" autoplay muted>
     >
-    <source src="{{ $src.RelPermalink }}" type="video/mp4" />
+    <source src="{{ template "absPath" (dict "Page" . "Path" $src.RelPermalink) }}" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 {{ else }}
@@ -31,50 +41,50 @@
 
   <picture>
     <source
-      media="(max-width: 376px) and (max-resolution: 1dppx), 
+      media="(max-width: 376px) and (max-resolution: 1dppx),
               (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
-      srcset="{{ $small.RelPermalink }}"
+      srcset="{{ $small.Permalink }}"
     />
     <source
-      media="(max-width: 376px) and (min-resolution: 2dppx), 
+      media="(max-width: 376px) and (min-resolution: 2dppx),
               (max-width: 376px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $large.RelPermalink }}"
+      srcset="{{ $large.Permalink }}"
     />
     <source
-      media="(max-width: 992px) and (max-resolution: 1dppx), 
+      media="(max-width: 992px) and (max-resolution: 1dppx),
               (max-width: 992px) and (-webkit-max-device-pixel-ratio: 1)"
-      srcset="{{ $medium.RelPermalink }}"
+      srcset="{{ $medium.Permalink }}"
     />
     <source
-      media="(max-width: 992px) and (min-resolution: 2dppx), 
+      media="(max-width: 992px) and (min-resolution: 2dppx),
               (max-width: 992px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $xlarge.RelPermalink }}"
+      srcset="{{ $xlarge.Permalink }}"
     />
     <source
-      media="(max-width: 1400px) and (min-resolution: 1dppx), 
+      media="(max-width: 1400px) and (min-resolution: 1dppx),
               (max-width: 1400px) and (-webkit-min-device-pixel-ratio: 1)"
-      srcset="{{ $large.RelPermalink }}"
+      srcset="{{ $large.Permalink }}"
     />
     <source
-      media="(max-width: 1400px) and (min-resolution: 2dppx), 
+      media="(max-width: 1400px) and (min-resolution: 2dppx),
               (max-width: 1400px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $xxlarge.RelPermalink }}"
+      srcset="{{ $xxlarge.Permalink }}"
     />
     <source
-      media="(min-width: 1401px) and (min-resolution: 1dppx), 
+      media="(min-width: 1401px) and (min-resolution: 1dppx),
               (min-width: 1401px) and (-webkit-min-device-pixel-ratio: 1)"
-      srcset="{{ $xlarge.RelPermalink }}"
+      srcset="{{ $xlarge.Permalink }}"
     />
     <source
-      media="(min-width: 1401px) and (min-resolution: 2dppx), 
+      media="(min-width: 1401px) and (min-resolution: 2dppx),
               (min-width: 1401px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $xxlarge.RelPermalink }}"
+      srcset="{{ $xxlarge.Permalink }}"
     />
 
     <img
       alt="{{ .Title }}"
       title="{{ .Title }}"
-      src="{{ $fallback.RelPermalink }}"
+      src="{{ $fallback.Permalink }}"
       height="{{ $src.Height }}"
       width="{{ $src.Width }}"
       class="img-fluid"
