@@ -132,19 +132,6 @@
                 href="https://www.tor-bjorn.com/sv/tags/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/topics/topic01/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/topics/topic01/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/topics/topic01/"
-                />
-  </url><url>
     <loc>https://www.tor-bjorn.com/sv/clients/topic01/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -158,17 +145,17 @@
                 href="https://www.tor-bjorn.com/sv/clients/topic01/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/topics/topic02/</loc>
+    <loc>https://www.tor-bjorn.com/sv/topics/topic01/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://www.tor-bjorn.com/topics/topic02/"
+                href="https://www.tor-bjorn.com/topics/topic01/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/topics/topic02/"
+                href="https://www.tor-bjorn.com/sv/topics/topic01/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/clients/topic02/</loc>
@@ -182,6 +169,19 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://www.tor-bjorn.com/sv/clients/topic02/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/sv/topics/topic02/</loc>
+    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/topics/topic02/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/topics/topic02/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/topics/</loc>
@@ -327,6 +327,30 @@
                 href="https://www.tor-bjorn.com/sv/clients/volvo/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/sv/books/tags/books/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/books/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/books/tags/books/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/sv/branding/tags/branding/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/branding/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/branding/tags/branding/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/sv/categories/</loc>
     <xhtml:link
                 rel="alternate"
@@ -337,6 +361,18 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://www.tor-bjorn.com/sv/categories/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/graphic-design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/kontakt/</loc>

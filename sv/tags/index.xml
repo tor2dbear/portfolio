@@ -57,5 +57,26 @@
       <guid>https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/</guid>
       <description></description>
     </item>
+    <item>
+      <title>Books</title>
+      <link>https://www.tor-bjorn.com/sv/books/tags/books/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/books/tags/books/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Branding</title>
+      <link>https://www.tor-bjorn.com/sv/branding/tags/branding/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/branding/tags/branding/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Graphic Design</title>
+      <link>https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
