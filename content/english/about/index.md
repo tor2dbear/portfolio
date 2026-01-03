@@ -1,7 +1,6 @@
 ---
 title: About
 linktitle: About
-title: About
 slug: About
 url: "/about"
 sidemenu: true

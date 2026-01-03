@@ -1,7 +1,6 @@
 ---
 title: Om
 linktitle: Om
-title: Om
 slug: om
 url: "/sv/om"
 sidemenu: true
