@@ -1,7 +1,8 @@
-{{ $related := site.RegularPages.RelatedIndices . "tags" | first 3 }}
-{{ with $related }}
+{{ $related := site.RegularPages.RelatedIndices . "tags" }}
+{{ $relatedFiltered := where $related ".Params.hidden" "!=" true }}
+{{ with $relatedFiltered }}
   <h3 class="mt-64 mb-8 type-headline-small hide-on-client">Related</h3>
-  {{ range . }}
+  {{ range first 3 . }}
     <article id="related" class="hide-on-client">
       <div class="related-image line-height-tighter">
         <a href="{{ .Permalink }}">{{ partial "headerimage.html" . }}</a>

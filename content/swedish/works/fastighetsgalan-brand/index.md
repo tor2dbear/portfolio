@@ -13,6 +13,7 @@ description: Varumärkesidentitet och webbplatsdesign för Fastighetsgalan, Loka
 header_image:
 featured: false
 draft: false
+hidden: true
 client: Lokalguiden / Fastighetsgalan
 clientweb:
 clientabout: Fastighetsgalan är en prisutdelning som uppmärksammar excellens inom fastighetsbranschen, arrangerad av Lokalguiden.

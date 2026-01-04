@@ -13,6 +13,7 @@ description: Komplett redesign av Lokalguidens interna admin-gränssnitt, förb�
 header_image:
 featured: true
 draft: false
+hidden: true
 client: Lokalguiden (Internt)
 clientweb: https://www.lokalguiden.se/
 clientabout: Internt admin-system använt av Lokalguiden-personal för att hantera företagslistor, kundkonton och innehåll.

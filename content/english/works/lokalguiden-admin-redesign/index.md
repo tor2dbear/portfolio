@@ -13,6 +13,7 @@ description: Complete redesign of Lokalguiden's internal admin interface, improv
 header_image:
 featured: true
 draft: false
+hidden: true
 client: Lokalguiden (Internal)
 clientweb: https://www.lokalguiden.se/
 clientabout: Internal admin system used by Lokalguiden staff to manage business listings, customer accounts, and content.

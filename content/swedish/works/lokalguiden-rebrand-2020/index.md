@@ -13,6 +13,7 @@ description: Komplett varumärkesuppdatering för Lokalguiden inklusive ny logot
 header_image:
 featured: true
 draft: false
+hidden: true
 client: Lokalguiden
 clientweb: https://www.lokalguiden.se/
 clientabout: Lokalguiden är en ledande plattform som kopplar samman lokala företag med kunder över hela Sverige, med omfattande företagskataloger och annonslösningar.
