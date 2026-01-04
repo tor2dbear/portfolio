@@ -11,6 +11,7 @@ clients: []
 description: Complete brand refresh for Lokalguiden including new logo, visual guidelines, print materials, magazine redesign, and website overhaul.
 header_image:
 featured: true
+draft: true
 client: Lokalguiden
 clientweb: https://www.lokalguiden.se/
 clientabout: Lokalguiden is a leading platform connecting local businesses with customers across Sweden, providing comprehensive business directories and advertising solutions.

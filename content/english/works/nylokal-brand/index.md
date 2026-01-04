@@ -11,6 +11,7 @@ clients: []
 description: Brand identity development for Nylokal, Lokalguiden's new business launch service.
 header_image:
 featured: false
+draft: true
 client: Lokalguiden / Nylokal
 clientweb:
 clientabout: Nylokal is a service helping new businesses get discovered and successfully launch in their local markets.
