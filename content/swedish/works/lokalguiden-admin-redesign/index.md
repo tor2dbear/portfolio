@@ -8,10 +8,12 @@ slug: works
 weight: 12
 tags: ["ui-ux", "product design", "web design"]
 clients: []
+employers: [techcorp]
 description: Komplett redesign av Lokalguidens interna admin-gränssnitt, förbättrad struktur, användbarhet och visuell design för interna team.
 header_image:
 featured: true
-draft: true
+draft: false
+hidden: true
 client: Lokalguiden (Internt)
 clientweb: https://www.lokalguiden.se/
 clientabout: Internt admin-system använt av Lokalguiden-personal för att hantera företagslistor, kundkonton och innehåll.
