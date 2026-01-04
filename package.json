@@ -1,7 +1,7 @@
 {
-  "name": "testsite",
-  "version": "1.0.0",
-  "description": "",
+  "name": "torbjorn-portfolio",
+  "version": "2.0.0",
+  "description": "Personal portfolio website for Torbjörn Hedberg - Graphic designer based in Gothenburg, Sweden",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -13,8 +13,14 @@
     "format:check": "prettier --check \"**/*.{js,json,md,html,css}\"",
     "prepare": "husky"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "portfolio",
+    "hugo",
+    "personal-website",
+    "design",
+    "graphic-design"
+  ],
+  "author": "Torbjörn Hedberg <tb.hedberg@gmail.com>",
   "license": "ISC",
   "lint-staged": {
     "*.js": [
@@ -147,5 +153,10 @@
     "yaml": "^1.10.2",
     "yargs": "^17.3.1",
     "yargs-parser": "^21.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tor2dbear/portfolio.git"
+  },
+  "homepage": "https://www.tor-bjorn.com"
 }
