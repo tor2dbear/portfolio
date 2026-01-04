@@ -8,6 +8,7 @@ slug: works
 weight: 15
 tags: ["branding", "ui-ux", "design", "web design"]
 clients: []
+employers: [techcorp]
 description: Complete brand refresh for Lokalguiden including new logo, visual guidelines, print materials, magazine redesign, and website overhaul.
 header_image:
 featured: true

@@ -8,6 +8,7 @@ slug: works
 weight: 12
 tags: ["ui-ux", "product design", "web design"]
 clients: []
+employers: [techcorp]
 description: Complete redesign of Lokalguiden's internal admin interface, improving structure, usability, and visual design for internal teams.
 header_image:
 featured: true

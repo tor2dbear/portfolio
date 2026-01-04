@@ -18,6 +18,7 @@ preserveTaxonomyNames = true
   tag = "tags"
   category = "categories"
   client = "clients"
+  employer = "employers"
   topic = "topics"
 
 [related]
@@ -31,6 +32,10 @@ preserveTaxonomyNames = true
 
   [[related.indices]]
     name = "clients"
+    weight = 100
+
+  [[related.indices]]
+    name = "employers"
     weight = 100
 
 [minify]
