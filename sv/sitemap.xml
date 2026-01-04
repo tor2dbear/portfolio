@@ -327,6 +327,18 @@
                 href="https://www.tor-bjorn.com/sv/clients/volvo/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/sv/arbetsgivare/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/employers/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbetsgivare/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/sv/books/tags/books/</loc>
     <xhtml:link
                 rel="alternate"
@@ -411,6 +423,18 @@
                 href="https://www.tor-bjorn.com/sv/om/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/sv/product-design/tags/product-design/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/product-design/tags/product-design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/product-design/tags/product-design/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/sv/tack/</loc>
     <xhtml:link
                 rel="alternate"
@@ -421,6 +445,18 @@
                 rel="alternate"
                 hreflang="sv"
                 href="https://www.tor-bjorn.com/sv/tack/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/sv/web-design/tags/web-design/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/web-design/tags/web-design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/web-design/tags/web-design/"
                 />
   </url>
 </urlset>
