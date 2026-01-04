@@ -679,6 +679,28 @@ header.summary:hover .header-image {
   margin-bottom: var(--spacing-160);
 }
 
+/* Employer page focus mode */
+#layout.employerpage>#menu {
+  display: none;
+}
+
+#layout.employerpage #main {
+  width: 100%;
+}
+
+#layout.employerpage {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+}
+
+.employerpage .content.post {
+  margin: 0 auto;
+  margin-bottom: var(--spacing-160);
+}
+
 /* Breadcrumbs */
 nav.client-breadcrumb ul {
   list-style: none;
