@@ -69,8 +69,11 @@
       <a id="portfolio"></a>
       <h3 class="type-headline-small mb-16 section-headline">Portfolio</h3>
       <div class="employer-portfolio-container grid-template-2-col">
-        {{ range .Data.Pages }}
-          {{ .Render "summary-employer" }}
+        {{ $companyName := .Params.company_name }}
+        {{ range where .Site.RegularPages "Type" "works" }}
+          {{ if in .Params.employers $companyName }}
+            {{ .Render "summary-employer" }}
+          {{ end }}
         {{ end }}
       </div>
     </div>
