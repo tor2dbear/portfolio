@@ -43,25 +43,33 @@
   {{ end }}
 
 
-  <!-- CSS variables -->
-  {{ $stylea := resources.Get "css/variables.css" }}
-  {{ $styleb := resources.Get "css/atoms.css" }}
-  {{ $stylec := resources.Get "css/typography.css" }}
-  {{ $styled := resources.Get "css/style.css" }}
-  {{ $stylee := resources.Get "css/print.css" }}
+  <!-- CSS tokens (3-layer architecture) -->
+  {{ $tokens_primitives := resources.Get "css/tokens/primitives.css" }}
+  {{ $tokens_semantic := resources.Get "css/tokens/semantic.css" }}
+  {{ $tokens_components := resources.Get "css/tokens/components.css" }}
+
+  <!-- CSS variables (legacy - will be migrated) -->
+  {{ $variables := resources.Get "css/variables.css" }}
+  {{ $atoms := resources.Get "css/atoms.css" }}
+  {{ $typography := resources.Get "css/typography.css" }}
+  {{ $style := resources.Get "css/style.css" }}
+  {{ $print := resources.Get "css/print.css" }}
 
 
   <!-- CSS loading -->
   {{ if hugo.IsServer }}
     <!-- CSS development -->
-    <link rel="stylesheet" type="text/css" href="{{ $stylea.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $styleb.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $stylec.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $styled.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $stylee.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $variables.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $atoms.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $typography.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $variables $atoms $typography $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
