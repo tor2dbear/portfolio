@@ -6,8 +6,43 @@
     <description>Recent content in Tags on Torbjörn Hedberg · Designer</description>
     <generator>Hugo</generator>
     <language>sv</language>
-    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 01 May 2023 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.tor-bjorn.com/sv/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Product Design</title>
+      <link>https://www.tor-bjorn.com/sv/product-design/tags/product-design/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/product-design/tags/product-design/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>UI/UX</title>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Web Design</title>
+      <link>https://www.tor-bjorn.com/sv/web-design/tags/web-design/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/web-design/tags/web-design/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Branding</title>
+      <link>https://www.tor-bjorn.com/sv/branding/tags/branding/</link>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/branding/tags/branding/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Design</title>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/design/</link>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/design/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Grafisk design</title>
       <link>https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/</link>
@@ -27,20 +62,6 @@
       <link>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</link>
       <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Design</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/design/</link>
-      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>UI/UX</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/</link>
-      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/</guid>
       <description></description>
     </item>
     <item>
@@ -65,31 +86,10 @@
       <description></description>
     </item>
     <item>
-      <title>Branding</title>
-      <link>https://www.tor-bjorn.com/sv/branding/tags/branding/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/branding/tags/branding/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Graphic Design</title>
       <link>https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Product Design</title>
-      <link>https://www.tor-bjorn.com/sv/product-design/tags/product-design/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/product-design/tags/product-design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Web Design</title>
-      <link>https://www.tor-bjorn.com/sv/web-design/tags/web-design/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/web-design/tags/web-design/</guid>
       <description></description>
     </item>
   </channel>

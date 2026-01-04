@@ -6,19 +6,40 @@
     <description>Recent content in Tags on Torbjörn Hedberg · Designer</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 01 May 2023 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.tor-bjorn.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Product Design</title>
+      <link>https://www.tor-bjorn.com/product-design/tags/product-design/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/product-design/tags/product-design/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>UI/UX</title>
+      <link>https://www.tor-bjorn.com/works/tags/ui-ux/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/works/tags/ui-ux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Web Design</title>
+      <link>https://www.tor-bjorn.com/web-design/tags/web-design/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/web-design/tags/web-design/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Branding</title>
       <link>https://www.tor-bjorn.com/works/tags/branding/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/branding/</guid>
       <description></description>
     </item>
     <item>
       <title>Design</title>
       <link>https://www.tor-bjorn.com/works/tags/design/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/design/</guid>
       <description></description>
     </item>
@@ -49,27 +70,6 @@
       <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/books/</guid>
       <description>&lt;p&gt;{{ range .Pages }}&lt;/p&gt;&#xA;&lt;!-- raw HTML omitted --&gt;</description>
-    </item>
-    <item>
-      <title>UI/UX</title>
-      <link>https://www.tor-bjorn.com/works/tags/ui-ux/</link>
-      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/works/tags/ui-ux/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Product Design</title>
-      <link>https://www.tor-bjorn.com/product-design/tags/product-design/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/product-design/tags/product-design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Web Design</title>
-      <link>https://www.tor-bjorn.com/web-design/tags/web-design/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/web-design/tags/web-design/</guid>
-      <description></description>
     </item>
   </channel>
 </rss>
