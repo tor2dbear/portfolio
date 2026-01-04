@@ -71,58 +71,111 @@ Content files are mirrored across both language directories with translated cont
 
 ## Client/Employer Application System
 
-Special feature for sending customized job applications with personalized styling.
+Special feature for sending customized job applications with personalized styling using a query parameter-based focus mode.
 
 ### How It Works
 
-**1. Client page structure**:
+**Focus Mode System** uses URL query parameters instead of localStorage for a stateless, shareable, SEO-friendly solution.
+
+**1. Client Page Structure**:
 ```
 content/english/clients/deg17/_index.md
+content/english/employers/techcorp/_index.md
 ```
 
-**2. Front matter**:
+**2. Front Matter**:
 ```yaml
 title: "Work application for UI position at Deg17"
-company_name: "deg17"           # Used in localStorage
+company_name: "deg17"           # Used in query params and filtering
+preamble: "Introduction text"
+body: "Main letter content"
 attach_cv: "/images/cvd.pdf"
 attach_portfolio: "/images/portfolio_20220812.pdf"
 attach_letter: ""
+taxonomy_indexes: true          # For employer pages
 ```
 
-**3. JavaScript flow**:
+**3. Query Parameter Flow**:
 
-**a) Set localStorage** (`client-set-cookie.js`):
-- Runs when visitor lands on `/clients/deg17/`
-- Extracts:
-  - `clientUrl` - Full URL to client page (without hash)
-  - `clientName` - From `.company_name` element in HTML
-- Stores in localStorage:
-  - `lsClientUrl` → URL
-  - `lsClient` → Company name
+**Client Mode**:
+```
+/clients/deg17/ → /works/project/?view=client&ref=deg17
+```
 
-**b) Check and apply styling** (`client-check.js`):
-- Detects if page is a client page by checking:
-  - URL contains `?source=client`, OR
-  - URL contains `/clients/`
-- If yes → Adds CSS class `clientpage` to `#layout`
+**Employer Mode**:
+```
+/employers/techcorp/ → /works/project/?view=employer
+```
 
-**c) Get and use data** (`client-get-cookie.js`):
-- Reads from localStorage
-- Sets up navigation with hash anchors:
-  - `#letter`, `#portfolio`, `#cv`, `#download`, `#contact`
-- Updates breadcrumb back-link
+**4. JavaScript Implementation** (`focus-mode.js`):
 
-**4. CSS styling**:
+**a) Detect context**:
+- Reads URL parameters: `?view=client&ref=company` or `?view=employer`
+- Backward compatibility: `?source=client` (legacy)
+- Path detection: `/clients/` or `/employers/` in URL
+
+**b) Apply styling**:
+- Adds CSS class `clientpage` or `employerpage` to `#layout`
+- Classes trigger CSS to hide menu and adjust layout
+
+**c) Propagate parameters**:
+- Automatically adds query params to all internal links
+- Maintains focus mode context across navigation
+- Updates breadcrumbs with company name from `ref` parameter
+
+**d) Security**:
+- Uses `textContent` instead of `innerHTML` to prevent XSS
+- URL encoding/decoding for special characters
+- Try/catch blocks for error handling
+
+**5. CSS Styling**:
 ```css
-#layout.clientpage #menu { /* Hide menu */ }
-#layout.clientpage #main { /* Custom layout */ }
-.clientpage .content.post { /* Custom content styling */ }
+/* Client mode */
+#layout.clientpage #menu { display: none; }
+#layout.clientpage #main { width: 100%; }
+#layout.clientpage .hide-on-client { display: none; }
+#layout:not(.clientpage) .show-on-client { display: none; }
+
+/* Employer mode */
+#layout.employerpage #menu { display: none; }
+#layout.employerpage #main { width: 100%; }
+#layout.employerpage .hide-on-employer { display: none; }
+#layout:not(.employerpage) .show-on-employer { display: none; }
 ```
 
-**Why localStorage?**
-- Maintains client context across page navigation
-- Visitor can browse different sections (CV, portfolio, contact)
-- Styling and breadcrumb persist
+**6. Hugo Taxonomy System**:
+
+**Employers**:
+- Uses Hugo taxonomy: `employers: [techcorp]` in project front matter
+- Template: `layouts/taxonomy/employer.html`
+- Queries projects directly: `{{ range where .Site.RegularPages "Type" "works" }}`
+- Filters by company: `{{ if in .Params.employers $companyName }}`
+
+**Clients**:
+- Uses Hugo taxonomy: `clients: [deg17]` in project front matter
+- Template: `layouts/taxonomy/client.html`
+- Same query pattern as employers
+
+**7. Hidden Projects**:
+
+Projects can be visible only on client/employer pages:
+```yaml
+employers: [techcorp]
+hidden: true              # Excluded from main portfolio
+draft: false
+```
+
+Templates filter hidden projects:
+- `layouts/works/works.html` - Main portfolio
+- `layouts/index.html` - Featured section
+- `layouts/partials/related.html` - Related suggestions
+
+**Why Query Parameters?**
+- ✅ Stateless - no browser storage needed
+- ✅ Shareable URLs maintain context
+- ✅ SEO-friendly with canonical tags
+- ✅ Works across devices/sessions
+- ✅ Easier to debug and test
 
 ---
 
@@ -132,10 +185,10 @@ attach_letter: ""
 - One function/feature per file
 - Vanilla JavaScript (no frameworks)
 - ES6+ syntax
-- Example: `client-check.js`, `darkmode.js`, `header-hide.js`
+- Example: `focus-mode.js`, `darkmode.js`, `header-hide.js`
 
 ### File Naming
-- Kebab-case: `client-set-cookie.js`
+- Kebab-case: `focus-mode.js`
 - Descriptive names indicating function
 - Tests: `<module-name>.test.js`
 
@@ -278,12 +331,14 @@ npm run test:coverage       # Generate coverage report
 ## Important Notes for AI Assistants
 
 1. **Bilingual Content**: Always consider both English and Swedish versions when modifying content
-2. **localStorage Usage**: The client system relies on localStorage - don't break this functionality
-3. **CSS Classes**: The `clientpage` class is critical for client styling
+2. **Focus Mode**: Query parameter-based system (`?view=client&ref=company` or `?view=employer`) - don't break parameter propagation
+3. **CSS Classes**: The `clientpage` and `employerpage` classes are critical for focus mode styling
 4. **Module Pattern**: Keep JavaScript modular - one responsibility per file
 5. **Testing**: Write tests for new JavaScript functionality
 6. **Hugo Context**: This is a static site - no server-side logic
 7. **Git Conventions**: Follow `claude/` branch naming for AI work
+8. **Taxonomy System**: Employers/clients use Hugo taxonomies - projects need taxonomy tags to appear on company pages
+9. **Hidden Projects**: Respect `hidden: true` parameter - must be filtered in main portfolio templates
 
 ---
 
@@ -300,8 +355,20 @@ npm run test:coverage       # Generate coverage report
 1. Create directory: `content/english/clients/company-slug/`
 2. Add `_index.md` with client front matter
 3. Ensure `company_name` matches company slug
-4. Add PDF attachments to `static/images/`
-5. Test localStorage flow in browser
+4. Mirror in Swedish: `content/swedish/clients/company-slug/`
+5. Add PDF attachments to `static/images/`
+6. Tag relevant projects: `clients: [company-slug]` in project front matter
+7. Test focus mode: `/clients/company-slug/` → click project → verify `?view=client&ref=company-slug`
+
+### Adding a New Employer Application
+1. Create directory: `content/english/employers/company-slug/`
+2. Add `_index.md` with employer front matter (include `taxonomy_indexes: true`)
+3. Ensure `company_name` matches company slug
+4. Mirror in Swedish: `content/swedish/employers/company-slug/`
+5. Add PDF attachments to `static/images/`
+6. Tag relevant projects: `employers: [company-slug]` in project front matter
+7. Optionally mark projects as `hidden: true` to exclude from main portfolio
+8. Test focus mode: `/employers/company-slug/` → verify projects display → click project → verify `?view=employer`
 
 ### Modifying JavaScript
 1. Edit module in `assets/js/`
