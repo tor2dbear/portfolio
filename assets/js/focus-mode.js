@@ -48,12 +48,16 @@
     const params = getUrlParams();
     const view = params.get(CONFIG.PARAM_VIEW);
 
+    // Backward compatibility: check for old ?source=client parameter
+    const legacySource = params.get('source');
+
     // Also detect from URL path
     const path = window.location.pathname;
     const isClientPath = path.includes('/clients/');
     const isEmployerPath = path.includes('/employer') || path.includes('/arbetsgivare');
 
-    if (view === CONFIG.VIEW_CLIENT || isClientPath) {
+    // Check for client context (new param, legacy param, or path)
+    if (view === CONFIG.VIEW_CLIENT || legacySource === 'client' || isClientPath) {
       return {
         type: CONFIG.VIEW_CLIENT,
         ref: params.get(CONFIG.PARAM_REF) || extractRefFromPath(path, 'clients')
