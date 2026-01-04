@@ -4,7 +4,7 @@ linktitle: Om
 slug: om
 url: "/sv/om"
 sidemenu: true
-description: Produktdesigner based in Gothenburg. Specialized in graphic design with a focus on UI/UX.
+description: Produktägare & Art Director baserad i Göteborg. Jag kombinerar design och produktstrategi.
 layout: about
 ---
 

@@ -6,7 +6,7 @@ url: "/sv/kontakt"
 aliases:
   - /sv/contact/
 sidemenu: true
-description: If you have any questions or suggestions on how we could work together, please get in touch.
+description: Om du har frågor eller förslag på hur vi kan samarbeta, hör av dig.
 layout: contact
 ---
 
