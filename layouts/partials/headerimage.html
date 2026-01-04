@@ -6,21 +6,11 @@
 {{ $pathLen := len $pathArr }}
 {{ $ext := index $pathArr (sub $pathLen 1) }}
 
-{{/* Helper function to convert RelPermalink to absolute path from site root */}}
-{{/* This ensures images load correctly on list pages and in preview deployments */}}
-{{ define "absPath" }}
-  {{ if strings.HasPrefix . "/" }}
-    {{ . }}
-  {{ else }}
-    {{ printf "%s%s" $.Page.RelPermalink . }}
-  {{ end }}
-{{ end }}
-
 {{/* IF mp4 */}}
 {{ if eq $ext "mp4" }}
   <video width="100%" height="auto" autoplay muted>
     >
-    <source src="{{ template "absPath" (dict "Page" . "Path" $src.RelPermalink) }}" type="video/mp4" />
+    <source src="{{ $src.Permalink }}" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 {{ else }}
