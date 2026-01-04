@@ -1,6 +1,7 @@
 {
   "name": "testsite",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -15,6 +16,15 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,html,css}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -31,9 +41,6 @@
     "postcss-import": "^14.0.2",
     "prettier": "^2.8.8",
     "prettier-plugin-go-template": "^0.0.13",
-    "tailwindcss": "^3.0.23"
-  },
-  "dependencies": {
     "acorn": "^7.4.1",
     "acorn-node": "^1.8.2",
     "acorn-walk": "^7.2.0",
@@ -140,15 +147,5 @@
     "yaml": "^1.10.2",
     "yargs": "^17.3.1",
     "yargs-parser": "^21.0.0"
-  },
-  "description": "",
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,html,css}": [
-      "prettier --write"
-    ]
   }
 }
