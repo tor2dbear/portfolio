@@ -1,3 +1,7 @@
 /themes
 /public
 /node_modules
+
+# Test coverage
+coverage/
+*.lcov

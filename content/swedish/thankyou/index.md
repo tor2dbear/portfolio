@@ -6,7 +6,7 @@ linktitle: Tack för ditt meddelande
 slug: tack
 url: "/sv/tack"
 aliases:
-    - /sv/thankyou/
+  - /sv/thankyou/
 ---
 
 ### Tack för att du hör av dig. Jag återkommer så snart som möjligt.
