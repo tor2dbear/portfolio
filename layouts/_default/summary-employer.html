@@ -1,7 +1,7 @@
 <article>
   <header class="summary">
     <div class="header-image">
-      <a href="{{ .Permalink }}?view=client{{ with $.Parent.Params.company_name }}&ref={{ . }}{{ end }}"
+      <a href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}&ref={{ . }}{{ end }}"
         >{{ partial "headerimage.html" . }}</a
       >
     </div>
@@ -10,7 +10,7 @@
       style="font-weight: var(--sans-weight-bold)"
       class="text-2xl line-height-normal text-color-default tracking-normal mt-12 mb-12"
     >
-      <a href="{{ .Permalink }}?view=client{{ with $.Parent.Params.company_name }}&ref={{ . }}{{ end }}"
+      <a href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}&ref={{ . }}{{ end }}"
         >{{ .Title }}{{ if isset .Params "subtitle" }}
           –
         {{ end }}{{ .Params.subtitle }}</a

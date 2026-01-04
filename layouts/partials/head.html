@@ -37,6 +37,9 @@
 
   {{ if .Params.canonical }}
     <link rel="canonical" href="{{ .Params.canonical }}" />
+  {{ else }}
+    {{/* Auto-generate canonical URL without query params for SEO */}}
+    <link rel="canonical" href="{{ .Permalink }}" />
   {{ end }}
 
 
@@ -90,7 +93,7 @@
   {{ $js3 := resources.Get "js/header-hide.js" }}
   {{ $js4 := resources.Get "js/theme.js" }}
   {{ $js5 := resources.Get "js/darkmode.js" }}
-  {{ $js6 := resources.Get "js/client-check.js" }}
+  {{ $js6 := resources.Get "js/focus-mode.js" }}
   {{ $js7 := resources.Get "js/progressbar.js" }}
 
   <!-- JavaScript loading -->

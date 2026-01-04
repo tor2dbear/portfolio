@@ -13,6 +13,14 @@
   display: none;
 }
 
+#layout.employerpage .hide-on-employer {
+  display: none;
+}
+
+#layout:not(.employerpage) .show-on-employer {
+  display: none;
+}
+
 /* min 768px Small  */
 @media (max-width: 63.9375em) {
   .hide-above-sm {

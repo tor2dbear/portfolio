@@ -1,7 +1,7 @@
-{{ partial "header-client.html" . }}
+{{ partial "header.html" . }}
 
 {{ $style := resources.Get "css/clientpage.css" }}
-{{ $css := slice $style | resources.Concat "client.css" }}
+{{ $css := slice $style | resources.Concat "employer.css" }}
 
 
 <link
@@ -11,22 +11,20 @@
   media="all"
 />
 
-<div class="content client">
-  <nav class="client-breadcrumb flex text-sm mb-24 show-on-client">
+<div class="content employer">
+  <nav class="employer-breadcrumb flex text-sm mb-24 show-on-employer">
     <ul>
-      <li class="text-capitalize" id="client-breadcrumb-home">
+      <li class="text-capitalize" id="employer-breadcrumb-home">
         <a href="{{ .Site.BaseURL | relLangURL }}">Start</a>
       </li>
-      <!-- company_name for localstorage -->
       <li
         class="text-color-lighter company_name text-capitalize"
-        id="client-breadcrumb-active"
+        id="employer-breadcrumb-active"
       >
         {{ .Params.company_name }}
       </li>
     </ul>
   </nav>
-  <!-- span company name for localstorage -->
   <span class="company_name">{{ .Params.company_name }}</span>
   <ul class="table-of-content mb-64 grid-6">
     <li><h3 class="type-headline-small mb-8">Table of content</h3></li>
@@ -66,13 +64,13 @@
       <p>{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
     </div>
 
-    <div class="client-portfolio grid-2 mb-64">
+    <div class="employer-portfolio grid-2 mb-64">
       <!-- put this just above the section you wanna go to -->
       <a id="portfolio"></a>
       <h3 class="type-headline-small mb-16 section-headline">Portfolio</h3>
-      <div class="client-portfolio-container grid-template-2-col">
+      <div class="employer-portfolio-container grid-template-2-col">
         {{ range .Data.Pages }}
-          {{ .Render "summary-client" }}
+          {{ .Render "summary-employer" }}
         {{ end }}
       </div>
     </div>
