@@ -12,7 +12,7 @@ employers: [techcorp]
 description: Brand identity and website design for Fastighetsgalan, Lokalguiden's real estate industry awards event.
 header_image:
 featured: false
-draft: true
+draft: false
 client: Lokalguiden / Fastighetsgalan
 clientweb:
 clientabout: Fastighetsgalan is an awards ceremony celebrating excellence in the real estate industry, organized by Lokalguiden.

@@ -8,10 +8,11 @@ slug: works
 weight: 14
 tags: ["branding", "web design", "ui-ux"]
 clients: []
+employers: [techcorp]
 description: Varumärkesidentitet och webbplatsdesign för Fastighetsgalan, Lokalguidens prisutdelning för fastighetsbranschen.
 header_image:
 featured: false
-draft: true
+draft: false
 client: Lokalguiden / Fastighetsgalan
 clientweb:
 clientabout: Fastighetsgalan är en prisutdelning som uppmärksammar excellens inom fastighetsbranschen, arrangerad av Lokalguiden.

@@ -8,10 +8,11 @@ slug: works
 weight: 15
 tags: ["branding", "ui-ux", "design", "web design"]
 clients: []
+employers: [techcorp]
 description: Komplett varumärkesuppdatering för Lokalguiden inklusive ny logotyp, visuella riktlinjer, tryckmaterial, magasin-redesign och ny webbsida.
 header_image:
 featured: true
-draft: true
+draft: false
 client: Lokalguiden
 clientweb: https://www.lokalguiden.se/
 clientabout: Lokalguiden är en ledande plattform som kopplar samman lokala företag med kunder över hela Sverige, med omfattande företagskataloger och annonslösningar.

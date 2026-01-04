@@ -8,10 +8,11 @@ slug: works
 weight: 13
 tags: ["branding", "design"]
 clients: []
+employers: [techcorp]
 description: Varumärkesutveckling för Nylokal, Lokalguidens tjänst för nyöppnade företag.
 header_image:
 featured: false
-draft: true
+draft: false
 client: Lokalguiden / Nylokal
 clientweb:
 clientabout: Nylokal är en tjänst som hjälper nya företag att bli upptäckta och framgångsrikt lansera på sina lokala marknader.
