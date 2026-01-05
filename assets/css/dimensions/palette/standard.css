@@ -1,0 +1,16 @@
+/* ============================================================================
+   PALETTE: Standard
+
+   Standard color palette with normal image rendering.
+   This is the default palette - no special adjustments.
+   ============================================================================ */
+
+:root[data-palette="standard"] {
+  /* Image effects */
+  --img-grayscale: 0%;
+  --img-blend-mode: normal;
+
+  /* Primary accent color mapping (unchanged) */
+  --text-color-accent: var(--accent-6);
+  --primary-color: var(--accent-6);
+}

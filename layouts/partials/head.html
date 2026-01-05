@@ -48,13 +48,16 @@
   {{ $tokens_semantic := resources.Get "css/tokens/semantic.css" }}
   {{ $tokens_components := resources.Get "css/tokens/components.css" }}
 
+  <!-- CSS dimensions (mode + palette) -->
+  {{ $dimensions_mode_light := resources.Get "css/dimensions/mode/light.css" }}
+  {{ $dimensions_mode_dark := resources.Get "css/dimensions/mode/dark.css" }}
+  {{ $dimensions_palette_standard := resources.Get "css/dimensions/palette/standard.css" }}
+  {{ $dimensions_palette_pantone := resources.Get "css/dimensions/palette/pantone.css" }}
+
   <!-- CSS utilities -->
   {{ $utilities_typography := resources.Get "css/utilities/typography.css" }}
   {{ $utilities_layout := resources.Get "css/utilities/layout.css" }}
   {{ $utilities_display := resources.Get "css/utilities/display.css" }}
-
-  <!-- CSS variables (legacy - themes will be migrated) -->
-  {{ $variables := resources.Get "css/variables.css" }}
 
   <!-- CSS components and pages -->
   {{ $style := resources.Get "css/style.css" }}
@@ -67,7 +70,10 @@
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $variables.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_light.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_dark.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_display.RelPermalink }}" />
@@ -75,7 +81,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $variables $utilities_typography $utilities_layout $utilities_display $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $utilities_typography $utilities_layout $utilities_display $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"

@@ -1,0 +1,82 @@
+/* ============================================================================
+   MODE: Light
+
+   Defines color tokens for light mode.
+   Combined with palette dimensions for full theming.
+   ============================================================================ */
+
+:root[data-mode="light"] {
+  /* Text colors */
+  --text-color: var(--gray-12);
+  --text-color-lighter: var(--gray-9);
+  --text-color-menu: var(--white);
+  --text-color-menu-hover: var(--accent-2);
+  --text-color-hover: var(--accent-6);
+  --text-section-headline: var(--accent-1);
+
+  /* Background colors */
+  --bg-color: var(--white);
+  --bg-section-headline: var(--accent-8);
+  --background-color-menu: var(--accent-7);
+  --img-background: var(--accent-10);
+  --box-background: var(--accent-1);
+
+  /* Tag colors */
+  --bg-tag: var(--accent-1);
+  --bg-tag-hover: var(--accent-2);
+  --text-color-tag: var(--accent-6);
+
+  /* Borders */
+  --border-header: var(--gray-4);
+
+  /* Forms */
+  --form-bg: var(--gray-2);
+  --form-border: transparent;
+  --form-placeholder: var(--gray-5);
+
+  /* Newsletter */
+  --newsletter-signup-bg: var(--accent-9);
+  --newsletter-illustration-bg: var(--accent-3);
+  --newsletter-color: var(--accent-2);
+  --newsletter-button-background: var(--accent-4);
+  --newsletter-button-color: var(--accent-9);
+
+  /* Errors */
+  --color-error: var(--red-9);
+  --color-error-light: var(--red-8);
+  --color-error-dark: var(--red-11);
+
+  /* Material Design semantic tokens */
+  --primary-base: var(--accent-6);
+  --primary-on-base: var(--white);
+  --primary-container: var(--accent-1);
+  --primary-on-container: var(--accent-6);
+
+  --secondary-base: var(--gray-12);
+  --secondary-on-base: var(--white);
+  --secondary-container: var(--gray-2);
+  --secondary-on-container: var(--gray-11);
+
+  --background-base: var(--white);
+  --background-on-base: var(--gray-12);
+
+  --variant-surface: var(--accent-3);
+  --variant-on-surface: var(--accent-9);
+
+  --error-base: var(--red-9);
+  --error-on-base: var(--white);
+  --error-container: var(--red-2);
+  --error-on-container: var(--red-11);
+
+  /* State layers */
+  --state-layer-base-hover: rgba(255, 255, 255, 0.04);
+  --state-layer-base-active: rgba(255, 255, 255, 0.08);
+  --state-layer-container-hover: rgba(0, 0, 0, 0.04);
+  --state-layer-container-active: rgba(0, 0, 0, 0.08);
+
+  /* Outline */
+  --outline-neutral: rgba(0, 0, 0, 0.08);
+
+  /* Shadow */
+  --shadow-01: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}

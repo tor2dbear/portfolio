@@ -105,7 +105,7 @@ function applyTheme(theme) {
   if (theme === "system") {
     updateSystemTheme();
   } else {
-    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.setAttribute("data-mode", theme);
   }
   updateMenuIcon(theme);
   updateThemeColor(theme); // Update the theme color meta tag
@@ -115,7 +115,7 @@ function updateSystemTheme() {
   var systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
-  document.documentElement.setAttribute("data-theme", systemTheme);
+  document.documentElement.setAttribute("data-mode", systemTheme);
   updateThemeColor(systemTheme); // Update the theme color meta tag
 }
 
