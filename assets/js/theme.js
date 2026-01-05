@@ -1,26 +1,22 @@
 var toggle = document.getElementById("theme-toggle");
 var delay = document.body;
 
-var storedTheme =
-  localStorage.getItem("mode") ||
-  (window.matchMedia("(prefers-color-scheme: pant)").matches
-    ? "pant"
-    : "standard");
-if (storedTheme)
-  document.documentElement.setAttribute("data-mode", storedTheme);
+var storedPalette = localStorage.getItem("palette") || "standard";
+if (storedPalette)
+  document.documentElement.setAttribute("data-palette", storedPalette);
 
 toggle.onclick = function () {
-  var currentMode = document.documentElement.getAttribute("data-mode");
-  var targetMode = "standard";
+  var currentPalette = document.documentElement.getAttribute("data-palette");
+  var targetPalette = "standard";
   delay.classList.add("darkmodeTransition");
   setTimeout(function () {
     delay.classList.remove("darkmodeTransition");
   }, 1000);
 
-  if (currentMode === "standard") {
-    targetMode = "pant";
+  if (currentPalette === "standard") {
+    targetPalette = "pantone";
   }
 
-  document.documentElement.setAttribute("data-mode", targetMode);
-  localStorage.setItem("mode", targetMode);
+  document.documentElement.setAttribute("data-palette", targetPalette);
+  localStorage.setItem("palette", targetPalette);
 };

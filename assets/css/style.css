@@ -1007,12 +1007,12 @@ button#theme-toggle {
   display: none;
 }
 
-[data-mode="pant"] .d-block-pant {
+[data-palette="pantone"] .d-block-pant {
   display: none;
 }
 
-[data-mode="standard"] .d-block-pant,
-[data-mode="pant"] .d-block-standard {
+[data-palette="standard"] .d-block-pant,
+[data-palette="pantone"] .d-block-standard {
   display: block;
 }
 
