@@ -11,7 +11,7 @@ Personal portfolio website built with Hugo, featuring multilingual content (Engl
 - 📱 **Fully Responsive** - Mobile-first design with touch gesture support
 - ♿ **Accessible** - ARIA attributes, keyboard navigation, semantic HTML
 - ⚡ **Fast** - Static site with optimized assets and minification
-- ✅ **Tested** - 228 automated tests with 88% coverage
+- ✅ **Tested** - 228 automated tests with 88% coverage + visual regression testing
 - 🔒 **Secure** - Pre-commit hooks, linting, and security audits
 
 ## Tech Stack
@@ -20,7 +20,7 @@ Personal portfolio website built with Hugo, featuring multilingual content (Engl
 - **Build Tools:** Node.js 20, npm
 - **CSS:** Custom CSS with CSS Variables (no framework)
 - **JavaScript:** Vanilla JS with modular architecture
-- **Testing:** Jest with jsdom
+- **Testing:** Jest with jsdom + Playwright for visual regression testing
 - **Linting:** ESLint + Prettier
 - **CI/CD:** GitHub Actions → GitHub Pages
 - **Quality:** Husky pre-commit hooks, lint-staged
@@ -64,9 +64,14 @@ hugo server -D              # Start Hugo dev server with drafts
 hugo server                 # Start Hugo dev server (published content only)
 
 # Testing
-npm test                    # Run all tests
+npm test                    # Run unit tests (Jest)
 npm run test:watch          # Run tests in watch mode
 npm run test:coverage       # Run tests with coverage report
+npm run test:visual         # Run visual regression tests (Playwright)
+npm run test:visual:ui      # Run visual tests in interactive UI mode
+npm run test:visual:update  # Update visual test baselines
+npm run test:visual:report  # View visual test HTML report
+npm run test:all            # Run both unit and visual tests
 
 # Code Quality
 npm run lint                # Run ESLint
@@ -130,12 +135,14 @@ hugo new swedish/blog/my-post.md
 
 ## Testing
 
-This project has comprehensive test coverage for all interactive JavaScript functionality.
+This project has comprehensive test coverage with both unit tests and visual regression tests.
 
-### Run tests
+### Unit Tests (Jest)
+
+Run JavaScript unit tests with Jest:
 
 ```bash
-npm test                    # Run all tests
+npm test                    # Run all unit tests
 npm run test:coverage       # See coverage report
 ```
 
@@ -146,6 +153,26 @@ npm run test:coverage       # See coverage report
 - **Files tested:** 9 JavaScript modules
 
 See [.github/TESTING.md](.github/TESTING.md) for detailed testing documentation.
+
+### Visual Regression Tests (Playwright)
+
+Visual tests capture screenshots and compare them against baseline images to detect unintended visual changes:
+
+```bash
+npm run test:visual         # Run visual tests
+npm run test:visual:ui      # Interactive UI mode
+npm run test:visual:update  # Update baselines
+npm run test:visual:report  # View HTML report
+```
+
+**What's tested:**
+- Homepage and key pages across multiple viewports
+- Dark mode styling
+- Responsive design (mobile, tablet, desktop)
+- Component rendering (header, menu, footer)
+- Layout integrity
+
+See [VISUAL_TESTING.md](VISUAL_TESTING.md) for complete visual testing documentation.
 
 ## Deployment
 
