@@ -1,0 +1,38 @@
+/* ============================================================================
+   COMPONENT TOKENS - Edge cases and component-specific overrides
+
+   These are exceptions to the semantic rules above.
+   Use sparingly - most components should use semantic tokens.
+   Only create component tokens when a component has unique theming needs.
+   ============================================================================ */
+
+:root {
+  /* ==========================================================================
+     FORMS
+     Component-specific because form styling differs from general surfaces
+     ========================================================================== */
+
+  --form-bg: var(--colors-gray-100);
+  --form-border: transparent;
+  --form-placeholder: var(--colors-gray-300);
+
+  /* ==========================================================================
+     NEWSLETTER
+     Highly specific styling that doesn't fit semantic patterns
+     ========================================================================== */
+
+  --newsletter-signup-bg: var(--colors-accent-800);
+  --newsletter-illustration-bg: var(--colors-accent-200);
+  --newsletter-color: var(--colors-accent-100);
+  --newsletter-button-background: var(--colors-accent-300);
+  --newsletter-button-color: var(--colors-accent-800);
+
+  /* ==========================================================================
+     ERROR COLORS (legacy aliases)
+     Transitional - prefer using --error-base, --error-container from semantic
+     ========================================================================== */
+
+  --color-error: var(--danger-normal);
+  --color-error-light: var(--danger-light);
+  --color-error-dark: var(--danger-dark);
+}
