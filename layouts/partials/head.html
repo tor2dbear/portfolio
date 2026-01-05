@@ -52,7 +52,7 @@
 
 
   <!-- CSS loading -->
-  {{ if hugo.IsServer }}
+  {{ if .Site.IsServer }}
     <!-- CSS development -->
     <link rel="stylesheet" type="text/css" href="{{ $stylea.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $styleb.RelPermalink }}" />
@@ -97,7 +97,7 @@
   {{ $js7 := resources.Get "js/progressbar.js" }}
 
   <!-- JavaScript loading -->
-  {{ if hugo.IsServer }}
+  {{ if .Site.IsServer }}
     <!-- JavaScript development -->
     <script src="{{ $js1.RelPermalink }}" defer></script>
     <script src="{{ $js2.RelPermalink }}" defer></script>
