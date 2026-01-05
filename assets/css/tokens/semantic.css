@@ -1,123 +1,96 @@
 /* ============================================================================
-   SEMANTIC TOKENS - Material Design 3 inspired
+   SEMANTIC TOKENS - Documentation
 
-   These tokens define USAGE, not raw values.
-   Themes override these to create different visual experiences.
+   This file documents the semantic token names used throughout the codebase.
 
-   Material Design pattern:
+   IMPORTANT: This file does NOT define values.
+   All values are defined in the dimensions layer:
+   - dimensions/mode/light.css - Light mode values
+   - dimensions/mode/dark.css - Dark mode values
+   - dimensions/palette/*.css - Palette-specific overrides
+
+   Material Design naming pattern:
    - *-base: Main surface color
    - *-on-base: Text/content color on that surface
    - *-container: Secondary/lighter surface
    - *-on-container: Text/content color on container
+
+   Available semantic tokens:
+
+   PRIMARY (Accent color - main brand color):
+   - --primary-base
+   - --primary-on-base
+   - --primary-container
+   - --primary-on-container
+   - --primary-color (legacy alias)
+
+   SECONDARY (Supporting color):
+   - --secondary-base
+   - --secondary-on-base
+   - --secondary-container
+   - --secondary-on-container
+
+   BACKGROUND (Page background):
+   - --background-base
+   - --background-on-base
+   - --bg-color
+
+   SURFACE (Cards, elevated surfaces):
+   - --variant-surface
+   - --variant-on-surface
+
+   ERROR (Alerts, danger states):
+   - --error-base
+   - --error-on-base
+   - --error-container
+   - --error-on-container
+   - --color-error
+   - --color-error-light
+   - --color-error-dark
+
+   STATE LAYERS (Hover, active, focus states):
+   - --state-layer-base-hover
+   - --state-layer-base-active
+   - --state-layer-container-hover
+   - --state-layer-container-active
+
+   BORDERS & OUTLINES:
+   - --outline-neutral
+   - --border-header
+
+   SHADOWS:
+   - --shadow-01
+
+   TEXT COLORS:
+   - --text-color
+   - --text-color-accent
+   - --text-color-lighter
+   - --text-color-hover
+   - --text-color-menu
+   - --text-color-menu-hover
+   - --text-section-headline
+
+   BACKGROUND COLORS:
+   - --bg-tag
+   - --bg-tag-hover
+   - --bg-section-headline
+   - --box-background
+   - --background-color-menu
+   - --img-background
+
+   TAG COLORS:
+   - --text-color-tag
+
+   FORMS:
+   - --form-bg
+   - --form-border
+   - --form-placeholder
+
+   NEWSLETTER:
+   - --newsletter-signup-bg
+   - --newsletter-illustration-bg
+   - --newsletter-color
+   - --newsletter-button-background
+   - --newsletter-button-color
+
    ============================================================================ */
-
-:root {
-  /* ==========================================================================
-     PRIMARY (Accent color - main brand color)
-     ========================================================================== */
-
-  --primary-base: var(--colors-accent-500);
-  --primary-on-base: var(--colors-white);
-  --primary-container: var(--colors-accent-50);
-  --primary-on-container: var(--colors-accent-500);
-
-  /* ==========================================================================
-     SECONDARY (Supporting color)
-     ========================================================================== */
-
-  --secondary-base: var(--colors-gray-900);
-  --secondary-on-base: var(--colors-white);
-  --secondary-container: var(--colors-gray-100);
-  --secondary-on-container: var(--colors-gray-700);
-
-  /* ==========================================================================
-     BACKGROUND (Page background)
-     ========================================================================== */
-
-  --background-base: var(--colors-white);
-  --background-on-base: var(--colors-gray-900);
-
-  /* ==========================================================================
-     SURFACE (Cards, elevated surfaces)
-     ========================================================================== */
-
-  --variant-surface: var(--colors-accent-200);
-  --variant-on-surface: var(--colors-accent-800);
-
-  /* ==========================================================================
-     ERROR (Alerts, danger states)
-     ========================================================================== */
-
-  --error-base: var(--colors-alert-danger-500);
-  --error-on-base: var(--colors-white);
-  --error-container: var(--colors-alert-danger-50);
-  --error-on-container: var(--colors-alert-danger-800);
-
-  /* ==========================================================================
-     STATE LAYERS (Hover, active, focus states)
-     ========================================================================== */
-
-  --state-layer-base-hover: rgba(255, 255, 255, 0.04);
-  --state-layer-base-active: rgba(255, 255, 255, 0.08);
-  --state-layer-container-hover: rgba(0, 0, 0, 0.04);
-  --state-layer-container-active: rgba(0, 0, 0, 0.08);
-
-  /* ==========================================================================
-     OUTLINES & BORDERS
-     ========================================================================== */
-
-  --outline-neutral: rgba(0, 0, 0, 0.08);
-  --border-header: var(--colors-gray-200);
-
-  /* ==========================================================================
-     SHADOWS
-     ========================================================================== */
-
-  --shadow-01: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
-               rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-
-  /* ==========================================================================
-     SEMANTIC TEXT COLORS (simplified aliases)
-     ========================================================================== */
-
-  --text-color: var(--colors-gray-900);
-  --text-color-accent: var(--colors-accent-500);
-  --text-color-lighter: var(--colors-gray-500);
-  --text-color-hover: var(--colors-accent-500);
-  --text-color-menu: var(--colors-white);
-  --text-color-menu-hover: var(--colors-accent-100);
-
-  /* ==========================================================================
-     SEMANTIC BACKGROUND COLORS
-     ========================================================================== */
-
-  --bg-color: var(--colors-white);
-  --bg-tag: var(--colors-accent-50);
-  --bg-tag-hover: var(--colors-accent-100);
-  --bg-section-headline: var(--colors-accent-700);
-  --text-section-headline: var(--colors-accent-50);
-
-  /* ==========================================================================
-     TAG COLORS
-     ========================================================================== */
-
-  --text-color-tag: var(--colors-accent-500);
-
-  /* ==========================================================================
-     BOX BACKGROUNDS (content boxes, cards)
-     ========================================================================== */
-
-  --box-background: var(--colors-accent-50);
-
-  /* ==========================================================================
-     MENU/NAVIGATION
-     ========================================================================== */
-
-  --background-color-menu: var(--colors-accent-600);
-
-  /* ==========================================================================
-     PRIMARY COLOR (legacy alias for primary-base)
-     ========================================================================== */
-
-  --primary-color: var(--colors-accent-500);
-}

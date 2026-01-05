@@ -9,46 +9,31 @@
   /* Image effects */
   --img-grayscale: 100%;
   --img-blend-mode: screen;
-  --img-background: var(--accent-11);
+  --img-background: var(--iris-12);
 
-  /* Primary accent color mapping (unchanged) */
-  --text-color-accent: var(--accent-6);
-  --primary-color: var(--accent-6);
-}
+  /* Primary iris color mapping */
+  --text-color-accent: var(--iris-11);
+  --primary-color: var(--iris-9);
 
-/* Light mode + Pantone overrides */
-:root[data-mode="light"][data-palette="pantone"] {
-  --text-color: var(--accent-8);
-  --text-color-lighter: var(--accent-6);
-  --text-color-menu: var(--accent-10);
-  --text-color-menu-hover: var(--accent-9);
-  --text-color-tag: color-mix(in oklab, var(--accent-7), var(--accent-12) 30%);
+  --text-color: var(--iris-12);
+  --text-color-lighter: var(--iris-10);
+  --text-color-menu: var(--iris-12);
+  --text-color-menu-hover: var(--iris-11);
+  --text-color-tag: color-mix(in oklab, var(--iris-7), var(--iris-12) 30%);
 
-  --bg-color: var(--accent-2);
-  --bg-tag: var(--accent-3);
-  --bg-tag-hover: var(--accent-5);
-  --box-background: var(--accent-4);
-  --background-color-menu: var(--accent-5);
+  --bg-color: var(--iris-2);
+  --bg-tag: var(--iris-4);
+  --bg-tag-hover: var(--iris-5);
+  --box-background: var(--iris-4);
+  --background-color-menu: var(--iris-5);
 
-  --border-header: var(--accent-5);
+  --border-header: var(--iris-5);
 
-  --form-bg: var(--accent-3);
-  --form-placeholder: var(--accent-4);
+  --form-bg: var(--iris-3);
+  --form-placeholder: var(--iris-4);
 }
 
 /* Dark mode + Pantone overrides */
 :root[data-mode="dark"][data-palette="pantone"] {
-  --text-color: var(--accent-4);
-  --text-color-tag: color-mix(in oklab, var(--accent-7), var(--accent-12) 80%);
-
-  --bg-color: var(--accent-10);
-  --bg-tag: var(--accent-5);
-  --bg-tag-hover: var(--accent-4);
-  --box-background: var(--accent-9);
-  --background-color-menu: var(--accent-9);
-
-  --border-header: var(--accent-8);
-
-  --form-bg: var(--accent-8);
-  --form-placeholder: var(--accent-6);
+  --img-background: var(--iris-7);
 }

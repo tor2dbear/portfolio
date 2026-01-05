@@ -19,21 +19,10 @@
 
    /* ==========================================================================
      COLORS: Gray Scale (Radix Slate)
-     12-step scale with consistent contrast per step
-     ========================================================================== */
 
-   --gray-1: hsl(206, 30%, 98.8%);
-   --gray-2: hsl(210, 16.7%, 97.6%);
-   --gray-3: hsl(209, 13.3%, 95.3%);
-   --gray-4: hsl(209, 12.2%, 93.1%);
-   --gray-5: hsl(208, 11.7%, 90.9%);
-   --gray-6: hsl(208, 11.3%, 88.4%);
-   --gray-7: hsl(207, 11.1%, 85.4%);
-   --gray-8: hsl(205, 10.7%, 78%);
-   --gray-9: hsl(206, 6%, 56.1%);
-   --gray-10: hsl(206, 5.8%, 52.3%);
-   --gray-11: hsl(206, 6%, 43.5%);
-   --gray-12: hsl(206, 24%, 9%);
+     Gray values are defined in dimensions/mode/light.css and dark.css
+     This allows automatic switching between light and dark scales per mode.
+     ========================================================================== */
 
    /* Legacy aliases (map old values to closest Radix equivalents) */
    --colors-gray-50: var(--gray-1);
@@ -49,20 +38,9 @@
 
    /* ==========================================================================
      COLORS: Red Scale (Radix Tomato)
-     ========================================================================== */
 
-   --red-1: hsl(10, 100%, 99.4%);
-   --red-2: hsl(8, 100%, 98.4%);
-   --red-3: hsl(8, 100%, 96.6%);
-   --red-4: hsl(8, 100%, 94.3%);
-   --red-5: hsl(8, 92.8%, 91%);
-   --red-6: hsl(9, 84.7%, 86.3%);
-   --red-7: hsl(10, 77.3%, 79.5%);
-   --red-8: hsl(10, 71.6%, 71%);
-   --red-9: hsl(10, 78%, 54%);
-   --red-10: hsl(10, 71.5%, 50%);
-   --red-11: hsl(10, 82%, 43.5%);
-   --red-12: hsl(10, 50%, 13.5%);
+     Red values are defined in dimensions/mode/light.css and dark.css
+     ========================================================================== */
 
    /* ==========================================================================
      COLORS: Blue Scale (Radix Blue)
@@ -167,38 +145,29 @@
    --teal-12: hsl(170, 50%, 12.5%);
 
    /* ==========================================================================
-     COLORS: Accent Palette (Custom Purple/Blue tones)
-     Custom brand color - kept as-is for now
+     COLORS: Iris (Radix brand color)
+     Purple/blue brand color with consistent contrast
+
+     Iris values are defined in dimensions/mode/light.css and dark.css
+     This allows the same --iris-* variable names to have different values
+     per mode, following Radix's official approach.
      ========================================================================== */
 
-   --accent-1: rgb(245, 245, 255);
-   --accent-2: rgb(226, 225, 237);
-   --accent-3: rgb(198, 196, 222);
-   --accent-4: rgb(170, 168, 208);
-   --accent-5: rgb(142, 140, 192);
-   --accent-6: hsl(239, 29%, 54%);
-   --accent-7: rgb(87, 89, 155);
-   --accent-8: rgb(65, 66, 118);
-   --accent-9: rgb(45, 45, 82);
-   --accent-10: rgb(25, 25, 46);
-   --accent-11: #000133;
-   --accent-12: #19192e;
-
-   /* Legacy accent aliases */
-   --colors-accent-50: var(--accent-1);
-   --colors-accent-100: var(--accent-2);
-   --colors-accent-200: var(--accent-3);
-   --colors-accent-300: var(--accent-4);
-   --colors-accent-400: var(--accent-5);
-   --colors-accent-500: var(--accent-6);
-   --colors-accent-600: var(--accent-7);
-   --colors-accent-700: var(--accent-8);
-   --colors-accent-800: var(--accent-9);
-   --colors-accent-900: var(--accent-10);
-   --colors-accent: var(--accent-7);
-   --colors-accent-lighter: var(--accent-2);
-   --colors-accent-dark: var(--accent-11);
-   --colors-accent-darker: var(--accent-12);
+   /* Legacy accent aliases (map to iris tokens) */
+   --colors-accent-50: var(--iris-1);
+   --colors-accent-100: var(--iris-2);
+   --colors-accent-200: var(--iris-3);
+   --colors-accent-300: var(--iris-4);
+   --colors-accent-400: var(--iris-5);
+   --colors-accent-500: var(--iris-6);
+   --colors-accent-600: var(--iris-7);
+   --colors-accent-700: var(--iris-8);
+   --colors-accent-800: var(--iris-9);
+   --colors-accent-900: var(--iris-10);
+   --colors-accent: var(--iris-7);
+   --colors-accent-lighter: var(--iris-2);
+   --colors-accent-dark: var(--iris-11);
+   --colors-accent-darker: var(--iris-12);
 
    /* ==========================================================================
      LEGACY ALIASES: Danger/Alert (now using Red scale)
