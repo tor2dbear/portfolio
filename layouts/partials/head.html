@@ -117,7 +117,7 @@
   {{ $js7 := resources.Get "js/progressbar.js" }}
 
   <!-- JavaScript loading -->
-  {{ if .Site.IsServer }}
+  {{ if eq hugo.Environment "development" }}
     <!-- JavaScript development -->
     <script src="{{ $js1.RelPermalink }}" defer></script>
     <script src="{{ $js2.RelPermalink }}" defer></script>
