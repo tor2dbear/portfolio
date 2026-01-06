@@ -118,8 +118,6 @@
    * Propagate focus mode parameters to internal links
    */
   function propagateToLinks(context) {
-    const focusParams = buildFocusParams(context);
-
     // Find all internal links (href starts with / or is relative)
     const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]');
 
@@ -146,7 +144,7 @@
         url.search = params.toString();
         link.setAttribute('href', url.pathname + url.search + url.hash);
         link.setAttribute('data-focus-processed', 'true');
-      } catch (error) {
+      } catch (_error) {
         // Skip links that can't be parsed (external, mailto, etc.)
       }
     });

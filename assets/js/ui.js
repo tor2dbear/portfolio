@@ -3,7 +3,7 @@
     var layout   = document.getElementById('layout'),
         menu     = document.getElementById('menu'),
         menuLink = document.querySelector('[data-js="menu-toggle"]'),
-        content  = document.getElementById('main');
+        content  = document.getElementById('main'),
         body = document.body;
 
     function toggleClass(element, className) {

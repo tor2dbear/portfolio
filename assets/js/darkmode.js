@@ -49,7 +49,7 @@ if (menu && overlay) {
   }
   });
 
-  menu.addEventListener("touchend", function (event) {
+  menu.addEventListener("touchend", function (_event) {
   if (window.matchMedia("(max-width: 767px)").matches) {
     const touchDeltaY = touchEndY - touchStartY;
     const touchEndTime = Date.now();
@@ -205,7 +205,7 @@ if (menuContainer) {
 
 window
   .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", (e) => {
+  .addEventListener("change", (_event) => {
     if (localStorage.getItem("theme") === "system") {
       updateSystemTheme();
     }
@@ -214,6 +214,7 @@ window
 // Initial theme application
 var storedTheme = localStorage.getItem("theme") || "system";
 applyTheme(storedTheme);
+window.setTheme = setTheme;
 
 // Load static SVGs
 function loadStaticSVGs() {
