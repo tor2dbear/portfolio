@@ -284,19 +284,19 @@ body {
    ========================================================================== */
 
 #layout .text-color-default {
-  color: var(--text-color);
+  color: var(--text-default);
 }
 
 #layout .text-color-lighter {
-  color: var(--text-color-lighter);
+  color: var(--text-muted);
 }
 
 #layout .text-color-accent {
-  color: var(--text-color-accent);
+  color: var(--text-accent);
 }
 
 #layout .text-color-neg {
-  color: var(--bg-color);
+  color: var(--bg-page);
 }
 
 /* ==========================================================================
@@ -367,7 +367,7 @@ h3,
 .type-headline-3,
 h4,
 .type-headline-4 {
-  color: var(--text-color);
+  color: var(--text-default);
   font-weight: var(--sans-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-normal);
@@ -380,7 +380,7 @@ h4,
   font-size: var(--text-6xl);
   font-weight: 400;
   line-height: var(--line-height-tighter);
-  color: var(--text-color);
+  color: var(--text-default);
   letter-spacing: var(--tracking-tight);
 }
 
@@ -415,14 +415,14 @@ h4,
   font-weight: var(--serif-weight-regular);
   text-transform: uppercase;
   line-height: var(--line-height-tight);
-  color: var(--text-color);
+  color: var(--text-default);
   letter-spacing: var(--tracking-wider);
 }
 
 /* Type: Caption */
 .type-caption {
   font-size: var(--text-3xl);
-  color: var(--text-color);
+  color: var(--text-default);
   line-height: var(--line-height-tight);
   font-weight: var(--serif-weight-regular);
   font-family: var(--font-serif);
@@ -434,7 +434,7 @@ p,
 .type-body {
   font-size: var(--text-lg);
   line-height: var(--line-height-normal);
-  color: var(--text-color);
+  color: var(--text-default);
   font-family: var(--font-serif);
   letter-spacing: var(--tracking-nomrmal);
   max-width: 70ch;
@@ -444,7 +444,7 @@ p,
 .type-body-sm {
   font-size: var(--text-sm);
   line-height: var(--line-height-normal);
-  color: var(--text-color);
+  color: var(--text-default);
   font-family: var(--font-serif);
 }
 
@@ -452,7 +452,7 @@ p,
 .type-information {
   font-size: var(--text-xs);
   line-height: var(--line-height-tighter);
-  color: var(--text-color);
+  color: var(--text-default);
   font-family: var(--font-sans);
   font-weight: var(--sans-weight-regular);
 }
@@ -477,7 +477,7 @@ p,
 
 .post-tags a.post-taxonomy-tag,
 a.post-taxonomy-tag {
-  color: var(--text-color-tag);
+  color: var(--text-muted);
 }
 
 .post-taxonomy-tag:hover {
@@ -491,7 +491,7 @@ a.post-taxonomy-tag {
 
 code {
   font-family: var(--font-mono);
-  color: var(--text-color);
+  color: var(--text-default);
 }
 
 .tag-header,
@@ -504,7 +504,7 @@ code {
 figcaption {
   font-family: var(--font-serif);
   font-size: var(--text-sm);
-  color: var(--text-color-lighter);
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -512,7 +512,7 @@ blockquote,
 blockquote > p {
   font-family: var(--font-serif);
   font-size: var(--text-3xl);
-  color: var(--text-color);
+  color: var(--text-default);
   line-height: var(--line-height-tight);
 }
 
@@ -525,7 +525,7 @@ blockquote {
 .section-headline {
   padding: 0.25rem 0.75rem;
   background-color: var(--bg-section-headline);
-  color: var(--text-section-headline);
+  color: var(--brand-on-primary);
   display: inline-block;
 }
 
@@ -542,7 +542,7 @@ blockquote {
   text-transform: none;
   background: transparent;
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--text-default);
 }
 
 a.menu-link {
@@ -574,15 +574,15 @@ a.menu-link {
 }
 
 #menu .menu-link.active::after {
-  color: var(--text-color);
+  color: var(--text-default);
 }
 
 #menu .menu-link:hover::after {
-  color: var(--text-color-hover);
+  color: var(--text-link-hover);
 }
 
 #layout #menu .menu-tag .menu-link.active:hover::after {
-  color: var(--text-color-hover);
+  color: var(--text-link-hover);
   margin-left: 0.25rem;
 }
 
@@ -597,7 +597,7 @@ a.menu-link {
   #menu .menu-tag .menu-link:hover::after {
     content: "";
     margin-left: 0rem;
-    color: var(--text-color);
+    color: var(--text-default);
   }
 }
 
@@ -618,7 +618,7 @@ a.menu-link {
    ========================================================================== */
 
 a {
-  color: var(--text-color);
+  color: var(--text-default);
   text-decoration: none;
   transition: all 0.3s ease;
 }
@@ -626,13 +626,13 @@ a {
 body a:hover,
 body a:focus,
 body a:active {
-  color: var(--text-color-hover);
+  color: var(--text-link-hover);
 }
 
 a:visited,
 a.menu-heading:hover {
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--text-default);
 }
 
 /* ==========================================================================

@@ -7,10 +7,10 @@
 
 :root[data-palette="standard"] {
   /* Image effects */
-  --img-grayscale: 0%;
-  --img-blend-mode: normal;
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
 
   /* Primary iris color mapping */
-  --text-color-accent: var(--iris-11);
-  --primary-color: var(--iris-9);
+  --text-accent: var(--iris-11);
+  --brand-primary: var(--iris-9);
 }

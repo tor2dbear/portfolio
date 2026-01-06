@@ -54,7 +54,7 @@
   /* Very light for dark backgrounds */
 
   /* Dark mode specific overrides */
-  --bg-color: var(--gray-1);
+  --bg-page: var(--gray-1);
   --outline-neutral: rgba(255, 255, 255, 0.16);
   --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -2px;
   /* --secondary-container: var(--gray-3); */

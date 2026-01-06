@@ -1,33 +1,34 @@
-# CSS Struktur - Förbättringsförslag
+# CSS Struktur - Förbättringsförslag (Uppdaterad plan)
 
 ## Nuvarande Problem
 
-1. **320 design tokens** - många oanvända eller överspecifika
-2. **Dubbla gråskalor** (`--colors-gray-*` OCH `--neutral-*`)
-3. **Oanvända utility classes** (text-3xl → text-9xl aldrig använda)
-4. **Komponentspecifika tokens** istället för semantiska lager
-5. **Alla teman i en 398-radig fil** - svårnavigerat
+1. **Flera källor till sanning** (semantic dokumenteras i `tokens/semantic.css` men definieras i `dimensions/common.css`)
+2. **Krockande namnstandarder** (`--text-primary` vs `--text-color*`, `--bg-menu` vs `--background-color-menu`)
+3. **Legacy + nya tokens parallellt** (`--danger-*`, `--error-*`, `--color-error-*`)
+4. **Överlappande komponenttokens** (form/newsletter i både `dimensions/common.css` och `tokens/components.css`)
+5. **Oklara overrides** (mode/palette skriver över olika namn)
 
 ---
 
 ## Föreslagen Struktur
 
-### 1. Ny Filmappning
+### 1. Ny Filmappning (platt, tydlig, skalbar)
 
 ```
 assets/css/
 ├── tokens/
-│   ├── primitives.css          # Layer 1: Bas-värden
-│   ├── semantic.css            # Layer 2: Användningsbaserade
-│   └── components.css          # Layer 3: Komponent-specifika
-├── themes/
-│   ├── light.css               # Överrides för light mode
-│   ├── dark.css                # Överrides för dark mode
-│   ├── pant.css                # Pant mode överrides
-│   └── test.css                # Test mode överrides
+│   ├── primitives.css          # Layer 1: Raw values (color, type, spacing)
+│   ├── semantic.css            # Layer 2: Canonical semantic tokens
+│   ├── components.css          # Layer 3: Component exceptions
+│   └── legacy.css              # Legacy aliases (old names map to new)
+├── theme/
+│   ├── mode.light.css          # Mode overrides (light)
+│   ├── mode.dark.css           # Mode overrides (dark)
+│   ├── palette.standard.css    # Palette overrides (standard)
+│   └── palette.pantone.css     # Palette overrides (pantone)
 ├── utilities/
-│   ├── typography.css          # Font utilities (renade)
-│   ├── layout.css              # Grid, flex, spacing (från atoms.css)
+│   ├── typography.css          # Font utilities (rensade)
+│   ├── layout.css              # Grid, flex, spacing
 │   └── display.css             # Visibility helpers
 ├── components/
 │   └── all.css                 # Från nuvarande style.css
@@ -93,9 +94,9 @@ Råa värden utan semantisk betydelse. Ändras ALDRIG av teman.
   --black: #000000;
 
   /* === TYPOGRAFI: Familjer === */
-  --font-family-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-family-serif: Georgia, Cambria, "Times New Roman", serif;
-  --font-family-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+  --font-family-sans: neue-haas-grotesk-text, ui-sans-serif, system-ui, sans-serif;
+  --font-family-serif: freight-text-pro, ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-family-mono: ui-monospace, "Courier New", Menlo, Monaco, Consolas, monospace;
 
   /* === TYPOGRAFI: Storlekar === */
   --font-size-xs: 0.75rem;    /* 12px */
@@ -145,82 +146,106 @@ Råa värden utan semantisk betydelse. Ändras ALDRIG av teman.
 ```
 
 #### **Layer 2: Semantic Tokens** (`tokens/semantic.css`)
-Användningsbaserade. DESSA ändras av teman!
+Användningsbaserade. Dessa är de CANONICAL tokens som alla komponenter ska använda.
 
 ```css
 :root {
   /* === TEXT === */
-  --text-primary: var(--gray-900);
-  --text-secondary: var(--gray-600);
-  --text-tertiary: var(--gray-500);
-  --text-inverted: var(--white);
-  --text-link: var(--blue-500);
-  --text-link-hover: var(--blue-600);
-  --text-error: var(--red-600);
-  --text-success: var(--accent-600);
+  --text-default: var(--gray-12);
+  --text-muted: var(--gray-9);
+  --text-inverse: var(--white);
+  --text-nav: var(--brand-on-primary);
+  --text-link: var(--iris-11);
+  --text-link-hover: var(--iris-12);
+  --text-accent: var(--iris-11);
 
-  /* === BAKGRUNDER === */
-  --bg-primary: var(--white);
-  --bg-secondary: var(--gray-50);
-  --bg-tertiary: var(--gray-100);
-  --bg-inverted: var(--gray-900);
-  --bg-overlay: rgba(0, 0, 0, 0.5);
+  /* === BACKGROUND / SURFACE === */
+  --bg-page: var(--white);
+  --bg-surface: var(--gray-2);
+  --bg-elevated: var(--gray-1);
+  --bg-inverse: var(--gray-12);
+  --bg-nav: var(--brand-primary);
+  --bg-tag: var(--iris-3);
+  --bg-tag-hover: var(--iris-4);
+  --bg-section-headline: var(--iris-9);
 
-  /* === BORDERS === */
-  --border-subtle: var(--gray-200);
-  --border-default: var(--gray-300);
-  --border-strong: var(--gray-400);
-  --border-accent: var(--blue-500);
+  /* === BORDER / OUTLINE === */
+  --border-subtle: var(--gray-4);
+  --border-default: var(--gray-6);
+  --border-strong: var(--gray-8);
+  --outline-neutral: rgba(0, 0, 0, 0.08);
 
-  /* === INTERAKTIVA YTOR === */
-  --surface-default: var(--white);
-  --surface-raised: var(--white);
-  --surface-sunken: var(--gray-50);
+  /* === STATE (OVERLAYS) === */
+  --state-on-light-hover: rgba(0, 0, 0, 0.04);
+  --state-on-light-active: rgba(0, 0, 0, 0.08);
+  --state-on-dark-hover: rgba(255, 255, 255, 0.04);
+  --state-on-dark-active: rgba(255, 255, 255, 0.08);
+  --state-focus: var(--iris-9);
+  --text-disabled: var(--gray-7);
+  --bg-disabled: var(--gray-3);
+  --border-disabled: var(--gray-4);
 
-  /* === SKUGGOR === */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* === STATUS === */
+  --status-error-bg: var(--red-2);
+  --status-error-border: var(--red-8);
+  --status-error-text: var(--red-11);
+  --status-error-icon: var(--status-error-text);
+
+  --status-success-bg: var(--green-2);
+  --status-success-border: var(--green-8);
+  --status-success-text: var(--green-11);
+  --status-success-icon: var(--status-success-text);
+
+  --status-warning-bg: var(--amber-2);
+  --status-warning-border: var(--amber-8);
+  --status-warning-text: var(--amber-11);
+  --status-warning-icon: var(--status-warning-text);
+
+  --status-info-bg: var(--blue-2);
+  --status-info-border: var(--blue-8);
+  --status-info-text: var(--blue-11);
+  --status-info-icon: var(--status-info-text);
+
+  /* === BRAND === */
+  --brand-primary: var(--iris-9);
+  --brand-on-primary: var(--white);
+  --brand-container: var(--iris-3);
+  --brand-on-container: var(--iris-11);
+
+  /* === IMAGE === */
+  --image-background: var(--iris-12);
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
+
+  /* === SHADOWS === */
+  --shadow-01: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 ```
 
 #### **Layer 3: Component Tokens** (`tokens/components.css`)
-Komponent-specifika, men skalade semantiskt.
+Komponent-specifika, men fortfarande semantiska i sin form.
 
 ```css
 :root {
-  /* === BUTTONS === */
-  --button-bg-primary: var(--blue-500);
-  --button-bg-primary-hover: var(--blue-600);
-  --button-text-primary: var(--white);
-
-  --button-bg-secondary: transparent;
-  --button-bg-secondary-hover: var(--gray-100);
-  --button-text-secondary: var(--text-primary);
-  --button-border-secondary: var(--border-default);
-
   /* === FORMS === */
-  --input-bg: var(--surface-default);
-  --input-border: var(--border-default);
-  --input-border-focus: var(--border-accent);
-  --input-text: var(--text-primary);
-  --input-placeholder: var(--text-tertiary);
+  --component-form-bg: var(--bg-surface);
+  --component-form-border: transparent;
+  --component-form-placeholder: var(--text-muted);
 
-  /* === NAVIGATION === */
-  --nav-bg: var(--surface-raised);
-  --nav-text: var(--text-primary);
-  --nav-text-hover: var(--text-link);
-  --nav-border: var(--border-subtle);
+  /* === NEWSLETTER === */
+  --component-newsletter-bg: var(--iris-12);
+  --component-newsletter-text: var(--iris-2);
+  --component-newsletter-illustration-bg: var(--iris-3);
+  --component-newsletter-button-bg: var(--iris-4);
+  --component-newsletter-button-text: var(--iris-11);
 
-  /* === HEADER === */
-  --header-height: 3.5rem;
-  --header-bg: var(--surface-default);
-  --header-shadow: var(--shadow-sm);
-
-  /* === TAGS === */
-  --tag-bg: var(--bg-secondary);
-  --tag-text: var(--text-secondary);
-  --tag-border: var(--border-subtle);
+  /* === SIZE === */
+  --size-header-height: 4.5rem;
+  --size-page-margins: clamp(1.5rem, 1.3261rem + 0.8696vi, 2rem);
+  --size-menu-width-xl: 24rem;
+  --size-menu-width-lg: 20rem;
+  --size-menu-width-md: 16rem;
 }
 ```
 
@@ -228,65 +253,69 @@ Komponent-specifika, men skalade semantiskt.
 
 ### 3. Teman (Separata Filer)
 
-#### **Light Theme** (`themes/light.css`)
+#### **Mode: Light** (`theme/mode.light.css`)
 ```css
-:root[data-theme="light"] {
+:root[data-mode="light"] {
   /* === TEXT === */
-  --text-primary: var(--gray-900);
-  --text-secondary: var(--gray-600);
-  --text-tertiary: var(--gray-500);
-  --text-inverted: var(--white);
+  --text-default: var(--gray-12);
+  --text-muted: var(--gray-9);
+  --text-inverse: var(--white);
 
-  /* === BAKGRUNDER === */
-  --bg-primary: var(--white);
-  --bg-secondary: var(--gray-50);
-  --bg-tertiary: var(--gray-100);
-  --bg-inverted: var(--gray-900);
+  /* === BACKGROUND === */
+  --bg-page: var(--white);
+  --bg-surface: var(--gray-2);
+  --bg-elevated: var(--gray-1);
+  --bg-inverse: var(--gray-12);
 
   /* === BORDERS === */
-  --border-subtle: var(--gray-200);
-  --border-default: var(--gray-300);
-  --border-strong: var(--gray-400);
+  --border-subtle: var(--gray-4);
+  --border-default: var(--gray-6);
+  --border-strong: var(--gray-8);
+
+  /* === IMAGE === */
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
 }
 ```
 
-#### **Dark Theme** (`themes/dark.css`)
+#### **Mode: Dark** (`theme/mode.dark.css`)
 ```css
-:root[data-theme="dark"] {
+:root[data-mode="dark"] {
   /* === TEXT === */
-  --text-primary: var(--gray-50);
-  --text-secondary: var(--gray-400);
-  --text-tertiary: var(--gray-500);
-  --text-inverted: var(--gray-900);
+  --text-default: var(--gray-12);
+  --text-muted: var(--gray-9);
+  --text-inverse: var(--gray-1);
 
-  /* === BAKGRUNDER === */
-  --bg-primary: var(--gray-900);
-  --bg-secondary: var(--gray-800);
-  --bg-tertiary: var(--gray-700);
-  --bg-inverted: var(--white);
+  /* === BACKGROUND === */
+  --bg-page: var(--gray-1);
+  --bg-surface: var(--gray-2);
+  --bg-elevated: var(--gray-3);
+  --bg-inverse: var(--white);
 
   /* === BORDERS === */
-  --border-subtle: var(--gray-700);
-  --border-default: var(--gray-600);
-  --border-strong: var(--gray-500);
+  --border-subtle: var(--gray-4);
+  --border-default: var(--gray-6);
+  --border-strong: var(--gray-8);
 
-  /* === SKUGGOR === */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  /* === IMAGE === */
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
 }
 ```
 
-#### **Pant Mode** (`themes/pant.css`)
+#### **Palette: Pantone** (`theme/palette.pantone.css`)
 ```css
-:root[data-mode="pant"] {
-  /* Specifika overrides för Pant mode */
-  --image-filter: grayscale(100%);
-  --image-blend-mode: multiply;
-
-  /* Mer färgglatt */
-  --text-link: var(--accent-500);
-  --button-bg-primary: var(--accent-500);
+:root[data-palette="pantone"] {
+  /* Specifika overrides för Pantone */
+  --image-grayscale: 100%;
+  --image-blend-mode: screen;
+  --bg-page: var(--iris-2);
+  --text-default: var(--iris-12);
+  --text-muted: var(--iris-10);
+  --text-link: var(--iris-11);
+  --bg-tag: var(--iris-4);
+  --bg-tag-hover: var(--iris-5);
+  --border-subtle: var(--iris-5);
 }
 ```
 
@@ -415,13 +444,20 @@ Komponent-specifika, men skalade semantiskt.
 
 ---
 
-## 5. Migration Plan
+## 5. Prioriterad Plan (stegordning)
+
+1. **Frys canonical tokenlista**: Bestam exakt naming och vilka semantic tokens som ska finnas.
+2. **Skapa legacy-aliaser**: Ny fil `tokens/legacy.css` som mappar gamla namn till nya.
+3. **Flytta semantiska values**: Allt in i `tokens/semantic.css`, mode/palette overrides bara overridar.
+4. **Migrera användning**: Uppdatera CSS att anvanda nya tokens (en modul i taget).
+5. **Stada utilities**: Ta bort oanvanda klasser/tokens.
+6. **Ta bort legacy**: Nar allt ar migrerat.
 
 ### Steg 1: Skapa Ny Struktur (Parallellt)
-1. Skapa nya mappar: `tokens/`, `themes/`, `utilities/`, `components/`, `pages/`
-2. Extrahera primitives från `variables.css` → `tokens/primitives.css`
-3. Skapa semantiska lager i `tokens/semantic.css`
-4. Separera teman till egna filer i `themes/`
+1. Skapa nya mappar: `tokens/`, `theme/`, `utilities/`, `components/`, `pages/`
+2. Flytta semantiska values från `dimensions/common.css` till `tokens/semantic.css`
+3. Skapa `tokens/legacy.css` med alias (old -> new)
+4. Dela upp mode/palette i `theme/`
 
 ### Steg 2: Rensa Oanvända Tokens
 ```bash
@@ -433,9 +469,9 @@ grep -r "font-(thin|extralight|light|black)" layouts/
 ```
 
 ### Steg 3: Konsolidera Duplicerade Tokens
-- Ta bort `--neutral-*` (använd bara `--gray-*`)
-- Fixa `--colors-gray-50` duplicering
-- Flytta komponent-specifika tokens till Layer 3
+- Bestam en canonical variant for text och background tokens
+- Sammanfoga error/danger tokens till `--status-error*`
+- Flytta layoutvariabler ur `assets/css/style.css` till `tokens/components.css`
 
 ### Steg 4: Uppdatera Build Pipeline
 Hugo `head.html` partial behöver uppdateras:
@@ -447,9 +483,10 @@ Hugo `head.html` partial behöver uppdateras:
   {{ $semantic := resources.Get "css/tokens/semantic.css" }}
   {{ $components := resources.Get "css/tokens/components.css" }}
 
-  {{ $themeLight := resources.Get "css/themes/light.css" }}
-  {{ $themeDark := resources.Get "css/themes/dark.css" }}
-  {{ $modePant := resources.Get "css/themes/pant.css" }}
+  {{ $themeLight := resources.Get "css/theme/mode.light.css" }}
+  {{ $themeDark := resources.Get "css/theme/mode.dark.css" }}
+  {{ $paletteStandard := resources.Get "css/theme/palette.standard.css" }}
+  {{ $palettePantone := resources.Get "css/theme/palette.pantone.css" }}
 
   {{ $utilities := resources.Get "css/utilities/typography.css" }}
   {{ $layout := resources.Get "css/utilities/layout.css" }}
@@ -458,7 +495,7 @@ Hugo `head.html` partial behöver uppdateras:
   {{ $styles := resources.Get "css/components/all.css" }}
   {{ $print := resources.Get "css/pages/print.css" }}
 
-  {{ range slice $primitives $semantic $components $themeLight $themeDark $modePant $utilities $layout $display $styles }}
+  {{ range slice $primitives $semantic $components $themeLight $themeDark $paletteStandard $palettePantone $utilities $layout $display $styles }}
     <link rel="stylesheet" href="{{ .RelPermalink }}">
   {{ end }}
 
@@ -471,9 +508,10 @@ Hugo `head.html` partial behöver uppdateras:
     (resources.Get "css/tokens/primitives.css")
     (resources.Get "css/tokens/semantic.css")
     (resources.Get "css/tokens/components.css")
-    (resources.Get "css/themes/light.css")
-    (resources.Get "css/themes/dark.css")
-    (resources.Get "css/themes/pant.css")
+    (resources.Get "css/theme/mode.light.css")
+    (resources.Get "css/theme/mode.dark.css")
+    (resources.Get "css/theme/palette.standard.css")
+    (resources.Get "css/theme/palette.pantone.css")
     (resources.Get "css/utilities/typography.css")
     (resources.Get "css/utilities/layout.css")
     (resources.Get "css/utilities/display.css")
@@ -501,7 +539,7 @@ Hugo `head.html` partial behöver uppdateras:
 
 ## Sammanfattning av Fördelar
 
-### Före
+### Fore
 - 398 rader `variables.css` (svårnavigerat)
 - 320 tokens (många oanvända)
 - Duplicerade gråskalor
@@ -523,10 +561,8 @@ Hugo `head.html` partial behöver uppdateras:
 
 ---
 
-## Nästa Steg
+## Nasta Steg
 
-1. **Beslut:** Vill du implementera detta? Allt på en gång eller stegvis?
-2. **Prioritering:** Vilken del är mest problematisk just nu?
-3. **Timeline:** Hur mycket tid vill du lägga på detta?
-
-Jag kan hjälpa dig implementera detta steg för steg om du vill!
+1. **Godkann naming**: Ska vi anvanda `--text-default` etc som canonical?
+2. **Validera aliaslista**: Lagga till alla viktiga legacy-namn.
+3. **Starta migrering**: Jag kan borja med form/newsletter och menu.

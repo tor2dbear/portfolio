@@ -8,31 +8,16 @@
 
 :root {
   /* ==========================================================================
-     FORMS
-     Component-specific because form styling differs from general surfaces
+     CANONICAL COMPONENT TOKENS
      ========================================================================== */
 
-  --form-bg: var(--colors-gray-100);
-  --form-border: transparent;
-  --form-placeholder: var(--colors-gray-300);
+  --component-form-bg: var(--gray-2);
+  --component-form-border: transparent;
+  --component-form-placeholder: var(--text-muted);
 
-  /* ==========================================================================
-     NEWSLETTER
-     Highly specific styling that doesn't fit semantic patterns
-     ========================================================================== */
-
-  --newsletter-signup-bg: var(--colors-accent-800);
-  --newsletter-illustration-bg: var(--colors-accent-200);
-  --newsletter-color: var(--colors-accent-100);
-  --newsletter-button-background: var(--colors-accent-300);
-  --newsletter-button-color: var(--colors-accent-800);
-
-  /* ==========================================================================
-     ERROR COLORS (legacy aliases)
-     Transitional - prefer using --error-base, --error-container from semantic
-     ========================================================================== */
-
-  --color-error: var(--danger-normal);
-  --color-error-light: var(--danger-light);
-  --color-error-dark: var(--danger-dark);
+  --component-newsletter-bg: var(--iris-12);
+  --component-newsletter-text: var(--iris-2);
+  --component-newsletter-illustration-bg: var(--iris-3);
+  --component-newsletter-button-bg: var(--iris-4);
+  --component-newsletter-button-text: var(--iris-11);
 }

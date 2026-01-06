@@ -49,7 +49,6 @@
   {{ $tokens_components := resources.Get "css/tokens/components.css" }}
 
   <!-- CSS dimensions (mode + palette) -->
-  {{ $dimensions_common := resources.Get "css/dimensions/common.css" }}
   {{ $dimensions_mode_light := resources.Get "css/dimensions/mode/light.css" }}
   {{ $dimensions_mode_dark := resources.Get "css/dimensions/mode/dark.css" }}
   {{ $dimensions_palette_standard := resources.Get "css/dimensions/palette/standard.css" }}
@@ -71,7 +70,6 @@
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $dimensions_common.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_light.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_dark.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
@@ -83,7 +81,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_common $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $utilities_typography $utilities_layout $utilities_display $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $utilities_typography $utilities_layout $utilities_display $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
