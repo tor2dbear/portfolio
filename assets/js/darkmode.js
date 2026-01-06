@@ -1,268 +1,219 @@
-const menuContainer = document.querySelector('[data-js="theme-switcher"]');
-const menuToggle = document.querySelector('[data-js="theme-switcher-toggle"]');
-const menu = document.querySelector('[data-js="theme-switcher-panel"]');
-const overlay = document.querySelector('[data-js="theme-switcher-overlay"]');
-const menuIcon = document.querySelector('[data-js="theme-switcher-icon"]');
+/**
+ * Theme Management System (Mode + Palette)
+ * Handles both color mode (light/dark/system) and color palette (standard/pantone)
+ * with localStorage persistence and dropdown UI
+ */
 
-if (menuToggle && menuContainer) {
-  menuToggle.addEventListener("click", function () {
-    const isVisible = menuContainer.getAttribute("data-visible") === "true";
-    toggleMenu(!isVisible);
-  });
-}
+(function() {
+  'use strict';
 
-if (overlay) {
-  overlay.addEventListener("click", function () {
-    closeMenu();
-  });
-}
+  // Theme dropdown selectors
+  const themeToggle = document.querySelector('[data-js="theme-toggle"]');
+  const themePanel = document.querySelector('[data-js="theme-panel"]');
+  const themeIcon = document.querySelector('[data-js="theme-icon"]');
+  const modeOptions = document.querySelectorAll('[data-js="mode-option"]');
+  const paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
 
-// Variables to store touch start position and animation start time
-let touchStartY = 0;
-let touchEndY = 0;
-let touchStartTime = 0;
+  // ==========================================================================
+  // DROPDOWN TOGGLE
+  // ==========================================================================
 
-if (menu && overlay) {
-  menu.addEventListener("touchstart", function (event) {
-  if (window.matchMedia("(max-width: 767px)").matches) {
-    touchStartY = event.changedTouches[0].screenY;
-    touchStartTime = Date.now();
-    menu.style.transition = "none"; // Disable transition during drag
-    overlay.style.transition = "none"; // Disable transition during drag
-  }
-  });
+  function togglePanel(e) {
+    if (e) e.stopPropagation();
+    const isHidden = themePanel.hasAttribute('hidden');
 
-  menu.addEventListener("touchmove", function (event) {
-  if (window.matchMedia("(max-width: 767px)").matches) {
-    touchEndY = event.changedTouches[0].screenY;
-    const touchDeltaY = touchEndY - touchStartY;
-
-    if (touchDeltaY > 0) {
-      menu.style.transform = `translateY(${touchDeltaY}px)`;
-
-      // Update overlay opacity based on the position of the bottom sheet
-      const maxDeltaY =
-        window.innerHeight - menu.getBoundingClientRect().height - 0.5 * 16; // 0.5rem from bottom
-      const opacity = 1 - touchDeltaY / maxDeltaY;
-      overlay.style.opacity = Math.max(opacity, 0); // Ensure opacity doesn't go below 0
-    }
-  }
-  });
-
-  menu.addEventListener("touchend", function (_event) {
-  if (window.matchMedia("(max-width: 767px)").matches) {
-    const touchDeltaY = touchEndY - touchStartY;
-    const touchEndTime = Date.now();
-    const touchDuration = (touchEndTime - touchStartTime) / 1000; // Duration in seconds
-
-    menu.style.transition = "transform 0.3s ease-in-out";
-    overlay.style.transition = "opacity 0.3s ease-in-out";
-    if (touchDeltaY > 50) {
-      // Swipe down detected
-      closeMenu(touchDuration); // Ensure the transition duration is used
+    if (isHidden) {
+      themePanel.removeAttribute('hidden');
+      themeToggle.setAttribute('aria-expanded', 'true');
     } else {
-      // Return to original position
-      menu.style.transform = `translateY(0)`;
-      overlay.style.opacity = 1;
+      themePanel.setAttribute('hidden', '');
+      themeToggle.setAttribute('aria-expanded', 'false');
     }
   }
-  });
-}
 
-function toggleMenu(visible, duration = 0.3) {
-  if (!menuContainer || !menu || !overlay) {
-    return;
+  function closePanel() {
+    if (themePanel && !themePanel.hasAttribute('hidden')) {
+      themePanel.setAttribute('hidden', '');
+      themeToggle.setAttribute('aria-expanded', 'false');
+    }
   }
 
-  menuContainer.setAttribute("data-visible", visible);
-  overlay.setAttribute("data-visible", visible);
-  menu.setAttribute("data-visible", visible);
+  // Event listeners for dropdown
+  if (themeToggle && themePanel) {
+    themeToggle.addEventListener('click', togglePanel);
 
-  if (window.matchMedia("(max-width: 767px)").matches) {
-    document.body.setAttribute("data-no-scroll", visible);
-  }
-
-  if (visible) {
-    menu.style.transform = "translateY(0)";
-    menu.style.opacity = "1";
-    menu.style.visibility = "visible";
-    menu.style.transition = `transform ${duration}s ease-in-out, opacity ${duration}s ease-in-out, visibility ${duration}s ease-in-out`;
-    overlay.style.opacity = "1";
-    overlay.style.visibility = "visible";
-    overlay.style.transition = `opacity ${duration}s ease-in-out, visibility ${duration}s ease-in-out`;
-  } else {
-    menu.style.transform = "translateY(100%)";
-    menu.style.opacity = "0";
-    menu.style.visibility = "hidden";
-    menu.style.transition = `transform ${duration}s ease-in-out, opacity ${duration}s ease-in-out, visibility ${duration}s ease-in-out`;
-    overlay.style.opacity = "0";
-    overlay.style.visibility = "hidden";
-    overlay.style.transition = `opacity ${duration}s ease-in-out, visibility ${duration}s ease-in-out`;
-  }
-}
-
-function setTheme(theme) {
-  localStorage.setItem("theme", theme);
-  applyTheme(theme);
-  closeMenu(); // Close menu after selection
-}
-
-function applyTheme(theme) {
-  if (theme === "system") {
-    updateSystemTheme();
-  } else {
-    document.documentElement.setAttribute("data-mode", theme);
-  }
-  updateMenuIcon(theme);
-  updateThemeColor(theme); // Update the theme color meta tag
-}
-
-function updateSystemTheme() {
-  var systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-  document.documentElement.setAttribute("data-mode", systemTheme);
-  updateThemeColor(systemTheme); // Update the theme color meta tag
-}
-
-function updateMenuIcon(theme) {
-  const icon = menuIcon;
-  if (!icon) {
-    return;
-  }
-  let svgPath = "";
-
-  if (theme === "light") {
-    svgPath = "/img/svg/light.svg";
-  } else if (theme === "dark") {
-    svgPath = "/img/svg/dark.svg";
-  } else if (theme === "system") {
-    svgPath = "/img/svg/system.svg";
-  }
-
-  fetch(svgPath)
-    .then((response) => response.text())
-    .then((svg) => {
-      const svgElement = new DOMParser()
-        .parseFromString(svg, "image/svg+xml")
-        .querySelector("svg");
-      icon.innerHTML = "";
-      icon.appendChild(svgElement);
-      svgElement.style.stroke = "currentColor";
+    // Close on click outside
+    document.addEventListener('click', function(e) {
+      if (!themeToggle.contains(e.target) && !themePanel.contains(e.target)) {
+        closePanel();
+      }
     });
-}
 
-function updateThemeColor(theme) {
-  const backgroundBase = getComputedStyle(document.documentElement)
-    .getPropertyValue("--background-base")
-    .trim();
-  let themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
-
-  if (theme === "system") {
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-      .matches
-      ? "dark"
-      : "light";
-    themeColorMetaTag.content = systemTheme === "dark" ? "#18181b" : "#FFFFFF";
-  } else {
-    themeColorMetaTag.content = backgroundBase;
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closePanel();
+      }
+    });
   }
-}
 
-function closeMenu(duration = 0.3) {
-  toggleMenu(false, duration);
-}
+  // ==========================================================================
+  // MODE MANAGEMENT (light/dark/system)
+  // ==========================================================================
 
-// Update visibility based on data-visible attribute
-const observer = new MutationObserver(function (mutations) {
-  mutations.forEach(function (mutation) {
-    if (
-      mutation.type === "attributes" &&
-      mutation.attributeName === "data-visible"
-    ) {
-      if (!menuContainer || !menu || !overlay) {
-        return;
+  function setMode(mode) {
+    localStorage.setItem('theme-mode', mode);
+    applyMode(mode);
+    updateModeUI(mode);
+    closePanel();
+  }
+
+  function applyMode(mode) {
+    if (mode === 'system') {
+      const systemMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-mode', systemMode);
+    } else {
+      document.documentElement.setAttribute('data-mode', mode);
+    }
+    updateThemeIcon(mode);
+    updateThemeColorMeta();
+  }
+
+  function updateModeUI(currentMode) {
+    modeOptions.forEach(option => {
+      const mode = option.getAttribute('data-mode');
+      if (mode === currentMode) {
+        option.classList.add('active');
+        option.setAttribute('aria-current', 'true');
+      } else {
+        option.classList.remove('active');
+        option.removeAttribute('aria-current');
       }
-      const isVisible = menuContainer.getAttribute("data-visible") === "true";
-      if (!isVisible) {
-        menu.style.transform = `translateY(100%)`; // Reset position when closed
-        menu.style.opacity = "0";
-        menu.style.visibility = "hidden";
-        menu.style.transition = `transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out`;
-        overlay.style.opacity = "0";
-        overlay.style.visibility = "hidden";
-        overlay.style.transition = `opacity 0.3s ease-in-out, visibility 0.3s ease-in-out`;
+    });
+  }
+
+  // ==========================================================================
+  // PALETTE MANAGEMENT (standard/pantone)
+  // ==========================================================================
+
+  function setPalette(palette) {
+    localStorage.setItem('theme-palette', palette);
+    applyPalette(palette);
+    updatePaletteUI(palette);
+    closePanel();
+  }
+
+  function applyPalette(palette) {
+    document.documentElement.setAttribute('data-palette', palette);
+  }
+
+  function updatePaletteUI(currentPalette) {
+    paletteOptions.forEach(option => {
+      const palette = option.getAttribute('data-palette');
+      if (palette === currentPalette) {
+        option.classList.add('active');
+        option.setAttribute('aria-current', 'true');
+      } else {
+        option.classList.remove('active');
+        option.removeAttribute('aria-current');
       }
+    });
+  }
+
+  // ==========================================================================
+  // ICON MANAGEMENT
+  // ==========================================================================
+
+  function updateThemeIcon(mode) {
+    if (!themeIcon) return;
+
+    let svgPath = '';
+    if (mode === 'light') {
+      svgPath = '/img/svg/light.svg';
+    } else if (mode === 'dark') {
+      svgPath = '/img/svg/dark.svg';
+    } else if (mode === 'system') {
+      svgPath = '/img/svg/system.svg';
+    }
+
+    fetch(svgPath)
+      .then(response => response.text())
+      .then(svg => {
+        const svgElement = new DOMParser()
+          .parseFromString(svg, 'image/svg+xml')
+          .querySelector('svg');
+        themeIcon.innerHTML = '';
+        themeIcon.appendChild(svgElement);
+      })
+      .catch(err => console.warn('Failed to load theme icon:', err));
+  }
+
+  // ==========================================================================
+  // META TAG MANAGEMENT
+  // ==========================================================================
+
+  function updateThemeColorMeta() {
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (!themeColorMeta) return;
+
+    const currentMode = document.documentElement.getAttribute('data-mode');
+    if (currentMode === 'dark') {
+      themeColorMeta.setAttribute('content', '#18181b');
+    } else {
+      themeColorMeta.setAttribute('content', '#FFFFFF');
+    }
+  }
+
+  // ==========================================================================
+  // SYSTEM PREFERENCE LISTENER
+  // ==========================================================================
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const storedMode = localStorage.getItem('theme-mode') || 'system';
+    if (storedMode === 'system') {
+      applyMode('system');
     }
   });
-});
 
-if (menuContainer) {
-  observer.observe(menuContainer, {
-    attributes: true,
-  });
-}
+  // ==========================================================================
+  // EVENT LISTENERS
+  // ==========================================================================
 
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", (_event) => {
-    if (localStorage.getItem("theme") === "system") {
-      updateSystemTheme();
-    }
+  // Mode option listeners
+  modeOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      const mode = this.getAttribute('data-mode');
+      setMode(mode);
+    });
   });
 
-// Initial theme application
-var storedTheme = localStorage.getItem("theme") || "system";
-applyTheme(storedTheme);
-window.setTheme = setTheme;
-
-// Load static SVGs
-function loadStaticSVGs() {
-  const lightIcon = document.getElementById("light-icon");
-  const darkIcon = document.getElementById("dark-icon");
-  const systemIcon = document.getElementById("system-icon");
-
-  fetch("/img/svg/light.svg")
-    .then((response) => response.text())
-    .then((svg) => {
-      const svgElement = new DOMParser()
-        .parseFromString(svg, "image/svg+xml")
-        .querySelector("svg");
-      if (lightIcon) {
-        lightIcon.innerHTML = "";
-        lightIcon.appendChild(svgElement);
-        svgElement.style.stroke = "currentColor";
-      }
+  // Palette option listeners
+  paletteOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      const palette = this.getAttribute('data-palette');
+      setPalette(palette);
     });
+  });
 
-  fetch("/img/svg/dark.svg")
-    .then((response) => response.text())
-    .then((svg) => {
-      const svgElement = new DOMParser()
-        .parseFromString(svg, "image/svg+xml")
-        .querySelector("svg");
-      if (darkIcon) {
-        darkIcon.innerHTML = "";
-        darkIcon.appendChild(svgElement);
-        svgElement.style.stroke = "currentColor";
-      }
-    });
+  // ==========================================================================
+  // INITIALIZATION
+  // ==========================================================================
 
-  fetch("/img/svg/system.svg")
-    .then((response) => response.text())
-    .then((svg) => {
-      const svgElement = new DOMParser()
-        .parseFromString(svg, "image/svg+xml")
-        .querySelector("svg");
-      if (systemIcon) {
-        systemIcon.innerHTML = "";
-        systemIcon.appendChild(svgElement);
-        svgElement.style.stroke = "currentColor";
-      }
-    });
-}
+  document.addEventListener('DOMContentLoaded', function() {
+    // Load stored preferences or use defaults
+    const storedMode = localStorage.getItem('theme-mode') || 'system';
+    const storedPalette = localStorage.getItem('theme-palette') || 'standard';
 
-// Load the static SVGs once the document is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-  loadStaticSVGs();
-});
+    // Apply stored preferences
+    applyMode(storedMode);
+    applyPalette(storedPalette);
+
+    // Update UI to reflect current settings
+    updateModeUI(storedMode);
+    updatePaletteUI(storedPalette);
+  });
+
+  // Global function for backwards compatibility (if needed elsewhere)
+  window.setTheme = setMode;
+
+})();

@@ -2,7 +2,9 @@
    SEMANTIC TOKENS
 
    Canonical tokens live here. Mode/palette files can override these values.
-   Legacy aliases are defined in assets/css/tokens/legacy.css.
+
+   REDESIGN UPDATE: Added new semantic tokens for header dropdowns, footer,
+   and homepage sections. Updated 2026-01-06.
    ============================================================================ */
 
 :root {

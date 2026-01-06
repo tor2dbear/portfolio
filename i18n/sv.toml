@@ -180,3 +180,42 @@ other = "Mörkt"
 
 [system_mode]
 other = "System"
+
+[mode]
+other = "Läge"
+
+[palette]
+other = "Palett"
+
+[navigation]
+other = "Navigering"
+
+[categories]
+other = "Kategorier"
+
+[connect]
+other = "Kontakt"
+
+[info]
+other = "Info"
+
+[featured_works]
+other = "Utvalda projekt"
+
+[about_me]
+other = "Om mig"
+
+[contact_me]
+other = "Kontakta mig"
+
+[all_works]
+other = "Alla projekt"
+
+[also_on_homepage]
+other = "Detta innehåll finns även på startsidan."
+
+[go_to_homepage]
+other = "Gå till startsidan"
+
+[to_homepage]
+other = "till startsidan"

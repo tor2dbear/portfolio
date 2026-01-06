@@ -1,301 +1,35 @@
 <header id="topmenu" class="top-menu" data-js="top-menu">
-  <div class="">
+  <div class="top-menu__container">
     {{ partial "brand.html" . }}
-    <nav class="top-menu__nav" aria-label="Main">
-      <ul class="top-menu__list nav-list">
-        {{ $urltop := .RelPermalink }}
-        {{ range .Site.Menus.top }}
-          <li class="top-menu__item hide-on-client hide-on-xs">
+    <nav class="top-menu__nav" aria-label="{{ i18n "menu_title" }}">
+      <ul class="top-menu__list">
+        {{- $urltop := .RelPermalink -}}
+        {{- range .Site.Menus.top -}}
+          <li class="top-menu__item top-menu__item--nav">
             <a
-              class="top-menu__link nav-link {{ if eq $urltop .URL }}active{{ end }}"
+              class="top-menu__link {{ if eq $urltop .URL }}active{{ end }}"
               title="{{ .Name }}"
               href="{{ .URL | relLangURL }}"
-              >{{ .Name }}</a
-            >
+            >{{ .Name }}</a>
           </li>
-        {{ end }}
-        <li class="top-menu__item top-menu__item--toggle">
-          <div class="theme-switcher" data-js="theme-switcher" data-visible="false">
-            <button
-              class="theme-switcher__button btn btn-link"
-              data-js="theme-switcher-toggle"
-              aria-label="Toggle theme menu"
-            >
-              <svg
-                class="theme-switcher__icon"
-                data-js="theme-switcher-icon"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <use href="/img/svg/system.svg"></use>
-                <!-- Default to system icon -->
-              </svg>
-            </button>
-            <div
-              class="theme-switcher__overlay"
-              data-js="theme-switcher-overlay"
-              data-visible="false"
-            ></div>
-            <div class="theme-switcher__panel" data-js="theme-switcher-panel">
-              <div class="theme-switcher__handle"></div>
-              <div class="theme-switcher__item" onclick="setTheme('light')">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Directly embed the SVG content for light mode -->
-                  <path
-                    d="M5.25 12a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 1 0 -13.5 0Z"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m12 2.25 0 -1.5"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m18.894 5.106 1.061 -1.061"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m21.75 12 1.5 0"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m18.894 18.894 1.061 1.061"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m12 21.75 0 1.5"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m5.106 18.894 -1.061 1.061"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m2.25 12 -1.5 0"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="M5.106 5.106 4.045 4.045"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                </svg>
-                {{ i18n "light_mode" }}
-              </div>
-              <div class="theme-switcher__item" onclick="setTheme('dark')">
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  id="Astronomy-Eclipse--Streamline-Ultimate.svg"
-                >
-                  <desc>
-                    Astronomy Eclipse Streamline Icon: https://streamlinehq.com
-                  </desc>
-                  <path
-                    d="M13.266 2.253a9.75 9.75 0 1 1 -0.643 19.458"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="M0.75 12a7.5 7.5 0 1 0 15 0 7.5 7.5 0 1 0 -15 0Z"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="M9.311 4.575 0.825 13.061"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="M13.553 6.697 2.947 17.303"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m15.675 10.939 -8.486 8.486"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                </svg>
-                {{ i18n "dark_mode" }}
-              </div>
-              <div class="theme-switcher__item" onclick="setTheme('system')">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Directly embed the SVG content for system mode -->
-                  <path
-                    d="M5.5 12a6.5 6.5 0 1 0 13 0 6.5 6.5 0 1 0 -13 0"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="M12 2.93 12 1"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m12 23 0 -1.93"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="M21.07 12 23 12"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m1 12 1.93 0"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m18.414 5.586 1.364 -1.364"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m4.222 19.778 1.364 -1.364"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m18.414 18.414 1.364 1.364"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="m4.222 4.222 1.364 1.364"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                  <path
-                    d="M12.5 8.5v7a3.5 3.5 0 0 0 0 -7Z"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                  ></path>
-                </svg>
-                {{ i18n "system_mode" }}
-              </div>
-            </div>
-          </div>
+        {{- end -}}
+
+        {{- /* Contact button */ -}}
+        <li class="top-menu__item top-menu__item--contact">
+          <a
+            class="top-menu__link top-menu__link--button"
+            href="{{ "contact" | relLangURL }}"
+          >{{ i18n "contact_me" }}</a>
         </li>
-        <li class="top-menu__item top-menu__item--toggle hide-above-sm hide-on-client">
-          <!-- Menu toggle -->
-          <a href="#menu" class="top-menu__toggle menu-toggle" data-js="menu-toggle" title="Menu">
-            <span class="hamburgare">
-              <svg viewBox="0 0 24 24" class="hamburgare">
-                <style>
-                  .hamburger-line {
-                    stroke-linecap: round;
-                    stroke-width: 1.5;
-                    stroke: currentColor;
-                    fill: none;
-                    stroke-linejoin: round;
-                    transition: transform 0.3s ease, opacity 0.3s ease;
-                  }
-                </style>
-                <line
-                  x1="2.25"
-                  x2="21.75"
-                  y1="18"
-                  y2="18"
-                  class="hamburger-line a"
-                ></line>
-                <line
-                  x1="2.25"
-                  x2="21.75"
-                  y1="12"
-                  y2="12"
-                  class="hamburger-line b"
-                ></line>
-                <line
-                  x1="2.25"
-                  x2="21.75"
-                  y1="6"
-                  y2="6"
-                  class="hamburger-line c"
-                ></line>
-              </svg>
-            </span>
-          </a>
+
+        {{- /* Language dropdown */ -}}
+        <li class="top-menu__item top-menu__item--language">
+          {{ partial "language-dropdown.html" . }}
+        </li>
+
+        {{- /* Theme dropdown (mode + palette) */ -}}
+        <li class="top-menu__item top-menu__item--theme">
+          {{ partial "theme-dropdown.html" . }}
         </li>
       </ul>
     </nav>

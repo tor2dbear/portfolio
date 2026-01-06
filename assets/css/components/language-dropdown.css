@@ -1,0 +1,113 @@
+/* Language Dropdown Component Styles */
+
+.language-dropdown {
+  position: relative;
+}
+
+.language-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-toggle:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border-hover);
+}
+
+.language-toggle:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.language-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.current-language {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.language-panel {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  right: 0;
+  min-width: 160px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-xs);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}
+
+.language-panel:not([hidden]) {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: background 0.2s ease;
+}
+
+.language-option:hover {
+  background: var(--color-bg-secondary);
+}
+
+.language-option[aria-current="page"] {
+  background: var(--color-bg-secondary);
+  font-weight: 600;
+}
+
+.language-option svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.language-option--fallback {
+  opacity: 0.7;
+}
+
+.language-note {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-left: var(--space-xs);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .current-language {
+    display: none;
+  }
+
+  .language-panel {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+  }
+
+  .language-panel:not([hidden]) {
+    transform: translateX(-50%) translateY(0);
+  }
+}

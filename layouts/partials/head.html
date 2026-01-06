@@ -59,7 +59,15 @@
   {{ $utilities_layout := resources.Get "css/utilities/layout.css" }}
   {{ $utilities_display := resources.Get "css/utilities/display.css" }}
 
-  <!-- CSS components and pages -->
+  <!-- CSS components (NEW - redesign) -->
+  {{ $components_footer := resources.Get "css/components/footer.css" }}
+  {{ $components_theme_dropdown := resources.Get "css/components/theme-dropdown.css" }}
+  {{ $components_language_dropdown := resources.Get "css/components/language-dropdown.css" }}
+
+  <!-- CSS pages (NEW - redesign) -->
+  {{ $pages_home := resources.Get "css/pages/home.css" }}
+
+  <!-- CSS main styles -->
   {{ $style := resources.Get "css/style.css" }}
   {{ $print := resources.Get "css/print.css" }}
 
@@ -77,11 +85,15 @@
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_display.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_footer.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_theme_dropdown.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_language_dropdown.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $utilities_typography $utilities_layout $utilities_display $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $utilities_typography $utilities_layout $utilities_display $components_footer $components_theme_dropdown $components_language_dropdown $pages_home $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
@@ -111,10 +123,12 @@
   {{ $js1 := resources.Get "js/ui.js" }}
   {{ $js2 := resources.Get "js/header-line.js" }}
   {{ $js3 := resources.Get "js/header-hide.js" }}
-  {{ $js4 := resources.Get "js/theme.js" }}
-  {{ $js5 := resources.Get "js/darkmode.js" }}
+  {{ $js4 := resources.Get "js/darkmode.js" }}
+  {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
   {{ $js7 := resources.Get "js/progressbar.js" }}
+  {{ $js8 := resources.Get "js/smooth-scroll.js" }}
+  {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
   {{ if eq hugo.Environment "development" }}
@@ -126,9 +140,10 @@
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
     <script src="{{ $js7.RelPermalink }}" defer></script>
+    <script src="{{ $js8.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 $js8 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
   
@@ -161,7 +176,8 @@
 
 
     <!-- Highlight.js (commented out) -->
-    {{/* {{ with .Site.Params.highlightjs }}
+    {{/*
+    {{ with .Site.Params.highlightjs }}
     <link
       rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/{{ . }}.min.css"
@@ -179,8 +195,8 @@
     <script>
       hljs.initHighlightingOnLoad();
     </script>
-  {{ end }}
-  */}}
+    {{ end }}
+    */}}
   {{ partial "favicon.html" . }}
 
 

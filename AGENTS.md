@@ -237,8 +237,12 @@ Configured in `package.json` with lint-staged:
 ## Git Workflow
 
 ### Branching
+- **IMPORTANT**: Always create a new branch when starting significant work (features, redesigns, major refactors)
 - Branch format: `<type>/<slug>-<sessionId>`
-- Example: `docs/agents-consolidation-4yQk`
+- Types: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
+- Example: `feature/header-footer-redesign-e47b`
+- Generate random session ID: `$(openssl rand -hex 2)` or manually
+- If you forget to branch before starting work and changes are unstaged, switch branches immediately with `git checkout -b <branch-name>` (changes follow you)
 
 ### Commits
 - Clear, descriptive commit messages

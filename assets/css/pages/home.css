@@ -1,0 +1,111 @@
+/* Home Page Styles */
+
+.home-page {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.home-section {
+  padding: var(--space-2xl) 0;
+  scroll-margin-top: calc(var(--header-height, 80px) + var(--space-md));
+}
+
+.section-heading {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-xl);
+  text-align: center;
+  color: var(--color-text-primary);
+}
+
+/* Hero Section */
+.hero-section {
+  padding: var(--space-3xl) 0;
+}
+
+/* Works Section */
+.works-section {
+  /* Additional specific styles if needed */
+}
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* About Section */
+.about-section {
+  /* Additional specific styles if needed */
+}
+
+.about-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Contact Section */
+.contact-section {
+  /* Additional specific styles if needed */
+}
+
+.contact-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Subscribe Section */
+.subscribe-section {
+  /* Additional specific styles if needed */
+}
+
+/* Alternating background colors for sections */
+.home-section:nth-child(even) {
+  background: var(--color-bg-secondary);
+  margin: 0 calc(-1 * var(--space-md));
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .works-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .home-section {
+    padding: var(--space-xl) 0;
+  }
+
+  .hero-section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .section-heading {
+    font-size: var(--font-size-xl);
+  }
+
+  .works-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page {
+    padding: 0 var(--space-sm);
+  }
+
+  .home-section {
+    padding: var(--space-lg) 0;
+  }
+
+  .home-section:nth-child(even) {
+    margin: 0 calc(-1 * var(--space-sm));
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+}

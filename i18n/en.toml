@@ -177,3 +177,45 @@ other = "Dark"
 
 [system_mode]
 other = "System"
+
+[mode]
+other = "Mode"
+
+[palette]
+other = "Palette"
+
+[navigation]
+other = "Navigation"
+
+[categories]
+other = "Categories"
+
+[connect]
+other = "Connect"
+
+[info]
+other = "Info"
+
+[featured_works]
+other = "Featured Works"
+
+[about_me]
+other = "About Me"
+
+[contact_me]
+other = "Get in Touch"
+
+[all_works]
+other = "All Works"
+
+[also_on_homepage]
+other = "This content is also available on the homepage."
+
+[go_to_homepage]
+other = "Go to homepage"
+
+[home]
+other = "Home"
+
+[to_homepage]
+other = "to homepage"
