@@ -1,11 +1,15 @@
 {{ partial "header.html" . }}
 
 <div class="content post">
-  <nav class="client-breadcrumb flex text-sm mb-24 show-on-client">
+  <nav class="application-breadcrumb flex text-sm mb-24 show-on-client">
     <ul>
-      <li id="client-breadcrumb-home"><a href="{{ .Site.BaseURL | relLangURL }}">Start</a></li>
-      <li class="text-capitalize" id="client-breadcrumb-back"><a></a></li>
-      <li class="text-color-lighter" id="client-breadcrumb-active">{{ .Title }}</li>
+      <li class="application-breadcrumb__item">
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
+      </li>
+      <li class="application-breadcrumb__item text-capitalize" data-js="application-breadcrumb-back">
+        <a class="application-breadcrumb__link"></a>
+      </li>
+      <li class="application-breadcrumb__item text-color-lighter">{{ .Title }}</li>
     </ul>
   </nav>
   <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
@@ -15,9 +19,9 @@
  
   {{ .Content }}
 
-  <div class="client-box">
+  <div class="project-client">
     {{ if .Params.client }}
-    <div class="client">
+    <div class="project-client__column">
     <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Client</h4>
     <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ .Params.client }}</p>
     {{end}}
@@ -27,7 +31,7 @@
     {{end}}
   </div>
     {{ if .Params.clientabout }}
-    <div class="clientabout">
+    <div class="project-client__column project-client__column--about">
     <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">About</h4>
     <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ .Params.clientabout }}</p>
   </div>
@@ -35,22 +39,22 @@
   </div>
 
   {{ partial "related.html" . }}
-    <ul class="table-of-content mt-64 mb-64 grid-6 show-on-client">
-    <li><h3 class="type-headline-small mb-8">Table of content</h3></li>
-    <li class="font-sans text-base text-color-lighter">
-      <a id="client-letter" href="#">Letter</a>
+    <ul class="toc mt-64 mb-64 grid-6 show-on-client">
+    <li class="toc__header"><h3 class="type-headline-small mb-8">Table of content</h3></li>
+    <li class="toc__item font-sans text-base text-color-lighter">
+      <a data-js="application-toc-letter" href="#">Letter</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
-      <a id="client-portfolio" href="#">Portfolio</a>
+    <li class="toc__item font-sans text-base text-color-lighter">
+      <a data-js="application-toc-portfolio" href="#">Portfolio</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
-      <a id="client-cv" href="#">CV</a>
+    <li class="toc__item font-sans text-base text-color-lighter">
+      <a data-js="application-toc-cv" href="#">CV</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
-      <a id="client-download" href="#">Download</a>
+    <li class="toc__item font-sans text-base text-color-lighter">
+      <a data-js="application-toc-download" href="#">Download</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
-      <a id="client-contact" href="#">Contact</a>
+    <li class="toc__item font-sans text-base text-color-lighter">
+      <a data-js="application-toc-contact" href="#">Contact</a>
     </li>
   </ul>
 </div>

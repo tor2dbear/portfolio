@@ -166,7 +166,9 @@
    * Update client breadcrumb with safe text handling
    */
   function updateClientBreadcrumb(clientRef) {
-    const breadcrumbElement = document.getElementById('client-breadcrumb-back');
+    const breadcrumbElement =
+      document.querySelector('[data-js="application-breadcrumb-back"]') ||
+      document.getElementById('client-breadcrumb-back');
     if (!breadcrumbElement) return;
 
     // Clear existing content safely
@@ -197,15 +199,15 @@
 
     const clientPath = `/clients/${encodeURIComponent(context.ref)}/`;
     const tocLinks = {
-      'client-letter': `${clientPath}#letter`,
-      'client-portfolio': `${clientPath}#portfolio`,
-      'client-cv': `${clientPath}#cv`,
-      'client-download': `${clientPath}#download`,
-      'client-contact': `${clientPath}#contact`
+      'application-toc-letter': `${clientPath}#letter`,
+      'application-toc-portfolio': `${clientPath}#portfolio`,
+      'application-toc-cv': `${clientPath}#cv`,
+      'application-toc-download': `${clientPath}#download`,
+      'application-toc-contact': `${clientPath}#contact`
     };
 
-    Object.entries(tocLinks).forEach(([id, href]) => {
-      const element = document.getElementById(id);
+    Object.entries(tocLinks).forEach(([key, href]) => {
+      const element = document.querySelector(`[data-js="${key}"]`);
       if (element) {
         element.setAttribute('href', href);
       }

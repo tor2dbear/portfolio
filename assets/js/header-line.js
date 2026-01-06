@@ -1,5 +1,8 @@
 let scrollpos = window.scrollY
-  const header = document.querySelector("#topmenu")
+  const header = document.querySelector('[data-js="top-menu"]') || document.querySelector("#topmenu")
+  if (!header) {
+    return
+  }
   const header_height = header.offsetHeight
 
   const add_class_on_scroll = () => header.classList.add("bottom-line")

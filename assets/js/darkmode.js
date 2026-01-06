@@ -1,33 +1,38 @@
-document
-  .getElementById("theme-menu-toggle")
-  .addEventListener("click", function () {
-    const menuContainer = document.querySelector(".theme-menu-container");
+const menuContainer = document.querySelector('[data-js="theme-switcher"]');
+const menuToggle = document.querySelector('[data-js="theme-switcher-toggle"]');
+const menu = document.querySelector('[data-js="theme-switcher-panel"]');
+const overlay = document.querySelector('[data-js="theme-switcher-overlay"]');
+const menuIcon = document.querySelector('[data-js="theme-switcher-icon"]');
+
+if (menuToggle && menuContainer) {
+  menuToggle.addEventListener("click", function () {
     const isVisible = menuContainer.getAttribute("data-visible") === "true";
     toggleMenu(!isVisible);
   });
+}
 
-document.getElementById("overlay").addEventListener("click", function () {
-  closeMenu();
-});
+if (overlay) {
+  overlay.addEventListener("click", function () {
+    closeMenu();
+  });
+}
 
 // Variables to store touch start position and animation start time
 let touchStartY = 0;
 let touchEndY = 0;
 let touchStartTime = 0;
 
-const menu = document.getElementById("theme-menu");
-const overlay = document.getElementById("overlay");
-
-menu.addEventListener("touchstart", function (event) {
+if (menu && overlay) {
+  menu.addEventListener("touchstart", function (event) {
   if (window.matchMedia("(max-width: 767px)").matches) {
     touchStartY = event.changedTouches[0].screenY;
     touchStartTime = Date.now();
     menu.style.transition = "none"; // Disable transition during drag
     overlay.style.transition = "none"; // Disable transition during drag
   }
-});
+  });
 
-menu.addEventListener("touchmove", function (event) {
+  menu.addEventListener("touchmove", function (event) {
   if (window.matchMedia("(max-width: 767px)").matches) {
     touchEndY = event.changedTouches[0].screenY;
     const touchDeltaY = touchEndY - touchStartY;
@@ -42,9 +47,9 @@ menu.addEventListener("touchmove", function (event) {
       overlay.style.opacity = Math.max(opacity, 0); // Ensure opacity doesn't go below 0
     }
   }
-});
+  });
 
-menu.addEventListener("touchend", function (event) {
+  menu.addEventListener("touchend", function (event) {
   if (window.matchMedia("(max-width: 767px)").matches) {
     const touchDeltaY = touchEndY - touchStartY;
     const touchEndTime = Date.now();
@@ -61,12 +66,13 @@ menu.addEventListener("touchend", function (event) {
       overlay.style.opacity = 1;
     }
   }
-});
+  });
+}
 
 function toggleMenu(visible, duration = 0.3) {
-  const menuContainer = document.querySelector(".theme-menu-container");
-  const menu = document.getElementById("theme-menu");
-  const overlay = document.getElementById("overlay");
+  if (!menuContainer || !menu || !overlay) {
+    return;
+  }
 
   menuContainer.setAttribute("data-visible", visible);
   overlay.setAttribute("data-visible", visible);
@@ -120,7 +126,10 @@ function updateSystemTheme() {
 }
 
 function updateMenuIcon(theme) {
-  const icon = document.getElementById("theme-menu-icon");
+  const icon = menuIcon;
+  if (!icon) {
+    return;
+  }
   let svgPath = "";
 
   if (theme === "light") {
@@ -171,9 +180,9 @@ const observer = new MutationObserver(function (mutations) {
       mutation.type === "attributes" &&
       mutation.attributeName === "data-visible"
     ) {
-      const menuContainer = document.querySelector(".theme-menu-container");
-      const menu = document.getElementById("theme-menu");
-      const overlay = document.getElementById("overlay");
+      if (!menuContainer || !menu || !overlay) {
+        return;
+      }
       const isVisible = menuContainer.getAttribute("data-visible") === "true";
       if (!isVisible) {
         menu.style.transform = `translateY(100%)`; // Reset position when closed
@@ -188,9 +197,11 @@ const observer = new MutationObserver(function (mutations) {
   });
 });
 
-observer.observe(document.querySelector(".theme-menu-container"), {
-  attributes: true,
-});
+if (menuContainer) {
+  observer.observe(menuContainer, {
+    attributes: true,
+  });
+}
 
 window
   .matchMedia("(prefers-color-scheme: dark)")

@@ -13,10 +13,10 @@ describe("Header Line - Scroll-based Bottom Line", () => {
   beforeEach(() => {
     // Setup DOM
     document.body.innerHTML = `
-      <div id="topmenu"></div>
+      <div id="topmenu" data-js="top-menu"></div>
     `;
 
-    header = document.querySelector("#topmenu");
+    header = document.querySelector('[data-js="top-menu"]');
 
     // Mock offsetHeight
     Object.defineProperty(header, "offsetHeight", {
@@ -41,10 +41,10 @@ describe("Header Line - Scroll-based Bottom Line", () => {
 
   describe("Initial Setup", () => {
     test("should query topmenu element", () => {
-      const headerElement = document.querySelector("#topmenu");
+      const headerElement = document.querySelector('[data-js="top-menu"]');
 
       expect(headerElement).toBeTruthy();
-      expect(headerElement.id).toBe("topmenu");
+      expect(headerElement.getAttribute("data-js")).toBe("top-menu");
     });
 
     test("should get header offsetHeight", () => {

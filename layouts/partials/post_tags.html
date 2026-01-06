@@ -1,4 +1,4 @@
-<div class="post-tags">
+<div class="tag-list">
 
   {{ $baseUrl := .Site.BaseURL }}
 
@@ -7,11 +7,13 @@
   {{ if isset .Params "tags" }}
   {{ $count := len .Params.tags }}
   {{ if gt $count 0 }}
-  <div>
+  <ul class="tag-list__items">
     {{ range $k, $v := .Params.tags }}
-      <a class="post-taxonomy-tag" href="{{ $baseUrl | relLangURL }}{{ i18n "works_url" }}/tags/{{ . | urlize }}">{{ replace . "ui-ux" "ui/ux" }}</a>{{ if lt $k (sub $count 1) }} {{ end }}
+      <li class="tag-list__item">
+        <a class="tag-list__link tag" href="{{ $baseUrl | relLangURL }}{{ i18n "works_url" }}/tags/{{ . | urlize }}">{{ replace . "ui-ux" "ui/ux" }}</a>{{ if lt $k (sub $count 1) }} {{ end }}
+      </li>
     {{ end }}
-  </div>
+  </ul>
   {{ end }}
   {{ end }}
 

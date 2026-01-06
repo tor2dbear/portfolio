@@ -1,13 +1,13 @@
-<div class="menu social">
-  <h2 class="type-headline-small">{{ i18n "Subscribe" }}</h2>
-  <ul class="menu-list">
-    <li class="menu-item">
-      <a class="menu-link" href="{{ .Site.BaseURL }}works/index.xml">rss</a>
+<div class="social-links side-menu__section">
+  <h2 class="social-links__title type-headline-small">{{ i18n "Subscribe" }}</h2>
+  <ul class="social-links__list nav-list">
+    <li class="social-links__item nav-item">
+      <a class="social-links__link nav-link" href="{{ .Site.BaseURL }}works/index.xml">rss</a>
     </li>
 
     <!-- Newsletter -->
-    <li class="menu-item">
-      <a class="menu-link" href="{{ .Site.BaseURL }}newsletter">
+    <li class="social-links__item nav-item">
+      <a class="social-links__link nav-link" href="{{ .Site.BaseURL }}newsletter">
         {{ i18n "newsletter" }}</a
       >
     </li>
@@ -15,9 +15,9 @@
     <!-- SNS microblogging -->
 
     {{ with .Site.Params.Social.twitter }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://twitter.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -26,16 +26,16 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.gnusocial }}
-      <li class="menu-item">
-        <a class="menu-link" href="{{ . }}" rel="me" target="_blank"
+      <li class="social-links__item nav-item">
+        <a class="social-links__link nav-link" href="{{ . }}" rel="me" target="_blank"
           ><i class="fas fa-comment fa-fw"></i>GNU social</a
         >
       </li>
     {{ end }}
     {{ with .Site.Params.Social.facebook }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://facebook.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -44,9 +44,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.weibo }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="http://weibo.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -55,9 +55,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.tumblr }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://{{ . }}.tumblr.com/"
           rel="me"
           target="_blank"
@@ -70,9 +70,9 @@
     <!-- SNS photo/video sharing -->
 
     {{ with .Site.Params.Social.instagram }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://instagram.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -81,9 +81,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.flickr }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://flickr.com/photos/{{ . }}"
           rel="me"
           target="_blank"
@@ -92,9 +92,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.photo500px }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://500px.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -103,9 +103,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.pinterest }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://pinterest.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -114,9 +114,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.youtube }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://youtube.com/user/{{ . }}"
           rel="me"
           target="_blank"
@@ -125,9 +125,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.vimeo }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://vimeo.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -136,9 +136,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.vine }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://vine.co/{{ . }}"
           rel="me"
           target="_blank"
@@ -147,9 +147,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.slideshare }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="http://slideshare.net/{{ . }}"
           rel="me"
           target="_blank"
@@ -162,9 +162,9 @@
     <!-- SNS career oriented -->
 
     {{ with .Site.Params.Social.linkedin }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://linkedin.com/in/{{ . }}"
           rel="me"
           target="_blank"
@@ -173,9 +173,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.xing }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://xing.com/profile/{{ . }}"
           rel="me"
           target="_blank"
@@ -188,9 +188,9 @@
     <!-- SNS news -->
 
     {{ with .Site.Params.Social.reddit }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://reddit.com/user/{{ . }}"
           rel="me"
           target="_blank"
@@ -199,9 +199,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.hackernews }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://news.ycombinator.com/user?id={{ . }}"
           rel="me"
           target="_blank"
@@ -214,9 +214,9 @@
     <!-- Techie -->
 
     {{ with .Site.Params.Social.github }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://github.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -225,9 +225,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.gitlab }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://gitlab.com/{{ . }}"
           rel="me"
           target="_blank"
@@ -236,9 +236,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.bitbucket }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://bitbucket.org/{{ . }}"
           rel="me"
           target="_blank"
@@ -247,9 +247,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.stackoverflow }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://stackoverflow.com/users/{{ . }}"
           rel="me"
           target="_blank"
@@ -258,9 +258,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.serverfault }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://serverfault.com/users/{{ . }}"
           rel="me"
           target="_blank"
@@ -273,9 +273,9 @@
     <!-- Gaming -->
 
     {{ with .Site.Params.Social.steam }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://steamcommunity.com/id/{{ . }}"
           rel="me"
           target="_blank"
@@ -284,9 +284,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.mobygames }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://www.mobygames.com/developer/sheet/view/developerId,{{ . }}"
           rel="me"
           target="_blank"
@@ -299,9 +299,9 @@
     <!-- Music -->
 
     {{ with .Site.Params.Social.lastfm }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="http://last.fm/user/{{ . }}"
           rel="me"
           target="_blank"
@@ -310,9 +310,9 @@
       </li>
     {{ end }}
     {{ with .Site.Params.Social.discogs }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://www.discogs.com/user/{{ . }}"
           rel="me"
           target="_blank"
@@ -325,9 +325,9 @@
     <!-- Other -->
 
     {{ with .Site.Params.Social.keybase }}
-      <li class="menu-item">
+      <li class="social-links__item nav-item">
         <a
-          class="menu-link"
+          class="social-links__link nav-link"
           href="https://keybase.io/{{ . }}"
           rel="me"
           target="_blank"

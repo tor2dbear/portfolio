@@ -1,28 +1,29 @@
-<header id="topmenu">
+<header id="topmenu" class="top-menu" data-js="top-menu">
   <div class="">
     {{ partial "brand.html" . }}
-    <nav class="menu" aria-label="Main">
-      <ul class="menu-list">
+    <nav class="top-menu__nav" aria-label="Main">
+      <ul class="top-menu__list nav-list">
         {{ $urltop := .RelPermalink }}
         {{ range .Site.Menus.top }}
-          <li class="menu-item hide-on-client hide-on-xs">
+          <li class="top-menu__item hide-on-client hide-on-xs">
             <a
-              class="menu-link {{ if eq $urltop .URL }}active{{ end }}"
+              class="top-menu__link nav-link {{ if eq $urltop .URL }}active{{ end }}"
               title="{{ .Name }}"
               href="{{ .URL | relLangURL }}"
               >{{ .Name }}</a
             >
           </li>
         {{ end }}
-        <li class="menu-item menu-menubutton">
-          <div class="theme-menu-container" data-visible="false">
+        <li class="top-menu__item top-menu__item--toggle">
+          <div class="theme-switcher" data-js="theme-switcher" data-visible="false">
             <button
-              id="theme-menu-toggle"
-              class="btn btn-link"
+              class="theme-switcher__button btn btn-link"
+              data-js="theme-switcher-toggle"
               aria-label="Toggle theme menu"
             >
               <svg
-                id="theme-menu-icon"
+                class="theme-switcher__icon"
+                data-js="theme-switcher-icon"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -30,10 +31,14 @@
                 <!-- Default to system icon -->
               </svg>
             </button>
-            <div id="overlay" class="overlay" data-visible="false"></div>
-            <div id="theme-menu" class="theme-menu">
-              <div class="handle"></div>
-              <div class="theme-menu-item" onclick="setTheme('light')">
+            <div
+              class="theme-switcher__overlay"
+              data-js="theme-switcher-overlay"
+              data-visible="false"
+            ></div>
+            <div class="theme-switcher__panel" data-js="theme-switcher-panel">
+              <div class="theme-switcher__handle"></div>
+              <div class="theme-switcher__item" onclick="setTheme('light')">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <!-- Directly embed the SVG content for light mode -->
                   <path
@@ -111,7 +116,7 @@
                 </svg>
                 {{ i18n "light_mode" }}
               </div>
-              <div class="theme-menu-item" onclick="setTheme('dark')">
+              <div class="theme-switcher__item" onclick="setTheme('dark')">
                 <svg
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +168,7 @@
                 </svg>
                 {{ i18n "dark_mode" }}
               </div>
-              <div class="theme-menu-item" onclick="setTheme('system')">
+              <div class="theme-switcher__item" onclick="setTheme('system')">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <!-- Directly embed the SVG content for system mode -->
                   <path
@@ -252,9 +257,9 @@
             </div>
           </div>
         </li>
-        <li class="menu-item menu-menubutton hide-above-sm hide-on-client">
+        <li class="top-menu__item top-menu__item--toggle hide-above-sm hide-on-client">
           <!-- Menu toggle -->
-          <a href="#menu" class="menu-link" id="menuLink" title="Menu">
+          <a href="#menu" class="top-menu__toggle menu-toggle" data-js="menu-toggle" title="Menu">
             <span class="hamburgare">
               <svg viewBox="0 0 24 24" class="hamburgare">
                 <style>

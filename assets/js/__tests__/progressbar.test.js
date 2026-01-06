@@ -5,51 +5,36 @@
 
 describe("Progress Bar - Scroll Indicator", () => {
   let hyphenLeft, hyphenRight, brandLink;
-  let brandFirst, brandSecond, brandThird, brandFourth, brandFifth;
+  let brandParts;
 
   beforeEach(() => {
     // Setup DOM with all required elements
     document.body.innerHTML = `
-      <div id="hyphen-left"></div>
-      <div id="hyphen-right"></div>
-      <div id="brand-link"></div>
-      <div class="brand-first">Brand</div>
-      <div class="brand-second">Name</div>
-      <div class="brand-third">Part</div>
-      <div class="brand-fourth">Four</div>
-      <div class="brand-fifth">Five</div>
+      <div data-js="brand-hyphen-left"></div>
+      <div data-js="brand-hyphen-right"></div>
+      <div data-js="brand-link"></div>
+      <div data-brand-part="true">Brand</div>
+      <div data-brand-part="true">Name</div>
+      <div data-brand-part="true">Part</div>
+      <div data-brand-part="true">Four</div>
+      <div data-brand-part="true">Five</div>
     `;
 
-    hyphenLeft = document.getElementById("hyphen-left");
-    hyphenRight = document.getElementById("hyphen-right");
-    brandLink = document.getElementById("brand-link");
+    hyphenLeft = document.querySelector('[data-js="brand-hyphen-left"]');
+    hyphenRight = document.querySelector('[data-js="brand-hyphen-right"]');
+    brandLink = document.querySelector('[data-js="brand-link"]');
 
-    brandFirst = document.querySelector(".brand-first");
-    brandSecond = document.querySelector(".brand-second");
-    brandThird = document.querySelector(".brand-third");
-    brandFourth = document.querySelector(".brand-fourth");
-    brandFifth = document.querySelector(".brand-fifth");
+    brandParts = Array.from(
+      document.querySelectorAll('[data-brand-part="true"]')
+    );
 
     // Mock offsetWidth for brand elements
-    Object.defineProperty(brandFirst, "offsetWidth", {
-      configurable: true,
-      value: 50,
-    });
-    Object.defineProperty(brandSecond, "offsetWidth", {
-      configurable: true,
-      value: 40,
-    });
-    Object.defineProperty(brandThird, "offsetWidth", {
-      configurable: true,
-      value: 30,
-    });
-    Object.defineProperty(brandFourth, "offsetWidth", {
-      configurable: true,
-      value: 35,
-    });
-    Object.defineProperty(brandFifth, "offsetWidth", {
-      configurable: true,
-      value: 45,
+    const widths = [50, 40, 30, 35, 45];
+    brandParts.forEach((part, index) => {
+      Object.defineProperty(part, "offsetWidth", {
+        configurable: true,
+        value: widths[index],
+      });
     });
 
     // Mock document scroll properties
@@ -78,14 +63,10 @@ describe("Progress Bar - Scroll Indicator", () => {
 
   describe("Brand Width Calculation", () => {
     test("should calculate total brand width correctly", () => {
-      const widthFirst = brandFirst.offsetWidth;
-      const widthSecond = brandSecond.offsetWidth;
-      const widthThird = brandThird.offsetWidth;
-      const widthFourth = brandFourth.offsetWidth;
-      const widthFifth = brandFifth.offsetWidth;
-
-      const brandBase =
-        widthFirst + widthSecond + widthThird + widthFourth + widthFifth;
+      const brandBase = brandParts.reduce(
+        (sum, part) => sum + part.offsetWidth,
+        0
+      );
 
       expect(brandBase).toBe(200); // 50 + 40 + 30 + 35 + 45
     });
@@ -98,11 +79,7 @@ describe("Progress Bar - Scroll Indicator", () => {
     });
 
     test("should query all brand elements", () => {
-      expect(brandFirst).toBeTruthy();
-      expect(brandSecond).toBeTruthy();
-      expect(brandThird).toBeTruthy();
-      expect(brandFourth).toBeTruthy();
-      expect(brandFifth).toBeTruthy();
+      expect(brandParts).toHaveLength(5);
     });
   });
 
@@ -269,11 +246,10 @@ describe("Progress Bar - Scroll Indicator", () => {
           widthFirst + widthSecond + widthThird + widthFourth + widthFifth;
         const brandWidth = brandBase + 5 + "px";
 
-        document.getElementById("hyphen-left").style.width =
-          "calc(" + scrolledleft + " - " + corr + ")";
-        document.getElementById("hyphen-right").style.width =
+        hyphenLeft.style.width = "calc(" + scrolledleft + " - " + corr + ")";
+        hyphenRight.style.width =
           "calc(" + scrolledright + " - " + corr + ")";
-        document.getElementById("brand-link").style.width =
+        brandLink.style.width =
           "calc(" +
           brandWidth +
           " * " +

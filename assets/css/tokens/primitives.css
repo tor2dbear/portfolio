@@ -283,4 +283,19 @@
    /* 96px */
    --spacing-160: 10rem;
    /* 160px */
+
+   /* ==========================================================================
+     LAYOUT: Sizes
+     ========================================================================== */
+
+   --size-header-height: 4.5rem;
+   --size-header-height-neg: 0rem;
+   --size-page-margins: clamp(1.5rem, 1.3261rem + 0.8696vi, 2rem);
+   --size-menu-width-xl: 24rem;
+   /* 320 px + padding 2x2rem */
+   --size-menu-width-lg: 20rem;
+   /* 256 px + padding 2x2rem */
+   --size-menu-width-md: 16rem;
+   /* 192 px + padding 2x2rem */
+   --size-menu-width: 24rem;
 }

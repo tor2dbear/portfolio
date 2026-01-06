@@ -14,13 +14,13 @@ describe("UI - Mobile Menu Toggle", () => {
     document.body.innerHTML = `
       <div id="layout"></div>
       <div id="menu"></div>
-      <a href="#" id="menuLink">Menu</a>
+      <a href="#" data-js="menu-toggle">Menu</a>
       <div id="main"></div>
     `;
 
     layout = document.getElementById("layout");
     menu = document.getElementById("menu");
-    menuLink = document.getElementById("menuLink");
+    menuLink = document.querySelector('[data-js="menu-toggle"]');
     content = document.getElementById("main");
     body = document.body;
   });
@@ -409,9 +409,9 @@ describe("UI - Mobile Menu Toggle", () => {
     });
 
     test("should find menuLink element", () => {
-      const menuLinkEl = document.getElementById("menuLink");
+      const menuLinkEl = document.querySelector('[data-js="menu-toggle"]');
       expect(menuLinkEl).toBeTruthy();
-      expect(menuLinkEl.id).toBe("menuLink");
+      expect(menuLinkEl.getAttribute("data-js")).toBe("menu-toggle");
     });
 
     test("should find main content element", () => {

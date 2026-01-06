@@ -237,9 +237,8 @@ Configured in `package.json` with lint-staged:
 ## Git Workflow
 
 ### Branching
-- Branches should start with `claude/` for AI-assisted work
-- Format: `claude/<description>-<sessionId>`
-- Example: `claude/review-agent-docs-dmHfU`
+- Branch format: `<type>/<slug>-<sessionId>`
+- Example: `docs/agents-consolidation-4yQk`
 
 ### Commits
 - Clear, descriptive commit messages
@@ -279,10 +278,19 @@ attach_letter: "/path/to/letter.pdf"
 
 ## CSS Architecture
 
-### Main Files
-- `assets/css/style.css` - Main stylesheet
-- `assets/css/atoms.css` - Utility classes
-- PostCSS for processing
+### File Layout
+- `assets/css/tokens/primitives.css` - Raw values (never overridden by themes)
+- `assets/css/tokens/semantic.css` - Canonical semantic tokens
+- `assets/css/tokens/components.css` - Component exceptions
+- `assets/css/tokens/legacy.css` - Legacy aliases (deprecated)
+- `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
+- `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `pantone`)
+- `assets/css/utilities/typography.css` - Typography utilities
+- `assets/css/utilities/layout.css` - Grid, flex, spacing utilities
+- `assets/css/utilities/display.css` - Visibility helpers
+- `assets/css/style.css` - Component styles
+- `assets/css/clientpage.css` - Client/employer page tweaks
+- `assets/css/print.css` - Print styles
 
 ### Client-specific CSS
 ```css
@@ -298,8 +306,44 @@ attach_letter: "/path/to/letter.pdf"
 ### Token System (Current)
 - Canonical tokens are defined in `assets/css/tokens/semantic.css`.
 - Component exceptions live in `assets/css/tokens/components.css`.
-- Legacy tokens and `assets/css/dimensions/common.css` have been removed.
 - Mode/palette overrides live in `assets/css/dimensions/mode/*` and `assets/css/dimensions/palette/*` and should only override canonical tokens.
+
+### CSS Load Order (head.html)
+1. tokens (primitives → semantic → components → legacy)
+2. dimensions (mode → palette)
+3. utilities (typography → layout → display)
+4. components (`style.css`)
+5. pages (`clientpage.css`, `print.css`)
+
+### Theming Dimensions (Current)
+- HTML data attributes drive theming:
+  - `data-mode="light|dark"`
+  - `data-palette="standard|pantone"`
+- Add new dimensions by creating `assets/css/dimensions/<dimension>/*.css` and wiring in `layouts/partials/head.html`.
+
+---
+
+## Naming Conventions
+
+### Tokens (CSS Custom Properties)
+- Prefix by domain: `text`, `bg`, `border`, `surface`, `brand`, `status`, `state`, `shadow`, `size`, `image`, `component`.
+- Contrast scale order: `subtle` → `muted` → `default` → `strong`.
+- Avoid overloaded prefixes like `text-*` for font sizes. Use `font-*` for typography sizes.
+- Canonical tokens live in `assets/css/tokens/semantic.css`.
+- Legacy aliases live in `assets/css/tokens/legacy.css` and must include `/* deprecated */`.
+- Legacy aliases map one-to-one to canonical tokens; remove legacy only after confirming no references remain.
+
+### CSS / HTML Naming Spec
+- **Utilities**: short, functional, scale-based names (e.g. `mt-24`, `grid-1-3`, `text-sm`).
+- **Components**: block + element naming (BEM-light), e.g. `brand`, `brand__link`, `brand__word`, `brand__hyphen`.
+- **Variants**: modifier suffixes, e.g. `button--primary`, `brand__word--lead`.
+- **State**: `is-*` / `has-*`, e.g. `is-active`, `has-client`.
+- **JS hooks**: prefer `data-js="hook-name"`; avoid styling via IDs. Use IDs only for anchors or form fields.
+
+### CSS / HTML
+- Class names and IDs: kebab-case (e.g. `project-card`, `#main-nav`).
+- `data-*` attributes: kebab-case (e.g. `data-focus-mode`).
+- CSS custom properties: kebab-case with `--` prefix (e.g. `--bg-surface`).
 
 ---
 
@@ -342,9 +386,10 @@ npm run test:coverage       # Generate coverage report
 4. **Module Pattern**: Keep JavaScript modular - one responsibility per file
 5. **Testing**: Write tests for new JavaScript functionality
 6. **Hugo Context**: This is a static site - no server-side logic
-7. **Git Conventions**: Follow `claude/` branch naming for AI work
+7. **Git Conventions**: Follow the branch format defined in this document
 8. **Taxonomy System**: Employers/clients use Hugo taxonomies - projects need taxonomy tags to appear on company pages
 9. **Hidden Projects**: Respect `hidden: true` parameter - must be filtered in main portfolio templates
+10. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
 
 ---
 
@@ -394,4 +439,4 @@ npm run test:coverage       # Generate coverage report
 
 ---
 
-Last updated: 2026-01-04
+Last updated: 2026-01-06

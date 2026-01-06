@@ -2,7 +2,7 @@
 
     var layout   = document.getElementById('layout'),
         menu     = document.getElementById('menu'),
-        menuLink = document.getElementById('menuLink'),
+        menuLink = document.querySelector('[data-js="menu-toggle"]'),
         content  = document.getElementById('main');
         body = document.body;
 
@@ -31,17 +31,21 @@
         e.preventDefault();
         toggleClass(layout,active);
         toggleClass(menu,active);
-        toggleClass(menuLink,active);
+        if (menuLink) {
+            toggleClass(menuLink,active);
+        }
         toggleClass(body,active);
     }
 
-    menuLink.onclick = function (e) {
-        toggleAll(e);
-        body.classList.add("menuTransition");
-            setTimeout(function() {
-                body.classList.remove("menuTransition");
-            }, 1000);
-    };
+    if (menuLink) {
+        menuLink.onclick = function (e) {
+            toggleAll(e);
+            body.classList.add("menuTransition");
+                setTimeout(function() {
+                    body.classList.remove("menuTransition");
+                }, 1000);
+        };
+    }
 
     content.onclick = function(e) {
         if (menu.className.indexOf('active') !== -1) {

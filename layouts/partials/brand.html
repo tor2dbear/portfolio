@@ -1,8 +1,17 @@
 <div class="brand" href="{{ .Site.BaseURL | relLangURL }}">
-  <a id="brand-link" title="Home" href="{{ .Site.BaseURL | relLangURL }}"></a>
-  <div class="brand-first" style="margin-right:2px;">tor</div>
-  <div class="progress-bar brand-second" id="hyphen-left"></div>
-  <div class="curl-icon-bold brand-third">
+  <a
+    class="brand__link"
+    data-js="brand-link"
+    title="Home"
+    href="{{ .Site.BaseURL | relLangURL }}"
+  ></a>
+  <div class="brand__word brand__word--lead" data-brand-part="true">tor</div>
+  <div
+    class="brand__hyphen brand__hyphen--left"
+    data-js="brand-hyphen-left"
+    data-brand-part="true"
+  ></div>
+  <div class="brand__mark curl-icon-bold" data-brand-part="true">
     <svg
       width="24"
       height="24"
@@ -17,6 +26,12 @@
       />
     </svg>
   </div>
-  <div class="progress-bar brand-fourth" id="hyphen-right"></div>
-  <div class="brand-first brand-fifth" style="margin-left:2px;">bjorn.com</div>
+  <div
+    class="brand__hyphen brand__hyphen--right"
+    data-js="brand-hyphen-right"
+    data-brand-part="true"
+  ></div>
+  <div class="brand__word brand__word--tail" data-brand-part="true">
+    bjorn.com
+  </div>
 </div>

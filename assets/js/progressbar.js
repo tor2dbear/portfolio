@@ -2,21 +2,20 @@ window.onscroll = function () {
   progressBar();
 };
 
-let first = document.querySelector(".brand-first");
-let widthFirst = first.offsetWidth;
-let second = document.querySelector(".brand-second");
-let widthSecond = second.offsetWidth;
-let third = document.querySelector(".brand-third");
-let widthThird = third.offsetWidth;
-let fourth = document.querySelector(".brand-fourth");
-let widthFourth = fourth.offsetWidth;
-let fifth = document.querySelector(".brand-fifth");
-let widthFifth = fifth.offsetWidth;
-let brandBase =
-  widthFirst + widthSecond + widthThird + widthFourth + widthFifth;
-let brandWidth = brandBase + 5 + "px";
+const brandParts = Array.from(
+  document.querySelectorAll("[data-brand-part=\"true\"]")
+);
+const hyphenLeft = document.querySelector('[data-js="brand-hyphen-left"]');
+const hyphenRight = document.querySelector('[data-js="brand-hyphen-right"]');
+const brandLink = document.querySelector('[data-js="brand-link"]');
+
+const brandBase = brandParts.reduce((sum, part) => sum + part.offsetWidth, 0);
+const brandWidth = brandBase + 5 + "px";
 
 function progressBar() {
+  if (!hyphenLeft || !hyphenRight || !brandLink) {
+    return;
+  }
   var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
   var height =
     document.documentElement.scrollHeight -
@@ -26,10 +25,10 @@ function progressBar() {
   var corr = (winScroll / height) * 5.4 + "rem";
   var scrolledBrand = (winScroll / height) * 100 + "%";
   var corrBrand = 1 - winScroll / height;
-  document.getElementById("hyphen-left").style.width =
+  hyphenLeft.style.width =
     "calc(" + scrolledleft + " - " + corr + ")";
-  document.getElementById("hyphen-right").style.width =
+  hyphenRight.style.width =
     "calc(" + scrolledright + " - " + corr + ")";
-  document.getElementById("brand-link").style.width =
+  brandLink.style.width =
     "calc(" + brandWidth + " * " + corrBrand + " + " + scrolledBrand + ")";
 }
