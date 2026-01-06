@@ -65,7 +65,7 @@
 
 
   <!-- CSS loading -->
-  {{ if .Site.IsServer }}
+  {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
