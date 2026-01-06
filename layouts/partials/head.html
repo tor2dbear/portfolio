@@ -43,25 +43,45 @@
   {{ end }}
 
 
-  <!-- CSS variables -->
-  {{ $stylea := resources.Get "css/variables.css" }}
-  {{ $styleb := resources.Get "css/atoms.css" }}
-  {{ $stylec := resources.Get "css/typography.css" }}
-  {{ $styled := resources.Get "css/style.css" }}
-  {{ $stylee := resources.Get "css/print.css" }}
+  <!-- CSS tokens (3-layer architecture) -->
+  {{ $tokens_primitives := resources.Get "css/tokens/primitives.css" }}
+  {{ $tokens_semantic := resources.Get "css/tokens/semantic.css" }}
+  {{ $tokens_components := resources.Get "css/tokens/components.css" }}
+
+  <!-- CSS dimensions (mode + palette) -->
+  {{ $dimensions_mode_light := resources.Get "css/dimensions/mode/light.css" }}
+  {{ $dimensions_mode_dark := resources.Get "css/dimensions/mode/dark.css" }}
+  {{ $dimensions_palette_standard := resources.Get "css/dimensions/palette/standard.css" }}
+  {{ $dimensions_palette_pantone := resources.Get "css/dimensions/palette/pantone.css" }}
+
+  <!-- CSS utilities -->
+  {{ $utilities_typography := resources.Get "css/utilities/typography.css" }}
+  {{ $utilities_layout := resources.Get "css/utilities/layout.css" }}
+  {{ $utilities_display := resources.Get "css/utilities/display.css" }}
+
+  <!-- CSS components and pages -->
+  {{ $style := resources.Get "css/style.css" }}
+  {{ $print := resources.Get "css/print.css" }}
 
 
   <!-- CSS loading -->
-  {{ if hugo.IsServer }}
+  {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
-    <link rel="stylesheet" type="text/css" href="{{ $stylea.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $styleb.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $stylec.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $styled.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $stylee.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_light.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_dark.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $utilities_display.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $stylea $styleb $stylec $styled $stylee | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $utilities_typography $utilities_layout $utilities_display $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
@@ -97,7 +117,7 @@
   {{ $js7 := resources.Get "js/progressbar.js" }}
 
   <!-- JavaScript loading -->
-  {{ if hugo.IsServer }}
+  {{ if eq hugo.Environment "development" }}
     <!-- JavaScript development -->
     <script src="{{ $js1.RelPermalink }}" defer></script>
     <script src="{{ $js2.RelPermalink }}" defer></script>

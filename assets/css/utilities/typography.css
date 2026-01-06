@@ -1,0 +1,684 @@
+/* ============================================================================
+   UTILITIES: TYPOGRAPHY
+
+   Combined from atoms.css and typography.css
+   - CSS Reset
+   - Typography utilities (font sizes, families, weights, etc.)
+   - Semantic typography classes (headings, body, captions, etc.)
+   - Hyperlink styles
+   ============================================================================ */
+
+/* ==========================================================================
+   CSS RESET (Meyer Reset v2.0)
+   ========================================================================== */
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ==========================================================================
+   BASE TYPOGRAPHY
+   ========================================================================== */
+
+body {
+  font-family: var(--font-sans);
+  margin: 0px;
+}
+
+/* ==========================================================================
+   FONT SIZE UTILITIES
+   ========================================================================== */
+
+.text-xs {
+  font-size: var(--text-xs);
+}
+
+.text-sm {
+  font-size: var(--text-sm);
+}
+
+.text-base {
+  font-size: var(--text-base);
+}
+
+.text-lg {
+  font-size: var(--text-lg);
+}
+
+.text-xl {
+  font-size: var(--text-xl);
+}
+
+.text-2xl {
+  font-size: var(--text-2xl);
+}
+
+.text-3xl {
+  font-size: var(--text-3xl);
+}
+
+.text-4xl {
+  font-size: var(--text-4xl);
+}
+
+.text-5xl {
+  font-size: var(--text-5xl);
+}
+
+.text-6xl {
+  font-size: var(--text-6xl);
+}
+
+.text-7xl {
+  font-size: var(--text-7xl);
+}
+
+.text-8xl {
+  font-size: var(--text-8xl);
+}
+
+.text-9xl {
+  font-size: var(--text-9xl);
+}
+
+/* ==========================================================================
+   FONT FAMILY UTILITIES
+   ========================================================================== */
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   FONT WEIGHT UTILITIES
+   ========================================================================== */
+
+.font-thin {
+  font-weight: 100;
+}
+
+.font-extralight {
+  font-weight: 200;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+.font-black {
+  font-weight: 900;
+}
+
+/* ==========================================================================
+   LINE HEIGHT UTILITIES
+   ========================================================================== */
+
+.line-height-tighter {
+  line-height: var(--line-height-tighter);
+}
+
+.line-height-tight {
+  line-height: var(--line-height-tight);
+}
+
+.line-height-normal {
+  line-height: var(--line-height-normal);
+}
+
+/* ==========================================================================
+   TEXT COLOR UTILITIES
+   ========================================================================== */
+
+#layout .text-color-default {
+  color: var(--text-default);
+}
+
+#layout .text-color-lighter {
+  color: var(--text-muted);
+}
+
+#layout .text-color-accent {
+  color: var(--text-accent);
+}
+
+#layout .text-color-neg {
+  color: var(--bg-page);
+}
+
+/* ==========================================================================
+   LETTER SPACING UTILITIES
+   ========================================================================== */
+
+.tracking-tighter {
+  letter-spacing: var(--tracking-tighter);
+}
+
+.tracking-tight {
+  letter-spacing: var(--tracking-tight);
+}
+
+.tracking-normal {
+  letter-spacing: var(--tracking-normal);
+}
+
+.tracking-wide {
+  letter-spacing: var(--tracking-wide);
+}
+
+.tracking-wider {
+  letter-spacing: var(--tracking-wider);
+}
+
+.tracking-widest {
+  letter-spacing: var(--tracking-widest);
+}
+
+/* ==========================================================================
+   TEXT TRANSFORM UTILITIES
+   ========================================================================== */
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+/* ==========================================================================
+   SEMANTIC TYPOGRAPHY CLASSES
+   ========================================================================== */
+
+/* Headings Reset */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  display: block;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+/* Base Heading Styles */
+.type-heading,
+h1,
+.type-headline-1,
+h2,
+.type-headline-2,
+h3,
+.type-headline-3,
+h4,
+.type-headline-4 {
+  color: var(--text-default);
+  font-weight: var(--sans-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
+  font-family: var(--font-sans);
+}
+
+/* Type: Heading */
+.type-heading {
+  font-family: var(--font-serif);
+  font-size: var(--text-6xl);
+  font-weight: 400;
+  line-height: var(--line-height-tighter);
+  color: var(--text-default);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Type: Headline 1 */
+h1,
+.type-headline-1 {
+  font-size: var(--text-5xl);
+}
+
+/* Type: Headline 2 */
+h2,
+.type-headline-2 {
+  font-size: var(--text-4xl);
+}
+
+/* Type: Headline 3 */
+h3,
+.type-headline-3 {
+  font-size: var(--text-2xl);
+}
+
+/* Type: Headline 4 */
+h4,
+.type-headline-4 {
+  font-size: var(--text-lg);
+}
+
+/* Type: Headline Small */
+.type-headline-small {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--serif-weight-regular);
+  text-transform: uppercase;
+  line-height: var(--line-height-tight);
+  color: var(--text-default);
+  letter-spacing: var(--tracking-wider);
+}
+
+/* Type: Caption */
+.type-caption {
+  font-size: var(--text-3xl);
+  color: var(--text-default);
+  line-height: var(--line-height-tight);
+  font-weight: var(--serif-weight-regular);
+  font-family: var(--font-serif);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Type: Body */
+p,
+.type-body {
+  font-size: var(--text-lg);
+  line-height: var(--line-height-normal);
+  color: var(--text-default);
+  font-family: var(--font-serif);
+  letter-spacing: var(--tracking-nomrmal);
+  max-width: 70ch;
+}
+
+/* Type: Body Small */
+.type-body-sm {
+  font-size: var(--text-sm);
+  line-height: var(--line-height-normal);
+  color: var(--text-default);
+  font-family: var(--font-serif);
+}
+
+/* Type: Information */
+.type-information {
+  font-size: var(--text-xs);
+  line-height: var(--line-height-tighter);
+  color: var(--text-default);
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+}
+
+/* ==========================================================================
+   TAG STYLES
+   ========================================================================== */
+
+.post-taxonomy-tag {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: var(--bg-tag);
+  letter-spacing: var(--tracking-wider);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--sans-weight-regular);
+  line-height: var(--line-height-wider);
+  letter-spacing: var(--tracking-wider);
+}
+
+.post-tags a.post-taxonomy-tag,
+a.post-taxonomy-tag {
+  color: var(--text-muted);
+}
+
+.post-taxonomy-tag:hover {
+  text-decoration: none;
+  background-color: var(--bg-tag-hover);
+}
+
+/* ==========================================================================
+   ELEMENT-SPECIFIC STYLES
+   ========================================================================== */
+
+code {
+  font-family: var(--font-mono);
+  color: var(--text-default);
+}
+
+.tag-header,
+.post-header {
+  white-space: nowrap;
+  overflow: auto;
+  grid-column: 1/-1;
+}
+
+figcaption {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+blockquote,
+blockquote > p {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  color: var(--text-default);
+  line-height: var(--line-height-tight);
+}
+
+blockquote {
+  width: 66.67%;
+  margin-top: var(--spacing-32);
+  margin-bottom: var(--spacing-32);
+}
+
+.section-headline {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--bg-section-headline);
+  color: var(--brand-on-primary);
+  display: inline-block;
+}
+
+/* ==========================================================================
+   BRAND & MENU TYPOGRAPHY
+   ========================================================================== */
+
+.brand {
+  font-size: var(--text-2xl);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-bold);
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;
+  background: transparent;
+  text-decoration: none;
+  color: var(--text-default);
+}
+
+a.menu-link {
+  font-size: var(--text-xl);
+  font-weight: var(--sans-weight-bold);
+  display: block;
+}
+
+#menu .menu-link.active::after,
+#menu .menu-link:hover::after,
+#menu .menu-link.active:hover::after {
+  margin-left: 0.25rem;
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-regular);
+  transition: all 0.3s ease;
+}
+
+#menu .menu-start .menu-link::after,
+#menu .menu-start .menu-link.active::after,
+#menu .menu-start .menu-link:hover::after {
+  content: "~";
+}
+
+#menu .menu-tag .menu-link::after,
+#menu .menu-tag .menu-link.active::after,
+#menu .menu-tag .menu-link:hover::after {
+  content: "/";
+  line-height: 0;
+}
+
+#menu .menu-link.active::after {
+  color: var(--text-default);
+}
+
+#menu .menu-link:hover::after {
+  color: var(--text-link-hover);
+}
+
+#layout #menu .menu-tag .menu-link.active:hover::after {
+  color: var(--text-link-hover);
+  margin-left: 0.25rem;
+}
+
+#menu .menu-link::after,
+#menu ul.menu-list:hover .menu-link.active::after {
+  margin-left: 0rem;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  #menu .menu-tag .menu-link:hover::after {
+    content: "";
+    margin-left: 0rem;
+    color: var(--text-default);
+  }
+}
+
+/* ==========================================================================
+   CONTENT-SPECIFIC TYPOGRAPHY
+   ========================================================================== */
+
+.content :is(h1, h2, h3, h4, h5, h6):not(.type-headline-1):not(.type-caption):not(.type-headline-4) {
+  margin-bottom: var(--spacing-8);
+}
+
+.content:is(.post, .page) p {
+  margin-bottom: var(--spacing-32);
+}
+
+/* ==========================================================================
+   HYPERLINKS
+   ========================================================================== */
+
+a {
+  color: var(--text-default);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+body a:hover,
+body a:focus,
+body a:active {
+  color: var(--text-link-hover);
+}
+
+a:visited,
+a.menu-heading:hover {
+  text-decoration: none;
+  color: var(--text-default);
+}
+
+/* ==========================================================================
+   RESPONSIVE TYPOGRAPHY
+   ========================================================================== */
+
+/* min 768px Small */
+@media (max-width: 63.9375em) {
+  .content:is(.startpage, .list) article:nth-of-type(n + 1) h2.text-2xl {
+    font-size: var(--text-xl);
+  }
+
+  #menu .menu-start .menu-link.active::after,
+  #menu .menu-tag .menu-link.active::after,
+  #menu .menu-tag .menu-link:hover::after,
+  #menu .menu-tag .menu-link::after {
+    content: "";
+  }
+}
+
+/* X-Small */
+@media (max-width: 47.9375em) {
+  .type-heading {
+    font-size: var(--text-5xl);
+  }
+
+  h1,
+  .type-headline-1 {
+    font-size: var(--text-4xl);
+  }
+
+  h2,
+  .type-headline-2 {
+    font-size: var(--text-2xl);
+  }
+
+  h3,
+  .type-headline-3 {
+    font-size: var(--text-2xl);
+  }
+
+  .type-caption {
+    font-size: var(--text-2xl);
+  }
+
+  blockquote {
+    width: 100%;
+  }
+}

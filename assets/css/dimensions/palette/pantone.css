@@ -1,0 +1,38 @@
+/* ============================================================================
+   PALETTE: Pantone
+
+   Special Pantone-style palette with grayscale images and screen blend mode.
+   Uses accent colors more prominently throughout the design.
+   ============================================================================ */
+
+:root[data-palette="pantone"] {
+  /* Image effects */
+  --image-grayscale: 100%;
+  --image-blend-mode: screen;
+  --image-background: var(--iris-12);
+
+  /* Primary iris color mapping */
+  --text-accent: var(--iris-11);
+  --brand-primary: var(--iris-9);
+
+  --text-default: var(--iris-12);
+  --text-muted: var(--iris-10);
+  --text-nav: var(--iris-12);
+  --text-link-hover: var(--iris-11);
+
+  --bg-page: var(--iris-2);
+  --bg-tag: var(--iris-4);
+  --bg-tag-hover: var(--iris-5);
+  --bg-surface: var(--iris-4);
+  --bg-nav: var(--iris-5);
+
+  --border-subtle: var(--iris-5);
+
+  --component-form-bg: var(--iris-3);
+  --component-form-placeholder: var(--iris-4);
+}
+
+/* Dark mode + Pantone overrides */
+:root[data-mode="dark"][data-palette="pantone"] {
+  --image-background: var(--iris-7);
+}

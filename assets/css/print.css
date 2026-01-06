@@ -46,7 +46,7 @@
 
     .post-taxonomy-tag {
         background-color: white;
-        border: 1pt solid var(--text-color-tag);
+        border: 1pt solid var(--text-muted);
     }
 }
 

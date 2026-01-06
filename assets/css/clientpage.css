@@ -70,7 +70,7 @@
 /* Download box on client page */
 .download-box {
     padding: 1rem 1.5rem;
-    background-color: var(--box-background);
+    background-color: var(--bg-surface);
 }
 
 .download-box>* {
@@ -78,12 +78,12 @@
 }
 
 .download-box:hover>div {
-    color: var(--text-color-hover);
+    color: var(--text-link-hover);
     transition: color 0.3s ease;
 }
 
 .download-box:hover>.download-item {
-    color: var(--text-color-hover);
+    color: var(--text-link-hover);
     transition: color 0.3s ease;
 }
 

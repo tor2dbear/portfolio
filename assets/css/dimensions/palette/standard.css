@@ -1,0 +1,16 @@
+/* ============================================================================
+   PALETTE: Standard
+
+   Standard color palette with normal image rendering.
+   This is the default palette - no special adjustments.
+   ============================================================================ */
+
+:root[data-palette="standard"] {
+  /* Image effects */
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
+
+  /* Primary iris color mapping */
+  --text-accent: var(--iris-11);
+  --brand-primary: var(--iris-9);
+}

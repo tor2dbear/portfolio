@@ -1,0 +1,23 @@
+/* ============================================================================
+   COMPONENT TOKENS - Edge cases and component-specific overrides
+
+   These are exceptions to the semantic rules above.
+   Use sparingly - most components should use semantic tokens.
+   Only create component tokens when a component has unique theming needs.
+   ============================================================================ */
+
+:root {
+  /* ==========================================================================
+     CANONICAL COMPONENT TOKENS
+     ========================================================================== */
+
+  --component-form-bg: var(--gray-2);
+  --component-form-border: transparent;
+  --component-form-placeholder: var(--text-muted);
+
+  --component-newsletter-bg: var(--iris-12);
+  --component-newsletter-text: var(--iris-2);
+  --component-newsletter-illustration-bg: var(--iris-3);
+  --component-newsletter-button-bg: var(--iris-4);
+  --component-newsletter-button-text: var(--iris-11);
+}

@@ -295,6 +295,12 @@ attach_letter: "/path/to/letter.pdf"
 #layout.clientpage #main { /* ... */ }
 ```
 
+### Token System (Current)
+- Canonical tokens are defined in `assets/css/tokens/semantic.css`.
+- Component exceptions live in `assets/css/tokens/components.css`.
+- Legacy tokens and `assets/css/dimensions/common.css` have been removed.
+- Mode/palette overrides live in `assets/css/dimensions/mode/*` and `assets/css/dimensions/palette/*` and should only override canonical tokens.
+
 ---
 
 ## Testing

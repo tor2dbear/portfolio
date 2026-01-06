@@ -1,0 +1,51 @@
+/* ============================================================================
+   UTILITIES: DISPLAY & VISIBILITY
+
+   Visibility and display utilities from atoms.css
+   - Responsive visibility (.hide-above-sm, .hide-on-xs)
+   - Context-based visibility (.hide-on-client, .show-on-client, etc.)
+   ============================================================================ */
+
+/* ==========================================================================
+   RESPONSIVE VISIBILITY
+   ========================================================================== */
+
+.hide-above-sm {
+  display: none;
+}
+
+/* min 768px Small */
+@media (max-width: 63.9375em) {
+  .hide-above-sm {
+    display: block;
+  }
+}
+
+/* X-Small */
+@media (max-width: 47.9375em) {
+  .hide-on-xs {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   CONTEXT-BASED VISIBILITY
+   ========================================================================== */
+
+/* Client page */
+#layout.clientpage .hide-on-client {
+  display: none;
+}
+
+#layout:not(.clientpage) .show-on-client {
+  display: none;
+}
+
+/* Employer page */
+#layout.employerpage .hide-on-employer {
+  display: none;
+}
+
+#layout:not(.employerpage) .show-on-employer {
+  display: none;
+}
