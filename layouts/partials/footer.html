@@ -1,6 +1,56 @@
 </main>
-<footer>{{ partial "copyright.html" . }}</footer>
-</div>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-column">
+        <h3 class="footer-heading">{{ i18n "navigation" }}</h3>
+        <ul class="footer-menu">
+          <li><a href="{{ "/" | relLangURL }}">{{ i18n "home" }}</a></li>
+          <li><a href="{{ "/#about" | relLangURL }}">{{ i18n "about" }}</a></li>
+          <li><a href="{{ "/#contact" | relLangURL }}">{{ i18n "contact" }}</a></li>
+        </ul>
+      </div>
 
-    
-    
+      <div class="footer-column">
+        <h3 class="footer-heading">{{ i18n "categories" }}</h3>
+        <ul class="footer-menu">
+          <li><a href="{{ "/tags/" | relLangURL }}">{{ i18n "all_works" }}</a></li>
+          {{ $tags := slice }}
+          {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+            {{ $tags = $tags | append (dict "name" $name "count" (len $taxonomy)) }}
+          {{ end }}
+          {{ range first 8 (sort $tags "name" "asc") }}
+            {{ with $.Site.GetPage (printf "/tags/%s" .name) }}
+              <li><a href="{{ .RelPermalink }}">{{ lower .Title }}</a></li>
+            {{ end }}
+          {{ end }}
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3 class="footer-heading">{{ i18n "connect" }}</h3>
+        <ul class="footer-menu">
+          {{ range .Site.Menus.social }}
+            <li>
+              <a href="{{ .URL }}"
+                 {{ if strings.HasPrefix .URL "http" }}target="_blank" rel="noopener noreferrer"{{ end }}
+                 aria-label="{{ .Name }}{{- if strings.HasPrefix .URL "http" }} (opens in new window){{ end -}}">
+                {{ .Name }}
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3 class="footer-heading">{{ i18n "info" }}</h3>
+        <ul class="footer-menu">
+          <li><a href="{{ "/newsletter/" | relLangURL }}">Newsletter</a></li>
+          <li><a href="{{ "/rss.xml" | relLangURL }}">RSS</a></li>
+        </ul>
+        {{ partial "copyright.html" . }}
+      </div>
+    </div>
+  </div>
+</footer>
+</div>
