@@ -25,6 +25,9 @@ Större redesign som flyttar navigeringen från sidomeny till header och footer,
 - Hamburger styles borttagna; `assets/js/ui.js` är no-op om meny saknas
 - Footer uppdaterad till 4-kolumns layout med navigation, kategorier, social, info
 
+**Aktiv branch:**
+- `refactor/header-footer-redesign-a3f1`
+
 **Kvar längre fram:**
 - Startsida ombyggnad enligt plan (Fas 5)
 

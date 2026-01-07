@@ -1,9 +1,34 @@
+{{ $roles := slice "Multidisciplinär designer" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
+{{ if eq .Site.Language.Lang "en" }}
+  {{ $roles = slice "Multidisciplinary designer" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
+{{ end }}
+
+
 <div class="grid-1-5 startpage-heading">
-  <h1 class="type-heading mb-24">
-    <span class="text-color-accent">Torbjörn Hedberg</span> {{ i18n "startpage" }}.
+  <h1 class="type-heading hero-title mb-24">
+    {{ i18n "hero_intro_lead" }}
+    <span
+      class="role-swapper"
+      data-js="role-swapper"
+      data-roles="{{ $roles | jsonify }}"
+      data-suffix="."
+      aria-live="polite"
+      aria-atomic="true"
+      ><span class="role-swapper__text" data-js="role-swapper-text"
+        >{{ index $roles 0 }}.</span
+      ></span
+    >
+    <br />
+    {{ i18n "hero_intro_middle" }}
+    <span class="hero-emphasis">{{ i18n "hero_emphasis_design" }}</span>,
+    <span class="hero-emphasis">{{ i18n "hero_emphasis_business" }}</span>
+    {{ i18n "hero_emphasis_and" }}
+    <span class="hero-emphasis">{{ i18n "hero_emphasis_tech" }}</span>.
   </h1>
-  <button class="icon text-lg font-sans font-medium"
-  onclick="window.location.href = '{{ "contact" | absLangURL }}';">
-  {{ i18n "get_in_touch" }}
+  <button
+    class="icon text-lg font-sans font-medium"
+    onclick="window.location.href = '{{ "contact" | absLangURL }}';"
+  >
+    {{ i18n "get_in_touch" }}
   </button>
 </div>

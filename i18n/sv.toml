@@ -1,6 +1,24 @@
 [startpage]
 other = "är en multidisiplinär designer, verksam i Göteborg"
 
+[hero_intro_lead]
+other = "Hej på dig. Jag är en"
+
+[hero_intro_middle]
+other = "I över 10 år rört mig mellan strategi och hantverk. Jag har hjälpt verksamheter att navigera från koncept till färdig produkt genom att förena"
+
+[hero_emphasis_design]
+other = "design"
+
+[hero_emphasis_business]
+other = "affärsnytta"
+
+[hero_emphasis_and]
+other = "och"
+
+[hero_emphasis_tech]
+other = "teknik"
+
 [contact_header_start]
 other = "Om du har några frågor eller förslag på hur vi kan sammarbeta, vänligen"
 
