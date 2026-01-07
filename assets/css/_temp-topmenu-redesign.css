@@ -1,0 +1,115 @@
+/* ============================================================================
+   TOPMENU REDESIGN - Temporary overrides
+   ============================================================================ */
+
+/* Container with max-width */
+.top-menu__container {
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-24);
+  width: 100%;
+  max-width: var(--content-max-width);
+  box-sizing: border-box;
+}
+
+/* Navigation list with proper spacing */
+.top-menu__nav {
+  display: flex;
+  align-items: center;
+}
+
+.top-menu__list {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.top-menu__item {
+  display: flex;
+  align-items: center;
+}
+
+/* Navigation links */
+.top-menu__item--nav .top-menu__link {
+  padding: var(--spacing-8) var(--spacing-12);
+  color: var(--text-default);
+  text-decoration: none;
+  border-radius: var(--spacing-8);
+  transition: background 0.2s ease;
+  font-size: var(--text-sm);
+}
+
+.top-menu__item--nav .top-menu__link:hover {
+  background: var(--state-on-light-hover);
+}
+
+.top-menu__item--nav .top-menu__link.active {
+  background: var(--brand-container);
+  color: var(--brand-on-container);
+  font-weight: var(--sans-weight-bold);
+}
+
+/* Contact button */
+.top-menu__item--contact .top-menu__link--button {
+  padding: var(--spacing-8) var(--spacing-16);
+  background: var(--text-default);
+  color: var(--bg-page);
+  text-decoration: none;
+  border: 0;
+  font-weight: var(--sans-weight-bold);
+  transition: background 0.2s ease;
+  font-size: var(--text-sm);
+}
+
+.top-menu__item--contact .top-menu__link--button:hover {
+  background: color-mix(in srgb, var(--text-default) 85%, var(--bg-page));
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .top-menu__container {
+    gap: var(--spacing-16);
+  }
+
+  .top-menu__list {
+    gap: var(--spacing-8);
+  }
+
+  .top-menu__item--nav .top-menu__link {
+    padding: calc(var(--spacing-4) + var(--spacing-2))
+      calc(var(--spacing-8) + var(--spacing-2));
+    font-size: var(--text-sm);
+  }
+
+  .top-menu__item--contact .top-menu__link--button {
+    padding: calc(var(--spacing-4) + var(--spacing-2)) var(--spacing-12);
+    font-size: var(--text-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .top-menu__container {
+    flex-wrap: wrap;
+  }
+
+  .top-menu__list {
+    gap: calc(var(--spacing-4) + var(--spacing-2));
+  }
+
+  .top-menu__item--contact {
+    order: 10;
+    flex: 1 1 100%;
+  }
+
+  .top-menu__item--contact .top-menu__link--button {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}

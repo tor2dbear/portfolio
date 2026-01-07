@@ -6,6 +6,10 @@
         content  = document.getElementById('main'),
         body = document.body;
 
+    if (!layout || !menu || !content) {
+        return;
+    }
+
     function toggleClass(element, className) {
         var classes = element.className.split(/\s+/),
             length = classes.length,

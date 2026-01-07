@@ -1,9 +1,16 @@
 var toggle = document.querySelector('[data-js="palette-toggle"]');
 var delay = document.body;
 
-var storedPalette = localStorage.getItem("palette") || "standard";
-if (storedPalette)
+var storedPalette =
+  localStorage.getItem("theme-palette") ||
+  localStorage.getItem("palette") ||
+  "standard";
+if (storedPalette) {
   document.documentElement.setAttribute("data-palette", storedPalette);
+  if (!localStorage.getItem("theme-palette")) {
+    localStorage.setItem("theme-palette", storedPalette);
+  }
+}
 
 if (toggle) {
   toggle.onclick = function () {
@@ -14,11 +21,12 @@ if (toggle) {
       delay.classList.remove("darkmodeTransition");
     }, 1000);
 
-  if (currentPalette === "standard") {
-    targetPalette = "pantone";
-  }
+    if (currentPalette === "standard") {
+      targetPalette = "pantone";
+    }
 
     document.documentElement.setAttribute("data-palette", targetPalette);
+    localStorage.setItem("theme-palette", targetPalette);
     localStorage.setItem("palette", targetPalette);
   };
 }

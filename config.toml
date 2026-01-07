@@ -66,11 +66,12 @@ DefaultContentLanguage = "en"
       name = "about"
       weight = 3
       identifier = "about"
-      url = "/about/"
+      url = "/#about"
     [[languages.en.menu.top]]
       name = "contact"
       weight = 4
-      url = "/contact/"
+      identifier = "contact"
+      url = "/#contact"
 
   [languages.sv]
     languageName = "Svenska"
@@ -93,11 +94,12 @@ DefaultContentLanguage = "en"
       name = "om"
       weight = 3
       identifier = "about"
-      url = "/om/"
+      url = "/#about"
     [[languages.sv.menu.top]]
       name = "kontakt"
       weight = 4
-      url = "/kontakt/"
+      identifier = "contact"
+      url = "/#contact"
 
 [permalinks]
   works = '/:slug/:title/'

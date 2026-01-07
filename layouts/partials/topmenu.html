@@ -5,13 +5,18 @@
       <ul class="top-menu__list">
         {{- $urltop := .RelPermalink -}}
         {{- range .Site.Menus.top -}}
+          {{- $nameLower := lower .Name -}}
+          {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}
+          {{- if not $isContact -}}
+            {{- $linkURL := .URL | relLangURL -}}
           <li class="top-menu__item top-menu__item--nav">
             <a
-              class="top-menu__link {{ if eq $urltop .URL }}active{{ end }}"
+              class="top-menu__link {{ if eq $urltop $linkURL }}active{{ end }}"
               title="{{ .Name }}"
-              href="{{ .URL | relLangURL }}"
+              href="{{ $linkURL }}"
             >{{ .Name }}</a>
           </li>
+          {{- end -}}
         {{- end -}}
 
         {{- /* Contact button */ -}}
@@ -22,14 +27,14 @@
           >{{ i18n "contact_me" }}</a>
         </li>
 
-        {{- /* Language dropdown */ -}}
-        <li class="top-menu__item top-menu__item--language">
-          {{ partial "language-dropdown.html" . }}
-        </li>
-
         {{- /* Theme dropdown (mode + palette) */ -}}
         <li class="top-menu__item top-menu__item--theme">
           {{ partial "theme-dropdown.html" . }}
+        </li>
+
+        {{- /* Language dropdown */ -}}
+        <li class="top-menu__item top-menu__item--language">
+          {{ partial "language-dropdown.html" . }}
         </li>
       </ul>
     </nav>

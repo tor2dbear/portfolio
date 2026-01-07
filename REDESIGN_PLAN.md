@@ -11,6 +11,25 @@ Större redesign som flyttar navigeringen från sidomeny till header och footer,
 
 ---
 
+## Status (uppdaterad)
+**Genomfört i kod:**
+- Theme dropdown: mobil bottom sheet + overlay + handle (CSS)
+- Theme icon: laddas via SVG fetch och sätts till 24px (darkmode.js)
+- Theme dropdown items: inga borders, endast hover-bakgrund
+- Contact button hover: ingen padding-jump på hover (kontaktknappen i topmeny)
+- Language dropdown: icon-only knapp (lang-icon), ingen visning av aktivt språk i knappen
+- Language dropdown list: inga flaggor/check, radiomarkering visar valt språk
+- Sidemenu borttagen ur layout + layout-grid förenklad (CSS)
+- Sidemenu/tags_menu/theme arkiverade i `layouts/partials/_deprecated/`
+- `assets/js/theme.js` arkiverad i `assets/js/_deprecated/` och ej längre laddad
+- Hamburger styles borttagna; `assets/js/ui.js` är no-op om meny saknas
+- Footer uppdaterad till 4-kolumns layout med navigation, kategorier, social, info
+
+**Kvar längre fram:**
+- Startsida ombyggnad enligt plan (Fas 5)
+
+---
+
 ## 1. HEADER NAVIGATION - STÖRRE OMBYGGNAD
 
 ### 1.1 Ta bort sidomeny
@@ -32,21 +51,22 @@ Större redesign som flyttar navigeringen från sidomeny till header och footer,
 
 **Ny struktur (vänster till höger):**
 ```
-[Logo] [Nav Links: Home | About | Contact Button] [Theme Dropdown | Language Dropdown]
+[Logo] [Nav Links: About | Contact Button] [Theme Dropdown | Language Dropdown]
 ```
+**Obs:** Loggan/brand länkar till startsidan (home)
 
 **Komponenter att lägga till/modifiera:**
 
 #### A. Navigation Links
-- Home (ny länk till `/`)
 - About (flyttad från menu.top, vanlig länk)
 - Contact (flyttad från menu.top, **styled som button**)
+**Obs:** Home visas i footer (inte i headern)
 
 #### B. Contact Button Styling
 **Ny CSS-klass:** `.contact-button`
-- Primary färg från semantic tokens
-- Padding och border-radius
-- Hover/focus states
+- Mörk bakgrund + vit text (matchar tidigare CTA-knapp)
+- Ingen padding-jump på hover (endast färg/outline)
+- Tydlig focus state
 - Responsiv sizing
 
 #### C. Kombinerad Theme Dropdown
@@ -136,6 +156,7 @@ document.documentElement.setAttribute('data-palette', palette);
 5. Event listeners för palette buttons
 6. Panel toggle logic (öppna/stänga)
 7. System preference listener (för mode=system)
+8. Theme-ikon laddas via SVG och skalas till 24px
 
 #### D. Language Dropdown (NY KOMPONENT)
 **Ny fil:** [layouts/partials/language-dropdown.html](layouts/partials/language-dropdown.html)
@@ -148,7 +169,6 @@ document.documentElement.setAttribute('data-palette', palette);
 <div class="language-dropdown">
   <button class="language-toggle" aria-label="Change language" aria-expanded="false">
     <svg class="language-icon"><!-- Globe/language icon --></svg>
-    <span class="current-language">{{ .Language.Lang | upper }}</span>
   </button>
 
   <div class="language-panel" hidden>
@@ -157,7 +177,7 @@ document.documentElement.setAttribute('data-palette', palette);
        class="language-option"
        data-lang="{{ .Language.Lang }}"
        aria-current="page">
-      <svg class="flag-{{ .Language.Lang }}"><!-- Flag icon --></svg>
+      <span class="language-radio" aria-hidden="true"></span>
       {{ .Language.LanguageName }}
     </a>
 
@@ -167,7 +187,7 @@ document.documentElement.setAttribute('data-palette', palette);
          class="language-option"
          data-lang="{{ .Language.Lang }}"
          hreflang="{{ .Language.Lang }}">
-        <svg class="flag-{{ .Language.Lang }}"><!-- Flag icon --></svg>
+        <span class="language-radio" aria-hidden="true"></span>
         {{ .Language.LanguageName }}
       </a>
     {{ end }}
@@ -180,7 +200,7 @@ document.documentElement.setAttribute('data-palette', palette);
              class="language-option language-option--fallback"
              data-lang="{{ .Lang }}"
              hreflang="{{ .Lang }}">
-            <svg class="flag-{{ .Lang }}"><!-- Flag icon --></svg>
+            <span class="language-radio" aria-hidden="true"></span>
             {{ .LanguageName }}
             <span class="language-note">({{ i18n "to_homepage" }})</span>
           </a>
@@ -201,6 +221,7 @@ document.documentElement.setAttribute('data-palette', palette);
 - Samma dropdown-stil som theme switcher för konsistens
 - [assets/css/components/language-dropdown.css](assets/css/components/language-dropdown.css)
 - `.language-option--fallback` - visuell indikator för fallback länkar
+- `.language-radio` - radiomarkering för valt språk
 
 **JavaScript:**
 - Ny fil: [assets/js/language-dropdown.js](assets/js/language-dropdown.js)
@@ -224,14 +245,13 @@ document.documentElement.setAttribute('data-palette', palette);
 **KONKRET 320px Layout-strategi:**
 ```
 Row 1: [Logo (flex-grow)] [Theme Icon] [Language Icon]
-Row 2: [Home Icon] [About Icon] [Contact Button (full-width eller wrappat)]
+Row 2: [About Icon] [Contact Button (full-width eller wrappat)]
 ```
 
 **Flexbox order för prioritering:**
 - Logo: order: 1
 - Theme dropdown: order: 5
 - Language dropdown: order: 6
-- Home: order: 2
 - About: order: 3
 - Contact: order: 4
 
@@ -298,8 +318,7 @@ Row 2: [Home Icon] [About Icon] [Contact Button (full-width eller wrappat)]
 ```
 
 **UX-beslut för startsidan:**
-- "Home" länken: Dölj med CSS när `body.home` class finns
-- Detta sparar plats på den sida där den är minst användbar
+- Ingen Home-länk i header (logo fungerar som Home)
 
 **Filer att uppdatera:**
 - [assets/css/components/topmenu.css](assets/css/components/topmenu.css) (eller inkluderat i style.css)
@@ -924,7 +943,7 @@ other = "till startsidan"
 ### 8.1 Visuell/funktionell testning
 
 **Desktop (>1024px):**
-- [ ] Header layout: Logo, nav links, contact button, theme dropdown, language dropdown
+- [ ] Header layout: Logo, nav links (About + Contact), theme dropdown, language dropdown
 - [ ] All navigation fungerar
 - [ ] Theme dropdown: mode + palette sektioner
 - [ ] Language dropdown: switch mellan EN/SV
@@ -934,12 +953,12 @@ other = "till startsidan"
 - [ ] Smooth scroll till ankare
 
 **Tablet (768-1024px):**
-- [ ] Header: Kompaktare layout, allt synligt
+- [ ] Header: Kompaktare layout, allt synligt (About + Contact + dropdowns)
 - [ ] Footer: Grid anpassar sig
 - [ ] Startsida sektioner: Läsbar layout
 
 **Mobile (320-768px):**
-- [ ] Header: INGEN hamburgare, allt får plats (ev. wrapped/stacked)
+- [ ] Header: INGEN hamburgare, allt får plats (ev. wrapped/stacked, utan Home-länk)
 - [ ] Dropdowns: Touch-friendly, stängs korrekt
 - [ ] Footer: 2 kolumner eller 1 kolumn på minsta skärmar
 - [ ] Startsida: Sections staplas korrekt
@@ -1039,7 +1058,7 @@ other = "till startsidan"
 
 ### Fas 2: Header navigation (KRITISK)
 5. **Uppdatera topmenu.html:**
-   - Lägg till Home link
+   - Behåll bara About + Contact (ingen Home i headern)
    - Modifiera About/Contact länkar
    - Skapa Contact button styling
    - Bygg kombinerad theme dropdown (mode + palette)
@@ -1054,7 +1073,11 @@ other = "till startsidan"
    - **ARKIVERA** `assets/js/theme.js` - flytta logik till darkmode.js
    - Skapa `assets/js/language-dropdown.js`
 
-### Fas 3: Ta bort sidomeny
+**Statusnotering (Fas 2):**
+- Theme dropdown + language dropdown är implementerade och stylade.
+- `darkmode.js` uppdaterad för ikonhantering.
+
+### Fas 3: Ta bort sidomeny ✅ KLAR
 8. **Modifiera header.html:**
    - Ta bort `{{ partial "sidemenu.html" . }}`
    - Ta bort conditional logic för client pages
@@ -1068,7 +1091,7 @@ other = "till startsidan"
     - Flytta sidemenu.html, tags_menu.html, theme.html till `_deprecated/`
     - Flytta theme.js till `_deprecated/` (logik nu i darkmode.js)
 
-### Fas 4: Footer
+### Fas 4: Footer ✅ KLAR
 11. **Bygga ny footer.html:**
     - 4-kolumns layout
     - Migrera innehåll från sidomeny (tags max 8, sorterade alfabetiskt, social med aria-labels)

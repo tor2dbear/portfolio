@@ -7,12 +7,13 @@
 (function() {
   'use strict';
 
-  // Theme dropdown selectors
-  const themeToggle = document.querySelector('[data-js="theme-toggle"]');
-  const themePanel = document.querySelector('[data-js="theme-panel"]');
-  const themeIcon = document.querySelector('[data-js="theme-icon"]');
-  const modeOptions = document.querySelectorAll('[data-js="mode-option"]');
-  const paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
+  // Theme dropdown selectors (will be initialized after DOM load)
+  let themeToggle;
+  let themePanel;
+  let themeOverlay;
+  let themeIcon;
+  let modeOptions;
+  let paletteOptions;
 
   // ==========================================================================
   // DROPDOWN TOGGLE
@@ -24,9 +25,11 @@
 
     if (isHidden) {
       themePanel.removeAttribute('hidden');
+      if (themeOverlay) themeOverlay.removeAttribute('hidden');
       themeToggle.setAttribute('aria-expanded', 'true');
     } else {
       themePanel.setAttribute('hidden', '');
+      if (themeOverlay) themeOverlay.setAttribute('hidden', '');
       themeToggle.setAttribute('aria-expanded', 'false');
     }
   }
@@ -34,27 +37,9 @@
   function closePanel() {
     if (themePanel && !themePanel.hasAttribute('hidden')) {
       themePanel.setAttribute('hidden', '');
+      if (themeOverlay) themeOverlay.setAttribute('hidden', '');
       themeToggle.setAttribute('aria-expanded', 'false');
     }
-  }
-
-  // Event listeners for dropdown
-  if (themeToggle && themePanel) {
-    themeToggle.addEventListener('click', togglePanel);
-
-    // Close on click outside
-    document.addEventListener('click', function(e) {
-      if (!themeToggle.contains(e.target) && !themePanel.contains(e.target)) {
-        closePanel();
-      }
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closePanel();
-      }
-    });
   }
 
   // ==========================================================================
@@ -139,9 +124,14 @@
     fetch(svgPath)
       .then(response => response.text())
       .then(svg => {
-        const svgElement = new DOMParser()
-          .parseFromString(svg, 'image/svg+xml')
-          .querySelector('svg');
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svg, 'image/svg+xml');
+        const svgElement = doc.documentElement;
+
+        // Set to 24px
+        svgElement.setAttribute('width', '24');
+        svgElement.setAttribute('height', '24');
+
         themeIcon.innerHTML = '';
         themeIcon.appendChild(svgElement);
       })
@@ -176,30 +166,18 @@
   });
 
   // ==========================================================================
-  // EVENT LISTENERS
-  // ==========================================================================
-
-  // Mode option listeners
-  modeOptions.forEach(option => {
-    option.addEventListener('click', function() {
-      const mode = this.getAttribute('data-mode');
-      setMode(mode);
-    });
-  });
-
-  // Palette option listeners
-  paletteOptions.forEach(option => {
-    option.addEventListener('click', function() {
-      const palette = this.getAttribute('data-palette');
-      setPalette(palette);
-    });
-  });
-
-  // ==========================================================================
   // INITIALIZATION
   // ==========================================================================
 
   document.addEventListener('DOMContentLoaded', function() {
+    // Initialize selectors
+    themeToggle = document.querySelector('[data-js="theme-toggle"]');
+    themePanel = document.querySelector('[data-js="theme-panel"]');
+    themeOverlay = document.querySelector('[data-js="theme-overlay"]');
+    themeIcon = document.querySelector('[data-js="theme-icon"]');
+    modeOptions = document.querySelectorAll('[data-js="mode-option"]');
+    paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
+
     // Load stored preferences or use defaults
     const storedMode = localStorage.getItem('theme-mode') || 'system';
     const storedPalette = localStorage.getItem('theme-palette') || 'standard';
@@ -211,6 +189,46 @@
     // Update UI to reflect current settings
     updateModeUI(storedMode);
     updatePaletteUI(storedPalette);
+
+    // Setup event listeners
+    if (themeToggle && themePanel) {
+      themeToggle.addEventListener('click', togglePanel);
+
+      // Close on overlay click
+      if (themeOverlay) {
+        themeOverlay.addEventListener('click', closePanel);
+      }
+
+      // Close on click outside
+      document.addEventListener('click', function(e) {
+        if (!themeToggle.contains(e.target) && !themePanel.contains(e.target)) {
+          closePanel();
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closePanel();
+        }
+      });
+    }
+
+    // Mode option listeners
+    modeOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const mode = this.getAttribute('data-mode');
+        setMode(mode);
+      });
+    });
+
+    // Palette option listeners
+    paletteOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const palette = this.getAttribute('data-palette');
+        setPalette(palette);
+      });
+    });
   });
 
   // Global function for backwards compatibility (if needed elsewhere)

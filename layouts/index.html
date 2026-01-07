@@ -1,19 +1,38 @@
 {{ partial "header.html" . }}
 
-{{ partial "startpage.html" . }}
+<div class="home-page">
+  <section id="hero" class="home-section hero-section">
+    {{ partial "startpage.html" . }}
+  </section>
 
+  <section id="works" class="home-section works-section">
+    <h2 class="section-heading type-headline-small">{{ i18n "featured_works" }}</h2>
+    <div class="works-grid">
+      {{ range first 6 (where (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) }}
+        {{ .Render "summary" }}
+      {{ end }}
+    </div>
+  </section>
 
-<div class="content startpage">
-  <div class="post-header mb-8">
-    <h2 class="type-headline-small">{{ i18n "Featured" }}</h2>
-  </div>
-  {{ range first 6 (where (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) }}
-    {{ .Render "summary" }}
-  {{ end }}
+  <section id="about" class="home-section about-section">
+    <h2 class="section-heading">{{ i18n "about_me" }}</h2>
+    <div class="about-content">
+      {{ $aboutShortcode := printf "{{< about_main_%s >}}" .Language.Lang }}
+      {{ .Page.RenderString $aboutShortcode }}
+    </div>
+  </section>
 
-</div>
-<div class="breakout">
-  {{ partial "subscribe.html" . }}
+  <section id="contact" class="home-section contact-section">
+    <h2 class="section-heading">{{ i18n "contact_me" }}</h2>
+    <div class="contact-content">
+      {{ .Page.RenderString "{{< contact_info >}}" }}
+      {{ .Page.RenderString "{{< contact_form >}}" }}
+    </div>
+  </section>
+
+  <section id="subscribe" class="home-section subscribe-section">
+    {{ partial "subscribe.html" . }}
+  </section>
 </div>
 
 {{ partial "footer.html" . }}

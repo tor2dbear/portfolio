@@ -1,19 +1,17 @@
 /**
  * Language Dropdown Toggle
- * Handles opening/closing of language selection panel
+ * Handles opening/closing the language selection panel
  */
 
 (function() {
   'use strict';
 
-  // Wait for DOM to be ready
   document.addEventListener('DOMContentLoaded', function() {
     const toggle = document.querySelector('.language-toggle');
     const panel = document.querySelector('.language-panel');
 
     if (!toggle || !panel) return;
 
-    // Toggle panel visibility
     function togglePanel(e) {
       e.stopPropagation();
       const isHidden = panel.hasAttribute('hidden');
@@ -27,40 +25,27 @@
       }
     }
 
-    // Close panel when clicking outside
-    function closePanel(e) {
-      if (!toggle.contains(e.target) && !panel.contains(e.target)) {
+    function closePanel() {
+      if (panel && !panel.hasAttribute('hidden')) {
         panel.setAttribute('hidden', '');
         toggle.setAttribute('aria-expanded', 'false');
       }
     }
 
-    // Close panel on Escape key
-    function handleEscape(e) {
-      if (e.key === 'Escape' && !panel.hasAttribute('hidden')) {
-        panel.setAttribute('hidden', '');
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.focus();
-      }
-    }
-
-    // Event listeners
+    // Toggle on click
     toggle.addEventListener('click', togglePanel);
-    document.addEventListener('click', closePanel);
-    document.addEventListener('keydown', handleEscape);
 
-    // Touch support for mobile
-    let touchStartY = 0;
+    // Close on click outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !panel.contains(e.target)) {
+        closePanel();
+      }
+    });
 
-    toggle.addEventListener('touchstart', function(e) {
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    toggle.addEventListener('touchend', function(e) {
-      const touchEndY = e.changedTouches[0].clientY;
-      // Only toggle if not scrolling
-      if (Math.abs(touchEndY - touchStartY) < 10) {
-        togglePanel(e);
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closePanel();
       }
     });
   });
