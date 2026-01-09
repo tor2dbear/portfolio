@@ -49,6 +49,8 @@ Documentation for AI assistants working with this project.
 │
 ├── layouts/             # Hugo templates
 ├── archetypes/          # Content templates
+├── docs/
+│   └── migrations/      # Migration/refactor plans and checklists
 └── config.toml          # Hugo configuration
 ```
 
@@ -234,12 +236,32 @@ Configured in `package.json` with lint-staged:
 
 ---
 
+## Documentation Workflow
+
+### Migration Plans
+- Store migration/refactor plans in `docs/migrations/` as standalone `.md` files.
+- Keep each plan actionable with phases, checklist, and rollback notes.
+
+### Feature Plans
+- Store new feature development plans in `docs/features/` as standalone `.md` files.
+- Include: overview, architecture decisions, implementation phases, success criteria, and rollback plan.
+- Keep plans actionable with clear phases and checklists.
+
+**General Guidelines**:
+- Update `AGENTS.md` when adding or changing documentation workflows.
+- Plans should be living documents - update as implementation progresses.
+
+---
+
 ## Git Workflow
 
 ### Branching
-- Branches should start with `claude/` for AI-assisted work
-- Format: `claude/<description>-<sessionId>`
-- Example: `claude/review-agent-docs-dmHfU`
+- **IMPORTANT**: Always create a new branch when starting significant work (features, redesigns, major refactors)
+- Branch format: `<type>/<slug>-<sessionId>`
+- Types: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
+- Example: `feature/header-footer-redesign-e47b`
+- Generate random session ID: `$(openssl rand -hex 2)` or manually
+- If you forget to branch before starting work and changes are unstaged, switch branches immediately with `git checkout -b <branch-name>` (changes follow you)
 
 ### Commits
 - Clear, descriptive commit messages
@@ -272,17 +294,46 @@ preamble: "Introduction text"
 body: "Main content"
 attach_cv: "/path/to/cv.pdf"
 attach_portfolio: "/path/to/portfolio.pdf"
+```yaml
+attach_cv: "/path/to/cv.pdf"
+attach_portfolio: "/path/to/portfolio.pdf"
 attach_letter: "/path/to/letter.pdf"
 ```
+
+### Images
+- **Responsive Images**: ALWAYS use the `headerimage` partial or Hugo's `render-image` hook.
+  - **Do NOT** use raw `<img>` tags for content images.
+  - The `headerimage` partial automates `srcset` generation and wraps the image in a `<picture>` tag.
+  - **Styles**: The `<picture>` wrapper is REQUIRED for certain CSS effects (e.g., `::after` pseudo-elements for backgrounds).
+  - **Border Radius**: Apply `border-radius` and `overflow: hidden` to the `<picture>` container (not the `<img>`). This ensures `::after` overlays and the image are clipped to the corners. Use `--radius-*` tokens.
+- **Header Images**: Use `.Params.header_image` in front matter and call `{{ partial "headerimage.html" . }}` in templates.
 
 ---
 
 ## CSS Architecture
 
-### Main Files
-- `assets/css/style.css` - Main stylesheet
-- `assets/css/atoms.css` - Utility classes
-- PostCSS for processing
+### File Layout
+- `assets/css/tokens/primitives.css` - Raw values (never overridden by themes)
+- `assets/css/tokens/semantic.css` - Canonical semantic tokens
+- `assets/css/tokens/components.css` - Component exceptions
+- `assets/css/tokens/legacy.css` - Legacy aliases (deprecated)
+- `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
+- `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `pantone`)
+- `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
+- `assets/css/utilities/typography.css` - Typography utilities
+- `assets/css/utilities/layout.css` - Layout utilities
+- `assets/css/utilities/grid.css` - 12-column subgrid utilities
+- `assets/css/utilities/display.css` - Visibility helpers
+- `assets/css/components/button.css` - Button component
+- `assets/css/components/footer.css` - Footer component
+- `assets/css/components/theme-dropdown.css` - Theme dropdown
+- `assets/css/components/language-dropdown.css` - Language dropdown
+- `assets/css/components/settings-dropdown.css` - Combined settings dropdown (xs only)
+- `assets/css/pages/home.css` - Homepage styles
+- `assets/css/pages/ui-library.css` - UI library page styles
+- `assets/css/style.css` - Remaining component styles
+- `assets/css/clientpage.css` - Client/employer page tweaks
+- `assets/css/print.css` - Print styles
 
 ### Client-specific CSS
 ```css
@@ -298,8 +349,58 @@ attach_letter: "/path/to/letter.pdf"
 ### Token System (Current)
 - Canonical tokens are defined in `assets/css/tokens/semantic.css`.
 - Component exceptions live in `assets/css/tokens/components.css`.
-- Legacy tokens and `assets/css/dimensions/common.css` have been removed.
 - Mode/palette overrides live in `assets/css/dimensions/mode/*` and `assets/css/dimensions/palette/*` and should only override canonical tokens.
+
+### CSS Load Order (head.html)
+1. tokens (primitives → semantic → components → legacy)
+2. dimensions (mode → palette → palette previews)
+3. utilities (typography → layout → grid → display)
+4. components (button → footer → theme-dropdown → language-dropdown → settings-dropdown)
+5. pages (home → ui-library → style → clientpage → print)
+
+### Breakpoints
+- Units: em-based, desktop-first with max-width queries.
+- Naming: xs, sm, md, lg, xl.
+- Values (base 16px):
+  - xs: 0-479px (max-width: 29.9375em)
+  - sm: 480-767px (max-width: 47.9375em)
+  - md: 768-1023px (max-width: 63.9375em)
+  - lg: 1024-1279px (max-width: 79.9375em)
+  - xl: 1280px+ (no max-width)
+- Comment convention: label each media block, e.g. `/* sm: <= 47.9375em */`.
+- Bottom sheet UI for theme/language dropdowns: sm and xs only.
+
+### Theming Dimensions (Current)
+- HTML data attributes drive theming:
+  - `data-mode="light|dark"`
+  - `data-palette="standard|pantone"`
+- Add new dimensions by creating `assets/css/dimensions/<dimension>/*.css` and wiring in `layouts/partials/head.html`.
+- When adding a new palette, also add its preview tokens in `assets/css/dimensions/palette/previews.css` so the theme dropdown can show palette dots in both modes.
+
+---
+
+## Naming Conventions
+
+### Tokens (CSS Custom Properties)
+- Prefix by domain: `text`, `bg`, `border`, `surface`, `brand`, `status`, `state`, `shadow`, `size`, `image`, `component`.
+- Contrast scale order: `subtle` → `muted` → `default` → `strong`.
+- Avoid overloaded prefixes like `text-*` for font sizes. Use `font-*` for typography sizes.
+- Canonical tokens live in `assets/css/tokens/semantic.css`.
+- Legacy aliases live in `assets/css/tokens/legacy.css` and must include `/* deprecated */`.
+- Legacy aliases map one-to-one to canonical tokens; remove legacy only after confirming no references remain.
+- **State-layer tokens (state-*)** must be applied as overlays (e.g. `background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover))`) on top of existing backgrounds, not as replacement background colors.
+
+### CSS / HTML Naming Spec
+- **Utilities**: short, functional, scale-based names (e.g. `mt-24`, `grid-1-3`, `text-sm`).
+- **Components**: block + element naming (BEM-light), e.g. `brand`, `brand__link`, `brand__word`, `brand__hyphen`.
+- **Variants**: modifier suffixes, e.g. `button--primary`, `brand__word--lead`.
+- **State**: `is-*` / `has-*`, e.g. `is-active`, `has-client`.
+- **JS hooks**: prefer `data-js="hook-name"`; avoid styling via IDs. Use IDs only for anchors or form fields.
+
+### CSS / HTML
+- Class names and IDs: kebab-case (e.g. `project-card`, `#main-nav`).
+- `data-*` attributes: kebab-case (e.g. `data-focus-mode`).
+- CSS custom properties: kebab-case with `--` prefix (e.g. `--bg-surface`).
 
 ---
 
@@ -342,9 +443,10 @@ npm run test:coverage       # Generate coverage report
 4. **Module Pattern**: Keep JavaScript modular - one responsibility per file
 5. **Testing**: Write tests for new JavaScript functionality
 6. **Hugo Context**: This is a static site - no server-side logic
-7. **Git Conventions**: Follow `claude/` branch naming for AI work
+7. **Git Conventions**: Follow the branch format defined in this document
 8. **Taxonomy System**: Employers/clients use Hugo taxonomies - projects need taxonomy tags to appear on company pages
 9. **Hidden Projects**: Respect `hidden: true` parameter - must be filtered in main portfolio templates
+10. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
 
 ---
 
@@ -383,6 +485,53 @@ npm run test:coverage       # Generate coverage report
 4. Run linting: `npm run lint:fix`
 5. Pre-commit hooks will format automatically
 
+### UI Library
+**Access**: `/ui-library/` (English) or `/sv/ui-library/` (Swedish)
+**Purpose**: Internal documentation of design tokens, components, and grid system
+**Not Indexed**: The page has `noindex: true` and is not linked from main navigation
+
+**Structure**:
+- **Tokens Tab**: All color scales (primitives, brand, semantic), typography, spacing
+- **Grid Tab**: 12-column subgrid system examples
+- **Components Tab**: Live component examples with meta-info (classes, files, tokens)
+- **Utilities Tab**: Typography and spacing utilities
+
+**Adding a New Component to UI Library**:
+1. Extract component CSS to `assets/css/components/[component].css`
+2. Import in `layouts/partials/head.html` (maintain load order)
+3. Add accordion in Components tab (`layouts/ui-library/single.html`)
+4. Include component meta-info:
+   - **Classes**: List all variant classes (e.g., `.button--primary`)
+   - **File**: Path to component CSS file
+   - **Tokens**: List tokens used by component
+5. Add live examples showing all states (default, hover, active, disabled)
+6. Test in browser at `/ui-library/`
+
+**Component Documentation Pattern**:
+```html
+<div class="component-doc">
+  <div class="component-meta mb-16">
+    <dl class="meta-list">
+      <div class="meta-item">
+        <dt>Classes:</dt>
+        <dd><code>.component</code>, <code>.component--variant</code></dd>
+      </div>
+      <div class="meta-item">
+        <dt>File:</dt>
+        <dd><code>assets/css/components/component.css</code></dd>
+      </div>
+      <div class="meta-item">
+        <dt>Tokens:</dt>
+        <dd><code>--token-name</code>, <code>--another-token</code></dd>
+      </div>
+    </dl>
+  </div>
+  <div class="component-examples">
+    <!-- Live examples here -->
+  </div>
+</div>
+```
+
 ---
 
 ## Resources
@@ -394,4 +543,4 @@ npm run test:coverage       # Generate coverage report
 
 ---
 
-Last updated: 2026-01-04
+Last updated: 2026-01-06

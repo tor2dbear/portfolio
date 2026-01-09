@@ -70,6 +70,7 @@
       image size, as Hugo will upscale small images
     */}}
     {{ $sizes := "100vw" }}
+    {{/* Size-based image breakpoints (performance). No art-direction crops here. */}}
     {{ if .Title }}
       <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
         <picture>

@@ -1,0 +1,65 @@
+/**
+ * Article Card Component
+ * Summary cards used for portfolio projects, blog posts, and works
+ */
+
+/* ==========================================================================
+   Base Article Styles
+   ========================================================================== */
+
+article {
+  margin-bottom: 3rem;
+}
+
+/* ==========================================================================
+   Summary Card - Hover Effects
+   ========================================================================== */
+
+.summary-card:hover a {
+  color: var(--text-link-hover);
+}
+
+.summary-card:hover .header-image {
+  -webkit-filter: contrast(1.2);
+  filter: contrast(1.2);
+  transition: -webkit-filter 1s ease;
+  transition: filter 1s ease;
+  transition: filter 1s ease, -webkit-filter 1s ease;
+}
+
+/* ==========================================================================
+   List Page Grid Layout
+   ========================================================================== */
+
+.content.list article {
+  grid-column: col-start 1 / span 6;
+}
+
+/* Make last odd article span full width */
+.content.list article:nth-last-of-type(1):nth-of-type(odd) {
+  grid-column: col-start 1 / span 12;
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .content.list article {
+    grid-column: col-start 1 / span 4;
+  }
+}
+
+/* ==========================================================================
+   Related Items Grid Layout
+   ========================================================================== */
+
+.content.post .related-items__item {
+  grid-column-start: auto;
+  grid-column-end: span 4;
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .content.post .related-items__item:nth-of-type(n + 1) {
+    grid-column-start: auto;
+    grid-column-end: span 4;
+  }
+}

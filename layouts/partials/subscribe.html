@@ -5,14 +5,14 @@
 	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
 	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
 </style> -->
-<div id="newsletter-container">
-  <div id="newsletter-signup">
+<div class="newsletter">
+  <div class="newsletter__signup">
     <form
       action="https://gmail.us14.list-manage.com/subscribe/post?u=294f66f378d5370fcbc5aa02f&amp;id=74c003d094"
       method="post"
       id="mc-embedded-subscribe-form"
       name="mc-embedded-subscribe-form"
-      class="validate"
+      class="newsletter__form validate"
       target="_blank"
       novalidate
     >
@@ -42,12 +42,12 @@
         <div class="optionalParent">
           <div class="clear foot">
             <input
-              type="submit"
-              value="{{ i18n "Subscribe" }}"
-              name="subscribe"
-              id="mc-embedded-subscribe"
-              class="button text-lg font-sans font-medium"
-            />
+            type="submit"
+            value="{{ i18n "Subscribe" }}"
+            name="subscribe"
+            id="mc-embedded-subscribe"
+            class="newsletter__submit button text-lg font-sans font-medium"
+          />
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
     var $mcj = jQuery.noConflict(true);
   </script>
   <!--End mc_embed_signup-->
-  <div class="newsletter-illustration">
-    <div class="newsletter-mask"></div>
+  <div class="newsletter__illustration">
+    <div class="newsletter__mask"></div>
   </div>
 </div>

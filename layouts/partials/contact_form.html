@@ -1,9 +1,11 @@
-<div class="contact-form mt-80 mb-64 grid-1-3">
-  <h2 class="type-headline-3 mb-16 hide-on-client">
+<div class="contact-form mt-80 mb-64 col-start-1 col-span-6">
+  <h2 class="contact-form__title type-headline-3 mb-16">
     {{ i18n "contact_send_message" }}
   </h2>
   <form
     id="contact-form"
+    class="contact-form__form"
+    data-js="contact-form"
     action="https://hook.eu1.make.com/mmg61440srh4u1ttmfqdtho0ys6t9w27"
     method="post"
   >
@@ -11,7 +13,7 @@
     <input
       type="text"
       placeholder="{{ i18n "contact_name_placeholder" }}"
-      class="form-input"
+      class="contact-form__input form-input"
       name="name"
       required
     />
@@ -20,7 +22,7 @@
     <input
       type="email"
       placeholder="{{ i18n "contact_mail_placeholder" }}"
-      class="form-input"
+      class="contact-form__input form-input"
       name="email"
       required
     />
@@ -30,7 +32,7 @@
       id="contact_subject"
       type="text"
       placeholder="{{ i18n "contact_subject_placeholder" }}"
-      class="form-input mb-8"
+      class="contact-form__input contact-form__input--subject form-input mb-8"
       name="subject"
       required
     />
@@ -39,10 +41,10 @@
     <textarea
       rows="5"
       placeholder="{{ i18n "contact_message_placeholder" }}"
-      class="form-input"
+      class="contact-form__textarea form-input"
       name="message"
     ></textarea>
-    <p class="type-information mb-16 text-color-lighter">
+    <p class="contact-form__note type-information mb-16 text-color-lighter">
       {{ i18n "re_captcha" }}
       <a href="https://policies.google.com/privacy" class="text-color-lighter"
         >{{ i18n "privacy_policy" }}</a
@@ -54,11 +56,17 @@
       {{ i18n "apply" }}.
     </p>
 
-    <input type="hidden" name="g-recaptcha-response" id="recaptchaToken" />
+    <input
+      type="hidden"
+      name="g-recaptcha-response"
+      id="recaptchaToken"
+      data-js="contact-recaptcha"
+    />
     <button
       type="button"
       id="submitButton"
-      class="g-recaptcha icon text-lg font-sans font-medium"
+      class="contact-form__submit g-recaptcha icon text-lg font-sans font-medium"
+      data-js="contact-submit"
       data-sitekey="6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"
       data-callback="onSubmit"
     >
@@ -67,14 +75,16 @@
     <p
       id="successMessage"
       style="display:none;"
-      class="type-information mt-16 message"
+      class="contact-form__message contact-form__message--success type-information mt-16 message"
+      data-js="contact-success"
     >
       {{ i18n "contact_submitted" }}
     </p>
     <p
       id="errorMessage"
       style="display:none;"
-      class="type-information mt-16 message"
+      class="contact-form__message contact-form__message--error type-information mt-16 message"
+      data-js="contact-error"
     >
       {{ i18n "contact_error" }}
     </p>

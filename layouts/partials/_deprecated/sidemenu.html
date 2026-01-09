@@ -1,0 +1,36 @@
+<nav id="menu" class="side-menu" data-js="side-menu">
+  <div class="side-menu__content">
+    <div class="side-menu__section">
+      <ul class="side-menu__list nav-list">
+        {{ $urlstart := .RelPermalink }}
+        {{ range .Site.Menus.start }}
+          <li class="side-menu__item side-menu__item--start nav-item">
+            <a
+              class="side-menu__link nav-link {{ if eq $urlstart (.URL | relLangURL) }}
+                active
+              {{ end }}"
+              title="{{ .Name }}"
+              href="{{ .URL | relLangURL }}"
+              >{{ .Name }}</a
+            >
+          </li>
+        {{ end }}
+        {{ $urltop := .RelPermalink }}
+        {{ range .Site.Menus.top }}
+          <li class="side-menu__item side-menu__item--top nav-item hide-on-client hide-above-sm">
+            <a
+              class="side-menu__link nav-link {{ if eq $urltop .URL }}active{{ end }}"
+              title="{{ .Name }}"
+              href="{{ .URL | relLangURL }}"
+              >{{ .Name }}</a
+            >
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+
+    {{ partial "tags_menu.html" . }}
+    {{ partial "social.html" . }}
+    {{ partial "theme.html" . }}
+  </div>
+</nav>

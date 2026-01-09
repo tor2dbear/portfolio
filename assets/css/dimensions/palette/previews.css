@@ -1,0 +1,20 @@
+/* ============================================================================
+   PALETTE PREVIEWS
+
+   Mode-aware palette preview tokens for the theme dropdown.
+   These are NOT tied to active data-palette, so previews stay accurate.
+   ============================================================================ */
+
+:root {
+  --palette-standard-bg: var(--white);
+  --palette-standard-accent: var(--iris-11);
+  --palette-pantone-bg: var(--iris-2);
+  --palette-pantone-accent: var(--iris-11);
+}
+
+:root[data-mode="dark"] {
+  --palette-standard-bg: var(--gray-1);
+  --palette-standard-accent: var(--iris-11);
+  --palette-pantone-bg: var(--iris-2);
+  --palette-pantone-accent: var(--iris-11);
+}

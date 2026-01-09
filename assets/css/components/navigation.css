@@ -1,0 +1,242 @@
+/**
+ * Navigation Component
+ * Top menu, brand logo, navigation lists, and contact button
+ */
+
+/* ==========================================================================
+   Top Menu - Sticky Header
+   ========================================================================== */
+
+.top-menu {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 100;
+  height: var(--size-header-height);
+  width: 100%;
+  margin: 0px;
+  background-color: var(--bg-page);
+  align-items: center;
+  box-sizing: border-box;
+  transition: border-color 0.5s ease;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: var(--bg-page);
+  display: grid;
+  grid-area: header;
+}
+
+.top-menu>div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 1.5rem;
+}
+
+.top-menu.bottom-line {
+  border-color: var(--border-subtle);
+}
+
+/* ==========================================================================
+   Navigation Lists
+   ========================================================================== */
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.top-menu__list {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.top-menu__item--settings {
+  display: none;
+}
+
+
+/* ==========================================================================
+   Contact Button (in Navigation)
+   ========================================================================== */
+
+.top-menu__item--contact .top-menu__link--button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-12);
+  min-height: var(--size-40);
+  background: var(--text-default);
+  color: var(--bg-page);
+  text-decoration: none;
+  border: 0;
+  border-radius: var(--spacing-8);
+  box-sizing: border-box;
+  font-weight: var(--sans-weight-bold);
+  font-size: var(--text-sm);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.top-menu__label--icon {
+  display: none;
+}
+
+.top-menu__label--icon svg {
+  width: var(--spacing-16);
+  height: var(--spacing-16);
+  display: block;
+}
+
+.top-menu__item--contact .top-menu__link--button:hover,
+.top-menu__item--contact .top-menu__link--button:focus-visible {
+  background: color-mix(in srgb, var(--text-default) 85%, var(--bg-page));
+}
+
+/* ==========================================================================
+   Navigation Links
+   ========================================================================== */
+
+.top-menu__item--nav .top-menu__link {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-8) var(--spacing-12);
+  border-radius: var(--radius-8);
+  color: var(--text-default);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.top-menu__item--nav .top-menu__link:hover,
+.top-menu__item--nav .top-menu__link:focus-visible {
+  background: var(--state-on-light-hover);
+}
+
+.top-menu__item--nav .top-menu__link.active {
+  background: var(--bg-surface);
+}
+
+.top-menu__list .top-menu__item--nav:not(:has(~ .top-menu__item--nav)) {
+  margin-right: var(--spacing-16);
+}
+
+/* ==========================================================================
+   Brand Logo
+   ========================================================================== */
+
+.brand {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.brand__word--lead {
+  margin-right: 2px;
+}
+
+.brand__word--tail {
+  margin-left: 2px;
+}
+
+.brand__link {
+  height: 2rem;
+  min-width: 11rem;
+  position: absolute;
+}
+
+.brand__hyphen {
+  height: 2px;
+  background-color: var(--text-default);
+}
+
+.brand__hyphen--left {
+  margin-top: 13px;
+}
+
+.brand__hyphen--right {
+  margin-top: 15px;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* md: <= 63.9375em */
+@media (max-width: 63.9375em) {
+  .top-menu {
+    transition: transform 0.5s ease;
+  }
+
+  .top-menu__item--nav {
+    display: none;
+  }
+
+  .top-menu__nav {
+    margin-top: 0;
+  }
+
+  .brand-hyphen {
+    width: 1rem;
+    margin-right: 0.08rem;
+  }
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  :root {
+    --size-header-height-neg: -4.5rem;
+  }
+
+  .top-menu.relative {
+    position: relative;
+  }
+
+  .top-menu.hide {
+    transform: translateY(var(--size-header-height-neg));
+  }
+
+  .brand__hyphen {
+    display: none;
+  }
+
+  .brand__link {
+    width: 11rem !important;
+  }
+
+  .top-menu,
+  #main,
+  footer {
+    grid-template-columns:
+      [full-start] var(--size-page-margins) [content-start] repeat(4, [col-start] 1fr) [content-end] var(--size-page-margins) [full-end];
+    column-gap: var(--spacing-16);
+  }
+
+  #main {
+    row-gap: var(--spacing-24);
+  }
+}
+
+/* xs: <= 29.9375em */
+@media (max-width: 29.9375em) {
+
+  .top-menu__item--theme,
+  .top-menu__item--language {
+    display: none;
+  }
+
+  .top-menu__item--settings {
+    display: block;
+  }
+
+  .top-menu__label--long {
+    display: none;
+  }
+
+  .top-menu__label--icon {
+    display: inline-flex;
+    align-items: center;
+  }
+}

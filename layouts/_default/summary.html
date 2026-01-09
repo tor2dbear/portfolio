@@ -1,12 +1,12 @@
 <article>
-  <header class="summary">
-    <div class="header-image">
+  <header class="summary-card">
+    <div class="summary-card__image header-image">
       <a href="{{ .Permalink }}">{{ partial "headerimage.html" . }}</a>
     </div>
 
     <h2
       style="font-weight: var(--sans-weight-bold)"
-      class="text-2xl line-height-normal text-color-default tracking-normal mt-12 mb-12"
+      class="summary-card__title text-2xl line-height-normal text-color-default tracking-normal mt-12 mb-12"
     >
       <a href="{{ .Permalink }}"
         >{{ .Title }}{{ if isset .Params "subtitle" }}
@@ -16,7 +16,7 @@
     </h2>
 
     <div
-      class="text-xs line-height-normal font-normal text-color-lighter tracking-wide mb-12"
+      class="summary-card__meta text-xs line-height-normal font-normal text-color-lighter tracking-wide mb-12"
     >
       {{ partial "date.html" . }}
     </div>

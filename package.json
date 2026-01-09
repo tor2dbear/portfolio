@@ -4,6 +4,7 @@
   "description": "Personal portfolio website for Torbjörn Hedberg - Graphic designer based in Gothenburg, Sweden",
   "main": "index.js",
   "scripts": {
+    "start": "hugo server --poll 1000ms",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

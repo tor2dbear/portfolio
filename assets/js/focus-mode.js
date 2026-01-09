@@ -60,14 +60,20 @@
     if (view === CONFIG.VIEW_CLIENT || legacySource === 'client' || isClientPath) {
       return {
         type: CONFIG.VIEW_CLIENT,
-        ref: params.get(CONFIG.PARAM_REF) || extractRefFromPath(path, 'clients')
+        ref:
+          params.get(CONFIG.PARAM_REF) ||
+          extractRefFromPath(path, 'clients') ||
+          extractRefFromReferrer('clients')
       };
     }
 
     if (view === CONFIG.VIEW_EMPLOYER || isEmployerPath) {
       return {
         type: CONFIG.VIEW_EMPLOYER,
-        ref: null
+        ref:
+          params.get(CONFIG.PARAM_REF) ||
+          extractRefFromPath(path, 'employers') ||
+          extractRefFromReferrer('employers')
       };
     }
 
@@ -81,6 +87,20 @@
     const regex = new RegExp(`/${segment}/([^/]+)`);
     const match = path.match(regex);
     return match ? match[1] : null;
+  }
+
+  /**
+   * Extract reference name from document referrer
+   */
+  function extractRefFromReferrer(segment) {
+    try {
+      if (!document.referrer) return null;
+      const referrerUrl = new URL(document.referrer);
+      if (referrerUrl.origin !== window.location.origin) return null;
+      return extractRefFromPath(referrerUrl.pathname, segment);
+    } catch (_error) {
+      return null;
+    }
   }
 
   /**
@@ -118,8 +138,6 @@
    * Propagate focus mode parameters to internal links
    */
   function propagateToLinks(context) {
-    const focusParams = buildFocusParams(context);
-
     // Find all internal links (href starts with / or is relative)
     const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]');
 
@@ -146,7 +164,7 @@
         url.search = params.toString();
         link.setAttribute('href', url.pathname + url.search + url.hash);
         link.setAttribute('data-focus-processed', 'true');
-      } catch (error) {
+      } catch (_error) {
         // Skip links that can't be parsed (external, mailto, etc.)
       }
     });
@@ -159,14 +177,18 @@
     if (context.type === CONFIG.VIEW_CLIENT && context.ref) {
       updateClientBreadcrumb(context.ref);
     }
-    // Employer breadcrumbs are handled in template
+    if (context.type === CONFIG.VIEW_EMPLOYER && context.ref) {
+      updateEmployerBreadcrumb(context.ref);
+    }
   }
 
   /**
    * Update client breadcrumb with safe text handling
    */
   function updateClientBreadcrumb(clientRef) {
-    const breadcrumbElement = document.getElementById('client-breadcrumb-back');
+    const breadcrumbElement =
+      document.querySelector('[data-js="application-breadcrumb-back"]') ||
+      document.getElementById('client-breadcrumb-back');
     if (!breadcrumbElement) return;
 
     // Clear existing content safely
@@ -190,6 +212,29 @@
   }
 
   /**
+   * Update employer breadcrumb with safe text handling
+   */
+  function updateEmployerBreadcrumb(employerRef) {
+    const breadcrumbElement =
+      document.querySelector('[data-js="application-breadcrumb-back-employer"]') ||
+      document.getElementById('employer-breadcrumb-back');
+    if (!breadcrumbElement) return;
+
+    while (breadcrumbElement.firstChild) {
+      breadcrumbElement.removeChild(breadcrumbElement.firstChild);
+    }
+
+    const link = document.createElement('a');
+    const employerPath = `/employers/${encodeURIComponent(employerRef)}/`;
+    link.setAttribute('href', employerPath);
+
+    const employerName = decodeURIComponent(employerRef).replace(/-/g, ' ');
+    link.textContent = employerName;
+
+    breadcrumbElement.appendChild(link);
+  }
+
+  /**
    * Update "back to client" links in table of contents
    */
   function updateTableOfContents(context) {
@@ -197,15 +242,15 @@
 
     const clientPath = `/clients/${encodeURIComponent(context.ref)}/`;
     const tocLinks = {
-      'client-letter': `${clientPath}#letter`,
-      'client-portfolio': `${clientPath}#portfolio`,
-      'client-cv': `${clientPath}#cv`,
-      'client-download': `${clientPath}#download`,
-      'client-contact': `${clientPath}#contact`
+      'application-toc-letter': `${clientPath}#letter`,
+      'application-toc-portfolio': `${clientPath}#portfolio`,
+      'application-toc-cv': `${clientPath}#cv`,
+      'application-toc-download': `${clientPath}#download`,
+      'application-toc-contact': `${clientPath}#contact`
     };
 
-    Object.entries(tocLinks).forEach(([id, href]) => {
-      const element = document.getElementById(id);
+    Object.entries(tocLinks).forEach(([key, href]) => {
+      const element = document.querySelector(`[data-js="${key}"]`);
       if (element) {
         element.setAttribute('href', href);
       }

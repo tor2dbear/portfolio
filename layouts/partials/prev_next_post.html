@@ -1,16 +1,16 @@
 {{ if or (.NextPage) (.PrevPage) }}
-<div class="prev-next-post pure-g hide-on-client">
-  <div class="pure-u-10-24">
+<div class="post-nav pure-g">
+  <div class="post-nav__col pure-u-10-24">
     {{ if .PrevInSection }}
-    <nav class="prev">
-      <a href="{{ .PrevInSection.Permalink }}">{{ .PrevInSection.Title }}</a>
+    <nav class="post-nav__prev">
+      <a class="post-nav__link" href="{{ .PrevInSection.Permalink }}">{{ .PrevInSection.Title }}</a>
     </nav>
     {{ end }}
   </div>
-  <div class="pure-u-10-24">
+  <div class="post-nav__col pure-u-10-24">
     {{ if .NextInSection }}
-    <nav class="next">
-      <a href="{{ .NextInSection.Permalink }}">{{ .NextInSection.Title }}</a>
+    <nav class="post-nav__next">
+      <a class="post-nav__link" href="{{ .NextInSection.Permalink }}">{{ .NextInSection.Title }}</a>
     </nav>
     {{ end }}
   </div>

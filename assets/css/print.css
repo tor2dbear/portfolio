@@ -4,18 +4,19 @@
     #header,
     #footer,
     #nav,
-    .client-breadcrumb,
-    .themeswitch,
-    .download-container,
+    .application-breadcrumb,
+    .palette-switcher,
+    .mode-switcher,
+    .download-list,
     .contact-form,
-    .content.post .table-of-content,
-    .client-portfolio,
-    ul.table-of-content :nth-child(3),
-    ul.table-of-content :nth-child(5) {
+    .content.post .toc,
+    .application-page__section--portfolio,
+    ul.toc :nth-child(3),
+    ul.toc :nth-child(5) {
         display: none !important;
     }
 
-    .client-letter {
+    .application-page__section--letter {
         page-break-after: always;
     }
 
@@ -44,7 +45,7 @@
         font-weight: bold;
     }
 
-    .post-taxonomy-tag {
+    .tag {
         background-color: white;
         border: 1pt solid var(--text-muted);
     }

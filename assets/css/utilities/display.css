@@ -14,14 +14,14 @@
   display: none;
 }
 
-/* min 768px Small */
+/* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
   .hide-above-sm {
     display: block;
   }
 }
 
-/* X-Small */
+/* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .hide-on-xs {
     display: none;

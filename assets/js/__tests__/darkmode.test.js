@@ -9,22 +9,22 @@ describe("Dark Mode - Theme Management", () => {
   beforeEach(() => {
     // Setup DOM with all required elements
     document.body.innerHTML = `
-      <div class="theme-menu-container" data-visible="false">
-        <button id="theme-menu-toggle">Toggle</button>
-        <div id="theme-menu"></div>
+      <div class="theme-switcher" data-js="theme-switcher" data-visible="false">
+        <button data-js="theme-switcher-toggle">Toggle</button>
+        <div class="theme-switcher__panel" data-js="theme-switcher-panel"></div>
       </div>
-      <div id="overlay"></div>
-      <div id="theme-menu-icon"></div>
+      <div class="theme-switcher__overlay" data-js="theme-switcher-overlay"></div>
+      <div class="theme-switcher__icon" data-js="theme-switcher-icon"></div>
       <div id="light-icon"></div>
       <div id="dark-icon"></div>
       <div id="system-icon"></div>
       <meta name="theme-color" content="#FFFFFF">
     `;
 
-    themeMenuContainer = document.querySelector(".theme-menu-container");
-    themeMenu = document.getElementById("theme-menu");
-    overlay = document.getElementById("overlay");
-    themeMenuIcon = document.getElementById("theme-menu-icon");
+    themeMenuContainer = document.querySelector('[data-js="theme-switcher"]');
+    themeMenu = document.querySelector('[data-js="theme-switcher-panel"]');
+    overlay = document.querySelector('[data-js="theme-switcher-overlay"]');
+    themeMenuIcon = document.querySelector('[data-js="theme-switcher-icon"]');
     themeMetaTag = document.querySelector('meta[name="theme-color"]');
 
     // Mock window.innerHeight for touch calculations
@@ -56,9 +56,9 @@ describe("Dark Mode - Theme Management", () => {
     test("should show menu when visible is true", () => {
       // Create a global toggleMenu function for testing
       window.toggleMenu = function (visible, _duration = 0.3) {
-        const menuContainer = document.querySelector(".theme-menu-container");
-        const menu = document.getElementById("theme-menu");
-        const overlay = document.getElementById("overlay");
+        const menuContainer = document.querySelector('[data-js="theme-switcher"]');
+        const menu = document.querySelector('[data-js="theme-switcher-panel"]');
+        const overlay = document.querySelector('[data-js="theme-switcher-overlay"]');
 
         menuContainer.setAttribute("data-visible", visible);
         overlay.setAttribute("data-visible", visible);
@@ -216,7 +216,7 @@ describe("Dark Mode - Theme Management", () => {
   describe("updateMenuIcon()", () => {
     beforeEach(() => {
       window.updateMenuIcon = function (theme) {
-        const icon = document.getElementById("theme-menu-icon");
+        const icon = document.querySelector('[data-js="theme-switcher-icon"]');
         let svgPath = "";
 
         if (theme === "light") {

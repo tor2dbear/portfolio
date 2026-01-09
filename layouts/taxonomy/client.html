@@ -11,48 +11,47 @@
   media="all"
 />
 
-<div class="content client">
-  <nav class="client-breadcrumb flex text-sm mb-24 show-on-client">
+<div class="content application-page use-subgrid">
+  <nav class="application-breadcrumb flex text-sm mb-24 show-on-client">
     <ul>
-      <li class="text-capitalize" id="client-breadcrumb-home">
-        <a href="{{ .Site.BaseURL | relLangURL }}">Start</a>
+      <li class="application-breadcrumb__item text-capitalize">
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
       </li>
       <!-- company_name for localstorage -->
       <li
-        class="text-color-lighter company_name text-capitalize"
-        id="client-breadcrumb-active"
+        class="application-breadcrumb__item application-page__company text-color-lighter text-capitalize"
       >
         {{ .Params.company_name }}
       </li>
     </ul>
   </nav>
   <!-- span company name for localstorage -->
-  <span class="company_name">{{ .Params.company_name }}</span>
-  <ul class="table-of-content mb-64 grid-6">
-    <li><h3 class="type-headline-small mb-8">Table of content</h3></li>
-    <li class="font-sans text-base text-color-lighter">
+  <span class="application-page__company">{{ .Params.company_name }}</span>
+  <ul class="toc mb-64 col-span-12">
+    <li class="toc__header"><h3 class="type-headline-small mb-8">Table of content</h3></li>
+    <li class="toc__item font-sans text-base text-color-lighter">
       <a href="#letter">Letter</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
+    <li class="toc__item font-sans text-base text-color-lighter">
       <a href="#portfolio">Portfolio</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
+    <li class="toc__item font-sans text-base text-color-lighter">
       <a href="#cv">CV</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
+    <li class="toc__item font-sans text-base text-color-lighter">
       <a href="#download">Download</a>
     </li>
-    <li class="font-sans text-base text-color-lighter">
+    <li class="toc__item font-sans text-base text-color-lighter">
       <a href="#contact">Contact</a>
     </li>
   </ul>
 
-  <div class="grid-1-4 client-maincolumn">
-    <div class="client-letter grid-2 mb-64">
+  <div class="col-start-1 col-span-8 application-page__main">
+    <div class="application-page__section application-page__section--letter col-span-4 mb-64">
       <!-- put this just above the section you wanna go to -->
       <a id="letter"></a>
       <h3 class="type-headline-small mb-16 section-headline">Letter</h3>
-      <div class="client-header">
+      <div class="application-page__header">
         <h1 class="mb-16 type-headline-2">
           {{ .Title }}
         </h1>
@@ -66,37 +65,37 @@
       <p>{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
     </div>
 
-    <div class="client-portfolio grid-2 mb-64">
+    <div class="application-page__section application-page__section--portfolio col-span-4 mb-64">
       <!-- put this just above the section you wanna go to -->
       <a id="portfolio"></a>
       <h3 class="type-headline-small mb-16 section-headline">Portfolio</h3>
-      <div class="client-portfolio-container grid-template-2-col">
+      <div class="application-page__portfolio-grid grid-cols-2">
         {{ range .Data.Pages }}
           {{ .Render "summary-client" }}
         {{ end }}
       </div>
     </div>
 
-    <div class="client-cv grid-2 mb-64">
+    <div class="application-page__section application-page__section--cv col-span-4 mb-64">
       <!-- put this just above the section you wanna go to -->
-      <a id="cv" class="grid-2"></a>
-      <h3 class="type-headline-small mb-16 grid-2 section-headline">CV</h3>
-      <div class="grid-2">{{ partial "about_cv.html" . }}</div>
+      <a id="cv" class="col-span-4"></a>
+      <h3 class="type-headline-small mb-16 col-span-4 section-headline">CV</h3>
+      <div class="col-span-4">{{ partial "about_cv.html" . }}</div>
     </div>
   </div>
 
-  <div class="grid-5-6 client-sidebar">
-    <div class="download-container mb-64">
+  <div class="col-start-9 col-span-4 application-page__sidebar">
+    <div class="download-list mb-64">
       <!-- put this just above the section you wanna go to -->
-      <a id="download" class="grid-4"></a>
-      <h3 class="type-headline-small mb-16 grid-4 section-headline">
+      <a id="download" class="col-span-8"></a>
+      <h3 class="type-headline-small mb-16 col-span-8 section-headline">
         Download
       </h3>
       {{ if .Params.attach_letter }}
         <a
           href="{{ printf "%s" $.Params.attach_letter }}"
           target="_blank"
-          class="download-box grid-2 flex"
+          class="download-card col-span-4 flex"
         >
           <div class="pdf-icon">
             <svg
@@ -165,7 +164,7 @@
               ></path>
             </svg>
           </div>
-          <p class="download-item flex-grow">
+          <p class="download-card__item flex-grow">
             {{ path.Base .Params.attach_letter }}
           </p>
           <div class="download-icon">
@@ -210,7 +209,7 @@
         <a
           href="{{ printf "%s" $.Params.attach_portfolio }}"
           target="_blank"
-          class="download-box mt-16 grid-2 flex"
+          class="download-card mt-16 col-span-4 flex"
         >
           <div class="pdf-icon">
             <svg
@@ -279,7 +278,7 @@
               ></path>
             </svg>
           </div>
-          <p class="download-item flex-grow">
+          <p class="download-card__item flex-grow">
             {{ path.Base .Params.attach_portfolio }}
           </p>
           <div class="download-icon">
@@ -324,7 +323,7 @@
         <a
           href="{{ printf "%s" $.Params.attach_cv }}"
           target="_blank"
-          class="download-box mt-16 grid-2 flex"
+          class="download-card mt-16 col-span-4 flex"
         >
           <div class="pdf-icon">
             <svg
@@ -393,7 +392,7 @@
               ></path>
             </svg>
           </div>
-          <p class="download-item flex-grow">
+          <p class="download-card__item flex-grow">
             {{ path.Base .Params.attach_cv }}
           </p>
           <div class="download-icon">
@@ -435,9 +434,9 @@
       {{ end }}
     </div>
     <!-- put this just above the section you wanna go to -->
-    <a id="contact" class="grid-4"></a>
+    <a id="contact" class="col-span-8 anchor-offset"></a>
     <h3
-      class="type-headline-small mb-16 grid-2 show-on-client section-headline"
+      class="type-headline-small mb-16 col-span-4 show-on-client section-headline"
     >
       Contact
     </h3>

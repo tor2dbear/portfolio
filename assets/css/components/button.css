@@ -1,0 +1,191 @@
+/**
+ * Button Component
+ *
+ * Base button styles and variants
+ *
+ * Classes:
+ * - .button (base)
+ * - .button--primary (brand color)
+ * - .button--secondary (outlined)
+ * - .button--tertiary (text only)
+ * - .button.icon (with arrow icon)
+ *
+ * Tokens used:
+ * - --brand-primary
+ * - --brand-on-primary
+ * - --text-default
+ * - --bg-page
+ * - --border-default
+ * - --state-on-brand-hover
+ * - --state-on-light-hover
+ */
+
+/* ==========================================================================
+   Base Button Styles
+   ========================================================================== */
+
+[type="button"]:not(:disabled),
+[type="submit"]:not(:disabled),
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button,
+.button {
+  /* Reset */
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  line-height: var(--line-height-normal);
+
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-12) var(--spacing-24);
+
+  /* Base styling */
+  background-color: var(--text-default);
+  color: var(--bg-page);
+  border-radius: var(--radius-8);
+  font-weight: 500;
+  text-decoration: none;
+
+  /* Interaction */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+button:hover,
+.button:hover {
+  background-image: linear-gradient(var(--state-on-light-hover),
+      var(--state-on-light-hover));
+}
+
+button:active,
+.button:active {
+  background-image: linear-gradient(var(--state-on-light-active),
+      var(--state-on-light-active));
+}
+
+button:focus-visible,
+.button:focus-visible {
+  outline: 2px solid var(--state-focus);
+  outline-offset: 2px;
+}
+
+button:disabled,
+.button:disabled {
+  background-color: var(--bg-disabled);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   Button Variants
+   ========================================================================== */
+
+/* Primary Button (Brand) */
+.button--primary {
+  background-color: var(--brand-primary);
+  color: var(--brand-on-primary);
+}
+
+.button--primary:hover {
+  background-image: linear-gradient(var(--state-on-dark-hover),
+      var(--state-on-dark-hover));
+}
+
+.button--primary:active {
+  background-image: linear-gradient(var(--state-on-dark-active),
+      var(--state-on-dark-active));
+}
+
+.button--primary:disabled {
+  background-color: var(--bg-disabled);
+  color: var(--text-disabled);
+}
+
+/* Secondary Button (Outlined) */
+.button--secondary {
+  background-color: transparent;
+  color: var(--text-default);
+  border: 1px solid var(--border-default);
+}
+
+.button--secondary:hover {
+  background-color: var(--bg-surface);
+  border-color: var(--border-strong);
+}
+
+.button--secondary:active {
+  background-image: linear-gradient(var(--state-on-light-active),
+      var(--state-on-light-active));
+}
+
+.button--secondary:disabled {
+  background-color: transparent;
+  border-color: var(--border-disabled);
+  color: var(--text-disabled);
+}
+
+/* Tertiary Button (Text only) */
+.button--tertiary {
+  background-color: transparent;
+  color: var(--text-link);
+  padding: var(--space-8) var(--space-12);
+}
+
+.button--tertiary:hover {
+  background-color: var(--bg-surface);
+  color: var(--text-link-hover);
+}
+
+.button--tertiary:active {
+  background-image: linear-gradient(var(--state-on-light-active),
+      var(--state-on-light-active));
+}
+
+.button--tertiary:disabled {
+  background-color: transparent;
+  color: var(--text-disabled);
+}
+
+/* ==========================================================================
+   Icon Button (with arrow)
+   ========================================================================== */
+
+button.icon,
+.button.icon {
+  position: relative;
+  transition: padding 0.3s ease;
+}
+
+button.icon:after,
+.button.icon:after {
+  display: block;
+  content: " ";
+  background-size: 1rem 1rem;
+  height: 1rem;
+  width: 1rem;
+  background-color: currentColor;
+  mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzExM184MzkpIj4KPHBhdGggZD0iTTE1Ljk5MTMgNy45OTk4M0MxNS45ODQ2IDcuNTM5ODMgMTUuNzkxMyA3LjA5OTgzIDE1LjQ0NDYgNi43OTk4M0w3Ljk4NjY1IDAuMjM5ODM1VjAuMjMzMTY4QzcuNTczMzEgLTAuMTA2ODMyIDYuOTY2NjUgLTAuMDQ2ODMyIDYuNjMzMzEgMC4zNjY1MDFDNi4zMTMzMSAwLjc1MzE2OCA2LjM0NjY1IDEuMzI2NSA2LjcxMzMxIDEuNjY2NUwxMi40NjY2IDYuNzMzMTdDMTIuNTMzMyA2Ljc5MzE3IDEyLjU0IDYuODkzMTcgMTIuNDggNi45NjY1QzEyLjQ0NjYgNi45OTk4MyAxMi40IDcuMDE5ODMgMTIuMzUzMyA3LjAxOTgzSDAuOTM5OThDMC40MDY2NDcgNy4wMTk4MyAtMC4wMjAwMTk1IDcuNDQ2NSAtMC4wMjAwMTk1IDcuOTc5ODRDLTAuMDIwMDE5NSA4LjUwNjUgMC40MDY2NDcgOC45Mzk4MyAwLjkzOTk4IDguOTM5ODNIMTIuMzQ3M1Y4LjkzOTE3QzEyLjQzNCA4LjkzOTE3IDEyLjUwNzMgOS4wMTI1IDEyLjUwNzMgOS4xMDU4NEMxMi41MDA2IDkuMTUyNSAxMi40ODA2IDkuMTkyNSAxMi40NDczIDkuMjI1ODNMNi42ODczMSAxNC4yOTI1QzYuMjczOTggMTQuNjE5MiA2LjIwNzMxIDE1LjIyNTggNi41NDA2NSAxNS42MzkyQzYuODY3MzEgMTYuMDQ1OCA3LjQ3Mzk4IDE2LjExMjUgNy44ODczMSAxNS43NzkyQzcuOTA3MzEgMTUuNzU5MiA3LjkyNzMxIDE1LjczOTIgNy45NDczMSAxNS43MjU4TDE1LjQwMDYgOS4xNjU4M0MxNS43NDA2IDguODU5MTcgMTUuOTQwNiA4LjQxOTE3IDE1Ljk0MDYgNy45NjU4NEwxNS45OTEzIDcuOTk5ODNaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzExM184MzkiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==);
+  -webkit-mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzExM184MzkpIj4KPHBhdGggZD0iTTE1Ljk5MTMgNy45OTk4M0MxNS45ODQ2IDcuNTM5ODMgMTUuNzkxMyA3LjA5OTgzIDE1LjQ0NDYgNi43OTk4M0w3Ljk4NjY1IDAuMjM5ODM1VjAuMjMzMTY4QzcuNTczMzEgLTAuMTA2ODMyIDYuOTY2NjUgLTAuMDQ2ODMyIDYuNjMzMzEgMC4zNjY1MDFDNi4zMTMzMSAwLjc1MzE2OCA2LjM0NjY1IDEuMzI2NSA2LjcxMzMxIDEuNjY2NUwxMi40NjY2IDYuNzMzMTdDMTIuNTMzMyA2Ljc5MzE3IDEyLjU0IDYuODkzMTcgMTIuNDggNi45NjY1QzEyLjQ0NjYgNi45OTk4MyAxMi40IDcuMDE5ODMgMTIuMzUzMyA3LjAxOTgzSDAuOTM5OThDMC40MDY2NDcgNy4wMTk4MyAtMC4wMjAwMTk1IDcuNDQ2NSAtMC4wMjAwMTk1IDcuOTc5ODRDLTAuMDIwMDE5NSA4LjUwNjUgMC40MDY2NDcgOC45Mzk4MyAwLjkzOTk4IDguOTM5ODNIMTIuMzQ3M1Y4LjkzOTE3QzEyLjQzNCA4LjkzOTE3IDEyLjUwNzMgOS4wMTI1IDEyLjUwNzMgOS4xMDU4NEMxMi41MDA2IDkuMTUyNSAxMi40ODA2IDkuMTkyNSAxMi40NDczIDkuMjI1ODNMNi42ODczMSAxNC4yOTI1QzYuMjczOTggMTQuNjE5MiA2LjIwNzMxIDE1LjIyNTggNi41NDA2NSAxNS42MzkyQzYuODY3MzEgMTYuMDQ1OCA3LjQ3Mzk4IDE2LjExMjUgNy44ODczMSAxNS43NzkyQzcuOTA3MzEgMTUuNzU5MiA3LjkyNzMxIDE1LjczOTIgNy45NDczMSAxNS43MjU4TDE1LjQwMDYgOS4xNjU4M0MxNS43NDA2IDguODU5MTcgMTUuOTQwNiA4LjQxOTE3IDE1Ljk0MDYgNy45NjU4NEwxNS45OTEzIDcuOTk5ODNaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzExM184MzkiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==);
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  transition: transform 0.3s ease;
+}
+
+button.icon:hover,
+.button.icon:hover {
+  padding-right: var(--spacing-24);
+}
+
+button.icon:hover:after,
+.button.icon:hover:after {
+  transform: translateX(var(--spacing-4));
+}
