@@ -122,6 +122,32 @@
                 href="https://www.tor-bjorn.com/preview/pr-11/works/lokalguiden-brand-refresh-2020/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/preview/pr-11/</loc>
+    <lastmod>2026-01-07T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/preview/pr-11/sv/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/preview/pr-11/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/preview/pr-11/ui-library/</loc>
+    <lastmod>2026-01-07T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/preview/pr-11/sv/ui-library/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/preview/pr-11/ui-library/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/preview/pr-11/employers/</loc>
     <lastmod>2025-01-04T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -172,19 +198,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.tor-bjorn.com/preview/pr-11/tags/"
-                />
-  </url><url>
-    <loc>https://www.tor-bjorn.com/preview/pr-11/</loc>
-    <lastmod>2023-05-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/preview/pr-11/sv/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/preview/pr-11/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/preview/pr-11/works/tags/ui-ux/</loc>
