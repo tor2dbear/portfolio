@@ -1,97 +1,85 @@
-#main.client-main {
+.application-main {
     width: 100%;
 }
 
-.content.client article:nth-of-type(odd) {
-    grid-column: 1 / span 1;
-}
 
-.content.client article:nth-of-type(even) {
-    grid-column: 2 / span 1;
-}
-
-
-.client-sidebar {
+.application-page__sidebar {
     margin-left: 1.5rem;
 }
 
-#layout .content.client .about-cv {
+#layout .content.application-page .about-cv {
     margin-top: 0;
 }
 
-.content.client .about-cv .curl-icon {
+.content.application-page .about-cv .curl-icon {
     display: none;
 }
 
-#layout .content.client .contact-form {
+#layout .content.application-page .contact-form {
     margin: 0;
     margin-bottom: var(--spacing-64);
 }
 
-#layout .content.client .contact-info {
+#layout .content.application-page .contact-info {
     margin: 0;
     margin-bottom: var(--spacing-32);
 }
 
-.company_name {
+.application-page__company {
     display: none;
 }
 
-/* min 1280px Large */
-@media (max-width: 80em) {
-    #main.client-main {
-        width: 100%;
-    }
-}
-
-/* min 1024px Medium */
+/* lg: <= 79.9375em */
 @media (max-width: 79.9375em) {
-    #main.client-main {
+    .application-main {
         width: 100%;
     }
 }
 
-@media (max-width: 47.9375em) {
-    .content.client article:nth-of-type(n + 1) {
-        grid-column: 1 / span 2;
-    }
-}
-
-/* min 768px Small  */
+/* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
 
-    .client-maincolumn,
-    .client-sidebar {
+    .application-page__main,
+    .application-page__sidebar {
         margin-left: 0;
-        grid-column: span 6;
+        grid-column: col-start 1 / span 12;
     }
 }
 
 /* Download box on client page */
-.download-box {
+.download-card {
     padding: 1rem 1.5rem;
     background-color: var(--bg-surface);
+    background-image: none;
 }
 
-.download-box>* {
+.download-card>* {
     transition: color 0.3s ease;
 }
 
-.download-box:hover>div {
+.download-card:hover>div {
     color: var(--text-link-hover);
     transition: color 0.3s ease;
 }
 
-.download-box:hover>.download-item {
+.download-card:hover {
+    background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover));
+}
+
+:root[data-mode="dark"] .download-card:hover {
+    background-image: linear-gradient(var(--state-on-dark-hover), var(--state-on-dark-hover));
+}
+
+.download-card:hover>.download-card__item {
     color: var(--text-link-hover);
     transition: color 0.3s ease;
 }
 
-.download-container {
+.download-list {
     grid-row: span 5;
 }
 
-p.download-item {
+p.download-card__item {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
