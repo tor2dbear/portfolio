@@ -234,20 +234,61 @@ Configured in `package.json` with lint-staged:
 
 ---
 
-## Git Workflow
+## Git Workflow (v2)
 
-### Branching
-- Branch format: `<type>/<slug>-<sessionId>`
-- Example: `docs/agents-consolidation-4yQk`
+### Core Principles (Strict)
+- **Isolation**: One task = one branch = one worktree.
+- **Mandatory Worktrees**: Parallel tasks MUST use separate worktrees. Branches alone are insufficient for parallel AI agents.
+- **Hierarchy**: The repo root is for management ONLY. Development happens ONLY inside worktrees.
+- **Verification**: Before editing any file, verify your location.
 
-### Commits
-- Clear, descriptive commit messages
-- Follow conventional commits when applicable
-- One logical change per commit
+### Repository Layout & Setup
+- The repository root MUST have `.worktrees/` added to `.gitignore`.
+- Active development occurs in `.worktrees/<branch-name>/`.
+- **Optional**: Add `**/.worktrees/**: true` to VS Code `files.exclude` to prevent cross-contamination in searches.
 
-### Pushing
-- Always push with upstream: `git push -u origin <branch-name>`
-- Branch must follow naming convention or push will fail (403)
+### Branch Naming
+- **Format**: `<type>/<slug>-<sessionId>` (e.g., `feature/login-system-a1b2`)
+- **Types**: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
+- **Session ID**: Generate using `openssl rand -hex 2`.
+
+### Creating a New Task (Run from Repo Root)
+```bash
+git switch main
+git pull
+git worktree add .worktrees/<branch-name> -b <branch-name>
+# Note: It is highly recommended to use a setup script (e.g., new-task.sh) to automate this and ensure naming consistency.
+```
+
+### Working in a Worktree (The "Gold" Rules)
+1. **Verification Step**: Always run `pwd`, `git rev-parse --show-toplevel` and `git branch --show-current` before the first edit in a session to ensure you are in the correct worktree and NOT in the repo root.
+2. **Scope**: Only modify files inside your assigned `.worktrees/<branch-name>/` folder.
+3. **Commits**: All `git add`, `git commit`, and `git push` commands must be executed from within the worktree directory.
+
+### Syncing & Updates
+To bring in latest changes from main (inside the worktree):
+```bash
+git fetch origin
+git merge origin/main # Avoid rebase unless explicitly requested.
+```
+
+### Finishing a Task (Cleanup)
+Once the PR is merged on GitHub:
+```bash
+# Remove Worktree: (from repo root).
+git worktree remove .worktrees/<branch-name> --force
+
+# Delete Branch:
+git branch -d <branch-name>
+
+# Prune:
+git fetch --prune
+```
+
+### Safety Guardrails
+- **Never** run two agents in the same worktree folder.
+- **Never** manually move files between worktrees.
+- If `git status` in repo root shows untracked files in `.worktrees/`, the `.gitignore` is missing or failing. Stop and fix.
 
 ---
 
