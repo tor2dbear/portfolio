@@ -1,0 +1,97 @@
+.application-main {
+    width: 100%;
+}
+
+.content.application-page article:nth-of-type(odd) {
+    grid-column: 1 / span 1;
+}
+
+.content.application-page article:nth-of-type(even) {
+    grid-column: 2 / span 1;
+}
+
+.application-page__sidebar {
+    margin-left: 1.5rem;
+}
+
+#layout .content.application-page .about-cv {
+    margin-top: 0;
+}
+
+.content.application-page .about-cv .curl-icon {
+    display: none;
+}
+
+#layout .content.application-page .contact-form {
+    margin: 0;
+    margin-bottom: var(--spacing-64);
+}
+
+#layout .content.application-page .contact-info {
+    margin: 0;
+    margin-bottom: var(--spacing-32);
+}
+
+.application-page__company {
+    display: none;
+}
+
+/* min 1280px Large */
+@media (max-width: 80em) {
+    .application-main {
+        width: 100%;
+    }
+}
+
+/* min 1024px Medium */
+@media (max-width: 79.9375em) {
+    .application-main {
+        width: 100%;
+    }
+}
+
+@media (max-width: 47.9375em) {
+    .content.application-page article:nth-of-type(n + 1) {
+        grid-column: 1 / span 2;
+    }
+}
+
+/* min 768px Small  */
+@media (max-width: 63.9375em) {
+
+    .application-page__main,
+    .application-page__sidebar {
+        margin-left: 0;
+        grid-column: span 6;
+    }
+}
+
+/* Download box on client page */
+.download-card {
+    padding: 1rem 1.5rem;
+    background-color: var(--bg-surface);
+}
+
+.download-card>* {
+    transition: color 0.3s ease;
+}
+
+.download-card:hover>div {
+    color: var(--text-link-hover);
+    transition: color 0.3s ease;
+}
+
+.download-card:hover>.download-card__item {
+    color: var(--text-link-hover);
+    transition: color 0.3s ease;
+}
+
+.download-list {
+    grid-row: span 5;
+}
+
+p.download-card__item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
