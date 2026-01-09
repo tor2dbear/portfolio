@@ -6,6 +6,31 @@
 (function() {
   'use strict';
 
+  function getScrollPaddingTop() {
+    const styles = getComputedStyle(document.documentElement);
+    const paddingTop = parseFloat(styles.scrollPaddingTop);
+    return Number.isFinite(paddingTop) ? paddingTop : 0;
+  }
+
+  function scrollToTarget(target, behavior) {
+    const offset = getScrollPaddingTop();
+    const paddingTop = parseFloat(getComputedStyle(target).paddingTop) || 0;
+    const targetTop =
+      target.getBoundingClientRect().top + window.pageYOffset + paddingTop - offset;
+    window.scrollTo({ top: targetTop, behavior: behavior || 'smooth' });
+  }
+
+  function alignTargetAfter(target) {
+    setTimeout(() => {
+      const offset = getScrollPaddingTop();
+      const targetTop = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      const delta = Math.abs(window.pageYOffset - targetTop);
+      if (delta > 2) {
+        scrollToTarget(target, 'auto');
+      }
+    }, 200);
+  }
+
   // Smooth scroll for anchor links
   document.addEventListener('DOMContentLoaded', function() {
     // Select all links with anchors
@@ -40,23 +65,27 @@
           if (target) {
             e.preventDefault();
 
-            // Smooth scroll to the target
-            target.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-
-            // Update URL without triggering scroll
+            // Update URL first so :target styles (e.g., scroll-margin) apply
             if (window.history.pushState) {
-              window.history.pushState(null, null, '#' + hash);
+              if (window.location.hash !== '#' + hash) {
+                window.history.pushState(null, null, '#' + hash);
+              }
             } else {
               // Fallback for older browsers
               window.location.hash = hash;
             }
 
+            scrollToTarget(target, 'smooth');
+
             // Update focus for accessibility
             target.setAttribute('tabindex', '-1');
-            target.focus();
+            try {
+              target.focus({ preventScroll: true });
+            } catch (_error) {
+              // Skip focus to avoid jump when preventScroll isn't supported.
+            }
+
+            // Keep click behavior smooth without forcing a second jump.
           }
         } catch (error) {
           // If URL parsing fails, let browser handle it
@@ -73,14 +102,17 @@
       if (target) {
         // Small delay to let the page finish loading
         setTimeout(() => {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
+          scrollToTarget(target, 'smooth');
 
           // Update focus for accessibility
           target.setAttribute('tabindex', '-1');
-          target.focus();
+          try {
+            target.focus({ preventScroll: true });
+          } catch (_error) {
+            // Skip focus to avoid jump when preventScroll isn't supported.
+          }
+
+          alignTargetAfter(target);
         }, 100);
       }
     }

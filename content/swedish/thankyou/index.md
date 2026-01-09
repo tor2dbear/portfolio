@@ -11,6 +11,6 @@ aliases:
 
 ### Tack för att du hör av dig. Jag återkommer så snart som möjligt.
 
-{.grid-1-3 .mb-64}
+{.col-start-1 .col-span-6 .mb-64}
 
 {{< subscribe >}}

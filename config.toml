@@ -63,7 +63,12 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/works/"
     [[languages.en.menu.top]]
-      name = "about"
+      name = "Works"
+      weight = 2
+      identifier = "works"
+      url = "/#works"
+    [[languages.en.menu.top]]
+      name = "About me"
       weight = 3
       identifier = "about"
       url = "/#about"
@@ -91,7 +96,12 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/arbeten/"
     [[languages.sv.menu.top]]
-      name = "om"
+      name = "Arbeten"
+      weight = 2
+      identifier = "works"
+      url = "/#works"
+    [[languages.sv.menu.top]]
+      name = "Om mig"
       weight = 3
       identifier = "about"
       url = "/#about"

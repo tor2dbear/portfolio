@@ -4,6 +4,7 @@ linktitle: Om
 slug: om
 url: "/sv/om"
 sidemenu: true
+header_image: DSCF7894
 description: Produktägare & Art Director baserad i Göteborg. Jag kombinerar design och produktstrategi.
 layout: about
 ---

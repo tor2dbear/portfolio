@@ -4,11 +4,16 @@
     <nav class="top-menu__nav" aria-label="{{ i18n "menu_title" }}">
       <ul class="top-menu__list">
         {{- $urltop := .RelPermalink -}}
+        {{- $homeURL := "/" | relLangURL -}}
         {{- range .Site.Menus.top -}}
           {{- $nameLower := lower .Name -}}
           {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}
+          {{- $isAbout := or (eq .Identifier "about") (eq $nameLower "about") (eq $nameLower "om") -}}
           {{- if not $isContact -}}
             {{- $linkURL := .URL | relLangURL -}}
+            {{- if $isAbout -}}
+              {{- $linkURL = printf "%s#about" $homeURL -}}
+            {{- end -}}
           <li class="top-menu__item top-menu__item--nav">
             <a
               class="top-menu__link {{ if eq $urltop $linkURL }}active{{ end }}"
@@ -19,14 +24,6 @@
           {{- end -}}
         {{- end -}}
 
-        {{- /* Contact button */ -}}
-        <li class="top-menu__item top-menu__item--contact">
-          <a
-            class="top-menu__link top-menu__link--button"
-            href="{{ "contact" | relLangURL }}"
-          >{{ i18n "contact_me" }}</a>
-        </li>
-
         {{- /* Theme dropdown (mode + palette) */ -}}
         <li class="top-menu__item top-menu__item--theme">
           {{ partial "theme-dropdown.html" . }}
@@ -35,6 +32,24 @@
         {{- /* Language dropdown */ -}}
         <li class="top-menu__item top-menu__item--language">
           {{ partial "language-dropdown.html" . }}
+        </li>
+
+        {{- /* Settings dropdown (xs only) */ -}}
+        <li class="top-menu__item top-menu__item--settings">
+          {{ partial "settings-dropdown.html" . }}
+        </li>
+
+        {{- /* Contact button */ -}}
+        <li class="top-menu__item top-menu__item--contact">
+          <a
+            class="top-menu__link top-menu__link--button"
+            href="{{ printf "%s#contact" $homeURL }}"
+          >
+            <span class="top-menu__label top-menu__label--long">{{ i18n "contact_me" }}</span>
+            <span class="top-menu__label top-menu__label--icon" aria-hidden="true">
+              {{ readFile "static/img/svg/contact.svg" | safeHTML }}
+            </span>
+          </a>
         </li>
       </ul>
     </nav>

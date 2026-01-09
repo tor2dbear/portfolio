@@ -31,6 +31,9 @@
       */
   
       var header = document.getElementById('topmenu');
+      if (!header) {
+        return;
+      }
       var toggled;
       var downThreshold = 300;
       var upThreshold = 200;
@@ -86,6 +89,40 @@
           return toggled;
       };
   
-      window.addEventListener('scroll', checkScroll);
-  
+      var mediaQuery = w.matchMedia('(max-width: 47.9375em)');
+      var scrollHandlerAttached = false;
+
+      var enableScrollHandler = function() {
+          if (scrollHandlerAttached) {
+            return;
+          }
+          scrollHandlerAttached = true;
+          prevScroll = w.scrollY || doc.scrollTop;
+          curDirection = 0;
+          prevDirection = 0;
+          lastY = prevScroll;
+          w.addEventListener('scroll', checkScroll);
+      };
+
+      var disableScrollHandler = function() {
+          if (!scrollHandlerAttached) {
+            return;
+          }
+          scrollHandlerAttached = false;
+          header.classList.remove('hide');
+          header.classList.remove('relative');
+          w.removeEventListener('scroll', checkScroll);
+      };
+
+      var handleMediaChange = function(e) {
+          if (e.matches) {
+            enableScrollHandler();
+          } else {
+            disableScrollHandler();
+          }
+      };
+
+      mediaQuery.addEventListener('change', handleMediaChange);
+      handleMediaChange(mediaQuery);
+
   })();

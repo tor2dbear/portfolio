@@ -80,7 +80,7 @@
 
     <div class="theme-section">
       <h3 class="theme-section-title">{{ i18n "palette" }}</h3>
-      <div class="theme-options">
+      <div class="theme-options theme-options--palette">
         <button
           class="theme-option theme-option--palette"
           data-palette="standard"
@@ -88,10 +88,10 @@
           aria-label="Standard"
         >
           <span class="palette-preview palette-preview--standard">
-            <span class="palette-preview-segment" style="background: var(--iris-9);"></span>
-            <span class="palette-preview-segment" style="background: var(--gray-12);"></span>
+            <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
           </span>
-          <span>Standard</span>
+          <span class="palette-label">Standard</span>
         </button>
 
         <button
@@ -101,10 +101,10 @@
           aria-label="Pantone"
         >
           <span class="palette-preview palette-preview--pantone">
-            <span class="palette-preview-segment" style="background: #C13B4E;"></span>
-            <span class="palette-preview-segment" style="background: var(--gray-12);"></span>
+            <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
           </span>
-          <span>Pantone</span>
+          <span class="palette-label">Pantone</span>
         </button>
       </div>
     </div>

@@ -285,12 +285,46 @@
    /* 160px */
 
    /* ==========================================================================
-     LAYOUT: Sizes
-     ========================================================================== */
+   RADIUS: Scale
+   ========================================================================== */
+
+   --radius-2: 0.125rem;
+   /* 2px */
+   --radius-4: 0.25rem;
+   /* 4px */
+   --radius-8: 0.5rem;
+   /* 8px */
+   --radius-16: 1rem;
+   /* 16px */
+   --radius-24: 1.5rem;
+   /* 24px */
+   --radius-32: 2rem;
+   /* 32px */
+   --radius-pill: 62.4375rem;
+   /* 999px */
+
+   /* ==========================================================================
+   LAYOUT: Sizes
+   ========================================================================== */
+
+   --size-0: var(--spacing-0);
+   --size-2: var(--spacing-2);
+   --size-4: var(--spacing-4);
+   --size-8: var(--spacing-8);
+   --size-12: var(--spacing-12);
+   --size-16: var(--spacing-16);
+   --size-24: var(--spacing-24);
+   --size-32: var(--spacing-32);
+   --size-40: var(--spacing-40);
+   --size-48: var(--spacing-48);
+   --size-64: var(--spacing-64);
+   --size-80: var(--spacing-80);
+   --size-96: var(--spacing-96);
+   --size-160: var(--spacing-160);
 
    --size-header-height: 4.5rem;
    --size-header-height-neg: 0rem;
-   --size-page-margins: clamp(1.5rem, 1.3261rem + 0.8696vi, 2rem);
+  --size-page-margins: clamp(0.5rem, 0.8rem + 0.5vi, 1.5rem);
    --size-menu-width-xl: 24rem;
    /* 320 px + padding 2x2rem */
    --size-menu-width-lg: 20rem;

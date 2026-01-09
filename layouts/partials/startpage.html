@@ -4,7 +4,7 @@
 {{ end }}
 
 
-<div class="grid-1-5 startpage-heading">
+<div class="col-start-1 col-span-10 startpage-heading">
   <h1 class="type-heading hero-title mb-24">
     {{ i18n "hero_intro_lead" }}
     <span
@@ -27,7 +27,7 @@
   </h1>
   <button
     class="icon text-lg font-sans font-medium"
-    onclick="window.location.href = '{{ "contact" | absLangURL }}';"
+    onclick="window.location.href = '{{ printf "%s#contact" ("/" | absLangURL) }}';"
   >
     {{ i18n "get_in_touch" }}
   </button>

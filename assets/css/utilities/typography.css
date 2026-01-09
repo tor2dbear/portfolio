@@ -417,6 +417,7 @@ h4,
   line-height: var(--line-height-tight);
   color: var(--text-default);
   letter-spacing: var(--tracking-wider);
+  text-align: left;
 }
 
 /* Type: Caption */
@@ -438,6 +439,7 @@ p,
   font-family: var(--font-serif);
   letter-spacing: var(--tracking-normal);
   max-width: 70ch;
+  text-wrap-style: pretty;
 }
 
 /* Type: Body Small */
@@ -473,6 +475,7 @@ p,
   font-weight: var(--sans-weight-regular);
   line-height: var(--line-height-wide);
   letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
 }
 
 .tag-list__items {
@@ -490,6 +493,12 @@ p,
 
 .tag-list__link,
 .post-meta__link--tag {
+  color: var(--text-muted);
+}
+
+.tag:visited,
+.tag-list__link:visited,
+.post-meta__link--tag:visited {
   color: var(--text-muted);
 }
 
@@ -522,7 +531,7 @@ figcaption {
 }
 
 blockquote,
-blockquote > p {
+blockquote>p {
   font-family: var(--font-serif);
   font-size: var(--text-3xl);
   color: var(--text-default);
@@ -602,14 +611,14 @@ a.menu-heading:hover {
    RESPONSIVE TYPOGRAPHY
    ========================================================================== */
 
-/* min 768px Small */
+/* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
   .content:is(.startpage, .list) article:nth-of-type(n + 1) h2.text-2xl {
     font-size: var(--text-xl);
   }
 }
 
-/* X-Small */
+/* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .type-heading {
     font-size: var(--text-5xl);

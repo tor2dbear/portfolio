@@ -24,6 +24,7 @@
     const isHidden = themePanel.hasAttribute('hidden');
 
     if (isHidden) {
+      closeLanguagePanel();
       themePanel.removeAttribute('hidden');
       if (themeOverlay) themeOverlay.removeAttribute('hidden');
       themeToggle.setAttribute('aria-expanded', 'true');
@@ -42,6 +43,30 @@
     }
   }
 
+  function closeLanguagePanel() {
+    const languagePanel = document.querySelector('.language-panel');
+    const languageToggle = document.querySelector('.language-toggle');
+    const languageOverlay = document.querySelector('.language-overlay');
+
+    if (languagePanel && !languagePanel.hasAttribute('hidden')) {
+      languagePanel.setAttribute('hidden', '');
+      if (languageOverlay) languageOverlay.setAttribute('hidden', '');
+      if (languageToggle) languageToggle.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function closeSettingsPanel() {
+    const settingsPanel = document.querySelector('[data-js="settings-panel"]');
+    const settingsToggle = document.querySelector('[data-js="settings-toggle"]');
+    const settingsOverlay = document.querySelector('[data-js="settings-overlay"]');
+
+    if (settingsPanel && !settingsPanel.hasAttribute('hidden')) {
+      settingsPanel.setAttribute('hidden', '');
+      if (settingsOverlay) settingsOverlay.setAttribute('hidden', '');
+      if (settingsToggle) settingsToggle.setAttribute('aria-expanded', 'false');
+    }
+  }
+
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
@@ -51,6 +76,7 @@
     applyMode(mode);
     updateModeUI(mode);
     closePanel();
+    closeSettingsPanel();
   }
 
   function applyMode(mode) {
@@ -86,6 +112,7 @@
     applyPalette(palette);
     updatePaletteUI(palette);
     closePanel();
+    closeSettingsPanel();
   }
 
   function applyPalette(palette) {
