@@ -4,7 +4,7 @@
   <h4>{{ .Title }}</h4>
 </div>
 
-<div class="content list">
+<div class="content list use-subgrid">
   {{ range .Data.Pages }}
     {{ .Render "summary"}}
   {{ end }}

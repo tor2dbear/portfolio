@@ -63,14 +63,20 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/works/"
     [[languages.en.menu.top]]
-      name = "about"
+      name = "Works"
+      weight = 2
+      identifier = "works"
+      url = "/#works"
+    [[languages.en.menu.top]]
+      name = "About me"
       weight = 3
       identifier = "about"
-      url = "/about/"
+      url = "/#about"
     [[languages.en.menu.top]]
       name = "contact"
       weight = 4
-      url = "/contact/"
+      identifier = "contact"
+      url = "/#contact"
 
   [languages.sv]
     languageName = "Svenska"
@@ -90,14 +96,20 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/arbeten/"
     [[languages.sv.menu.top]]
-      name = "om"
+      name = "Arbeten"
+      weight = 2
+      identifier = "works"
+      url = "/#works"
+    [[languages.sv.menu.top]]
+      name = "Om mig"
       weight = 3
       identifier = "about"
-      url = "/om/"
+      url = "/#about"
     [[languages.sv.menu.top]]
       name = "kontakt"
       weight = 4
-      url = "/kontakt/"
+      identifier = "contact"
+      url = "/#contact"
 
 [permalinks]
   works = '/:slug/:title/'

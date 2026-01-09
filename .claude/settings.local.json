@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(gh pr view:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "Bash(cd:*)",
+      "Bash(cd /Users/torbjornhedberg/Library/Mobile\\\\ Documents/com~apple~CloudDocs/Hugo/testsite:*)",
+      "Bash(for file in ui.js header-line.js header-hide.js darkmode.js language-dropdown.js focus-mode.js progressbar.js smooth-scroll.js)",
+      "Bash(do)",
+      "Bash(if [ ! -f \"assets/js/$file\" ])",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(else)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(hugo server:*)",
+      "Bash(pkill:*)",
+      "Bash(lsof:*)"
+    ]
+  }
+}

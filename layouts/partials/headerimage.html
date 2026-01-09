@@ -28,7 +28,7 @@
   {{ $xxlarge := .Scratch.Get "xxlarge" }}
   {{ $fallback := .Scratch.Get "fallback" }}
 
-
+  {{/* Size-based image breakpoints (performance). No art-direction crops here. */}}
   <picture>
     <source
       media="(max-width: 376px) and (max-resolution: 1dppx),

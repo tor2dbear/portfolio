@@ -1,12 +1,23 @@
 {{ partial "header.html" . }}
 
-<div class="content post">
+<div class="content post use-subgrid">
   <nav class="application-breadcrumb flex text-sm mb-24 show-on-client">
     <ul>
       <li class="application-breadcrumb__item">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
       </li>
       <li class="application-breadcrumb__item text-capitalize" data-js="application-breadcrumb-back">
+        <a class="application-breadcrumb__link"></a>
+      </li>
+      <li class="application-breadcrumb__item text-color-lighter">{{ .Title }}</li>
+    </ul>
+  </nav>
+  <nav class="application-breadcrumb flex text-sm mb-24 show-on-employer">
+    <ul>
+      <li class="application-breadcrumb__item">
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
+      </li>
+      <li class="application-breadcrumb__item text-capitalize" data-js="application-breadcrumb-back-employer">
         <a class="application-breadcrumb__link"></a>
       </li>
       <li class="application-breadcrumb__item text-color-lighter">{{ .Title }}</li>
@@ -39,7 +50,7 @@
   </div>
 
   {{ partial "related.html" . }}
-    <ul class="toc mt-64 mb-64 grid-6 show-on-client">
+    <ul class="toc mt-64 mb-64 col-span-12 show-on-client">
     <li class="toc__header"><h3 class="type-headline-small mb-8">Table of content</h3></li>
     <li class="toc__item font-sans text-base text-color-lighter">
       <a data-js="application-toc-letter" href="#">Letter</a>

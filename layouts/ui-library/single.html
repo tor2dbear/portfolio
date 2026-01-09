@@ -1,0 +1,1211 @@
+{{ partial "header.html" . }}
+
+<div class="content ui-library use-subgrid">
+  <div class="ui-library__header">
+    <h1 class="type-headline-1 mt-0 mb-8">{{ .Title }}</h1>
+    <p class="type-body-large mb-24">{{ .Description }}</p>
+  </div>
+
+  <div class="ui-library__tabs" data-js="ui-library-tabs">
+    <!-- Tab Navigation -->
+    <nav class="tabs-nav" role="tablist">
+      <button class="tab-button is-active" data-tab="tokens" role="tab" aria-selected="true" aria-controls="panel-tokens">
+        {{ if eq .Language.Lang "sv" }}Tokens{{ else }}Tokens{{ end }}
+      </button>
+      <button class="tab-button" data-tab="grid" role="tab" aria-selected="false" aria-controls="panel-grid">
+        {{ if eq .Language.Lang "sv" }}Grid{{ else }}Grid{{ end }}
+      </button>
+      <button class="tab-button" data-tab="components" role="tab" aria-selected="false" aria-controls="panel-components">
+        {{ if eq .Language.Lang "sv" }}Komponenter{{ else }}Components{{ end }}
+      </button>
+      <button class="tab-button" data-tab="utilities" role="tab" aria-selected="false" aria-controls="panel-utilities">
+        {{ if eq .Language.Lang "sv" }}Utilities{{ else }}Utilities{{ end }}
+      </button>
+    </nav>
+
+    <!-- Tab Panels -->
+    <div class="tabs-content">
+
+      <!-- TOKENS TAB -->
+      <div id="panel-tokens" class="tab-panel is-active" data-panel="tokens" role="tabpanel" aria-labelledby="tab-tokens">
+
+        <!-- Colors Accordion -->
+        <details class="accordion" open>
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Färger{{ else }}Colors{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+
+            <!-- Base Colors -->
+            <div class="token-section">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Basfarger{{ else }}Base Colors{{ end }}</h4>
+              <div class="color-grid">
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--black);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--black</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--white); border: 1px solid #ccc;"></div>
+                  <div class="color-swatch__meta">
+                    <code>--white</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Brand Colors (Iris) -->
+            <div class="token-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Märkesfarger (Iris){{ else }}Brand Colors (Iris){{ end }}</h4>
+              <div class="color-grid">
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-1);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-1</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-2);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-2</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-3);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-3</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-4);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-4</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-5);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-5</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-6);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-6</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-7);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-7</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-8);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-8</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-9);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-9</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-10);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-10</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-11);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-11</code>
+                  </div>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-swatch__visual" style="background-color: var(--iris-12);"></div>
+                  <div class="color-swatch__meta">
+                    <code>--iris-12</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Color Scales -->
+            <div class="token-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Ytterligare färgskalor{{ else }}Additional Color Scales{{ end }}</h4>
+
+              <!-- Blue Scale -->
+              <details class="accordion-nested">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Blå skala{{ else }}Blue Scale{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-1);"></div>
+                    <div class="color-swatch__meta"><code>--blue-1</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-2);"></div>
+                    <div class="color-swatch__meta"><code>--blue-2</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-3);"></div>
+                    <div class="color-swatch__meta"><code>--blue-3</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-4);"></div>
+                    <div class="color-swatch__meta"><code>--blue-4</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-5);"></div>
+                    <div class="color-swatch__meta"><code>--blue-5</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-6);"></div>
+                    <div class="color-swatch__meta"><code>--blue-6</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-7);"></div>
+                    <div class="color-swatch__meta"><code>--blue-7</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-8);"></div>
+                    <div class="color-swatch__meta"><code>--blue-8</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-9);"></div>
+                    <div class="color-swatch__meta"><code>--blue-9</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-10);"></div>
+                    <div class="color-swatch__meta"><code>--blue-10</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-11);"></div>
+                    <div class="color-swatch__meta"><code>--blue-11</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--blue-12);"></div>
+                    <div class="color-swatch__meta"><code>--blue-12</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Green Scale -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Grön skala{{ else }}Green Scale{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-1);"></div>
+                    <div class="color-swatch__meta"><code>--green-1</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-2);"></div>
+                    <div class="color-swatch__meta"><code>--green-2</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-3);"></div>
+                    <div class="color-swatch__meta"><code>--green-3</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-4);"></div>
+                    <div class="color-swatch__meta"><code>--green-4</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-5);"></div>
+                    <div class="color-swatch__meta"><code>--green-5</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-6);"></div>
+                    <div class="color-swatch__meta"><code>--green-6</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-7);"></div>
+                    <div class="color-swatch__meta"><code>--green-7</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-8);"></div>
+                    <div class="color-swatch__meta"><code>--green-8</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-9);"></div>
+                    <div class="color-swatch__meta"><code>--green-9</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-10);"></div>
+                    <div class="color-swatch__meta"><code>--green-10</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-11);"></div>
+                    <div class="color-swatch__meta"><code>--green-11</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--green-12);"></div>
+                    <div class="color-swatch__meta"><code>--green-12</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Orange Scale -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Orange skala{{ else }}Orange Scale{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-1);"></div>
+                    <div class="color-swatch__meta"><code>--orange-1</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-2);"></div>
+                    <div class="color-swatch__meta"><code>--orange-2</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-3);"></div>
+                    <div class="color-swatch__meta"><code>--orange-3</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-4);"></div>
+                    <div class="color-swatch__meta"><code>--orange-4</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-5);"></div>
+                    <div class="color-swatch__meta"><code>--orange-5</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-6);"></div>
+                    <div class="color-swatch__meta"><code>--orange-6</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-7);"></div>
+                    <div class="color-swatch__meta"><code>--orange-7</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-8);"></div>
+                    <div class="color-swatch__meta"><code>--orange-8</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-9);"></div>
+                    <div class="color-swatch__meta"><code>--orange-9</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-10);"></div>
+                    <div class="color-swatch__meta"><code>--orange-10</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-11);"></div>
+                    <div class="color-swatch__meta"><code>--orange-11</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--orange-12);"></div>
+                    <div class="color-swatch__meta"><code>--orange-12</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Amber Scale -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Amber skala{{ else }}Amber Scale{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-1);"></div>
+                    <div class="color-swatch__meta"><code>--amber-1</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-2);"></div>
+                    <div class="color-swatch__meta"><code>--amber-2</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-3);"></div>
+                    <div class="color-swatch__meta"><code>--amber-3</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-4);"></div>
+                    <div class="color-swatch__meta"><code>--amber-4</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-5);"></div>
+                    <div class="color-swatch__meta"><code>--amber-5</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-6);"></div>
+                    <div class="color-swatch__meta"><code>--amber-6</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-7);"></div>
+                    <div class="color-swatch__meta"><code>--amber-7</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-8);"></div>
+                    <div class="color-swatch__meta"><code>--amber-8</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-9);"></div>
+                    <div class="color-swatch__meta"><code>--amber-9</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-10);"></div>
+                    <div class="color-swatch__meta"><code>--amber-10</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-11);"></div>
+                    <div class="color-swatch__meta"><code>--amber-11</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--amber-12);"></div>
+                    <div class="color-swatch__meta"><code>--amber-12</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Purple Scale -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Lila skala{{ else }}Purple Scale{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-1);"></div>
+                    <div class="color-swatch__meta"><code>--purple-1</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-2);"></div>
+                    <div class="color-swatch__meta"><code>--purple-2</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-3);"></div>
+                    <div class="color-swatch__meta"><code>--purple-3</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-4);"></div>
+                    <div class="color-swatch__meta"><code>--purple-4</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-5);"></div>
+                    <div class="color-swatch__meta"><code>--purple-5</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-6);"></div>
+                    <div class="color-swatch__meta"><code>--purple-6</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-7);"></div>
+                    <div class="color-swatch__meta"><code>--purple-7</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-8);"></div>
+                    <div class="color-swatch__meta"><code>--purple-8</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-9);"></div>
+                    <div class="color-swatch__meta"><code>--purple-9</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-10);"></div>
+                    <div class="color-swatch__meta"><code>--purple-10</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-11);"></div>
+                    <div class="color-swatch__meta"><code>--purple-11</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--purple-12);"></div>
+                    <div class="color-swatch__meta"><code>--purple-12</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Teal Scale -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Teal skala{{ else }}Teal Scale{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-1);"></div>
+                    <div class="color-swatch__meta"><code>--teal-1</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-2);"></div>
+                    <div class="color-swatch__meta"><code>--teal-2</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-3);"></div>
+                    <div class="color-swatch__meta"><code>--teal-3</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-4);"></div>
+                    <div class="color-swatch__meta"><code>--teal-4</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-5);"></div>
+                    <div class="color-swatch__meta"><code>--teal-5</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-6);"></div>
+                    <div class="color-swatch__meta"><code>--teal-6</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-7);"></div>
+                    <div class="color-swatch__meta"><code>--teal-7</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-8);"></div>
+                    <div class="color-swatch__meta"><code>--teal-8</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-9);"></div>
+                    <div class="color-swatch__meta"><code>--teal-9</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-10);"></div>
+                    <div class="color-swatch__meta"><code>--teal-10</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-11);"></div>
+                    <div class="color-swatch__meta"><code>--teal-11</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--teal-12);"></div>
+                    <div class="color-swatch__meta"><code>--teal-12</code></div>
+                  </div>
+                </div>
+              </details>
+
+            </div>
+
+            <!-- Semantic Tokens -->
+            <div class="token-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Semantiska tokens{{ else }}Semantic Tokens{{ end }}</h4>
+
+              <!-- Text Tokens -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Text{{ else }}Text{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-default);"></div>
+                    <div class="color-swatch__meta"><code>--text-default</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-muted);"></div>
+                    <div class="color-swatch__meta"><code>--text-muted</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-inverse);"></div>
+                    <div class="color-swatch__meta"><code>--text-inverse</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-nav);"></div>
+                    <div class="color-swatch__meta"><code>--text-nav</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-link);"></div>
+                    <div class="color-swatch__meta"><code>--text-link</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-link-hover);"></div>
+                    <div class="color-swatch__meta"><code>--text-link-hover</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-accent);"></div>
+                    <div class="color-swatch__meta"><code>--text-accent</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--text-disabled);"></div>
+                    <div class="color-swatch__meta"><code>--text-disabled</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Background Tokens -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Bakgrund{{ else }}Background{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-page);"></div>
+                    <div class="color-swatch__meta"><code>--bg-page</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-surface);"></div>
+                    <div class="color-swatch__meta"><code>--bg-surface</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-elevated);"></div>
+                    <div class="color-swatch__meta"><code>--bg-elevated</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-inverse);"></div>
+                    <div class="color-swatch__meta"><code>--bg-inverse</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-nav);"></div>
+                    <div class="color-swatch__meta"><code>--bg-nav</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-tag);"></div>
+                    <div class="color-swatch__meta"><code>--bg-tag</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-tag-hover);"></div>
+                    <div class="color-swatch__meta"><code>--bg-tag-hover</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-section-headline);"></div>
+                    <div class="color-swatch__meta"><code>--bg-section-headline</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--bg-disabled);"></div>
+                    <div class="color-swatch__meta"><code>--bg-disabled</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Border Tokens -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Border{{ else }}Border{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--border-subtle);"></div>
+                    <div class="color-swatch__meta"><code>--border-subtle</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--border-default);"></div>
+                    <div class="color-swatch__meta"><code>--border-default</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--border-strong);"></div>
+                    <div class="color-swatch__meta"><code>--border-strong</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--border-disabled);"></div>
+                    <div class="color-swatch__meta"><code>--border-disabled</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--outline-neutral);"></div>
+                    <div class="color-swatch__meta"><code>--outline-neutral</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Brand Tokens -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Brand{{ else }}Brand{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--brand-primary);"></div>
+                    <div class="color-swatch__meta"><code>--brand-primary</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--brand-on-primary);"></div>
+                    <div class="color-swatch__meta"><code>--brand-on-primary</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--brand-container);"></div>
+                    <div class="color-swatch__meta"><code>--brand-container</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--brand-on-container);"></div>
+                    <div class="color-swatch__meta"><code>--brand-on-container</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- State Tokens -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}State Overlays{{ else }}State Overlays{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content color-grid mt-16">
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--state-on-light-hover);"></div>
+                    <div class="color-swatch__meta"><code>--state-on-light-hover</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--state-on-light-active);"></div>
+                    <div class="color-swatch__meta"><code>--state-on-light-active</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--state-on-dark-hover);"></div>
+                    <div class="color-swatch__meta"><code>--state-on-dark-hover</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--state-on-dark-active);"></div>
+                    <div class="color-swatch__meta"><code>--state-on-dark-active</code></div>
+                  </div>
+                  <div class="color-swatch">
+                    <div class="color-swatch__visual" style="background-color: var(--state-focus);"></div>
+                    <div class="color-swatch__meta"><code>--state-focus</code></div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Status Tokens -->
+              <details class="accordion-nested mt-16">
+                <summary class="accordion-nested__trigger">
+                  <span class="type-body-large">{{ if eq .Language.Lang "sv" }}Status{{ else }}Status{{ end }}</span>
+                </summary>
+                <div class="accordion-nested__content mt-16">
+                  <h5 class="type-body-large mb-8">{{ if eq .Language.Lang "sv" }}Error{{ else }}Error{{ end }}</h5>
+                  <div class="color-grid mb-16">
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-error-bg);"></div>
+                      <div class="color-swatch__meta"><code>--status-error-bg</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-error-border);"></div>
+                      <div class="color-swatch__meta"><code>--status-error-border</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-error-text);"></div>
+                      <div class="color-swatch__meta"><code>--status-error-text</code></div>
+                    </div>
+                  </div>
+
+                  <h5 class="type-body-large mb-8">{{ if eq .Language.Lang "sv" }}Success{{ else }}Success{{ end }}</h5>
+                  <div class="color-grid mb-16">
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-success-bg);"></div>
+                      <div class="color-swatch__meta"><code>--status-success-bg</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-success-border);"></div>
+                      <div class="color-swatch__meta"><code>--status-success-border</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-success-text);"></div>
+                      <div class="color-swatch__meta"><code>--status-success-text</code></div>
+                    </div>
+                  </div>
+
+                  <h5 class="type-body-large mb-8">{{ if eq .Language.Lang "sv" }}Warning{{ else }}Warning{{ end }}</h5>
+                  <div class="color-grid mb-16">
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-warning-bg);"></div>
+                      <div class="color-swatch__meta"><code>--status-warning-bg</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-warning-border);"></div>
+                      <div class="color-swatch__meta"><code>--status-warning-border</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-warning-text);"></div>
+                      <div class="color-swatch__meta"><code>--status-warning-text</code></div>
+                    </div>
+                  </div>
+
+                  <h5 class="type-body-large mb-8">{{ if eq .Language.Lang "sv" }}Info{{ else }}Info{{ end }}</h5>
+                  <div class="color-grid">
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-info-bg);"></div>
+                      <div class="color-swatch__meta"><code>--status-info-bg</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-info-border);"></div>
+                      <div class="color-swatch__meta"><code>--status-info-border</code></div>
+                    </div>
+                    <div class="color-swatch">
+                      <div class="color-swatch__visual" style="background-color: var(--status-info-text);"></div>
+                      <div class="color-swatch__meta"><code>--status-info-text</code></div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+            </div>
+
+          </div>
+        </details>
+
+        <!-- Typography Accordion -->
+        <details class="accordion">
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Typografi{{ else }}Typography{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+
+            <div class="token-section">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Font Sizes{{ else }}Font Sizes{{ end }}</h4>
+
+              <div class="typography-scale">
+                <div class="typography-example">
+                  <div class="typography-example__sample type-headline-1">Headline 1</div>
+                  <code class="typography-example__token">.type-headline-1</code>
+                </div>
+                <div class="typography-example">
+                  <div class="typography-example__sample type-headline-2">Headline 2</div>
+                  <code class="typography-example__token">.type-headline-2</code>
+                </div>
+                <div class="typography-example">
+                  <div class="typography-example__sample type-heading">Heading</div>
+                  <code class="typography-example__token">.type-heading</code>
+                </div>
+                <div class="typography-example">
+                  <div class="typography-example__sample type-subheading">Subheading</div>
+                  <code class="typography-example__token">.type-subheading</code>
+                </div>
+                <div class="typography-example">
+                  <div class="typography-example__sample type-body-large">Body Large</div>
+                  <code class="typography-example__token">.type-body-large</code>
+                </div>
+                <div class="typography-example">
+                  <div class="typography-example__sample">Body (default)</div>
+                  <code class="typography-example__token">Default body text</code>
+                </div>
+                <div class="typography-example">
+                  <div class="typography-example__sample type-body-small">Body Small</div>
+                  <code class="typography-example__token">.type-body-small</code>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </details>
+
+        <!-- Spacing Accordion -->
+        <details class="accordion">
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Spacing{{ else }}Spacing{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+
+            <div class="token-section">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Spacing Scale{{ else }}Spacing Scale{{ end }}</h4>
+              <p class="mb-16">{{ if eq .Language.Lang "sv" }}Spacing används för margins, padding och gap.{{ else }}Spacing used for margins, padding, and gap.{{ end }}</p>
+
+              <div class="spacing-scale">
+                <div class="spacing-example">
+                  <div class="spacing-example__visual" style="width: 4px; height: 4px;"></div>
+                  <code class="spacing-example__token">4px</code>
+                  <span class="spacing-example__usage">mt-4, mb-4, gap-4</span>
+                </div>
+                <div class="spacing-example">
+                  <div class="spacing-example__visual" style="width: 8px; height: 8px;"></div>
+                  <code class="spacing-example__token">8px</code>
+                  <span class="spacing-example__usage">mt-8, mb-8, gap-8</span>
+                </div>
+                <div class="spacing-example">
+                  <div class="spacing-example__visual" style="width: 16px; height: 16px;"></div>
+                  <code class="spacing-example__token">16px</code>
+                  <span class="spacing-example__usage">mt-16, mb-16, gap-16</span>
+                </div>
+                <div class="spacing-example">
+                  <div class="spacing-example__visual" style="width: 24px; height: 24px;"></div>
+                  <code class="spacing-example__token">24px</code>
+                  <span class="spacing-example__usage">mt-24, mb-24, gap-24</span>
+                </div>
+                <div class="spacing-example">
+                  <div class="spacing-example__visual" style="width: 32px; height: 32px;"></div>
+                  <code class="spacing-example__token">32px</code>
+                  <span class="spacing-example__usage">mt-32, mb-32, gap-32</span>
+                </div>
+                <div class="spacing-example">
+                  <div class="spacing-example__visual" style="width: 48px; height: 48px;"></div>
+                  <code class="spacing-example__token">48px</code>
+                  <span class="spacing-example__usage">mt-48, mb-48, gap-48</span>
+                </div>
+                <div class="spacing-example">
+                  <div class="spacing-example__visual" style="width: 64px; height: 64px;"></div>
+                  <code class="spacing-example__token">64px</code>
+                  <span class="spacing-example__usage">mt-64, mb-64, gap-64</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </details>
+
+      </div>
+
+      <!-- GRID TAB -->
+      <div id="panel-grid" class="tab-panel" data-panel="grid" role="tabpanel" aria-labelledby="tab-grid">
+
+        <details class="accordion" open>
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}12-kolumns Grid System{{ else }}12-Column Grid System{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+
+            <p class="mb-24">{{ if eq .Language.Lang "sv" }}Ett 12-kolumns subgrid-system med flexibla kolumnspanningar och placeringar.{{ else }}A 12-column subgrid system with flexible column spans and placements.{{ end }}</p>
+
+            <!-- Full Width -->
+            <div class="grid-section">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Full bredd (12 kolumner){{ else }}Full Width (12 columns){{ end }}</h4>
+              <div class="grid-demo mb-16 use-subgrid">
+                <div class="col-span-12 grid-demo__item">col-span-12</div>
+              </div>
+              <details class="code-example">
+                <summary>{{ if eq .Language.Lang "sv" }}Visa HTML{{ else }}Show HTML{{ end }}</summary>
+                <pre><code>&lt;div class="use-subgrid"&gt;
+  &lt;div class="col-span-12"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+              </details>
+            </div>
+
+            <!-- 50/50 Split -->
+            <div class="grid-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}50/50 Split (6+6){{ else }}50/50 Split (6+6){{ end }}</h4>
+              <div class="grid-demo mb-16 use-subgrid">
+                <div class="col-span-6 grid-demo__item">col-span-6</div>
+                <div class="col-span-6 grid-demo__item">col-span-6</div>
+              </div>
+              <details class="code-example">
+                <summary>{{ if eq .Language.Lang "sv" }}Visa HTML{{ else }}Show HTML{{ end }}</summary>
+                <pre><code>&lt;div class="use-subgrid"&gt;
+  &lt;div class="col-span-6"&gt;...&lt;/div&gt;
+  &lt;div class="col-span-6"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+              </details>
+            </div>
+
+            <!-- Thirds -->
+            <div class="grid-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Tredjedel delar (4+4+4){{ else }}Thirds (4+4+4){{ end }}</h4>
+              <div class="grid-demo mb-16 use-subgrid">
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+              </div>
+              <details class="code-example">
+                <summary>{{ if eq .Language.Lang "sv" }}Visa HTML{{ else }}Show HTML{{ end }}</summary>
+                <pre><code>&lt;div class="use-subgrid"&gt;
+  &lt;div class="col-span-4"&gt;...&lt;/div&gt;
+  &lt;div class="col-span-4"&gt;...&lt;/div&gt;
+  &lt;div class="col-span-4"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+              </details>
+            </div>
+
+            <!-- 2:1 Ratio -->
+            <div class="grid-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}2:1 Ratio (8+4){{ else }}2:1 Ratio (8+4){{ end }}</h4>
+              <div class="grid-demo mb-16 use-subgrid">
+                <div class="col-span-8 grid-demo__item">col-span-8 (wide)</div>
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+              </div>
+              <details class="code-example">
+                <summary>{{ if eq .Language.Lang "sv" }}Visa HTML{{ else }}Show HTML{{ end }}</summary>
+                <pre><code>&lt;div class="use-subgrid"&gt;
+  &lt;div class="col-span-8"&gt;...&lt;/div&gt;
+  &lt;div class="col-span-4"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+              </details>
+            </div>
+
+            <!-- Specific Placement -->
+            <div class="grid-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Specifik placering{{ else }}Specific Placement{{ end }}</h4>
+              <div class="grid-demo mb-16 use-subgrid">
+                <div class="col-start-3 col-span-8 grid-demo__item">col-start-3 col-span-8</div>
+              </div>
+              <details class="code-example">
+                <summary>{{ if eq .Language.Lang "sv" }}Visa HTML{{ else }}Show HTML{{ end }}</summary>
+                <pre><code>&lt;div class="use-subgrid"&gt;
+  &lt;div class="col-start-3 col-span-8"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+              </details>
+            </div>
+
+            <!-- Asymmetric Layout -->
+            <div class="grid-section mt-24">
+              <h4 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Asymmetrisk layout{{ else }}Asymmetric Layout{{ end }}</h4>
+              <div class="grid-demo mb-16 use-subgrid">
+                <div class="col-span-3 grid-demo__item">3 cols</div>
+                <div class="col-span-6 grid-demo__item">6 cols</div>
+                <div class="col-span-3 grid-demo__item">3 cols</div>
+              </div>
+              <details class="code-example">
+                <summary>{{ if eq .Language.Lang "sv" }}Visa HTML{{ else }}Show HTML{{ end }}</summary>
+                <pre><code>&lt;div class="use-subgrid"&gt;
+  &lt;div class="col-span-3"&gt;...&lt;/div&gt;
+  &lt;div class="col-span-6"&gt;...&lt;/div&gt;
+  &lt;div class="col-span-3"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+              </details>
+            </div>
+
+          </div>
+        </details>
+
+      </div>
+
+      <!-- COMPONENTS TAB -->
+      <div id="panel-components" class="tab-panel" data-panel="components" role="tabpanel" aria-labelledby="tab-components">
+
+        <details class="accordion" open>
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Buttons{{ else }}Buttons{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+
+            <div class="component-doc">
+              <div class="component-meta mb-16">
+                <dl class="meta-list">
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Klasser:{{ else }}Classes:{{ end }}</dt>
+                    <dd><code>.button</code>, <code>.button--primary</code>, <code>.button--secondary</code>, <code>.button--tertiary</code>, <code>.button.icon</code></dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Fil:{{ else }}File:{{ end }}</dt>
+                    <dd><code>assets/css/components/button.css</code></dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>Tokens:</dt>
+                    <dd><code>--brand-primary</code>, <code>--brand-on-primary</code>, <code>--text-default</code>, <code>--border-default</code>, <code>--state-on-brand-hover</code></dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div class="component-examples">
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Default Button{{ else }}Default Button{{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <button class="button">{{ if eq .Language.Lang "sv" }}Klicka här{{ else }}Click here{{ end }}</button>
+                  <button class="button" disabled>{{ if eq .Language.Lang "sv" }}Inaktiverad{{ else }}Disabled{{ end }}</button>
+                </div>
+
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Primary Button (Brand){{ else }}Primary Button (Brand){{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <button class="button button--primary">{{ if eq .Language.Lang "sv" }}Klicka här{{ else }}Click here{{ end }}</button>
+                  <button class="button button--primary" disabled>{{ if eq .Language.Lang "sv" }}Inaktiverad{{ else }}Disabled{{ end }}</button>
+                </div>
+
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Secondary Button (Outlined){{ else }}Secondary Button (Outlined){{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <button class="button button--secondary">{{ if eq .Language.Lang "sv" }}Klicka här{{ else }}Click here{{ end }}</button>
+                  <button class="button button--secondary" disabled>{{ if eq .Language.Lang "sv" }}Inaktiverad{{ else }}Disabled{{ end }}</button>
+                </div>
+
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Tertiary Button (Text Only){{ else }}Tertiary Button (Text Only){{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <button class="button button--tertiary">{{ if eq .Language.Lang "sv" }}Klicka här{{ else }}Click here{{ end }}</button>
+                  <button class="button button--tertiary" disabled>{{ if eq .Language.Lang "sv" }}Inaktiverad{{ else }}Disabled{{ end }}</button>
+                </div>
+
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Button med ikon{{ else }}Button with Icon{{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <button class="button button--primary icon">{{ if eq .Language.Lang "sv" }}Läs mer{{ else }}Read more{{ end }}</button>
+                  <button class="button button--secondary icon">{{ if eq .Language.Lang "sv" }}Läs mer{{ else }}Read more{{ end }}</button>
+                  <button class="button icon">{{ if eq .Language.Lang "sv" }}Läs mer{{ else }}Read more{{ end }}</button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Forms{{ else }}Forms{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+
+            <div class="component-doc">
+              <div class="component-meta mb-16">
+                <dl class="meta-list">
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Klasser:{{ else }}Classes:{{ end }}</dt>
+                    <dd><code>.input</code>, <code>.radio</code>, <code>.checkbox</code>, <code>.select</code>, <code>.form-group</code>, <code>.form-label</code></dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Fil:{{ else }}File:{{ end }}</dt>
+                    <dd><code>assets/css/components/form.css</code></dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>Tokens:</dt>
+                    <dd><code>--brand-primary</code>, <code>--border-default</code>, <code>--text-default</code>, <code>--text-muted</code>, <code>--iris-4</code>, <code>--orange-9</code></dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div class="component-examples">
+
+                <!-- Text Inputs -->
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Text Inputs{{ else }}Text Inputs{{ end }}</h5>
+                <div class="component-example-group mb-24" style="flex-direction: column; align-items: stretch;">
+                  <div class="form-group">
+                    <label class="form-label" for="input-text">{{ if eq .Language.Lang "sv" }}Text input{{ else }}Text input{{ end }}</label>
+                    <input type="text" id="input-text" placeholder="{{ if eq .Language.Lang "sv" }}Skriv något...{{ else }}Type something...{{ end }}">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-email">{{ if eq .Language.Lang "sv" }}Email{{ else }}Email{{ end }}</label>
+                    <input type="email" id="input-email" placeholder="name@example.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-disabled">{{ if eq .Language.Lang "sv" }}Inaktiverad{{ else }}Disabled{{ end }}</label>
+                    <input type="text" id="input-disabled" value="{{ if eq .Language.Lang "sv" }}Kan inte ändras{{ else }}Cannot be changed{{ end }}" disabled>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-error">{{ if eq .Language.Lang "sv" }}Error state{{ else }}Error state{{ end }}</label>
+                    <input type="text" id="input-error" class="error" value="{{ if eq .Language.Lang "sv" }}Ogiltigt värde{{ else }}Invalid value{{ end }}">
+                    <span class="form-error">{{ if eq .Language.Lang "sv" }}Detta fält innehåller fel{{ else }}This field contains an error{{ end }}</span>
+                  </div>
+                </div>
+
+                <!-- Textarea -->
+                <h5 class="type-subheading mb-8">Textarea</h5>
+                <div class="component-example-group mb-24" style="flex-direction: column; align-items: stretch;">
+                  <div class="form-group">
+                    <label class="form-label" for="textarea-1">{{ if eq .Language.Lang "sv" }}Meddelande{{ else }}Message{{ end }}</label>
+                    <textarea id="textarea-1" placeholder="{{ if eq .Language.Lang "sv" }}Skriv ditt meddelande här...{{ else }}Write your message here...{{ end }}"></textarea>
+                    <span class="form-help">{{ if eq .Language.Lang "sv" }}Minst 10 tecken{{ else }}Minimum 10 characters{{ end }}</span>
+                  </div>
+                </div>
+
+                <!-- Radio Buttons -->
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Radio Buttons{{ else }}Radio Buttons{{ end }}</h5>
+                <div class="component-example-group mb-24" style="flex-direction: column; align-items: flex-start;">
+                  <div class="form-group">
+                    <label class="form-label">{{ if eq .Language.Lang "sv" }}Välj ett alternativ{{ else }}Select an option{{ end }}</label>
+                    <div class="radio-group">
+                      <label class="radio">
+                        <input type="radio" name="radio-demo" value="option1" checked>
+                        <span class="radio__visual"></span>
+                        <span class="radio__label">{{ if eq .Language.Lang "sv" }}Alternativ 1{{ else }}Option 1{{ end }}</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="radio-demo" value="option2">
+                        <span class="radio__visual"></span>
+                        <span class="radio__label">{{ if eq .Language.Lang "sv" }}Alternativ 2{{ else }}Option 2{{ end }}</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="radio-demo" value="option3">
+                        <span class="radio__visual"></span>
+                        <span class="radio__label">{{ if eq .Language.Lang "sv" }}Alternativ 3{{ else }}Option 3{{ end }}</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="radio-demo" value="disabled" disabled>
+                        <span class="radio__visual"></span>
+                        <span class="radio__label">{{ if eq .Language.Lang "sv" }}Inaktiverad{{ else }}Disabled{{ end }}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group mt-16">
+                    <label class="form-label">{{ if eq .Language.Lang "sv" }}Inline radio buttons{{ else }}Inline radio buttons{{ end }}</label>
+                    <div class="radio-group--inline">
+                      <label class="radio">
+                        <input type="radio" name="radio-inline" value="yes" checked>
+                        <span class="radio__visual"></span>
+                        <span class="radio__label">{{ if eq .Language.Lang "sv" }}Ja{{ else }}Yes{{ end }}</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="radio-inline" value="no">
+                        <span class="radio__visual"></span>
+                        <span class="radio__label">{{ if eq .Language.Lang "sv" }}Nej{{ else }}No{{ end }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Checkboxes -->
+                <h5 class="type-subheading mb-8">Checkboxes</h5>
+                <div class="component-example-group mb-24" style="flex-direction: column; align-items: flex-start;">
+                  <div class="form-group">
+                    <label class="form-label">{{ if eq .Language.Lang "sv" }}Välj flera alternativ{{ else }}Select multiple options{{ end }}</label>
+                    <div class="checkbox-group">
+                      <label class="checkbox">
+                        <input type="checkbox" name="checkbox-demo" value="option1" checked>
+                        <span class="checkbox__visual"></span>
+                        <span class="checkbox__label">{{ if eq .Language.Lang "sv" }}Alternativ 1{{ else }}Option 1{{ end }}</span>
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="checkbox-demo" value="option2" checked>
+                        <span class="checkbox__visual"></span>
+                        <span class="checkbox__label">{{ if eq .Language.Lang "sv" }}Alternativ 2{{ else }}Option 2{{ end }}</span>
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="checkbox-demo" value="option3">
+                        <span class="checkbox__visual"></span>
+                        <span class="checkbox__label">{{ if eq .Language.Lang "sv" }}Alternativ 3{{ else }}Option 3{{ end }}</span>
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="checkbox-demo" value="disabled" disabled>
+                        <span class="checkbox__visual"></span>
+                        <span class="checkbox__label">{{ if eq .Language.Lang "sv" }}Inaktiverad{{ else }}Disabled{{ end }}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group mt-16">
+                    <label class="form-label">{{ if eq .Language.Lang "sv" }}Inline checkboxes{{ else }}Inline checkboxes{{ end }}</label>
+                    <div class="checkbox-group--inline">
+                      <label class="checkbox">
+                        <input type="checkbox" name="checkbox-inline" value="terms" checked>
+                        <span class="checkbox__visual"></span>
+                        <span class="checkbox__label">{{ if eq .Language.Lang "sv" }}Godkänn villkor{{ else }}Accept terms{{ end }}</span>
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="checkbox-inline" value="newsletter">
+                        <span class="checkbox__visual"></span>
+                        <span class="checkbox__label">{{ if eq .Language.Lang "sv" }}Nyhetsbrev{{ else }}Newsletter{{ end }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Select Dropdown -->
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Select Dropdown{{ else }}Select Dropdown{{ end }}</h5>
+                <div class="component-example-group mb-24" style="flex-direction: column; align-items: stretch;">
+                  <div class="form-group">
+                    <label class="form-label" for="select-1">{{ if eq .Language.Lang "sv" }}Välj land{{ else }}Select country{{ end }}</label>
+                    <select id="select-1">
+                      <option value="">{{ if eq .Language.Lang "sv" }}-- Välj ett alternativ --{{ else }}-- Select an option --{{ end }}</option>
+                      <option value="se">{{ if eq .Language.Lang "sv" }}Sverige{{ else }}Sweden{{ end }}</option>
+                      <option value="no">{{ if eq .Language.Lang "sv" }}Norge{{ else }}Norway{{ end }}</option>
+                      <option value="dk">{{ if eq .Language.Lang "sv" }}Danmark{{ else }}Denmark{{ end }}</option>
+                      <option value="fi">{{ if eq .Language.Lang "sv" }}Finland{{ else }}Finland{{ end }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="select-disabled">{{ if eq .Language.Lang "sv" }}Inaktiverad select{{ else }}Disabled select{{ end }}</label>
+                    <select id="select-disabled" disabled>
+                      <option>{{ if eq .Language.Lang "sv" }}Kan inte ändras{{ else }}Cannot be changed{{ end }}</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </details>
+
+      </div>
+
+      <!-- UTILITIES TAB -->
+      <div id="panel-utilities" class="tab-panel" data-panel="utilities" role="tabpanel" aria-labelledby="tab-utilities">
+
+        <details class="accordion" open>
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Typography Utilities{{ else }}Typography Utilities{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+            <p class="text-muted">{{ if eq .Language.Lang "sv" }}Kommer snart...{{ else }}Coming soon...{{ end }}</p>
+          </div>
+        </details>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{{ partial "footer.html" . }}

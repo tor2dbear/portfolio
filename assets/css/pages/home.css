@@ -1,0 +1,229 @@
+/* Home Page Styles */
+
+.home-page {
+  display: grid;
+  grid-column: content-start / content-end;
+}
+
+.home-section {
+  display: grid;
+  grid-column: 1 / -1;
+  padding: var(--spacing-64) 0;
+  scroll-margin-top: calc(var(--size-header-height) + var(--spacing-16));
+}
+
+.home-section > * {
+  grid-column: content-start / content-end;
+}
+
+.home-section > .col-full {
+  grid-column: 1 / -1;
+}
+
+@supports not (grid-template-columns: subgrid) {
+  .home-page {
+    grid-template-columns: repeat(12, [col-start] 1fr);
+    column-gap: var(--spacing-24);
+  }
+
+  .home-section {
+    grid-template-columns: repeat(12, [col-start] 1fr);
+    column-gap: var(--spacing-24);
+  }
+}
+
+@supports (grid-template-columns: subgrid) {
+  .home-page {
+    grid-template-columns: subgrid;
+  }
+
+  .home-section {
+    grid-template-columns: subgrid;
+  }
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  @supports not (grid-template-columns: subgrid) {
+    .home-page {
+      grid-template-columns: repeat(4, [col-start] 1fr);
+      column-gap: var(--spacing-16);
+    }
+
+    .home-section {
+      grid-template-columns: repeat(4, [col-start] 1fr);
+      column-gap: var(--spacing-16);
+    }
+  }
+}
+
+.section-heading {
+  margin-bottom: var(--spacing-32);
+  text-align: left;
+  color: var(--text-default);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--serif-weight-regular);
+  text-transform: uppercase;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-wider);
+}
+
+/* Hero Section */
+.hero-section {
+  padding: var(--spacing-96) 0;
+}
+
+.hero-title {
+  max-width: var(--content-max-width-narrow);
+  line-height: 1.4;
+  font-size: var(--text-4xl);
+}
+
+.role-swapper {
+  color: var(--text-accent);
+  font-weight: var(--sans-weight-bold);
+  display: inline-block;
+  min-width: 18ch;
+  transition: opacity 0.5s ease;
+}
+
+.hero-emphasis {
+  background: var(--bg-tag);
+  padding: 0 var(--spacing-4);
+  border-radius: var(--spacing-4);
+  font-weight: var(--sans-weight-bold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-swapper {
+    transition: none;
+  }
+}
+
+/* Works Section */
+.works-section {
+  /* Additional specific styles if needed */
+}
+
+.works-section .section-heading {
+  margin-bottom: var(--spacing-8);
+  text-align: left;
+}
+
+.summary-card--compact h2.text-2xl {
+  font-size: var(--text-xl);
+}
+
+/* About Section */
+.about-section {
+  /* Additional specific styles if needed */
+}
+
+.about-content {
+  row-gap: var(--spacing-32);
+}
+
+.about-main__primary {
+  grid-column: col-start 1 / span 6;
+  grid-row: 1;
+}
+
+.about-main__secondary {
+  grid-column: col-start 7 / span 6;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+/* Contact Section */
+.contact-section {
+  /* Additional specific styles if needed */
+}
+
+.contact-content {
+}
+
+.contact-portrait {
+  margin: 0;
+  grid-row: 1;
+}
+
+.contact-portrait picture {
+  border-radius: var(--radius-8);
+  overflow: hidden;
+}
+
+.contact-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.contact-content {
+  row-gap: var(--spacing-32);
+  align-items: start;
+}
+
+.contact-info {
+  grid-row: 1;
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .contact-info {
+    grid-column: col-start 1 / span 4;
+    grid-row: 1;
+  }
+
+  .contact-portrait {
+    grid-column: col-start 1 / span 4;
+    grid-row: 2;
+  }
+}
+
+/* Subscribe Section */
+.subscribe-section {
+  /* Additional specific styles if needed */
+}
+
+/* Responsive adjustments */
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .summary-card--wide,
+  .summary-card--compact {
+    grid-column: col-start 1 / span 4;
+  }
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .about-main__primary,
+  .about-main__secondary {
+    grid-column: col-start 1 / span 4;
+    grid-row: auto;
+  }
+
+  .home-section {
+    padding: var(--spacing-48) 0;
+  }
+
+  .hero-section {
+    padding: var(--spacing-64) 0;
+  }
+
+  .hero-title {
+    font-size: var(--text-3xl);
+  }
+
+  .section-heading {
+    font-size: var(--text-xl);
+  }
+
+}
+
+/* xs: <= 29.9375em */
+@media (max-width: 29.9375em) {
+  .home-section {
+    padding: var(--spacing-32) 0;
+  }
+}

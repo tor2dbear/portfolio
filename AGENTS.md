@@ -49,6 +49,8 @@ Documentation for AI assistants working with this project.
 │
 ├── layouts/             # Hugo templates
 ├── archetypes/          # Content templates
+├── docs/
+│   └── migrations/      # Migration/refactor plans and checklists
 └── config.toml          # Hugo configuration
 ```
 
@@ -319,8 +321,19 @@ preamble: "Introduction text"
 body: "Main content"
 attach_cv: "/path/to/cv.pdf"
 attach_portfolio: "/path/to/portfolio.pdf"
+```yaml
+attach_cv: "/path/to/cv.pdf"
+attach_portfolio: "/path/to/portfolio.pdf"
 attach_letter: "/path/to/letter.pdf"
 ```
+
+### Images
+- **Responsive Images**: ALWAYS use the `headerimage` partial or Hugo's `render-image` hook.
+  - **Do NOT** use raw `<img>` tags for content images.
+  - The `headerimage` partial automates `srcset` generation and wraps the image in a `<picture>` tag.
+  - **Styles**: The `<picture>` wrapper is REQUIRED for certain CSS effects (e.g., `::after` pseudo-elements for backgrounds).
+  - **Border Radius**: Apply `border-radius` and `overflow: hidden` to the `<picture>` container (not the `<img>`). This ensures `::after` overlays and the image are clipped to the corners. Use `--radius-*` tokens.
+- **Header Images**: Use `.Params.header_image` in front matter and call `{{ partial "headerimage.html" . }}` in templates.
 
 ---
 
@@ -333,10 +346,19 @@ attach_letter: "/path/to/letter.pdf"
 - `assets/css/tokens/legacy.css` - Legacy aliases (deprecated)
 - `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
 - `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `pantone`)
+- `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
 - `assets/css/utilities/typography.css` - Typography utilities
-- `assets/css/utilities/layout.css` - Grid, flex, spacing utilities
+- `assets/css/utilities/layout.css` - Layout utilities
+- `assets/css/utilities/grid.css` - 12-column subgrid utilities
 - `assets/css/utilities/display.css` - Visibility helpers
-- `assets/css/style.css` - Component styles
+- `assets/css/components/button.css` - Button component
+- `assets/css/components/footer.css` - Footer component
+- `assets/css/components/theme-dropdown.css` - Theme dropdown
+- `assets/css/components/language-dropdown.css` - Language dropdown
+- `assets/css/components/settings-dropdown.css` - Combined settings dropdown (xs only)
+- `assets/css/pages/home.css` - Homepage styles
+- `assets/css/pages/ui-library.css` - UI library page styles
+- `assets/css/style.css` - Remaining component styles
 - `assets/css/clientpage.css` - Client/employer page tweaks
 - `assets/css/print.css` - Print styles
 
@@ -358,16 +380,29 @@ attach_letter: "/path/to/letter.pdf"
 
 ### CSS Load Order (head.html)
 1. tokens (primitives → semantic → components → legacy)
-2. dimensions (mode → palette)
-3. utilities (typography → layout → display)
-4. components (`style.css`)
-5. pages (`clientpage.css`, `print.css`)
+2. dimensions (mode → palette → palette previews)
+3. utilities (typography → layout → grid → display)
+4. components (button → footer → theme-dropdown → language-dropdown → settings-dropdown)
+5. pages (home → ui-library → style → clientpage → print)
+
+### Breakpoints
+- Units: em-based, desktop-first with max-width queries.
+- Naming: xs, sm, md, lg, xl.
+- Values (base 16px):
+  - xs: 0-479px (max-width: 29.9375em)
+  - sm: 480-767px (max-width: 47.9375em)
+  - md: 768-1023px (max-width: 63.9375em)
+  - lg: 1024-1279px (max-width: 79.9375em)
+  - xl: 1280px+ (no max-width)
+- Comment convention: label each media block, e.g. `/* sm: <= 47.9375em */`.
+- Bottom sheet UI for theme/language dropdowns: sm and xs only.
 
 ### Theming Dimensions (Current)
 - HTML data attributes drive theming:
   - `data-mode="light|dark"`
   - `data-palette="standard|pantone"`
 - Add new dimensions by creating `assets/css/dimensions/<dimension>/*.css` and wiring in `layouts/partials/head.html`.
+- When adding a new palette, also add its preview tokens in `assets/css/dimensions/palette/previews.css` so the theme dropdown can show palette dots in both modes.
 
 ---
 
@@ -380,6 +415,7 @@ attach_letter: "/path/to/letter.pdf"
 - Canonical tokens live in `assets/css/tokens/semantic.css`.
 - Legacy aliases live in `assets/css/tokens/legacy.css` and must include `/* deprecated */`.
 - Legacy aliases map one-to-one to canonical tokens; remove legacy only after confirming no references remain.
+- **State-layer tokens (state-*)** must be applied as overlays (e.g. `background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover))`) on top of existing backgrounds, not as replacement background colors.
 
 ### CSS / HTML Naming Spec
 - **Utilities**: short, functional, scale-based names (e.g. `mt-24`, `grid-1-3`, `text-sm`).
@@ -475,6 +511,53 @@ npm run test:coverage       # Generate coverage report
 3. Run tests: `npm test`
 4. Run linting: `npm run lint:fix`
 5. Pre-commit hooks will format automatically
+
+### UI Library
+**Access**: `/ui-library/` (English) or `/sv/ui-library/` (Swedish)
+**Purpose**: Internal documentation of design tokens, components, and grid system
+**Not Indexed**: The page has `noindex: true` and is not linked from main navigation
+
+**Structure**:
+- **Tokens Tab**: All color scales (primitives, brand, semantic), typography, spacing
+- **Grid Tab**: 12-column subgrid system examples
+- **Components Tab**: Live component examples with meta-info (classes, files, tokens)
+- **Utilities Tab**: Typography and spacing utilities
+
+**Adding a New Component to UI Library**:
+1. Extract component CSS to `assets/css/components/[component].css`
+2. Import in `layouts/partials/head.html` (maintain load order)
+3. Add accordion in Components tab (`layouts/ui-library/single.html`)
+4. Include component meta-info:
+   - **Classes**: List all variant classes (e.g., `.button--primary`)
+   - **File**: Path to component CSS file
+   - **Tokens**: List tokens used by component
+5. Add live examples showing all states (default, hover, active, disabled)
+6. Test in browser at `/ui-library/`
+
+**Component Documentation Pattern**:
+```html
+<div class="component-doc">
+  <div class="component-meta mb-16">
+    <dl class="meta-list">
+      <div class="meta-item">
+        <dt>Classes:</dt>
+        <dd><code>.component</code>, <code>.component--variant</code></dd>
+      </div>
+      <div class="meta-item">
+        <dt>File:</dt>
+        <dd><code>assets/css/components/component.css</code></dd>
+      </div>
+      <div class="meta-item">
+        <dt>Tokens:</dt>
+        <dd><code>--token-name</code>, <code>--another-token</code></dd>
+      </div>
+    </dl>
+  </div>
+  <div class="component-examples">
+    <!-- Live examples here -->
+  </div>
+</div>
+```
 
 ---
 

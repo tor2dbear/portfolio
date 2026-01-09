@@ -1,8 +1,16 @@
-{{ partial "header.html" . }}
-
-  <div class="content page">
-    <h2 class="type-heading mb-80 grid-1-5">{{ i18n "contact_header_start" }} <span class="text-color-accent">{{ i18n "contact_header_end" }}</span>.</h2>
-    {{ .Content }}
-  </div>
-
-{{ partial "footer.html" . }}
+{{- $contactAnchor := printf "%s#contact" ("/" | relLangURL) -}}
+<!doctype html>
+<html lang="{{ .Language.Lang }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0; url={{ $contactAnchor }}">
+    <link rel="canonical" href="{{ $contactAnchor }}">
+    <meta name="robots" content="noindex">
+    <title>{{ i18n "contact_me" }}</title>
+  </head>
+  <body>
+    <p>
+      <a href="{{ $contactAnchor }}">{{ i18n "contact_me" }}</a>
+    </p>
+  </body>
+</html>

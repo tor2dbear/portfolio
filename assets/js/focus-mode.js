@@ -60,14 +60,20 @@
     if (view === CONFIG.VIEW_CLIENT || legacySource === 'client' || isClientPath) {
       return {
         type: CONFIG.VIEW_CLIENT,
-        ref: params.get(CONFIG.PARAM_REF) || extractRefFromPath(path, 'clients')
+        ref:
+          params.get(CONFIG.PARAM_REF) ||
+          extractRefFromPath(path, 'clients') ||
+          extractRefFromReferrer('clients')
       };
     }
 
     if (view === CONFIG.VIEW_EMPLOYER || isEmployerPath) {
       return {
         type: CONFIG.VIEW_EMPLOYER,
-        ref: null
+        ref:
+          params.get(CONFIG.PARAM_REF) ||
+          extractRefFromPath(path, 'employers') ||
+          extractRefFromReferrer('employers')
       };
     }
 
@@ -81,6 +87,20 @@
     const regex = new RegExp(`/${segment}/([^/]+)`);
     const match = path.match(regex);
     return match ? match[1] : null;
+  }
+
+  /**
+   * Extract reference name from document referrer
+   */
+  function extractRefFromReferrer(segment) {
+    try {
+      if (!document.referrer) return null;
+      const referrerUrl = new URL(document.referrer);
+      if (referrerUrl.origin !== window.location.origin) return null;
+      return extractRefFromPath(referrerUrl.pathname, segment);
+    } catch (_error) {
+      return null;
+    }
   }
 
   /**
@@ -157,7 +177,9 @@
     if (context.type === CONFIG.VIEW_CLIENT && context.ref) {
       updateClientBreadcrumb(context.ref);
     }
-    // Employer breadcrumbs are handled in template
+    if (context.type === CONFIG.VIEW_EMPLOYER && context.ref) {
+      updateEmployerBreadcrumb(context.ref);
+    }
   }
 
   /**
@@ -186,6 +208,29 @@
     link.textContent = clientName;
 
     // Append to breadcrumb
+    breadcrumbElement.appendChild(link);
+  }
+
+  /**
+   * Update employer breadcrumb with safe text handling
+   */
+  function updateEmployerBreadcrumb(employerRef) {
+    const breadcrumbElement =
+      document.querySelector('[data-js="application-breadcrumb-back-employer"]') ||
+      document.getElementById('employer-breadcrumb-back');
+    if (!breadcrumbElement) return;
+
+    while (breadcrumbElement.firstChild) {
+      breadcrumbElement.removeChild(breadcrumbElement.firstChild);
+    }
+
+    const link = document.createElement('a');
+    const employerPath = `/employers/${encodeURIComponent(employerRef)}/`;
+    link.setAttribute('href', employerPath);
+
+    const employerName = decodeURIComponent(employerRef).replace(/-/g, ' ');
+    link.textContent = employerName;
+
     breadcrumbElement.appendChild(link);
   }
 
