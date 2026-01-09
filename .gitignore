@@ -1,6 +1,7 @@
 /themes
 /public
 /node_modules
+/worktrees
 
 # Test coverage
 coverage/
