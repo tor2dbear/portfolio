@@ -4,4 +4,4 @@
 
 # Test coverage
 coverage/
-*.lcov
+*.lcov.worktrees/
