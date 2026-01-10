@@ -248,24 +248,6 @@ other = "writing"
 other = "Read more"
 
 [published_on]
-other = "Published on"
-
-[writing]
-other = "Writing"
-
-[all_posts]
-other = "All posts"
-
-[no_posts_yet]
-other = "No posts yet. Check back soon!"
-
-[writing_url]
-other = "writing"
-
-[read_more]
-other = "Read more"
-
-[published_on]
 other = "Published"
 
 [writing]
