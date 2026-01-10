@@ -113,6 +113,8 @@ DefaultContentLanguage = "en"
 
 [permalinks]
   works = '/:slug/:title/'
+  writing = '/:slug/:title/'
+  texter = '/:slug/:title/'
   tags = "/:slug/tags/:title/"
 
 [params]
@@ -121,7 +123,7 @@ DefaultContentLanguage = "en"
   brand = "tor-bjorn.com"
   googleAnalytics = "G-B270MQG9GZ"
   dateFormat = "02 Jan 2006, 15:04"
-  mainSections = ['blog', 'docs']
+  mainSections = ['writing', 'texter', 'works']
 
 [markup]
   [markup.goldmark]
