@@ -1,6 +1,6 @@
 +++
 title = "Design Thinking Essentials"
-date = "2026-01-15"
+date = "2026-01-09"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
