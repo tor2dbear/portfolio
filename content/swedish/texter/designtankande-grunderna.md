@@ -7,6 +7,7 @@ hidden = false
 description = "Nyckelprinciper som vägleder mitt sätt att närma mig designutmaningar"
 tags = ["design", "ui-ux", "branding"]
 topics = []
+translationKey = "design-thinking-essentials"
 +++
 
 Designtänkande är mer än en metod—det är ett tankesätt som hjälper till att lösa komplexa problem genom ett människocentrerat förhållningssätt.

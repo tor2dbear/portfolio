@@ -7,6 +7,7 @@ hidden = false
 description = "Introducing a new space for sharing thoughts on design, creativity, and technology"
 tags = ["design", "creativity"]
 topics = []
+translationKey = "welcome-writing"
 +++
 
 Welcome to my new writing section! I'm excited to have a dedicated space to share thoughts, insights, and reflections on design, creativity, and technology.

@@ -7,6 +7,7 @@ hidden = false
 description = "Key principles that guide my approach to design challenges"
 tags = ["design", "ui-ux", "branding"]
 topics = []
+translationKey = "design-thinking-essentials"
 +++
 
 Design thinking is more than a methodology—it's a mindset that helps solve complex problems through a human-centered approach.

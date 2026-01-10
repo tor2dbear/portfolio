@@ -7,6 +7,7 @@ hidden = false
 description = "Introducerar ett nytt utrymme för att dela tankar om design, kreativitet och teknik"
 tags = ["design", "kreativitet"]
 topics = []
+translationKey = "welcome-writing"
 +++
 
 Välkommen till min nya textsektion! Jag är glad över att ha ett dedikerat utrymme för att dela tankar, insikter och reflektioner kring design, kreativitet och teknik.
