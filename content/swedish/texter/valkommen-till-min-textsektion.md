@@ -1,6 +1,6 @@
 +++
 title = "Välkommen till min textsektion"
-date = "2025-01-10"
+date = "2026-01-10"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false

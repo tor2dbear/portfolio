@@ -1,6 +1,6 @@
 +++
 title = "Designtänkande: Grunderna"
-date = "2025-01-15"
+date = "2026-01-15"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
