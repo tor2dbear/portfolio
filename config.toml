@@ -68,13 +68,18 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/#works"
     [[languages.en.menu.top]]
-      name = "About me"
+      name = "Writing"
       weight = 3
+      identifier = "writing"
+      url = "/writing/"
+    [[languages.en.menu.top]]
+      name = "About me"
+      weight = 4
       identifier = "about"
       url = "/#about"
     [[languages.en.menu.top]]
       name = "contact"
-      weight = 4
+      weight = 5
       identifier = "contact"
       url = "/#contact"
 
@@ -101,18 +106,25 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/#works"
     [[languages.sv.menu.top]]
-      name = "Om mig"
+      name = "Texter"
       weight = 3
+      identifier = "writing"
+      url = "/texter/"
+    [[languages.sv.menu.top]]
+      name = "Om mig"
+      weight = 4
       identifier = "about"
       url = "/#about"
     [[languages.sv.menu.top]]
       name = "kontakt"
-      weight = 4
+      weight = 5
       identifier = "contact"
       url = "/#contact"
 
 [permalinks]
   works = '/:slug/:title/'
+  writing = '/:slug/:title/'
+  texter = '/:slug/:title/'
   tags = "/:slug/tags/:title/"
 
 [params]
@@ -121,7 +133,7 @@ DefaultContentLanguage = "en"
   brand = "tor-bjorn.com"
   googleAnalytics = "G-B270MQG9GZ"
   dateFormat = "02 Jan 2006, 15:04"
-  mainSections = ['blog', 'docs']
+  mainSections = ['writing', 'texter', 'works']
 
 [markup]
   [markup.goldmark]

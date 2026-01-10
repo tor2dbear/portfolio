@@ -237,3 +237,21 @@ other = "Home"
 
 [to_homepage]
 other = "to homepage"
+
+[no_posts_yet]
+other = "No posts yet. Check back soon!"
+
+[writing_url]
+other = "writing"
+
+[read_more]
+other = "Read more"
+
+[published_on]
+other = "Published on"
+
+[writing]
+other = "Writing"
+
+[all_posts]
+other = "All posts"
