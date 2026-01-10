@@ -166,6 +166,16 @@
   </url><url>
     <loc>https://www.tor-bjorn.com/preview/pr-13/welcome-to-my-writing-section/welcome-to-my-writing-section/</loc>
     <lastmod>2026-01-10T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/preview/pr-13/sv/v%C3%A4lkommen-till-min-textsektion/v%C3%A4lkommen-till-min-textsektion/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/preview/pr-13/welcome-to-my-writing-section/welcome-to-my-writing-section/"
+                />
   </url><url>
     <loc>https://www.tor-bjorn.com/preview/pr-13/writing/</loc>
     <lastmod>2026-01-10T00:00:00+00:00</lastmod>
@@ -185,6 +195,16 @@
   </url><url>
     <loc>https://www.tor-bjorn.com/preview/pr-13/design-thinking-essentials/design-thinking-essentials/</loc>
     <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/preview/pr-13/sv/designt%C3%A4nkande-grunderna/designt%C3%A4nkande-grunderna/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/preview/pr-13/design-thinking-essentials/design-thinking-essentials/"
+                />
   </url><url>
     <loc>https://www.tor-bjorn.com/preview/pr-13/works/tags/ui-ux/</loc>
     <lastmod>2026-01-09T00:00:00+00:00</lastmod>
