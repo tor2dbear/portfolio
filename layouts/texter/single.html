@@ -1,0 +1,18 @@
+{{ partial "header.html" . }}
+
+<div class="content post use-subgrid">
+  <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}</h1>
+  {{ partial "date.html" . }}
+
+  {{ if .Description }}
+  <h2 class="type-caption">{{ .Description }}</h2>
+  {{ end }}
+
+  {{ partial "post_tags.html" . }}
+
+  {{ .Content }}
+
+  {{ partial "prev_next_post.html" . }}
+</div>
+
+{{ partial "footer.html" . }}
