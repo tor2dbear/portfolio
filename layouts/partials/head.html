@@ -77,6 +77,7 @@
   {{ $components_breadcrumb := resources.Get "css/components/breadcrumb.css" }}
   {{ $components_tags := resources.Get "css/components/tags.css" }}
   {{ $components_newsletter := resources.Get "css/components/newsletter.css" }}
+  {{ $components_tooltip := resources.Get "css/components/tooltip.css" }}
 
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
@@ -115,13 +116,14 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_breadcrumb.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_tags.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_newsletter.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_tooltip.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
