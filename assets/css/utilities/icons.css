@@ -1,56 +1,65 @@
 /**
  * Icon Utilities
- * SVG mask-based icons with consistent sizing
+ * SVG sprite-based icons with consistent sizing
+ * Usage: <svg class="icon icon--pdf"><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
  */
 
 /* ==========================================================================
    Base Icon Styles
    ========================================================================== */
 
-.d-block-light,
-.d-block-dark,
-.d-block-system,
-.download-icon,
-.pdf-icon,
-.theme-icon,
-.curl-icon,
-.curl-icon-bold,
-.arrow-left {
-  display: block;
-  content: " ";
-  height: 1.5rem;
+.icon {
+  display: inline-block;
   width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
   color: var(--text-default);
-}
-
-/* SVGs inside icon containers should fill the container */
-.pdf-icon svg,
-.download-icon svg,
-.theme-icon svg,
-.curl-icon svg,
-.curl-icon-bold svg,
-.arrow-left svg {
-  width: 100%;
-  height: 100%;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
-   Specific Icon Masks
+   Icon Size Variants
    ========================================================================== */
 
-.theme-icon {
-  mask-image: url("/img/svg/theme-icon-16.svg");
-  -webkit-mask-image: url("/img/svg/theme-icon-16.svg");
+.icon--sm {
+  width: 1rem;
+  height: 1rem;
 }
 
-/* Allow dropdown theme icon to render its inline SVG without masking. */
-.theme-dropdown .theme-icon {
-  mask-image: none;
-  -webkit-mask-image: none;
-  background: none;
+.icon--lg {
+  width: 2rem;
+  height: 2rem;
 }
 
+.icon--xl {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* ==========================================================================
+   Legacy Icon Containers (for backward compatibility)
+   ========================================================================== */
+
+.pdf-icon,
+.download-icon,
+.theme-icon,
 .arrow-left {
-  mask-image: url("/img/svg/arrow-left.svg");
-  -webkit-mask-image: url("/img/svg/arrow-left.svg");
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--text-default);
+  flex-shrink: 0;
+}
+
+.pdf-icon svg,
+.download-icon svg,
+.theme-icon svg,
+.arrow-left svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
 }
