@@ -400,27 +400,7 @@ p:empty {
 /* NOTE: Language switcher styles moved to assets/css/components/language-dropdown.css */
 
 /* NOTE: Form element styles (inputs, textarea, radio, checkbox, select) moved to assets/css/components/form.css */
-
-/* Contact form specific message styles */
-.content.post form p,
-.content.page form p {
-  margin-bottom: 0;
-}
-
-form .contact-form__message--error.message {
-  background-color: var(--status-error-bg);
-  color: var(--status-error-text);
-}
-
-form .contact-form__message--success.message {
-  background-color: var(--bg-tag);
-  color: var(--text-accent);
-}
-
-form .message {
-  padding: 1rem;
-  max-width: 100%;
-}
+/* NOTE: Form message styles (error, success messages) moved to assets/css/components/form.css */
 
 /* NOTE: Newsletter component moved to assets/css/components/newsletter.css */
 
