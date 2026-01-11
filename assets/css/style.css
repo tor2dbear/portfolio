@@ -393,40 +393,7 @@ p:empty {
 
 /* NOTE: Breadcrumb styles moved to assets/css/components/breadcrumb.css */
 
-/* || ========== Icons ------------------------------------- */
-
-.d-block-light,
-.d-block-dark,
-.d-block-system,
-.download-icon,
-.pdf-icon,
-.theme-icon,
-.curl-icon,
-.curl-icon-bold,
-.arrow-left {
-  display: block;
-  content: " ";
-  height: 1.5rem;
-  width: 1.5rem;
-  color: var(--text-default);
-}
-
-.theme-icon {
-  mask-image: url("/img/svg/theme-icon-16.svg");
-  -webkit-mask-image: url("/img/svg/theme-icon-16.svg");
-}
-
-/* Allow dropdown theme icon to render its inline SVG without masking. */
-.theme-dropdown .theme-icon {
-  mask-image: none;
-  -webkit-mask-image: none;
-  background: none;
-}
-
-.arrow-left {
-  mask-image: url("/img/svg/arrow-left.svg");
-  -webkit-mask-image: url("/img/svg/arrow-left.svg");
-}
+/* NOTE: Icon utilities moved to assets/css/utilities/icons.css */
 
 /* NOTE: Button styles moved to assets/css/components/button.css */
 /* NOTE: Theme switcher styles moved to assets/css/components/theme-dropdown.css */

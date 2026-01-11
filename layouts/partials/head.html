@@ -63,6 +63,7 @@
   {{ $utilities_layout := resources.Get "css/utilities/layout.css" }}
   {{ $utilities_grid := resources.Get "css/utilities/grid.css" }}
   {{ $utilities_display := resources.Get "css/utilities/display.css" }}
+  {{ $utilities_icons := resources.Get "css/utilities/icons.css" }}
 
   <!-- CSS components (NEW - redesign) -->
   {{ $components_button := resources.Get "css/components/button.css" }}
@@ -105,6 +106,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_grid.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_display.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $utilities_icons.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_button.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_form.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_footer.RelPermalink }}" />
@@ -125,7 +127,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
