@@ -391,20 +391,7 @@ p:empty {
   margin-bottom: var(--spacing-160);
 }
 
-/* Breadcrumbs */
-nav.application-breadcrumb ul {
-  list-style: none;
-}
-
-nav.application-breadcrumb ul li {
-  display: inline;
-}
-
-nav.application-breadcrumb ul li+li:before {
-  content: "/";
-  padding: var(--spacing-8);
-  color: var(--text-muted);
-}
+/* NOTE: Breadcrumb styles moved to assets/css/components/breadcrumb.css */
 
 /* || ========== Icons ------------------------------------- */
 
