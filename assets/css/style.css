@@ -244,47 +244,7 @@ p:empty {
 }
 
 /* NOTE: Article card styles (related items, hover effects) moved to assets/css/components/article-card.css */
-
-/* || ========== Pagination ------------------------------------- */
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-12);
-  margin-top: var(--spacing-32);
-}
-
-.pagination__link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.pagination__link:hover {
-  background-color: var(--state-on-light-hover);
-}
-
-.pagination__link:focus-visible {
-  outline: 2px solid var(--outline-neutral);
-  outline-offset: 2px;
-}
-
-.pagination__icon {
-  color: var(--text-muted);
-}
-
-.pagination__link .pagination__icon {
-  color: var(--text-default);
-}
-
-.pagination__status {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
+/* NOTE: Pagination styles moved to assets/css/components/pagination.css */
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
