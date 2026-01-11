@@ -1355,6 +1355,27 @@
               </div>
 
               <p class="text-muted mb-16">{{ if eq .Language.Lang "sv" }}Newsletter signup-komponent med MailChimp-integration, 12-kolumners grid layout, illustration sektion och validering av formulär.{{ else }}Newsletter signup component with MailChimp integration, 12-column grid layout, illustration section, and form validation.{{ end }}</p>
+
+              <div class="component-examples">
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Newsletter exempel{{ else }}Newsletter example{{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <div class="newsletter" style="max-width: 800px;">
+                    <div class="newsletter__signup">
+                      <h2 class="type-heading mb-8">{{ if eq .Language.Lang "sv" }}Prenumerera på nyhetsbrev{{ else }}Subscribe to newsletter{{ end }}</h2>
+                      <p class="mb-16">{{ if eq .Language.Lang "sv" }}Få de senaste uppdateringarna direkt i din inkorg.{{ else }}Get the latest updates directly in your inbox.{{ end }}</p>
+                      <form>
+                        {{ $emailPlaceholder := cond (eq .Language.Lang "sv") "Din e-postadress" "Your email address" }}
+                        {{ $submitText := cond (eq .Language.Lang "sv") "Prenumerera" "Subscribe" }}
+                        <input type="email" class="form-input email required mb-8" placeholder="{{ $emailPlaceholder }}" />
+                        <button type="submit" class="newsletter__submit">{{ $submitText }}</button>
+                      </form>
+                    </div>
+                    <div class="newsletter__illustration" style="background-color: var(--component-newsletter-illustration-bg);">
+                      <div class="newsletter__mask"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </details>
@@ -1431,6 +1452,91 @@
               </div>
 
               <p class="text-muted mb-16">{{ if eq .Language.Lang "sv" }}Nedladdningskort för filer och dokument med hover states och texttrunkering.{{ else }}Download cards for files and documents with hover states and text truncation.{{ end }}</p>
+
+              <div class="component-examples">
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Download Card exempel{{ else }}Download Card example{{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <div class="download-list" style="display: grid; gap: var(--spacing-12); max-width: 600px;">
+                    <a href="#" class="download-card">
+                      <div>
+                        <strong>{{ if eq .Language.Lang "sv" }}CV - Torbjörn Hedberg.pdf{{ else }}Resume - Torbjörn Hedberg.pdf{{ end }}</strong>
+                      </div>
+                      <p class="download-card__item text-muted text-sm">PDF, 245 KB</p>
+                    </a>
+                    <a href="#" class="download-card">
+                      <div>
+                        <strong>{{ if eq .Language.Lang "sv" }}Portfolio 2025.pdf{{ else }}Portfolio 2025.pdf{{ end }}</strong>
+                      </div>
+                      <p class="download-card__item text-muted text-sm">PDF, 1.2 MB</p>
+                    </a>
+                    <a href="#" class="download-card">
+                      <div>
+                        <strong>{{ if eq .Language.Lang "sv" }}Personligt Brev.pdf{{ else }}Cover Letter.pdf{{ end }}</strong>
+                      </div>
+                      <p class="download-card__item text-muted text-sm">PDF, 180 KB</p>
+                    </a>
+                  </div>
+                </div>
+                <p class="text-muted text-sm">{{ if eq .Language.Lang "sv" }}Hover över korten för att se interaktionen.{{ else }}Hover over the cards to see the interaction.{{ end }}</p>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Table of Contents{{ else }}Table of Contents{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+            <div class="component-doc">
+              <div class="component-meta mb-16">
+                <dl class="meta-list">
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Klasser:{{ else }}Classes:{{ end }}</dt>
+                    <dd><code>.toc</code>, <code>.toc__header</code>, <code>.toc__item</code></dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Fil:{{ else }}File:{{ end }}</dt>
+                    <dd><code>assets/css/components/table-of-contents.css</code></dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Användning:{{ else }}Usage:{{ end }}</dt>
+                    <dd>{{ if eq .Language.Lang "sv" }}Klient- och arbetsgivarsidor{{ else }}Client and employer pages{{ end }}</dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>Tokens:</dt>
+                    <dd><code>--text-muted</code>, <code>--text-default</code>, <code>--brand-primary</code>, <code>--spacing-4</code>, <code>--spacing-8</code></dd>
+                  </div>
+                </dl>
+              </div>
+
+              <p class="text-muted mb-16">{{ if eq .Language.Lang "sv" }}Navigeringsmeny för ansökningssidor med länkar till Letter, Portfolio, CV, Download och Contact sektioner.{{ else }}Navigation menu for application pages with links to Letter, Portfolio, CV, Download, and Contact sections.{{ end }}</p>
+
+              <div class="component-examples">
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Table of Contents exempel{{ else }}Table of Contents example{{ end }}</h5>
+                <div class="component-example-group mb-16">
+                  <ul class="toc" style="max-width: 400px;">
+                    <li class="toc__header">
+                      <h3 class="type-headline-small mb-8">{{ if eq .Language.Lang "sv" }}Innehållsförteckning{{ else }}Table of content{{ end }}</h3>
+                    </li>
+                    <li class="toc__item font-sans text-base text-color-lighter">
+                      <a href="#letter">{{ if eq .Language.Lang "sv" }}Personligt brev{{ else }}Letter{{ end }}</a>
+                    </li>
+                    <li class="toc__item font-sans text-base text-color-lighter">
+                      <a href="#portfolio">Portfolio</a>
+                    </li>
+                    <li class="toc__item font-sans text-base text-color-lighter">
+                      <a href="#cv">CV</a>
+                    </li>
+                    <li class="toc__item font-sans text-base text-color-lighter">
+                      <a href="#download">{{ if eq .Language.Lang "sv" }}Ladda ner{{ else }}Download{{ end }}</a>
+                    </li>
+                    <li class="toc__item font-sans text-base text-color-lighter">
+                      <a href="#contact">{{ if eq .Language.Lang "sv" }}Kontakt{{ else }}Contact{{ end }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </details>
