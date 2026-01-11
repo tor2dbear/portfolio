@@ -7,7 +7,19 @@
     data-js="theme-toggle"
   >
     <span class="theme-icon" data-js="theme-icon">
-      <!-- Icon will be dynamically loaded based on current theme -->
+      <script>
+        // Pre-render the correct icon to avoid flash
+        (function() {
+          const mode = localStorage.getItem('theme-mode') || 'system';
+          const iconId = mode === 'light' ? 'icon-light' : mode === 'dark' ? 'icon-dark' : 'icon-system';
+          document.write('<svg width="24" height="24" aria-hidden="true"><use href="/img/svg/sprite.svg#' + iconId + '"></use></svg>');
+        })();
+      </script>
+      <noscript>
+        <svg width="24" height="24" aria-hidden="true">
+          <use href="/img/svg/sprite.svg#icon-system"></use>
+        </svg>
+      </noscript>
     </span>
   </button>
 
