@@ -23,6 +23,17 @@
   color: var(--text-default);
 }
 
+/* SVGs inside icon containers should fill the container */
+.pdf-icon svg,
+.download-icon svg,
+.theme-icon svg,
+.curl-icon svg,
+.curl-icon-bold svg,
+.arrow-left svg {
+  width: 100%;
+  height: 100%;
+}
+
 /* ==========================================================================
    Specific Icon Masks
    ========================================================================== */

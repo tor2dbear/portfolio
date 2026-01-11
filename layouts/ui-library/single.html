@@ -1568,6 +1568,84 @@
 
         <details class="accordion" open>
           <summary class="accordion__trigger">
+            <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Icon Utilities{{ else }}Icon Utilities{{ end }}</h3>
+          </summary>
+          <div class="accordion__content">
+            <div class="component-doc">
+              <div class="component-meta mb-16">
+                <dl class="meta-list">
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Fil:{{ else }}File:{{ end }}</dt>
+                    <dd><code>assets/css/utilities/icons.css</code></dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Storlek:{{ else }}Size:{{ end }}</dt>
+                    <dd>1.5rem × 1.5rem (24px × 24px)</dd>
+                  </div>
+                  <div class="meta-item">
+                    <dt>{{ if eq .Language.Lang "sv" }}Användning:{{ else }}Usage:{{ end }}</dt>
+                    <dd>{{ if eq .Language.Lang "sv" }}Inline SVG inuti icon-klass{{ else }}Inline SVG inside icon class{{ end }}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <p class="text-muted mb-16">{{ if eq .Language.Lang "sv" }}Standardiserade ikonstorlekar för inline SVG. SVG-element placeras inuti en div med icon-klass.{{ else }}Standardized icon sizes for inline SVG. SVG elements are placed inside a div with an icon class.{{ end }}</p>
+
+              <div class="component-examples">
+                <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Tillgängliga ikoner{{ else }}Available icons{{ end }}</h5>
+                <div class="component-example-group mb-16" style="display: flex; gap: var(--spacing-24); align-items: center; flex-wrap: wrap;">
+
+                  <div style="text-align: center;">
+                    <div class="pdf-icon" style="margin: 0 auto;">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m4.499 19.498 0 -7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        <path d="M4.5 12h0.75a2.25 2.25 0 0 1 0 4.5H4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        <path d="M10.5 19.5a3 3 0 0 0 3 -3V15a3 3 0 0 0 -3 -3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        <path d="m16.498 12.002 3 0 0 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        <path d="M16.5 16.5h3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                      </svg>
+                    </div>
+                    <p class="text-muted text-xs mt-4"><code>.pdf-icon</code></p>
+                  </div>
+
+                  <div style="text-align: center;">
+                    <div class="download-icon" style="margin: 0 auto;">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15.5v-11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        <path d="m15.5 12 -3.5 3.5L8.5 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        <path d="M12 0.75c-6.213 0 -11.25 5.037 -11.25 11.25S5.787 23.25 12 23.25s11.25 -5.037 11.25 -11.25S18.213 0.75 12 0.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                      </svg>
+                    </div>
+                    <p class="text-muted text-xs mt-4"><code>.download-icon</code></p>
+                  </div>
+
+                  <div style="text-align: center;">
+                    <div class="arrow-left" style="margin: 0 auto; background-color: currentColor;"></div>
+                    <p class="text-muted text-xs mt-4"><code>.arrow-left</code></p>
+                    <p class="text-muted text-xs">(mask-based)</p>
+                  </div>
+
+                  <div style="text-align: center;">
+                    <div class="theme-icon" style="margin: 0 auto; background-color: currentColor;"></div>
+                    <p class="text-muted text-xs mt-4"><code>.theme-icon</code></p>
+                    <p class="text-muted text-xs">(mask-based)</p>
+                  </div>
+
+                </div>
+
+                <h5 class="type-subheading mb-8 mt-24">{{ if eq .Language.Lang "sv" }}Användningsexempel{{ else }}Usage example{{ end }}</h5>
+                <pre class="mb-16" style="background: var(--bg-surface); padding: var(--spacing-16); border-radius: var(--spacing-8); overflow-x: auto;"><code>&lt;div class="pdf-icon"&gt;
+  &lt;svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"&gt;
+    &lt;!-- SVG paths --&gt;
+  &lt;/svg&gt;
+&lt;/div&gt;</code></pre>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary class="accordion__trigger">
             <h3 class="accordion__title type-heading">{{ if eq .Language.Lang "sv" }}Typography Utilities{{ else }}Typography Utilities{{ end }}</h3>
           </summary>
           <div class="accordion__content">
