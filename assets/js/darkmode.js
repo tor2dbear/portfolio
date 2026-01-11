@@ -139,30 +139,19 @@
   function updateThemeIcon(mode) {
     if (!themeIcon) return;
 
-    let svgPath = '';
+    let iconId = '';
     if (mode === 'light') {
-      svgPath = '/img/svg/light.svg';
+      iconId = 'icon-light';
     } else if (mode === 'dark') {
-      svgPath = '/img/svg/dark.svg';
+      iconId = 'icon-dark';
     } else if (mode === 'system') {
-      svgPath = '/img/svg/system.svg';
+      iconId = 'icon-system';
     }
 
-    fetch(svgPath)
-      .then(response => response.text())
-      .then(svg => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(svg, 'image/svg+xml');
-        const svgElement = doc.documentElement;
-
-        // Set to 24px
-        svgElement.setAttribute('width', '24');
-        svgElement.setAttribute('height', '24');
-
-        themeIcon.innerHTML = '';
-        themeIcon.appendChild(svgElement);
-      })
-      .catch(err => console.warn('Failed to load theme icon:', err));
+    // Use SVG sprite system for instant icon updates
+    themeIcon.innerHTML = `<svg width="24" height="24" aria-hidden="true">
+      <use href="/img/svg/sprite.svg#${iconId}"></use>
+    </svg>`;
   }
 
   // ==========================================================================
