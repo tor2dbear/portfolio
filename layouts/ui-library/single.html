@@ -1361,8 +1361,8 @@
                 <div class="component-example-group mb-16">
                   <div class="newsletter" style="max-width: 800px;">
                     <div class="newsletter__signup">
-                      <h2 class="type-heading mb-8">{{ if eq .Language.Lang "sv" }}Prenumerera på nyhetsbrev{{ else }}Subscribe to newsletter{{ end }}</h2>
-                      <p class="mb-16">{{ if eq .Language.Lang "sv" }}Få de senaste uppdateringarna direkt i din inkorg.{{ else }}Get the latest updates directly in your inbox.{{ end }}</p>
+                      <h2 class="type-headline-2 mb-8">{{ if eq .Language.Lang "sv" }}Prenumerera på nyhetsbrev{{ else }}Subscribe to newsletter{{ end }}</h2>
+                      <p class="mb-24">{{ if eq .Language.Lang "sv" }}Få de senaste uppdateringarna direkt i din inkorg.{{ else }}Get the latest updates directly in your inbox.{{ end }}</p>
                       <form>
                         {{ $emailPlaceholder := cond (eq .Language.Lang "sv") "Din e-postadress" "Your email address" }}
                         {{ $submitText := cond (eq .Language.Lang "sv") "Prenumerera" "Subscribe" }}
@@ -1456,24 +1456,44 @@
               <div class="component-examples">
                 <h5 class="type-subheading mb-8">{{ if eq .Language.Lang "sv" }}Download Card exempel{{ else }}Download Card example{{ end }}</h5>
                 <div class="component-example-group mb-16">
-                  <div class="download-list" style="display: grid; gap: var(--spacing-12); max-width: 600px;">
-                    <a href="#" class="download-card">
-                      <div>
-                        <strong>{{ if eq .Language.Lang "sv" }}CV - Torbjörn Hedberg.pdf{{ else }}Resume - Torbjörn Hedberg.pdf{{ end }}</strong>
+                  <div class="download-list" style="max-width: 600px;">
+                    <a href="#" class="download-card flex">
+                      <div class="pdf-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="m4.499 19.498 0 -7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M4.5 12h0.75a2.25 2.25 0 0 1 0 4.5H4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M10.5 19.5a3 3 0 0 0 3 -3V15a3 3 0 0 0 -3 -3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="m16.498 12.002 3 0 0 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M16.5 16.5h3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        </svg>
                       </div>
-                      <p class="download-card__item text-muted text-sm">PDF, 245 KB</p>
+                      <p class="download-card__item flex-grow">{{ if eq .Language.Lang "sv" }}CV - Torbjörn Hedberg.pdf{{ else }}Resume - Torbjörn Hedberg.pdf{{ end }}</p>
+                      <div class="download-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 15.5v-11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="m15.5 12 -3.5 3.5L8.5 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M12 0.75c-6.213 0 -11.25 5.037 -11.25 11.25S5.787 23.25 12 23.25s11.25 -5.037 11.25 -11.25S18.213 0.75 12 0.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        </svg>
+                      </div>
                     </a>
-                    <a href="#" class="download-card">
-                      <div>
-                        <strong>{{ if eq .Language.Lang "sv" }}Portfolio 2025.pdf{{ else }}Portfolio 2025.pdf{{ end }}</strong>
+                    <a href="#" class="download-card flex mt-16">
+                      <div class="pdf-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="m4.499 19.498 0 -7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M4.5 12h0.75a2.25 2.25 0 0 1 0 4.5H4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M10.5 19.5a3 3 0 0 0 3 -3V15a3 3 0 0 0 -3 -3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="m16.498 12.002 3 0 0 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M16.5 16.5h3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        </svg>
                       </div>
-                      <p class="download-card__item text-muted text-sm">PDF, 1.2 MB</p>
-                    </a>
-                    <a href="#" class="download-card">
-                      <div>
-                        <strong>{{ if eq .Language.Lang "sv" }}Personligt Brev.pdf{{ else }}Cover Letter.pdf{{ end }}</strong>
+                      <p class="download-card__item flex-grow">{{ if eq .Language.Lang "sv" }}Portfolio 2025.pdf{{ else }}Portfolio 2025.pdf{{ end }}</p>
+                      <div class="download-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 15.5v-11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="m15.5 12 -3.5 3.5L8.5 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          <path d="M12 0.75c-6.213 0 -11.25 5.037 -11.25 11.25S5.787 23.25 12 23.25s11.25 -5.037 11.25 -11.25S18.213 0.75 12 0.75" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                        </svg>
                       </div>
-                      <p class="download-card__item text-muted text-sm">PDF, 180 KB</p>
                     </a>
                   </div>
                 </div>
