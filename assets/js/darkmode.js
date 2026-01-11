@@ -254,9 +254,10 @@
 
         // Only allow dragging downwards
         if (deltaY > 0) {
+          e.preventDefault(); // Prevent body scroll while dragging
           themePanel.style.transform = `translateY(${deltaY}px)`;
         }
-      }, { passive: true });
+      }, { passive: false });
 
       themePanel.addEventListener('touchend', function(e) {
         if (!isDragging) return;

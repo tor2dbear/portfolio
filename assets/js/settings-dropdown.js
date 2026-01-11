@@ -104,9 +104,10 @@
 
         // Only allow dragging downwards
         if (deltaY > 0) {
+          e.preventDefault(); // Prevent body scroll while dragging
           panel.style.transform = `translateY(${deltaY}px)`;
         }
-      }, { passive: true });
+      }, { passive: false });
 
       panel.addEventListener('touchend', function(e) {
         if (!isDragging) return;
