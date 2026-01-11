@@ -141,19 +141,20 @@ img {
   -webkit-filter: grayscale(var(--image-grayscale));
   -moz-filter: grayscale(var(--image-grayscale));
   filter: grayscale(var(--image-grayscale));
-  mix-blend-mode: var(--image-blend-mode);
 }
 
 .headerimg img {
   width: 100%;
 }
 
-picture {
+picture,
+.video-wrapper {
   position: relative;
   display: block;
 }
 
-picture::after {
+picture::after,
+.video-wrapper::after {
   content: " ";
   position: absolute;
   display: block;
@@ -161,13 +162,19 @@ picture::after {
   height: 100%;
   background-color: var(--image-background);
   top: 0;
-  z-index: -1;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: var(--image-blend-mode);
 }
 
-img {
+img,
+video {
   width: 100%;
   max-width: 100%;
   height: auto;
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
 }
 
 .header-image {
