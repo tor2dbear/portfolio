@@ -65,8 +65,8 @@
   </symbol>
 
   <!-- Language Icon -->
-  <symbol id="icon-language" viewBox="0 0 16 16">
-    <g transform="scale(.66666)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+  <symbol id="icon-language" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
       <polyline points="19.652 .748 15.902 2.998 18.152 6.748"></polyline>
       <path d="M23.25 8.187v0c-1.04-2.86-3.86-4.67-6.884-4.42"></path>
       <polyline points="4.348 23.248 8.098 20.998 5.848 17.248"></polyline>
