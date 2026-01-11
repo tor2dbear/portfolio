@@ -43,6 +43,9 @@
   {{ end }}
 
 
+  <!-- CSS base (reset) -->
+  {{ $base_reset := resources.Get "css/base/reset.css" }}
+
   <!-- CSS tokens (3-layer architecture) -->
   {{ $tokens_primitives := resources.Get "css/tokens/primitives.css" }}
   {{ $tokens_semantic := resources.Get "css/tokens/semantic.css" }}
@@ -86,6 +89,7 @@
   <!-- CSS loading -->
   {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
+    <link rel="stylesheet" type="text/css" href="{{ $base_reset.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
@@ -115,7 +119,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
