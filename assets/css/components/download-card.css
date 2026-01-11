@@ -1,0 +1,55 @@
+/**
+ * Download Card Component
+ * Downloadable file/document cards for client and employer pages
+ * Features hover states and text truncation
+ */
+
+/* ==========================================================================
+   Download Card
+   ========================================================================== */
+
+.download-card {
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-surface);
+  background-image: none;
+}
+
+.download-card > * {
+  transition: color 0.3s ease;
+}
+
+.download-card:hover {
+  background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover));
+}
+
+:root[data-mode="dark"] .download-card:hover {
+  background-image: linear-gradient(var(--state-on-dark-hover), var(--state-on-dark-hover));
+}
+
+.download-card:hover > div {
+  color: var(--text-link-hover);
+  transition: color 0.3s ease;
+}
+
+.download-card:hover > .download-card__item {
+  color: var(--text-link-hover);
+  transition: color 0.3s ease;
+}
+
+/* ==========================================================================
+   Download List
+   ========================================================================== */
+
+.download-list {
+  grid-row: span 5;
+}
+
+/* ==========================================================================
+   Download Card Item
+   ========================================================================== */
+
+p.download-card__item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
