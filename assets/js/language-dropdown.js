@@ -69,5 +69,53 @@
         closePanel();
       }
     });
+
+    // Touch support for swipe-to-close on mobile bottom sheet
+    let touchStartY = 0;
+    let touchCurrentY = 0;
+    let isDragging = false;
+
+    if (panel) {
+      panel.addEventListener('touchstart', function(e) {
+        // Only handle touches on the panel itself or the drag handle area
+        const rect = panel.getBoundingClientRect();
+        const touchY = e.touches[0].clientY;
+
+        // Check if touch is in the top drag handle area (first 48px)
+        if (touchY - rect.top < 48) {
+          touchStartY = touchY;
+          isDragging = true;
+        }
+      }, { passive: true });
+
+      panel.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+
+        touchCurrentY = e.touches[0].clientY;
+        const deltaY = touchCurrentY - touchStartY;
+
+        // Only allow dragging downwards
+        if (deltaY > 0) {
+          panel.style.transform = `translateY(${deltaY}px)`;
+        }
+      }, { passive: true });
+
+      panel.addEventListener('touchend', function(e) {
+        if (!isDragging) return;
+
+        const deltaY = touchCurrentY - touchStartY;
+
+        // Close if dragged down more than 80px
+        if (deltaY > 80) {
+          closePanel();
+        }
+
+        // Reset transform
+        panel.style.transform = '';
+        isDragging = false;
+        touchStartY = 0;
+        touchCurrentY = 0;
+      });
+    }
   });
 })();
