@@ -237,3 +237,21 @@ other = "Gå till startsidan"
 
 [to_homepage]
 other = "till startsidan"
+
+[no_posts_yet]
+other = "Inga inlägg ännu. Kom tillbaka snart!"
+
+[writing_url]
+other = "texter"
+
+[read_more]
+other = "Läs mer"
+
+[published_on]
+other = "Publicerad"
+
+[writing]
+other = "Texter"
+
+[all_posts]
+other = "Alla inlägg"
