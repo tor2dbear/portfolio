@@ -366,3 +366,31 @@ select:disabled,
   flex-wrap: wrap;
   gap: var(--spacing-16);
 }
+
+/* ==========================================================================
+   Form Messages
+   ========================================================================== */
+
+/* Contact form paragraph spacing */
+.content.post form p,
+.content.page form p {
+  margin-bottom: 0;
+}
+
+/* Form message container */
+form .message {
+  padding: 1rem;
+  max-width: 100%;
+}
+
+/* Error message */
+form .contact-form__message--error.message {
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text);
+}
+
+/* Success message */
+form .contact-form__message--success.message {
+  background-color: var(--bg-tag);
+  color: var(--text-accent);
+}

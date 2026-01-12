@@ -43,6 +43,9 @@
   {{ end }}
 
 
+  <!-- CSS base (reset) -->
+  {{ $base_reset := resources.Get "css/base/reset.css" }}
+
   <!-- CSS tokens (3-layer architecture) -->
   {{ $tokens_primitives := resources.Get "css/tokens/primitives.css" }}
   {{ $tokens_semantic := resources.Get "css/tokens/semantic.css" }}
@@ -60,6 +63,7 @@
   {{ $utilities_layout := resources.Get "css/utilities/layout.css" }}
   {{ $utilities_grid := resources.Get "css/utilities/grid.css" }}
   {{ $utilities_display := resources.Get "css/utilities/display.css" }}
+  {{ $utilities_icons := resources.Get "css/utilities/icons.css" }}
 
   <!-- CSS components (NEW - redesign) -->
   {{ $components_button := resources.Get "css/components/button.css" }}
@@ -70,6 +74,13 @@
   {{ $components_settings_dropdown := resources.Get "css/components/settings-dropdown.css" }}
   {{ $components_article_card := resources.Get "css/components/article-card.css" }}
   {{ $components_navigation := resources.Get "css/components/navigation.css" }}
+  {{ $components_pagination := resources.Get "css/components/pagination.css" }}
+  {{ $components_breadcrumb := resources.Get "css/components/breadcrumb.css" }}
+  {{ $components_tags := resources.Get "css/components/tags.css" }}
+  {{ $components_newsletter := resources.Get "css/components/newsletter.css" }}
+  {{ $components_tooltip := resources.Get "css/components/tooltip.css" }}
+  {{ $components_download_card := resources.Get "css/components/download-card.css" }}
+  {{ $components_table_of_contents := resources.Get "css/components/table-of-contents.css" }}
 
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
@@ -83,6 +94,7 @@
   <!-- CSS loading -->
   {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
+    <link rel="stylesheet" type="text/css" href="{{ $base_reset.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
@@ -95,6 +107,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_grid.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_display.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $utilities_icons.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_button.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_form.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_footer.RelPermalink }}" />
@@ -103,13 +116,20 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_settings_dropdown.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_article_card.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_navigation.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_pagination.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_breadcrumb.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_tags.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_newsletter.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_tooltip.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_download_card.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_table_of_contents.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"

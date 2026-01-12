@@ -77,5 +77,53 @@
         closePanel();
       }
     });
+
+    // Touch support for swipe-to-close on mobile bottom sheet
+    let touchStartY = 0;
+    let touchCurrentY = 0;
+
+    if (panel && overlay) {
+      panel.addEventListener('touchstart', function(e) {
+        touchStartY = e.changedTouches[0].screenY;
+        panel.style.transition = 'none';
+        overlay.style.transition = 'none';
+      });
+
+      panel.addEventListener('touchmove', function(e) {
+        touchCurrentY = e.changedTouches[0].screenY;
+        const deltaY = touchCurrentY - touchStartY;
+
+        // Only allow dragging downwards
+        if (deltaY > 0) {
+          e.preventDefault();
+          panel.style.transform = `translateY(${deltaY}px)`;
+
+          // Update overlay opacity based on drag distance
+          const panelHeight = panel.getBoundingClientRect().height;
+          const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
+          const opacity = 1 - (deltaY / maxDeltaY);
+          overlay.style.opacity = Math.max(opacity, 0);
+        }
+      });
+
+      panel.addEventListener('touchend', function(e) {
+        const deltaY = touchCurrentY - touchStartY;
+
+        panel.style.transition = 'transform 0.3s ease-in-out';
+        overlay.style.transition = 'opacity 0.3s ease-in-out';
+
+        // Close if dragged down more than 50px
+        if (deltaY > 50) {
+          closePanel();
+        } else {
+          // Return to original position
+          panel.style.transform = 'translateY(0)';
+          overlay.style.opacity = '1';
+        }
+
+        touchStartY = 0;
+        touchCurrentY = 0;
+      });
+    }
   });
 })();

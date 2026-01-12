@@ -1,0 +1,22 @@
+/**
+ * Breadcrumb Component
+ * Navigation showing page hierarchy (e.g., Company / Applications / Job Title)
+ */
+
+/* ==========================================================================
+   Breadcrumb Navigation
+   ========================================================================== */
+
+nav.application-breadcrumb ul {
+  list-style: none;
+}
+
+nav.application-breadcrumb ul li {
+  display: inline;
+}
+
+nav.application-breadcrumb ul li+li:before {
+  content: "/";
+  padding: var(--spacing-8);
+  color: var(--text-muted);
+}

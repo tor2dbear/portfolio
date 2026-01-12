@@ -1,0 +1,48 @@
+/**
+ * Table of Contents Component
+ * Navigation menu for client/employer application pages
+ * Shows sections: Letter, Portfolio, CV, Download, Contact
+ */
+
+/* ==========================================================================
+   ToC Container
+   ========================================================================== */
+
+.toc {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ==========================================================================
+   ToC Header
+   ========================================================================== */
+
+.toc__header {
+  margin-bottom: var(--spacing-8);
+}
+
+/* ==========================================================================
+   ToC Items
+   ========================================================================== */
+
+.toc__item {
+  margin-bottom: var(--spacing-4);
+}
+
+.toc__item a {
+  display: inline-block;
+  padding: var(--spacing-4) 0;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.toc__item a:hover {
+  color: var(--text-default);
+}
+
+.toc__item a:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
