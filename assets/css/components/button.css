@@ -8,7 +8,7 @@
  * - .button--primary (brand color)
  * - .button--secondary (outlined)
  * - .button--tertiary (text only)
- * - .button.icon (with arrow icon)
+ * - .button--icon (with arrow icon)
  *
  * Tokens used:
  * - --brand-primary
@@ -159,14 +159,14 @@ button:disabled,
    Icon Button (with arrow)
    ========================================================================== */
 
-button.icon,
-.button.icon {
+button.button--icon,
+.button--icon {
   position: relative;
   transition: padding 0.3s ease;
 }
 
-button.icon:after,
-.button.icon:after {
+button.button--icon:after,
+.button--icon:after {
   display: block;
   content: " ";
   background-size: 1rem 1rem;
@@ -180,12 +180,12 @@ button.icon:after,
   transition: transform 0.3s ease;
 }
 
-button.icon:hover,
-.button.icon:hover {
+button.button--icon:hover,
+.button--icon:hover {
   padding-right: var(--spacing-24);
 }
 
-button.icon:hover:after,
-.button.icon:hover:after {
+button.button--icon:hover:after,
+.button--icon:hover:after {
   transform: translateX(var(--spacing-4));
 }

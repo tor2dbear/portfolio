@@ -1,0 +1,55 @@
+/**
+ * Tags Component
+ * Tag chips/labels used for categorization in posts, projects, and works
+ */
+
+/* ==========================================================================
+   Tag Chip
+   ========================================================================== */
+
+.tag {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: var(--bg-tag);
+  letter-spacing: var(--tracking-wider);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--sans-weight-regular);
+  line-height: var(--line-height-wide);
+  color: var(--text-muted);
+}
+
+.tag:hover {
+  text-decoration: none;
+  background-color: var(--bg-tag-hover);
+}
+
+.tag:visited,
+.tag-list__link:visited,
+.post-meta__link--tag:visited {
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Tag List Container
+   ========================================================================== */
+
+.tag-list__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag-list__item {
+  display: flex;
+}
+
+.tag-list__link,
+.post-meta__link--tag {
+  color: var(--text-muted);
+}

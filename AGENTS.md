@@ -324,6 +324,7 @@ attach_letter: "/path/to/letter.pdf"
 - `assets/css/utilities/layout.css` - Layout utilities
 - `assets/css/utilities/grid.css` - 12-column subgrid utilities
 - `assets/css/utilities/display.css` - Visibility helpers
+- `assets/css/utilities/icons.css` - SVG sprite icon utilities
 - `assets/css/components/button.css` - Button component
 - `assets/css/components/footer.css` - Footer component
 - `assets/css/components/theme-dropdown.css` - Theme dropdown
@@ -354,9 +355,53 @@ attach_letter: "/path/to/letter.pdf"
 ### CSS Load Order (head.html)
 1. tokens (primitives → semantic → components → legacy)
 2. dimensions (mode → palette → palette previews)
-3. utilities (typography → layout → grid → display)
+3. utilities (typography → layout → grid → display → icons)
 4. components (button → footer → theme-dropdown → language-dropdown → settings-dropdown)
 5. pages (home → ui-library → style → clientpage → print)
+
+### SVG Sprite System
+All icons use a centralized SVG sprite system for better performance and maintainability.
+
+**Sprite File**: `static/img/svg/sprite.svg`
+
+**Available Icons**:
+- `icon-pdf` - PDF document icon
+- `icon-download` - Download/circle icon
+- `icon-light` - Light mode sun icon
+- `icon-dark` - Dark mode moon icon
+- `icon-system` - System preference icon
+- `icon-arrow-left` - Left arrow navigation
+- `icon-arrow-right` - Right arrow (used in buttons)
+- `icon-language` - Language selector icon
+
+**Usage Patterns**:
+```html
+<!-- Direct usage with .icon class -->
+<svg class="icon">
+  <use href="/img/svg/sprite.svg#icon-pdf"></use>
+</svg>
+
+<!-- With size variants -->
+<svg class="icon icon--sm"></svg>  <!-- 1rem -->
+<svg class="icon icon--lg"></svg>  <!-- 2rem -->
+<svg class="icon icon--xl"></svg>  <!-- 2.5rem -->
+
+<!-- Legacy containers (backward compatibility) -->
+<div class="pdf-icon">
+  <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+</div>
+```
+
+**Adding New Icons**:
+1. Add `<symbol id="icon-name" viewBox="...">` to `static/img/svg/sprite.svg`
+2. Use sprite reference: `<svg><use href="/img/svg/sprite.svg#icon-name"></use></svg>`
+3. Optionally add legacy container class to `assets/css/utilities/icons.css`
+4. Document in UI Library (`layouts/ui-library/single.html`)
+
+**Icon Styling**:
+- Icons inherit color from parent via `currentColor`
+- Size controlled by `width`/`height` or `.icon` size variants
+- Legacy containers (`.pdf-icon`, `.language-icon`, etc.) provide consistent 1.5rem sizing
 
 ### Breakpoints
 - Units: em-based, desktop-first with max-width queries.
@@ -613,4 +658,4 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 
 ---
 
-Last updated: 2026-01-10
+Last updated: 2026-01-11
