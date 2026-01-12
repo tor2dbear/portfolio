@@ -122,8 +122,37 @@
                 href="https://www.tor-bjorn.com/works/lokalguiden-brand-refresh-2020/"
                 />
   </url><url>
+    <loc>https://www.tor-bjorn.com/creativity/tags/creativity/</loc>
+    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/design/</loc>
+    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/design/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/tags/</loc>
+    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/tags/"
+                />
+  </url><url>
     <loc>https://www.tor-bjorn.com/</loc>
-    <lastmod>2026-01-07T00:00:00+00:00</lastmod>
+    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv"
@@ -133,6 +162,61 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.tor-bjorn.com/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/welcome-to-my-writing-section/welcome-to-my-writing-section/</loc>
+    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/v%C3%A4lkommen-till-min-textsektion/v%C3%A4lkommen-till-min-textsektion/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/welcome-to-my-writing-section/welcome-to-my-writing-section/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/writing/</loc>
+    <lastmod>2026-01-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/branding/</loc>
+    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/branding/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/design-thinking-essentials/design-thinking-essentials/</loc>
+    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/designt%C3%A4nkande-grunderna/designt%C3%A4nkande-grunderna/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/design-thinking-essentials/design-thinking-essentials/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/ui-ux/</loc>
+    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/ui-ux/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/ui-library/</loc>
@@ -187,32 +271,6 @@
                 href="https://www.tor-bjorn.com/product-design/tags/product-design/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/tags/</loc>
-    <lastmod>2023-05-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/tags/"
-                />
-  </url><url>
-    <loc>https://www.tor-bjorn.com/works/tags/ui-ux/</loc>
-    <lastmod>2023-05-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/ui-ux/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/works/tags/ui-ux/"
-                />
-  </url><url>
     <loc>https://www.tor-bjorn.com/web-design/tags/web-design/</loc>
     <lastmod>2023-05-01T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -237,32 +295,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://www.tor-bjorn.com/works/"
-                />
-  </url><url>
-    <loc>https://www.tor-bjorn.com/works/tags/branding/</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/works/tags/branding/"
-                />
-  </url><url>
-    <loc>https://www.tor-bjorn.com/works/tags/design/</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/design/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/works/tags/design/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/clients/</loc>
