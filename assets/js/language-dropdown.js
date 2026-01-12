@@ -73,47 +73,46 @@
     // Touch support for swipe-to-close on mobile bottom sheet
     let touchStartY = 0;
     let touchCurrentY = 0;
-    let isDragging = false;
 
-    if (panel) {
+    if (panel && overlay) {
       panel.addEventListener('touchstart', function(e) {
-        // Only handle touches on the panel itself or the drag handle area
-        const rect = panel.getBoundingClientRect();
-        const touchY = e.touches[0].clientY;
-
-        // Check if touch is in the top drag handle area (first 48px)
-        if (touchY - rect.top < 48) {
-          touchStartY = touchY;
-          isDragging = true;
-        }
-      }, { passive: true });
+        touchStartY = e.changedTouches[0].screenY;
+        panel.style.transition = 'none';
+        overlay.style.transition = 'none';
+      });
 
       panel.addEventListener('touchmove', function(e) {
-        if (!isDragging) return;
-
-        touchCurrentY = e.touches[0].clientY;
+        touchCurrentY = e.changedTouches[0].screenY;
         const deltaY = touchCurrentY - touchStartY;
 
         // Only allow dragging downwards
         if (deltaY > 0) {
-          e.preventDefault(); // Prevent body scroll while dragging
+          e.preventDefault();
           panel.style.transform = `translateY(${deltaY}px)`;
+
+          // Update overlay opacity based on drag distance
+          const panelHeight = panel.getBoundingClientRect().height;
+          const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
+          const opacity = 1 - (deltaY / maxDeltaY);
+          overlay.style.opacity = Math.max(opacity, 0);
         }
-      }, { passive: false });
+      });
 
       panel.addEventListener('touchend', function(e) {
-        if (!isDragging) return;
-
         const deltaY = touchCurrentY - touchStartY;
 
-        // Close if dragged down more than 80px
-        if (deltaY > 80) {
+        panel.style.transition = 'transform 0.3s ease-in-out';
+        overlay.style.transition = 'opacity 0.3s ease-in-out';
+
+        // Close if dragged down more than 50px
+        if (deltaY > 50) {
           closePanel();
+        } else {
+          // Return to original position
+          panel.style.transform = 'translateY(0)';
+          overlay.style.opacity = '1';
         }
 
-        // Reset transform
-        panel.style.transform = '';
-        isDragging = false;
         touchStartY = 0;
         touchCurrentY = 0;
       });
