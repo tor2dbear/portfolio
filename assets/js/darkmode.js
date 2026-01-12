@@ -40,6 +40,9 @@
       themePanel.setAttribute('hidden', '');
       if (themeOverlay) themeOverlay.setAttribute('hidden', '');
       themeToggle.setAttribute('aria-expanded', 'false');
+      // Reset transform and opacity for next open
+      themePanel.style.transform = '';
+      if (themeOverlay) themeOverlay.style.opacity = '';
     }
   }
 

@@ -42,6 +42,9 @@
         panel.setAttribute('hidden', '');
         if (overlay) overlay.setAttribute('hidden', '');
         toggle.setAttribute('aria-expanded', 'false');
+        // Reset transform and opacity for next open
+        panel.style.transform = '';
+        if (overlay) overlay.style.opacity = '';
       }
     }
 
