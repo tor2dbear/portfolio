@@ -236,41 +236,68 @@ Configured in `package.json` with lint-staged:
 
 ---
 
-## Documentation Workflow
+## Git Workflow (v3)
 
-### Migration Plans
-- Store migration/refactor plans in `docs/migrations/` as standalone `.md` files.
-- Keep each plan actionable with phases, checklist, and rollback notes.
+### Core Principles (Strict)
+- **Isolation**: One task = one branch = one worktree.
+- **Mandatory Worktrees**: Parallel tasks MUST use separate worktrees. Branches alone are insufficient for parallel AI agents.
+- **Hierarchy**: The repo root is for management ONLY. Development happens ONLY inside worktrees.
+- **Verification**: Before editing any file, verify your location.
 
-### Feature Plans
-- Store new feature development plans in `docs/features/` as standalone `.md` files.
-- Include: overview, architecture decisions, implementation phases, success criteria, and rollback plan.
-- Keep plans actionable with clear phases and checklists.
+### Repository Layout & Setup
+- The repository root MUST have `worktrees/` added to `.gitignore`.
+- Active development occurs in `worktrees/<branch-name>/`.
+- **Optional**: Add `**/worktrees/**: true` to VS Code `files.exclude` to prevent cross-contamination in searches.
 
-**General Guidelines**:
-- Update `AGENTS.md` when adding or changing documentation workflows.
-- Plans should be living documents - update as implementation progresses.
+### Branch Naming
+- **Format**: `<type>/<slug>-<sessionId>` (e.g., `feature/login-system-a1b2`)
+- **Types**: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
+- **Session ID**: Generate using `openssl rand -hex 2`.
 
----
+### Creating a New Task (Automated)
+Run the automation script from the repo root:
+```bash
+./new-task.sh <type> <slug>
+# Example: ./new-task.sh feature login-page
+```
 
-## Git Workflow
+### Creating a New Task (Manual Fallback)
+```bash
+git switch main
+git pull
+# Format: worktrees/<slug>-<sessionId>
+git worktree add worktrees/<slug>-<sessionId> -b <type>/<slug>-<sessionId>
+```
 
-### Branching
-- **IMPORTANT**: Always create a new branch when starting significant work (features, redesigns, major refactors)
-- Branch format: `<type>/<slug>-<sessionId>`
-- Types: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
-- Example: `feature/header-footer-redesign-e47b`
-- Generate random session ID: `$(openssl rand -hex 2)` or manually
-- If you forget to branch before starting work and changes are unstaged, switch branches immediately with `git checkout -b <branch-name>` (changes follow you)
+### Working in a Worktree (The "Gold" Rules)
+1. **Verification Step**: Always run `pwd`, `git rev-parse --show-toplevel` and `git branch --show-current` before the first edit in a session to verify you are in a `worktrees/` subfolder.
+2. **Scope**: Only modify files inside your assigned `worktrees/<branch-name>/` folder.
+3. **Commits**: All `git add`, `git commit`, and `git push` commands must be executed from within the worktree directory.
 
-### Commits
-- Clear, descriptive commit messages
-- Follow conventional commits when applicable
-- One logical change per commit
+### Syncing & Updates
+To bring in latest changes from main (inside the worktree):
+```bash
+git fetch origin
+git merge origin/main # Avoid rebase unless explicitly requested.
+```
 
-### Pushing
-- Always push with upstream: `git push -u origin <branch-name>`
-- Branch must follow naming convention or push will fail (403)
+### Finishing a Task (Cleanup)
+Once the PR is merged on GitHub:
+```bash
+# Remove Worktree: (from repo root).
+git worktree remove worktrees/<folder-name> --force
+
+# Delete Branch:
+git branch -d <branch-name>
+
+# Prune:
+git fetch --prune
+```
+
+### Safety Guardrails
+- **Never** run two agents in the same worktree folder.
+- **Never** manually move files between worktrees.
+- If `git status` in repo root shows untracked files in `worktrees/`, the `.gitignore` is missing or failing. Stop and fix.
 
 ---
 
