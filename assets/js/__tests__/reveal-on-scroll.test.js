@@ -37,7 +37,7 @@ describe("Reveal On Scroll", () => {
       removeEventListener: jest.fn(),
     }));
 
-    global.IntersectionObserver = jest.fn();
+    globalThis.IntersectionObserver = jest.fn();
 
     require("../reveal-on-scroll");
     document.dispatchEvent(new Event("DOMContentLoaded"));
@@ -46,14 +46,14 @@ describe("Reveal On Scroll", () => {
     elements.forEach((element) => {
       expect(element.classList.contains("is-revealed")).toBe(true);
     });
-    expect(global.IntersectionObserver).not.toHaveBeenCalled();
+    expect(globalThis.IntersectionObserver).not.toHaveBeenCalled();
   });
 
   test("reveals elements when they intersect and unobserves them", () => {
     let observerCallback;
     let observerInstance;
 
-    global.IntersectionObserver = jest.fn((callback) => {
+    globalThis.IntersectionObserver = jest.fn((callback) => {
       observerCallback = callback;
       observerInstance = {
         observe: jest.fn(),
@@ -89,7 +89,7 @@ describe("Reveal On Scroll", () => {
     });
 
     window.innerHeight = 800;
-    global.IntersectionObserver = jest.fn(() => ({
+    globalThis.IntersectionObserver = jest.fn(() => ({
       observe: jest.fn(),
       unobserve: jest.fn(),
       disconnect: jest.fn(),
@@ -120,7 +120,7 @@ describe("Reveal On Scroll", () => {
       }));
     });
 
-    global.IntersectionObserver = jest.fn(() => ({
+    globalThis.IntersectionObserver = jest.fn(() => ({
       observe: jest.fn(),
       unobserve: jest.fn(),
       disconnect: jest.fn(),
@@ -154,7 +154,7 @@ describe("Reveal On Scroll", () => {
     });
 
     window.innerHeight = 800;
-    global.IntersectionObserver = jest.fn(() => ({
+    globalThis.IntersectionObserver = jest.fn(() => ({
       observe: jest.fn(),
       unobserve: jest.fn(),
       disconnect: jest.fn(),
