@@ -1,0 +1,16 @@
+<article class="mb-32">
+  <header>
+    <h2 class="text-2xl line-height-normal text-color-default tracking-normal mt-0 mb-12 font-sans" style="font-weight: var(--sans-weight-bold)">
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </h2>
+
+    {{ if .Description }}
+    <p class="text-base line-height-normal text-color-default mt-0 mb-12">{{ .Description }}</p>
+    {{ end }}
+
+    <div class="text-xs line-height-normal font-normal text-color-lighter tracking-wide mb-12">
+      {{ partial "date.html" . }}
+    </div>
+  </header>
+  {{ partial "post_tags.html" . }}
+</article>

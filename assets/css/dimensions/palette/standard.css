@@ -9,6 +9,7 @@
   /* Image effects */
   --image-grayscale: 0%;
   --image-blend-mode: normal;
+  --image-background: transparent;
 
   /* Primary iris color mapping */
   --text-accent: var(--iris-11);

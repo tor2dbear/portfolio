@@ -16,7 +16,7 @@ BRANCH_NAME="$TYPE/$SLUG-$SESSION_ID"
 TARGET_DIR="worktrees/$SLUG-$SESSION_ID"
 
 echo "🔄 Updating main branch..."
-git switch main && git pull
+git switch master && git pull
 
 echo "🌿 Creating worktree and branch: $BRANCH_NAME"
 git worktree add "$TARGET_DIR" -b "$BRANCH_NAME"

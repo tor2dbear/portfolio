@@ -141,19 +141,20 @@ img {
   -webkit-filter: grayscale(var(--image-grayscale));
   -moz-filter: grayscale(var(--image-grayscale));
   filter: grayscale(var(--image-grayscale));
-  mix-blend-mode: var(--image-blend-mode);
 }
 
 .headerimg img {
   width: 100%;
 }
 
-picture {
+picture,
+.video-wrapper {
   position: relative;
   display: block;
 }
 
-picture::after {
+picture::after,
+.video-wrapper::after {
   content: " ";
   position: absolute;
   display: block;
@@ -161,13 +162,19 @@ picture::after {
   height: 100%;
   background-color: var(--image-background);
   top: 0;
-  z-index: -1;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: var(--image-blend-mode);
 }
 
-img {
+img,
+video {
   width: 100%;
   max-width: 100%;
   height: auto;
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
 }
 
 .header-image {
@@ -244,47 +251,7 @@ p:empty {
 }
 
 /* NOTE: Article card styles (related items, hover effects) moved to assets/css/components/article-card.css */
-
-/* || ========== Pagination ------------------------------------- */
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-12);
-  margin-top: var(--spacing-32);
-}
-
-.pagination__link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.pagination__link:hover {
-  background-color: var(--state-on-light-hover);
-}
-
-.pagination__link:focus-visible {
-  outline: 2px solid var(--outline-neutral);
-  outline-offset: 2px;
-}
-
-.pagination__icon {
-  color: var(--text-muted);
-}
-
-.pagination__link .pagination__icon {
-  color: var(--text-default);
-}
-
-.pagination__status {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
+/* NOTE: Pagination styles moved to assets/css/components/pagination.css */
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
@@ -431,328 +398,20 @@ p:empty {
   margin-bottom: var(--spacing-160);
 }
 
-/* Breadcrumbs */
-nav.application-breadcrumb ul {
-  list-style: none;
-}
+/* NOTE: Breadcrumb styles moved to assets/css/components/breadcrumb.css */
 
-nav.application-breadcrumb ul li {
-  display: inline;
-}
-
-nav.application-breadcrumb ul li+li:before {
-  content: "/";
-  padding: var(--spacing-8);
-  color: var(--text-muted);
-}
-
-/* || ========== Icons ------------------------------------- */
-
-.d-block-light,
-.d-block-dark,
-.d-block-system,
-.download-icon,
-.pdf-icon,
-.theme-icon,
-.curl-icon,
-.curl-icon-bold,
-.arrow-left {
-  display: block;
-  content: " ";
-  height: 1.5rem;
-  width: 1.5rem;
-  color: var(--text-default);
-}
-
-.theme-icon {
-  mask-image: url("/img/svg/theme-icon-16.svg");
-  -webkit-mask-image: url("/img/svg/theme-icon-16.svg");
-}
-
-/* Allow dropdown theme icon to render its inline SVG without masking. */
-.theme-dropdown .theme-icon {
-  mask-image: none;
-  -webkit-mask-image: none;
-  background: none;
-}
-
-.arrow-left {
-  mask-image: url("/img/svg/arrow-left.svg");
-  -webkit-mask-image: url("/img/svg/arrow-left.svg");
-}
+/* NOTE: Icon utilities moved to assets/css/utilities/icons.css */
 
 /* NOTE: Button styles moved to assets/css/components/button.css */
 /* NOTE: Theme switcher styles moved to assets/css/components/theme-dropdown.css */
 /* NOTE: Language switcher styles moved to assets/css/components/language-dropdown.css */
 
 /* NOTE: Form element styles (inputs, textarea, radio, checkbox, select) moved to assets/css/components/form.css */
+/* NOTE: Form message styles (error, success messages) moved to assets/css/components/form.css */
 
-/* Contact form specific message styles */
-.content.post form p,
-.content.page form p {
-  margin-bottom: 0;
-}
+/* NOTE: Newsletter component moved to assets/css/components/newsletter.css */
 
-form .contact-form__message--error.message {
-  background-color: var(--status-error-bg);
-  color: var(--status-error-text);
-}
-
-form .contact-form__message--success.message {
-  background-color: var(--bg-tag);
-  color: var(--text-accent);
-}
-
-form .message {
-  padding: 1rem;
-  max-width: 100%;
-}
-
-/* || ========== Newsletter  -------------------------------------  */
-
-.newsletter {
-  display: grid;
-  grid-template-columns: repeat(12, [col-start] 1fr);
-  column-gap: 0;
-  width: 100%;
-}
-
-.newsletter__signup {
-  grid-column: col-start 1 / span 6;
-  background-color: var(--component-newsletter-bg);
-  padding: 2rem;
-  box-sizing: border-box;
-  color: var(--component-newsletter-text);
-}
-
-.newsletter__signup :is(p, h2, label) {
-  color: var(--component-newsletter-text);
-}
-
-.newsletter__illustration {
-  grid-column: col-start 7 / span 6;
-  background-color: var(--component-newsletter-illustration-bg);
-  background-repeat: no-repeat;
-  background-position: center;
-  display: flex;
-}
-
-.required.email.form-input {
-  margin-top: var(--spacing-8);
-}
-
-/* Small */
-@media (max-width: 63.9375em) {
-  .newsletter {
-    grid-template-columns: repeat(4, [col-start] 1fr);
-  }
-
-  .newsletter__signup {
-    grid-column: col-start 1 / span 4;
-  }
-
-  .newsletter__illustration {
-    display: none;
-  }
-}
-
-.newsletter__mask {
-  mask-image: url("/img/svg/curl-vertical.svg");
-  -webkit-mask-image: url("/img/svg/curl-vertical.svg");
-  background-color: var(--component-newsletter-bg);
-  width: 100%;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-repeat: no-repeat;
-  mask-position: center;
-}
-
-/* Input button */
-.newsletter__submit {
-  width: auto;
-  background-color: var(--component-newsletter-button-bg);
-  color: var(--component-newsletter-button-text);
-  padding: 0.5rem 1rem;
-  -webkit-appearance: none;
-  border-radius: 0;
-  margin-top: var(--spacing-0);
-  margin-bottom: var(--spacing-0);
-}
-
-/* Error message */
-.mc-field-group {
-  display: inline-block;
-  height: 102px;
-  /* Height includes error message and margin-bottom */
-  width: 100%;
-}
-
-input#mce-EMAIL.mce_inline_error {
-  border: solid 1px var(--status-error-border);
-  background-color: var(--status-error-bg);
-  mix-blend-mode: normal;
-}
-
-div.mce_inline_error,
-div#mce-responses {
-  font-size: var(--text-xs);
-  text-align: start;
-  line-height: var(--line-height-normal);
-}
-
-div#mce-responses {
-  margin-top: var(--spacing-8);
-}
-
-/* Tooltip */
-.tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
-  position: absolute;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Tooltip positions */
-.tooltip[data-position="top"] .tooltiptext {
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.tooltip[data-position="top"] .tooltiptext::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-}
-
-.tooltip[data-position="bottom"] .tooltiptext {
-  top: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.tooltip[data-position="bottom"] .tooltiptext::after {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent black transparent;
-}
-
-.tooltip[data-position="top-start"] .tooltiptext {
-  bottom: 125%;
-  left: 0;
-  transform: translateX(0);
-}
-
-.tooltip[data-position="top-start"] .tooltiptext::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 10%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-}
-
-.tooltip[data-position="top-end"] .tooltiptext {
-  bottom: 125%;
-  right: 0;
-  transform: translateX(0);
-}
-
-.tooltip[data-position="top-end"] .tooltiptext::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  right: 10%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-}
-
-.tooltip[data-position="bottom-start"] .tooltiptext {
-  top: 125%;
-  left: 0;
-  transform: translateX(0);
-}
-
-.tooltip[data-position="bottom-start"] .tooltiptext::after {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: 10%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent black transparent;
-}
-
-.tooltip[data-position="bottom-end"] .tooltiptext {
-  top: 125%;
-  right: 0;
-  transform: translateX(0);
-}
-
-.tooltip[data-position="bottom-end"] .tooltiptext::after {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  right: 10%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent black transparent;
-}
-
-/* Ensure tooltip stays within the viewport */
-.tooltip[data-position="top"] .tooltiptext {
-  bottom: 125%;
-}
-
-.tooltip[data-position="top"] .tooltiptext::after {
-  top: 100%;
-  border-color: black transparent transparent transparent;
-}
-
-.tooltip[data-position="bottom"] .tooltiptext {
-  top: 125%;
-  bottom: auto;
-}
-
-.tooltip[data-position="bottom"] .tooltiptext::after {
-  top: auto;
-  bottom: 100%;
-  border-color: transparent transparent black transparent;
-}
+/* NOTE: Tooltip component moved to assets/css/components/tooltip.css */
 
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 

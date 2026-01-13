@@ -351,6 +351,7 @@ attach_letter: "/path/to/letter.pdf"
 - `assets/css/utilities/layout.css` - Layout utilities
 - `assets/css/utilities/grid.css` - 12-column subgrid utilities
 - `assets/css/utilities/display.css` - Visibility helpers
+- `assets/css/utilities/icons.css` - SVG sprite icon utilities
 - `assets/css/components/button.css` - Button component
 - `assets/css/components/footer.css` - Footer component
 - `assets/css/components/theme-dropdown.css` - Theme dropdown
@@ -381,9 +382,53 @@ attach_letter: "/path/to/letter.pdf"
 ### CSS Load Order (head.html)
 1. tokens (primitives → semantic → components → legacy)
 2. dimensions (mode → palette → palette previews)
-3. utilities (typography → layout → grid → display)
+3. utilities (typography → layout → grid → display → icons)
 4. components (button → footer → theme-dropdown → language-dropdown → settings-dropdown)
 5. pages (home → ui-library → style → clientpage → print)
+
+### SVG Sprite System
+All icons use a centralized SVG sprite system for better performance and maintainability.
+
+**Sprite File**: `static/img/svg/sprite.svg`
+
+**Available Icons**:
+- `icon-pdf` - PDF document icon
+- `icon-download` - Download/circle icon
+- `icon-light` - Light mode sun icon
+- `icon-dark` - Dark mode moon icon
+- `icon-system` - System preference icon
+- `icon-arrow-left` - Left arrow navigation
+- `icon-arrow-right` - Right arrow (used in buttons)
+- `icon-language` - Language selector icon
+
+**Usage Patterns**:
+```html
+<!-- Direct usage with .icon class -->
+<svg class="icon">
+  <use href="/img/svg/sprite.svg#icon-pdf"></use>
+</svg>
+
+<!-- With size variants -->
+<svg class="icon icon--sm"></svg>  <!-- 1rem -->
+<svg class="icon icon--lg"></svg>  <!-- 2rem -->
+<svg class="icon icon--xl"></svg>  <!-- 2.5rem -->
+
+<!-- Legacy containers (backward compatibility) -->
+<div class="pdf-icon">
+  <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+</div>
+```
+
+**Adding New Icons**:
+1. Add `<symbol id="icon-name" viewBox="...">` to `static/img/svg/sprite.svg`
+2. Use sprite reference: `<svg><use href="/img/svg/sprite.svg#icon-name"></use></svg>`
+3. Optionally add legacy container class to `assets/css/utilities/icons.css`
+4. Document in UI Library (`layouts/ui-library/single.html`)
+
+**Icon Styling**:
+- Icons inherit color from parent via `currentColor`
+- Size controlled by `width`/`height` or `.icon` size variants
+- Legacy containers (`.pdf-icon`, `.language-icon`, etc.) provide consistent 1.5rem sizing
 
 ### Breakpoints
 - Units: em-based, desktop-first with max-width queries.
@@ -473,7 +518,77 @@ npm run test:coverage       # Generate coverage report
 7. **Git Conventions**: Follow the branch format defined in this document
 8. **Taxonomy System**: Employers/clients use Hugo taxonomies - projects need taxonomy tags to appear on company pages
 9. **Hidden Projects**: Respect `hidden: true` parameter - must be filtered in main portfolio templates
-10. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
+10. **Request Handling**: Follow the "Request Handling Guidelines" section below - propose plans for analysis requests, implement directly only for clear action requests
+11. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
+
+---
+
+## Request Handling Guidelines
+
+### When to Propose vs. Implement
+
+**Key Principle**: Distinguish between requests for analysis/suggestions and requests for direct action.
+
+### Language Cues
+
+**Analysis/Proposal Requests** (respond with plan, wait for approval):
+- "Can you analyze..."
+- "What would be the best way to..."
+- "How should I..."
+- "Could you suggest..."
+- "What do you recommend..."
+- "Föreslå hur..." (Swedish: "suggest how...")
+- Questions that ask "how" or "what" about approach
+
+**Direct Action Requests** (proceed with implementation):
+- "Please add..."
+- "Create a..."
+- "Update the..."
+- "Fix the..."
+- "Lägg till..." (Swedish: "add...")
+- "Skapa..." (Swedish: "create...")
+- Clear imperative commands
+
+### Response Pattern for Analysis Requests
+
+When user asks for analysis or suggestions:
+
+1. **Analyze**: Use appropriate tools (Explore agent, Read, Grep) to understand current state
+2. **Present findings**: Summarize what you discovered about the codebase
+3. **Propose solution**: Present a clear implementation plan with:
+   - Files to be created/modified
+   - Structural changes needed
+   - Configuration updates required
+   - Example code/content snippets
+   - Trade-offs and alternatives if applicable
+4. **Ask for confirmation**: "Does this approach look good? Should I proceed with implementation?"
+5. **Wait for approval**: Do not proceed until user explicitly confirms
+
+### Response Pattern for Action Requests
+
+When user gives clear implementation instructions:
+
+1. **Acknowledge**: Briefly confirm what you'll do
+2. **Plan** (if complex): Use TodoWrite for multi-step tasks
+3. **Execute**: Implement the requested changes
+4. **Report**: Summarize what was completed
+
+### Gray Areas
+
+When in doubt, **default to proposing first**. It's better to over-communicate than to implement unwanted changes.
+
+**Example gray area**: "I want to add a blog section" could be:
+- Analysis request: User wants to discuss options and structure first
+- Action request: User has decided and wants it done immediately
+
+**Resolution**: If the request is substantial (affects multiple files, adds new features, changes site architecture), treat it as an analysis request and propose a plan first, even if the wording seems action-oriented.
+
+### Handling Swedish Language Requests
+
+The same principles apply to Swedish requests. Common Swedish phrases:
+
+- **Analysis**: "Kan du analysera...", "Hur skulle jag...", "Vad är bästa sättet...", "Föreslå hur..."
+- **Action**: "Lägg till...", "Skapa...", "Uppdatera...", "Fixa...", "Implementera..."
 
 ---
 
@@ -570,4 +685,4 @@ npm run test:coverage       # Generate coverage report
 
 ---
 
-Last updated: 2026-01-06
+Last updated: 2026-01-11

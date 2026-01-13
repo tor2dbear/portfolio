@@ -37,10 +37,14 @@
   </figure>
   {{/* IF mp4 */}}
 {{ else if eq $ext "mp4" }}
-  <video width="100%" height="auto" autoplay muted>
-    <source src="{{ $src.RelPermalink }}" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
+  <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
+    <div class="video-wrapper">
+      <video width="100%" height="auto" autoplay muted loop playsinline>
+        <source src="{{ $src.RelPermalink }}" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </figure>
   {{/* So for posts that aren't setup in the page bundles, it doesn't fail */}}
 {{ else }}
   {{ if $src }}
