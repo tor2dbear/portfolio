@@ -123,6 +123,20 @@
   --amber-11: hsl(39, 90%, 49.8%);
   --amber-12: hsl(39, 97%, 93.2%);
 
+  /* Cloud Dancer Dark Scale (Pantone 11-4201 TCX inspired) */
+  --cloud-1: hsl(42, 12%, 9.6%);
+  --cloud-2: hsl(42, 14%, 11%);
+  --cloud-3: hsl(42, 16%, 14.5%);
+  --cloud-4: hsl(42, 18%, 17.3%);
+  --cloud-5: hsl(42, 20%, 20%);
+  --cloud-6: hsl(42, 22%, 23.7%);
+  --cloud-7: hsl(42, 25%, 30%);
+  --cloud-8: hsl(42, 30%, 41.8%);
+  --cloud-9: hsl(42, 38%, 59.8%);
+  --cloud-10: hsl(42, 36%, 56.1%);
+  --cloud-11: hsl(42, 70%, 77.3%);
+  --cloud-12: hsl(42, 60%, 94.9%);
+
   /* Teal Dark Scale (Radix Teal) */
   --teal-1: hsl(168, 48%, 6.5%);
   --teal-2: hsl(169, 77.8%, 7.1%);

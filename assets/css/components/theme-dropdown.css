@@ -187,6 +187,23 @@
   background: var(--palette-pantone-bg);
 }
 
+.palette-preview--forest .palette-preview-segment:first-child {
+  background: var(--palette-forest-accent);
+}
+
+.palette-preview--forest .palette-preview-segment:last-child {
+  background: var(--palette-forest-bg);
+}
+
+.palette-preview--mesa .palette-preview-segment:first-child {
+  background: var(--palette-mesa-accent);
+}
+
+.palette-preview--mesa .palette-preview-segment:last-child {
+  background: var(--palette-mesa-bg);
+}
+
+
 /* Mobile bottom sheet */
 /* xs: <= 29.9375em */
 @media (max-width: 29.9375em) {

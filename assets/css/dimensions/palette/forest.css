@@ -1,0 +1,38 @@
+/* ============================================================================
+   PALETTE: Forest
+
+   Green-forward palette with no special image effects.
+   ============================================================================ */
+
+:root[data-palette="forest"] {
+  /* Image effects */
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
+  --image-background: transparent;
+
+  /* Primary green color mapping */
+  --text-accent: var(--green-11);
+  --brand-primary: var(--green-9);
+
+  --text-default: var(--green-12);
+  --text-muted: var(--green-10);
+  --text-nav: var(--green-12);
+  --text-link-hover: var(--green-11);
+
+  --bg-page: var(--green-2);
+  --bg-tag: var(--green-4);
+  --bg-tag-hover: var(--green-5);
+  --bg-surface: var(--green-4);
+  --bg-nav: var(--green-5);
+
+  --border-subtle: var(--green-5);
+
+  --component-form-bg: var(--green-3);
+  --component-form-placeholder: var(--green-4);
+
+  --component-newsletter-bg: var(--green-12);
+  --component-newsletter-text: var(--green-2);
+  --component-newsletter-illustration-bg: var(--green-3);
+  --component-newsletter-button-bg: var(--green-4);
+  --component-newsletter-button-text: var(--green-11);
+}

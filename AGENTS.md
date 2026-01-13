@@ -403,6 +403,18 @@ All icons use a centralized SVG sprite system for better performance and maintai
 - Size controlled by `width`/`height` or `.icon` size variants
 - Legacy containers (`.pdf-icon`, `.language-icon`, etc.) provide consistent 1.5rem sizing
 
+### Sticky Footer Pattern
+The site uses CSS Grid for a sticky footer that works even with short content:
+```css
+#layout {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto 1fr auto;  /* header, main (fills space), footer */
+  grid-template-areas: "header" "main" "footer";
+}
+```
+This ensures the footer stays at the bottom of the viewport even when page content is minimal (e.g., 404 page).
+
 ### Breakpoints
 - Units: em-based, desktop-first with max-width queries.
 - Naming: xs, sm, md, lg, xl.
@@ -434,6 +446,15 @@ All icons use a centralized SVG sprite system for better performance and maintai
 - Legacy aliases live in `assets/css/tokens/legacy.css` and must include `/* deprecated */`.
 - Legacy aliases map one-to-one to canonical tokens; remove legacy only after confirming no references remain.
 - **State-layer tokens (state-*)** must be applied as overlays (e.g. `background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover))`) on top of existing backgrounds, not as replacement background colors.
+
+### Button Link Styling
+When styling links, always exclude `.button` elements to prevent visited link colors from overriding button styles:
+```css
+a:visited:not(.button) {
+  color: var(--text-default);
+}
+```
+This pattern is used in `assets/css/utilities/typography.css`.
 
 ### CSS / HTML Naming Spec
 - **Utilities**: short, functional, scale-based names (e.g. `mt-24`, `grid-1-3`, `text-sm`).
@@ -600,6 +621,25 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 4. Run linting: `npm run lint:fix`
 5. Pre-commit hooks will format automatically
 
+### 404 Pages
+Hugo generates bilingual 404 pages:
+- English: `/404.html`
+- Swedish: `/sv/404.html`
+
+**GitHub Pages Limitation**: GitHub Pages only serves `/404.html` for all 404 errors.
+
+**Solution**: A JavaScript redirect (`static/js/404-redirect.js`) detects Swedish paths and redirects:
+```javascript
+// If URL starts with /sv/, redirect to Swedish 404
+if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
+  window.location.replace('/sv/404.html');
+}
+```
+
+**Template**: `layouts/404.html`
+- Uses `.Lang` to show correct language content
+- Language dropdown uses `.Kind "404"` to detect 404 pages and link directly to other language's 404.html
+
 ### UI Library
 **Access**: `/ui-library/` (English) or `/sv/ui-library/` (Swedish)
 **Purpose**: Internal documentation of design tokens, components, and grid system
@@ -658,4 +698,4 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 
 ---
 
-Last updated: 2026-01-11
+Last updated: 2026-01-13

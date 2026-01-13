@@ -5,7 +5,7 @@
 
 
 <div class="col-start-1 col-span-10 startpage-heading">
-  <h1 class="type-heading hero-title mb-24">
+  <h1 class="type-heading hero-title mb-24 reveal">
     {{ i18n "hero_intro_lead" }}
     <span
       class="role-swapper"
@@ -25,10 +25,4 @@
     {{ i18n "hero_emphasis_and" }}
     <span class="hero-emphasis">{{ i18n "hero_emphasis_tech" }}</span>.
   </h1>
-  <button
-    class="button--icon text-lg font-sans font-medium"
-    onclick="window.location.href = '{{ printf "%s#contact" ("/" | absLangURL) }}';"
-  >
-    {{ i18n "get_in_touch" }}
-  </button>
 </div>

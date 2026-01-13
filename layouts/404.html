@@ -1,9 +1,21 @@
 {{ partial "header.html" . }}
 
+{{- /* Redirect to language-specific 404 on GitHub Pages (only needed on default language) */ -}}
+{{ if eq .Lang "en" }}
+<script src="{{ "js/404-redirect.js" | relURL }}"></script>
+{{ end }}
 
 <div class="content use-subgrid">
-  <div class="type-heading">
-    <h2>{{ .Title }}</h2>
+  <div class="col-start-1 col-span-10">
+    {{ if eq .Lang "sv" }}
+      <h1 class="type-heading mb-24">Hoppsan! Den här sidan fanns nog bara i mitt huvud.</h1>
+      <p class="mb-32">Jag jobbar ständigt med att förfina och bygga ut den här sajten, men just den här länken verkar ha hamnat i papperskorgen eller aldrig riktigt lämnat skissbordet.</p>
+      <a href="/" class="button button--primary">Tillbaka till start</a>
+    {{ else }}
+      <h1 class="type-heading mb-24">Oops! This page only exists in my head.</h1>
+      <p class="mb-32">I'm constantly refining and building out this site, but this link seems to have ended up in the trash—or never left the sketchbook.</p>
+      <a href="/" class="button button--primary">Back to safer ground</a>
+    {{ end }}
   </div>
 </div>
 

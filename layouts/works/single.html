@@ -23,14 +23,16 @@
       <li class="application-breadcrumb__item text-color-lighter">{{ .Title }}</li>
     </ul>
   </nav>
-  <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
-  <h2 class="type-caption mb-16 mt-16">{{ .Description }}</h2>
-  <div class="type-information text-color-lighter mt-0 mb-16"> {{ partial "date.html" . }}</div>
-  <div class="mt-0 mb-16"> {{ partial "post_tags.html" . }}</div>
+  <h1 class="type-headline-1 mt-0 mb-0 reveal">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
+  <h2 class="type-caption mb-16 mt-16 reveal">{{ .Description }}</h2>
+  <div class="type-information text-color-lighter mt-0 mb-16 reveal"> {{ partial "date.html" . }}</div>
+  <div class="mt-0 mb-16 reveal"> {{ partial "post_tags.html" . }}</div>
  
-  {{ .Content }}
+  <div class="post-content">
+    {{ .Content }}
+  </div>
 
-  <div class="project-client">
+  <div class="project-client reveal">
     {{ if .Params.client }}
     <div class="project-client__column">
     <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Client</h4>
@@ -50,7 +52,7 @@
   </div>
 
   {{ partial "related.html" . }}
-    <ul class="toc mt-64 mb-64 col-span-12 show-on-client">
+    <ul class="toc mt-64 mb-64 col-span-12 show-on-client reveal">
     <li class="toc__header"><h3 class="type-headline-small mb-8">Table of content</h3></li>
     <li class="toc__item font-sans text-base text-color-lighter">
       <a data-js="application-toc-letter" href="#">Letter</a>

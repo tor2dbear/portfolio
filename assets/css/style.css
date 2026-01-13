@@ -25,9 +25,10 @@ body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .curl-icon-bold, butt
 
 #layout {
   display: grid;
-  height: auto;
+  min-height: 100vh;
   flex-basis: auto;
   grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
   grid-template-areas:
     "header"
     "main"

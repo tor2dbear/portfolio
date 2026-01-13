@@ -55,6 +55,8 @@
   {{ $dimensions_mode_light := resources.Get "css/dimensions/mode/light.css" }}
   {{ $dimensions_mode_dark := resources.Get "css/dimensions/mode/dark.css" }}
   {{ $dimensions_palette_standard := resources.Get "css/dimensions/palette/standard.css" }}
+  {{ $dimensions_palette_forest := resources.Get "css/dimensions/palette/forest.css" }}
+  {{ $dimensions_palette_mesa := resources.Get "css/dimensions/palette/mesa.css" }}
   {{ $dimensions_palette_pantone := resources.Get "css/dimensions/palette/pantone.css" }}
   {{ $dimensions_palette_previews := resources.Get "css/dimensions/palette/previews.css" }}
 
@@ -101,6 +103,8 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_light.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_dark.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_forest.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_mesa.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_previews.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
@@ -129,7 +133,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
@@ -167,6 +171,7 @@
   {{ $js9 := resources.Get "js/role-swapper.js" }}
   {{ $js10 := resources.Get "js/ui-library-tabs.js" }}
   {{ $js11 := resources.Get "js/settings-dropdown.js" }}
+  {{ $js12 := resources.Get "js/reveal-on-scroll.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -183,9 +188,10 @@
     <script src="{{ $js9.RelPermalink }}" defer></script>
     <script src="{{ $js10.RelPermalink }}" defer></script>
     <script src="{{ $js11.RelPermalink }}" defer></script>
+    <script src="{{ $js12.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 $js8 $js9 $js10 $js11 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 $js8 $js9 $js10 $js11 $js12 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
   
