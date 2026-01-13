@@ -214,11 +214,6 @@
   .hero-title {
     font-size: var(--text-3xl);
   }
-
-  .section-heading {
-    font-size: var(--text-xl);
-  }
-
 }
 
 /* xs: <= 29.9375em */

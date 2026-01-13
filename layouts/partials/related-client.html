@@ -1,18 +1,24 @@
 {{ $related := site.RegularPages.RelatedIndices . "clients" }}
 {{ with $related }}
 <h3 class="related-items__title mt-64 mb-8 type-headline-small show-on-client">More from portfolio</h3>
-	{{ range . }}
-	<article class="related-items__item show-on-client">
-	<div class="related-items__image line-height-tighter">
-		<a href="{{ .Permalink }}">{{ partial "headerimage.html" . }}</a>
-		</div>
-		<header class="related-items__header">
-		<h2 class="type-headline-4 mt-12"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-		<h4 class="type-information text-color-lighter mb-12 mt-12">{{ partial "date.html" . }}</h4>
-		</header>
-		  {{ partial "post_tags.html" . }}
-		</article>
-		{{ end }}
+  {{ range $index, $page := . }}
+    {{ $delayClass := "" }}
+    {{ if eq $index 1 }}
+      {{ $delayClass = "reveal--delay" }}
+    {{ else if eq $index 2 }}
+      {{ $delayClass = "reveal--delay-2" }}
+    {{ end }}
+    <article class="related-items__item show-on-client reveal {{ $delayClass }}">
+      <div class="related-items__image line-height-tighter">
+        <a href="{{ $page.Permalink }}">{{ partial "headerimage.html" $page }}</a>
+      </div>
+      <header class="related-items__header">
+        <h2 class="type-headline-4 mt-12"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h2>
+        <h4 class="type-information text-color-lighter mb-12 mt-12">{{ partial "date.html" $page }}</h4>
+      </header>
+      {{ partial "post_tags.html" $page }}
+    </article>
+  {{ end }}
 
 
 {{ end }}

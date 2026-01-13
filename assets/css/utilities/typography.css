@@ -397,7 +397,7 @@ blockquote {
    CONTENT-SPECIFIC TYPOGRAPHY
    ========================================================================== */
 
-.content :is(h1, h2, h3, h4, h5, h6):not(.type-headline-1):not(.type-caption):not(.type-headline-4) {
+.content :is(h1, h2, h3, h4, h5, h6):not(.type-headline-1):not(.type-caption):not(.type-headline-4):not(.accordion__title) {
   margin-bottom: var(--spacing-8);
 }
 
@@ -421,7 +421,7 @@ body a:active {
   color: var(--text-link-hover);
 }
 
-a:visited,
+a:visited:not(.button):not(.top-menu__link--button):not(.tag):not(.tag-list__link):not(.post-meta__link--tag),
 a.menu-heading:hover {
   text-decoration: none;
   color: var(--text-default);

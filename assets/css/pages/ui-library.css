@@ -15,6 +15,7 @@
 .accordion__trigger,
 .accordion__title,
 .accordion-nested__trigger,
+.accordion-nested__trigger h4,
 .token-section>h4,
 .typography-example__token,
 .spacing-example__token,
@@ -76,7 +77,7 @@
 }
 
 .ui-library__header {
-  grid-column: span 12;
+  grid-column: content-start / content-end;
   margin-bottom: var(--spacing-32);
 }
 
@@ -85,7 +86,7 @@
    ========================================================================== */
 
 .ui-library__tabs {
-  grid-column: span 12;
+  grid-column: content-start / content-end;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-24);
@@ -150,6 +151,7 @@
   border: 1px solid var(--border-default);
   border-radius: 8px;
   margin-bottom: var(--spacing-16);
+  overflow: hidden;
 }
 
 .accordion__trigger {
@@ -185,6 +187,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   margin-bottom: var(--spacing-8);
+  overflow: hidden;
 }
 
 .accordion-nested__trigger {

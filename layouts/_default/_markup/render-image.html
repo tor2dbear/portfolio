@@ -9,7 +9,7 @@
 {{ $ext := index $pathArr (sub $pathLen 1) }}
 {{/* IF svg */}}
 {{ if eq $ext "svg" }}
-  <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
+  <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}">
     <picture>
       <img
         alt="{{ $alt }}"
@@ -22,7 +22,7 @@
   </figure>
   {{/* IF gif */}}
 {{ else if eq $ext "gif" }}
-  <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
+  <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}">
     <picture>
       <img
         alt="{{ $alt }}"
@@ -37,7 +37,7 @@
   </figure>
   {{/* IF mp4 */}}
 {{ else if eq $ext "mp4" }}
-  <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
+  <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}">
     <div class="video-wrapper">
       <video width="100%" height="auto" autoplay muted loop playsinline>
         <source src="{{ $src.RelPermalink }}" type="video/mp4" />
@@ -76,7 +76,7 @@
     {{ $sizes := "100vw" }}
     {{/* Size-based image breakpoints (performance). No art-direction crops here. */}}
     {{ if .Title }}
-      <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
+      <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}">
         <picture>
           <source
             media="(max-width: 393px)"
@@ -131,7 +131,7 @@
         <figcaption>{{- .Title -}}</figcaption>
       </figure>
     {{ else }}
-      <figure class="{{ if in $src "header-img" }}header-img{{ end }}">
+      <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}">
         <picture>
           <source
             media="(max-width: 393px)"

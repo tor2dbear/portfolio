@@ -139,6 +139,7 @@ DefaultContentLanguage = "en"
     [markup.goldmark.parser]
       autoHeadingID = false
       autoHeadingIDType = 'github'
+      wrapStandAloneImageWithinParagraph = false
       [markup.goldmark.parser.attribute]
         block = true
         title = true

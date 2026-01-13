@@ -22,7 +22,8 @@
       "Bash(done)",
       "Bash(hugo server:*)",
       "Bash(pkill:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(hugo --quiet:*)"
     ]
   }
 }

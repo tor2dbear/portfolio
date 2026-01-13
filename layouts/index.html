@@ -12,7 +12,11 @@
       </div>
       {{ range $index, $page := first 6 (where (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) }}
         {{ $isWide := or (eq $index 0) (eq $index 3) (eq $index 4) }}
-        <div class="{{ if $isWide }}col-span-8 summary-card--wide{{ else }}col-span-4 summary-card--compact{{ end }}">
+        {{ $delayClass := "" }}
+        {{ if not (modBool $index 2) }}
+          {{ $delayClass = "reveal--delay" }}
+        {{ end }}
+        <div class="reveal {{ $delayClass }} {{ if $isWide }}col-span-8 summary-card--wide{{ else }}col-span-4 summary-card--compact{{ end }}">
           {{ $page.Render "summary" }}
         </div>
       {{ end }}
@@ -20,7 +24,7 @@
   </section>
 
   <section id="about" class="home-section about-section">
-    <h2 class="section-heading">{{ i18n "about_me" }}</h2>
+    <h2 class="section-heading reveal">{{ i18n "about_me" }}</h2>
     <div class="about-content use-subgrid">
       {{ $aboutPartial := printf "about_main_%s.html" .Language.Lang }}
       {{ partial $aboutPartial . }}
@@ -29,10 +33,10 @@
   </section>
 
   <section id="contact" class="home-section contact-section">
-    <h2 class="section-heading">{{ i18n "contact_me" }}</h2>
+    <h2 class="section-heading reveal">{{ i18n "contact_me" }}</h2>
     <div class="contact-content use-subgrid">
       {{ with .Site.GetPage "/about" }}
-        <figure class="contact-portrait col-start-7 col-span-6">
+        <figure class="contact-portrait col-start-7 col-span-6 reveal reveal--delay">
           {{ partial "headerimage.html" . }}
         </figure>
       {{ end }}
