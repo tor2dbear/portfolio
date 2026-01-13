@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Product Design on Torbjörn Hedberg · Designer</title>
+    <link>https://www.tor-bjorn.com/preview/pr-15/product-design/tags/product-design/</link>
+    <description>Recent content in Product Design on Torbjörn Hedberg · Designer</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 01 May 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.tor-bjorn.com/preview/pr-15/product-design/tags/product-design/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lokalguiden Admin Interface Redesign</title>
+      <link>https://www.tor-bjorn.com/preview/pr-15/works/lokalguiden-admin-interface-redesign/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/preview/pr-15/works/lokalguiden-admin-interface-redesign/</guid>
+      <description>&lt;h3&gt;Challenge&lt;/h3&gt;&#xA;&lt;p&gt;Lokalguiden&amp;rsquo;s admin interface had evolved organically over years, resulting in inconsistent UI patterns, confusing navigation, and inefficient workflows. Internal teams struggled with daily tasks, leading to decreased productivity and increased training time for new staff.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Key Problems:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Inconsistent interface patterns and navigation&lt;/li&gt;&#xA;&lt;li&gt;Poor information architecture making features hard to find&lt;/li&gt;&#xA;&lt;li&gt;Outdated visual design reducing usability&lt;/li&gt;&#xA;&lt;li&gt;No design system leading to fragmented experience&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3&gt;Approach&lt;/h3&gt;&#xA;&lt;p&gt;&lt;strong&gt;Research &amp;amp; Discovery&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Conducted user interviews with internal staff across departments&lt;/li&gt;&#xA;&lt;li&gt;Mapped common workflows and pain points&lt;/li&gt;&#xA;&lt;li&gt;Audited existing interface for usability issues&lt;/li&gt;&#xA;&lt;li&gt;Analyzed task completion times and error rates&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;Information Architecture&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
