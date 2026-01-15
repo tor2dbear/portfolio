@@ -14,7 +14,7 @@ body {
 
 /* Darkmode transition. */
 body.darkmodeTransition,
-body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .curl-icon-bold, button, .brand, .brand__hyphen) {
+body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .brand__mark, .brand__mark path, .brand__mark line, button, .brand, .brand__hyphen) {
   transition: stroke 1s cubic-bezier(0.075, 0.82, 0.165, 1),
     border-color 1s cubic-bezier(0.075, 0.82, 0.165, 1),
     color 1s cubic-bezier(0.075, 0.82, 0.165, 1),

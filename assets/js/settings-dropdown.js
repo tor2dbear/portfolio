@@ -37,11 +37,22 @@
       }
     }
 
+    function resetPanelStyles() {
+      if (!panel) return;
+      panel.style.transform = '';
+      panel.style.transition = '';
+      if (overlay) {
+        overlay.style.opacity = '';
+        overlay.style.transition = '';
+      }
+    }
+
     function closePanel() {
       if (panel && !panel.hasAttribute('hidden')) {
         panel.setAttribute('hidden', '');
         if (overlay) overlay.setAttribute('hidden', '');
         toggle.setAttribute('aria-expanded', 'false');
+        resetPanelStyles();
       }
     }
 
@@ -55,6 +66,7 @@
         panel.removeAttribute('hidden');
         if (overlay) overlay.removeAttribute('hidden');
         toggle.setAttribute('aria-expanded', 'true');
+        resetPanelStyles();
       } else {
         closePanel();
       }

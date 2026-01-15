@@ -1,4 +1,6 @@
 {{ $related := site.RegularPages.RelatedIndices . "tags" }}
+{{ $relatedWorks := where $related "Type" "works" }}
+{{ $relatedFiltered := where $relatedWorks ".Params.hidden" "!=" true }}
 {{ $relatedFiltered := where $related ".Params.hidden" "!=" true }}
 {{ $relatedFiltered = where $relatedFiltered "Type" .Type }}
 {{ with $relatedFiltered }}

@@ -23,7 +23,7 @@ client:
   url: "https://www.utblick.org/"
   about: ""
 ---
-![Header example](header-img-utblick_no2-0002.jpeg "Description of heroimage")
+![Utblick nr.2](header-img-utblick_no2-0002.jpeg "Description of heroimage")
 ### Om
 Utblick nr.2 utforskar temat Ansvar och Tillväxt genom typografisk hierarki och organiska illustrationer. Den redaktionella designen balanserar strukturerade textlayouter med handritade botaniska element, vilket skapar rytm genom publikationen samtidigt som läsbarheten bevaras.
 
