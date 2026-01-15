@@ -21,11 +21,19 @@
 
   {{ if isset .Params "tags" }}
   {{ $count := len .Params.tags }}
+  {{ $worksSlug := strings.TrimPrefix (i18n "works_url") "/" }}
+  {{ $writingSlug := strings.TrimPrefix (i18n "writing_url") "/" }}
+  {{ $tagSection := "tags" }}
+  {{ if eq .Section "works" }}
+    {{ $tagSection = printf "/%s/tags" $worksSlug }}
+  {{ else if or (eq .Section "writing") (eq .Section "texter") }}
+    {{ $tagSection = printf "/%s/tags" $writingSlug }}
+  {{ end }}
   {{ if gt $count 0 }}
   <div class="post-meta__item">
     <i class="post-meta__icon fa fa-tags fa-fw"></i>
     {{ range $k, $v := .Params.tags }}
-      <a class="post-meta__link post-meta__link--tag tag" href="{{ $baseUrl }}tags/{{ . | urlize }}">{{ . }}</a>{{ if lt $k (sub $count 1) }}&nbsp;&#47;{{ end }}
+      <a class="post-meta__link post-meta__link--tag tag" href="{{ $baseUrl }}{{ $tagSection }}/{{ . | urlize }}">{{ . }}</a>{{ if lt $k (sub $count 1) }}&nbsp;&#47;{{ end }}
     {{ end }}
   </div>
   {{ end }}

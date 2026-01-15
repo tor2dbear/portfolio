@@ -3,7 +3,21 @@
 {{ $relatedFiltered := where $relatedWorks ".Params.hidden" "!=" true }}
 {{ $relatedFiltered := where $related ".Params.hidden" "!=" true }}
 {{ $relatedFiltered = where $relatedFiltered "Type" .Type }}
-{{ with $relatedFiltered }}
+{{ $relatedFiltered = where $relatedFiltered "Permalink" "!=" .Permalink }}
+{{ $relatedList := $relatedFiltered }}
+{{ if lt (len $relatedList) 3 }}
+  {{ $relatedPermalinks := slice }}
+  {{ range $relatedList }}
+    {{ $relatedPermalinks = $relatedPermalinks | append .Permalink }}
+  {{ end }}
+  {{ $fallback := where site.RegularPages ".Params.hidden" "!=" true }}
+  {{ $fallback = where $fallback "Type" .Type }}
+  {{ $fallback = where $fallback "Permalink" "!=" .Permalink }}
+  {{ $fallback = where $fallback "Permalink" "not in" $relatedPermalinks }}
+  {{ $fallback = first (sub 3 (len $relatedList)) $fallback }}
+  {{ $relatedList = $relatedList | append $fallback }}
+{{ end }}
+{{ with $relatedList }}
   <h3 class="related-items__title mt-64 mb-8 type-headline-small">Related</h3>
   {{ range $index, $page := first 3 . }}
     {{ $delayClass := "" }}

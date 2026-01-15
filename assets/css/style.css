@@ -196,7 +196,7 @@ picture>img {
 }
 
 .post figure {
-  margin-bottom: var(--spacing-32);
+  margin-bottom: var(--post-media-gap, var(--spacing-32));
 }
 
 /* remove <br> introduced by render-image */
@@ -227,6 +227,14 @@ p:empty {
 
 .content.post {
   max-width: 64rem;
+  --post-media-gap: var(--spacing-24);
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .content.post {
+    --post-media-gap: var(--spacing-16);
+  }
 }
 
 /* Project info block */

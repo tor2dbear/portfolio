@@ -253,5 +253,8 @@ other = "Published"
 [writing]
 other = "Writing"
 
+[ui_library]
+other = "UI Library"
+
 [all_posts]
 other = "All posts"

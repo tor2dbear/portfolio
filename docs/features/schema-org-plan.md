@@ -35,25 +35,24 @@ Out-of-scope:
 - `name`: "Torbjörn Hedberg"
 - `url`: `.Site.BaseURL`
 - `jobTitle`: list of hero roles
-- `description`: hero summary
-- `sameAs`: add social URLs from config if available
+- `description`: `.Site.Params.description`
 - `address`: Gothenburg, Västra Götaland, SE
 - `workLocation`: Gothenburg + Remote
 
 ### CreativeWork (works)
 - `name`: `.Title`
-- `description`: `.Description`
-- `dateCreated`: `.Date`
+- `description`: `.Description` or `.Summary`
+- `dateCreated`: `.Date` formatted as `YYYY-MM-DD`
 - `creator`: Person
 - `keywords`: `.Params.tags`
-- `image`: header image if present (absolute URL)
+- `image`: `.Params.header_image` if present (absolute URL via `.RelPermalink | absURL`)
 
 ### Article (writing)
 - `headline`: `.Title`
 - `author`: Person
-- `datePublished`: `.Date`
-- `dateModified`: `.Lastmod`
-- `image`: header image if present (absolute URL)
+- `datePublished`: `.Date` formatted as `YYYY-MM-DD`
+- `dateModified`: `.Lastmod` formatted as `YYYY-MM-DD`
+- `image`: `.Params.header_image` if present (absolute URL via `.RelPermalink | absURL`)
 
 ## Example Payloads
 ### Person (home)
@@ -124,12 +123,12 @@ Out-of-scope:
 1) Create `layouts/partials/schema.html`.
 2) Add conditional JSON-LD blocks per page type.
 3) Include the partial in `layouts/partials/head.html`.
-4) Add config for `sameAs` links if missing (optional).
-5) Validate with Rich Results Test.
+4) Validate with Rich Results Test.
 
 ## Validation
-- Google Rich Results Test (home + a work + a writing post).
 - Lighthouse SEO audit for home page.
+- Google Search Console URL Inspection (Request indexing + Preview rendered HTML).
+- Google Rich Results Test (home + a work + a writing post).
 
 ## Rollback
-- Remove the `schema.html` partial include from head.
+- Remove `{{ partial "schema.html" . }}` from `layouts/partials/head.html`.

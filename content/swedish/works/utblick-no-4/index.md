@@ -31,16 +31,33 @@ Genom att arbeta med en begränsad palett—varm orange och svart på obestruket
 Detta nummer visar hur redaktionell design kan stödja komplext ämnesinnehåll—skapa ett konsekvent visuellt språk samtidigt som innehållets nyansering förblir central.
 <!--more-->
 
+{{< gallery layout="1+1" >}}
 ![Example image](utblick_africa-0002.jpg)
 ![Example image](utblick_africa-0003.jpg)
+{{< /gallery >}}
+
+{{< gallery layout="2x2" >}}
 ![Example image](utblick_africa-0006-1.jpg)
 ![Example image](utblick_africa-0007-1.jpg)
 ![Example image](utblick_africa-0008.jpg)
 ![Example image](utblick_africa-0013.jpg)
+{{< /gallery >}}
+
+{{< gallery layout="1+1" >}}
 ![Example image](utblick_africa-0015.jpg)
 ![Example image](utblick_africa-0016.jpg)
+{{< /gallery >}}
+
+{{< gallery layout="1+1" >}}
 ![Example image](utblick_africa-0017.jpg)
 ![Example image](utblick_africa-0018.jpg)
+{{< /gallery >}}
+
+{{< gallery layout="full" >}}
 ![Example image](utblick_africa-0019.jpg)
+{{< /gallery >}}
+
+{{< gallery layout="1+1" >}}
 ![Example image](utblick_africa-0020.jpg)
 ![Example image](utblick_africa-0021.jpg)
+{{< /gallery >}}

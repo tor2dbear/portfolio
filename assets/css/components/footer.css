@@ -41,7 +41,7 @@
 }
 
 .footer-menu li {
-  margin-bottom: var(--spacing-12);
+  margin-bottom: var(--spacing-16);
 }
 
 .footer-menu a {
@@ -53,6 +53,10 @@
 .footer-menu a:focus {
   color: var(--text-default);
   text-decoration: underline;
+}
+
+html[lang="en"] .footer-menu--tags .footer-tag-link {
+  text-transform: capitalize;
 }
 
 /* Responsive adjustments */

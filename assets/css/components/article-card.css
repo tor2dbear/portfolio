@@ -31,6 +31,37 @@ article {
    List Page Grid Layout
    ========================================================================== */
 
+.content.list.tag-page {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--spacing-24);
+  row-gap: var(--spacing-32);
+}
+
+.content.list.tag-page > .taxonomy-header,
+.content.list.tag-page > .tag-list {
+  grid-column: 1 / -1;
+}
+
+.content.list.tag-page article {
+  grid-column: auto;
+  margin-bottom: 0;
+}
+
+.content.list.works-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--spacing-24);
+  row-gap: var(--spacing-32);
+}
+
+.content.list.works-list > .post-header {
+  grid-column: 1 / -1;
+}
+
+.content.list.works-list article {
+  grid-column: auto;
+  margin-bottom: 0;
+}
+
 .content.list article {
   grid-column: col-start 1 / span 6;
 }
@@ -42,8 +73,26 @@ article {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
+  .content.list.tag-page {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: var(--spacing-16);
+  }
+
+  .content.list.tag-page article {
+    grid-column: auto;
+  }
+
   .content.list article {
     grid-column: col-start 1 / span 4;
+  }
+
+  .content.list.works-list {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: var(--spacing-16);
+  }
+
+  .content.list.works-list article {
+    grid-column: auto;
   }
 }
 

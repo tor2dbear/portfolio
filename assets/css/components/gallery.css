@@ -1,0 +1,41 @@
+/* Gallery shortcode layouts */
+.gallery {
+  row-gap: var(--post-media-gap, var(--spacing-24));
+  margin-bottom: var(--post-media-gap, var(--spacing-24));
+}
+
+.gallery figure {
+  margin: 0;
+}
+
+.content.post .gallery figure {
+  margin-bottom: 0;
+}
+
+.gallery br {
+  display: none;
+}
+
+.gallery p {
+  display: contents;
+  margin: 0;
+}
+
+.content.post .gallery + br {
+  display: none;
+}
+
+.gallery--full > * {
+  grid-column: col-start 1 / span 12;
+}
+
+.gallery.grid-cols-2 > figure:nth-of-type(even) {
+  --reveal-delay: 120ms;
+}
+
+.gallery picture,
+.gallery img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

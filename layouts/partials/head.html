@@ -82,6 +82,7 @@
   {{ $components_tooltip := resources.Get "css/components/tooltip.css" }}
   {{ $components_download_card := resources.Get "css/components/download-card.css" }}
   {{ $components_table_of_contents := resources.Get "css/components/table-of-contents.css" }}
+  {{ $components_gallery := resources.Get "css/components/gallery.css" }}
 
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
@@ -126,13 +127,21 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_tooltip.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_download_card.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_table_of_contents.RelPermalink }}" />
+    {{ with $components_gallery }}
+      <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
+    {{ end }}
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ with $components_gallery }}
+      {{ $css = $css | append . }}
+    {{ end }}
+    {{ $css = $css | append $pages_home $pages_ui_library $style $print }}
+    {{ $css = $css | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
@@ -194,24 +203,7 @@
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
   
-    {{ if .IsHome }}
-      {{ $roles := slice "DesignOps" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
-      {{ if eq .Site.Language.Lang "sv" }}
-        {{ $roles = slice "DesignOps" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
-      {{ end }}
-      {{ $desc := printf "%s %s, %s %s %s." (i18n "hero_intro_middle") (i18n "hero_emphasis_design") (i18n "hero_emphasis_business") (i18n "hero_emphasis_and") (i18n "hero_emphasis_tech") }}
-      <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Person",
-          "name": "Torbjörn Hedberg",
-          "url": {{ .Site.BaseURL | jsonify }},
-          "jobTitle": {{ $roles | jsonify }},
-          "description": {{ $desc | jsonify }},
-          "knowsAbout": ["Product Design", "DesignOps", "UX Strategy", "Product Management"]
-        }
-      </script>
-    {{ end }}
+    {{ partial "schema.html" . }}
 
     <!-- Google Analytics -->
     {{ partial "google_analytics.html" . }}

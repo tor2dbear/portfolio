@@ -65,7 +65,7 @@ other = "Utvalda"
 other = "är"
 
 [home]
-other = "Home"
+other = "Hem"
 
 [menu_title]
 other = "Huvudmeny"
@@ -252,6 +252,9 @@ other = "Publicerad"
 
 [writing]
 other = "Texter"
+
+[ui_library]
+other = "UI-bibliotek"
 
 [all_posts]
 other = "Alla inlägg"

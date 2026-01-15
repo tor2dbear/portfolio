@@ -10,21 +10,30 @@
           <li><a href="{{ "/" | relLangURL }}#about">{{ i18n "about_me" }}</a></li>
           <li><a href="{{ "/" | relLangURL }}#contact">{{ i18n "contact_me" }}</a></li>
           <li><a href="{{ printf "/%s/" (i18n "writing_url") | relLangURL }}">{{ i18n "writing" }}</a></li>
-          <li><a href="{{ "/ui-library/" | relLangURL }}">UI Library</a></li>
+          <li><a href="{{ "/ui-library/" | relLangURL }}">{{ i18n "ui_library" }}</a></li>
         </ul>
       </div>
 
       <div class="footer-column">
         <h3 class="footer-heading">{{ i18n "categories" }}</h3>
-        <ul class="footer-menu">
-          <li><a href="{{ "/tags/" | relLangURL }}">{{ i18n "all_works" }}</a></li>
+        {{- $worksSlug := strings.Trim (i18n "works_url") "/" -}}
+        <ul class="footer-menu footer-menu--tags">
+          {{- with $.Site.GetPage (printf "/%s/tags" $worksSlug) -}}
+            <li><a href="{{ .RelPermalink }}">{{ i18n "all_works" }}</a></li>
+          {{- else -}}
+            <li><a href="{{ printf "/%s/tags/" $worksSlug | relLangURL }}">{{ i18n "all_works" }}</a></li>
+          {{- end -}}
           {{- $tags := slice -}}
           {{- range $name, $taxonomy := .Site.Taxonomies.tags -}}
-            {{- $tags = $tags | append (dict "name" $name "count" (len $taxonomy)) -}}
+            {{- $works := where $taxonomy "Section" "works" -}}
+            {{- $works = where $works ".Params.hidden" "!=" true -}}
+            {{- if gt (len $works) 0 -}}
+              {{- $tags = $tags | append (dict "name" $name "count" (len $works)) -}}
+            {{- end -}}
           {{- end -}}
           {{- range first 8 (sort $tags "name" "asc") -}}
             {{- with $.Site.GetPage (printf "/tags/%s" .name) -}}
-              <li><a href="{{ .Permalink }}">{{ lower .Title }}</a></li>
+              <li><a class="footer-tag-link" href="{{ .RelPermalink }}">{{ .Title }}</a></li>
             {{- end -}}
           {{- end -}}
         </ul>
@@ -51,7 +60,7 @@
       <div class="footer-column">
         <h3 class="footer-heading">{{ i18n "info" }}</h3>
         <ul class="footer-menu">
-          <li><a href="{{ "/newsletter/" | relLangURL }}">Newsletter</a></li>
+          <li><a href="{{ "/newsletter/" | relLangURL }}">{{ i18n "Newsletter" }}</a></li>
           <li><a href="{{ "/rss.xml" | relLangURL }}">RSS</a></li>
         </ul>
         {{ partial "copyright.html" . }}
