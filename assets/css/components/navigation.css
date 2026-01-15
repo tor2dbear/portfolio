@@ -147,17 +147,23 @@
   position: absolute;
 }
 
-.brand__hyphen {
-  height: 2px;
-  background-color: var(--text-default);
+.brand__mark {
+  display: block;
+  height: 1.5rem;
+  width: 6rem;
+  color: var(--text-default);
 }
 
-.brand__hyphen--left {
-  margin-top: 13px;
+.brand__mark-line,
+.brand__mark-loop path {
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
 }
 
-.brand__hyphen--right {
-  margin-top: 15px;
+.brand__mark-loop {
+  transform-origin: 12px 12px;
 }
 
 /* ==========================================================================
