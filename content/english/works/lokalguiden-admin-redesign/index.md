@@ -14,9 +14,15 @@ header_image:
 featured: true
 draft: false
 hidden: true
-client: Lokalguiden (Internal)
-clientweb: https://www.lokalguiden.se/
-clientabout: Internal admin system used by Lokalguiden staff to manage business listings, customer accounts, and content.
+role: "Art Director, Product Designer"
+details:
+  year: 2023
+  platform: "Web admin"
+  scope: "UX research, IA, UI design"
+client:
+  name: "Lokalguiden (Internal)"
+  url: "https://www.lokalguiden.se/"
+  about: "Internal admin system used by Lokalguiden staff to manage business listings, customer accounts, and content."
 ---
 
 ### Challenge

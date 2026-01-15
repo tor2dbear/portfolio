@@ -13,11 +13,12 @@ describe("Role Swapper - Hero Text", () => {
     document.body.innerHTML = `
       <span
         data-js="role-swapper"
-        data-roles='["One","Two"]'
         data-interval="1000"
         data-fade="100"
-        data-suffix="."
-      ><span data-js="role-swapper-text">One.</span></span>
+      >
+        <span class="role-swapper__item is-active" data-role="One" aria-hidden="false">One.</span>
+        <span class="role-swapper__item" data-role="Two" aria-hidden="true">Two.</span>
+      </span>
     `;
 
     jest.useFakeTimers();
@@ -25,25 +26,52 @@ describe("Role Swapper - Hero Text", () => {
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
     expect(
-      document.querySelector('[data-js="role-swapper-text"]').textContent
+      document.querySelector(".role-swapper__item.is-active").textContent
     ).toBe("One.");
 
     jest.advanceTimersByTime(1100);
 
     expect(
-      document.querySelector('[data-js="role-swapper-text"]').textContent
+      document.querySelector(".role-swapper__item.is-active").textContent
     ).toBe("Two.");
+  });
+
+  test("starts from a random role when configured", () => {
+    document.body.innerHTML = `
+      <span
+        data-js="role-swapper"
+        data-start="random"
+        data-interval="1000"
+        data-fade="100"
+      >
+        <span class="role-swapper__item is-active" data-role="One" aria-hidden="false">One.</span>
+        <span class="role-swapper__item" data-role="Two" aria-hidden="true">Two.</span>
+        <span class="role-swapper__item" data-role="Three" aria-hidden="true">Three.</span>
+      </span>
+    `;
+
+    jest.useFakeTimers();
+    jest.spyOn(Math, "random").mockReturnValue(0.6);
+    require("../role-swapper");
+    document.dispatchEvent(new Event("DOMContentLoaded"));
+
+    expect(
+      document.querySelector(".role-swapper__item.is-active").textContent
+    ).toBe("Two.");
+
+    Math.random.mockRestore();
   });
 
   test("does not animate when reduced motion is enabled", () => {
     document.body.innerHTML = `
       <span
         data-js="role-swapper"
-        data-roles='["One","Two"]'
         data-interval="1000"
         data-fade="100"
-        data-suffix="."
-      ><span data-js="role-swapper-text">One.</span></span>
+      >
+        <span class="role-swapper__item is-active" data-role="One" aria-hidden="false">One.</span>
+        <span class="role-swapper__item" data-role="Two" aria-hidden="true">Two.</span>
+      </span>
     `;
 
     window.matchMedia = jest.fn().mockImplementation((query) => ({
@@ -63,7 +91,7 @@ describe("Role Swapper - Hero Text", () => {
     jest.advanceTimersByTime(2000);
 
     expect(
-      document.querySelector('[data-js="role-swapper-text"]').textContent
+      document.querySelector(".role-swapper__item.is-active").textContent
     ).toBe("One.");
   });
 });

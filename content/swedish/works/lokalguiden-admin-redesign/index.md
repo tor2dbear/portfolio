@@ -14,9 +14,15 @@ header_image:
 featured: true
 draft: false
 hidden: true
-client: Lokalguiden (Internt)
-clientweb: https://www.lokalguiden.se/
-clientabout: Internt admin-system använt av Lokalguiden-personal för att hantera företagslistor, kundkonton och innehåll.
+role: "Art Director, Produktdesigner"
+details:
+  year: 2023
+  platform: "Admin-webb"
+  scope: "Användarresearch, IA, UI-design"
+client:
+  name: "Lokalguiden (Internt)"
+  url: "https://www.lokalguiden.se/"
+  about: "Internt admin-system använt av Lokalguiden-personal för att hantera företagslistor, kundkonton och innehåll."
 ---
 
 ### Utmaning

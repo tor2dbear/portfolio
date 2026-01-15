@@ -1,6 +1,6 @@
-{{ $roles := slice "Multidisciplinär designer" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
+{{ $roles := slice "DesignOps" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
 {{ if eq .Site.Language.Lang "en" }}
-  {{ $roles = slice "Multidisciplinary designer" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
+  {{ $roles = slice "DesignOps" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
 {{ end }}
 
 
@@ -11,12 +11,20 @@
       class="role-swapper"
       data-js="role-swapper"
       data-roles="{{ $roles | jsonify }}"
+      data-start="random"
       data-suffix="."
       aria-live="polite"
       aria-atomic="true"
-      ><span class="role-swapper__text" data-js="role-swapper-text"
-        >{{ index $roles 0 }}.</span
-      ></span
+      >
+      {{ range $index, $role := $roles }}
+        <span
+          class="role-swapper__item{{ if eq $index 0 }} is-active{{ end }}"
+          data-role="{{ $role }}"
+          aria-hidden="{{ if eq $index 0 }}false{{ else }}true{{ end }}"
+          >{{ $role }}.</span
+        >
+      {{ end }}
+    </span
     >
     <br />
     {{ i18n "hero_intro_middle" }}
