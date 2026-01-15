@@ -312,6 +312,23 @@ tags: ["design", "branding", "ui-ux"]
 featured_image: "/images/project/hero.jpg"
 ```
 
+Project info block (renders via `layouts/partials/project-info.html`):
+```yaml
+role: "Art Direction, Illustration"
+details:
+  year: 2015
+  format: "A4"
+  paper: "Uncoated, 120g"
+  print_method: "2 Pantone spot colors + black"
+client:
+  name: "Society of International Affairs"
+  url: "https://www.utblick.org/"
+  about: ""
+```
+- `role` is a single string (comma-separated if multiple roles).
+- `details` keys use `snake_case` for consistent labels.
+- Omit `client` for self-initiated/personal projects.
+
 ### Client Applications (`/clients/`)
 Front matter structure:
 ```yaml
