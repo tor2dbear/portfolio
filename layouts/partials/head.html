@@ -194,24 +194,7 @@
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
   
-    {{ if .IsHome }}
-      {{ $roles := slice "DesignOps" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
-      {{ if eq .Site.Language.Lang "sv" }}
-        {{ $roles = slice "DesignOps" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
-      {{ end }}
-      {{ $desc := printf "%s %s, %s %s %s." (i18n "hero_intro_middle") (i18n "hero_emphasis_design") (i18n "hero_emphasis_business") (i18n "hero_emphasis_and") (i18n "hero_emphasis_tech") }}
-      <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Person",
-          "name": "Torbjörn Hedberg",
-          "url": {{ .Site.BaseURL | jsonify }},
-          "jobTitle": {{ $roles | jsonify }},
-          "description": {{ $desc | jsonify }},
-          "knowsAbout": ["Product Design", "DesignOps", "UX Strategy", "Product Management"]
-        }
-      </script>
-    {{ end }}
+    {{ partial "schema.html" . }}
 
     <!-- Google Analytics -->
     {{ partial "google_analytics.html" . }}

@@ -1,0 +1,90 @@
+{{ $schemas := slice }}
+{{ $siteTitle := or .Site.Params.title .Site.Title }}
+{{ $siteDesc := .Site.Params.description }}
+{{ $siteUrl := .Site.BaseURL }}
+{{ $personName := "Torbjörn Hedberg" }}
+
+{{ $website := dict
+  "@context" "https://schema.org"
+  "@type" "WebSite"
+  "name" $siteTitle
+  "url" $siteUrl
+  "description" $siteDesc
+}}
+{{ $schemas = $schemas | append $website }}
+
+{{ if .IsHome }}
+  {{ $roles := slice "DesignOps" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
+  {{ if eq .Site.Language.Lang "sv" }}
+    {{ $roles = slice "DesignOps" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
+  {{ end }}
+  {{ $workLocation := slice
+    (dict "@type" "Place" "name" "Remote")
+    (dict "@type" "Place" "address" (dict
+      "@type" "PostalAddress"
+      "addressLocality" "Gothenburg"
+      "addressRegion" "Västra Götaland"
+      "addressCountry" "SE"
+    ))
+  }}
+  {{ $person := dict
+    "@type" "Person"
+    "name" $personName
+    "url" $siteUrl
+    "jobTitle" $roles
+    "description" $siteDesc
+    "address" (dict
+      "@type" "PostalAddress"
+      "addressLocality" "Gothenburg"
+      "addressRegion" "Västra Götaland"
+      "addressCountry" "SE"
+    )
+    "workLocation" $workLocation
+  }}
+  {{ $profile := dict
+    "@context" "https://schema.org"
+    "@type" "ProfilePage"
+    "mainEntity" $person
+  }}
+  {{ $schemas = $schemas | append $profile }}
+{{ end }}
+
+{{ $imageUrl := "" }}
+{{ with .Params.header_image }}
+  {{ $imageUrl = (printf "%s%s" $.RelPermalink .) | absURL }}
+{{ end }}
+
+{{ if eq .Type "works" }}
+  {{ $creative := dict
+    "@context" "https://schema.org"
+    "@type" "CreativeWork"
+    "name" .Title
+    "description" (or .Description .Summary)
+    "dateCreated" (.Date.Format "2006-01-02")
+    "creator" (dict "@type" "Person" "name" $personName)
+    "keywords" .Params.tags
+  }}
+  {{ if ne $imageUrl "" }}
+    {{ $creative = merge $creative (dict "image" $imageUrl) }}
+  {{ end }}
+  {{ $schemas = $schemas | append $creative }}
+{{ end }}
+
+{{ if or (eq .Type "writing") (eq .Type "texter") }}
+  {{ $article := dict
+    "@context" "https://schema.org"
+    "@type" "Article"
+    "headline" .Title
+    "datePublished" (.Date.Format "2006-01-02")
+    "dateModified" (.Lastmod.Format "2006-01-02")
+    "author" (dict "@type" "Person" "name" $personName)
+  }}
+  {{ if ne $imageUrl "" }}
+    {{ $article = merge $article (dict "image" $imageUrl) }}
+  {{ end }}
+  {{ $schemas = $schemas | append $article }}
+{{ end }}
+
+{{ range $schemas }}
+  <script type="application/ld+json">{{ . | jsonify | safeHTML }}</script>
+{{ end }}
