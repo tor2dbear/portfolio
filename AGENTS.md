@@ -335,6 +335,16 @@ attach_letter: "/path/to/letter.pdf"
   - **Border Radius**: Apply `border-radius` and `overflow: hidden` to the `<picture>` container (not the `<img>`). This ensures `::after` overlays and the image are clipped to the corners. Use `--radius-*` tokens.
 - **Header Images**: Use `.Params.header_image` in front matter and call `{{ partial "headerimage.html" . }}` in templates.
 
+### Gallery Shortcode
+Wrap Markdown images in a layout-aware grid:
+```markdown
+{{< gallery layout="1+1" >}}
+![Alt](image-1.webp)
+![Alt](image-2.webp)
+{{< /gallery >}}
+```
+Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
+
 ---
 
 ## CSS Architecture

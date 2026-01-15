@@ -1,0 +1,7 @@
+{{ $layout := .Get "layout" | default "full" }}
+{{ $layoutClass := replace $layout "+" "-" }}
+{{ $isGridTwo := or (eq $layout "1+1") (eq $layout "2x2") }}
+
+<div class="gallery gallery--{{ $layoutClass }} use-subgrid{{ if $isGridTwo }} grid-cols-2{{ end }}">
+  {{ .Inner | markdownify }}
+</div>

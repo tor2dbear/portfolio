@@ -1,0 +1,15 @@
+/* Gallery shortcode layouts */
+.gallery {
+  row-gap: var(--spacing-24);
+}
+
+.gallery--full > * {
+  grid-column: col-start 1 / span 12;
+}
+
+.gallery picture,
+.gallery img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
