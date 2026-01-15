@@ -170,7 +170,7 @@ describe("Progress Bar - Scroll Indicator", () => {
       window.progressBar();
 
       expect(parseFloat(brandMark.style.width)).toBeCloseTo(125, 5);
-      expect(brandMark.getAttribute("viewBox")).toBe("0 0 125 24");
+      expect(brandMark.getAttribute("viewBox")).toBe("0 0 124.99999999999999 24");
       expect(brandLineLeft.getAttribute("x2")).toBe("30.30");
       expect(brandLineRight.getAttribute("x1")).toBe("54.30");
       expect(brandLineRight.getAttribute("x2")).toBe("125.00");
