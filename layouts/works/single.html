@@ -28,28 +28,15 @@
   <div class="type-information text-color-lighter mt-0 mb-16 reveal"> {{ partial "date.html" . }}</div>
   <div class="mt-0 mb-16 reveal"> {{ partial "post_tags.html" . }}</div>
  
-  <div class="post-content">
+  {{ if .Truncated }}
+    {{ .Summary }}
+    {{ partial "project-info.html" . }}
+    {{ $rest := replace .Content .Summary "" }}
+    {{ $rest | safeHTML }}
+  {{ else }}
     {{ .Content }}
-  </div>
-
-  <div class="project-client reveal">
-    {{ if .Params.client }}
-    <div class="project-client__column">
-    <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Client</h4>
-    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ .Params.client }}</p>
-    {{end}}
-    {{ if .Params.clientweb }}
-    <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Website</h4>
-    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16"><a href={{ printf "%s" $.Params.clientweb }} target="_blank">{{ .Params.clientweb }}</a></p>
-    {{end}}
-  </div>
-    {{ if .Params.clientabout }}
-    <div class="project-client__column project-client__column--about">
-    <h4 class="text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">About</h4>
-    <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ .Params.clientabout }}</p>
-  </div>
-    {{end}}
-  </div>
+    {{ partial "project-info.html" . }}
+  {{ end }}
 
   {{ partial "related.html" . }}
     <ul class="toc mt-64 mb-64 col-span-12 show-on-client reveal">

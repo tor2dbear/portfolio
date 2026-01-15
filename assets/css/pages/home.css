@@ -84,8 +84,23 @@
   color: var(--text-accent);
   font-weight: var(--sans-weight-bold);
   display: inline-block;
-  min-width: 18ch;
+  min-width: 0;
+  position: relative;
+  white-space: nowrap;
   transition: opacity 0.5s ease;
+}
+
+.role-swapper__item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.role-swapper__item.is-active {
+  position: relative;
+  opacity: 1;
 }
 
 .hero-emphasis {
@@ -97,6 +112,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .role-swapper {
+    transition: none;
+  }
+
+  .role-swapper__item {
     transition: none;
   }
 }

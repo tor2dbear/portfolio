@@ -14,9 +14,15 @@ header_image:
 featured: false
 draft: false
 hidden: true
-client: Lokalguiden / Fastighetsgalan
-clientweb:
-clientabout: Fastighetsgalan is an awards ceremony celebrating excellence in the real estate industry, organized by Lokalguiden.
+role: "Art Director"
+details:
+  year: 2021
+  deliverables: "Brand identity, website"
+  scope: "Brand system, web design"
+client:
+  name: "Lokalguiden / Fastighetsgalan"
+  url: ""
+  about: "Fastighetsgalan is an awards ceremony celebrating excellence in the real estate industry, organized by Lokalguiden."
 ---
 
 ### Challenge

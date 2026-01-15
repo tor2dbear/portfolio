@@ -411,6 +411,7 @@ All icons use a centralized SVG sprite system for better performance and maintai
 **Available Icons**:
 - `icon-pdf` - PDF document icon
 - `icon-download` - Download/circle icon
+- `icon-new-window` - External link/new window icon
 - `icon-light` - Light mode sun icon
 - `icon-dark` - Dark mode moon icon
 - `icon-system` - System preference icon
