@@ -29,12 +29,12 @@
   <div class="mt-0 mb-16 reveal"> {{ partial "post_tags.html" . }}</div>
  
   {{ if .Truncated }}
-    {{ .Summary }}
+    {{ .Summary | replaceRE "<p>\\s*</p>" "" | safeHTML }}
     {{ partial "project-info.html" . }}
     {{ $rest := replace .Content .Summary "" }}
-    {{ $rest | safeHTML }}
+    {{ $rest | replaceRE "<p>\\s*</p>" "" | safeHTML }}
   {{ else }}
-    {{ .Content }}
+    {{ .Content | replaceRE "<p>\\s*</p>" "" | safeHTML }}
     {{ partial "project-info.html" . }}
   {{ end }}
 

@@ -4,15 +4,8 @@
   <div class="taxonomy-header taxonomy-header--tag mb-8 col-span-12">
     <h1 class="type-headline-small">{{ .Title }}</h1>
   </div>
-  {{ $path := .RelPermalink }}
   {{ $pages := where .Data.Pages ".Params.hidden" "!=" true }}
-  {{ if in $path "/works/tags/" }}
-    {{ $pages = where $pages "Section" "works" }}
-  {{ else if in $path "/writing/tags/" }}
-    {{ $pages = where $pages "Section" "writing" }}
-  {{ else if in $path "/texter/tags/" }}
-    {{ $pages = where $pages "Section" "texter" }}
-  {{ end }}
+  {{ $pages = where $pages "Section" "works" }}
   {{ range $pages }}
     {{ .Render "summary"}}
   {{ end }}

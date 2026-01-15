@@ -57,6 +57,9 @@ Default layout (if omitted): `full`.
 - Manual: add gallery blocks to a work page with webp/svg/gif images.
 - Verify mobile stacking behavior at sm breakpoint.
 
+## TODO
+- Evaluate JS-based reveal delay that adapts to column count (for multi-column layouts across the site).
+
 ## Rollback
 - Remove `layouts/shortcodes/gallery.html`.
 - Remove any added CSS for `.gallery*` if introduced.

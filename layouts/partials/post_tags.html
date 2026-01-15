@@ -6,11 +6,19 @@
 
   {{ if isset .Params "tags" }}
   {{ $count := len .Params.tags }}
+  {{ $worksSlug := strings.TrimPrefix (i18n "works_url") "/" }}
+  {{ $writingSlug := strings.TrimPrefix (i18n "writing_url") "/" }}
+  {{ $tagSection := "tags" }}
+  {{ if eq .Section "works" }}
+    {{ $tagSection = printf "/%s/tags" $worksSlug }}
+  {{ else if or (eq .Section "writing") (eq .Section "texter") }}
+    {{ $tagSection = printf "/%s/tags" $writingSlug }}
+  {{ end }}
   {{ if gt $count 0 }}
   <ul class="tag-list__items">
     {{ range $k, $v := .Params.tags }}
       <li class="tag-list__item">
-        <a class="tag-list__link tag" href="{{ $baseUrl | relLangURL }}{{ i18n "works_url" }}/tags/{{ . | urlize }}">{{ replace . "ui-ux" "ui/ux" }}</a>{{ if lt $k (sub $count 1) }} {{ end }}
+        <a class="tag-list__link tag" href="{{ $baseUrl | relLangURL }}{{ $tagSection }}/{{ . | urlize }}">{{ replace . "ui-ux" "ui/ux" }}</a>{{ if lt $k (sub $count 1) }} {{ end }}
       </li>
     {{ end }}
   </ul>

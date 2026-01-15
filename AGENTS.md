@@ -345,6 +345,9 @@ Wrap Markdown images in a layout-aware grid:
 ```
 Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 
+### Tag Links
+- Tag URLs are section-scoped (`/works/tags/`, `/writing/tags/`, `/texter/tags/`).
+
 ---
 
 ## CSS Architecture
