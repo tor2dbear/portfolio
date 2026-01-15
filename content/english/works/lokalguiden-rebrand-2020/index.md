@@ -14,9 +14,15 @@ header_image:
 featured: true
 draft: false
 hidden: true
-client: Lokalguiden
-clientweb: https://www.lokalguiden.se/
-clientabout: Lokalguiden is a leading platform connecting local businesses with customers across Sweden, providing comprehensive business directories and advertising solutions.
+role: "Art Director"
+details:
+  year: 2020
+  deliverables: "Logo, guidelines, print, web"
+  scope: "Brand identity, magazine, website"
+client:
+  name: "Lokalguiden"
+  url: "https://www.lokalguiden.se/"
+  about: "Lokalguiden is a leading platform connecting local businesses with customers across Sweden, providing comprehensive business directories and advertising solutions."
 ---
 
 ### Challenge

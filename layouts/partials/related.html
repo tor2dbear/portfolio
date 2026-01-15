@@ -1,5 +1,6 @@
 {{ $related := site.RegularPages.RelatedIndices . "tags" }}
 {{ $relatedFiltered := where $related ".Params.hidden" "!=" true }}
+{{ $relatedFiltered = where $relatedFiltered "Type" .Type }}
 {{ with $relatedFiltered }}
   <h3 class="related-items__title mt-64 mb-8 type-headline-small">Related</h3>
   {{ range $index, $page := first 3 . }}

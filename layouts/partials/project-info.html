@@ -1,0 +1,81 @@
+{{ $hasRole := and .Params.role (ne .Params.role "") }}
+{{ $hasDetails := and .Params.details (gt (len .Params.details) 0) }}
+{{ $clientParam := .Params.client }}
+{{ $clientName := "" }}
+{{ $clientUrl := "" }}
+{{ $clientAbout := "" }}
+
+{{ if $clientParam }}
+  {{ $clientName = $clientParam }}
+  {{ if reflect.IsMap $clientParam }}
+    {{ with $clientParam.name }}{{ $clientName = . }}{{ end }}
+    {{ with $clientParam.url }}{{ $clientUrl = . }}{{ end }}
+    {{ with $clientParam.about }}{{ $clientAbout = . }}{{ end }}
+  {{ end }}
+{{ end }}
+{{ with .Params.clientweb }}{{ $clientUrl = . }}{{ end }}
+{{ with .Params.clientabout }}{{ $clientAbout = . }}{{ end }}
+
+{{ $hasClient := or (ne $clientName "") (ne $clientUrl "") (ne $clientAbout "") }}
+{{ $hasContent := or $hasRole (or $hasDetails $hasClient) }}
+
+{{ if $hasContent }}
+  {{ $scratch := newScratch }}
+  {{ $scratch.Set "count" 0 }}
+  {{ if $hasRole }}{{ $scratch.Add "count" 1 }}{{ end }}
+  {{ if $hasDetails }}{{ $scratch.Add "count" 1 }}{{ end }}
+  {{ if $hasClient }}{{ $scratch.Add "count" 1 }}{{ end }}
+  {{ $sectionCount := $scratch.Get "count" }}
+  {{ $columnsClass := "" }}
+  {{ if eq $sectionCount 2 }}{{ $columnsClass = "project-info--cols-2" }}{{ end }}
+  {{ if eq $sectionCount 1 }}{{ $columnsClass = "project-info--cols-1" }}{{ end }}
+
+  <section class="project-info {{ $columnsClass }}">
+    {{ if $hasRole }}
+      <div class="project-info__section">
+        <h4 class="project-info__title text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Role</h4>
+        <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ .Params.role }}</p>
+      </div>
+    {{ end }}
+
+    {{ if $hasDetails }}
+      <div class="project-info__section">
+        <h4 class="project-info__title text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Details</h4>
+        {{ $detailItems := slice }}
+        {{ range $key, $value := .Params.details }}
+          {{ $detailItems = $detailItems | append (dict "key" $key "value" $value) }}
+        {{ end }}
+        <dl class="project-info__list">
+          {{ range sort $detailItems "key" }}
+            <div class="project-info__item">
+              <dt class="project-info__label text-xs font-sans line-height-tight font-normal text-color-lighter mt-0 mb-4">{{ humanize .key }}</dt>
+              <dd class="project-info__value text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-12">{{ .value }}</dd>
+            </div>
+          {{ end }}
+        </dl>
+      </div>
+    {{ end }}
+
+    {{ if $hasClient }}
+      <div class="project-info__section">
+        <h4 class="project-info__title text-xs font-sans line-height-tight font-normal tracking-wider text-color-accent mt-0 mb-8 text-uppercase">Client</h4>
+        {{ if ne $clientName "" }}
+          <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-12">{{ $clientName }}</p>
+        {{ end }}
+        {{ if ne $clientUrl "" }}
+          <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-12">
+            <a class="project-info__link" href="{{ $clientUrl }}" target="_blank" rel="noopener">
+              {{ $clientUrl | replaceRE "^https?://(www\\.)?" "" | replaceRE "/$" "" }}
+              <svg class="icon icon--sm project-info__icon" aria-hidden="true" focusable="false">
+                <use href="/img/svg/sprite.svg#icon-new-window"></use>
+              </svg>
+            </a>
+          </p>
+        {{ end }}
+        {{ if and (ne $clientAbout "") (le (len $clientAbout) 100) }}
+          <p class="text-sm font-serif line-height-normal font-normal text-color-default mt-0 mb-16">{{ $clientAbout }}</p>
+        {{ end }}
+      </div>
+    {{ end }}
+  </section>
+{{ end }}
