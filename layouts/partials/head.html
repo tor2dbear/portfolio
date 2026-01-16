@@ -41,6 +41,15 @@
     <link rel="canonical" href="{{ .Permalink }}" />
   {{ end }}
 
+  {{/* Hreflang tags for multilingual SEO */}}
+  {{ range .AllTranslations }}
+    <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+  {{ end }}
+  {{ range .AllTranslations }}
+    {{ if eq .Language.Lang "en" }}
+      <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+    {{ end }}
+  {{ end }}
 
   <!-- CSS base (reset) -->
   {{ $base_reset := resources.Get "css/base/reset.css" }}

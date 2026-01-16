@@ -65,7 +65,12 @@
     "keywords" .Params.tags
   }}
   {{ if ne $imageUrl "" }}
-    {{ $creative = merge $creative (dict "image" $imageUrl) }}
+    {{ $imageObject := dict
+      "@type" "ImageObject"
+      "url" $imageUrl
+      "contentUrl" $imageUrl
+    }}
+    {{ $creative = merge $creative (dict "image" $imageObject) }}
   {{ end }}
   {{ $schemas = $schemas | append $creative }}
 {{ end }}
@@ -80,9 +85,73 @@
     "author" (dict "@type" "Person" "name" $personName)
   }}
   {{ if ne $imageUrl "" }}
-    {{ $article = merge $article (dict "image" $imageUrl) }}
+    {{ $imageObject := dict
+      "@type" "ImageObject"
+      "url" $imageUrl
+      "contentUrl" $imageUrl
+    }}
+    {{ $article = merge $article (dict "image" $imageObject) }}
   {{ end }}
   {{ $schemas = $schemas | append $article }}
+{{ end }}
+
+{{/* ContactPage schema for contact pages */}}
+{{ if or (eq .RelPermalink "/contact/") (eq .RelPermalink "/sv/kontakt/") (strings.Contains .RelPermalink "/clients/") }}
+  {{ $contactPage := dict
+    "@context" "https://schema.org"
+    "@type" "ContactPage"
+    "name" .Title
+    "url" .Permalink
+    "description" (or .Description .Summary $siteDesc)
+    "mainEntity" (dict
+      "@type" "Person"
+      "name" $personName
+      "url" $siteUrl
+    )
+  }}
+  {{ $schemas = $schemas | append $contactPage }}
+{{ end }}
+
+{{/* BreadcrumbList schema for non-home pages */}}
+{{ if not .IsHome }}
+  {{ $breadcrumbItems := slice }}
+  {{ $homeItem := dict
+    "@type" "ListItem"
+    "position" 1
+    "name" "Start"
+    "item" ($siteUrl | absURL)
+  }}
+  {{ $breadcrumbItems = $breadcrumbItems | append $homeItem }}
+
+  {{/* Add section level if present */}}
+  {{ with .CurrentSection }}
+    {{ if not .IsHome }}
+      {{ $sectionItem := dict
+        "@type" "ListItem"
+        "position" 2
+        "name" .Title
+        "item" (.Permalink | absURL)
+      }}
+      {{ $breadcrumbItems = $breadcrumbItems | append $sectionItem }}
+    {{ end }}
+  {{ end }}
+
+  {{/* Add current page */}}
+  {{ $currentPosition := add (len $breadcrumbItems) 1 }}
+  {{ $currentItem := dict
+    "@type" "ListItem"
+    "position" $currentPosition
+    "name" .Title
+    "item" (.Permalink | absURL)
+  }}
+  {{ $breadcrumbItems = $breadcrumbItems | append $currentItem }}
+
+  {{ $breadcrumb := dict
+    "@context" "https://schema.org"
+    "@type" "BreadcrumbList"
+    "itemListElement" $breadcrumbItems
+  }}
+  {{ $schemas = $schemas | append $breadcrumb }}
 {{ end }}
 
 {{ range $schemas }}
