@@ -121,7 +121,6 @@ DefaultContentLanguage = "en"
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
-  googleAnalytics = "G-B270MQG9GZ"
   dateFormat = "02 Jan 2006, 15:04"
   mainSections = ['writing', 'texter', 'works']
 
