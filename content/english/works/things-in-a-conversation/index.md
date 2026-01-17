@@ -5,7 +5,7 @@ linktitle: Things in a Conversation
 title: Things in a Conversation
 slug: works
 weight: 10
-tags: ["books", "design", "ui-ux"]
+tags: ["Experimental"]
 description: An experimental project that investigates our perception of artifacts through speculative design.
 header_image: things08.webp
 featured: true

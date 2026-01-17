@@ -1,43 +1,44 @@
-<div class="brand" href="{{ .Site.BaseURL | relLangURL }}">
+<div class="brand">
   <a
     class="brand__link"
     data-js="brand-link"
     title="Home"
     href="{{ .Site.BaseURL | relLangURL }}"
-  ></a>
-  <div class="brand__word brand__word--lead" data-brand-part="true">tor</div>
-  <svg
-    class="brand__mark"
-    data-js="brand-mark"
-    data-brand-part="true"
-    viewBox="0 0 140 24"
-    aria-hidden="true"
   >
-    <line
-      class="brand__mark-line brand__mark-line--left"
-      data-js="brand-line-left"
-      x1="0"
-      y1="14"
-      x2="0"
-      y2="14"
-    />
-    <g data-js="brand-loop" transform="translate(0 0)">
-      <g class="brand__mark-loop">
-        <path
-          d="M24 16L18 16C12.2264 16 7 14 7 8C7 3 13 4 13 9C13 14 7 14 4 14H0"
-        />
+    <span class="brand__word brand__word--lead" data-brand-part="true">tor</span>
+    <svg
+      class="brand__mark"
+      data-js="brand-mark"
+      data-brand-part="true"
+      viewBox="0 0 140 24"
+      aria-hidden="true"
+    >
+      <line
+        class="brand__mark-line brand__mark-line--left"
+        data-js="brand-line-left"
+        x1="0"
+        y1="14"
+        x2="0"
+        y2="14"
+      />
+      <g data-js="brand-loop" transform="translate(0 0)">
+        <g class="brand__mark-loop">
+          <path
+            d="M24 16L18 16C12.2264 16 7 14 7 8C7 3 13 4 13 9C13 14 7 14 4 14H0"
+          />
+        </g>
       </g>
-    </g>
-    <line
-      class="brand__mark-line brand__mark-line--right"
-      data-js="brand-line-right"
-      x1="24"
-      y1="16"
-      x2="24"
-      y2="16"
-    />
-  </svg>
-  <div class="brand__word brand__word--tail" data-brand-part="true">
-    bjorn.com
-  </div>
+      <line
+        class="brand__mark-line brand__mark-line--right"
+        data-js="brand-line-right"
+        x1="24"
+        y1="16"
+        x2="24"
+        y2="16"
+      />
+    </svg>
+    <span class="brand__word brand__word--tail" data-brand-part="true">
+      bjorn.com
+    </span>
+  </a>
 </div>

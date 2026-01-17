@@ -6,7 +6,7 @@ title: Lokalguiden Admin Interface Redesign
 subtitle: Product Design & UX
 slug: works
 weight: 12
-tags: ["ui-ux", "product design", "web design"]
+tags: ["Digital Product"]
 clients: []
 employers: [techcorp]
 description: Complete redesign of Lokalguiden's internal admin interface, improving structure, usability, and visual design for internal teams.

@@ -428,6 +428,9 @@ All icons use a centralized SVG sprite system for better performance and maintai
 - `icon-light` - Light mode sun icon
 - `icon-dark` - Dark mode moon icon
 - `icon-system` - System preference icon
+- `icon-mode-micro` - Micro mode icon (10x10)
+- `icon-palette-micro` - Micro palette icon (10x10)
+- `icon-language-micro` - Micro language icon (10x10)
 - `icon-arrow-left` - Left arrow navigation
 - `icon-arrow-right` - Right arrow (used in buttons)
 - `icon-language` - Language selector icon
@@ -441,6 +444,7 @@ All icons use a centralized SVG sprite system for better performance and maintai
 
 <!-- With size variants -->
 <svg class="icon icon--sm"></svg>  <!-- 1rem -->
+<svg class="icon icon--xs"></svg>  <!-- 10px -->
 <svg class="icon icon--lg"></svg>  <!-- 2rem -->
 <svg class="icon icon--xl"></svg>  <!-- 2.5rem -->
 

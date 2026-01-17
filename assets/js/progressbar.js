@@ -1,35 +1,19 @@
-window.onscroll = function () {
-  progressBar();
-};
-
-const brandParts = Array.from(
-  document.querySelectorAll("[data-brand-part=\"true\"]")
-);
 const brandMark = document.querySelector('[data-js="brand-mark"]');
 const brandLineLeft = document.querySelector('[data-js="brand-line-left"]');
 const brandLineRight = document.querySelector('[data-js="brand-line-right"]');
 const brandLoop = document.querySelector('[data-js="brand-loop"]');
-const brandLink = document.querySelector('[data-js="brand-link"]');
 const brandWords = Array.from(document.querySelectorAll(".brand__word"));
+const rootElement = document.documentElement;
+let brandReady = false;
+let rafId = null;
 
 const loopWidth = 24;
 const loopHeight = 24;
 
-let brandWidth = 0;
 let leftMaxPx = 0;
 let rightMaxPx = 0;
 
 function updateMetrics() {
-  if (!brandParts.length) {
-    brandWidth = 0;
-  } else {
-    const brandBase = brandParts.reduce(
-      (sum, part) => sum + part.offsetWidth,
-      0
-    );
-    brandWidth = brandBase + 5;
-  }
-
   const brandContainer = brandMark ? brandMark.parentElement : null;
   const headerContainer = brandContainer
     ? brandContainer.closest(".top-menu__container")
@@ -59,21 +43,30 @@ function updateMetrics() {
   rightMaxPx = lineGap * 0.7;
 }
 
-updateMetrics();
-
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(updateMetrics);
+function markBrandReady() {
+  if (!rootElement || brandReady) {
+    return;
+  }
+  brandReady = true;
+  rootElement.setAttribute("data-brand-ready", "true");
 }
 
-window.addEventListener("resize", updateMetrics);
+function scheduleProgressUpdate() {
+  if (rafId !== null) {
+    return;
+  }
+  rafId = requestAnimationFrame(() => {
+    rafId = null;
+    progressBar();
+  });
+}
 
 function progressBar() {
   if (
     !brandMark ||
     !brandLineLeft ||
     !brandLineRight ||
-    !brandLoop ||
-    !brandLink
+    !brandLoop
   ) {
     return;
   }
@@ -97,22 +90,61 @@ function progressBar() {
   const rightLength = rightMaxPx * progress;
   const markWidth = loopWidth + leftLength + rightLength;
 
-  brandMark.style.width = markWidth + "px";
-  brandMark.setAttribute("viewBox", "0 0 " + markWidth + " " + loopHeight);
+  const resolvedWidth = Math.max(
+    loopWidth,
+    Number.isFinite(markWidth) ? markWidth : loopWidth
+  );
+
+  brandMark.style.width = resolvedWidth + "px";
+  brandMark.setAttribute("viewBox", "0 0 " + resolvedWidth + " " + loopHeight);
 
   brandLineLeft.setAttribute("x2", leftLength.toFixed(2));
   brandLineRight.setAttribute(
     "x1",
     (leftLength + loopWidth).toFixed(2)
   );
-  brandLineRight.setAttribute("x2", markWidth.toFixed(2));
-  brandLoop.setAttribute("transform", "translate(" + leftLength.toFixed(2) + " 0)");
-
-  const scrolledBrand = progress * 100 + "%";
-  const corrBrand = 1 - progress;
-
-  brandLink.style.width =
-    "calc(" + brandWidth + "px * " + corrBrand + " + " + scrolledBrand + ")";
+  brandLineRight.setAttribute("x2", resolvedWidth.toFixed(2));
+  brandLoop.setAttribute(
+    "transform",
+    "translate(" + leftLength.toFixed(2) + " 0)"
+  );
+  markBrandReady();
 }
 
-progressBar();
+function syncBrand() {
+  updateMetrics();
+  progressBar();
+}
+
+function settleBrand(frames = 12) {
+  if (frames <= 0) {
+    return;
+  }
+  syncBrand();
+  requestAnimationFrame(() => {
+    settleBrand(frames - 1);
+  });
+}
+
+if (rootElement) {
+  rootElement.setAttribute("data-brand-ready", "false");
+}
+
+window.onscroll = function () {
+  scheduleProgressUpdate();
+};
+
+updateMetrics();
+requestAnimationFrame(syncBrand);
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => settleBrand(6));
+}
+
+window.addEventListener("load", () => {
+  settleBrand(12);
+  setTimeout(() => settleBrand(6), 150);
+});
+window.addEventListener("pageshow", () => settleBrand(12));
+window.addEventListener("resize", syncBrand);
+window.addEventListener("scroll", scheduleProgressUpdate, { passive: true });

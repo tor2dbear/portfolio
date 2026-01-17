@@ -6,7 +6,7 @@ title: A Cut up World
 subtitle: bokdesign
 slug: arbeten
 weight: 2
-tags: ["böcker", "varumärke", "grafisk design"]
+tags: ["Experimentellt"]
 description: Ett experimentell bokprojekt som utforskar digital kultur genom algoritmgenererade berättelser och cut-up metodik.
 header_image: cut-up-world11.webp
 featured: true

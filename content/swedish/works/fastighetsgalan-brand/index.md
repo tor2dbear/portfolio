@@ -6,7 +6,7 @@ title: Fastighetsgalans Varumärkesidentitet & Webbplats
 subtitle: Sub-brand utveckling
 slug: works
 weight: 14
-tags: ["branding", "web design", "ui-ux"]
+tags: ["Varumärke & Identitet"]
 clients: []
 employers: [techcorp]
 description: Varumärkesidentitet och webbplatsdesign för Fastighetsgalan, Lokalguidens prisutdelning för fastighetsbranschen.

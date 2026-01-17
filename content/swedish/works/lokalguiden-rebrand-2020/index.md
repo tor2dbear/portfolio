@@ -6,7 +6,7 @@ title: Lokalguidens varumärkesuppdatering 2020
 subtitle: Varumärkesidentitet & Digital redesign
 slug: works
 weight: 15
-tags: ["branding", "ui-ux", "design", "web design"]
+tags: ["Varumärke & Identitet"]
 clients: []
 employers: [techcorp]
 description: Komplett varumärkesuppdatering för Lokalguiden inklusive ny logotyp, visuella riktlinjer, tryckmaterial, magasin-redesign och ny webbsida.

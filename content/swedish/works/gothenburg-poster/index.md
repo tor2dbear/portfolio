@@ -5,7 +5,7 @@ linktitle: gothenburg-poster
 title: Göteborgsaffisch
 slug: arbeten
 weight: 10
-tags: ["grafisk design"]
+tags: ["Tryck"]
 topics: ["topic01", "topic02"]
 clients: ["topic01", "topic02"]
 description: Self initiated project. A poster with some of the landmarks and symbols representing the city of Gothenburg.

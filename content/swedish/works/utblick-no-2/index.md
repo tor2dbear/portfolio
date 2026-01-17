@@ -6,7 +6,7 @@ title: Utblick nr.2
 subtitle: Redaktionell design
 slug: arbeten
 weight: 1
-tags: ["redaktionellt", "grafisk design", "illustrationer"]
+tags: ["Redaktionellt"]
 topics: ["topic01", "topic02"]
 clients: ["clients01", "clients02", "volvo"]
 description: Redaktionell design och illustration för magasinet Utblick, publicerad av Utrikespolitiska föreningen Göteborg.

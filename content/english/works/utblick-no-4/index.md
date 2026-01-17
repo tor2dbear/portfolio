@@ -6,7 +6,7 @@ title: Utblick no.4 "Africa?"
 subtitle: Editorial design
 slug: works
 weight: 10
-tags: ["design", "editorial design", "illustrations"]
+tags: ["Editorial"]
 clients: ["deg17", "topic02"]
 description: Editorial design for Utblick's last 2015 issue exploring African politics and identity
 header_image: utblick_africa-0005.jpg
