@@ -184,7 +184,7 @@
 
 
   <!-- Dark mode -->
-  <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
+  <script src="{{ "js/darkmode-initial.js" | relURL }}"></script>
 
   <!-- JavaScript resources -->
   {{/*  <script src="js/darkmode-initial.js" defer></script>
@@ -229,7 +229,7 @@
   {{ else }}
     <!-- JavaScript production -->
     {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 | resources.Concat "js.js" | minify | fingerprint }}
-    <script src="{{ $js.Permalink }}" defer></script>
+    <script src="{{ $js.RelPermalink | relURL }}" defer></script>
   {{ end }}
 
     {{ partial "schema.html" . }}
