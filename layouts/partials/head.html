@@ -23,6 +23,9 @@
     <meta name="robots" content="noindex" />
   {{ end }}
 
+  <!-- Google Search Console verification -->
+  <meta name="google-site-verification" content="7a1qvb7XC4NVOarpiAgYDg7pnCgz4Gg3GKFvfFk6_Ls" />
+
   {{ hugo.Generator }}
 
 
@@ -211,11 +214,9 @@
     {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 $js8 $js9 $js10 $js11 $js12 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
-  
+
     {{ partial "schema.html" . }}
 
-    <!-- Google Analytics -->
-    {{ partial "google_analytics.html" . }}
     <!-- Adobe TypeKit -->
     <link
       rel="stylesheet"
