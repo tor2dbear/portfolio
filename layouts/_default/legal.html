@@ -5,11 +5,11 @@
       {{ .Title }}
     </h1>
     {{ with .Description }}
-      <p class="type-caption mb-32 text-color-lighter col-start-1 col-span-8">
+      <p class="type-preamble mb-32 text-color-lighter col-start-1 col-span-8">
         {{ . }}
       </p>
     {{ end }}
-    <div class="legal-content col-start-1 col-span-8">
+    <div class="legal-content prose col-start-1 col-span-8">
       {{ .Content }}
     </div>
   </div>

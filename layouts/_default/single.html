@@ -4,7 +4,9 @@
     <!-- <h1 class="type-headline-1 mt-0 mb-0">{{ .Title }}</h1> -->
     <h2 class="type-heading mb-16 col-start-1 col-span-10">{{ .Description }}</h2>
    
-    {{ .Content }}
+    <div class="page-content prose">
+      {{ .Content }}
+    </div>
   </div>
 
 {{ partial "footer.html" . }}

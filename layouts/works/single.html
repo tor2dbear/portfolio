@@ -24,17 +24,23 @@
     </ul>
   </nav>
   <h1 class="type-headline-1 mt-0 mb-0 reveal">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
-  <h2 class="type-caption mb-16 mt-16 reveal">{{ .Description }}</h2>
+  <h2 class="type-preamble mb-16 mt-16 reveal">{{ .Description }}</h2>
   <div class="type-information text-color-lighter mt-0 mb-16 reveal"> {{ partial "date.html" . }}</div>
   <div class="mt-0 mb-16 reveal"> {{ partial "post_tags.html" . }}</div>
  
   {{ if .Truncated }}
-    {{ .Summary | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    <div class="post-content prose">
+      {{ .Summary | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    </div>
     {{ partial "project-info.html" . }}
     {{ $rest := replace .Content .Summary "" }}
-    {{ $rest | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    <div class="post-content prose">
+      {{ $rest | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    </div>
   {{ else }}
-    {{ .Content | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    <div class="post-content prose">
+      {{ .Content | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    </div>
     {{ partial "project-info.html" . }}
   {{ end }}
 
