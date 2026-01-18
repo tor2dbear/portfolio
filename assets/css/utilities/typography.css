@@ -316,7 +316,7 @@ h4,
 
 /* Type: Preamble (Ingress) */
 .type-preamble {
-  font-size: var(--text-3xl);
+  font-size: clamp(1.5rem, 1.35rem + 0.75vw, 1.875rem);
   color: var(--text-default);
   line-height: var(--line-height-tight);
   font-weight: var(--serif-weight-regular);
@@ -526,10 +526,6 @@ a.menu-heading:hover {
   h4,
   .type-headline-4 {
     font-size: var(--text-lg);
-  }
-
-  .type-preamble {
-    font-size: var(--text-2xl);
   }
 
 }

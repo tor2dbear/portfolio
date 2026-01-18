@@ -154,6 +154,14 @@
   grid-row-end: 3;
 }
 
+.about-main__text {
+  margin-bottom: var(--spacing-24);
+}
+
+.about-main__text:last-child {
+  margin-bottom: 0;
+}
+
 /* Contact Section */
 .contact-section {
   /* Additional specific styles if needed */
