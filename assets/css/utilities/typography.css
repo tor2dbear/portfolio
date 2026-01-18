@@ -49,6 +49,10 @@ body {
   font-size: var(--text-3xl);
 }
 
+.text-1-5xl {
+  font-size: var(--text-1-5xl);
+}
+
 .text-4xl {
   font-size: var(--text-4xl);
 }
@@ -278,13 +282,13 @@ h2,
 /* Type: Headline 3 */
 h3,
 .type-headline-3 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-1-5xl);
 }
 
 /* Type: Headline 4 */
 h4,
 .type-headline-4 {
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
 }
 
 /* Type: Headline Small */
@@ -511,7 +515,12 @@ a.menu-heading:hover {
 
   h3,
   .type-headline-3 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
+  }
+
+  h4,
+  .type-headline-4 {
+    font-size: var(--text-lg);
   }
 
   .type-preamble,
