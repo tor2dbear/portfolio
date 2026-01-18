@@ -243,7 +243,6 @@ h6 {
 /* Base Heading Styles */
 .type-display-1,
 .type-display-2,
-.type-heading,
 h1,
 .type-headline-1,
 h2,
@@ -260,10 +259,9 @@ h4,
 }
 
 /* Type: Display 1 */
-.type-display-1,
-.type-heading {
+.type-display-1 {
   font-family: var(--font-serif);
-  font-size: var(--text-6xl);
+  font-size: clamp(2.75rem, 2.2rem + 2.5vw, 4rem);
   font-weight: 400;
   line-height: var(--line-height-tighter);
   color: var(--text-default);
@@ -273,7 +271,7 @@ h4,
 /* Type: Display 2 */
 .type-display-2 {
   font-family: var(--font-serif);
-  font-size: var(--text-5xl);
+  font-size: clamp(2.25rem, 1.9rem + 2vw, 3rem);
   font-weight: 400;
   line-height: var(--line-height-tighter);
   color: var(--text-default);
@@ -283,13 +281,13 @@ h4,
 /* Type: Headline 1 */
 h1,
 .type-headline-1 {
-  font-size: var(--text-5xl);
+  font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
 }
 
 /* Type: Headline 2 */
 h2,
 .type-headline-2 {
-  font-size: var(--text-4xl);
+  font-size: clamp(1.75rem, 1.45rem + 1.5vw, 2.25rem);
 }
 
 /* Type: Headline 3 */
@@ -317,8 +315,7 @@ h4,
 }
 
 /* Type: Preamble (Ingress) */
-.type-preamble,
-.type-caption {
+.type-preamble {
   font-size: var(--text-3xl);
   color: var(--text-default);
   line-height: var(--line-height-tight);
@@ -338,7 +335,7 @@ h4,
 
 /* Type: Lead */
 .type-lead {
-  font-size: var(--text-xl);
+  font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   font-family: var(--font-serif);
@@ -478,7 +475,7 @@ figcaption {
    CONTENT-SPECIFIC TYPOGRAPHY
    ========================================================================== */
 
-.content :is(h1, h2, h3, h4, h5, h6):not(.type-headline-1):not(.type-preamble):not(.type-caption):not(.type-headline-4):not(.accordion__title) {
+.content :is(h1, h2, h3, h4, h5, h6):not(.type-headline-1):not(.type-preamble):not(.type-headline-4):not(.accordion__title) {
   margin-bottom: var(--spacing-8);
 }
 
@@ -521,25 +518,6 @@ a.menu-heading:hover {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  .type-display-1,
-  .type-heading {
-    font-size: var(--text-5xl);
-  }
-
-  .type-display-2 {
-    font-size: var(--text-4xl);
-  }
-
-  h1,
-  .type-headline-1 {
-    font-size: var(--text-4xl);
-  }
-
-  h2,
-  .type-headline-2 {
-    font-size: var(--text-2xl);
-  }
-
   h3,
   .type-headline-3 {
     font-size: var(--text-xl);
@@ -550,8 +528,7 @@ a.menu-heading:hover {
     font-size: var(--text-lg);
   }
 
-  .type-preamble,
-  .type-caption {
+  .type-preamble {
     font-size: var(--text-2xl);
   }
 
