@@ -241,6 +241,8 @@ h6 {
 }
 
 /* Base Heading Styles */
+.type-display-1,
+.type-display-2,
 .type-heading,
 h1,
 .type-headline-1,
@@ -257,10 +259,21 @@ h4,
   font-family: var(--font-sans);
 }
 
-/* Type: Heading */
+/* Type: Display 1 */
+.type-display-1,
 .type-heading {
   font-family: var(--font-serif);
   font-size: var(--text-6xl);
+  font-weight: 400;
+  line-height: var(--line-height-tighter);
+  color: var(--text-default);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Type: Display 2 */
+.type-display-2 {
+  font-family: var(--font-serif);
+  font-size: var(--text-5xl);
   font-weight: 400;
   line-height: var(--line-height-tighter);
   color: var(--text-default);
@@ -317,6 +330,15 @@ h4,
 /* Type: Body */
 .type-body {
   font-size: var(--text-lg);
+  line-height: var(--line-height-normal);
+  color: var(--text-default);
+  font-family: var(--font-serif);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* Type: Lead */
+.type-lead {
+  font-size: var(--text-xl);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   font-family: var(--font-serif);
@@ -499,8 +521,13 @@ a.menu-heading:hover {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
+  .type-display-1,
   .type-heading {
     font-size: var(--text-5xl);
+  }
+
+  .type-display-2 {
+    font-size: var(--text-4xl);
   }
 
   h1,
