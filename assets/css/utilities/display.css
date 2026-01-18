@@ -71,6 +71,11 @@
   --reveal-delay: 440ms;
 }
 
+.reveal--immediate {
+  --reveal-delay: 0ms;
+  --reveal-duration: 400ms;
+}
+
 .reveal.is-revealed {
   opacity: 1;
   transform: translateY(0);

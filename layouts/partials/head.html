@@ -140,6 +140,22 @@
       border-radius: var(--spacing-4);
       font-weight: var(--sans-weight-bold);
     }
+    /* Reveal animation - immediate variant for hero */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 600ms ease-out, transform 600ms ease-out;
+      will-change: opacity, transform;
+    }
+    .reveal--immediate {
+      --reveal-delay: 0ms;
+      --reveal-duration: 400ms;
+      transition: opacity 400ms ease-out, transform 400ms ease-out;
+    }
+    .reveal.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
     @media (max-width: 47.9375em) {
       .hero-section { padding: var(--spacing-64) 0; }
       .hero-title { font-size: var(--text-3xl); }
@@ -147,6 +163,7 @@
     @media (prefers-reduced-motion: reduce) {
       .role-swapper { transition: none; }
       .role-swapper__item { transition: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
     }
   </style>
 
