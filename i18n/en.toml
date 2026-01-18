@@ -238,6 +238,72 @@ other = "Home"
 [to_homepage]
 other = "to homepage"
 
+[footer_navigation]
+other = "Navigation"
+
+[footer_portfolio]
+other = "Portfolio"
+
+[footer_contact]
+other = "Contact"
+
+[footer_linkedin]
+other = "LinkedIn"
+
+[footer_newsletter_title]
+other = "Newsletter"
+
+[footer_newsletter_label]
+other = "Email address"
+
+[footer_newsletter_placeholder]
+other = "Your email"
+
+[footer_newsletter_submit]
+other = "Subscribe"
+
+[footer_rights_reserved]
+other = "CC BY-NC-SA 4.0"
+
+[footer_rss]
+other = "RSS"
+
+[footer_privacy]
+other = "Privacy"
+
+[footer_license]
+other = "License"
+
+[privacy_url]
+other = "privacy"
+
+[license_url]
+other = "license"
+
+[footer_meta_label]
+other = "Footer metadata"
+
+[footer_mode_label]
+other = "Mode"
+
+[footer_palette_label]
+other = "Palette"
+
+[footer_language_label]
+other = "Language"
+
+[palette_standard]
+other = "Standard"
+
+[palette_forest]
+other = "Forest"
+
+[palette_mesa]
+other = "Mesa"
+
+[palette_pantone]
+other = "Pantone"
+
 [no_posts_yet]
 other = "No posts yet. Check back soon!"
 

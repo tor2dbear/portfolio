@@ -6,7 +6,7 @@ title: A Cut up World
 subtitle: Book
 slug: works
 weight: 2
-tags: ["books", "branding", "graphic design"]
+tags: ["Experimental"]
 clients: ["deg17", "test01"]
 description: An experimental book projekt exploring digital culture through algorithm-generated narratives and cut-up methodology.
 header_image: cut-up-world11.webp

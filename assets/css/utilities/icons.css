@@ -27,6 +27,11 @@
   height: 1rem;
 }
 
+.icon--xs {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
 .icon--lg {
   width: 2rem;
   height: 2rem;

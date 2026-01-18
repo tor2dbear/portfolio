@@ -6,7 +6,7 @@ title: Nylokal Varumärkesidentitet
 subtitle: Sub-brand utveckling
 slug: works
 weight: 13
-tags: ["branding", "design"]
+tags: ["Varumärke & Identitet"]
 clients: []
 employers: [techcorp]
 description: Varumärkesutveckling för Nylokal, Lokalguidens tjänst för nyöppnade företag.

@@ -6,7 +6,7 @@ title: Utblick no.2
 subtitle: Editorial design
 slug: works
 weight: 1
-tags: ["editorial design", "graphic design", "illustrations"]
+tags: ["Editorial"]
 topics: ["topic01", "topic02"]
 clients: ["clients01", "clients02", "volvo", "deg17"]
 description: Publication design and illustrations for the magazine Utblick, published by Society of International Affairs in Gothenburg.
