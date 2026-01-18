@@ -107,11 +107,25 @@
       <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;&lt;div class=&#34;about-main__primary col-start-1 col-span-6&#34;&gt;&#xA;  &lt;h3 class=&#34;about-main__headline mb-32 type-headline-3&#34;&gt;&#xA;    Product Owner &amp; Art Director based in Gothenburg. I bridge design and&#xA;    product strategy – combining UI/UX expertise with data-driven prioritization.&#xA;  &lt;/h3&gt;&#xA;&#xA;  &lt;p class=&#34;about-main__text type-body&#34;&gt;&#xA;    Hi! My name is Torbjörn Hedberg. I lead digital product development by owning&#xA;    the backlog, writing user stories, and running sprints – while maintaining&#xA;    design quality through my background in visual communication, UI/UX design,&#xA;    and brand development.&#xA;  &lt;/p&gt;</description>
     </item>
     <item>
+      <title>License</title>
+      <link>https://www.tor-bjorn.com/license/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/license/</guid>
+      <description>&lt;h1&gt;License information&lt;/h1&gt;&#xA;&lt;p&gt;All of the content on this site is produced under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY‑NC‑SA 4.0) license. The footer uses the short form “CC BY‑NC‑SA 4.0”. This means:&lt;/p&gt;&#xA;&lt;h2&gt;You are free to&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Share — copy and redistribute the material in any medium or format.&lt;/li&gt;&#xA;&lt;li&gt;Adapt — remix, transform, and build upon the material.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2&gt;Under the following terms&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Attribution — provide a clearly visible backlink to tor-bjorn.com.&lt;/li&gt;&#xA;&lt;li&gt;Non‑Commercial — you may not use the material for commercial purposes.&lt;/li&gt;&#xA;&lt;li&gt;Share‑Alike — if you remix, transform, or build upon the material, you must distribute your contributions under the same license.&lt;/li&gt;&#xA;&lt;li&gt;No additional restrictions — you may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;This page is a summary and not a substitute for the full legal code. Read the full license here: &lt;a href=&#34;https://creativecommons.org/licenses/by-nc-sa/4.0/&#34;&gt;https://creativecommons.org/licenses/by-nc-sa/4.0/&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Newsletter</title>
       <link>https://www.tor-bjorn.com/newsletter/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/newsletter/</guid>
       <description>&lt;h3 class=&#34;col-start-1 col-span-6 mb-32&#34;&gt;Subscribe to my newsletter for news and be notified when new content is added to the site.&lt;/h3&gt;</description>
+    </item>
+    <item>
+      <title>Privacy</title>
+      <link>https://www.tor-bjorn.com/privacy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/privacy/</guid>
+      <description>&lt;h1&gt;Privacy&lt;/h1&gt;&#xA;&lt;p&gt;In line with GDPR and to be transparent, this page explains what data I collect on tor-bjorn.com, how it is used, and how I keep it safe.&lt;/p&gt;&#xA;&lt;h2&gt;What data I collect&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Newsletter sign‑ups: email address submitted via the form in the footer.&lt;/li&gt;&#xA;&lt;li&gt;Contact form: name, email address, subject, and message.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;This site does not use first‑party analytics or tracking cookies. However, some third‑party services may set cookies, such as Google reCAPTCHA (used on the contact form).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Thank you</title>

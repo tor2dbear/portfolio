@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Digitala Produkter on Torbjörn Hedberg · Designer</title>
+    <link>https://www.tor-bjorn.com/sv/digitala-produkter/tags/digitala-produkter/</link>
+    <description>Recent content in Digitala Produkter on Torbjörn Hedberg · Designer</description>
+    <generator>Hugo</generator>
+    <language>sv</language>
+    <lastBuildDate>Mon, 01 May 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://www.tor-bjorn.com/sv/digitala-produkter/tags/digitala-produkter/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lokalguiden Admin-gränssnitt Redesign</title>
+      <link>https://www.tor-bjorn.com/sv/works/lokalguiden-admin-gr%C3%A4nssnitt-redesign/</link>
+      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/works/lokalguiden-admin-gr%C3%A4nssnitt-redesign/</guid>
+      <description>&lt;h3&gt;Utmaning&lt;/h3&gt;&#xA;&lt;p&gt;Lokalguidens admin-gränssnitt hade utvecklats organiskt över åren, vilket resulterade i inkonsekventa UI-mönster, förvirrande navigation och ineffektiva arbetsflöden. Interna team kämpade med dagliga uppgifter, vilket ledde till minskad produktivitet och ökad utbildningstid för ny personal.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Huvudsakliga Problem:&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Inkonsekventa gränssnittsmönster och navigation&lt;/li&gt;&#xA;&lt;li&gt;Dålig informationsarkitektur som gjorde funktioner svåra att hitta&lt;/li&gt;&#xA;&lt;li&gt;Föråldrad visuell design som minskade användbarhet&lt;/li&gt;&#xA;&lt;li&gt;Inget designsystem ledde till fragmenterad upplevelse&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3&gt;Tillvägagångssätt&lt;/h3&gt;&#xA;&lt;p&gt;&lt;strong&gt;Research &amp;amp; Upptäckt&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Genomförde användarintervjuer med intern personal från olika avdelningar&lt;/li&gt;&#xA;&lt;li&gt;Kartlade vanliga arbetsflöden och smärtpunkter&lt;/li&gt;&#xA;&lt;li&gt;Granskade befintligt gränssnitt för användbarhetsproblem&lt;/li&gt;&#xA;&lt;li&gt;Analyserade tid för uppgiftsavslut och felfrekvenser&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;Informationsarkitektur&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

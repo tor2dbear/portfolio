@@ -37,45 +37,31 @@
       <description></description>
     </item>
     <item>
-      <title>Product Design</title>
-      <link>https://www.tor-bjorn.com/sv/product-design/tags/product-design/</link>
+      <title>Digitala Produkter</title>
+      <link>https://www.tor-bjorn.com/sv/digitala-produkter/tags/digitala-produkter/</link>
       <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/product-design/tags/product-design/</guid>
+      <guid>https://www.tor-bjorn.com/sv/digitala-produkter/tags/digitala-produkter/</guid>
       <description></description>
     </item>
     <item>
-      <title>Web Design</title>
-      <link>https://www.tor-bjorn.com/sv/web-design/tags/web-design/</link>
-      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/web-design/tags/web-design/</guid>
+      <title>Varumärke &amp; Identitet</title>
+      <link>https://www.tor-bjorn.com/sv/varum%C3%A4rke-identitet/tags/varum%C3%A4rke-identitet/</link>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/varum%C3%A4rke-identitet/tags/varum%C3%A4rke-identitet/</guid>
       <description></description>
     </item>
     <item>
-      <title>Grafisk design</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/</link>
+      <title>Experimentellt</title>
+      <link>https://www.tor-bjorn.com/sv/experimentellt/tags/experimentellt/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/</guid>
+      <guid>https://www.tor-bjorn.com/sv/experimentellt/tags/experimentellt/</guid>
       <description></description>
     </item>
     <item>
-      <title>Varumärke</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</link>
+      <title>Tryck</title>
+      <link>https://www.tor-bjorn.com/sv/tryck/tags/tryck/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Böcker</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</link>
-      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Illustrationer</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/illustrationer/</link>
-      <pubDate>Fri, 20 Nov 2015 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/illustrationer/</guid>
+      <guid>https://www.tor-bjorn.com/sv/tryck/tags/tryck/</guid>
       <description></description>
     </item>
     <item>
@@ -86,17 +72,31 @@
       <description></description>
     </item>
     <item>
-      <title>Books</title>
-      <link>https://www.tor-bjorn.com/sv/books/tags/books/</link>
+      <title>Böcker</title>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/books/tags/books/</guid>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</guid>
       <description></description>
     </item>
     <item>
-      <title>Graphic Design</title>
-      <link>https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/</link>
+      <title>Grafisk design</title>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/graphic-design/tags/graphic-design/</guid>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/grafisk-design/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Illustrationer</title>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/illustrationer/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/illustrationer/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Varumärke</title>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</guid>
       <description></description>
     </item>
   </channel>

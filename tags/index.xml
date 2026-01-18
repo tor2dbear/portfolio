@@ -37,46 +37,67 @@
       <description></description>
     </item>
     <item>
-      <title>Product Design</title>
-      <link>https://www.tor-bjorn.com/product-design/tags/product-design/</link>
+      <title>Digital Product</title>
+      <link>https://www.tor-bjorn.com/digital-product/tags/digital-product/</link>
       <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/product-design/tags/product-design/</guid>
+      <guid>https://www.tor-bjorn.com/digital-product/tags/digital-product/</guid>
       <description></description>
     </item>
     <item>
-      <title>Web Design</title>
-      <link>https://www.tor-bjorn.com/web-design/tags/web-design/</link>
-      <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/web-design/tags/web-design/</guid>
+      <title>Brand &amp; Identity</title>
+      <link>https://www.tor-bjorn.com/brand-identity/tags/brand-identity/</link>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/brand-identity/tags/brand-identity/</guid>
       <description></description>
+    </item>
+    <item>
+      <title>Editorial</title>
+      <link>https://www.tor-bjorn.com/editorial/tags/editorial/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/editorial/tags/editorial/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Experimental</title>
+      <link>https://www.tor-bjorn.com/experimental/tags/experimental/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/experimental/tags/experimental/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Print</title>
+      <link>https://www.tor-bjorn.com/print/tags/print/</link>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/print/tags/print/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Books</title>
+      <link>https://www.tor-bjorn.com/works/tags/books/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/works/tags/books/</guid>
+      <description>&lt;p&gt;{{ range .Pages }}&lt;/p&gt;&#xA;&lt;!-- raw HTML omitted --&gt;</description>
     </item>
     <item>
       <title>Editorial Design</title>
       <link>https://www.tor-bjorn.com/works/tags/editorial-design/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/editorial-design/</guid>
       <description></description>
     </item>
     <item>
       <title>Graphic Design</title>
       <link>https://www.tor-bjorn.com/works/tags/graphic-design/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/graphic-design/</guid>
       <description></description>
     </item>
     <item>
       <title>Illustrations</title>
       <link>https://www.tor-bjorn.com/works/tags/illustrations/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/illustrations/</guid>
       <description></description>
-    </item>
-    <item>
-      <title>Books</title>
-      <link>https://www.tor-bjorn.com/works/tags/books/</link>
-      <pubDate>Tue, 15 Mar 2016 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/works/tags/books/</guid>
-      <description>&lt;p&gt;{{ range .Pages }}&lt;/p&gt;&#xA;&lt;!-- raw HTML omitted --&gt;</description>
     </item>
   </channel>
 </rss>
