@@ -105,6 +105,51 @@
   {{ $print := resources.Get "css/print.css" }}
 
 
+  <!-- Critical CSS - Above the fold -->
+  <style>
+    /* Hero Section - Critical for LCP */
+    .hero-section { padding: var(--spacing-96) 0; }
+    .hero-title {
+      max-width: var(--content-max-width-narrow);
+      line-height: 1.4;
+      font-size: var(--text-4xl);
+    }
+    .role-swapper {
+      color: var(--text-accent);
+      font-weight: var(--sans-weight-bold);
+      display: inline-block;
+      min-width: 0;
+      position: relative;
+      white-space: nowrap;
+      transition: opacity 0.5s ease;
+    }
+    .role-swapper__item {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .role-swapper__item.is-active {
+      position: relative;
+      opacity: 1;
+    }
+    .hero-emphasis {
+      background: var(--bg-tag);
+      padding: 0 var(--spacing-4);
+      border-radius: var(--spacing-4);
+      font-weight: var(--sans-weight-bold);
+    }
+    @media (max-width: 47.9375em) {
+      .hero-section { padding: var(--spacing-64) 0; }
+      .hero-title { font-size: var(--text-3xl); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .role-swapper { transition: none; }
+      .role-swapper__item { transition: none; }
+    }
+  </style>
+
   <!-- CSS loading -->
   {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
@@ -165,7 +210,24 @@
 
 
   <!-- Dark mode -->
-  <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
+  <script>
+    (function () {
+      // Set mode (light/dark/system)
+      var storedMode = localStorage.getItem("theme-mode") || "system";
+      if (storedMode === "system") {
+        var systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+        document.documentElement.setAttribute("data-mode", systemTheme);
+      } else {
+        document.documentElement.setAttribute("data-mode", storedMode);
+      }
+
+      // Set palette (standard/pantone)
+      var storedPalette = localStorage.getItem("theme-palette") || "standard";
+      document.documentElement.setAttribute("data-palette", storedPalette);
+    })();
+  </script>
 
   <!-- JavaScript resources -->
   {{/*  <script src="js/darkmode-initial.js" defer></script>
@@ -218,6 +280,8 @@
     {{ partial "schema.html" . }}
 
     <!-- Adobe TypeKit -->
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+    <link rel="preconnect" href="https://p.typekit.net" crossorigin>
     <link
       rel="stylesheet"
       href="https://use.typekit.net/diz3sha.css"
