@@ -19,8 +19,8 @@
     content="#18181b"
     media="(prefers-color-scheme: dark)"
   />
-  {{ if eq .Params.index false }}
-    <meta name="robots" content="noindex" />
+  {{ if or (eq .Params.index false) (eq .Type "clients") (eq .Type "employers") }}
+    <meta name="robots" content="noindex, nofollow" />
   {{ end }}
 
   <!-- Google Search Console verification -->
