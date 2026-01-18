@@ -6,7 +6,7 @@ title: Nylokal Brand Identity
 subtitle: Sub-brand Development
 slug: works
 weight: 13
-tags: ["branding", "design"]
+tags: ["Brand & Identity"]
 clients: []
 employers: [techcorp]
 description: Brand identity development for Nylokal, Lokalguiden's new business launch service.

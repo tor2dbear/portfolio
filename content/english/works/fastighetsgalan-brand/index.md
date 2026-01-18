@@ -6,7 +6,7 @@ title: Fastighetsgalan Brand Identity & Website
 subtitle: Sub-brand Development
 slug: works
 weight: 14
-tags: ["branding", "web design", "ui-ux"]
+tags: ["Brand & Identity"]
 clients: []
 employers: [techcorp]
 description: Brand identity and website design for Fastighetsgalan, Lokalguiden's real estate industry awards event.

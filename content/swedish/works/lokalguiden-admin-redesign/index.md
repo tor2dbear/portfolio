@@ -6,7 +6,7 @@ title: Lokalguiden Admin-gränssnitt Redesign
 subtitle: Produktdesign & UX
 slug: works
 weight: 12
-tags: ["ui-ux", "product design", "web design"]
+tags: ["Digitala Produkter"]
 clients: []
 employers: [techcorp]
 description: Komplett redesign av Lokalguidens interna admin-gränssnitt, förbättrad struktur, användbarhet och visuell design för interna team.

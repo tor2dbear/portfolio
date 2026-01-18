@@ -23,12 +23,12 @@ textarea,
   box-sizing: border-box;
   padding: var(--spacing-12) var(--spacing-16);
   font-family: inherit;
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   background-color: var(--bg-page);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-8);
   transition: all 0.2s ease;
 }
 
@@ -177,7 +177,7 @@ textarea.error:focus,
 }
 
 .radio__label {
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   user-select: none;
@@ -262,7 +262,7 @@ textarea.error:focus,
 }
 
 .checkbox__label {
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   user-select: none;
@@ -278,7 +278,7 @@ select,
   width: 100%;
   padding: var(--spacing-12) var(--spacing-40) var(--spacing-12) var(--spacing-16);
   font-family: inherit;
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   background-color: var(--bg-page);
@@ -287,7 +287,7 @@ select,
   background-position: right var(--spacing-12) center;
   background-size: 20px;
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-8);
   cursor: pointer;
   appearance: none;
   transition: all 0.2s ease;
@@ -328,7 +328,7 @@ select:disabled,
 }
 
 .form-label {
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   font-weight: 500;
   color: var(--text-default);
   line-height: var(--line-height-normal);

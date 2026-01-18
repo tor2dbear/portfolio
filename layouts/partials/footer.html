@@ -1,70 +1,131 @@
 </main>
-<footer class="footer">
+<footer class="footer page-grid">
   <div class="footer-container">
-    <div class="footer-grid">
-      <div class="footer-column">
-        <h3 class="footer-heading">{{ i18n "navigation" }}</h3>
+    <div class="footer-grid footer-grid--primary use-subgrid">
+      <nav class="footer-column" aria-label="{{ i18n "footer_navigation" }}">
+        <h3 class="footer-heading">{{ i18n "footer_navigation" }}</h3>
         <ul class="footer-menu">
           <li><a href="{{ "/" | relLangURL }}">{{ i18n "home" }}</a></li>
-          <li><a href="{{ "/" | relLangURL }}#works">{{ i18n "featured_works" }}</a></li>
-          <li><a href="{{ "/" | relLangURL }}#about">{{ i18n "about_me" }}</a></li>
-          <li><a href="{{ "/" | relLangURL }}#contact">{{ i18n "contact_me" }}</a></li>
           <li><a href="{{ printf "/%s/" (i18n "writing_url") | relLangURL }}">{{ i18n "writing" }}</a></li>
           <li><a href="{{ "/ui-library/" | relLangURL }}">{{ i18n "ui_library" }}</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <div class="footer-column">
-        <h3 class="footer-heading">{{ i18n "categories" }}</h3>
+      <nav class="footer-column" aria-label="{{ i18n "footer_portfolio" }}">
+        <h3 class="footer-heading">{{ i18n "footer_portfolio" }}</h3>
         {{- $worksSlug := strings.Trim (i18n "works_url") "/" -}}
+        {{- if eq $worksSlug "" -}}
+          {{- $worksSlug = "works" -}}
+        {{- end -}}
         <ul class="footer-menu footer-menu--tags">
-          {{- with $.Site.GetPage (printf "/%s/tags" $worksSlug) -}}
+          {{- with $.Site.GetPage (printf "/works/tags") -}}
             <li><a href="{{ .RelPermalink }}">{{ i18n "all_works" }}</a></li>
           {{- else -}}
             <li><a href="{{ printf "/%s/tags/" $worksSlug | relLangURL }}">{{ i18n "all_works" }}</a></li>
           {{- end -}}
-          {{- $tags := slice -}}
-          {{- range $name, $taxonomy := .Site.Taxonomies.tags -}}
-            {{- $works := where $taxonomy "Section" "works" -}}
-            {{- $works = where $works ".Params.hidden" "!=" true -}}
-            {{- if gt (len $works) 0 -}}
-              {{- $tags = $tags | append (dict "name" $name "count" (len $works)) -}}
-            {{- end -}}
+          {{- $portfolioTags := slice "Digital Product" "Brand & Identity" "Editorial" "Print" "Experimental" -}}
+          {{- if eq .Language.Lang "sv" -}}
+            {{- $portfolioTags = slice "Digitala Produkter" "Varumärke & Identitet" "Redaktionellt" "Tryck" "Experimentellt" -}}
           {{- end -}}
-          {{- range first 8 (sort $tags "name" "asc") -}}
-            {{- with $.Site.GetPage (printf "/tags/%s" .name) -}}
-              <li><a class="footer-tag-link" href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-            {{- end -}}
-          {{- end -}}
-        </ul>
-      </div>
-
-      <div class="footer-column">
-        <h3 class="footer-heading">{{ i18n "connect" }}</h3>
-        <ul class="footer-menu">
-          <li><a href="mailto:hej@tor-bjorn.com">hej@tor-bjorn.com</a></li>
-          <li><a href="tel:+46702562090">+46 (0) 702 - 56 20 90</a></li>
-          <li><a href="https://www.linkedin.com/in/tbhedberg/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          {{- range .Site.Menus.social -}}
+          {{- range $portfolioTags -}}
             <li>
-              <a
-                href="{{ .URL }}"
-                {{- if strings.HasPrefix .URL "http" }} target="_blank" rel="noopener noreferrer"{{ end }}
-                aria-label="{{ .Name }}{{- if strings.HasPrefix .URL "http" }} (opens in new window){{ end -}}"
-              >{{ .Name }}</a>
+              <a class="footer-tag-link" href="{{ printf "/%s/tags/%s/" $worksSlug (urlize .) | relLangURL }}">
+                {{ . }}
+              </a>
             </li>
           {{- end -}}
         </ul>
-      </div>
+      </nav>
 
-      <div class="footer-column">
-        <h3 class="footer-heading">{{ i18n "info" }}</h3>
+      <address class="footer-column footer-contact">
+        <h3 class="footer-heading">{{ i18n "footer_contact" }}</h3>
         <ul class="footer-menu">
-          <li><a href="{{ "/newsletter/" | relLangURL }}">{{ i18n "Newsletter" }}</a></li>
-          <li><a href="{{ "/rss.xml" | relLangURL }}">RSS</a></li>
+          <li><a href="mailto:hej@tor-bjorn.com">hej@tor-bjorn.com</a></li>
+          <li><a href="tel:+46702562090">+46 (0) 702 - 56 20 90</a></li>
+          <li>
+            <a href="https://www.linkedin.com/in/tbhedberg/" target="_blank" rel="noopener noreferrer">
+              {{ i18n "footer_linkedin" }}
+            </a>
+          </li>
         </ul>
-        {{ partial "copyright.html" . }}
+      </address>
+    </div>
+
+    {{- $newsletterAction := .Site.Params.newsletter_action | default "https://gmail.us14.list-manage.com/subscribe/post?u=294f66f378d5370fcbc5aa02f&amp;id=74c003d094" -}}
+    {{- $newsletterEmailField := .Site.Params.newsletter_email_field | default "EMAIL" -}}
+    <section class="footer-newsletter use-subgrid">
+      <div class="footer-newsletter__inner">
+        <h3 class="footer-heading footer-heading--newsletter">{{ i18n "footer_newsletter_title" }}</h3>
+        <form class="footer-newsletter__form" action="{{ $newsletterAction }}" method="post" novalidate>
+          <label class="sr-only" for="footer-newsletter-email">{{ i18n "footer_newsletter_label" }}</label>
+          <input
+            id="footer-newsletter-email"
+            type="email"
+            name="{{ $newsletterEmailField }}"
+            class="footer-newsletter__input"
+            placeholder="{{ i18n "footer_newsletter_placeholder" }}"
+            required
+          />
+          <button type="submit" class="footer-newsletter__submit button">
+            {{ i18n "footer_newsletter_submit" }}
+          </button>
+        </form>
       </div>
+    </section>
+
+    <div class="footer-meta use-subgrid">
+      <ul class="footer-meta__list" role="list" aria-label="{{ i18n "footer_meta_label" }}">
+        <li class="footer-meta__item">
+          © 2026. {{ i18n "footer_rights_reserved" }}
+        </li>
+        <li class="footer-meta__item footer-meta__item--status">
+          <span class="footer-meta__label" aria-hidden="true">
+            <svg class="icon icon--xs">
+              <use href="/img/svg/sprite.svg#icon-mode-micro"></use>
+            </svg>
+          </span>
+          <span class="sr-only">{{ i18n "footer_mode_label" }}</span>
+          <span
+            data-js="footer-mode"
+            data-label-light="{{ i18n "light_mode" }}"
+            data-label-dark="{{ i18n "dark_mode" }}"
+            data-label-system="{{ i18n "system_mode" }}"
+          >{{ i18n "system_mode" }}</span>
+        </li>
+        <li class="footer-meta__item footer-meta__item--status">
+          <span class="footer-meta__label" aria-hidden="true">
+            <svg class="icon icon--xs">
+              <use href="/img/svg/sprite.svg#icon-palette-micro"></use>
+            </svg>
+          </span>
+          <span class="sr-only">{{ i18n "footer_palette_label" }}</span>
+          <span
+            data-js="footer-palette"
+            data-label-standard="{{ i18n "palette_standard" }}"
+            data-label-forest="{{ i18n "palette_forest" }}"
+            data-label-mesa="{{ i18n "palette_mesa" }}"
+            data-label-pantone="{{ i18n "palette_pantone" }}"
+          >{{ i18n "palette_standard" }}</span>
+        </li>
+        <li class="footer-meta__item footer-meta__item--status">
+          <span class="footer-meta__label" aria-hidden="true">
+            <svg class="icon icon--xs">
+              <use href="/img/svg/sprite.svg#icon-language-micro"></use>
+            </svg>
+          </span>
+          <span class="sr-only">{{ i18n "footer_language_label" }}</span>
+          <span>{{ .Language.LanguageName }}</span>
+        </li>
+        <li class="footer-meta__item">
+          <a href="{{ "/rss.xml" | relLangURL }}">{{ i18n "footer_rss" }}</a>
+        </li>
+        <li class="footer-meta__item">
+          <a href="{{ printf "/%s/" (i18n "privacy_url") | relLangURL }}">{{ i18n "footer_privacy" }}</a>
+        </li>
+        <li class="footer-meta__item">
+          <a href="{{ printf "/%s/" (i18n "license_url") | relLangURL }}">{{ i18n "footer_license" }}</a>
+        </li>
+      </ul>
     </div>
   </div>
 </footer>

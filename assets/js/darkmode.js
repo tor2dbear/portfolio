@@ -88,6 +88,7 @@
     }
     updateThemeIcon(mode);
     updateThemeColorMeta();
+    updateFooterModeLabel(mode);
   }
 
   function updateModeUI(currentMode) {
@@ -117,6 +118,7 @@
 
   function applyPalette(palette) {
     document.documentElement.setAttribute('data-palette', palette);
+    updateFooterPaletteLabel(palette);
   }
 
   function updatePaletteUI(currentPalette) {
@@ -168,6 +170,20 @@
     } else {
       themeColorMeta.setAttribute('content', '#FFFFFF');
     }
+  }
+
+  function updateFooterModeLabel(mode) {
+    const modeLabel = document.querySelector('[data-js="footer-mode"]');
+    if (!modeLabel) return;
+    const label = modeLabel.getAttribute(`data-label-${mode}`) || mode;
+    modeLabel.textContent = label;
+  }
+
+  function updateFooterPaletteLabel(palette) {
+    const paletteLabel = document.querySelector('[data-js="footer-palette"]');
+    if (!paletteLabel) return;
+    const label = paletteLabel.getAttribute(`data-label-${palette}`) || palette;
+    paletteLabel.textContent = label;
   }
 
   // ==========================================================================

@@ -19,8 +19,27 @@
     content="#18181b"
     media="(prefers-color-scheme: dark)"
   />
-  {{ if or (eq .Params.index false) (eq .Type "clients") (eq .Type "employers") }}
-    <meta name="robots" content="noindex, nofollow" />
+  <script>
+    (function () {
+      try {
+        var doc = document.documentElement;
+        var scrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop ||
+          0;
+        var height =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        var progress = height > 0 ? scrollTop / height : 0;
+        if (progress < 0) progress = 0;
+        if (progress > 1) progress = 1;
+        doc.style.setProperty("--brand-progress", progress);
+      } catch (e) {}
+    })();
+  </script>
+  {{ if eq .Params.index false }}
+    <meta name="robots" content="noindex" />
   {{ end }}
 
   <!-- Google Search Console verification -->
@@ -265,7 +284,6 @@
   {{ $js4 := resources.Get "js/darkmode.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
-  {{ $js7 := resources.Get "js/progressbar.js" }}
   {{ $js8 := resources.Get "js/smooth-scroll.js" }}
   {{ $js9 := resources.Get "js/role-swapper.js" }}
   {{ $js10 := resources.Get "js/ui-library-tabs.js" }}
@@ -282,7 +300,6 @@
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
-    <script src="{{ $js7.RelPermalink }}" defer></script>
     <script src="{{ $js8.RelPermalink }}" defer></script>
     <script src="{{ $js9.RelPermalink }}" defer></script>
     <script src="{{ $js10.RelPermalink }}" defer></script>
@@ -290,7 +307,7 @@
     <script src="{{ $js12.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 $js8 $js9 $js10 $js11 $js12 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
 

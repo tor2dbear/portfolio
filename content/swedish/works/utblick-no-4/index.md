@@ -6,7 +6,7 @@ title: Utblick nr.4 "Africa?"
 subtitle: redaktionell design
 slug: arbeten
 weight: 10
-tags: ["design", "redaktionellt", "illustrationer"]
+tags: ["Redaktionellt"]
 description: Redaktionell design för Utblicks 2015-nummer som utforskar afrikansk politik och identitet.
 header_image: utblick_africa-0005.jpg
 featured: true

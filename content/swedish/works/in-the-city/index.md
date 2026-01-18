@@ -5,7 +5,7 @@ linktitle: In the City
 title: In the City
 slug: arbeten
 weight: 10
-tags: ["varumärke", "grafisk design"]
+tags: ["Experimentellt"]
 topics: ["topic01", "topic02"]
 clients: ["topic01", "topic02"]
 description: Publication design. A magazine that expands from a stroll through the city.
