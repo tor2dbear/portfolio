@@ -229,8 +229,7 @@
   {{ else }}
     <!-- JavaScript production -->
     {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 | resources.Concat "js.js" | minify | fingerprint }}
-    {{ $jsSrc := printf "/%s" (strings.TrimPrefix "/" $js.RelPermalink) }}
-    <script src="{{ $jsSrc }}" defer></script>
+    <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
 
     {{ partial "schema.html" . }}
