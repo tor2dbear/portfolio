@@ -85,7 +85,12 @@
           if (!entry.isIntersecting) {
             return;
           }
-          revealWhenReady(entry.target);
+          // Immediate reveal elements skip image waiting for faster LCP
+          if (entry.target.classList.contains("reveal--immediate")) {
+            revealElement(entry.target);
+          } else {
+            revealWhenReady(entry.target);
+          }
           obs.unobserve(entry.target);
         });
       },
@@ -109,6 +114,7 @@
     const hasCustomDelay = (element) =>
       element.classList.contains("reveal--delay") ||
       element.classList.contains("reveal--delay-2") ||
+      element.classList.contains("reveal--immediate") ||
       element.style.getPropertyValue("--reveal-delay");
 
     const prefersNoStagger =
@@ -135,7 +141,12 @@
           }
         }
       }
-      revealWhenReady(element);
+      // Immediate reveal elements skip image waiting for faster LCP
+      if (element.classList.contains("reveal--immediate")) {
+        revealElement(element);
+      } else {
+        revealWhenReady(element);
+      }
     });
 
     elements.forEach((element) => {
