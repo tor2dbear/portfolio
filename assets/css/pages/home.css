@@ -77,7 +77,7 @@
 .hero-title {
   max-width: var(--content-max-width-narrow);
   line-height: 1.4;
-  font-size: var(--text-4xl);
+  font-size: clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl));
 }
 
 .role-swapper {
@@ -238,9 +238,6 @@
     padding: var(--spacing-64) 0;
   }
 
-  .hero-title {
-    font-size: var(--text-3xl);
-  }
 }
 
 /* xs: <= 29.9375em */

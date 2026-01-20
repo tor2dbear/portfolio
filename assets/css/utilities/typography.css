@@ -42,39 +42,35 @@ body {
 }
 
 .text-2xl {
-  font-size: var(--text-2xl);
-}
-
-.text-3xl {
   font-size: var(--text-3xl);
 }
 
-.text-1-5xl {
-  font-size: var(--text-1-5xl);
-}
-
-.text-4xl {
-  font-size: var(--text-4xl);
-}
-
-.text-5xl {
+.text-3xl {
   font-size: var(--text-5xl);
 }
 
-.text-6xl {
+.text-4xl {
   font-size: var(--text-6xl);
 }
 
-.text-7xl {
-  font-size: var(--text-7xl);
-}
-
-.text-8xl {
+.text-5xl {
   font-size: var(--text-8xl);
 }
 
-.text-9xl {
+.text-6xl {
   font-size: var(--text-9xl);
+}
+
+.text-7xl {
+  font-size: var(--text-10xl);
+}
+
+.text-8xl {
+  font-size: var(--text-11xl);
+}
+
+.text-9xl {
+  font-size: var(--text-12xl);
 }
 
 /* Screen reader only */
@@ -261,7 +257,7 @@ h4,
 /* Type: Display 1 */
 .type-display-1 {
   font-family: var(--font-serif);
-  font-size: clamp(2.75rem, 2.2rem + 2.5vw, 4rem);
+  font-size: clamp(var(--text-8xl), calc(2.667rem + 1.667vw), var(--text-9xl));
   font-weight: 400;
   line-height: var(--line-height-tighter);
   color: var(--text-default);
@@ -271,7 +267,7 @@ h4,
 /* Type: Display 2 */
 .type-display-2 {
   font-family: var(--font-serif);
-  font-size: clamp(2.25rem, 1.9rem + 2vw, 3rem);
+  font-size: clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl));
   font-weight: 400;
   line-height: var(--line-height-tighter);
   color: var(--text-default);
@@ -281,26 +277,35 @@ h4,
 /* Type: Headline 1 */
 h1,
 .type-headline-1 {
-  font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
+  font-size: clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl));
 }
 
 /* Type: Headline 2 */
 h2,
 .type-headline-2 {
-  font-size: clamp(1.75rem, 1.45rem + 1.5vw, 2.25rem);
+  font-size: clamp(var(--text-6xl),
+      calc(1.75rem + 0.625vw),
+      var(--text-10xl));
 }
 
 /* Type: Headline 3 */
 h3,
 .type-headline-3 {
-  font-size: var(--text-1-5xl);
+  font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
 }
 
 /* Type: Headline 4 */
 h4,
 .type-headline-4 {
-  font-size: var(--text-xl);
+  font-size: clamp(var(--text-xl), calc(1.167rem + 0.417vw), var(--text-3xl));
 }
+
+/* Type: Headline 5 */
+h5,
+.type-headline-5 {
+  font-size: clamp(var(--text-xl), 1.05rem + 0.3vw, var(--text-2xl));
+}
+
 
 /* Type: Headline Small */
 .type-headline-small {
@@ -316,7 +321,7 @@ h4,
 
 /* Type: Preamble (Ingress) */
 .type-preamble {
-  font-size: clamp(1.5rem, 1.35rem + 0.75vw, 1.875rem);
+  font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
   color: var(--text-default);
   line-height: var(--line-height-tight);
   font-weight: var(--serif-weight-regular);
@@ -335,7 +340,7 @@ h4,
 
 /* Type: Lead */
 .type-lead {
-  font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  font-size: clamp(var(--text-lg), calc(1.083rem + 0.208vw), var(--text-xl));
   line-height: var(--line-height-normal);
   color: var(--text-default);
   font-family: var(--font-serif);
@@ -416,10 +421,26 @@ figcaption {
 .prose ol {
   margin-bottom: var(--spacing-24);
   padding-left: var(--spacing-24);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--line-height-normal);
+  color: var(--text-default);
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
 }
 
 .prose li {
   margin-bottom: var(--spacing-8);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--line-height-normal);
+  color: var(--text-default);
 }
 
 .prose blockquote {
@@ -433,7 +454,7 @@ figcaption {
   border-left: 2px solid var(--border-default);
 }
 
-.prose blockquote > p {
+.prose blockquote>p {
   margin-bottom: 0;
 }
 
@@ -454,7 +475,7 @@ figcaption {
    ========================================================================== */
 
 .brand {
-  font-size: var(--text-2xl);
+  font-size: var(--text-3xl);
   margin: 0;
   font-family: var(--font-sans);
   font-weight: var(--sans-weight-bold);
@@ -517,15 +538,4 @@ a.menu-heading:hover {
 }
 
 /* sm: <= 47.9375em */
-@media (max-width: 47.9375em) {
-  h3,
-  .type-headline-3 {
-    font-size: var(--text-xl);
-  }
-
-  h4,
-  .type-headline-4 {
-    font-size: var(--text-lg);
-  }
-
-}
+@media (max-width: 47.9375em) {}
