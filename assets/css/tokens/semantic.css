@@ -10,7 +10,7 @@
 :root {
   /* === TEXT === */
   --text-default: var(--gray-12);
-  --text-muted: var(--gray-9);
+  --text-muted: var(--gray-11);
   --text-inverse: var(--white);
   --text-nav: var(--brand-on-primary);
   --text-link: var(--iris-11);

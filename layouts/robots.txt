@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /clients/
+Disallow: /employers/
+Disallow: /sv/clients/
+Disallow: /sv/employers/
 
 Sitemap: {{ .Site.BaseURL }}sitemap.xml
