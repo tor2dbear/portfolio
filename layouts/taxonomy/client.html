@@ -56,13 +56,13 @@
           {{ .Title }}
         </h1>
       </div>
-      <h2 class="mb-16 type-caption">
+      <h2 class="mb-16 type-preamble">
         {{ .Params.preamble }}
       </h2>
       <div class="type-information text-color-lighter mt-0 mb-16">
         {{ partial "date.html" . }}
       </div>
-      <p>{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
+      <p class="type-body">{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
     </div>
 
     <div class="application-page__section application-page__section--portfolio col-span-4 mb-64">

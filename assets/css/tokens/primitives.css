@@ -36,19 +36,38 @@
     TYPOGRAPHY: Font Sizes
     ========================================================================== */
 
-  --text-xs: 0.75rem; /* 12px */
-  --text-sm: 0.875rem; /* 14px */
-  --text-base: 1rem; /* 16px */
-  --text-lg: 1.125rem; /* 18px */
-  --text-xl: 1.25rem; /* 20px */
-  --text-2xl: 1.5rem; /* 24px */
-  --text-3xl: 1.875rem; /* 30px */
-  --text-4xl: 2.25rem; /* 36px */
-  --text-5xl: 3rem; /* 48px */
-  --text-6xl: 4rem; /* 64px */
-  --text-7xl: 4.5rem; /* 72px */
-  --text-8xl: 6rem; /* 96px */
-  --text-9xl: 8rem; /* 128px */
+  --text-xs: 0.75rem;
+  /* 12px */
+  --text-sm: 0.875rem;
+  /* 14px */
+  --text-base: 1rem;
+  /* 16px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.25rem;
+  /* 20px */
+  --text-2xl: 1.3125rem;
+  /* 21px */
+  --text-3xl: 1.5rem;
+  /* 24px */
+  --text-4xl: 1.75rem;
+  /* 28px */
+  --text-5xl: 1.875rem;
+  /* 30px */
+  --text-6xl: 2.25rem;
+  /* 36px */
+  --text-7xl: 2.375rem;
+  /* 38px */
+  --text-8xl: 3rem;
+  /* 48px */
+  --text-9xl: 4rem;
+  /* 64px */
+  --text-10xl: 4.5rem;
+  /* 72px */
+  --text-11xl: 6rem;
+  /* 96px */
+  --text-12xl: 8rem;
+  /* 128px */
 
   /* ==========================================================================
     TYPOGRAPHY: Line Heights
@@ -75,31 +94,51 @@
     ========================================================================== */
 
   --spacing-0: 0rem;
-  --spacing-2: 0.125rem; /* 2px */
-  --spacing-4: 0.25rem; /* 4px */
-  --spacing-8: 0.5rem; /* 8px */
-  --spacing-12: 0.75rem; /* 12px */
-  --spacing-16: 1rem; /* 16px */
-  --spacing-24: 1.5rem; /* 24px */
-  --spacing-32: 2rem; /* 32px */
-  --spacing-40: 2.5rem; /* 40px */
-  --spacing-48: 3rem; /* 48px */
-  --spacing-64: 4rem; /* 64px */
-  --spacing-80: 5rem; /* 80px */
-  --spacing-96: 6rem; /* 96px */
-  --spacing-160: 10rem; /* 160px */
+  --spacing-2: 0.125rem;
+  /* 2px */
+  --spacing-4: 0.25rem;
+  /* 4px */
+  --spacing-8: 0.5rem;
+  /* 8px */
+  --spacing-12: 0.75rem;
+  /* 12px */
+  --spacing-16: 1rem;
+  /* 16px */
+  --spacing-24: 1.5rem;
+  /* 24px */
+  --spacing-32: 2rem;
+  /* 32px */
+  --spacing-40: 2.5rem;
+  /* 40px */
+  --spacing-48: 3rem;
+  /* 48px */
+  --spacing-64: 4rem;
+  /* 64px */
+  --spacing-80: 5rem;
+  /* 80px */
+  --spacing-96: 6rem;
+  /* 96px */
+  --spacing-160: 10rem;
+  /* 160px */
 
   /* ==========================================================================
     RADIUS: Scale
     ========================================================================== */
 
-  --radius-2: 0.125rem; /* 2px */
-  --radius-4: 0.25rem; /* 4px */
-  --radius-8: 0.5rem; /* 8px */
-  --radius-16: 1rem; /* 16px */
-  --radius-24: 1.5rem; /* 24px */
-  --radius-32: 2rem; /* 32px */
-  --radius-pill: 62.4375rem; /* 999px */
+  --radius-2: 0.125rem;
+  /* 2px */
+  --radius-4: 0.25rem;
+  /* 4px */
+  --radius-8: 0.5rem;
+  /* 8px */
+  --radius-16: 1rem;
+  /* 16px */
+  --radius-24: 1.5rem;
+  /* 24px */
+  --radius-32: 2rem;
+  /* 32px */
+  --radius-pill: 62.4375rem;
+  /* 999px */
 
   /* ==========================================================================
     LAYOUT: Sizes
@@ -123,8 +162,11 @@
   --size-header-height: 4.5rem;
   --size-header-height-neg: 0rem;
   --size-page-margins: clamp(0.5rem, 0.8rem + 0.5vi, 1.5rem);
-  --size-menu-width-xl: 24rem; /* 320 px + padding 2x2rem */
-  --size-menu-width-lg: 20rem; /* 256 px + padding 2x2rem */
-  --size-menu-width-md: 16rem; /* 192 px + padding 2x2rem */
+  --size-menu-width-xl: 24rem;
+  /* 320 px + padding 2x2rem */
+  --size-menu-width-lg: 20rem;
+  /* 256 px + padding 2x2rem */
+  --size-menu-width-md: 16rem;
+  /* 192 px + padding 2x2rem */
   --size-menu-width: 24rem;
 }
