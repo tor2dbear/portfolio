@@ -9,6 +9,11 @@
 
 nav.application-breadcrumb ul {
   list-style: none;
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 nav.application-breadcrumb ul li {
@@ -18,5 +23,18 @@ nav.application-breadcrumb ul li {
 nav.application-breadcrumb ul li+li:before {
   content: "/";
   padding: var(--spacing-8);
+  color: var(--text-muted);
+}
+
+nav.application-breadcrumb {
+  font-size: var(--text-sm);
+  margin-bottom: var(--spacing-24);
+}
+
+nav.application-breadcrumb .application-breadcrumb__item--caps {
+  text-transform: capitalize;
+}
+
+nav.application-breadcrumb .application-breadcrumb__item--muted {
   color: var(--text-muted);
 }

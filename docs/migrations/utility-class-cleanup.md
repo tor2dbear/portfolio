@@ -1,6 +1,6 @@
 # Migrationsplan: Från Utility Classes till Semantic Type System
 
-Status: draft
+Status: in progress (Fas 1-7 genomförda, Fas 8 påbörjad)
 Skapad: 2026-01-20
 Språk: Svenska (dokumentet är på svenska för bättre kommunikation med teamet)
 
@@ -15,6 +15,11 @@ Migrera från utility-heavy HTML till en komponentbaserad approach med semantisk
 - **Förenkla underhåll**: Ändringar görs i CSS-filer istället för 20+ HTML-filer
 - **Behåll flexibilitet**: Spacing och layout kan fortfarande variera per kontext
 - **Bevara design system**: Semantiska type-klasser är grunden (redan klara!)
+
+## Ramar
+
+- **Token-frys**: Denna migration ändrar inte `--text-*` tokens eller typografiska clamps.
+- **Layout utilities behålls**: `.col-*`, `.use-subgrid`, `.page-grid`, `.reveal*` och `.gap-*` migreras inte i denna fas.
 
 ## Nulägesanalys
 
@@ -100,9 +105,9 @@ Skapa en mappningstabell mellan utility combinations och semantic classes:
 | `text-sm font-serif line-height-normal` | `type-body-sm` | Liten brödtext |
 | `text-base font-serif line-height-normal` | `type-body` | Huvudtext |
 | `text-lg font-serif line-height-normal` | `type-body` eller `type-lead` | Beroende på kontext |
-| `text-2xl line-height-normal tracking-normal` | `type-headline-3` | Vanlig rubrik |
-| `text-3xl → text-5xl clamp()` | `type-headline-3` | Responsive |
-| `text-6xl → text-8xl clamp()` | `type-headline-2` | Stor rubrik |
+| `text-2xl line-height-normal tracking-normal` | `type-headline-3` | Rubrik (px styrs av aktuell token-skala) |
+| `text-3xl → text-5xl clamp()` | `type-headline-3` | Clamp styrs av nuvarande typografi |
+| `text-6xl → text-8xl clamp()` | `type-headline-2` | Clamp styrs av nuvarande typografi |
 | `text-uppercase tracking-wider text-xs` | `type-headline-small` | Small caps |
 
 #### 0.2 Identifiera prioriterade komponenter
@@ -182,7 +187,7 @@ Filer som ska uppdateras:
 
 .summary-card__title {
   /* Typography nu definierad här istället för HTML */
-  font-size: var(--text-2xl);
+  font-size: var(--text-3xl);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   letter-spacing: var(--tracking-normal);
@@ -211,6 +216,11 @@ Filer som ska uppdateras:
 .summary-card--wide .summary-card__title {
   font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
 }
+
+#### 1.4 Valideringschecklista (pilot)
+- Visuellt match mot nuvarande summary-cards i list/startsida.
+- Inga oväntade spacing-drifter (mt/mb ska kännas oförändrade).
+- Typografisk hierarki oförändrad (rubrik > meta > excerpt).
 ```
 
 #### 1.3 Uppdatera HTML-mallar
@@ -592,13 +602,13 @@ hugo server
 Efter pilot-implementationerna (Fas 1-6), applicera samma mönster på:
 
 #### Prioritetslista:
-1. **Article card** - Liknande summary-card
-2. **Download card** - Typography + spacing
-3. **Tags** - Small typography
-4. **Newsletter** - Form styling
-5. **Pagination** - Navigation styling
-6. **Gallery** - Minimal text, mest layout
-7. **Tooltip** - Minimal utilities
+1. **Article card** - Liknande summary-card (klar)
+2. **Download card** - Typography + spacing (klar)
+3. **Tags** - Small typography (ingen utility cleanup behövdes)
+4. **Newsletter** - Form styling (klar)
+5. **Pagination** - Navigation styling (ingen utility cleanup behövdes)
+6. **Gallery** - Minimal text, mest layout (ingen utility cleanup behövdes)
+7. **Tooltip** - Minimal utilities (ingen utility cleanup behövdes)
 
 #### Process per komponent:
 1. Identifiera alla användningar (grep/search)
@@ -659,6 +669,10 @@ grep -r "\.text-xs\|\.text-sm\|\.text-base" layouts/ | wc -l
 - Då kan utility:n tas bort från `assets/css/utilities/typography.css`
 
 **OBS:** Ta INTE bort utilities omedelbart. Vänta 2-4 veckor efter migrationen.
+
+**Status (utfört):**
+- Inga kvarvarande typography-utilities i `layouts/` (undantag: UI‑library och `_deprecated`).
+- Enda återstående utility i produktion var `line-height-tighter` i related‑items; flyttad till komponent‑CSS.
 
 ## Riktlinjer för framtida utveckling
 

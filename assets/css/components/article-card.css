@@ -12,6 +12,22 @@ article {
 }
 
 /* ==========================================================================
+   Article Card
+   ========================================================================== */
+
+.article-card__title {
+  margin: 0 0 var(--spacing-12);
+}
+
+.article-card__description {
+  margin: 0 0 var(--spacing-12);
+}
+
+.article-card__meta {
+  margin: 0 0 var(--spacing-12);
+}
+
+/* ==========================================================================
    Summary Card - Hover Effects
    ========================================================================== */
 
@@ -25,6 +41,10 @@ article {
   transition: -webkit-filter 1s ease;
   transition: filter 1s ease;
   transition: filter 1s ease, -webkit-filter 1s ease;
+}
+
+.related-items__image {
+  line-height: var(--line-height-tighter);
 }
 
 /* ==========================================================================

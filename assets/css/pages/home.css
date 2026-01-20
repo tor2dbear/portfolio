@@ -130,7 +130,7 @@
   text-align: left;
 }
 
-.summary-card--compact h2.text-2xl {
+.summary-card--compact .summary-card__title {
   font-size: var(--text-xl);
 }
 

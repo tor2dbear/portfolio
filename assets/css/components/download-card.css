@@ -9,6 +9,9 @@
    ========================================================================== */
 
 .download-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
   padding: 1rem 1.5rem;
   background-color: var(--bg-surface);
   background-image: none;
@@ -44,9 +47,18 @@
   grid-row: span 5;
 }
 
+.download-list .download-card + .download-card {
+  margin-top: var(--spacing-16);
+}
+
 /* ==========================================================================
    Download Card Item
    ========================================================================== */
+
+.download-card__item {
+  flex: 1;
+  margin: 0;
+}
 
 p.download-card__item {
   white-space: nowrap;

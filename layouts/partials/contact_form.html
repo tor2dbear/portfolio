@@ -1,5 +1,5 @@
 <div class="contact-form mt-80 mb-64 col-start-1 col-span-6">
-  <h2 class="contact-form__title type-headline-3 mb-16">
+  <h2 class="contact-form__title type-headline-3">
     {{ i18n "contact_send_message" }}
   </h2>
   <form
@@ -32,7 +32,7 @@
       id="contact_subject"
       type="text"
       placeholder="{{ i18n "contact_subject_placeholder" }}"
-      class="contact-form__input contact-form__input--subject form-input mb-8"
+      class="contact-form__input contact-form__input--subject form-input"
       name="subject"
       required
     />
@@ -44,7 +44,7 @@
       class="contact-form__textarea form-input"
       name="message"
     ></textarea>
-    <p class="contact-form__note type-information mb-16 text-color-lighter">
+    <p class="contact-form__note type-information">
       {{ i18n "re_captcha" }}
       <a href="https://policies.google.com/privacy" class="text-color-lighter"
         >{{ i18n "privacy_policy" }}</a
@@ -65,7 +65,7 @@
     <button
       type="button"
       id="submitButton"
-      class="contact-form__submit g-recaptcha button--icon text-lg font-sans font-medium"
+      class="contact-form__submit g-recaptcha button--icon"
       data-js="contact-submit"
       data-sitekey="6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"
       data-callback="onSubmit"
@@ -75,7 +75,7 @@
     <p
       id="successMessage"
       style="display:none;"
-      class="contact-form__message contact-form__message--success type-information mt-16 message"
+      class="contact-form__message contact-form__message--success type-information message"
       data-js="contact-success"
     >
       {{ i18n "contact_submitted" }}
@@ -83,7 +83,7 @@
     <p
       id="errorMessage"
       style="display:none;"
-      class="contact-form__message contact-form__message--error type-information mt-16 message"
+      class="contact-form__message contact-form__message--error type-information message"
       data-js="contact-error"
     >
       {{ i18n "contact_error" }}
