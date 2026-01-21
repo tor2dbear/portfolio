@@ -211,7 +211,25 @@ Filer som ska uppdateras:
 .summary-card--wide .summary-card__title {
   font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
 }
+
+/* VIKTIGT: Responsive styling */
+@media (max-width: 63.9375em) {
+  .summary-card__title {
+    font-size: var(--text-xl); /* Minska på tablet/mobil */
+  }
+}
 ```
+
+**VARNING - Responsive utilities:** Glöm inte att kolla efter dolda media queries i `typography.css` som påverkar utilities! Exempel:
+```css
+/* typography.css hade denna regel för .text-2xl: */
+@media (max-width: 63.9375em) {
+  .content:is(.startpage, .list) article h2.text-2xl {
+    font-size: var(--text-xl);
+  }
+}
+```
+Denna responsiva styling måste flyttas till komponent-CSS annars blir text för stor på mobil.
 
 #### 1.3 Uppdatera HTML-mallar
 
