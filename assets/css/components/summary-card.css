@@ -1,5 +1,5 @@
 .summary-card__title {
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   letter-spacing: var(--tracking-normal);
@@ -32,4 +32,11 @@
 
 .summary-card--compact .summary-card__title {
   font-size: var(--text-xl);
+}
+
+/* md: <= 63.9375em */
+@media (max-width: 63.9375em) {
+  .summary-card__title {
+    font-size: var(--text-xl);
+  }
 }
