@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "Torbjörn Hedberg · Designer"
 author = "Torbjörn Hedberg"
 canonifyurls = true
-relativeURLs = true
+relativeURLs = false
 preserveTaxonomyNames = true
 
 [pagination]
@@ -47,6 +47,7 @@ DefaultContentLanguage = "en"
 [languages]
   [languages.en]
     languageName = "English"
+    languageCode = "en"
     weight = 1
     contentDir = "content/english"
     [languages.en.params]
@@ -80,6 +81,7 @@ DefaultContentLanguage = "en"
 
   [languages.sv]
     languageName = "Svenska"
+    languageCode = "sv-SE"
     weight = 2
     contentDir = "content/swedish"
     [languages.sv.params]
