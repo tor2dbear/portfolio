@@ -392,9 +392,6 @@ p:empty {
 /* || ========== About page ------------------------------------- */
 .about-cv {
   grid-column: content-start / content-end;
-  column-count: 1;
-  column-gap: var(--spacing-32);
-  column-fill: balance;
 }
 
 .about-cv__icon,
@@ -402,15 +399,10 @@ p:empty {
   display: block;
 }
 
-@supports (column-span: all) {
-  .about-cv {
-    column-count: 3;
-  }
-
-  .about-cv__icon,
-  .about-cv__title {
-    column-span: all;
-  }
+ .about-cv__columns {
+  column-count: 3;
+  column-gap: var(--spacing-32);
+  column-fill: balance;
 }
 
 .about-cv__icon {
@@ -438,19 +430,15 @@ p:empty {
 
 /* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
-  @supports (column-span: all) {
-    .about-cv {
-      column-count: 2;
-    }
+  .about-cv__columns {
+    column-count: 2;
   }
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  @supports (column-span: all) {
-    .about-cv {
-      column-count: 1;
-    }
+  .about-cv__columns {
+    column-count: 1;
   }
 }
 
