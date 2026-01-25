@@ -105,6 +105,7 @@
   {{ $components_language_dropdown := resources.Get "css/components/language-dropdown.css" }}
   {{ $components_settings_dropdown := resources.Get "css/components/settings-dropdown.css" }}
   {{ $components_article_card := resources.Get "css/components/article-card.css" }}
+  {{ $components_summary_card := resources.Get "css/components/summary-card.css" }}
   {{ $components_navigation := resources.Get "css/components/navigation.css" }}
   {{ $components_pagination := resources.Get "css/components/pagination.css" }}
   {{ $components_breadcrumb := resources.Get "css/components/breadcrumb.css" }}
@@ -212,6 +213,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_language_dropdown.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_settings_dropdown.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_article_card.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_summary_card.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_navigation.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_pagination.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_breadcrumb.RelPermalink }}" />
@@ -229,7 +231,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}

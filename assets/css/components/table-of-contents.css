@@ -22,18 +22,25 @@
   margin-bottom: var(--spacing-8);
 }
 
+.toc__header h3 {
+  margin: 0;
+}
+
 /* ==========================================================================
    ToC Items
    ========================================================================== */
 
 .toc__item {
   margin-bottom: var(--spacing-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--text-muted);
 }
 
 .toc__item a {
   display: inline-block;
   padding: var(--spacing-4) 0;
-  color: var(--text-muted);
+  color: inherit;
   text-decoration: none;
   transition: color 0.2s ease;
 }

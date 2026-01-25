@@ -1,26 +1,26 @@
 {{ partial "header.html" . }}
 
 <div class="content post use-subgrid">
-  <nav class="application-breadcrumb flex text-sm mb-24 show-on-client">
+  <nav class="application-breadcrumb show-on-client">
     <ul>
       <li class="application-breadcrumb__item">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
       </li>
-      <li class="application-breadcrumb__item text-capitalize" data-js="application-breadcrumb-back">
+      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back">
         <a class="application-breadcrumb__link"></a>
       </li>
-      <li class="application-breadcrumb__item text-color-lighter">{{ .Title }}</li>
+      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
   </nav>
-  <nav class="application-breadcrumb flex text-sm mb-24 show-on-employer">
+  <nav class="application-breadcrumb show-on-employer">
     <ul>
       <li class="application-breadcrumb__item">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
       </li>
-      <li class="application-breadcrumb__item text-capitalize" data-js="application-breadcrumb-back-employer">
+      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back-employer">
         <a class="application-breadcrumb__link"></a>
       </li>
-      <li class="application-breadcrumb__item text-color-lighter">{{ .Title }}</li>
+      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
   </nav>
   <h1 class="type-headline-1 mt-0 mb-0 reveal">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
@@ -46,20 +46,20 @@
 
   {{ partial "related.html" . }}
     <ul class="toc mt-64 mb-64 col-span-12 show-on-client reveal">
-    <li class="toc__header"><h3 class="type-headline-small mb-8">Table of content</h3></li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__header"><h3 class="type-headline-small">Table of content</h3></li>
+    <li class="toc__item">
       <a data-js="application-toc-letter" href="#">Letter</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a data-js="application-toc-portfolio" href="#">Portfolio</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a data-js="application-toc-cv" href="#">CV</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a data-js="application-toc-download" href="#">Download</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a data-js="application-toc-contact" href="#">Contact</a>
     </li>
   </ul>

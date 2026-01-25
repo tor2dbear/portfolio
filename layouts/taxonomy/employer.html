@@ -12,32 +12,32 @@
 />
 
 <div class="content application-page use-subgrid">
-  <nav class="application-breadcrumb flex text-sm mb-24 show-on-employer">
+  <nav class="application-breadcrumb show-on-employer">
     <ul>
-      <li class="application-breadcrumb__item text-capitalize">
+      <li class="application-breadcrumb__item application-breadcrumb__item--caps">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
       </li>
-      <li class="application-breadcrumb__item application-page__company text-color-lighter text-capitalize">
+      <li class="application-breadcrumb__item application-page__company application-breadcrumb__item--muted application-breadcrumb__item--caps">
         {{ .Params.company_name }}
       </li>
     </ul>
   </nav>
   <span class="application-page__company">{{ .Params.company_name }}</span>
   <ul class="toc mb-64 col-span-12">
-    <li class="toc__header"><h3 class="type-headline-small mb-8">Table of content</h3></li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__header"><h3 class="type-headline-small">Table of content</h3></li>
+    <li class="toc__item">
       <a href="#letter">Letter</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a href="#portfolio">Portfolio</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a href="#cv">CV</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a href="#download">Download</a>
     </li>
-    <li class="toc__item font-sans text-base text-color-lighter">
+    <li class="toc__item">
       <a href="#contact">Contact</a>
     </li>
   </ul>
@@ -94,12 +94,12 @@
         <a
           href="{{ printf "%s" $.Params.attach_letter }}"
           target="_blank"
-          class="download-card col-span-4 flex"
+          class="download-card col-span-4"
         >
           <div class="pdf-icon">
             <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
           </div>
-          <p class="download-card__item flex-grow">
+          <p class="download-card__item">
             {{ path.Base .Params.attach_letter }}
           </p>
           <div class="download-icon">
@@ -112,12 +112,12 @@
         <a
           href="{{ printf "%s" $.Params.attach_portfolio }}"
           target="_blank"
-          class="download-card mt-16 col-span-4 flex"
+          class="download-card col-span-4"
         >
           <div class="pdf-icon">
             <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
           </div>
-          <p class="download-card__item flex-grow">
+          <p class="download-card__item">
             {{ path.Base .Params.attach_portfolio }}
           </p>
           <div class="download-icon">
@@ -130,12 +130,12 @@
         <a
           href="{{ printf "%s" $.Params.attach_cv }}"
           target="_blank"
-          class="download-card mt-16 col-span-4 flex"
+          class="download-card col-span-4"
         >
           <div class="pdf-icon">
             <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
           </div>
-          <p class="download-card__item flex-grow">
+          <p class="download-card__item">
             {{ path.Base .Params.attach_cv }}
           </p>
           <div class="download-icon">

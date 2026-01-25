@@ -3,7 +3,7 @@ languageCode = "en-us"
 title = "Torbjörn Hedberg · Designer"
 author = "Torbjörn Hedberg"
 canonifyurls = true
-relativeURLs = true
+relativeURLs = false
 preserveTaxonomyNames = true
 
 [pagination]
@@ -47,11 +47,12 @@ DefaultContentLanguage = "en"
 [languages]
   [languages.en]
     languageName = "English"
+    languageCode = "en"
     weight = 1
     contentDir = "content/english"
     [languages.en.params]
       title = "Torbjörn Hedberg · Designer"
-      description = "Torbjörn Hedberg is a graphic designer based in Gothenburg, Sweden. Available for freelance work & collaborations."
+      description = "Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology."
     [[languages.en.menu.start]]
       name = "home"
       weight = 1
@@ -80,11 +81,12 @@ DefaultContentLanguage = "en"
 
   [languages.sv]
     languageName = "Svenska"
+    languageCode = "sv-SE"
     weight = 2
     contentDir = "content/swedish"
     [languages.sv.params]
       title = "Torbjörn Hedberg · Designer"
-      description = "Torbjörn Hedberg är en grafiskt designer verksam i Göteborg. Tillgänglig för frilansuppdrag och sammarbeten."
+      description = "Hej! Jag är en multidisciplinär designer. I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt organisationer från idé till färdig produkt genom att kombinera design, affärsvärde och teknik."
     [[languages.sv.menu.start]]
       name = "hem"
       weight = 1
