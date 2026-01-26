@@ -4,7 +4,7 @@
   <div class="taxonomy-header taxonomy-header--tag mb-8 col-span-12">
     <h1 class="type-headline-small">{{ i18n "all_works" }}</h1>
   </div>
-  <div class="tag-list col-span-12">
+  <div class="tag-list col-span-12 mb-32">
     <ul class="tag-list__items">
       {{- range $tagName, $tagTerm := .Site.Taxonomies.tags -}}
         {{- $worksPages := where $tagTerm.Pages "Section" "works" -}}
@@ -18,6 +18,11 @@
       {{- end -}}
     </ul>
   </div>
+  {{- $works := where .Site.RegularPages "Section" "works" -}}
+  {{- $works = where $works ".Params.hidden" "!=" true -}}
+  {{- range $works.ByDate.Reverse -}}
+    {{ .Render "summary" }}
+  {{- end -}}
 </div>
 
 {{ partial "footer.html" . }}
