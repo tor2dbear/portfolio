@@ -83,9 +83,8 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
 
 .footer-newsletter__form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 1fr;
   gap: var(--spacing-16);
-  align-items: stretch;
 }
 
 .footer .footer-newsletter__input {
