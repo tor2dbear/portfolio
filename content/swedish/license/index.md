@@ -1,7 +1,7 @@
 ---
 title: Licens
 description: Licensvillkor för innehållet på tor-bjorn.com.
-url: "/licens/"
+url: "/sv/licens/"
 layout: legal
 ---
 

@@ -6,12 +6,10 @@
   </div>
   {{ $path := .RelPermalink }}
   {{ $pages := where .Data.Pages ".Params.hidden" "!=" true }}
-  {{ if in $path "/works/tags/" }}
+  {{ if or (in $path "/works/tags/") (in $path "/arbeten/tags/") }}
     {{ $pages = where $pages "Section" "works" }}
-  {{ else if in $path "/writing/tags/" }}
+  {{ else if or (in $path "/writing/tags/") (in $path "/texter/tags/") }}
     {{ $pages = where $pages "Section" "writing" }}
-  {{ else if in $path "/texter/tags/" }}
-    {{ $pages = where $pages "Section" "texter" }}
   {{ end }}
   {{ range $pages }}
     {{ .Render "summary"}}
