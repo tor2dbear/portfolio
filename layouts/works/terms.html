@@ -6,11 +6,25 @@
   </div>
   <div class="tag-list col-span-12">
     <ul class="tag-list__items">
-      {{ range .Data.Terms.Alphabetical }}
+      {{- $defined := slice -}}
+      {{- range .Site.Taxonomies.tags -}}
+        {{- $hasWorks := false -}}
+        {{- range .Pages -}}
+          {{- if eq .Section "works" -}}
+            {{- $hasWorks = true -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if $hasWorks -}}
+          {{- $defined = $defined | append . -}}
+        {{- end -}}
+      {{- end -}}
+      {{- range $defined -}}
+        {{- with .Page -}}
         <li class="tag-list__item">
-          <a class="tag-list__link tag" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+          <a class="tag-list__link tag" href="{{ .RelPermalink }}">{{ .Title }}</a>
         </li>
-      {{ end }}
+        {{- end -}}
+      {{- end -}}
     </ul>
   </div>
 </div>
