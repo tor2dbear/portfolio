@@ -1,0 +1,49 @@
+.application-main {
+    width: 100%;
+}
+
+
+.application-page__sidebar {
+    margin-left: 1.5rem;
+}
+
+#layout .content.application-page .about-cv {
+    margin-top: 0;
+}
+
+.content.application-page .about-cv .curl-icon {
+    display: none;
+}
+
+#layout .content.application-page .contact-form {
+    margin: 0;
+    margin-bottom: var(--spacing-64);
+}
+
+#layout .content.application-page .contact-info {
+    margin: 0;
+    margin-bottom: var(--spacing-32);
+}
+
+.application-page__company {
+    display: none;
+}
+
+/* lg: <= 79.9375em */
+@media (max-width: 79.9375em) {
+    .application-main {
+        width: 100%;
+    }
+}
+
+/* md: <= 63.9375em */
+@media (max-width: 63.9375em) {
+
+    .application-page__main,
+    .application-page__sidebar {
+        margin-left: 0;
+        grid-column: col-start 1 / span 12;
+    }
+}
+
+/* NOTE: Download card styles moved to assets/css/components/download-card.css */
