@@ -1,7 +1,7 @@
 ---
 title: Integritet
 description: Hur data samlas in och används på tor-bjorn.com.
-url: "/integritet/"
+url: "/sv/integritet/"
 layout: legal
 ---
 

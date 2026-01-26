@@ -1,18 +1,21 @@
 {{ partial "header.html" . }}
 
-<div class="content list tag-page use-subgrid">
-  <div class="taxonomy-header taxonomy-header--tag mb-8 col-span-12">
+<div class="content startpage use-subgrid">
+  <div class="post-header mb-8 col-span-12">
     <h1 class="type-headline-small">{{ i18n "all_works" }}</h1>
   </div>
-  <div class="tag-list col-span-12">
-    <ul class="tag-list__items">
-      {{ range .Data.Terms.Alphabetical }}
-        <li class="tag-list__item">
-          <a class="tag-list__link tag" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
-        </li>
-      {{ end }}
-    </ul>
-  </div>
+  {{- $works := where .Site.RegularPages "Section" "works" -}}
+  {{- $works = where $works ".Params.hidden" "!=" true -}}
+  {{- range $index, $page := $works.ByDate.Reverse -}}
+    {{- $isWide := or (eq $index 0) (eq $index 3) (eq $index 4) -}}
+    {{- $mod := mod $index 6 -}}
+    {{- if gt $index 5 -}}
+      {{- $isWide = or (eq $mod 0) (eq $mod 3) (eq $mod 4) -}}
+    {{- end -}}
+    <div class="{{ if $isWide }}col-span-8 summary-card--wide{{ else }}col-span-4 summary-card--compact{{ end }}">
+      {{ $page.Render "summary" }}
+    </div>
+  {{- end -}}
 </div>
 
 {{ partial "footer.html" . }}
