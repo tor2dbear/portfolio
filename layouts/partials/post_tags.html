@@ -2,20 +2,22 @@
 
   {{ if isset .Params "tags" }}
   {{ $count := len .Params.tags }}
-  {{ $worksSlug := i18n "works_url" | default "works" | strings.TrimPrefix "/" }}
-  {{ $writingSlug := i18n "writing_url" | default "writing" | strings.TrimPrefix "/" }}
-  {{ $tagSection := "" }}
-  {{ if eq .Section "works" }}
-    {{ $tagSection = printf "%s/tags" $worksSlug }}
-  {{ else if or (eq .Section "writing") (eq .Section "texter") }}
-    {{ $tagSection = printf "%s/tags" $writingSlug }}
-  {{ end }}
+  {{ $section := .Section }}
   {{ if gt $count 0 }}
   <ul class="tag-list__items">
     {{ range $k, $v := .Params.tags }}
       <li class="tag-list__item">
-        {{ $tagUrl := printf "/%s/%s/" $tagSection (. | urlize) | replaceRE "/+" "/" }}
-        <a class="tag-list__link tag" href="{{ $tagUrl | relLangURL }}">{{ replace . "ui-ux" "ui/ux" }}</a>{{ if lt $k (sub $count 1) }} {{ end }}
+        {{- $tagPage := false -}}
+        {{- $tagSlug := . | urlize -}}
+        {{- with index site.Taxonomies.tags $tagSlug -}}
+          {{- $tagPage = .Page -}}
+        {{- end -}}
+        {{- if $tagPage -}}
+          <a class="tag-list__link tag" href="{{ $tagPage.RelPermalink }}">{{ replace . "ui-ux" "ui/ux" }}</a>
+        {{- else -}}
+          <span class="tag-list__link tag">{{ replace . "ui-ux" "ui/ux" }}</span>
+        {{- end -}}
+        {{ if lt $k (sub $count 1) }} {{ end }}
       </li>
     {{ end }}
   </ul>
