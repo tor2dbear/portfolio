@@ -6,18 +6,22 @@
 (function () {
   "use strict";
 
+  const TIMEOUT_MS = 10000; // 10 second timeout
+
   const MESSAGES = {
     en: {
       success: "Thank you for subscribing!",
       error: "Something went wrong. Please try again.",
       invalidEmail: "Please enter a valid email address.",
       alreadySubscribed: "You're already subscribed!",
+      timeout: "Request timed out. Please try again.",
     },
     sv: {
       success: "Tack för din prenumeration!",
       error: "Något gick fel. Försök igen.",
       invalidEmail: "Ange en giltig e-postadress.",
       alreadySubscribed: "Du prenumererar redan!",
+      timeout: "Förfrågan tog för lång tid. Försök igen.",
     },
   };
 
@@ -52,14 +56,14 @@
 
   function hideResponses(form) {
     const responses = form.querySelectorAll(".mc-response, .response");
-    responses.forEach((el) => {
+    responses.forEach(function (el) {
       el.style.display = "none";
       el.textContent = "";
     });
   }
 
   function setLoading(form, isLoading) {
-    const submitBtn = form.querySelector(
+    var submitBtn = form.querySelector(
       'button[type="submit"], input[type="submit"]'
     );
     if (submitBtn) {
@@ -73,7 +77,7 @@
           submitBtn.textContent = "...";
         }
       } else {
-        const original = submitBtn.dataset.originalText;
+        var original = submitBtn.dataset.originalText;
         if (original) {
           if (submitBtn.tagName === "INPUT") {
             submitBtn.value = original;
@@ -85,9 +89,45 @@
     }
   }
 
+  function buildJsonpUrl(baseUrl, callbackName, params) {
+    // Remove any existing callback parameter and trailing ?
+    var url = baseUrl
+      .replace(/&c=\?$/, "")
+      .replace(/\?c=\?$/, "")
+      .replace(/&c=[^&]*/, "")
+      .replace(/\?c=[^&]*&/, "?")
+      .replace(/\?c=[^&]*$/, "");
+
+    // Ensure we have the post-json endpoint
+    url = url.replace("/subscribe/post?", "/subscribe/post-json?");
+
+    // Add callback parameter
+    var separator = url.indexOf("?") === -1 ? "?" : "&";
+    url += separator + "c=" + callbackName;
+
+    // Add form parameters
+    if (params) {
+      url += "&" + params;
+    }
+
+    return url;
+  }
+
+  function cleanup(callbackName, script, timeoutId) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    if (window[callbackName]) {
+      delete window[callbackName];
+    }
+    if (script && script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+  }
+
   function submitForm(form) {
-    const emailInput = form.querySelector('input[type="email"]');
-    const email = emailInput ? emailInput.value.trim() : "";
+    var emailInput = form.querySelector('input[type="email"]');
+    var email = emailInput ? emailInput.value.trim() : "";
 
     if (!email || !email.includes("@")) {
       showResponse(form, getMessage("invalidEmail"), true);
@@ -97,31 +137,42 @@
     hideResponses(form);
     setLoading(form, true);
 
-    const formData = new FormData(form);
-    const params = new URLSearchParams();
+    var formData = new FormData(form);
+    var params = new URLSearchParams();
 
-    for (const [key, value] of formData.entries()) {
+    formData.forEach(function (value, key) {
       params.append(key, value);
-    }
+    });
 
-    // Create JSONP request
-    const callbackName = "mc_callback_" + Date.now();
-    const action = form.action.replace("&c=?", "&c=" + callbackName);
+    // Create unique callback name
+    var callbackName = "mc_callback_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
 
+    // Build the JSONP URL
+    var url = buildJsonpUrl(form.action, callbackName, params.toString());
+
+    var script = document.createElement("script");
+    script.id = callbackName;
+    var timeoutId = null;
+    var completed = false;
+
+    // Set up the callback
     window[callbackName] = function (response) {
+      if (completed) return;
+      completed = true;
+
       setLoading(form, false);
 
-      if (response.result === "success") {
+      if (response && response.result === "success") {
         showResponse(form, getMessage("success"), false);
         form.reset();
       } else {
-        let errorMsg = getMessage("error");
+        var errorMsg = getMessage("error");
 
         // Parse Mailchimp error messages
-        if (response.msg) {
+        if (response && response.msg) {
           if (response.msg.includes("already subscribed")) {
             errorMsg = getMessage("alreadySubscribed");
-          } else if (response.msg.includes("invalid")) {
+          } else if (response.msg.includes("invalid") || response.msg.includes("valid email")) {
             errorMsg = getMessage("invalidEmail");
           } else {
             // Clean up Mailchimp's HTML in error messages
@@ -132,30 +183,38 @@
         showResponse(form, errorMsg, true);
       }
 
-      // Cleanup
-      delete window[callbackName];
-      const script = document.getElementById(callbackName);
-      if (script) script.remove();
+      cleanup(callbackName, script, timeoutId);
     };
 
-    // Create and append script tag for JSONP
-    const script = document.createElement("script");
-    script.id = callbackName;
-    script.src = action + "&" + params.toString();
+    // Set up timeout
+    timeoutId = setTimeout(function () {
+      if (completed) return;
+      completed = true;
+
+      setLoading(form, false);
+      showResponse(form, getMessage("timeout"), true);
+      cleanup(callbackName, script, null);
+    }, TIMEOUT_MS);
+
+    // Set up error handler
     script.onerror = function () {
+      if (completed) return;
+      completed = true;
+
       setLoading(form, false);
       showResponse(form, getMessage("error"), true);
-      delete window[callbackName];
-      script.remove();
+      cleanup(callbackName, script, timeoutId);
     };
 
+    // Start the request
+    script.src = url;
     document.body.appendChild(script);
   }
 
   function init() {
-    const forms = document.querySelectorAll("form[data-mc-form]");
+    var forms = document.querySelectorAll("form[data-mc-form]");
 
-    forms.forEach((form) => {
+    forms.forEach(function (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
         submitForm(form);
