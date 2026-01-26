@@ -51,24 +51,34 @@
       </address>
     </div>
 
-    {{- $newsletterAction := .Site.Params.newsletter_action | default "https://gmail.us14.list-manage.com/subscribe/post?u=294f66f378d5370fcbc5aa02f&amp;id=74c003d094" -}}
+    {{- $newsletterAction := .Site.Params.newsletter_action | default "https://gmail.us14.list-manage.com/subscribe/post-json?u=294f66f378d5370fcbc5aa02f&id=74c003d094&c=?" -}}
     {{- $newsletterEmailField := .Site.Params.newsletter_email_field | default "EMAIL" -}}
     <section class="footer-newsletter use-subgrid">
       <div class="footer-newsletter__inner">
         <h3 class="footer-heading footer-heading--newsletter">{{ i18n "footer_newsletter_title" }}</h3>
-        <form class="footer-newsletter__form" action="{{ $newsletterAction }}" method="post" novalidate>
-          <label class="sr-only" for="footer-newsletter-email">{{ i18n "footer_newsletter_label" }}</label>
-          <input
-            id="footer-newsletter-email"
-            type="email"
-            name="{{ $newsletterEmailField }}"
-            class="footer-newsletter__input"
-            placeholder="{{ i18n "footer_newsletter_placeholder" }}"
-            required
-          />
-          <button type="submit" class="footer-newsletter__submit button">
-            {{ i18n "footer_newsletter_submit" }}
-          </button>
+        <form class="footer-newsletter__form" action="{{ $newsletterAction }}" method="post" data-mc-form novalidate>
+          <div class="footer-newsletter__fields">
+            <label class="sr-only" for="footer-newsletter-email">{{ i18n "footer_newsletter_label" }}</label>
+            <input
+              id="footer-newsletter-email"
+              type="email"
+              name="{{ $newsletterEmailField }}"
+              class="footer-newsletter__input"
+              placeholder="{{ i18n "footer_newsletter_placeholder" }}"
+              required
+            />
+            <!-- Honeypot field for bot protection -->
+            <div style="position: absolute; left: -5000px;" aria-hidden="true">
+              <input type="text" name="b_294f66f378d5370fcbc5aa02f_74c003d094" tabindex="-1" value="" />
+            </div>
+            <button type="submit" class="footer-newsletter__submit button">
+              {{ i18n "footer_newsletter_submit" }}
+            </button>
+          </div>
+          <div class="footer-newsletter__responses">
+            <div class="mc-response mc-response--error" style="display:none"></div>
+            <div class="mc-response mc-response--success" style="display:none"></div>
+          </div>
         </form>
       </div>
     </section>
