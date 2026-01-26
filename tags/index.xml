@@ -38,9 +38,9 @@
     </item>
     <item>
       <title>Digital Product</title>
-      <link>https://www.tor-bjorn.com/digital-product/tags/digital-product/</link>
+      <link>https://www.tor-bjorn.com/works/tags/digital-product/</link>
       <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/digital-product/tags/digital-product/</guid>
+      <guid>https://www.tor-bjorn.com/works/tags/digital-product/</guid>
       <description></description>
     </item>
     <item>
@@ -52,23 +52,23 @@
     </item>
     <item>
       <title>Editorial</title>
-      <link>https://www.tor-bjorn.com/editorial/tags/editorial/</link>
+      <link>https://www.tor-bjorn.com/works/tags/editorial/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/editorial/tags/editorial/</guid>
+      <guid>https://www.tor-bjorn.com/works/tags/editorial/</guid>
       <description></description>
     </item>
     <item>
       <title>Experimental</title>
-      <link>https://www.tor-bjorn.com/experimental/tags/experimental/</link>
+      <link>https://www.tor-bjorn.com/works/tags/experimental/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/experimental/tags/experimental/</guid>
+      <guid>https://www.tor-bjorn.com/works/tags/experimental/</guid>
       <description></description>
     </item>
     <item>
       <title>Print</title>
-      <link>https://www.tor-bjorn.com/print/tags/print/</link>
+      <link>https://www.tor-bjorn.com/works/tags/print/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/print/tags/print/</guid>
+      <guid>https://www.tor-bjorn.com/works/tags/print/</guid>
       <description></description>
     </item>
     <item>
@@ -77,6 +77,13 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://www.tor-bjorn.com/works/tags/books/</guid>
       <description>&lt;p&gt;{{ range .Pages }}&lt;/p&gt;&#xA;&lt;!-- raw HTML omitted --&gt;</description>
+    </item>
+    <item>
+      <title>Brand &amp; Identity</title>
+      <link>https://www.tor-bjorn.com/works/tags/brand-identity/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/works/tags/brand-identity/</guid>
+      <description></description>
     </item>
     <item>
       <title>Editorial Design</title>

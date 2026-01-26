@@ -291,8 +291,18 @@
                 href="https://www.tor-bjorn.com/sv/arbeten/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/digitala-produkter/tags/digitala-produkter/</loc>
+    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/digitala-produkter/</loc>
     <lastmod>2023-05-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/digital-product/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/digitala-produkter/"
+                />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/varum%C3%A4rke-identitet/tags/varum%C3%A4rke-identitet/</loc>
     <lastmod>2022-09-01T00:00:00+00:00</lastmod>
@@ -310,8 +320,18 @@
                 href="https://www.tor-bjorn.com/sv/clients/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/experimentellt/tags/experimentellt/</loc>
+    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/experimentellt/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/experimental/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/experimentellt/"
+                />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/clients/topic01/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
@@ -378,15 +398,25 @@
                 href="https://www.tor-bjorn.com/sv/topics/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/tryck/tags/tryck/</loc>
+    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/tryck/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/print/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/tryck/"
+                />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/</loc>
     <lastmod>2015-11-20T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://www.tor-bjorn.com/works/tags/editorial-design/"
+                href="https://www.tor-bjorn.com/works/tags/editorial/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -445,7 +475,7 @@
                 href="https://www.tor-bjorn.com/sv/arbeten/tags/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</loc>
+    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/bocker/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -454,7 +484,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/bocker/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/categories/</loc>
@@ -493,7 +523,7 @@
                 href="https://www.tor-bjorn.com/sv/arbeten/tags/illustrationer/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/integritet/</loc>
+    <loc>https://www.tor-bjorn.com/sv/integritet/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -502,7 +532,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/integritet/"
+                href="https://www.tor-bjorn.com/sv/integritet/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/kontakt/</loc>
@@ -517,7 +547,7 @@
                 href="https://www.tor-bjorn.com/sv/kontakt/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/licens/</loc>
+    <loc>https://www.tor-bjorn.com/sv/licens/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -526,7 +556,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/licens/"
+                href="https://www.tor-bjorn.com/sv/licens/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/sv/nyhetsbrev/</loc>
@@ -565,7 +595,7 @@
                 href="https://www.tor-bjorn.com/sv/tack/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</loc>
+    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/varumarke/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -574,7 +604,19 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/varumarke/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/sv/arbeten/tags/varumarke-identitet/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/brand-identity/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/varumarke-identitet/"
                 />
   </url>
 </urlset>

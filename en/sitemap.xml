@@ -195,7 +195,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/varumarke/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -268,8 +268,18 @@
                 href="https://www.tor-bjorn.com/employers/techcorp/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/digital-product/tags/digital-product/</loc>
+    <loc>https://www.tor-bjorn.com/works/tags/digital-product/</loc>
     <lastmod>2023-05-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/digitala-produkter/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/digital-product/"
+                />
   </url><url>
     <loc>https://www.tor-bjorn.com/works/</loc>
     <lastmod>2023-05-01T00:00:00+00:00</lastmod>
@@ -300,14 +310,44 @@
                 href="https://www.tor-bjorn.com/clients/"
                 />
   </url><url>
-    <loc>https://www.tor-bjorn.com/editorial/tags/editorial/</loc>
+    <loc>https://www.tor-bjorn.com/works/tags/editorial/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/editorial/"
+                />
   </url><url>
-    <loc>https://www.tor-bjorn.com/experimental/tags/experimental/</loc>
+    <loc>https://www.tor-bjorn.com/works/tags/experimental/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/experimentellt/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/experimental/"
+                />
   </url><url>
-    <loc>https://www.tor-bjorn.com/print/tags/print/</loc>
+    <loc>https://www.tor-bjorn.com/works/tags/print/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/tryck/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/print/"
+                />
   </url><url>
     <loc>https://www.tor-bjorn.com/clients/topic01/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
@@ -460,12 +500,24 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/bocker/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
                 href="https://www.tor-bjorn.com/works/tags/books/"
+                />
+  </url><url>
+    <loc>https://www.tor-bjorn.com/works/tags/brand-identity/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://www.tor-bjorn.com/sv/arbeten/tags/varumarke-identitet/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.tor-bjorn.com/works/tags/brand-identity/"
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/categories/</loc>
@@ -481,16 +533,6 @@
                 />
   </url><url>
     <loc>https://www.tor-bjorn.com/works/tags/editorial-design/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/sv/arbeten/tags/redaktionellt/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://www.tor-bjorn.com/works/tags/editorial-design/"
-                />
   </url><url>
     <loc>https://www.tor-bjorn.com/works/tags/graphic-design/</loc>
     <xhtml:link
@@ -520,7 +562,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/licens/"
+                href="https://www.tor-bjorn.com/sv/licens/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -544,7 +586,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
-                href="https://www.tor-bjorn.com/integritet/"
+                href="https://www.tor-bjorn.com/sv/integritet/"
                 />
     <xhtml:link
                 rel="alternate"

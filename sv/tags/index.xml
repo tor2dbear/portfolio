@@ -38,9 +38,9 @@
     </item>
     <item>
       <title>Digitala Produkter</title>
-      <link>https://www.tor-bjorn.com/sv/digitala-produkter/tags/digitala-produkter/</link>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/digitala-produkter/</link>
       <pubDate>Mon, 01 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/digitala-produkter/tags/digitala-produkter/</guid>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/digitala-produkter/</guid>
       <description></description>
     </item>
     <item>
@@ -52,16 +52,16 @@
     </item>
     <item>
       <title>Experimentellt</title>
-      <link>https://www.tor-bjorn.com/sv/experimentellt/tags/experimentellt/</link>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/experimentellt/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/experimentellt/tags/experimentellt/</guid>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/experimentellt/</guid>
       <description></description>
     </item>
     <item>
       <title>Tryck</title>
-      <link>https://www.tor-bjorn.com/sv/tryck/tags/tryck/</link>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/tryck/</link>
       <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/tryck/tags/tryck/</guid>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/tryck/</guid>
       <description></description>
     </item>
     <item>
@@ -73,9 +73,9 @@
     </item>
     <item>
       <title>Böcker</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</link>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/bocker/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/b%C3%B6cker/</guid>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/bocker/</guid>
       <description></description>
     </item>
     <item>
@@ -94,9 +94,16 @@
     </item>
     <item>
       <title>Varumärke</title>
-      <link>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</link>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/varumarke/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/varum%C3%A4rke/</guid>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/varumarke/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Varumärke &amp; Identitet</title>
+      <link>https://www.tor-bjorn.com/sv/arbeten/tags/varumarke-identitet/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.tor-bjorn.com/sv/arbeten/tags/varumarke-identitet/</guid>
       <description></description>
     </item>
   </channel>
