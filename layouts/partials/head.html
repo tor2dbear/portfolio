@@ -409,11 +409,4 @@
       <script src="{{ $.Site.BaseURL }}{{ . }}"></script>
     {{ end }}
   {{ end }}
-
-
-  <!-- reCAPTCHA -->
-  {{ if or (eq .RelPermalink "/contact/") (strings.Contains .RelPermalink "/clients/") (strings.Contains .RelPermalink "/sv/kontakt/") }}
-    <script src="https://www.google.com/recaptcha/api.js?render=6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"></script>
-    <script src="{{ .Site.BaseURL }}js/recaptcha.js"></script>
-  {{ end }}
 </head>

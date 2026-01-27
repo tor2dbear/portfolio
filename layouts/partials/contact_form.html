@@ -5,10 +5,17 @@
   <form
     id="contact-form"
     class="contact-form__form"
-    data-js="contact-form"
-    action="https://hook.eu1.make.com/mmg61440srh4u1ttmfqdtho0ys6t9w27"
-    method="post"
+    name="contact"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
   >
+    <input type="hidden" name="form-name" value="contact" />
+    <!-- Honeypot field for spam protection -->
+    <p class="visually-hidden">
+      <label>Don't fill this out: <input name="bot-field" /></label>
+    </p>
+
     <label>{{ i18n "contact_name" }}</label>
     <input
       type="text"
@@ -44,49 +51,9 @@
       class="contact-form__textarea form-input"
       name="message"
     ></textarea>
-    <p class="contact-form__note type-information">
-      {{ i18n "re_captcha" }}
-      <a href="https://policies.google.com/privacy" class="text-color-lighter"
-        >{{ i18n "privacy_policy" }}</a
-      >
-      {{ i18n "and" }}
-      <a href="https://policies.google.com/terms" class="text-color-lighter"
-        >{{ i18n "terms_of_service" }}</a
-      >
-      {{ i18n "apply" }}.
-    </p>
 
-    <input
-      type="hidden"
-      name="g-recaptcha-response"
-      id="recaptchaToken"
-      data-js="contact-recaptcha"
-    />
-    <button
-      type="button"
-      id="submitButton"
-      class="contact-form__submit g-recaptcha button--icon"
-      data-js="contact-submit"
-      data-sitekey="6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"
-      data-callback="onSubmit"
-    >
+    <button type="submit" class="contact-form__submit button--icon">
       {{ i18n "contact_submit" }}
     </button>
-    <p
-      id="successMessage"
-      style="display:none;"
-      class="contact-form__message contact-form__message--success type-information message"
-      data-js="contact-success"
-    >
-      {{ i18n "contact_submitted" }}
-    </p>
-    <p
-      id="errorMessage"
-      style="display:none;"
-      class="contact-form__message contact-form__message--error type-information message"
-      data-js="contact-error"
-    >
-      {{ i18n "contact_error" }}
-    </p>
   </form>
 </div>
