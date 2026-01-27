@@ -11,9 +11,15 @@
     netlify-honeypot="bot-field"
   >
     <input type="hidden" name="form-name" value="contact" />
-    <!-- Honeypot field for spam protection -->
-    <p class="visually-hidden">
-      <label>Don't fill this out: <input name="bot-field" /></label>
+    <!-- Honeypot field for spam protection (hidden from users) -->
+    <p
+      style="position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden;"
+      aria-hidden="true"
+    >
+      <label
+        >Don't fill this out:
+        <input name="bot-field" tabindex="-1" autocomplete="off"
+      /></label>
     </p>
 
     <label>{{ i18n "contact_name" }}</label>
@@ -55,5 +61,53 @@
     <button type="submit" class="contact-form__submit button--icon">
       {{ i18n "contact_submit" }}
     </button>
+
+    <p
+      id="contact-success"
+      class="contact-form__message contact-form__message--success type-information message"
+      style="display: none;"
+    >
+      {{ i18n "contact_submitted" }}
+    </p>
+    <p
+      id="contact-error"
+      class="contact-form__message contact-form__message--error type-information message"
+      style="display: none;"
+    >
+      {{ i18n "contact_error" }}
+    </p>
   </form>
+
+  <script>
+    (function () {
+      var form = document.getElementById("contact-form");
+      var successMsg = document.getElementById("contact-success");
+      var errorMsg = document.getElementById("contact-error");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(form);
+
+        fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(formData).toString(),
+        })
+          .then(function (response) {
+            if (response.ok) {
+              form.reset();
+              successMsg.style.display = "block";
+              errorMsg.style.display = "none";
+            } else {
+              throw new Error("Network response was not ok");
+            }
+          })
+          .catch(function () {
+            errorMsg.style.display = "block";
+            successMsg.style.display = "none";
+          });
+      });
+    })();
+  </script>
 </div>
