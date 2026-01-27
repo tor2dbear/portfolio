@@ -143,6 +143,9 @@
         </a>
       {{ end }}
     </div>
+
+    {{ partial "print-buttons.html" . }}
+
     <!-- put this just above the section you wanna go to -->
     <a id="contact" class="col-span-8 anchor-offset"></a>
     <h3
@@ -153,6 +156,12 @@
     {{ partial "contact_info.html" . }}
     {{ partial "contact_form.html" . }}
   </div>
+</div>
+
+<!-- Print footer with URL -->
+<div class="print-footer">
+  <span class="print-footer__label">View online:</span>
+  <span class="print-footer__url">{{ .Permalink }}</span>
 </div>
 
 {{ partial "footer.html" . }}

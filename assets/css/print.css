@@ -1,6 +1,8 @@
 @media print {
 
-    /* All your print styles go here */
+    /* ===========================================
+       HIDE UI ELEMENTS
+       =========================================== */
     #header,
     #footer,
     #nav,
@@ -9,50 +11,215 @@
     .mode-switcher,
     .download-list,
     .contact-form,
+    .contact-info,
     .content.post .toc,
     .application-page__section--portfolio,
-    ul.toc :nth-child(3),
-    ul.toc :nth-child(5) {
+    .application-page__sidebar,
+    ul.toc,
+    .reveal,
+    .about-cv__icon {
         display: none !important;
     }
 
+    /* ===========================================
+       PAGE LAYOUT
+       =========================================== */
+
+    /* Reset grid to single column for print */
+    .application-page {
+        display: block !important;
+    }
+
+    .application-page__main {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Letter section - own page */
     .application-page__section--letter {
         page-break-after: always;
     }
+
+    /* CV section */
+    .application-page__section--cv {
+        page-break-before: avoid;
+    }
+
+    /* ===========================================
+       CV LAYOUT FOR PRINT
+       =========================================== */
+
+    .about-cv {
+        margin-top: 0 !important;
+    }
+
+    .about-cv__title {
+        margin-bottom: 1.5rem;
+        font-size: 14pt;
+        font-weight: bold;
+    }
+
+    .about-cv__columns {
+        column-count: 2 !important;
+        column-gap: 2rem;
+        column-fill: balance;
+    }
+
+    .about-cv__section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+
+    .about-cv__heading {
+        font-size: 11pt;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .about-cv__text {
+        font-size: 9pt;
+        line-height: 1.4;
+        margin-bottom: 0.75rem;
+    }
+
+    /* ===========================================
+       TYPOGRAPHY
+       =========================================== */
+
+    body {
+        font-size: 11pt;
+        line-height: 1.5;
+        color: #000 !important;
+        background: #fff !important;
+    }
+
+    h1, .type-headline-2 {
+        font-size: 18pt;
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+    }
+
+    h2, .type-preamble {
+        font-size: 12pt;
+        line-height: 1.4;
+        margin-bottom: 0.5rem;
+    }
+
+    h3, .type-headline-small {
+        font-size: 11pt;
+        font-weight: bold;
+    }
+
+    p, .type-body {
+        font-size: 10pt;
+        line-height: 1.5;
+    }
+
+    .type-information {
+        font-size: 9pt;
+        color: #666 !important;
+    }
+
+    /* ===========================================
+       SECTION HEADLINES
+       =========================================== */
+
+    .section-headline {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        padding: 0.25rem 0.5rem;
+        color: #333;
+        display: inline-block;
+        background-color: white;
+        border: 1.5pt solid #333;
+        font-weight: bold;
+        font-size: 9pt;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* ===========================================
+       SPACING OVERRIDES
+       =========================================== */
 
     #layout .mb-64,
     .mb-64 {
         margin-bottom: 1.5rem;
     }
 
-    p {
-        font-size: 12pt;
+    .mb-16 {
+        margin-bottom: 0.5rem;
     }
 
-    .text-base {
-        font-size: 10pt;
+    .mt-64 {
+        margin-top: 1rem;
     }
 
-    .section-headline {
-        margin-top: 2rem;
-    }
-
-    .section-headline {
-        color: var(--bg-section-headline);
-        display: inline-block;
-        background-color: white;
-        border: 2pt solid var(--bg-section-headline);
-        font-weight: bold;
-    }
+    /* ===========================================
+       TAGS (for portfolio print)
+       =========================================== */
 
     .tag {
         background-color: white;
-        border: 1pt solid var(--text-muted);
+        border: 1pt solid #999;
+        font-size: 8pt;
+        padding: 0.15rem 0.4rem;
+    }
+
+    /* ===========================================
+       PRINT FOOTER WITH URL
+       =========================================== */
+
+    .print-footer {
+        display: block !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0.5rem 0;
+        font-size: 8pt;
+        color: #666;
+        text-align: center;
+        border-top: 0.5pt solid #ccc;
+        background: white;
+    }
+
+    .print-footer__url {
+        font-family: monospace;
+        color: #333;
+    }
+
+    /* ===========================================
+       LINKS
+       =========================================== */
+
+    a {
+        color: #000 !important;
+        text-decoration: none !important;
+    }
+
+    /* Show URL after external links in body text */
+    .type-body a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 8pt;
+        color: #666;
     }
 }
 
+/* Screen-only: hide print elements */
+@media screen {
+    .print-footer,
+    .print-only {
+        display: none !important;
+    }
+}
 
 @page {
-    size: a4;
-    margin: 7mm 5mm;
+    size: A4;
+    margin: 15mm 12mm 20mm 12mm;
+}
+
+@page :first {
+    margin-top: 12mm;
 }

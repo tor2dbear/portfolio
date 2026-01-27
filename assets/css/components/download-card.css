@@ -65,3 +65,49 @@ p.download-card__item {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ==========================================================================
+   Print Buttons
+   ========================================================================== */
+
+.print-buttons {
+  grid-row: span 3;
+}
+
+.print-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color: var(--text-default);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.print-button:hover {
+  background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover));
+  color: var(--text-link-hover);
+}
+
+:root[data-mode="dark"] .print-button:hover {
+  background-image: linear-gradient(var(--state-on-dark-hover), var(--state-on-dark-hover));
+}
+
+.print-button + .print-button {
+  margin-top: var(--spacing-16);
+}
+
+.print-button__icon {
+  flex-shrink: 0;
+}
+
+.print-button__text {
+  flex: 1;
+  text-align: left;
+}
