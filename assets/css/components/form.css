@@ -414,11 +414,13 @@ form .message {
 /* Error message */
 form .contact-form__message--error.message {
   background-color: var(--status-error-bg);
-  color: var(--status-error-text);
+  color: var(--status-error-text, hsl(0 84% 30%));
+  border: 1px solid var(--status-error-border);
 }
 
 /* Success message */
 form .contact-form__message--success.message {
-  background-color: var(--bg-tag);
-  color: var(--text-accent);
+  background-color: var(--status-success-bg, hsl(142 76% 94%));
+  color: var(--status-success-text, hsl(142 71% 29%));
+  border: 1px solid var(--status-success-border, hsl(142 76% 80%));
 }
