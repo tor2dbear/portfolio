@@ -36,7 +36,6 @@ module.exports = [
         clearInterval: "readonly",
         Event: "readonly",
         KeyboardEvent: "readonly",
-        grecaptcha: "readonly",
         module: "readonly",
         require: "readonly",
         process: "readonly",
