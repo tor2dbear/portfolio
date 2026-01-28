@@ -1,6 +1,9 @@
 ---
 title: Work application for UI position at test01
 company_name: "test01"
+outputs:
+  - HTML
+  - print
 preamble: "Hi! My name is Torbjörn Hedberg and I’m a multi-disciplinary designer based in Gothenburg, Sweden."
 body: "Lörem ipsum ov difapp inklusive triheten. Pretire susamma öjere, favin revösk. Ris dekara eurare euroliga. Ruvaplaska nysare sedan timåvis presamma decibel. Mikrore prenat: då drevkultur dirosade. 
 Livslogga koböjydade plus håplaspen ode. Giganat tratir, rurande. Flexicurity revis och psykotet ingen. Vispel olilin passivhus nåde. Engen eulig makron.<br><br>
