@@ -1,9 +1,6 @@
 ---
 title: Job Application for Senior Product Designer at TechCorp
 company_name: "techcorp"
-outputs:
-  - HTML
-  - print
 preamble: "Hello! I'm Torbjörn Hedberg, a Product Owner & Art Director with 9+ years of experience bridging design and product strategy."
 body: "I'm excited to apply for the Senior Product Designer position at TechCorp. My unique combination of strategic product ownership and deep design expertise makes me an ideal fit for your team.<br><br>
 

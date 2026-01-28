@@ -165,4 +165,7 @@
   <span class="print-footer__url">{{ .Permalink }}</span>
 </div>
 
+{{ $portfolioPrint := resources.Get "js/portfolio-print.js" }}
+<script src="{{ $portfolioPrint.Permalink }}" defer></script>
+
 {{ partial "footer.html" . }}

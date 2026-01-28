@@ -223,3 +223,197 @@
 @page :first {
     margin-top: 12mm;
 }
+
+/* ===========================================
+   PORTFOLIO PRINT MODE (JavaScript-based)
+   =========================================== */
+
+/* Screen styles for portfolio print mode */
+.portfolio-print-mode .portfolio-print {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #fff;
+}
+
+.portfolio-print__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.portfolio-print__back {
+    color: #333;
+    text-decoration: none;
+}
+
+.portfolio-print__back:hover {
+    text-decoration: underline;
+}
+
+.portfolio-print__print-btn {
+    padding: 0.5rem 1rem;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.portfolio-print__print-btn:hover {
+    background: #555;
+}
+
+.portfolio-print__header {
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #333;
+}
+
+.portfolio-print__header h1 {
+    font-size: 28pt;
+    margin: 0 0 0.5rem 0;
+}
+
+.portfolio-print__subtitle {
+    font-size: 14pt;
+    color: #666;
+    margin: 0;
+}
+
+.portfolio-print__loading {
+    text-align: center;
+    padding: 4rem;
+    color: #666;
+}
+
+.portfolio-print__project {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.portfolio-print__project:last-of-type {
+    border-bottom: none;
+}
+
+.portfolio-print__project-header h2 {
+    font-size: 18pt;
+    margin: 0 0 0.5rem 0;
+}
+
+.portfolio-print__description {
+    font-size: 12pt;
+    color: #444;
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+}
+
+.portfolio-print__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.portfolio-print__meta-item dt {
+    font-size: 9pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.portfolio-print__meta-item dd {
+    font-size: 11pt;
+    margin: 0;
+}
+
+.portfolio-print__images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.portfolio-print__images figure {
+    margin: 0;
+}
+
+.portfolio-print__images img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.portfolio-print__content {
+    font-size: 11pt;
+    line-height: 1.6;
+}
+
+.portfolio-print__content h3 {
+    font-size: 12pt;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.portfolio-print__content p {
+    margin: 0 0 1rem 0;
+}
+
+.portfolio-print__content ul,
+.portfolio-print__content ol {
+    margin: 0 0 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.portfolio-print__footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ccc;
+    font-size: 10pt;
+    color: #666;
+}
+
+/* Print styles for portfolio print mode */
+@media print {
+    .portfolio-print-mode #header,
+    .portfolio-print-mode #footer,
+    .portfolio-print-mode #nav,
+    .portfolio-print-mode .portfolio-print__controls {
+        display: none !important;
+    }
+
+    .portfolio-print-mode .portfolio-print {
+        max-width: none;
+        padding: 0;
+    }
+
+    .portfolio-print__project {
+        page-break-after: always;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .portfolio-print__project:last-of-type {
+        page-break-after: avoid;
+    }
+
+    .portfolio-print__meta {
+        background: none;
+        border: 1px solid #ddd;
+    }
+
+    .portfolio-print__images img {
+        border-radius: 0;
+    }
+}

@@ -119,19 +119,6 @@ DefaultContentLanguage = "en"
   texter = '/:slug/:title/'
   tags = "/:slug/tags/:title/"
 
-# Custom output format for portfolio print
-[outputFormats]
-  [outputFormats.print]
-    baseName = "portfolio-print"
-    isHTML = true
-    mediaType = "text/html"
-    path = ""
-    permalinkable = true
-
-# Enable print output for taxonomy terms (employers/clients)
-[outputs]
-  taxonomyTerm = ["HTML", "print"]
-
 [params]
   # Shown in the home page
   subtitle = "Portfolio"
