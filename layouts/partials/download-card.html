@@ -1,0 +1,55 @@
+{{/*
+  Download Card Partial
+
+  Usage: {{ partial "download-card.html" (dict "page" . "path" .Params.attach_letter "label" "Letter") }}
+
+  Supports:
+  - Absolute paths: "/images/file.pdf"
+  - Page bundle resources: "file.pdf" (relative to _index.md)
+*/}}
+
+{{ $page := .page }}
+{{ $path := .path }}
+{{ $label := .label | default "" }}
+
+{{ if $path }}
+  {{/* Determine URL - check if absolute or page resource */}}
+  {{ $url := "" }}
+  {{ $filename := "" }}
+
+  {{ if hasPrefix $path "/" }}
+    {{/* Absolute path */}}
+    {{ $url = $path }}
+    {{ $filename = path.Base $path }}
+  {{ else }}
+    {{/* Page bundle resource */}}
+    {{ $resource := $page.Resources.GetMatch $path }}
+    {{ if $resource }}
+      {{ $url = $resource.Permalink }}
+      {{ $filename = $resource.Name }}
+    {{ else }}
+      {{/* Fallback: treat as relative URL */}}
+      {{ $url = $path }}
+      {{ $filename = path.Base $path }}
+    {{ end }}
+  {{ end }}
+
+  {{ if $url }}
+  <a
+    href="{{ $url }}"
+    target="_blank"
+    class="download-card col-span-4"
+    download
+  >
+    <div class="pdf-icon">
+      <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+    </div>
+    <p class="download-card__item">
+      {{ if $label }}{{ $label }}{{ else }}{{ $filename }}{{ end }}
+    </p>
+    <div class="download-icon">
+      <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
+    </div>
+  </a>
+  {{ end }}
+{{ end }}
