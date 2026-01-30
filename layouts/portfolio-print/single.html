@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio – {{ .Params.company_name | title }} | {{ .Site.Title }}</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  {{ $reset := resources.Get "css/base/reset.css" }}
+  {{ $primitives := resources.Get "css/tokens/primitives.css" }}
+  {{ $semantic := resources.Get "css/tokens/semantic.css" }}
+  {{ $light := resources.Get "css/dimensions/mode/light.css" }}
+  {{ $print := resources.Get "css/print.css" }}
+  {{ $css := slice $reset $primitives $semantic $light $print | resources.Concat "portfolio-print-bundle.css" }}
+  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media="all" />
+</head>
+<body>
+  <main class="portfolio-print">
+    <nav class="portfolio-print__nav">
+      <a href="{{ .Params.back_url | default (print "/" .Params.taxonomy "/" .Params.company_name "/") }}">&larr; Back to application</a>
+    </nav>
+
+    <header class="portfolio-print__header">
+      <h1>Portfolio</h1>
+      <p class="portfolio-print__subtitle">{{ .Params.subtitle | default (print "Selected works for " (.Params.company_name | title)) }}</p>
+    </header>
+
+    {{ $companyName := .Params.company_name }}
+    {{ $taxonomy := .Params.taxonomy | default "employers" }}
+    {{ $projects := slice }}
+
+    {{/* Get projects based on taxonomy type */}}
+    {{ range where .Site.RegularPages "Type" "works" }}
+      {{ if eq $taxonomy "employers" }}
+        {{ if in .Params.employers $companyName }}
+          {{ $projects = $projects | append . }}
+        {{ end }}
+      {{ else if eq $taxonomy "clients" }}
+        {{ if in .Params.clients $companyName }}
+          {{ $projects = $projects | append . }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    {{ range $projects }}
+    <article class="portfolio-print__project">
+      <header class="portfolio-print__project-header">
+        <h2 class="portfolio-print__project-title">{{ .Title }}</h2>
+        {{ with .Params.subtitle }}
+        <p class="portfolio-print__project-subtitle">{{ . }}</p>
+        {{ end }}
+      </header>
+
+      {{ with .Description }}
+      <p class="portfolio-print__description">{{ . }}</p>
+      {{ end }}
+
+      {{ with .Params.details }}
+      <dl class="portfolio-print__meta">
+        {{ with .year }}
+        <div>
+          <dt>Year</dt>
+          <dd>{{ . }}</dd>
+        </div>
+        {{ end }}
+        {{ with .deliverables }}
+        <div>
+          <dt>Deliverables</dt>
+          <dd>{{ . }}</dd>
+        </div>
+        {{ end }}
+        {{ with .scope }}
+        <div>
+          <dt>Scope</dt>
+          <dd>{{ . }}</dd>
+        </div>
+        {{ end }}
+      </dl>
+      {{ end }}
+
+      {{/* Display images from project */}}
+      {{ $images := .Resources.ByType "image" }}
+      {{ if $images }}
+      <div class="portfolio-print__images">
+        {{ range first 4 $images }}
+        <figure>
+          <img src="{{ .Permalink }}" alt="{{ $.Title }}" loading="lazy">
+        </figure>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      <div class="portfolio-print__content">
+        {{ .Content }}
+      </div>
+    </article>
+    {{ end }}
+
+    <footer class="portfolio-print__footer">
+      <p>View full application online: <strong>{{ .Params.back_url | default (print .Site.BaseURL .Params.taxonomy "/" .Params.company_name "/") }}</strong></p>
+    </footer>
+  </main>
+
+  <!-- Print footer -->
+  <div class="print-footer">
+    <span class="print-footer__label">Portfolio:</span>
+    <span class="print-footer__url">{{ .Permalink }}</span>
+  </div>
+</body>
+</html>
