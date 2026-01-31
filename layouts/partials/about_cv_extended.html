@@ -1,7 +1,7 @@
 <div class="about-cv mt-64 reveal">
 <div class="about-cv__icon curl-icon"></div>
 
-<h3 class="about-cv__title type-headline-3">What I've been up to</h3>
+<h3 class="about-cv__title type-headline-3">{{ if eq .Language.Lang "sv" }}Vad jag har gjort{{ else }}What I've been up to{{ end }}</h3>
 
 <div class="about-cv__columns">
 
@@ -15,105 +15,106 @@
 <p class="about-cv__text type-body-sm">
 <strong>2024</strong><br>
 <strong>Hydroware / Lumberyard</strong><br>
-UI/UX-design för webbapplikation<br>
+{{ if eq .Language.Lang "sv" }}UI/UX-design för webbapplikation{{ else }}UI/UX design for web application{{ end }}<br>
 <br>
 <strong>2022</strong><br>
 <strong>Vårdporten</strong><br>
-UI/UX-design för webbapplikation<br>
+{{ if eq .Language.Lang "sv" }}UI/UX-design för webbapplikation{{ else }}UI/UX design for web application{{ end }}<br>
 <br>
 <strong>2020</strong><br>
 <strong>I-Racket</strong><br>
-UI/UX-design för mobilapplikation<br>
+{{ if eq .Language.Lang "sv" }}UI/UX-design för mobilapplikation{{ else }}UI/UX design for mobile application{{ end }}<br>
 <br>
 <strong>2018</strong><br>
 <strong>Metro</strong><br>
-Frilansfotograf<br>
+{{ if eq .Language.Lang "sv" }}Frilansfotograf{{ else }}Freelance photographer{{ end }}<br>
 <br>
 <strong>2017</strong><br>
 <strong>Cycling Films Ltd.</strong><br>
-Webbdesign för dokumentärfilmen Time Trial<br>
+{{ if eq .Language.Lang "sv" }}Webbdesign för dokumentärfilmen Time Trial{{ else }}Web design for the documentary Time Trial{{ end }}<br>
 <br>
 <strong>2016</strong><br>
 <strong>Zentropa Sweden</strong><br>
-Grafisk identitet och animation för SVT-serien Hashtag<br>
+{{ if eq .Language.Lang "sv" }}Grafisk identitet och animation för SVT-serien Hashtag{{ else }}Visual identity and animation for SVT series Hashtag{{ end }}<br>
 <br>
 <strong>2015</strong><br>
 <strong>Göteborgs Stad</strong><br>
-Grafisk identitet för Göteborgs stadstriennal<br>
+{{ if eq .Language.Lang "sv" }}Grafisk identitet för Göteborgs stadstriennal{{ else }}Visual identity for Gothenburg City Triennial{{ end }}<br>
 <br>
 <strong>Carnea</strong><br>
-Visualiseringsuppdrag<br>
+{{ if eq .Language.Lang "sv" }}Visualiseringsuppdrag{{ else }}Visualization project{{ end }}<br>
 <br>
 <strong>Forsify</strong><br>
-UI/UX-design, Snörapporten<br>
+{{ if eq .Language.Lang "sv" }}UI/UX-design, Snörapporten{{ else }}UI/UX design, Snörapporten{{ end }}<br>
 <br>
 <strong>2014</strong><br>
 <strong>Mecka Reklambyrå</strong><br>
-Illustrationsuppdrag
+{{ if eq .Language.Lang "sv" }}Illustrationsuppdrag{{ else }}Illustration project{{ end }}
 </p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Non-profit</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Ideellt{{ else }}Non-profit{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
 <strong>2015 – 2016</strong><br>
 <strong>Utblick, Utrikespolitiska föreningen</strong>, Göteborg<br>
-Grafisk designer för magasin<br>
+{{ if eq .Language.Lang "sv" }}Grafisk designer för magasin{{ else }}Graphic designer for magazine{{ end }}<br>
 <br>
 <strong>2012</strong><br>
 <strong>Hemma-borta-hem</strong>, Frölunda kulturhus<br>
-Grafisk designer, filmproduktion
+{{ if eq .Language.Lang "sv" }}Grafisk designer, filmproduktion{{ else }}Graphic designer, film production{{ end }}
 </p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Languages</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Språk{{ else }}Languages{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
-<strong>Svenska</strong><br>
-Flytande, tal och skrift<br>
+<strong>{{ if eq .Language.Lang "sv" }}Svenska{{ else }}Swedish{{ end }}</strong><br>
+{{ if eq .Language.Lang "sv" }}Flytande, tal och skrift{{ else }}Fluent, spoken and written{{ end }}<br>
 <br>
-<strong>Engelska</strong><br>
-Flytande, tal och skrift<br>
+<strong>{{ if eq .Language.Lang "sv" }}Engelska{{ else }}English{{ end }}</strong><br>
+{{ if eq .Language.Lang "sv" }}Flytande, tal och skrift{{ else }}Fluent, spoken and written{{ end }}<br>
 <br>
-<strong>Tyska</strong><br>
-Måttlig, tal och skrift
+<strong>{{ if eq .Language.Lang "sv" }}Tyska{{ else }}German{{ end }}</strong><br>
+{{ if eq .Language.Lang "sv" }}Måttlig, tal och skrift{{ else }}Moderate, spoken and written{{ end }}
 </p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Driver's license</h4>
-<p class="about-cv__text type-body-sm">B-körkort</p>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Körkort{{ else }}Driver's license{{ end }}</h4>
+<p class="about-cv__text type-body-sm">{{ if eq .Language.Lang "sv" }}B-körkort{{ else }}Class B license{{ end }}</p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Software</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Mjukvara{{ else }}Software{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
-<strong>Figma</strong> – Utmärkt kunskap<br>
-<strong>Photoshop</strong> – Utmärkt kunskap<br>
-<strong>InDesign</strong> – Utmärkt kunskap<br>
-<strong>Illustrator</strong> – Utmärkt kunskap<br>
-<strong>Lightroom</strong> – Utmärkt kunskap<br>
-<strong>After Effects</strong> – Goda kunskaper<br>
-<strong>Premiere Pro</strong> – Utmärkt kunskap<br>
-<strong>Google Analytics</strong> – God kunskap<br>
-<strong>Looker Studio</strong> – God kunskap<br>
-<strong>Office</strong> – God kunskap<br>
-<strong>Keynote / Powerpoint</strong> – God kunskap
+<strong>Figma</strong> – {{ if eq .Language.Lang "sv" }}Utmärkt kunskap{{ else }}Expert{{ end }}<br>
+<strong>Photoshop</strong> – {{ if eq .Language.Lang "sv" }}Utmärkt kunskap{{ else }}Expert{{ end }}<br>
+<strong>InDesign</strong> – {{ if eq .Language.Lang "sv" }}Utmärkt kunskap{{ else }}Expert{{ end }}<br>
+<strong>Illustrator</strong> – {{ if eq .Language.Lang "sv" }}Utmärkt kunskap{{ else }}Expert{{ end }}<br>
+<strong>Lightroom</strong> – {{ if eq .Language.Lang "sv" }}Utmärkt kunskap{{ else }}Expert{{ end }}<br>
+<strong>After Effects</strong> – {{ if eq .Language.Lang "sv" }}Goda kunskaper{{ else }}Proficient{{ end }}<br>
+<strong>Premiere Pro</strong> – {{ if eq .Language.Lang "sv" }}Utmärkt kunskap{{ else }}Expert{{ end }}<br>
+<strong>Google Analytics</strong> – {{ if eq .Language.Lang "sv" }}God kunskap{{ else }}Proficient{{ end }}<br>
+<strong>Looker Studio</strong> – {{ if eq .Language.Lang "sv" }}God kunskap{{ else }}Proficient{{ end }}<br>
+<strong>Office</strong> – {{ if eq .Language.Lang "sv" }}God kunskap{{ else }}Proficient{{ end }}<br>
+<strong>Keynote / Powerpoint</strong> – {{ if eq .Language.Lang "sv" }}God kunskap{{ else }}Proficient{{ end }}
 </p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Programming</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Programmering{{ else }}Programming{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
-<strong>HTML</strong> – God kunskap<br>
-<strong>CSS</strong> – God kunskap<br>
-<strong>Javascript</strong> – Grundläggande kunskap
+<strong>HTML</strong> – {{ if eq .Language.Lang "sv" }}God kunskap{{ else }}Proficient{{ end }}<br>
+<strong>CSS</strong> – {{ if eq .Language.Lang "sv" }}God kunskap{{ else }}Proficient{{ end }}<br>
+<strong>Javascript</strong> – {{ if eq .Language.Lang "sv" }}Grundläggande kunskap{{ else }}Basic{{ end }}
 </p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Selected experience</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Utvalda erfarenheter{{ else }}Selected experience{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
+{{ if eq .Language.Lang "sv" }}
 <strong>Statistik och data</strong><br>
 Jag har arbetat mycket med att visualisera data, senast med Looker Studio och GA4, och med hjälp av diverse API-integrationer.<br>
 <br>
@@ -128,6 +129,22 @@ Jag har varit med och tagit fram och drivit marknadsföringskampanjer för bl.a.
 <br>
 <strong>Foto och video</strong><br>
 Jag har ett privat intresse för foto och video, både att fånga material och arbeta med post-produktion. Jag har även använt mina färdigheter professionellt vid flera tillfällen, t.ex. på galor, mässor och reportage.
+{{ else }}
+<strong>Statistics and data</strong><br>
+I have extensive experience visualizing data, most recently with Looker Studio and GA4, including various API integrations.<br>
+<br>
+<strong>Email and campaigns</strong><br>
+I have worked extensively with Mailchimp, building templates, automations (Journeys), and custom solutions using merge tags.<br>
+<br>
+<strong>Project planning and issue tracking</strong><br>
+I led the development of a project planning and issue tracking tool in Notion, including building an API system to receive and respond to external customer inquiries directly in the tool.<br>
+<br>
+<strong>Marketing campaigns</strong><br>
+I have developed and managed marketing campaigns for platforms including Google Ads, LinkedIn, and Meta.<br>
+<br>
+<strong>Photo and video</strong><br>
+I have a personal interest in photography and video, both capturing material and post-production. I have also applied these skills professionally on multiple occasions, including galas, trade shows, and reportage.
+{{ end }}
 </p>
 </div>
 
