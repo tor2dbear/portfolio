@@ -29,6 +29,39 @@
     }
 
     /* ===========================================
+       PRINT HEADER (Contact info)
+       =========================================== */
+
+    .print-header {
+        display: block !important;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1pt solid #ccc;
+    }
+
+    .print-header__contact {
+        text-align: left;
+    }
+
+    .print-header__name {
+        font-size: 14pt;
+        font-weight: bold;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .print-header__address {
+        font-size: 9pt;
+        margin: 0 0 0.25rem 0;
+        color: #333;
+    }
+
+    .print-header__details {
+        font-size: 9pt;
+        margin: 0;
+        color: #333;
+    }
+
+    /* ===========================================
        PAGE LAYOUT
        =========================================== */
 
@@ -261,6 +294,7 @@
 /* Screen-only: hide print elements */
 @media screen {
     .print-footer,
+    .print-header,
     .print-only {
         display: none !important;
     }
