@@ -6,23 +6,77 @@
   <title>Portfolio – {{ .Params.company_name | title }} | {{ .Site.Title }}</title>
   <meta name="robots" content="noindex, nofollow">
 
+  <!-- Typekit fonts -->
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin>
+  <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
+
+  <!-- CSS -->
   {{ $reset := resources.Get "css/base/reset.css" }}
   {{ $primitives := resources.Get "css/tokens/primitives.css" }}
   {{ $semantic := resources.Get "css/tokens/semantic.css" }}
   {{ $light := resources.Get "css/dimensions/mode/light.css" }}
+  {{ $typography := resources.Get "css/utilities/typography.css" }}
+  {{ $style := resources.Get "css/style.css" }}
   {{ $print := resources.Get "css/print.css" }}
-  {{ $css := slice $reset $primitives $semantic $light $print | resources.Concat "portfolio-print-bundle.css" }}
+  {{ $css := slice $reset $primitives $semantic $light $typography $style $print | resources.Concat "portfolio-print-bundle.css" }}
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media="all" />
+
+  <style>
+    /* Portfolio print specific overrides */
+    .portfolio-print__images {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .portfolio-print__images img {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+      background: #f5f5f5;
+    }
+    .portfolio-print__project {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-default, #ddd);
+    }
+    .portfolio-print__project:last-child {
+      border-bottom: none;
+    }
+    .portfolio-print__content {
+      margin-top: 1.5rem;
+    }
+    .portfolio-print__content img {
+      max-width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    @media print {
+      .portfolio-print__images img {
+        max-height: 200px;
+      }
+      .portfolio-print__content img {
+        max-height: 300px;
+      }
+      .portfolio-print__project {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+  </style>
 </head>
 <body>
   <main class="portfolio-print">
     <nav class="portfolio-print__nav">
-      <a href="{{ .Params.back_url | default (print "/" .Params.taxonomy "/" .Params.company_name "/") }}">&larr; Back to application</a>
+      <a href="{{ .Params.back_url | default (print "/" .Params.taxonomy "/" .Params.company_name "/") }}">&larr; {{ if eq .Language.Lang "sv" }}Tillbaka till ansökan{{ else }}Back to application{{ end }}</a>
     </nav>
 
     <header class="portfolio-print__header">
-      <h1>Portfolio</h1>
-      <p class="portfolio-print__subtitle">{{ .Params.subtitle | default (print "Selected works for " (.Params.company_name | title)) }}</p>
+      <h1 class="type-headline-2">Portfolio</h1>
+      <p class="portfolio-print__subtitle type-preamble">{{ .Params.subtitle | default (print (i18n "selected_works_for" | default "Selected works for") " " (.Params.company_name | title)) }}</p>
     </header>
 
     {{ $companyName := .Params.company_name }}
@@ -45,40 +99,20 @@
     {{ range $projects }}
     <article class="portfolio-print__project">
       <header class="portfolio-print__project-header">
-        <h2 class="portfolio-print__project-title">{{ .Title }}</h2>
+        <h2 class="type-headline-3">{{ .Title }}</h2>
         {{ with .Params.subtitle }}
-        <p class="portfolio-print__project-subtitle">{{ . }}</p>
+        <p class="type-preamble">{{ . }}</p>
         {{ end }}
       </header>
 
       {{ with .Description }}
-      <p class="portfolio-print__description">{{ . }}</p>
+      <p class="type-body">{{ . }}</p>
       {{ end }}
 
-      {{ with .Params.details }}
-      <dl class="portfolio-print__meta">
-        {{ with .year }}
-        <div>
-          <dt>Year</dt>
-          <dd>{{ . }}</dd>
-        </div>
-        {{ end }}
-        {{ with .deliverables }}
-        <div>
-          <dt>Deliverables</dt>
-          <dd>{{ . }}</dd>
-        </div>
-        {{ end }}
-        {{ with .scope }}
-        <div>
-          <dt>Scope</dt>
-          <dd>{{ . }}</dd>
-        </div>
-        {{ end }}
-      </dl>
-      {{ end }}
+      {{/* Use the project-info partial for consistent display */}}
+      {{ partial "project-info.html" . }}
 
-      {{/* Display images from project */}}
+      {{/* Display first 4 images from project */}}
       {{ $images := .Resources.ByType "image" }}
       {{ if $images }}
       <div class="portfolio-print__images">
@@ -90,14 +124,16 @@
       </div>
       {{ end }}
 
-      <div class="portfolio-print__content">
-        {{ .Content }}
+      {{ with .Content }}
+      <div class="portfolio-print__content type-body">
+        {{ . }}
       </div>
+      {{ end }}
     </article>
     {{ end }}
 
     <footer class="portfolio-print__footer">
-      <p>View full application online: <strong>{{ .Params.back_url | default (print .Site.BaseURL .Params.taxonomy "/" .Params.company_name "/") }}</strong></p>
+      <p>{{ if eq $.Language.Lang "sv" }}Se fullständig ansökan online{{ else }}View full application online{{ end }}: <strong>{{ .Params.back_url | default (print .Site.BaseURL .Params.taxonomy "/" .Params.company_name "/") }}</strong></p>
     </footer>
   </main>
 
