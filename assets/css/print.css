@@ -8,8 +8,9 @@
     /* ===========================================
        HIDE UI ELEMENTS
        =========================================== */
-    #header,
-    #footer,
+    #topmenu,
+    .top-menu,
+    .footer,
     #nav,
     .application-breadcrumb,
     .palette-switcher,
@@ -21,8 +22,9 @@
     .application-page__section--portfolio,
     .application-page__sidebar,
     ul.toc,
-    .reveal,
-    .about-cv__icon {
+    .about-cv__icon,
+    .theme-dropdown,
+    .language-dropdown {
         display: none !important;
     }
 
@@ -40,14 +42,26 @@
         max-width: 100% !important;
     }
 
+    /* Remove any animations/transitions */
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
     /* Letter section - own page */
     .application-page__section--letter {
         page-break-after: always;
     }
 
-    /* CV section */
+    /* CV section - show it! */
     .application-page__section--cv {
+        display: block !important;
         page-break-before: avoid;
+    }
+
+    .about-cv {
+        display: block !important;
     }
 
     /* ===========================================
@@ -163,25 +177,24 @@
 
     /* ===========================================
        PRINT FOOTER WITH URL
+       (Shows at bottom of each printed page)
        =========================================== */
 
     .print-footer {
         display: block !important;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 0.5rem 0;
+        margin-top: 2rem;
+        padding-top: 0.5rem;
         font-size: 8pt;
         color: #666;
         text-align: center;
         border-top: 0.5pt solid #ccc;
-        background: white;
     }
 
     .print-footer__url {
         font-family: monospace;
         color: #333;
+        font-size: 7pt;
+        word-break: break-all;
     }
 
     /* ===========================================
@@ -236,11 +249,7 @@
 
 @page {
     size: A4;
-    margin: 15mm 12mm 20mm 12mm;
-}
-
-@page :first {
-    margin-top: 12mm;
+    margin: 20mm;
 }
 
 /* ===========================================
