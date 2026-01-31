@@ -111,6 +111,8 @@
         line-height: 1.5;
         color: #000 !important;
         background: #fff !important;
+        orphans: 3;
+        widows: 3;
     }
 
     h1, .type-headline-2 {
@@ -182,12 +184,16 @@
 
     .print-footer {
         display: block !important;
-        margin-top: 2rem;
-        padding-top: 0.5rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0.5rem 0;
         font-size: 8pt;
         color: #666;
         text-align: center;
         border-top: 0.5pt solid #ccc;
+        background: #fff;
     }
 
     .print-footer__url {
@@ -249,7 +255,11 @@
 
 @page {
     size: A4;
-    margin: 20mm;
+    margin: 15mm 20mm 20mm 20mm;
+}
+
+@page :first {
+    margin-top: 25mm;
 }
 
 /* ===========================================
