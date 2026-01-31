@@ -75,7 +75,7 @@
     .about-cv__title {
         margin-bottom: 1.5rem;
         font-size: 14pt;
-        font-weight: 700 !important;
+        font-weight: bold;
     }
 
     .about-cv__columns {
@@ -92,7 +92,7 @@
 
     .about-cv__heading {
         font-size: 11pt;
-        font-weight: 700 !important;
+        font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 0.03em;
         margin-bottom: 0.5rem;
@@ -117,6 +117,8 @@
         background: #fff !important;
         orphans: 3;
         widows: 3;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
     /* Keep headings with following content */
@@ -127,21 +129,18 @@
 
     h1, .type-headline-2 {
         font-size: 18pt;
-        font-weight: 700 !important;
         line-height: 1.2;
         margin-bottom: 0.75rem;
     }
 
     h2, .type-preamble {
         font-size: 12pt;
-        font-weight: 600 !important;
         line-height: 1.4;
         margin-bottom: 0.5rem;
     }
 
     h3, .type-headline-small {
         font-size: 11pt;
-        font-weight: 700 !important;
     }
 
     p, .type-body {
@@ -166,7 +165,7 @@
         display: inline-block;
         background-color: white;
         border: 1.5pt solid #333;
-        font-weight: 700 !important;
+        font-weight: bold;
         font-size: 9pt;
         text-transform: uppercase;
         letter-spacing: 0.05em;
