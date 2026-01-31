@@ -11,6 +11,9 @@
   media="all"
 />
 
+<!-- Print-only contact header -->
+{{ partial "print-header.html" . }}
+
 <div class="content application-page use-subgrid">
   <nav class="application-breadcrumb show-on-client">
     <ul>
@@ -78,7 +81,7 @@
       <!-- put this just above the section you wanna go to -->
       <a id="cv" class="col-span-4"></a>
       <h3 class="type-headline-small mb-16 col-span-4 section-headline">CV</h3>
-      <div class="col-span-4">{{ partial "about_cv.html" . }}</div>
+      <div class="col-span-4">{{ partial "about_cv_extended.html" . }}</div>
     </div>
   </div>
 
@@ -89,60 +92,12 @@
       <h3 class="type-headline-small mb-16 col-span-8 section-headline">
         Download
       </h3>
-      {{ if .Params.attach_letter }}
-        <a
-          href="{{ printf "%s" $.Params.attach_letter }}"
-          target="_blank"
-          class="download-card col-span-4"
-        >
-          <div class="pdf-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
-          </div>
-          <p class="download-card__item">
-            {{ path.Base .Params.attach_letter }}
-          </p>
-          <div class="download-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
-          </div>
-        </a>
-      {{ end }}
-
-      {{ if .Params.attach_portfolio }}
-        <a
-          href="{{ printf "%s" $.Params.attach_portfolio }}"
-          target="_blank"
-          class="download-card col-span-4"
-        >
-          <div class="pdf-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
-          </div>
-          <p class="download-card__item">
-            {{ path.Base .Params.attach_portfolio }}
-          </p>
-          <div class="download-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
-          </div>
-        </a>
-      {{ end }}
-
-      {{ if .Params.attach_cv }}
-        <a
-          href="{{ printf "%s" $.Params.attach_cv }}"
-          target="_blank"
-          class="download-card col-span-4"
-        >
-          <div class="pdf-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
-          </div>
-          <p class="download-card__item">
-            {{ path.Base .Params.attach_cv }}
-          </p>
-          <div class="download-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
-          </div>
-        </a>
-      {{ end }}
+      {{/* Supports both absolute paths (/images/file.pdf) and page bundle resources (file.pdf) */}}
+      {{ partial "download-card.html" (dict "page" . "path" .Params.attach_letter "label" "Letter + CV") }}
+      {{ partial "download-card.html" (dict "page" . "path" .Params.attach_portfolio "label" "Portfolio") }}
+      {{ partial "download-card.html" (dict "page" . "path" .Params.attach_cv "label" "CV") }}
     </div>
+
     <!-- put this just above the section you wanna go to -->
     <a id="contact" class="col-span-8 anchor-offset"></a>
     <h3
@@ -153,6 +108,12 @@
     {{ partial "contact_info.html" . }}
     {{ partial "contact_form.html" . }}
   </div>
+</div>
+
+<!-- Print footer with URL -->
+<div class="print-footer">
+  <span class="print-footer__label">View online:</span>
+  <span class="print-footer__url">{{ .Permalink }}</span>
 </div>
 
 {{ partial "footer.html" . }}
