@@ -13,16 +13,17 @@ describe("ToC Active", () => {
       <a id="portfolio" data-toc-section="portfolio"></a>
     `;
 
-    delete window.location;
-    window.location = new URL("https://example.com/");
-
     jest.resetModules();
   });
 
   test("sets active link from hash on load", () => {
     window.location.hash = "#portfolio";
 
-    globalThis.IntersectionObserver = jest.fn();
+    globalThis.IntersectionObserver = jest.fn(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn(),
+    }));
 
     require("../toc-active");
     document.dispatchEvent(new Event("DOMContentLoaded"));

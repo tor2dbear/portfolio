@@ -35,6 +35,7 @@
     }
 
     if (!("IntersectionObserver" in window) || !sections.length) return;
+    if (typeof IntersectionObserver !== "function") return;
 
     let activeId = null;
     const observer = new IntersectionObserver(
@@ -53,6 +54,8 @@
         threshold: 0.1,
       }
     );
+
+    if (!observer || typeof observer.observe !== "function") return;
 
     sections.forEach((section) => observer.observe(section));
   }
