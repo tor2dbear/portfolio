@@ -47,6 +47,10 @@
         {{ partial "date.html" . }}
       </div>
       <p class="type-body">{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
+      <!-- Mobile download: Letter + CV -->
+      <div class="download-inline mt-32">
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_letter "label" "Letter + CV") }}
+      </div>
     </div>
 
     <div class="application-page__section application-page__section--portfolio col-span-4 mb-64">
@@ -61,6 +65,10 @@
           {{ end }}
         {{ end }}
       </div>
+      <!-- Mobile download: Portfolio -->
+      <div class="download-inline mt-32">
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_portfolio "label" "Portfolio") }}
+      </div>
     </div>
 
     <div class="application-page__section application-page__section--cv col-span-4 mb-64">
@@ -68,6 +76,10 @@
       <a id="cv" class="col-span-4"></a>
       <h3 class="type-headline-small mb-16 col-span-4 section-headline">CV</h3>
       <div class="col-span-4">{{ partial "about_cv_extended.html" . }}</div>
+      <!-- Mobile download: CV -->
+      <div class="download-inline mt-32">
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_cv "label" "CV") }}
+      </div>
     </div>
 
     <!-- Contact section moved to main column -->

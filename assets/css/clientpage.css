@@ -59,6 +59,11 @@
     margin-bottom: var(--spacing-32);
 }
 
+/* Hide inline downloads on desktop - shown on mobile when sidebar is hidden */
+.download-inline {
+    display: none;
+}
+
 .application-page__company {
     display: none;
 }
@@ -87,6 +92,11 @@
     /* Hide ToC on mobile - main navigation is enough */
     .application-page__sidebar .toc {
         display: none;
+    }
+
+    /* Show inline downloads on mobile when sidebar is hidden */
+    .download-inline {
+        display: block;
     }
 }
 
