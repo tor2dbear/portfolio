@@ -11,6 +11,11 @@
   media="all"
 />
 
+<!-- Print-only: contact info at top -->
+<div class="print-contact-header">
+  {{ partial "contact_info.html" . }}
+</div>
+
 <div class="content application-page use-subgrid">
   <nav class="application-breadcrumb show-on-client">
     <ul>
@@ -25,25 +30,8 @@
   </nav>
   <!-- span company name for localstorage -->
   <span class="application-page__company">{{ .Params.company_name }}</span>
-  <ul class="toc mb-64 col-span-12">
-    <li class="toc__header"><h3 class="type-headline-small">Table of content</h3></li>
-    <li class="toc__item">
-      <a href="#letter">Letter</a>
-    </li>
-    <li class="toc__item">
-      <a href="#portfolio">Portfolio</a>
-    </li>
-    <li class="toc__item">
-      <a href="#cv">CV</a>
-    </li>
-    <li class="toc__item">
-      <a href="#download">Download</a>
-    </li>
-    <li class="toc__item">
-      <a href="#contact">Contact</a>
-    </li>
-  </ul>
 
+  <!-- Main column -->
   <div class="col-start-1 col-span-8 application-page__main">
     <div class="application-page__section application-page__section--letter col-span-4 mb-64">
       <!-- put this just above the section you wanna go to -->
@@ -61,6 +49,13 @@
         {{ partial "date.html" . }}
       </div>
       <p class="type-body">{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
+      <!-- Mobile downloads: all downloads after Letter section -->
+      <div class="download-inline mt-32">
+        <h3 class="type-headline-small mb-16 section-headline">Download</h3>
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_letter "label" "Letter + CV") }}
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_portfolio "label" "Portfolio") }}
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_cv "label" "CV") }}
+      </div>
     </div>
 
     <div class="application-page__section application-page__section--portfolio col-span-4 mb-64">
@@ -78,81 +73,57 @@
       <!-- put this just above the section you wanna go to -->
       <a id="cv" class="col-span-4"></a>
       <h3 class="type-headline-small mb-16 col-span-4 section-headline">CV</h3>
-      <div class="col-span-4">{{ partial "about_cv.html" . }}</div>
+      <div class="col-span-4">{{ partial "about_cv_extended.html" . }}</div>
+    </div>
+
+    <!-- Contact section moved to main column -->
+    <div class="application-page__section application-page__section--contact col-span-4 mb-64">
+      <a id="contact" class="anchor-offset"></a>
+      <h3 class="type-headline-small mb-16 section-headline">Contact</h3>
+      {{ partial "contact_info.html" . }}
+      {{ partial "contact_form.html" . }}
     </div>
   </div>
 
+  <!-- Sidebar with ToC and Downloads -->
   <div class="col-start-9 col-span-4 application-page__sidebar">
-    <div class="download-list mb-64">
-      <!-- put this just above the section you wanna go to -->
-      <a id="download" class="col-span-8"></a>
-      <h3 class="type-headline-small mb-16 col-span-8 section-headline">
-        Download
-      </h3>
-      {{ if .Params.attach_letter }}
-        <a
-          href="{{ printf "%s" $.Params.attach_letter }}"
-          target="_blank"
-          class="download-card col-span-4"
-        >
-          <div class="pdf-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
-          </div>
-          <p class="download-card__item">
-            {{ path.Base .Params.attach_letter }}
-          </p>
-          <div class="download-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
-          </div>
-        </a>
-      {{ end }}
+    <div class="application-page__sidebar-sticky">
+      <!-- Table of Contents -->
+      <ul class="toc mb-64">
+        <li class="toc__header"><h3 class="type-headline-small">Table of content</h3></li>
+        <li class="toc__item">
+          <a href="#letter">Letter</a>
+        </li>
+        <li class="toc__item">
+          <a href="#portfolio">Portfolio</a>
+        </li>
+        <li class="toc__item">
+          <a href="#cv">CV</a>
+        </li>
+        <li class="toc__item">
+          <a href="#contact">Contact</a>
+        </li>
+      </ul>
 
-      {{ if .Params.attach_portfolio }}
-        <a
-          href="{{ printf "%s" $.Params.attach_portfolio }}"
-          target="_blank"
-          class="download-card col-span-4"
-        >
-          <div class="pdf-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
-          </div>
-          <p class="download-card__item">
-            {{ path.Base .Params.attach_portfolio }}
-          </p>
-          <div class="download-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
-          </div>
-        </a>
-      {{ end }}
-
-      {{ if .Params.attach_cv }}
-        <a
-          href="{{ printf "%s" $.Params.attach_cv }}"
-          target="_blank"
-          class="download-card col-span-4"
-        >
-          <div class="pdf-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
-          </div>
-          <p class="download-card__item">
-            {{ path.Base .Params.attach_cv }}
-          </p>
-          <div class="download-icon">
-            <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
-          </div>
-        </a>
-      {{ end }}
+      <!-- Downloads -->
+      <div class="download-list mb-64">
+        <a id="download"></a>
+        <h3 class="type-headline-small mb-16 section-headline">
+          Download
+        </h3>
+        {{/* Supports both absolute paths (/images/file.pdf) and page bundle resources (file.pdf) */}}
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_letter "label" "Letter + CV") }}
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_portfolio "label" "Portfolio") }}
+        {{ partial "download-card.html" (dict "page" . "path" .Params.attach_cv "label" "CV") }}
+      </div>
     </div>
-    <!-- put this just above the section you wanna go to -->
-    <a id="contact" class="col-span-8 anchor-offset"></a>
-    <h3
-      class="type-headline-small mb-16 col-span-4 show-on-client section-headline"
-    >
-      Contact
-    </h3>
-    {{ partial "contact_info.html" . }}
-    {{ partial "contact_form.html" . }}
   </div>
+</div>
+
+<!-- Print footer with URL -->
+<div class="print-footer">
+  <span class="print-footer__label">View online:</span>
+  <span class="print-footer__url">{{ .Permalink }}</span>
 </div>
 
 {{ partial "footer.html" . }}

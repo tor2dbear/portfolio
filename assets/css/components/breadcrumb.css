@@ -10,7 +10,6 @@
 nav.application-breadcrumb ul {
   list-style: none;
   display: flex;
-  gap: var(--spacing-8);
   align-items: center;
   margin: 0;
   padding: 0;

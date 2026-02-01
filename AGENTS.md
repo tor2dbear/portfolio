@@ -652,10 +652,112 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 2. Add `_index.md` with employer front matter (include `taxonomy_indexes: true`)
 3. Ensure `company_name` matches company slug
 4. Mirror in Swedish: `content/swedish/employers/company-slug/`
-5. Add PDF attachments to `static/images/`
+5. Add PDF attachments to `static/images/` or as page bundle resources in the employer folder
 6. Tag relevant projects: `employers: [company-slug]` in project front matter
 7. Optionally mark projects as `hidden: true` to exclude from main portfolio
 8. Test focus mode: `/employers/company-slug/` → verify projects display → click project → verify `?view=employer`
+9. Optionally create portfolio-print page (see "PDF Export & Print System" section)
+
+---
+
+## CV System
+
+The CV is split into modular partials for reuse across different contexts:
+
+### Partials Structure
+```
+layouts/partials/
+├── about_cv_base.html      # Shared sections (Work, Skills, Education, etc.)
+├── about_cv.html           # Short version for about/start page
+└── about_cv_extended.html  # Full version for employer/client pages
+```
+
+### Usage
+- **Start page / About**: Uses `about_cv.html` (includes base only)
+- **Employer/Client pages**: Uses `about_cv_extended.html` (includes base + extra sections)
+
+### Extended CV Sections
+The extended version adds (with bilingual support):
+- Freelance assignments
+- Non-profit work
+- Languages
+- Driver's license
+- Software skills
+- Programming skills
+- Selected experience
+
+### Language Support
+Extended CV uses `{{ if eq .Language.Lang "sv" }}` conditionals for bilingual content.
+
+### Updating CV Content
+- **Shared sections**: Edit `about_cv_base.html` (updates everywhere)
+- **Extended-only sections**: Edit `about_cv_extended.html`
+
+---
+
+## PDF Export & Print System
+
+The site supports generating PDFs via browser print (Ctrl+P → Save as PDF).
+
+### Print Styling
+**File**: `assets/css/print.css`
+
+**Features**:
+- Hides navigation, footer, sidebar elements
+- Optimizes typography for A4 print
+- Adds print-header with contact info
+- Adds print-footer with page URL
+- Prevents orphaned headings (`break-after: avoid`)
+
+### Print Header (Contact Info)
+Uses the existing `layouts/partials/contact_info.html` partial:
+- Styled differently for print (smaller fonts, border-bottom)
+- Icon hidden in print
+- No separate partial needed - single source of truth
+
+### Print Footer
+- Shows page URL for reference
+- Uses `position: fixed` to appear on all pages (browser support varies)
+
+### Portfolio Print Page
+A dedicated page for printing all tagged projects for an employer/client.
+
+**URL pattern**: `/employers/[company]/portfolio-print/` or `/clients/[company]/portfolio-print/`
+
+**Content file structure**:
+```yaml
+# content/english/employers/techcorp/portfolio-print.md
+---
+title: "Portfolio – TechCorp"
+type: "portfolio-print"
+company_name: "techcorp"
+taxonomy: "employers"
+back_url: "/employers/techcorp/"
+index: false
+---
+```
+
+**Layout**: `layouts/portfolio-print/single.html`
+
+### Creating Portfolio-Print for New Employer/Client
+1. Create `portfolio-print.md` in the employer/client content folder
+2. Set `type: "portfolio-print"`
+3. Set `company_name` to match the employer/client slug
+4. Set `taxonomy` to either "employers" or "clients"
+5. Set `back_url` to the parent employer/client page
+6. Mirror in other language folder
+
+### PDF Generation Workflow
+1. Navigate to employer/client page
+2. Press Ctrl+P (Chrome recommended for best support)
+3. Select "Save as PDF"
+4. Upload PDF to employer/client folder as page bundle resource
+5. Reference in front matter: `attach_letter: "filename.pdf"`
+
+### Download Cards
+**Partial**: `layouts/partials/download-card.html`
+- Supports both absolute paths (`/images/file.pdf`) and page bundle resources (`file.pdf`)
+- Used in employer/client sidebars for PDF downloads
 
 ### Modifying JavaScript
 1. Edit module in `assets/js/`
