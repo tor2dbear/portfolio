@@ -11,6 +11,9 @@
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
+  <!-- Paged.js for proper print pagination -->
+  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+
   <!-- CSS -->
   {{ $reset := resources.Get "css/base/reset.css" }}
   {{ $primitives := resources.Get "css/tokens/primitives.css" }}
@@ -23,7 +26,39 @@
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media="all" />
 
   <style>
-    /* Portfolio print specific overrides */
+    /* Paged.js @page rules */
+    @page {
+      size: A4;
+      margin: 20mm 15mm 25mm 15mm;
+
+      @bottom-center {
+        content: counter(page) " / " counter(pages);
+        font-family: var(--font-sans, system-ui, sans-serif);
+        font-size: 9pt;
+        color: #666;
+      }
+
+      @top-right {
+        content: "Portfolio";
+        font-family: var(--font-sans, system-ui, sans-serif);
+        font-size: 9pt;
+        color: #666;
+      }
+    }
+
+    @page :first {
+      @top-right {
+        content: none;  /* No header on first page */
+      }
+      @bottom-center {
+        content: none;  /* No page number on first page */
+      }
+    }
+
+    /* Portfolio print specific styles */
+    .portfolio-print {
+      max-width: 100%;
+    }
     .portfolio-print__images {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -41,6 +76,7 @@
       margin-bottom: 3rem;
       padding-bottom: 2rem;
       border-bottom: 1px solid var(--border-default, #ddd);
+      break-inside: avoid-page;
     }
     .portfolio-print__project:last-child {
       border-bottom: none;
@@ -54,17 +90,28 @@
       max-height: 400px;
       object-fit: contain;
     }
-    @media print {
-      .portfolio-print__images img {
-        max-height: 200px;
-      }
-      .portfolio-print__content img {
-        max-height: 300px;
-      }
-      .portfolio-print__project {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
+
+    /* Hide nav when printing */
+    .portfolio-print__nav {
+      margin-bottom: 2rem;
+    }
+    .pagedjs_page .portfolio-print__nav {
+      display: none;
+    }
+
+    /* Hide manual print-footer - paged.js handles it now */
+    .print-footer {
+      display: none;
+    }
+
+    /* Screen-only footer for navigation */
+    .portfolio-print__footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-default, #ddd);
+    }
+    .pagedjs_page .portfolio-print__footer {
+      display: none;
     }
   </style>
 </head>
@@ -137,10 +184,5 @@
     </footer>
   </main>
 
-  <!-- Print footer -->
-  <div class="print-footer">
-    <span class="print-footer__label">Portfolio:</span>
-    <span class="print-footer__url">{{ .Permalink }}</span>
-  </div>
 </body>
 </html>
