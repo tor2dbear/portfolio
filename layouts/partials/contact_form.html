@@ -1,7 +1,4 @@
-<div class="contact-form mt-80 mb-64 col-start-1 col-span-6">
-  <h2 class="contact-form__title type-headline-3">
-    {{ i18n "contact_send_message" }}
-  </h2>
+<div class="contact-form">
   <form
     id="contact-form"
     class="contact-form__form"
@@ -40,16 +37,6 @@
       required
     />
 
-    <label for="contact_subject">{{ i18n "contact_subject" }}</label>
-    <input
-      id="contact_subject"
-      type="text"
-      placeholder="{{ i18n "contact_subject_placeholder" }}"
-      class="contact-form__input contact-form__input--subject form-input"
-      name="subject"
-      required
-    />
-
     <label>{{ i18n "contact_message" }}</label>
     <textarea
       rows="5"
@@ -58,7 +45,7 @@
       name="message"
     ></textarea>
 
-    <button type="submit" class="contact-form__submit button--icon">
+    <button type="submit" class="contact-form__submit button">
       {{ i18n "contact_submit" }}
     </button>
 

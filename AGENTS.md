@@ -236,57 +236,40 @@ Configured in `package.json` with lint-staged:
 
 ---
 
-## Git Workflow (v3)
+## Git Workflow (v4)
 
 ### Core Principles (Strict)
-- **Isolation**: One task = one branch = one worktree.
-- **Mandatory Worktrees**: Parallel tasks MUST use separate worktrees. Branches alone are insufficient for parallel AI agents.
-- **Hierarchy**: The repo root is for management ONLY. Development happens ONLY inside worktrees.
-- **Verification**: Before editing any file, verify your location.
-
-### Repository Layout & Setup
-- The repository root MUST have `worktrees/` added to `.gitignore`.
-- Active development occurs in `worktrees/<branch-name>/`.
-- **Optional**: Add `**/worktrees/**: true` to VS Code `files.exclude` to prevent cross-contamination in searches.
+- **Isolation**: One task = one branch.
+- **No Worktrees**: Development happens directly in the repo on a task branch.
+- **Verification**: Before editing any file, verify your location and branch.
 
 ### Branch Naming
-- **Format**: `<type>/<slug>-<sessionId>` (e.g., `feature/login-system-a1b2`)
+- **Format**: `<type>/<slug>-<sessionId>` (required, e.g., `feature/login-system-a1b2`)
 - **Types**: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
 - **Session ID**: Generate using `openssl rand -hex 2`.
 
-### Creating a New Task (Automated)
-Run the automation script from the repo root:
+### Creating a New Task
 ```bash
-./new-task.sh <type> <slug>
-# Example: ./new-task.sh feature login-page
-```
-
-### Creating a New Task (Manual Fallback)
-```bash
-git switch main
+git switch master
 git pull
-# Format: worktrees/<slug>-<sessionId>
-git worktree add worktrees/<slug>-<sessionId> -b <type>/<slug>-<sessionId>
+git switch -c <type>/<slug>-<sessionId>
 ```
 
-### Working in a Worktree (The "Gold" Rules)
-1. **Verification Step**: Always run `pwd`, `git rev-parse --show-toplevel` and `git branch --show-current` before the first edit in a session to verify you are in a `worktrees/` subfolder.
-2. **Scope**: Only modify files inside your assigned `worktrees/<branch-name>/` folder.
-3. **Commits**: All `git add`, `git commit`, and `git push` commands must be executed from within the worktree directory.
+### Working in a Branch (The "Gold" Rules)
+1. **Verification Step**: Always run `pwd`, `git rev-parse --show-toplevel` and `git branch --show-current` before the first edit in a session to confirm repo root + branch.
+2. **Scope**: Only modify files related to the current task branch.
+3. **Commits**: All `git add`, `git commit`, and `git push` commands must be executed from the repo root.
 
 ### Syncing & Updates
-To bring in latest changes from main (inside the worktree):
+To bring in latest changes from master:
 ```bash
 git fetch origin
-git merge origin/main # Avoid rebase unless explicitly requested.
+git merge origin/master # Avoid rebase unless explicitly requested.
 ```
 
 ### Finishing a Task (Cleanup)
 Once the PR is merged on GitHub:
 ```bash
-# Remove Worktree: (from repo root).
-git worktree remove worktrees/<folder-name> --force
-
 # Delete Branch:
 git branch -d <branch-name>
 
@@ -295,9 +278,7 @@ git fetch --prune
 ```
 
 ### Safety Guardrails
-- **Never** run two agents in the same worktree folder.
-- **Never** manually move files between worktrees.
-- If `git status` in repo root shows untracked files in `worktrees/`, the `.gitignore` is missing or failing. Stop and fix.
+- **Never** run two agents in the same repo folder at the same time.
 
 ---
 
@@ -715,7 +696,7 @@ if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
 
 **Adding a New Component to UI Library**:
 1. Extract component CSS to `assets/css/components/[component].css`
-2. Import in `layouts/partials/head.html` (maintain load order)
+2. Import in `layouts/partials/head.html` (maintain load order in both the dev `<link>` list and the production concat slice)
 3. Add accordion in Components tab (`layouts/ui-library/single.html`)
 4. Include component meta-info:
    - **Classes**: List all variant classes (e.g., `.button--primary`)

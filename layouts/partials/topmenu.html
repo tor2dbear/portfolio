@@ -8,12 +8,8 @@
         {{- range .Site.Menus.top -}}
           {{- $nameLower := lower .Name -}}
           {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}
-          {{- $isAbout := or (eq .Identifier "about") (eq $nameLower "about") (eq $nameLower "om") -}}
           {{- if not $isContact -}}
             {{- $linkURL := .URL | relLangURL -}}
-            {{- if $isAbout -}}
-              {{- $linkURL = printf "%s#about" $homeURL -}}
-            {{- end -}}
           <li class="top-menu__item top-menu__item--nav">
             <a
               class="top-menu__link {{ if eq $urltop $linkURL }}active{{ end }}"
@@ -43,7 +39,7 @@
         <li class="top-menu__item top-menu__item--contact">
           <a
             class="top-menu__link top-menu__link--button"
-            href="{{ printf "%s#contact" $homeURL }}"
+            href="{{ "/contact" | relLangURL }}"
             aria-label="{{ i18n "contact_me" }}"
           >
             <span class="top-menu__label top-menu__label--long">{{ i18n "contact_me" }}</span>
