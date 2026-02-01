@@ -728,11 +728,11 @@ The site supports generating PDFs via browser print (Ctrl+P → Save as PDF).
 - Adds print-footer with page URL
 - Prevents orphaned headings (`break-after: avoid`)
 
-### Print Header
-**Partial**: `layouts/partials/print-header.html`
-- Shows contact info (name, address, email, phone, website)
-- Hidden on screen, visible in print
-- Included in employer and client layouts
+### Print Header (Contact Info)
+Uses the existing `layouts/partials/contact_info.html` partial:
+- Styled differently for print (smaller fonts, border-bottom)
+- Icon hidden in print
+- No separate partial needed - single source of truth
 
 ### Print Footer
 - Shows page URL for reference
