@@ -17,47 +17,38 @@
     .mode-switcher,
     .download-list,
     .contact-form,
-    .contact-info,
     .content.post .toc,
     .application-page__section--portfolio,
     .application-page__sidebar,
     ul.toc,
     .about-cv__icon,
+    .contact-info__icon,
     .theme-dropdown,
     .language-dropdown {
         display: none !important;
     }
 
     /* ===========================================
-       PRINT HEADER (Contact info)
+       CONTACT INFO (Print header)
        =========================================== */
 
-    .print-header {
+    .contact-info {
         display: block !important;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem !important;
         padding-bottom: 1rem;
         border-bottom: 1pt solid #ccc;
     }
 
-    .print-header__contact {
-        text-align: left;
-    }
-
-    .print-header__name {
-        font-size: 14pt;
+    .contact-info__title {
+        font-size: 14pt !important;
         font-weight: bold;
-        margin: 0 0 0.25rem 0;
+        margin-bottom: 0.25rem !important;
     }
 
-    .print-header__address {
-        font-size: 9pt;
-        margin: 0 0 0.25rem 0;
-        color: #333;
-    }
-
-    .print-header__details {
-        font-size: 9pt;
-        margin: 0;
+    .contact-info__text {
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
+        margin-bottom: 0.25rem !important;
         color: #333;
     }
 
@@ -294,7 +285,6 @@
 /* Screen-only: hide print elements */
 @media screen {
     .print-footer,
-    .print-header,
     .print-only {
         display: none !important;
     }
