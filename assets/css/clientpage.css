@@ -10,7 +10,7 @@
 /* Sticky sidebar */
 .application-page__sidebar-sticky {
     position: sticky;
-    top: var(--spacing-32);
+    top: var(--spacing-16);
 }
 
 /* ToC styling for sidebar */
