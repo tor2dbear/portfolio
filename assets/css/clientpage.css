@@ -7,6 +7,40 @@
     margin-left: 1.5rem;
 }
 
+/* Sticky sidebar */
+.application-page__sidebar-sticky {
+    position: sticky;
+    top: var(--spacing-32);
+}
+
+/* ToC styling for sidebar */
+.application-page__sidebar .toc {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-64) 0;
+}
+
+.application-page__sidebar .toc__header {
+    margin-bottom: var(--spacing-16);
+}
+
+.application-page__sidebar .toc__item {
+    margin-bottom: var(--spacing-4);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--text-muted);
+    line-height: var(--line-height-tighter);
+}
+
+.application-page__sidebar .toc__item a {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.application-page__sidebar .toc__item a:hover {
+    color: var(--text-default);
+}
+
 #layout .content.application-page .about-cv {
     margin-top: 0;
 }
@@ -43,6 +77,16 @@
     .application-page__sidebar {
         margin-left: 0;
         grid-column: col-start 1 / span 12;
+    }
+
+    /* Disable sticky on smaller screens */
+    .application-page__sidebar-sticky {
+        position: static;
+    }
+
+    /* Hide ToC on mobile - main navigation is enough */
+    .application-page__sidebar .toc {
+        display: none;
     }
 }
 
