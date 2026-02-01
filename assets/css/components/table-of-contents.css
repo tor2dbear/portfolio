@@ -12,6 +12,17 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  position: relative;
+}
+
+.toc::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc(var(--spacing-8) + 1.5em);
+  bottom: var(--spacing-8);
+  width: 2px;
+  background-color: var(--border-subtle);
 }
 
 /* ==========================================================================
@@ -35,18 +46,44 @@
   font-family: var(--font-sans);
   font-size: var(--text-base);
   color: var(--text-muted);
+  font-weight: var(--sans-weight-bold);
+}
+
+.application-page__sidebar .toc__item {
+  line-height: var(--line-height-wide);
 }
 
 .toc__item a {
   display: inline-block;
-  padding: var(--spacing-4) 0;
+  padding: var(--spacing-4) 0 var(--spacing-4) var(--spacing-24);
   color: inherit;
   text-decoration: none;
   transition: color 0.2s ease;
+  position: relative;
 }
 
 .toc__item a:hover {
   color: var(--text-default);
+}
+
+.toc__item a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: transparent;
+  border-radius: 999px;
+}
+
+.toc__item a.is-active {
+  color: var(--text-default);
+  font-weight: var(--sans-weight-medium);
+}
+
+.toc__item a.is-active::before {
+  background-color: var(--brand-primary);
 }
 
 .toc__item a:focus {

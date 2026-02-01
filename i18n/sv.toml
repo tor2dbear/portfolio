@@ -226,6 +226,15 @@ other = "Om mig"
 [contact_me]
 other = "Kontakta mig"
 
+[contact_me_focus]
+other = "Kontakta mig"
+
+[to_client]
+other = "Till %s"
+
+[contact]
+other = "Kontakt"
+
 [all_works]
 other = "Alla projekt"
 

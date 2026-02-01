@@ -60,6 +60,12 @@
     <path d="M12.5 8.5v7a3.5 3.5 0 0 0 0 -7Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
   </symbol>
 
+  <!-- Settings Icon -->
+  <symbol id="icon-settings" viewBox="0 0 24 24">
+    <path d="M19.922 7.213a1.874 1.874 0 0 0 1.065 2.571l1.265 0.45a1.875 1.875 0 0 1 0 3.534l-1.265 0.45a1.874 1.874 0 0 0 -1.065 2.571L20.5 18a1.875 1.875 0 0 1 -2.5 2.5l-1.213 -0.576a1.874 1.874 0 0 0 -2.571 1.065l-0.45 1.265a1.875 1.875 0 0 1 -3.533 0l-0.45 -1.265a1.875 1.875 0 0 0 -2.572 -1.065L6 20.5A1.874 1.874 0 0 1 3.5 18l0.576 -1.213a1.874 1.874 0 0 0 -1.065 -2.571l-1.265 -0.45a1.875 1.875 0 0 1 0 -3.534l1.265 -0.45a1.874 1.874 0 0 0 1.065 -2.569L3.5 6A1.874 1.874 0 0 1 6 3.5l1.213 0.576a1.875 1.875 0 0 0 2.57 -1.063l0.45 -1.265a1.875 1.875 0 0 1 3.533 0l0.45 1.265a1.874 1.874 0 0 0 2.571 1.065L18 3.5A1.875 1.875 0 0 1 20.5 6Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+    <path d="M7.499 12.001a4.5 4.5 0 1 0 9 0 4.5 4.5 0 1 0 -9 0Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+  </symbol>
+
   <!-- Mode Micro Icon -->
   <symbol id="icon-mode-micro" viewBox="0 0 10 10">
     <path d="M5 7.5c1.38071 0 2.5 -1.11929 2.5 -2.5S6.38071 2.5 5 2.5 2.5 3.61929 2.5 5 3.61929 7.5 5 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
@@ -90,6 +96,31 @@
     <path d="M6 0.5 1.5 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
     <path d="m2.37 2.11 2.531 2.974" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
     <path d="M5.5 8.5H9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+  </symbol>
+
+  <!-- Home Micro Icon -->
+  <symbol id="icon-home-micro" viewBox="0 0 10 10">
+    <path d="M0.5 5.246 5 0.5l4.5 4.746" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+    <path d="M2 5.246V8.5a1 1 0 0 0 1 1h4a1 1 0 0 0 1 -1V5.246" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+  </symbol>
+
+  <!-- Arrow Right Micro Icon -->
+  <symbol id="icon-arrow-right-micro" viewBox="0 0 10 10">
+    <path d="M2.75 0.5 7.1 4.646a0.5 0.5 0 0 1 0 0.708L2.75 9.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+  </symbol>
+
+  <!-- Home Icon (16px) -->
+  <symbol id="icon-home" viewBox="0 0 24 24">
+    <path d="M3.753 13.944v8.25h6v-6a1.5 1.5 0 0 1 1.5 -1.5h1.5a1.5 1.5 0 0 1 1.5 1.5v6h6v-8.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+    <path d="M0.753 12.444 10.942 2.255a1.5 1.5 0 0 1 2.122 0l10.189 10.189" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+  </symbol>
+
+  <!-- Profile Male Icon -->
+  <symbol id="icon-profile-male" viewBox="0 0 24 24">
+    <path d="M7.131 6.875a2.625 2.625 0 1 0 5.25 0 2.625 2.625 0 1 0 -5.25 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+    <path d="M10.006 14.75h-4.75a4.5 4.5 0 0 1 7.75 -3.112" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+    <path d="M7.49 18.75H3.756a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+    <path d="m13.718 19.227 3.822 -3.822a1.423 1.423 0 0 1 2.012 2.012l-4.44 4.439a2.845 2.845 0 0 1 -4.023 -4.023l4.871 -4.87A4.267 4.267 0 0 1 21.994 19l-4.253 4.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
   </symbol>
 
   <!-- Arrow Left Icon -->

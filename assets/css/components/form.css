@@ -376,6 +376,15 @@ select:disabled,
   margin-bottom: var(--spacing-16);
 }
 
+.contact-info__icon {
+  margin-bottom: var(--spacing-8);
+}
+
+.contact-info__title,
+.contact-info__text {
+  margin-bottom: var(--spacing-8);
+}
+
 .contact-form__form input,
 .contact-form__form textarea {
   margin-bottom: var(--spacing-8);

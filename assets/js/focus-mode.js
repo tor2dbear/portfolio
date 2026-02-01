@@ -123,6 +123,52 @@
   }
 
   /**
+   * Update top menu contact button for focus mode
+   */
+  function updateContactButton(context) {
+    if (!context || !context.ref) return;
+    const contactButton = document.querySelector('.top-menu__item--contact .top-menu__link--button');
+    if (!contactButton) return;
+
+    const path = window.location.pathname;
+    const langPrefix = path.startsWith('/sv/') ? '/sv' : '';
+    const baseSegment = context.type === CONFIG.VIEW_EMPLOYER ? 'employers' : 'clients';
+    const targetPath = `${langPrefix}/${baseSegment}/${encodeURIComponent(context.ref)}/`;
+    const params = buildFocusParams(context);
+    const isRootContext = path.startsWith(targetPath);
+
+    if (isRootContext) {
+      contactButton.setAttribute('href', `${targetPath}?${params}#contact`);
+    } else {
+      contactButton.setAttribute('href', `${targetPath}?${params}`);
+    }
+
+    const label = contactButton.querySelector('.top-menu__label--long');
+    const iconDefault = contactButton.querySelector('[data-focus-icon="contact-default"]');
+    const iconProfile = contactButton.querySelector('[data-focus-icon="contact-profile"]');
+
+    if (label) {
+      if (isRootContext) {
+        label.textContent =
+          label.getAttribute('data-focus-label') ||
+          label.getAttribute('data-focus-label-default') ||
+          label.textContent;
+      } else {
+        const template = label.getAttribute('data-focus-label-template');
+        const rawName = decodeURIComponent(context.ref).replace(/-/g, ' ');
+        const name = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+        label.textContent = template ? template.replace('%s', name) : label.textContent;
+      }
+    }
+
+    if (isRootContext) {
+      contactButton.classList.remove('is-focus-subpage');
+    } else {
+      contactButton.classList.add('is-focus-subpage');
+    }
+  }
+
+  /**
    * Build query string for focus mode
    */
   function buildFocusParams(context) {
@@ -138,20 +184,31 @@
    * Propagate focus mode parameters to internal links
    */
   function propagateToLinks(context) {
-    // Find all internal links (href starts with / or is relative)
-    const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]');
+    // Find all internal links (relative, root-relative, or same-origin absolute)
+    const links = document.querySelectorAll('a[href]');
 
     links.forEach(link => {
       try {
         const href = link.getAttribute('href');
 
         // Skip anchor links and already processed links
-        if (!href || href.startsWith('#') || link.hasAttribute('data-focus-processed')) {
+        if (
+          !href ||
+          href.startsWith('#') ||
+          link.hasAttribute('data-focus-processed') ||
+          link.hasAttribute('data-focus-ignore') ||
+          link.closest('[data-focus-ignore="true"]')
+        ) {
           return;
         }
 
-        // Parse the URL
+        // Parse the URL (handles relative + absolute)
         const url = new URL(href, window.location.origin);
+
+        // Only rewrite same-origin links
+        if (url.origin !== window.location.origin) {
+          return;
+        }
 
         // Add focus parameters
         const params = new URLSearchParams(url.search);
@@ -186,52 +243,63 @@
    * Update client breadcrumb with safe text handling
    */
   function updateClientBreadcrumb(clientRef) {
-    const breadcrumbElement =
-      document.querySelector('[data-js="application-breadcrumb-back"]') ||
-      document.getElementById('client-breadcrumb-back');
-    if (!breadcrumbElement) return;
-
-    // Clear existing content safely
-    while (breadcrumbElement.firstChild) {
-      breadcrumbElement.removeChild(breadcrumbElement.firstChild);
-    }
-
-    // Create link element
-    const link = document.createElement('a');
+    const breadcrumbElements = document.querySelectorAll(
+      '[data-js="application-breadcrumb-back"]'
+    );
+    const fallbackElement = document.getElementById('client-breadcrumb-back');
+    const elements = breadcrumbElements.length
+      ? Array.from(breadcrumbElements)
+      : fallbackElement
+      ? [fallbackElement]
+      : [];
+    if (!elements.length) return;
 
     // Build client page URL
     const clientPath = `/clients/${encodeURIComponent(clientRef)}/`;
-    link.setAttribute('href', clientPath);
-
-    // Set text content safely (prevents XSS)
     const clientName = decodeURIComponent(clientRef).replace(/-/g, ' ');
-    link.textContent = clientName;
 
-    // Append to breadcrumb
-    breadcrumbElement.appendChild(link);
+    elements.forEach((breadcrumbElement) => {
+      while (breadcrumbElement.firstChild) {
+        breadcrumbElement.removeChild(breadcrumbElement.firstChild);
+      }
+
+      const link = document.createElement('a');
+      link.setAttribute('href', clientPath);
+      link.setAttribute('class', 'application-breadcrumb__link');
+      link.textContent = clientName;
+      breadcrumbElement.appendChild(link);
+    });
   }
 
   /**
    * Update employer breadcrumb with safe text handling
    */
   function updateEmployerBreadcrumb(employerRef) {
-    const breadcrumbElement =
-      document.querySelector('[data-js="application-breadcrumb-back-employer"]') ||
-      document.getElementById('employer-breadcrumb-back');
-    if (!breadcrumbElement) return;
+    const breadcrumbElements = document.querySelectorAll(
+      '[data-js="application-breadcrumb-back-employer"]'
+    );
+    const fallbackElement = document.getElementById('employer-breadcrumb-back');
+    const elements = breadcrumbElements.length
+      ? Array.from(breadcrumbElements)
+      : fallbackElement
+      ? [fallbackElement]
+      : [];
+    if (!elements.length) return;
 
-    while (breadcrumbElement.firstChild) {
-      breadcrumbElement.removeChild(breadcrumbElement.firstChild);
-    }
-
-    const link = document.createElement('a');
     const employerPath = `/employers/${encodeURIComponent(employerRef)}/`;
-    link.setAttribute('href', employerPath);
-
     const employerName = decodeURIComponent(employerRef).replace(/-/g, ' ');
-    link.textContent = employerName;
 
-    breadcrumbElement.appendChild(link);
+    elements.forEach((breadcrumbElement) => {
+      while (breadcrumbElement.firstChild) {
+        breadcrumbElement.removeChild(breadcrumbElement.firstChild);
+      }
+
+      const link = document.createElement('a');
+      link.setAttribute('href', employerPath);
+      link.setAttribute('class', 'application-breadcrumb__link');
+      link.textContent = employerName;
+      breadcrumbElement.appendChild(link);
+    });
   }
 
   /**
@@ -258,6 +326,49 @@
   }
 
   /**
+   * Filter related items by active client/employer ref
+   */
+  function filterRelatedItems(context) {
+    if (!context || !context.ref) return;
+
+    if (context.type === CONFIG.VIEW_CLIENT) {
+      const items = document.querySelectorAll('.related-items__item.show-on-client');
+      const title = document.querySelector('.related-items__title.show-on-client');
+      let visibleCount = 0;
+      items.forEach((item) => {
+        const clients = (item.getAttribute('data-clients') || '')
+          .split(',')
+          .map((value) => value.trim())
+          .filter(Boolean);
+        const matches = clients.includes(context.ref);
+        item.style.display = matches ? '' : 'none';
+        if (matches) visibleCount += 1;
+      });
+      if (title) {
+        title.style.display = visibleCount > 0 ? '' : 'none';
+      }
+    }
+
+    if (context.type === CONFIG.VIEW_EMPLOYER) {
+      const items = document.querySelectorAll('.related-items__item.show-on-employer');
+      const title = document.querySelector('.related-items__title.show-on-employer');
+      let visibleCount = 0;
+      items.forEach((item) => {
+        const employers = (item.getAttribute('data-employers') || '')
+          .split(',')
+          .map((value) => value.trim())
+          .filter(Boolean);
+        const matches = employers.includes(context.ref);
+        item.style.display = matches ? '' : 'none';
+        if (matches) visibleCount += 1;
+      });
+      if (title) {
+        title.style.display = visibleCount > 0 ? '' : 'none';
+      }
+    }
+  }
+
+  /**
    * Initialize focus mode
    */
   function init() {
@@ -275,13 +386,17 @@
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         propagateToLinks(context);
-        updateBreadcrumbs(context);
-        updateTableOfContents(context);
+    updateBreadcrumbs(context);
+    updateTableOfContents(context);
+    filterRelatedItems(context);
+    updateContactButton(context);
       });
     } else {
       propagateToLinks(context);
       updateBreadcrumbs(context);
       updateTableOfContents(context);
+      filterRelatedItems(context);
+      updateContactButton(context);
     }
   }
 

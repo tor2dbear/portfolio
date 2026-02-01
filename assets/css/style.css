@@ -55,6 +55,15 @@ body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .brand__mark, .brand_
   padding-top: 5rem;
 }
 
+.startpage-heading h1 {
+  margin-bottom: var(--spacing-24);
+}
+
+.content.thankyou h3,
+.content.newsletter h3 {
+  margin-bottom: var(--spacing-64);
+}
+
 .startpage-heading__cta {
   font-size: var(--text-lg);
   font-family: var(--font-sans);
@@ -393,6 +402,7 @@ p:empty {
 /* || ========== About page ------------------------------------- */
 .about-cv {
   grid-column: content-start / content-end;
+  margin-top: var(--spacing-64);
 }
 
 .about-cv__icon,
@@ -412,6 +422,14 @@ p:empty {
 
 .about-cv__title {
   margin-bottom: var(--spacing-32);
+}
+
+.about-main__headline {
+  margin-bottom: var(--spacing-32);
+}
+
+.about-main__secondary .about-main__headline {
+  margin-top: var(--spacing-32);
 }
 
 .about-cv__section {
@@ -451,6 +469,20 @@ p:empty {
 .content.about>figure img {
   -webkit-filter: grayscale(1);
   filter: grayscale(1);
+}
+
+.related-items__title {
+  margin-top: var(--spacing-64);
+  margin-bottom: var(--spacing-8);
+}
+
+.related-items__header .type-headline-4 {
+  margin-top: var(--spacing-12);
+}
+
+.related-items__header .type-information {
+  margin-top: var(--spacing-12);
+  margin-bottom: var(--spacing-12);
 }
 
 .contact-info {

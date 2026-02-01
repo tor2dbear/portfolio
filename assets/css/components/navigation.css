@@ -90,6 +90,10 @@
   display: block;
 }
 
+.top-menu__label--icon .top-menu__icon--profile {
+  display: none;
+}
+
 .top-menu__item--contact .top-menu__link--button:hover,
 .top-menu__item--contact .top-menu__link--button:focus-visible {
   background: color-mix(in srgb, var(--text-default) 85%, var(--bg-page));
@@ -119,8 +123,35 @@
   background: var(--bg-surface);
 }
 
+#layout.clientpage .top-menu__item--nav[data-menu-id="works"],
+#layout.clientpage .top-menu__item--nav[data-menu-id="about"],
+#layout.employerpage .top-menu__item--nav[data-menu-id="works"],
+#layout.employerpage .top-menu__item--nav[data-menu-id="about"] {
+  display: none;
+}
+
 .top-menu__list .top-menu__item--nav:not(:has(~ .top-menu__item--nav)) {
   margin-right: var(--spacing-16);
+}
+
+.top-menu__icon--profile {
+  display: none;
+}
+
+.top-menu__link--button.is-focus-subpage .top-menu__icon--profile {
+  display: inline-flex;
+}
+
+.top-menu__link--button.is-focus-subpage .top-menu__icon--contact {
+  display: none;
+}
+
+.top-menu__icon--contact svg {
+  color: inherit;
+}
+
+.top-menu__icon--profile {
+  color: inherit;
 }
 
 /* ==========================================================================
@@ -249,5 +280,10 @@
   .top-menu__label--icon {
     display: inline-flex;
     align-items: center;
+  }
+
+  .top-menu__item--contact .top-menu__label--icon svg {
+    width: calc(var(--size-16) + var(--size-4));
+    height: calc(var(--size-16) + var(--size-4));
   }
 }

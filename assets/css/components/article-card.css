@@ -60,6 +60,7 @@ article {
 .content.list.tag-page > .taxonomy-header,
 .content.list.tag-page > .tag-list {
   grid-column: 1 / -1;
+  margin-bottom: var(--spacing-8);
 }
 
 .content.list.tag-page article {
@@ -123,6 +124,20 @@ article {
 .content.post .related-items__item {
   grid-column-start: auto;
   grid-column-end: span 4;
+}
+
+#layout.clientpage .related-items__title,
+#layout.clientpage .related-items__item,
+#layout.employerpage .related-items__title,
+#layout.employerpage .related-items__item {
+  display: none;
+}
+
+#layout.clientpage .related-items__title.show-on-client,
+#layout.clientpage .related-items__item.show-on-client,
+#layout.employerpage .related-items__title.show-on-employer,
+#layout.employerpage .related-items__item.show-on-employer {
+  display: block;
 }
 
 /* sm: <= 47.9375em */

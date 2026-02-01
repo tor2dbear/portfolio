@@ -1,8 +1,5 @@
 {{- $translations := .Translations -}}
-{{- $languageCount := add (len $translations) 1 -}}
-{{- $siteHasMultipleLanguages := gt (len $.Site.Languages) 1 -}}
-
-{{- if or (gt $languageCount 1) $siteHasMultipleLanguages -}}
+{{- if gt (len $translations) 0 -}}
 <div class="language-dropdown">
   <button
     class="language-toggle"
@@ -37,39 +34,6 @@
         <span class="language-name">{{ .Language.LanguageName }}</span>
       </span>
 
-      {{- /* Fallback languages - shown only if current page has no translation */ -}}
-      {{- if eq (len $translations) 0 -}}
-        {{- $is404 := eq .Kind "404" -}}
-        {{- range $.Site.Languages -}}
-          {{- if ne .Lang $.Language.Lang -}}
-            {{- $targetURL := "/" -}}
-            {{- if ne .Lang $.Site.Language.Lang -}}
-              {{- $targetURL = printf "/%s/" .Lang -}}
-            {{- end -}}
-            {{- /* For 404 pages, link to the other language's 404 */ -}}
-            {{- if $is404 -}}
-              {{- if eq .Lang "en" -}}
-                {{- $targetURL = "/404.html" -}}
-              {{- else -}}
-                {{- $targetURL = printf "/%s/404.html" .Lang -}}
-              {{- end -}}
-            {{- end -}}
-            <a
-              href="{{ $targetURL }}"
-              class="language-option{{ if not $is404 }} language-option--fallback{{ end }}"
-              lang="{{ .Lang }}"
-              hreflang="{{ .Lang }}"
-              {{ if not $is404 }}title="{{ i18n "also_on_homepage" }}"{{ end }}
-            >
-              <span class="language-radio" aria-hidden="true"></span>
-              <span class="language-name">{{ .LanguageName }}</span>
-              {{- if not $is404 -}}
-              <span class="fallback-indicator">{{ i18n "to_homepage" }}</span>
-              {{- end -}}
-            </a>
-          {{- end -}}
-        {{- end -}}
-      {{- end -}}
     </div>
   </div>
   <div class="language-overlay" hidden></div>

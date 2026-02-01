@@ -17,10 +17,20 @@
 </div>
 
 <div class="content application-page use-subgrid">
-  <nav class="application-breadcrumb show-on-client">
+  <nav class="application-breadcrumb show-on-client reveal">
     <ul>
       <li class="application-breadcrumb__item application-breadcrumb__item--caps">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+          <svg class="icon icon--sm" aria-hidden="true">
+            <use href="/img/svg/sprite.svg#icon-home"></use>
+          </svg>
+          <span>Start</span>
+        </a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
       </li>
       <!-- company_name for localstorage -->
       <li class="application-breadcrumb__item application-page__company application-breadcrumb__item--muted application-breadcrumb__item--caps">
@@ -33,35 +43,35 @@
 
   <!-- Main column -->
   <div class="col-start-1 col-span-8 application-page__main">
-    <div class="application-page__section application-page__section--letter col-span-4 mb-64">
+    <div class="application-page__section application-page__section--letter col-span-4 reveal">
       <!-- put this just above the section you wanna go to -->
-      <a id="letter"></a>
-      <h3 class="type-headline-small mb-16 section-headline">Letter</h3>
+      <a id="letter" data-toc-section="letter"></a>
+      <h3 class="type-headline-small section-headline">Letter</h3>
       <div class="application-page__header">
-        <h1 class="mb-16 type-headline-2">
+        <h1 class="type-headline-2 application-page__title">
           {{ .Title }}
         </h1>
       </div>
-      <h2 class="mb-16 type-preamble">
+      <h2 class="type-preamble application-page__preamble">
         {{ .Params.preamble }}
       </h2>
-      <div class="type-information text-color-lighter mt-0 mb-16">
+      <div class="type-information text-color-lighter application-page__meta">
         {{ partial "date.html" . }}
       </div>
       <p class="type-body">{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
       <!-- Mobile downloads: all downloads after Letter section -->
-      <div class="download-inline mt-32">
-        <h3 class="type-headline-small mb-16 section-headline">Download</h3>
+      <div class="download-inline">
+        <h3 class="type-headline-small section-headline">Download</h3>
         {{ partial "download-card.html" (dict "page" . "path" .Params.attach_letter "label" "Letter + CV") }}
         {{ partial "download-card.html" (dict "page" . "path" .Params.attach_portfolio "label" "Portfolio") }}
         {{ partial "download-card.html" (dict "page" . "path" .Params.attach_cv "label" "CV") }}
       </div>
     </div>
 
-    <div class="application-page__section application-page__section--portfolio col-span-4 mb-64">
+    <div class="application-page__section application-page__section--portfolio col-span-4 reveal">
       <!-- put this just above the section you wanna go to -->
-      <a id="portfolio"></a>
-      <h3 class="type-headline-small mb-16 section-headline">Portfolio</h3>
+      <a id="portfolio" data-toc-section="portfolio"></a>
+      <h3 class="type-headline-small section-headline">Portfolio</h3>
       <div class="application-page__portfolio-grid grid-cols-2">
         {{ range .Data.Pages }}
           {{ .Render "summary-client" }}
@@ -69,17 +79,17 @@
       </div>
     </div>
 
-    <div class="application-page__section application-page__section--cv col-span-4 mb-64">
+    <div class="application-page__section application-page__section--cv col-span-4">
       <!-- put this just above the section you wanna go to -->
-      <a id="cv" class="col-span-4"></a>
-      <h3 class="type-headline-small mb-16 col-span-4 section-headline">CV</h3>
+      <a id="cv" class="col-span-4" data-toc-section="cv"></a>
+      <h3 class="type-headline-small col-span-4 section-headline reveal">CV</h3>
       <div class="col-span-4">{{ partial "about_cv_extended.html" . }}</div>
     </div>
 
     <!-- Contact section moved to main column -->
-    <div class="application-page__section application-page__section--contact col-span-4 mb-64">
-      <a id="contact" class="anchor-offset"></a>
-      <h3 class="type-headline-small mb-16 section-headline">Contact</h3>
+    <div class="application-page__section application-page__section--contact col-span-4 reveal">
+      <a id="contact" class="anchor-offset" data-toc-section="contact"></a>
+      <h3 class="type-headline-small section-headline">Contact</h3>
       {{ partial "contact_info.html" . }}
       {{ partial "contact_form.html" . }}
     </div>
@@ -87,28 +97,28 @@
 
   <!-- Sidebar with ToC and Downloads -->
   <div class="col-start-9 col-span-4 application-page__sidebar">
-    <div class="application-page__sidebar-sticky">
+    <div class="application-page__sidebar-sticky reveal reveal--delay">
       <!-- Table of Contents -->
-      <ul class="toc mb-64">
+      <ul class="toc">
         <li class="toc__header"><h3 class="type-headline-small">Table of content</h3></li>
         <li class="toc__item">
-          <a href="#letter">Letter</a>
+          <a href="#letter" data-toc-link="letter">Letter</a>
         </li>
         <li class="toc__item">
-          <a href="#portfolio">Portfolio</a>
+          <a href="#portfolio" data-toc-link="portfolio">Portfolio</a>
         </li>
         <li class="toc__item">
-          <a href="#cv">CV</a>
+          <a href="#cv" data-toc-link="cv">CV</a>
         </li>
         <li class="toc__item">
-          <a href="#contact">Contact</a>
+          <a href="#contact" data-toc-link="contact">Contact</a>
         </li>
       </ul>
 
       <!-- Downloads -->
-      <div class="download-list mb-64">
+      <div class="download-list">
         <a id="download"></a>
-        <h3 class="type-headline-small mb-16 section-headline">
+        <h3 class="type-headline-small section-headline">
           Download
         </h3>
         {{/* Supports both absolute paths (/images/file.pdf) and page bundle resources (file.pdf) */}}

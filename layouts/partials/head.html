@@ -322,6 +322,7 @@
   {{ $js11 := resources.Get "js/settings-dropdown.js" }}
   {{ $js12 := resources.Get "js/reveal-on-scroll.js" }}
   {{ $js13 := resources.Get "js/newsletter-form.js" }}
+  {{ $js14 := resources.Get "js/toc-active.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -339,9 +340,10 @@
     <script src="{{ $js11.RelPermalink }}" defer></script>
     <script src="{{ $js12.RelPermalink }}" defer></script>
     <script src="{{ $js13.RelPermalink }}" defer></script>
+    <script src="{{ $js14.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
 
