@@ -95,8 +95,9 @@
         position: static;
     }
 
-    /* Hide ToC on mobile - main navigation is enough */
-    .application-page__sidebar .toc {
+    /* Hide ToC and downloads in sidebar on mobile */
+    .application-page__sidebar .toc,
+    .application-page__sidebar .download-list {
         display: none;
     }
 
