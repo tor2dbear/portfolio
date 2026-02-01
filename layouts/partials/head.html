@@ -141,6 +141,7 @@
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
   {{ $pages_ui_library := resources.Get "css/pages/ui-library.css" }}
+  {{ $pages_contact := resources.Get "css/pages/contact.css" }}
 
   <!-- CSS main styles -->
   {{ $style := resources.Get "css/style.css" }}
@@ -249,6 +250,9 @@
     {{ end }}
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
+    {{ with $pages_contact }}
+      <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
+    {{ end }}
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
@@ -257,7 +261,11 @@
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
-    {{ $css = $css | append $pages_home $pages_ui_library $style $print }}
+    {{ $css = $css | append $pages_home $pages_ui_library }}
+    {{ with $pages_contact }}
+      {{ $css = $css | append . }}
+    {{ end }}
+    {{ $css = $css | append $style $print }}
     {{ $css = $css | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"

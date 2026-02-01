@@ -50,7 +50,8 @@
 .download-icon,
 .theme-icon,
 .language-icon,
-.arrow-left {
+.arrow-left,
+.curl-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -64,9 +65,15 @@
 .download-icon svg,
 .theme-icon svg,
 .language-icon svg,
-.arrow-left svg {
+.arrow-left svg,
+.curl-icon svg {
   width: 100%;
   height: 100%;
   fill: none;
   stroke: currentColor;
+}
+
+.curl-icon svg path {
+  stroke: currentColor;
+  fill: none;
 }

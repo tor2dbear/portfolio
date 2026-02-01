@@ -183,11 +183,13 @@
 }
 
 .contact-portrait picture {
-  border-radius: var(--radius-8);
-  overflow: hidden;
+  border-radius: 0;
+  overflow: visible;
 }
 
 .contact-portrait img {
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
   display: block;
   width: 100%;
   height: auto;
@@ -198,7 +200,8 @@
   align-items: start;
 }
 
-.contact-info {
+.home-page .contact-info {
+  grid-column: col-start 1 / span 6;
   grid-row: 1;
 }
 
