@@ -1243,10 +1243,36 @@
                 <div class="component-example-group mb-16">
                   <nav class="application-breadcrumb">
                     <ul>
-                      <li><a href="#">{{ if eq .Language.Lang "sv" }}Hem{{ else }}Home{{ end }}</a></li>
-                      <li><a href="#">{{ if eq .Language.Lang "sv" }}Företag{{ else }}Company{{ end }}</a></li>
-                      <li><a href="#">{{ if eq .Language.Lang "sv" }}Ansökningar{{ else }}Applications{{ end }}</a></li>
-                      <li>{{ if eq .Language.Lang "sv" }}Jobbtitel{{ else }}Job Title{{ end }}</li>
+                      <li class="application-breadcrumb__item">
+                        <a class="application-breadcrumb__link" href="#">
+                          <svg class="icon icon--sm" aria-hidden="true">
+                            <use href="/img/svg/sprite.svg#icon-home"></use>
+                          </svg>
+                          <span>{{ if eq .Language.Lang "sv" }}Hem{{ else }}Home{{ end }}</span>
+                        </a>
+                      </li>
+                      <li class="application-breadcrumb__separator" aria-hidden="true">
+                        <svg class="icon icon--xs">
+                          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+                        </svg>
+                      </li>
+                      <li class="application-breadcrumb__item">
+                        <a class="application-breadcrumb__link" href="#">{{ if eq .Language.Lang "sv" }}Företag{{ else }}Company{{ end }}</a>
+                      </li>
+                      <li class="application-breadcrumb__separator" aria-hidden="true">
+                        <svg class="icon icon--xs">
+                          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+                        </svg>
+                      </li>
+                      <li class="application-breadcrumb__item">
+                        <a class="application-breadcrumb__link" href="#">{{ if eq .Language.Lang "sv" }}Ansökningar{{ else }}Applications{{ end }}</a>
+                      </li>
+                      <li class="application-breadcrumb__separator" aria-hidden="true">
+                        <svg class="icon icon--xs">
+                          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+                        </svg>
+                      </li>
+                      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ if eq .Language.Lang "sv" }}Jobbtitel{{ else }}Job Title{{ end }}</li>
                     </ul>
                   </nav>
                 </div>
@@ -1498,19 +1524,19 @@
                       <h3 class="type-headline-small">{{ if eq .Language.Lang "sv" }}Innehållsförteckning{{ else }}Table of content{{ end }}</h3>
                     </li>
                     <li class="toc__item">
-                      <a href="#letter">{{ if eq .Language.Lang "sv" }}Personligt brev{{ else }}Letter{{ end }}</a>
+                      <a class="is-active" data-toc-link="letter" href="#letter">{{ if eq .Language.Lang "sv" }}Personligt brev{{ else }}Letter{{ end }}</a>
                     </li>
                     <li class="toc__item">
-                      <a href="#portfolio">Portfolio</a>
+                      <a data-toc-link="portfolio" href="#portfolio">Portfolio</a>
                     </li>
                     <li class="toc__item">
-                      <a href="#cv">CV</a>
+                      <a data-toc-link="cv" href="#cv">CV</a>
                     </li>
                     <li class="toc__item">
-                      <a href="#download">{{ if eq .Language.Lang "sv" }}Ladda ner{{ else }}Download{{ end }}</a>
+                      <a data-toc-link="download" href="#download">{{ if eq .Language.Lang "sv" }}Ladda ner{{ else }}Download{{ end }}</a>
                     </li>
                     <li class="toc__item">
-                      <a href="#contact">{{ if eq .Language.Lang "sv" }}Kontakt{{ else }}Contact{{ end }}</a>
+                      <a data-toc-link="contact" href="#contact">{{ if eq .Language.Lang "sv" }}Kontakt{{ else }}Contact{{ end }}</a>
                     </li>
                   </ul>
                 </div>

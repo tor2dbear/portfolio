@@ -18,7 +18,7 @@
   {{ $relatedList = $relatedList | append $fallback }}
 {{ end }}
 {{ with $relatedList }}
-  <h3 class="related-items__title mt-64 mb-8 type-headline-small">Related</h3>
+  <h3 class="related-items__title type-headline-small">Related</h3>
   {{ range $index, $page := first 3 . }}
     {{ $delayClass := "" }}
     {{ if eq $index 1 }}
@@ -28,13 +28,13 @@
     {{ end }}
     <article class="related-items__item reveal {{ $delayClass }}">
       <div class="related-items__image">
-        <a href="{{ $page.Permalink }}">{{ partial "headerimage.html" $page }}</a>
+        <a href="{{ $page.RelPermalink }}">{{ partial "headerimage.html" $page }}</a>
       </div>
       <header class="related-items__header">
-        <h2 class="type-headline-4 mt-12">
+        <h2 class="type-headline-4">
           <a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a>
         </h2>
-        <div class="type-information text-color-lighter mb-12 mt-12">
+        <div class="type-information text-color-lighter">
           {{ partial "date.html" $page }}
         </div>
       </header>

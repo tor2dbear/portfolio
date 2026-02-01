@@ -223,6 +223,15 @@ other = "About Me"
 [contact_me]
 other = "Get in Touch"
 
+[contact_me_focus]
+other = "Contact me"
+
+[to_client]
+other = "To %s"
+
+[contact]
+other = "Contact"
+
 [all_works]
 other = "All Works"
 

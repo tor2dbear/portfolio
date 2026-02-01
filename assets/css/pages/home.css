@@ -200,6 +200,10 @@
   align-items: start;
 }
 
+.hero-title {
+  margin-bottom: var(--spacing-24);
+}
+
 .home-page .contact-info {
   grid-column: col-start 1 / span 6;
   grid-row: 1;

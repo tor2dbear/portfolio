@@ -10,7 +10,9 @@
     data-js="settings-toggle"
   >
     <span class="settings-icon" aria-hidden="true">
-      {{ readFile "static/img/svg/cog.svg" | safeHTML }}
+      <svg class="icon" aria-hidden="true">
+        <use href="/img/svg/sprite.svg#icon-settings"></use>
+      </svg>
     </span>
   </button>
 

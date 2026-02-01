@@ -92,6 +92,29 @@ class="text-2xl line-height-normal text-color-default tracking-normal"
 - `.text-color-accent` (behålls för länkar)
 - `.text-color-neg` (behålls för negativ space)
 
+## Fas 8: Client/Employer-sidor (pågående)
+
+### Inventering (taxonomy/client.html + taxonomy/employer.html)
+
+**Utility-klasser att migrera bort (spacing/typography):**
+- `mb-64`, `mb-16`, `mt-32`, `mt-0`, `mb-12` (spacing)
+- `type-*` behålls (semantiska)
+- `.text-color-lighter` behålls
+
+**Layout utilities som behålls (enligt ramar):**
+- `col-start-*`, `col-span-*`, `.use-subgrid`
+- `.reveal` / `.reveal--delay`
+
+### Plan (snabb)
+1) **Inför semantiska wrappers** i `application-page`:
+   - `application-page__title`, `application-page__preamble`, `application-page__meta`
+   - `application-page__section` (baseline spacing)
+2) **Flytta spacing till CSS** i `assets/css/clientpage.css`:
+   - margin-top/margin-bottom för rubriker, metadata, sektioner, download-block
+3) **Rensa utility-classes** i markup på client/employer:
+   - ta bort `mb-*`, `mt-*` där det finns semantiska ersättningar
+4) **Visuell kontroll** i focus mode (client/employer) så layouten inte förändras.
+
 ## Migrationsprocess
 
 ### Fas 0: Förberedelser

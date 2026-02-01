@@ -55,6 +55,17 @@
   };
 
   document.addEventListener("DOMContentLoaded", function () {
+    const applicationCvBlocks = document.querySelectorAll(
+      ".application-page .about-cv.reveal"
+    );
+    if (applicationCvBlocks.length) {
+      scheduleReveal(() => {
+        applicationCvBlocks.forEach((block) => {
+          revealElement(block);
+        });
+      });
+    }
+
     const contentBlocks = document.querySelectorAll(".post-content");
     const postContentChildren = new Set();
     contentBlocks.forEach((block) => {
@@ -87,6 +98,8 @@
           }
           // Immediate reveal elements skip image waiting for faster LCP
           if (entry.target.classList.contains("reveal--immediate")) {
+            revealElement(entry.target);
+          } else if (entry.target.classList.contains("reveal--no-wait")) {
             revealElement(entry.target);
           } else {
             revealWhenReady(entry.target);
@@ -143,6 +156,8 @@
       }
       // Immediate reveal elements skip image waiting for faster LCP
       if (element.classList.contains("reveal--immediate")) {
+        revealElement(element);
+      } else if (element.classList.contains("reveal--no-wait")) {
         revealElement(element);
       } else {
         revealWhenReady(element);

@@ -7,6 +7,35 @@
     margin-left: 1.5rem;
 }
 
+.application-page__section {
+    margin-bottom: var(--spacing-64);
+}
+
+.application-page__section .section-headline {
+    margin-bottom: var(--spacing-16);
+}
+
+.application-page__title {
+    margin-bottom: var(--spacing-16);
+}
+
+.application-page__preamble {
+    margin-bottom: var(--spacing-16);
+}
+
+.application-page__meta {
+    margin-top: 0;
+    margin-bottom: var(--spacing-16);
+}
+
+.download-inline {
+    margin-top: var(--spacing-32);
+}
+
+.download-list {
+    margin-bottom: var(--spacing-64);
+}
+
 /* Sticky sidebar */
 .application-page__sidebar-sticky {
     position: sticky;
@@ -29,7 +58,7 @@
     font-family: var(--font-sans);
     font-size: var(--text-base);
     color: var(--text-muted);
-    line-height: var(--line-height-tighter);
+    line-height: var(--line-height-wide);
 }
 
 .application-page__sidebar .toc__item a {
@@ -59,15 +88,16 @@
     margin-bottom: var(--spacing-32);
 }
 
+
+
 /* Hide inline downloads on desktop - shown on mobile when sidebar is hidden */
 .download-inline {
     display: none;
 }
 
-/* Disable reveal animations on application pages - show all content immediately */
-.application-page .reveal {
-    opacity: 1;
-    transform: none;
+.application-page .about-cv.reveal {
+    --reveal-delay: 120ms;
+    --reveal-duration: 700ms;
 }
 
 .application-page__company {

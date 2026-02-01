@@ -4,10 +4,25 @@
   <nav class="application-breadcrumb show-on-client">
     <ul>
       <li class="application-breadcrumb__item">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+          <svg class="icon icon--sm" aria-hidden="true">
+            <use href="/img/svg/sprite.svg#icon-home"></use>
+          </svg>
+          <span>Start</span>
+        </a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
       </li>
       <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back">
         <a class="application-breadcrumb__link"></a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
       </li>
       <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
@@ -15,10 +30,25 @@
   <nav class="application-breadcrumb show-on-employer">
     <ul>
       <li class="application-breadcrumb__item">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">Start</a>
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+          <svg class="icon icon--sm" aria-hidden="true">
+            <use href="/img/svg/sprite.svg#icon-home"></use>
+          </svg>
+          <span>Start</span>
+        </a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
       </li>
       <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back-employer">
         <a class="application-breadcrumb__link"></a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
       </li>
       <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
@@ -44,25 +74,61 @@
     {{ partial "project-info.html" . }}
   {{ end }}
 
+  <nav class="application-breadcrumb application-breadcrumb--footer show-on-client">
+    <ul>
+      <li class="application-breadcrumb__item">
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+          <svg class="icon icon--sm" aria-hidden="true">
+            <use href="/img/svg/sprite.svg#icon-home"></use>
+          </svg>
+          <span>Start</span>
+        </a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
+      </li>
+      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back">
+        <a class="application-breadcrumb__link"></a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
+      </li>
+      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
+    </ul>
+  </nav>
+  <nav class="application-breadcrumb application-breadcrumb--footer show-on-employer">
+    <ul>
+      <li class="application-breadcrumb__item">
+        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+          <svg class="icon icon--sm" aria-hidden="true">
+            <use href="/img/svg/sprite.svg#icon-home"></use>
+          </svg>
+          <span>Start</span>
+        </a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
+      </li>
+      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back-employer">
+        <a class="application-breadcrumb__link"></a>
+      </li>
+      <li class="application-breadcrumb__separator" aria-hidden="true">
+        <svg class="icon icon--xs">
+          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+        </svg>
+      </li>
+      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
+    </ul>
+  </nav>
   {{ partial "related.html" . }}
-    <ul class="toc mt-64 mb-64 col-span-12 show-on-client reveal">
-    <li class="toc__header"><h3 class="type-headline-small">Table of content</h3></li>
-    <li class="toc__item">
-      <a data-js="application-toc-letter" href="#">Letter</a>
-    </li>
-    <li class="toc__item">
-      <a data-js="application-toc-portfolio" href="#">Portfolio</a>
-    </li>
-    <li class="toc__item">
-      <a data-js="application-toc-cv" href="#">CV</a>
-    </li>
-    <li class="toc__item">
-      <a data-js="application-toc-download" href="#">Download</a>
-    </li>
-    <li class="toc__item">
-      <a data-js="application-toc-contact" href="#">Contact</a>
-    </li>
-  </ul>
+  {{ partial "related-client.html" . }}
+  {{ partial "related-employer.html" . }}
 </div>
 
 {{ partial "footer.html" . }}
