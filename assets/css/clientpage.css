@@ -64,6 +64,12 @@
     display: none;
 }
 
+/* Disable reveal animations on application pages - show all content immediately */
+.application-page .reveal {
+    opacity: 1;
+    transform: none;
+}
+
 .application-page__company {
     display: none;
 }
