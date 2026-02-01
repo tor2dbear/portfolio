@@ -98,6 +98,10 @@
     .download-inline {
         display: block;
     }
+
+    .download-inline .download-card {
+        margin-bottom: var(--spacing-16);
+    }
 }
 
 /* NOTE: Download card styles moved to assets/css/components/download-card.css */
