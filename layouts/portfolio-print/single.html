@@ -11,14 +11,12 @@
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
-  <!-- CSS (without print.css to avoid @page conflicts with paged.js) -->
+  <!-- Minimal CSS for paged.js (avoiding nth-of-type selectors that crash paged.js) -->
   {{ $reset := resources.Get "css/base/reset.css" }}
   {{ $primitives := resources.Get "css/tokens/primitives.css" }}
   {{ $semantic := resources.Get "css/tokens/semantic.css" }}
   {{ $light := resources.Get "css/dimensions/mode/light.css" }}
-  {{ $typography := resources.Get "css/utilities/typography.css" }}
-  {{ $style := resources.Get "css/style.css" }}
-  {{ $css := slice $reset $primitives $semantic $light $typography $style | resources.Concat "portfolio-print-bundle.css" }}
+  {{ $css := slice $reset $primitives $semantic $light | resources.Concat "portfolio-print-minimal.css" }}
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media="all" />
 
   <style>
@@ -50,6 +48,50 @@
         content: none;
       }
     }
+
+    /* Typography (inline to avoid nth-of-type issues) */
+    body {
+      font-family: var(--font-sans, system-ui, sans-serif);
+      font-size: var(--text-base, 1rem);
+      line-height: var(--line-height-normal, 1.5);
+      color: var(--text-default, #1a1a1a);
+    }
+    .type-headline-2 {
+      font-family: var(--font-serif, Georgia, serif);
+      font-size: var(--text-3xl, 1.875rem);
+      line-height: var(--line-height-tight, 1.25);
+      font-weight: 400;
+      margin: 0;
+    }
+    .type-headline-3 {
+      font-family: var(--font-serif, Georgia, serif);
+      font-size: var(--text-2xl, 1.5rem);
+      line-height: var(--line-height-tight, 1.25);
+      font-weight: 400;
+      margin: 0 0 0.5rem 0;
+    }
+    .type-preamble {
+      font-family: var(--font-sans, system-ui, sans-serif);
+      font-size: var(--text-lg, 1.125rem);
+      line-height: var(--line-height-normal, 1.5);
+      color: var(--text-muted, #666);
+      margin: 0;
+    }
+    .type-body {
+      font-family: var(--font-sans, system-ui, sans-serif);
+      font-size: var(--text-base, 1rem);
+      line-height: var(--line-height-wide, 1.75);
+    }
+    .type-body p { margin: 0 0 1rem 0; }
+
+    /* Project info styles */
+    .project-info {
+      margin: 1rem 0;
+      font-size: var(--text-sm, 0.875rem);
+      color: var(--text-muted, #666);
+    }
+    .project-info dt { font-weight: 600; }
+    .project-info dd { margin: 0 0 0.5rem 0; }
 
     /* Portfolio print specific styles */
     .portfolio-print {
