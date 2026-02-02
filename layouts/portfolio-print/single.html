@@ -11,88 +11,18 @@
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
-  <!-- Minimal CSS for paged.js (avoiding nth-of-type selectors that crash paged.js) -->
+  <!-- CSS -->
   {{ $reset := resources.Get "css/base/reset.css" }}
   {{ $primitives := resources.Get "css/tokens/primitives.css" }}
   {{ $semantic := resources.Get "css/tokens/semantic.css" }}
   {{ $light := resources.Get "css/dimensions/mode/light.css" }}
-  {{ $css := slice $reset $primitives $semantic $light | resources.Concat "portfolio-print-minimal.css" }}
+  {{ $typography := resources.Get "css/utilities/typography.css" }}
+  {{ $style := resources.Get "css/style.css" }}
+  {{ $print := resources.Get "css/print.css" }}
+  {{ $css := slice $reset $primitives $semantic $light $typography $style $print | resources.Concat "portfolio-print-bundle.css" }}
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media="all" />
 
   <style>
-    /* Paged.js @page rules */
-    @page {
-      size: A4;
-      margin: 20mm 15mm 25mm 15mm;
-
-      @bottom-center {
-        content: counter(page) " / " counter(pages);
-        font-family: var(--font-sans, system-ui, sans-serif);
-        font-size: 9pt;
-        color: #666;
-      }
-
-      @top-right {
-        content: "Portfolio";
-        font-family: var(--font-sans, system-ui, sans-serif);
-        font-size: 9pt;
-        color: #666;
-      }
-    }
-
-    @page :first {
-      @top-right {
-        content: none;
-      }
-      @bottom-center {
-        content: none;
-      }
-    }
-
-    /* Typography (inline to avoid nth-of-type issues) */
-    body {
-      font-family: var(--font-sans, system-ui, sans-serif);
-      font-size: var(--text-base, 1rem);
-      line-height: var(--line-height-normal, 1.5);
-      color: var(--text-default, #1a1a1a);
-    }
-    .type-headline-2 {
-      font-family: var(--font-serif, Georgia, serif);
-      font-size: var(--text-3xl, 1.875rem);
-      line-height: var(--line-height-tight, 1.25);
-      font-weight: 400;
-      margin: 0;
-    }
-    .type-headline-3 {
-      font-family: var(--font-serif, Georgia, serif);
-      font-size: var(--text-2xl, 1.5rem);
-      line-height: var(--line-height-tight, 1.25);
-      font-weight: 400;
-      margin: 0 0 0.5rem 0;
-    }
-    .type-preamble {
-      font-family: var(--font-sans, system-ui, sans-serif);
-      font-size: var(--text-lg, 1.125rem);
-      line-height: var(--line-height-normal, 1.5);
-      color: var(--text-muted, #666);
-      margin: 0;
-    }
-    .type-body {
-      font-family: var(--font-sans, system-ui, sans-serif);
-      font-size: var(--text-base, 1rem);
-      line-height: var(--line-height-wide, 1.75);
-    }
-    .type-body p { margin: 0 0 1rem 0; }
-
-    /* Project info styles */
-    .project-info {
-      margin: 1rem 0;
-      font-size: var(--text-sm, 0.875rem);
-      color: var(--text-muted, #666);
-    }
-    .project-info dt { font-weight: 600; }
-    .project-info dd { margin: 0 0 0.5rem 0; }
-
     /* Portfolio print specific styles */
     .portfolio-print {
       max-width: 800px;
@@ -119,7 +49,6 @@
       margin-bottom: 3rem;
       padding-bottom: 2rem;
       border-bottom: 1px solid var(--border-default, #ddd);
-      break-inside: avoid;
     }
     .portfolio-print__project:last-child {
       border-bottom: none;
@@ -142,25 +71,20 @@
       border-top: 1px solid var(--border-default, #ddd);
     }
 
-    /* Hide nav and footer when paged.js renders */
-    .pagedjs_page .portfolio-print__nav,
-    .pagedjs_page .portfolio-print__footer {
-      display: none;
-    }
-
-    /* Ensure all content is visible (override any reset styles) */
-    .portfolio-print,
-    .portfolio-print * {
-      visibility: visible;
-      opacity: 1;
-    }
-    article, header, section, figure, p, h1, h2, h3, div {
-      display: block;
-    }
-    .portfolio-print__project {
-      display: block;
-      visibility: visible;
-      opacity: 1;
+    @media print {
+      .portfolio-print {
+        max-width: 100%;
+        padding: 0;
+      }
+      .portfolio-print__nav {
+        display: none;
+      }
+      .portfolio-print__project {
+        break-inside: avoid;
+      }
+      .portfolio-print__images img {
+        max-height: 200px;
+      }
     }
   </style>
 </head>
@@ -233,7 +157,10 @@
     </footer>
   </main>
 
-  <!-- Paged.js loaded at end of body -->
-  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+  <!-- Print footer with URL -->
+  <div class="print-footer">
+    <span class="print-footer__label">Portfolio:</span>
+    <span class="print-footer__url">{{ .Permalink }}</span>
+  </div>
 </body>
 </html>
