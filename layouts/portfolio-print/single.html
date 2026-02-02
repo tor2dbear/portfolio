@@ -11,80 +11,187 @@
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
-  <!-- CSS -->
-  {{ $reset := resources.Get "css/base/reset.css" }}
-  {{ $primitives := resources.Get "css/tokens/primitives.css" }}
-  {{ $semantic := resources.Get "css/tokens/semantic.css" }}
-  {{ $light := resources.Get "css/dimensions/mode/light.css" }}
-  {{ $typography := resources.Get "css/utilities/typography.css" }}
-  {{ $style := resources.Get "css/style.css" }}
-  {{ $print := resources.Get "css/print.css" }}
-  {{ $css := slice $reset $primitives $semantic $light $typography $style $print | resources.Concat "portfolio-print-bundle.css" }}
-  <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media="all" />
-
   <style>
-    /* Portfolio print specific styles */
+    /* ===========================================
+       ISOLATED CSS FOR PAGED.JS
+       No nth-of-type, nth-child, or external CSS
+       =========================================== */
+
+    /* Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Paged.js @page rules */
+    @page {
+      size: A4;
+      margin: 20mm 15mm 25mm 15mm;
+
+      @bottom-center {
+        content: counter(page) " / " counter(pages);
+        font-family: "sofia-pro", system-ui, sans-serif;
+        font-size: 9pt;
+        color: #666;
+      }
+
+      @top-right {
+        content: "Portfolio";
+        font-family: "sofia-pro", system-ui, sans-serif;
+        font-size: 9pt;
+        color: #666;
+      }
+    }
+
+    @page :first {
+      @top-right {
+        content: none;
+      }
+      @bottom-center {
+        content: none;
+      }
+    }
+
+    /* Base typography */
+    body {
+      font-family: "sofia-pro", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #1a1a1a;
+      background: #fff;
+    }
+
+    h1, h2, h3 {
+      font-family: "freight-display-pro", Georgia, serif;
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+
+    p { margin-bottom: 1rem; }
+    a { color: #1a1a1a; }
+
+    /* Layout */
     .portfolio-print {
       max-width: 800px;
       margin: 0 auto;
       padding: 2rem;
     }
+
     .portfolio-print__header {
       margin-bottom: 2rem;
     }
+
+    .portfolio-print__subtitle {
+      font-family: "sofia-pro", system-ui, sans-serif;
+      font-size: 1.125rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+
+    /* Project cards */
+    .portfolio-print__project {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #ddd;
+      break-inside: avoid;
+    }
+
+    .portfolio-print__project-header {
+      margin-bottom: 1rem;
+    }
+
+    .portfolio-print__project-subtitle {
+      font-family: "sofia-pro", system-ui, sans-serif;
+      font-size: 1rem;
+      color: #666;
+    }
+
+    /* Project info */
+    .project-info {
+      margin: 1rem 0;
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .project-info dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.25rem 1rem;
+    }
+
+    .project-info dt {
+      font-weight: 600;
+    }
+
+    .project-info dd {
+      margin: 0;
+    }
+
+    /* Image grid */
     .portfolio-print__images {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
       margin: 1.5rem 0;
     }
+
+    .portfolio-print__images figure {
+      margin: 0;
+    }
+
     .portfolio-print__images img {
       width: 100%;
       height: auto;
-      max-height: 300px;
+      max-height: 200px;
       object-fit: contain;
       background: #f5f5f5;
     }
-    .portfolio-print__project {
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border-default, #ddd);
-    }
-    .portfolio-print__project:last-child {
-      border-bottom: none;
-    }
+
+    /* Content */
     .portfolio-print__content {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
+      line-height: 1.75;
     }
+
     .portfolio-print__content img {
       max-width: 100%;
       height: auto;
-      max-height: 400px;
+      max-height: 300px;
       object-fit: contain;
     }
+
+    /* Navigation (screen only) */
     .portfolio-print__nav {
       margin-bottom: 2rem;
     }
+
+    .portfolio-print__nav a {
+      color: #666;
+      text-decoration: none;
+    }
+
+    .portfolio-print__nav a:hover {
+      color: #1a1a1a;
+    }
+
+    /* Footer (screen only) */
     .portfolio-print__footer {
       margin-top: 3rem;
       padding-top: 2rem;
-      border-top: 1px solid var(--border-default, #ddd);
+      border-top: 1px solid #ddd;
+      font-size: 0.875rem;
+      color: #666;
     }
 
-    @media print {
-      .portfolio-print {
-        max-width: 100%;
-        padding: 0;
-      }
-      .portfolio-print__nav {
-        display: none;
-      }
-      .portfolio-print__project {
-        break-inside: avoid;
-      }
-      .portfolio-print__images img {
-        max-height: 200px;
-      }
+    /* Hide elements when paged.js renders */
+    .pagedjs_page .portfolio-print__nav,
+    .pagedjs_page .portfolio-print__footer {
+      display: none;
     }
   </style>
 </head>
@@ -95,8 +202,8 @@
     </nav>
 
     <header class="portfolio-print__header">
-      <h1 class="type-headline-2">Portfolio</h1>
-      <p class="portfolio-print__subtitle type-preamble">{{ .Params.subtitle | default (print (i18n "selected_works_for" | default "Selected works for") " " (.Params.company_name | title)) }}</p>
+      <h1>Portfolio</h1>
+      <p class="portfolio-print__subtitle">{{ .Params.subtitle | default (print (i18n "selected_works_for" | default "Selected works for") " " (.Params.company_name | title)) }}</p>
     </header>
 
     {{ $companyName := .Params.company_name }}
@@ -119,18 +226,26 @@
     {{ range $projects }}
     <article class="portfolio-print__project">
       <header class="portfolio-print__project-header">
-        <h2 class="type-headline-3">{{ .Title }}</h2>
+        <h2>{{ .Title }}</h2>
         {{ with .Params.subtitle }}
-        <p class="type-preamble">{{ . }}</p>
+        <p class="portfolio-print__project-subtitle">{{ . }}</p>
         {{ end }}
       </header>
 
       {{ with .Description }}
-      <p class="type-body">{{ . }}</p>
+      <p>{{ . }}</p>
       {{ end }}
 
-      {{/* Use the project-info partial for consistent display */}}
-      {{ partial "project-info.html" . }}
+      {{/* Inline project info instead of partial */}}
+      {{ if or .Params.client .Params.role .Params.year }}
+      <section class="project-info">
+        <dl>
+          {{ with .Params.client }}<dt>Client</dt><dd>{{ . }}</dd>{{ end }}
+          {{ with .Params.role }}<dt>Role</dt><dd>{{ . }}</dd>{{ end }}
+          {{ with .Params.year }}<dt>Year</dt><dd>{{ . }}</dd>{{ end }}
+        </dl>
+      </section>
+      {{ end }}
 
       {{/* Display first 4 images from project */}}
       {{ $images := .Resources.ByType "image" }}
@@ -145,7 +260,7 @@
       {{ end }}
 
       {{ with .Content }}
-      <div class="portfolio-print__content type-body">
+      <div class="portfolio-print__content">
         {{ . }}
       </div>
       {{ end }}
@@ -153,14 +268,11 @@
     {{ end }}
 
     <footer class="portfolio-print__footer">
-      <p>{{ if eq $.Language.Lang "sv" }}Se fullständig ansökan online{{ else }}View full application online{{ end }}: <strong>{{ .Params.back_url | default (print .Site.BaseURL .Params.taxonomy "/" .Params.company_name "/") }}</strong></p>
+      <p>{{ if eq $.Language.Lang "sv" }}Se fullständig ansökan online{{ else }}View full application online{{ end }}: {{ .Params.back_url | default (print .Site.BaseURL .Params.taxonomy "/" .Params.company_name "/") }}</p>
     </footer>
   </main>
 
-  <!-- Print footer with URL -->
-  <div class="print-footer">
-    <span class="print-footer__label">Portfolio:</span>
-    <span class="print-footer__url">{{ .Permalink }}</span>
-  </div>
+  <!-- Paged.js for print pagination -->
+  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
 </body>
 </html>
