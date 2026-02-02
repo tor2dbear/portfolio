@@ -11,18 +11,14 @@
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
   <link rel="stylesheet" href="https://use.typekit.net/diz3sha.css">
 
-  <!-- Paged.js for proper print pagination -->
-  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
-
-  <!-- CSS -->
+  <!-- CSS (without print.css to avoid @page conflicts with paged.js) -->
   {{ $reset := resources.Get "css/base/reset.css" }}
   {{ $primitives := resources.Get "css/tokens/primitives.css" }}
   {{ $semantic := resources.Get "css/tokens/semantic.css" }}
   {{ $light := resources.Get "css/dimensions/mode/light.css" }}
   {{ $typography := resources.Get "css/utilities/typography.css" }}
   {{ $style := resources.Get "css/style.css" }}
-  {{ $print := resources.Get "css/print.css" }}
-  {{ $css := slice $reset $primitives $semantic $light $typography $style $print | resources.Concat "portfolio-print-bundle.css" }}
+  {{ $css := slice $reset $primitives $semantic $light $typography $style | resources.Concat "portfolio-print-bundle.css" }}
   <link rel="stylesheet" type="text/css" href="{{ $css.Permalink }}" media="all" />
 
   <style>
@@ -48,16 +44,21 @@
 
     @page :first {
       @top-right {
-        content: none;  /* No header on first page */
+        content: none;
       }
       @bottom-center {
-        content: none;  /* No page number on first page */
+        content: none;
       }
     }
 
     /* Portfolio print specific styles */
     .portfolio-print {
-      max-width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .portfolio-print__header {
+      margin-bottom: 2rem;
     }
     .portfolio-print__images {
       display: grid;
@@ -76,7 +77,7 @@
       margin-bottom: 3rem;
       padding-bottom: 2rem;
       border-bottom: 1px solid var(--border-default, #ddd);
-      break-inside: avoid-page;
+      break-inside: avoid;
     }
     .portfolio-print__project:last-child {
       border-bottom: none;
@@ -90,26 +91,17 @@
       max-height: 400px;
       object-fit: contain;
     }
-
-    /* Hide nav when printing */
     .portfolio-print__nav {
       margin-bottom: 2rem;
     }
-    .pagedjs_page .portfolio-print__nav {
-      display: none;
-    }
-
-    /* Hide manual print-footer - paged.js handles it now */
-    .print-footer {
-      display: none;
-    }
-
-    /* Screen-only footer for navigation */
     .portfolio-print__footer {
       margin-top: 3rem;
       padding-top: 2rem;
       border-top: 1px solid var(--border-default, #ddd);
     }
+
+    /* Hide nav and footer when paged.js renders */
+    .pagedjs_page .portfolio-print__nav,
     .pagedjs_page .portfolio-print__footer {
       display: none;
     }
@@ -184,5 +176,7 @@
     </footer>
   </main>
 
+  <!-- Paged.js loaded at end of body -->
+  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
 </body>
 </html>
