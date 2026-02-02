@@ -147,6 +147,21 @@
     .pagedjs_page .portfolio-print__footer {
       display: none;
     }
+
+    /* Ensure all content is visible (override any reset styles) */
+    .portfolio-print,
+    .portfolio-print * {
+      visibility: visible;
+      opacity: 1;
+    }
+    article, header, section, figure, p, h1, h2, h3, div {
+      display: block;
+    }
+    .portfolio-print__project {
+      display: block;
+      visibility: visible;
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
