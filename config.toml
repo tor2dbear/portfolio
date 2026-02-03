@@ -126,6 +126,9 @@ DefaultContentLanguage = "en"
   dateFormat = "02 Jan 2006, 15:04"
   mainSections = ['writing', 'texter', 'works']
 
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.extensions]

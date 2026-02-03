@@ -377,6 +377,16 @@
       />
     {{ end }}
 
+    <!-- JSON Feed -->
+    {{ if .OutputFormats.Get "JSON" }}
+      <link
+        rel="alternate"
+        type="application/feed+json"
+        title="{{ .Site.Title }}"
+        href="{{ with .OutputFormats.Get "JSON" }}{{ .RelPermalink }}{{ end }}"
+      />
+    {{ end }}
+
 
     <!-- Highlight.js (commented out) -->
     {{/*
