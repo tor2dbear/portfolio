@@ -216,13 +216,6 @@
   }
 }
 
-/* Focus mode: serif brand */
-#layout.clientpage .brand__word,
-#layout.employerpage .brand__word {
-  font-family: var(--font-serif);
-  letter-spacing: -0.04em;
-}
-
 /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
