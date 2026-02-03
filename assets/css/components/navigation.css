@@ -190,8 +190,7 @@
   max-width: 100%;
 }
 
-.brand__mark-line,
-.brand__mark-loop path {
+.brand__mark-line {
   stroke: currentColor;
   stroke-width: 2;
   fill: none;
@@ -200,6 +199,21 @@
 
 .brand__mark-loop {
   transform-origin: 12px 12px;
+}
+
+.brand__mark-loop-path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand__mark-loop-path animate {
+    display: none;
+  }
 }
 
 /* ==========================================================================
