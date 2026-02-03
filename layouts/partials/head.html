@@ -38,7 +38,7 @@
       } catch (e) {}
     })();
   </script>
-  {{ if eq .Params.index false }}
+  {{ if or (eq .Params.index false) (eq .Params.hidden true) }}
     <meta name="robots" content="noindex" />
   {{ end }}
 
