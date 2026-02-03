@@ -1,4 +1,7 @@
 {{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections -}}
+{{- $pages = where $pages ".Params.hidden" "!=" true -}}
+{{- $pages = where $pages "Draft" "!=" true -}}
+{{- $pages = where $pages "Date" "<=" now -}}
 {
   "version": "https://jsonfeed.org/version/1.1",
   "title": {{ site.Title | jsonify }},

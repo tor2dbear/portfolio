@@ -6,7 +6,11 @@
     title="Home"
     href="{{ .Site.BaseURL | relLangURL }}"
   >
-    <span class="brand__word brand__word--lead" data-brand-part="true">/toːr</span>
+    {{- if eq .Site.Language.Lang "en" -}}
+      <span class="brand__word brand__word--lead" data-brand-part="true">/tɔːr</span>
+    {{- else -}}
+      <span class="brand__word brand__word--lead" data-brand-part="true">/toːr</span>
+    {{- end -}}
     <svg
       class="brand__mark"
       data-js="brand-mark"
@@ -106,6 +110,10 @@
         y2="16"
       />
     </svg>
-    <span class="brand__word brand__word--tail" data-brand-part="true">bjœːrn/</span>
+    {{- if eq .Site.Language.Lang "en" -}}
+      <span class="brand__word brand__word--tail" data-brand-part="true">bjɔːrn/</span>
+    {{- else -}}
+      <span class="brand__word brand__word--tail" data-brand-part="true">bjœːrn/</span>
+    {{- end -}}
   </a>
 </div>

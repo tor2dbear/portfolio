@@ -72,8 +72,8 @@
   const doubleChance = 0.2;
 
   const pickOtherVariant = (current) => {
-    if (variants.length < 2) return null;
-    const pool = variants.filter((variant) => variant !== current);
+    if (activeVariants.length < 2) return null;
+    const pool = activeVariants.filter((variant) => variant !== current);
     if (!pool.length) return null;
     return pool[Math.floor(Math.random() * pool.length)];
   };
@@ -83,15 +83,36 @@
       ? variant.transition
       : randomBetween(transitionMin, transitionMax);
 
-  const sequence = shuffle(variants);
+  const bridgeVariant = variants.find(
+    (variant) => variant.role === "bridge" || variant.bridge === true
+  );
+  const activeVariants = bridgeVariant
+    ? variants.filter((variant) => variant !== bridgeVariant)
+    : variants;
+
+  if (activeVariants.length === 0) return;
+
+  const bridgePath = bridgeVariant ? bridgeVariant.d : null;
+  const sequence = shuffle(activeVariants);
   let t = 0;
   const times = [0];
   const values = [base];
+  const splines = [];
+  const LINEAR = "0 0 1 1";
+  const EASE_IN = "0.42 0 1 1";
+  const EASE_OUT = "0 0 0.58 1";
+
+  const addPoint = (value, time, spline = LINEAR) => {
+    values.push(value);
+    times.push(time);
+    splines.push(spline);
+  };
 
   const appendVariant = ({
     variant,
     includeBaseHold,
     returnToBase,
+    startFromBridge,
     transitionOut,
   }) => {
     const baseHold = includeBaseHold ? randomBetween(baseMin, baseMax) : 0;
@@ -102,37 +123,56 @@
 
     if (baseHold > 0) {
       t += baseHold;
-      values.push(base);
-      times.push(t);
+      addPoint(base, t, LINEAR);
     }
 
-    t += transitionIn;
-    values.push(altA);
-    times.push(t);
+    if (bridgePath) {
+      const lastValue = values[values.length - 1];
+      if (includeBaseHold || lastValue === base) {
+        t += transitionIn;
+        addPoint(bridgePath, t, EASE_IN);
+      }
+      t += transitionIn;
+      addPoint(altA, t, EASE_OUT);
+    } else if (startFromBridge) {
+      t += transitionIn;
+      addPoint(altA, t, EASE_OUT);
+    } else {
+      t += transitionIn;
+      addPoint(altA, t, LINEAR);
+    }
 
     if (variant.type === "dynamic") {
       const stepDur = altHold / dynamicSteps;
       for (let i = 0; i < dynamicSteps; i += 1) {
         t += stepDur;
-        values.push(i % 2 === 0 ? altB : altA);
-        times.push(t);
+        addPoint(i % 2 === 0 ? altB : altA, t, LINEAR);
       }
     } else {
       t += altHold;
-      values.push(altA);
-      times.push(t);
+      addPoint(altA, t, LINEAR);
     }
 
     if (returnToBase) {
       const transitionBack = transitionOut ?? getTransition(variant);
+      if (bridgePath) {
+        t += transitionBack;
+        addPoint(bridgePath, t, EASE_IN);
+        t += transitionBack;
+        addPoint(base, t, EASE_OUT);
+      } else {
+        t += transitionBack;
+        addPoint(base, t, LINEAR);
+      }
+    } else if (bridgePath) {
+      const transitionBack = transitionOut ?? getTransition(variant);
       t += transitionBack;
-      values.push(base);
-      times.push(t);
+      addPoint(bridgePath, t, EASE_IN);
     }
   };
 
   const doubleFlags = sequence.map(() => Math.random() < doubleChance);
-  if (variants.length > 1 && !doubleFlags.some(Boolean)) {
+  if (activeVariants.length > 1 && !doubleFlags.some(Boolean)) {
     doubleFlags[Math.floor(Math.random() * doubleFlags.length)] = true;
   }
 
@@ -145,6 +185,7 @@
         variant,
         includeBaseHold: true,
         returnToBase: true,
+        startFromBridge: false,
       });
       return;
     }
@@ -153,12 +194,14 @@
       variant,
       includeBaseHold: true,
       returnToBase: false,
+      startFromBridge: false,
     });
 
     appendVariant({
       variant: secondVariant,
       includeBaseHold: false,
       returnToBase: true,
+      startFromBridge: Boolean(bridgePath),
     });
   });
 
@@ -185,8 +228,9 @@
   animate.setAttribute("dur", `${t.toFixed(1)}s`);
   animate.setAttribute("begin", "0s");
   animate.setAttribute("repeatCount", "indefinite");
-  animate.setAttribute("calcMode", "linear");
+  animate.setAttribute("calcMode", "spline");
   animate.setAttribute("keyTimes", keyTimes.join(";"));
+  animate.setAttribute("keySplines", splines.join(";"));
   animate.setAttribute("values", values.join(";"));
   path.appendChild(animate);
 
