@@ -22,11 +22,79 @@
         x2="0"
         y2="14"
       />
-      <g data-js="brand-loop" transform="translate(0 0)">
+      {{- $curl := index site.Data "brand-curl" -}}
+      {{- $base := $curl.base -}}
+      {{- $baseHold := $curl.base_hold | default 10 -}}
+      {{- $transition := $curl.transition | default 0.5 -}}
+      {{- $altHold := $curl.alt_hold | default 2 -}}
+      {{- $dynamicSteps := $curl.dynamic_steps | default 4 -}}
+      {{- $variants := $curl.variants | default (slice) -}}
+      {{- $values := slice $base -}}
+      {{- $times := slice 0.0 -}}
+      {{- $t := 0.0 -}}
+      {{- range $variants -}}
+        {{- $t = add $t $baseHold -}}
+        {{- $values = $values | append $base -}}
+        {{- $times = $times | append $t -}}
+        {{- $t = add $t $transition -}}
+        {{- $values = $values | append .d -}}
+        {{- $times = $times | append $t -}}
+        {{- if eq .type "dynamic" -}}
+          {{- $altA := .d -}}
+          {{- $altB := .d_alt | default .d -}}
+          {{- $stepDur := div (float $altHold) (float $dynamicSteps) -}}
+          {{- range $i, $_ := seq $dynamicSteps -}}
+            {{- $t = add $t $stepDur -}}
+            {{- if eq (mod $i 2) 0 -}}
+              {{- $values = $values | append $altB -}}
+            {{- else -}}
+              {{- $values = $values | append $altA -}}
+            {{- end -}}
+            {{- $times = $times | append $t -}}
+          {{- end -}}
+        {{- else -}}
+          {{- $t = add $t $altHold -}}
+          {{- $values = $values | append .d -}}
+          {{- $times = $times | append $t -}}
+        {{- end -}}
+        {{- $t = add $t $transition -}}
+        {{- $values = $values | append $base -}}
+        {{- $times = $times | append $t -}}
+      {{- end -}}
+      <g
+        data-js="brand-loop"
+        data-curl-base="{{ $base | base64Encode }}"
+        data-curl-variants="{{ $variants | jsonify | base64Encode }}"
+        data-curl-random="{{ $curl.randomize | default false }}"
+        data-curl-base-min="{{ $curl.base_hold_min | default $baseHold }}"
+        data-curl-base-max="{{ $curl.base_hold_max | default $baseHold }}"
+        data-curl-transition-min="{{ $curl.transition_min | default $transition }}"
+        data-curl-transition-max="{{ $curl.transition_max | default $transition }}"
+        data-curl-alt-min="{{ $curl.alt_hold_min | default $altHold }}"
+        data-curl-alt-max="{{ $curl.alt_hold_max | default $altHold }}"
+        data-curl-dynamic-steps="{{ $dynamicSteps }}"
+        transform="translate(0 0)"
+      >
         <g class="brand__mark-loop">
-          <path
-            d="M24 16L18 16C12.2264 16 7 14 7 8C7 3 13 4 13 9C13 14 7 14 4 14H0"
-          />
+          <path class="brand__mark-loop-path" d="{{ $base }}">
+            {{- if gt (len $variants) 0 -}}
+              {{- $duration := $t -}}
+              {{- if gt $duration 0 -}}
+                {{- $keyTimes := slice -}}
+                {{- range $times -}}
+                  {{- $keyTimes = $keyTimes | append (printf "%.6f" (div (float .) $duration)) -}}
+                {{- end -}}
+                <animate
+                  attributeName="d"
+                  dur="{{ printf "%.1fs" $duration }}"
+                  repeatCount="indefinite"
+                  calcMode="linear"
+                  keyTimes="{{ delimit $keyTimes ";" }}"
+                  values="{{ delimit $values ";" }}"
+                />
+              {{- end -}}
+            {{- end -}}
+          </path>
         </g>
       </g>
       <line
