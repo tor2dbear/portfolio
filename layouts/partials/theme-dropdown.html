@@ -12,12 +12,12 @@
         (function() {
           const mode = localStorage.getItem('theme-mode') || 'system';
           const iconId = mode === 'light' ? 'icon-light' : mode === 'dark' ? 'icon-dark' : 'icon-system';
-          document.write('<svg width="24" height="24" aria-hidden="true"><use href="/img/svg/sprite.svg#' + iconId + '"></use></svg>');
+          document.write('<svg width="24" height="24" aria-hidden="true"><use href="{{ "/img/svg/sprite.svg" | relURL }}#' + iconId + '"></use></svg>');
         })();
       </script>
       <noscript>
         <svg width="24" height="24" aria-hidden="true">
-          <use href="/img/svg/sprite.svg#icon-system"></use>
+          <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-system"></use>
         </svg>
       </noscript>
     </span>
@@ -36,7 +36,7 @@
           aria-label="{{ i18n "light_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="/img/svg/sprite.svg#icon-light"></use>
+            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-light"></use>
           </svg>
           <span>{{ i18n "light_mode" }}</span>
         </button>
@@ -48,7 +48,7 @@
           aria-label="{{ i18n "dark_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="/img/svg/sprite.svg#icon-dark"></use>
+            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-dark"></use>
           </svg>
           <span>{{ i18n "dark_mode" }}</span>
         </button>
@@ -60,7 +60,7 @@
           aria-label="{{ i18n "system_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="/img/svg/sprite.svg#icon-system"></use>
+            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-system"></use>
           </svg>
           <span>{{ i18n "system_mode" }}</span>
         </button>

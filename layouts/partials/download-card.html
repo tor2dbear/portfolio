@@ -42,13 +42,13 @@
     download
   >
     <div class="pdf-icon">
-      <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+      <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"></use></svg>
     </div>
     <p class="download-card__item">
       {{ if $label }}{{ $label }}{{ else }}{{ $filename }}{{ end }}
     </p>
     <div class="download-icon">
-      <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
+      <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-download"></use></svg>
     </div>
   </a>
   {{ end }}

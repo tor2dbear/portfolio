@@ -1246,14 +1246,14 @@
                       <li class="application-breadcrumb__item">
                         <a class="application-breadcrumb__link" href="#">
                           <svg class="icon icon--sm" aria-hidden="true">
-                            <use href="/img/svg/sprite.svg#icon-home"></use>
+                            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-home"></use>
                           </svg>
                           <span>{{ if eq .Language.Lang "sv" }}Hem{{ else }}Home{{ end }}</span>
                         </a>
                       </li>
                       <li class="application-breadcrumb__separator" aria-hidden="true">
                         <svg class="icon icon--xs">
-                          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+                          <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-arrow-right-micro"></use>
                         </svg>
                       </li>
                       <li class="application-breadcrumb__item">
@@ -1261,7 +1261,7 @@
                       </li>
                       <li class="application-breadcrumb__separator" aria-hidden="true">
                         <svg class="icon icon--xs">
-                          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+                          <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-arrow-right-micro"></use>
                         </svg>
                       </li>
                       <li class="application-breadcrumb__item">
@@ -1269,7 +1269,7 @@
                       </li>
                       <li class="application-breadcrumb__separator" aria-hidden="true">
                         <svg class="icon icon--xs">
-                          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+                          <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-arrow-right-micro"></use>
                         </svg>
                       </li>
                       <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ if eq .Language.Lang "sv" }}Jobbtitel{{ else }}Job Title{{ end }}</li>
@@ -1463,20 +1463,20 @@
                   <div class="download-list" style="max-width: 600px;">
                     <a href="#" class="download-card">
                       <div class="pdf-icon">
-                        <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+                        <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"></use></svg>
                       </div>
                       <p class="download-card__item">{{ if eq .Language.Lang "sv" }}CV - Torbjörn Hedberg.pdf{{ else }}Resume - Torbjörn Hedberg.pdf{{ end }}</p>
                       <div class="download-icon">
-                        <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
+                        <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-download"></use></svg>
                       </div>
                     </a>
                     <a href="#" class="download-card">
                       <div class="pdf-icon">
-                        <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+                        <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"></use></svg>
                       </div>
                       <p class="download-card__item">{{ if eq .Language.Lang "sv" }}Portfolio 2025.pdf{{ else }}Portfolio 2025.pdf{{ end }}</p>
                       <div class="download-icon">
-                        <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
+                        <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-download"></use></svg>
                       </div>
                     </a>
                   </div>
@@ -1585,49 +1585,49 @@
 
                   <div style="text-align: center;">
                     <div class="pdf-icon" style="margin: 0 auto;">
-                      <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+                      <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"></use></svg>
                     </div>
                     <p class="text-muted text-xs mt-4"><code>icon-pdf</code></p>
                   </div>
 
                   <div style="text-align: center;">
                     <div class="download-icon" style="margin: 0 auto;">
-                      <svg><use href="/img/svg/sprite.svg#icon-download"></use></svg>
+                      <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-download"></use></svg>
                     </div>
                     <p class="text-muted text-xs mt-4"><code>icon-download</code></p>
                   </div>
 
                   <div style="text-align: center;">
                     <div class="arrow-left" style="margin: 0 auto;">
-                      <svg><use href="/img/svg/sprite.svg#icon-arrow-left"></use></svg>
+                      <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-arrow-left"></use></svg>
                     </div>
                     <p class="text-muted text-xs mt-4"><code>icon-arrow-left</code></p>
                   </div>
 
                   <div style="text-align: center;">
-                    <svg class="icon" width="16" height="16"><use href="/img/svg/sprite.svg#icon-arrow-right"></use></svg>
+                    <svg class="icon" width="16" height="16"><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-arrow-right"></use></svg>
                     <p class="text-muted text-xs mt-4"><code>icon-arrow-right</code></p>
                   </div>
 
                   <div style="text-align: center;">
                     <div class="language-icon" style="margin: 0 auto;">
-                      <svg><use href="/img/svg/sprite.svg#icon-language"></use></svg>
+                      <svg><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-language"></use></svg>
                     </div>
                     <p class="text-muted text-xs mt-4"><code>icon-language</code></p>
                   </div>
 
                   <div style="text-align: center;">
-                    <svg class="icon" width="24" height="24"><use href="/img/svg/sprite.svg#icon-light"></use></svg>
+                    <svg class="icon" width="24" height="24"><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-light"></use></svg>
                     <p class="text-muted text-xs mt-4"><code>icon-light</code></p>
                   </div>
 
                   <div style="text-align: center;">
-                    <svg class="icon" width="24" height="24"><use href="/img/svg/sprite.svg#icon-dark"></use></svg>
+                    <svg class="icon" width="24" height="24"><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-dark"></use></svg>
                     <p class="text-muted text-xs mt-4"><code>icon-dark</code></p>
                   </div>
 
                   <div style="text-align: center;">
-                    <svg class="icon" width="24" height="24"><use href="/img/svg/sprite.svg#icon-system"></use></svg>
+                    <svg class="icon" width="24" height="24"><use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-system"></use></svg>
                     <p class="text-muted text-xs mt-4"><code>icon-system</code></p>
                   </div>
 
@@ -1637,17 +1637,17 @@
 
                 <p class="text-muted mb-8">{{ if eq .Language.Lang "sv" }}Med legacy container (för bakåtkompatibilitet):{{ else }}With legacy container (for backward compatibility):{{ end }}</p>
                 <pre class="mb-16" style="background: var(--bg-surface); padding: var(--spacing-16); border-radius: var(--spacing-8); overflow-x: auto;"><code>&lt;div class="pdf-icon"&gt;
-  &lt;svg&gt;&lt;use href="/img/svg/sprite.svg#icon-pdf"&gt;&lt;/use&gt;&lt;/svg&gt;
+  &lt;svg&gt;&lt;use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"&gt;&lt;/use&gt;&lt;/svg&gt;
 &lt;/div&gt;</code></pre>
 
                 <p class="text-muted mb-8">{{ if eq .Language.Lang "sv" }}Direktanvändning med .icon klass:{{ else }}Direct usage with .icon class:{{ end }}</p>
                 <pre class="mb-16" style="background: var(--bg-surface); padding: var(--spacing-16); border-radius: var(--spacing-8); overflow-x: auto;"><code>&lt;svg class="icon"&gt;
-  &lt;use href="/img/svg/sprite.svg#icon-pdf"&gt;&lt;/use&gt;
+  &lt;use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"&gt;&lt;/use&gt;
 &lt;/svg&gt;
 
 &lt;!-- Med storleksvarianter --&gt;
-&lt;svg class="icon icon--sm"&gt;&lt;use href="/img/svg/sprite.svg#icon-pdf"&gt;&lt;/use&gt;&lt;/svg&gt;
-&lt;svg class="icon icon--lg"&gt;&lt;use href="/img/svg/sprite.svg#icon-pdf"&gt;&lt;/use&gt;&lt;/svg&gt;</code></pre>
+&lt;svg class="icon icon--sm"&gt;&lt;use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"&gt;&lt;/use&gt;&lt;/svg&gt;
+&lt;svg class="icon icon--lg"&gt;&lt;use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-pdf"&gt;&lt;/use&gt;&lt;/svg&gt;</code></pre>
               </div>
             </div>
           </div>
