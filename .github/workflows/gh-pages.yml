@@ -226,22 +226,6 @@ jobs:
             core.setOutput('count', violations.length.toString());
             core.setOutput('hasViolations', violations.length > 0 ? 'true' : 'false');
 
-      - name: Comment preview URL with Lighthouse and Axe
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        env:
-          COMMENT_BODY: ${{ steps.lighthouse_score.outputs.comment }}
-          AXE_SECTION: ${{ steps.axe_results.outputs.section }}
-        with:
-          script: |
-            const body = process.env.COMMENT_BODY + (process.env.AXE_SECTION || '');
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            })
-
       - name: Create accessibility issue if needed
         if: github.event_name == 'pull_request' && steps.axe_results.outputs.hasViolations == 'true'
         uses: actions/github-script@v7
@@ -376,6 +360,23 @@ jobs:
             core.setOutput('section', linkSection);
             core.setOutput('count', brokenLinks.length.toString());
             core.setOutput('hasBrokenLinks', brokenLinks.length > 0 ? 'true' : 'false');
+
+      - name: Comment on PR with all results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: ${{ steps.lighthouse_score.outputs.comment }}
+          AXE_SECTION: ${{ steps.axe_results.outputs.section }}
+          LINK_SECTION: ${{ steps.broken_links.outputs.section }}
+        with:
+          script: |
+            const body = process.env.COMMENT_BODY + (process.env.AXE_SECTION || '') + (process.env.LINK_SECTION || '');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
 
       - name: Create broken links issue if needed
         if: github.event_name == 'pull_request' && steps.broken_links.outputs.hasBrokenLinks == 'true'
