@@ -149,21 +149,24 @@ jobs:
             }
 
             const reportUrl = Object.values(links)[0] || results[0].htmlPath;
-
             const previewBranch = process.env.PREVIEW_BRANCH || '';
-            const comment = `🔍 **Preview ready!**
+            const previewUrl = 'https://tor2dbear.github.io/portfolio/preview/' + previewBranch + '/';
 
-https://tor2dbear.github.io/portfolio/preview/${previewBranch}/
-
-**Lighthouse Report:**
-| Category | Score |
-|----------|-------|
-| ${emoji(summary.performance)} Performance | ${scores.performance} |
-| ${emoji(summary.accessibility)} Accessibility | ${scores.accessibility} |
-| ${emoji(summary['best-practices'])} Best Practices | ${scores.bestPractices} |
-| ${emoji(summary.seo)} SEO | ${scores.seo} |
-
-[View full report](${reportUrl})${todoSection}`;
+            const comment = [
+              '🔍 **Preview ready!**',
+              '',
+              previewUrl,
+              '',
+              '**Lighthouse Report:**',
+              '| Category | Score |',
+              '|----------|-------|',
+              `| ${emoji(summary.performance)} Performance | ${scores.performance} |`,
+              `| ${emoji(summary.accessibility)} Accessibility | ${scores.accessibility} |`,
+              `| ${emoji(summary['best-practices'])} Best Practices | ${scores.bestPractices} |`,
+              `| ${emoji(summary.seo)} SEO | ${scores.seo} |`,
+              '',
+              `[View full report](${reportUrl})${todoSection}`
+            ].join('\n');
 
             core.setOutput('comment', comment);
 
