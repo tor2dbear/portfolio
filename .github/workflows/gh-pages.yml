@@ -2,10 +2,6 @@ name: CI & Preview
 
 on:
   push:
-    branches:
-      - main
-      - master
-      - claude/**
   pull_request:
 
 jobs:
@@ -165,6 +161,9 @@ https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
 [View full report](${reportUrl})${todoSection}`;
 
             core.setOutput('comment', comment);
+            core.setOutput('todoSection', todoSection);
+            core.setOutput('reportUrl', reportUrl);
+            core.setOutput('hasTodos', todos.length > 0 ? 'true' : 'false');
 
       - name: Comment preview URL with Lighthouse
         if: github.event_name == 'pull_request'
@@ -177,3 +176,25 @@ https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
               repo: context.repo.repo,
               body: `${{ steps.lighthouse_score.outputs.comment }}`
             })
+
+      - name: Create Lighthouse issue
+        if: github.event_name == 'pull_request' && steps.lighthouse_score.outputs.hasTodos == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = process.env.PREVIEW_BRANCH || context.ref.replace('refs/heads/', '');
+            const reportUrl = `${{ steps.lighthouse_score.outputs.reportUrl }}`;
+            const todoSection = `${{ steps.lighthouse_score.outputs.todoSection }}`;
+            const title = `Lighthouse findings: ${branch}`;
+            const body = `Automated Lighthouse detected issues for **${branch}**.
+
+            Preview: https://tor2dbear.github.io/portfolio/preview/${branch}/
+
+            Report: ${reportUrl}${todoSection}`;
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body
+            });
