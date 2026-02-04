@@ -63,6 +63,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           destination_dir: preview/${{ env.PREVIEW_BRANCH }}
+          keep_files: true
 
       - name: Comment preview URL
         if: github.event_name == 'pull_request'
