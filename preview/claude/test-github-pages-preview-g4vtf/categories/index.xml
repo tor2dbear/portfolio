@@ -1,0 +1,11 @@
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Wed, 04 Feb 2026 07:46:27 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/categories/" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>
