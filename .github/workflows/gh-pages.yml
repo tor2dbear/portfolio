@@ -55,7 +55,7 @@ jobs:
           extended: true
 
       - name: Build
-        run: hugo --minify --buildFuture --buildDrafts --baseURL "https://www.tor-bjorn.com/preview/${{ env.PREVIEW_BRANCH }}/"
+        run: hugo --minify --buildFuture --buildDrafts --baseURL "https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -74,5 +74,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🔍 **Preview ready!**\n\nhttps://www.tor-bjorn.com/preview/${{ env.PREVIEW_BRANCH }}/'
+              body: '🔍 **Preview ready!**\n\nhttps://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/'
             })

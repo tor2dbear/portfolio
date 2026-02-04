@@ -296,10 +296,9 @@ Preview builds use **GitHub Pages** instead of Netlify to save build credits.
 1. Push to any non-main/master branch triggers GitHub Actions
 2. Hugo builds with branch-specific baseURL
 3. Deploys to GitHub Pages at `/preview/<branch-name>/`
-4. Custom domain redirects to: `https://www.tor-bjorn.com/preview/<branch-name>/`
 
 **Preview URLs**:
-- Branch `feature/new-thing-a1b2` → `https://www.tor-bjorn.com/preview/feature/new-thing-a1b2/`
+- Branch `feature/new-thing-a1b2` → `https://tor2dbear.github.io/portfolio/preview/feature/new-thing-a1b2/`
 - PR comments automatically include preview link
 
 ### Forcing a Netlify Preview
