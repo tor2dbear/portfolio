@@ -183,16 +183,106 @@ jobs:
 
             core.setOutput('comment', comment);
 
-      - name: Comment preview URL with Lighthouse
+      - name: Run axe accessibility scan
+        id: axe
+        run: |
+          npm install -g @axe-core/cli
+          URL="https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
+          axe "$URL" --save axe-results.json --exit || true
+          echo "Axe scan complete"
+
+      - name: Process axe results
+        id: axe_results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let violations = [];
+            let axeSection = '';
+
+            try {
+              const results = JSON.parse(fs.readFileSync('axe-results.json', 'utf8'));
+              violations = results[0]?.violations || [];
+
+              if (violations.length > 0) {
+                axeSection = '\n\n**Axe Accessibility Issues:**\n';
+                for (const v of violations.slice(0, 10)) {
+                  const impact = v.impact === 'critical' ? '🔴' : v.impact === 'serious' ? '🟠' : '🟡';
+                  axeSection += '- [ ] ' + impact + ' ' + v.help + ' (' + v.nodes.length + ' elements)\n';
+                }
+              }
+            } catch (e) {
+              console.log('Could not parse axe results:', e.message);
+            }
+
+            core.setOutput('section', axeSection);
+            core.setOutput('count', violations.length.toString());
+            core.setOutput('hasViolations', violations.length > 0 ? 'true' : 'false');
+
+      - name: Comment preview URL with Lighthouse and Axe
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         env:
           COMMENT_BODY: ${{ steps.lighthouse_score.outputs.comment }}
+          AXE_SECTION: ${{ steps.axe_results.outputs.section }}
         with:
           script: |
+            const body = process.env.COMMENT_BODY + (process.env.AXE_SECTION || '');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: process.env.COMMENT_BODY
+              body: body
+            })
+
+      - name: Create accessibility issue if needed
+        if: github.event_name == 'pull_request' && steps.axe_results.outputs.hasViolations == 'true'
+        uses: actions/github-script@v7
+        env:
+          AXE_SECTION: ${{ steps.axe_results.outputs.section }}
+          AXE_COUNT: ${{ steps.axe_results.outputs.count }}
+        with:
+          script: |
+            const fs = require('fs');
+            const branch = process.env.PREVIEW_BRANCH || context.ref.replace('refs/heads/', '');
+            const previewUrl = 'https://tor2dbear.github.io/portfolio/preview/' + branch + '/';
+
+            let details = '';
+            try {
+              const results = JSON.parse(fs.readFileSync('axe-results.json', 'utf8'));
+              const violations = results[0]?.violations || [];
+              for (const v of violations) {
+                details += '\n### ' + v.help + '\n';
+                details += '**Impact:** ' + v.impact + ' | **WCAG:** ' + (v.tags.filter(t => t.startsWith('wcag')).join(', ') || 'n/a') + '\n\n';
+                details += v.description + '\n\n';
+                details += '**Affected elements:**\n';
+                for (const node of v.nodes.slice(0, 3)) {
+                  details += '```html\n' + node.html + '\n```\n';
+                }
+                if (v.nodes.length > 3) {
+                  details += '...and ' + (v.nodes.length - 3) + ' more elements\n';
+                }
+              }
+            } catch (e) {
+              details = 'Could not parse detailed results.';
+            }
+
+            const body = [
+              'Axe accessibility scan found **' + process.env.AXE_COUNT + ' issues** on branch `' + branch + '`.',
+              '',
+              'Preview: ' + previewUrl,
+              '',
+              '## Issues Found',
+              process.env.AXE_SECTION,
+              '',
+              '## Details',
+              details
+            ].join('\n');
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Accessibility issues: ' + branch,
+              body: body,
+              labels: ['accessibility', 'automated']
             })
