@@ -2,62 +2,62 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
-    <link>https://tor2dbear.github.io/portfolio/</link>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/test-github-pages-preview-g4vtf/</link>
     <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Wed, 04 Feb 2026 07:51:26 &#43;0000</lastBuildDate>
-    <atom:link href="https://tor2dbear.github.io/portfolio/works/tags/print/" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 04 Feb 2026 07:55:31 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/test-github-pages-preview-g4vtf/works/tags/print/" rel="self" type="application/rss+xml" />
     <item>
       <title>Gothenburg Poster</title>
-      <link>https://tor2dbear.github.io/portfolio/works/gothenburg-poster/</link>
-      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/works/gothenburg-poster/</guid>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/</guid>
       <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
       <description>&lt;figure class=&#34;reveal&#34;&gt;
         &lt;picture&gt;
           &lt;source
             media=&#34;(max-width: 393px)&#34;
             srcset=&#34;
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_d539bfe587c2e4b7.webp 1x,
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_887b9f6f3b1793d1.webp 2x
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_d539bfe587c2e4b7.webp 1x,
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_887b9f6f3b1793d1.webp 2x
             &#34;
             sizes=&#34;(max-width: 393px) 100vw&#34;
           /&gt;
           &lt;source
             media=&#34;(max-width: 430px)&#34;
             srcset=&#34;
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_887b9f6f3b1793d1.webp 1x,
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_6d7515a4faab834.webp 2x
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_887b9f6f3b1793d1.webp 1x,
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_6d7515a4faab834.webp 2x
             &#34;
             sizes=&#34;(max-width: 430px) 100vw&#34;
           /&gt;
           &lt;source
             media=&#34;(max-width: 768px)&#34;
             srcset=&#34;
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_6d7515a4faab834.webp 1x,
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_388870167d417cbd.webp 2x
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_6d7515a4faab834.webp 1x,
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_388870167d417cbd.webp 2x
             &#34;
             sizes=&#34;(max-width: 768px) 100vw&#34;
           /&gt;
           &lt;source
             media=&#34;(max-width: 1400px)&#34;
             srcset=&#34;
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_388870167d417cbd.webp 1x,
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_20b251866bb4b1f4.webp 2x
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_388870167d417cbd.webp 1x,
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_20b251866bb4b1f4.webp 2x
             &#34;
             sizes=&#34;(max-width: 1400px) 100vw&#34;
           /&gt;
           &lt;source
             media=&#34;(min-width: 1401px)&#34;
             srcset=&#34;
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_20b251866bb4b1f4.webp 1x,
-              /portfolio/works/gothenburg-poster/gbg_poster08_hu_20b251866bb4b1f4.webp 2x
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_20b251866bb4b1f4.webp 1x,
+              /portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_20b251866bb4b1f4.webp 2x
             &#34;
             sizes=&#34;100vw&#34;
           /&gt;
           &lt;img
             alt=&#34;Header example&#34;
             title=&#34;Header example&#34;
-            src=&#34;https://tor2dbear.github.io/portfolio/works/gothenburg-poster/gbg_poster08_hu_e95df174c1163d0f.jpg&#34;
+            src=&#34;https://tor2dbear.github.io/portfolio/preview/claude/test-github-pages-preview-g4vtf/works/gothenburg-poster/gbg_poster08_hu_e95df174c1163d0f.jpg&#34;
             height=&#34;1280&#34;
             width=&#34;1920&#34;
             class=&#34;img-fluid&#34;
