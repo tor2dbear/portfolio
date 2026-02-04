@@ -5,7 +5,7 @@
   publish = "public"
   command = "hugo --minify --baseURL $URL"
   # Skip builds for claude/* branches - previews handled by GitHub Pages
-  ignore = "bash -c 'echo $BRANCH | grep -q ^claude/'"
+  ignore = "test \"${BRANCH#claude/}\" != \"$BRANCH\""
 
 [build.environment]
   HUGO_VERSION = "0.154.2"
