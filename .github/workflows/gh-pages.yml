@@ -8,6 +8,10 @@ on:
       - claude/**
   pull_request:
 
+concurrency:
+  group: preview-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -66,7 +70,20 @@ jobs:
           keep_files: true
 
       - name: Wait for GitHub Pages deployment
-        run: sleep 30
+        run: |
+          URL="https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
+          echo "Waiting for $URL to be available..."
+          for i in {1..30}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$STATUS" = "200" ]; then
+              echo "Page is available (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i: HTTP $STATUS, waiting 10s..."
+            sleep 10
+          done
+          echo "Page not available after 30 attempts"
+          exit 1
 
       - name: Run Lighthouse CI
         id: lighthouse
@@ -149,31 +166,251 @@ jobs:
             }
 
             const reportUrl = Object.values(links)[0] || results[0].htmlPath;
+            const previewBranch = process.env.PREVIEW_BRANCH || '';
+            const previewUrl = 'https://tor2dbear.github.io/portfolio/preview/' + previewBranch + '/';
 
-            const comment = `🔍 **Preview ready!**
-
-https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
-
-**Lighthouse Report:**
-| Category | Score |
-|----------|-------|
-| ${emoji(summary.performance)} Performance | ${scores.performance} |
-| ${emoji(summary.accessibility)} Accessibility | ${scores.accessibility} |
-| ${emoji(summary['best-practices'])} Best Practices | ${scores.bestPractices} |
-| ${emoji(summary.seo)} SEO | ${scores.seo} |
-
-[View full report](${reportUrl})${todoSection}`;
+            const comment = [
+              '🔍 **Preview ready!**',
+              '',
+              previewUrl,
+              '',
+              '**Lighthouse Report:**',
+              '| Category | Score |',
+              '|----------|-------|',
+              `| ${emoji(summary.performance)} Performance | ${scores.performance} |`,
+              `| ${emoji(summary.accessibility)} Accessibility | ${scores.accessibility} |`,
+              `| ${emoji(summary['best-practices'])} Best Practices | ${scores.bestPractices} |`,
+              `| ${emoji(summary.seo)} SEO | ${scores.seo} |`,
+              '',
+              `[View full report](${reportUrl})${todoSection}`
+            ].join('\n');
 
             core.setOutput('comment', comment);
+            core.setOutput('todoSection', todoSection);
+            core.setOutput('hasTodos', todos.length > 0 ? 'true' : 'false');
+            core.setOutput('reportUrl', reportUrl);
 
-      - name: Comment preview URL with Lighthouse
-        if: github.event_name == 'pull_request'
+      - name: Run axe accessibility scan
+        id: axe
+        run: |
+          npm install -g @axe-core/cli
+          URL="https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
+          axe "$URL" --save axe-results.json --exit || true
+          echo "Axe scan complete"
+
+      - name: Process axe results
+        id: axe_results
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
+            let violations = [];
+            let axeSection = '';
+
+            try {
+              const results = JSON.parse(fs.readFileSync('axe-results.json', 'utf8'));
+              violations = results[0]?.violations || [];
+
+              if (violations.length > 0) {
+                axeSection = '\n\n**Axe Accessibility Issues:**\n';
+                for (const v of violations.slice(0, 10)) {
+                  const impact = v.impact === 'critical' ? '🔴' : v.impact === 'serious' ? '🟠' : '🟡';
+                  axeSection += '- [ ] ' + impact + ' ' + v.help + ' (' + v.nodes.length + ' elements)\n';
+                }
+              }
+            } catch (e) {
+              console.log('Could not parse axe results:', e.message);
+            }
+
+            core.setOutput('section', axeSection);
+            core.setOutput('count', violations.length.toString());
+            core.setOutput('hasViolations', violations.length > 0 ? 'true' : 'false');
+
+      - name: Create accessibility issue if needed
+        if: github.event_name == 'pull_request' && steps.axe_results.outputs.hasViolations == 'true'
+        uses: actions/github-script@v7
+        env:
+          AXE_SECTION: ${{ steps.axe_results.outputs.section }}
+          AXE_COUNT: ${{ steps.axe_results.outputs.count }}
+        with:
+          script: |
+            const fs = require('fs');
+            const branch = process.env.PREVIEW_BRANCH || context.ref.replace('refs/heads/', '');
+            const previewUrl = 'https://tor2dbear.github.io/portfolio/preview/' + branch + '/';
+
+            let details = '';
+            try {
+              const results = JSON.parse(fs.readFileSync('axe-results.json', 'utf8'));
+              const violations = results[0]?.violations || [];
+              for (const v of violations) {
+                details += '\n### ' + v.help + '\n';
+                details += '**Impact:** ' + v.impact + ' | **WCAG:** ' + (v.tags.filter(t => t.startsWith('wcag')).join(', ') || 'n/a') + '\n\n';
+                details += v.description + '\n\n';
+                details += '**Affected elements:**\n';
+                for (const node of v.nodes.slice(0, 3)) {
+                  details += '```html\n' + node.html + '\n```\n';
+                }
+                if (v.nodes.length > 3) {
+                  details += '...and ' + (v.nodes.length - 3) + ' more elements\n';
+                }
+              }
+            } catch (e) {
+              details = 'Could not parse detailed results.';
+            }
+
+            const body = [
+              'Axe accessibility scan found **' + process.env.AXE_COUNT + ' issues** on branch `' + branch + '`.',
+              '',
+              'Preview: ' + previewUrl,
+              '',
+              '## Issues Found',
+              process.env.AXE_SECTION,
+              '',
+              '## Details',
+              details
+            ].join('\n');
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Accessibility issues: ' + branch,
+              body: body,
+              labels: ['accessibility', 'automated']
+            })
+
+      - name: Create Lighthouse issue if needed
+        if: github.event_name == 'pull_request' && steps.lighthouse_score.outputs.hasTodos == 'true'
+        uses: actions/github-script@v7
+        env:
+          TODO_SECTION: ${{ steps.lighthouse_score.outputs.todoSection }}
+          REPORT_URL: ${{ steps.lighthouse_score.outputs.reportUrl }}
+        with:
+          script: |
+            const branch = process.env.PREVIEW_BRANCH || context.ref.replace('refs/heads/', '');
+            const previewUrl = 'https://tor2dbear.github.io/portfolio/preview/' + branch + '/';
+            const reportUrl = process.env.REPORT_URL || '';
+            const todoSection = process.env.TODO_SECTION || '';
+
+            const body = [
+              'Lighthouse audit found improvement opportunities on branch `' + branch + '`.',
+              '',
+              'Preview: ' + previewUrl,
+              '',
+              'Full report: ' + reportUrl,
+              '',
+              '## Improvement Opportunities',
+              todoSection
+            ].join('\n');
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Lighthouse improvements: ' + branch,
+              body: body,
+              labels: ['performance', 'automated']
+            })
+
+      - name: Check for broken links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --base https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
+            --exclude-loopback
+            --exclude-mail
+            --accept 200,204,301,302,307,308
+            --timeout 30
+            --max-retries 3
+            ./public
+          output: lychee-results.md
+          fail: false
+
+      - name: Process broken links
+        id: broken_links
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let brokenLinks = [];
+            let linkSection = '';
+
+            try {
+              const results = fs.readFileSync('lychee-results.md', 'utf8');
+              const lines = results.split('\n');
+
+              for (const line of lines) {
+                if (line.includes('[ERR]') || line.includes('[FAIL]')) {
+                  brokenLinks.push(line.trim());
+                }
+              }
+
+              if (brokenLinks.length > 0) {
+                linkSection = '\n\n**Broken Links Found:**\n';
+                for (const link of brokenLinks.slice(0, 15)) {
+                  linkSection += '- ' + link + '\n';
+                }
+                if (brokenLinks.length > 15) {
+                  linkSection += '...and ' + (brokenLinks.length - 15) + ' more\n';
+                }
+              }
+            } catch (e) {
+              console.log('Could not parse lychee results:', e.message);
+            }
+
+            core.setOutput('section', linkSection);
+            core.setOutput('count', brokenLinks.length.toString());
+            core.setOutput('hasBrokenLinks', brokenLinks.length > 0 ? 'true' : 'false');
+
+      - name: Comment on PR with all results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: ${{ steps.lighthouse_score.outputs.comment }}
+          AXE_SECTION: ${{ steps.axe_results.outputs.section }}
+          LINK_SECTION: ${{ steps.broken_links.outputs.section }}
+        with:
+          script: |
+            const body = process.env.COMMENT_BODY + (process.env.AXE_SECTION || '') + (process.env.LINK_SECTION || '');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `${{ steps.lighthouse_score.outputs.comment }}`
+              body: body
+            })
+
+      - name: Create broken links issue if needed
+        if: github.event_name == 'pull_request' && steps.broken_links.outputs.hasBrokenLinks == 'true'
+        uses: actions/github-script@v7
+        env:
+          LINK_COUNT: ${{ steps.broken_links.outputs.count }}
+        with:
+          script: |
+            const fs = require('fs');
+            const branch = process.env.PREVIEW_BRANCH || context.ref.replace('refs/heads/', '');
+            const previewUrl = 'https://tor2dbear.github.io/portfolio/preview/' + branch + '/';
+
+            let details = '';
+            try {
+              details = fs.readFileSync('lychee-results.md', 'utf8');
+            } catch (e) {
+              details = 'Could not read detailed results.';
+            }
+
+            const body = [
+              'Link checker found **' + process.env.LINK_COUNT + ' broken links** on branch `' + branch + '`.',
+              '',
+              'Preview: ' + previewUrl,
+              '',
+              '## Details',
+              '```',
+              details,
+              '```'
+            ].join('\n');
+
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Broken links: ' + branch,
+              body: body,
+              labels: ['broken-links', 'automated']
             })
