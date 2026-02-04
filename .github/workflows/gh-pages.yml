@@ -1,23 +1,24 @@
-name: CI
+name: CI & Preview
 
 on:
   push:
     branches:
+      - main
       - master
+      - claude/**
   pull_request:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
 
@@ -33,3 +34,41 @@ jobs:
       - name: Security audit
         run: npm audit --audit-level=high
         continue-on-error: true
+
+  preview:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.145.0"
+          extended: true
+
+      - name: Build
+        run: hugo --minify --buildFuture --buildDrafts --baseURL "https://tor2dbear.github.io/portfolio/"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          destination_dir: preview/${{ github.ref_name }}
+
+      - name: Comment preview URL
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🔍 **Preview ready!**\n\nhttps://tor2dbear.github.io/portfolio/preview/${{ github.ref_name }}/'
+            })
