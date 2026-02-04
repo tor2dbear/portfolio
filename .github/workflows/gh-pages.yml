@@ -146,9 +146,10 @@ jobs:
 
             const reportUrl = Object.values(links)[0] || results[0].htmlPath;
 
+            const previewUrl = `https://tor2dbear.github.io/portfolio/preview/${process.env.PREVIEW_BRANCH || ''}/`;
             const comment = `🔍 **Preview ready!**
 
-https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
+${previewUrl}
 
 **Lighthouse Report:**
 | Category | Score |
@@ -164,6 +165,7 @@ https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
             core.setOutput('todoSection', todoSection);
             core.setOutput('reportUrl', reportUrl);
             core.setOutput('hasTodos', todos.length > 0 ? 'true' : 'false');
+            core.setOutput('previewUrl', previewUrl);
 
       - name: Comment preview URL with Lighthouse
         if: github.event_name == 'pull_request'
