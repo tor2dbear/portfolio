@@ -282,6 +282,42 @@ git fetch --prune
 
 ---
 
+## Deployment & Preview System
+
+### Production
+- **URL**: https://www.tor-bjorn.com/
+- **Host**: Netlify (main/master branch only)
+- **Build**: Automatic on push to main/master
+
+### Preview Builds
+Preview builds use **GitHub Pages** instead of Netlify to save build credits.
+
+**How it works**:
+1. Push to any non-main/master branch triggers GitHub Actions
+2. Hugo builds with branch-specific baseURL
+3. Deploys to GitHub Pages at `/preview/<branch-name>/`
+4. Custom domain redirects to: `https://www.tor-bjorn.com/preview/<branch-name>/`
+
+**Preview URLs**:
+- Branch `feature/new-thing-a1b2` → `https://www.tor-bjorn.com/preview/feature/new-thing-a1b2/`
+- PR comments automatically include preview link
+
+### Forcing a Netlify Preview
+By default, Netlify skips all non-production builds. To force a Netlify preview:
+
+**Add `[netlify]` to your commit message**:
+```bash
+git commit -m "feat: my changes [netlify]"
+```
+
+This triggers a full Netlify deploy preview with all Netlify features (redirects, headers, etc.).
+
+### Configuration Files
+- **GitHub Actions**: `.github/workflows/gh-pages.yml`
+- **Netlify**: `netlify.toml`
+
+---
+
 ## Content Guidelines
 
 ### Portfolio Projects (`/works/`)
@@ -843,4 +879,4 @@ if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
 
 ---
 
-Last updated: 2026-01-13
+Last updated: 2026-02-04
