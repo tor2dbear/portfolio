@@ -66,7 +66,20 @@ jobs:
           keep_files: true
 
       - name: Wait for GitHub Pages deployment
-        run: sleep 30
+        run: |
+          URL="https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
+          echo "Waiting for $URL to be available..."
+          for i in {1..30}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$STATUS" = "200" ]; then
+              echo "Page is available (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i: HTTP $STATUS, waiting 10s..."
+            sleep 10
+          done
+          echo "Page not available after 30 attempts"
+          exit 1
 
       - name: Run Lighthouse CI
         id: lighthouse
