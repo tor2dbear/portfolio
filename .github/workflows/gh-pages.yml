@@ -150,9 +150,10 @@ jobs:
 
             const reportUrl = Object.values(links)[0] || results[0].htmlPath;
 
+            const previewBranch = process.env.PREVIEW_BRANCH || '';
             const comment = `🔍 **Preview ready!**
 
-https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
+https://tor2dbear.github.io/portfolio/preview/${previewBranch}/
 
 **Lighthouse Report:**
 | Category | Score |
@@ -169,11 +170,13 @@ https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
       - name: Comment preview URL with Lighthouse
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: ${{ steps.lighthouse_score.outputs.comment }}
         with:
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `${{ steps.lighthouse_score.outputs.comment }}`
+              body: process.env.COMMENT_BODY
             })
