@@ -8,6 +8,11 @@ on:
       - claude/**
   pull_request:
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -165,6 +170,46 @@ https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
 [View full report](${reportUrl})${todoSection}`;
 
             core.setOutput('comment', comment);
+            core.setOutput('todos', JSON.stringify(todos));
+
+      - name: Create Lighthouse issues
+        if: ${{ steps.lighthouse_score.outputs.todos != '[]' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const todos = JSON.parse(`${{ steps.lighthouse_score.outputs.todos }}`);
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const links = ${{ steps.lighthouse.outputs.links }};
+            const reportUrl = Object.values(links)[0] || '';
+
+            for (const todo of todos) {
+              const title = `Lighthouse: ${todo.title} (${todo.category})`;
+              const queryTitle = title.replace(/"/g, '\\"');
+              const query = `repo:${owner}/${repo} is:issue in:title "${queryTitle}"`;
+              const existing = await github.rest.search.issuesAndPullRequests({ q: query });
+
+              if (existing.data.items.length > 0) {
+                core.info(`Issue already exists: ${title}`);
+                continue;
+              }
+
+              const body = [
+                `**Category:** ${todo.category}`,
+                `**Score:** ${todo.score}`,
+                '',
+                `Source: ${reportUrl}`,
+                '',
+                `Found in preview build: ${process.env.PREVIEW_BRANCH}`
+              ].join('\n');
+
+              await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body
+              });
+            }
 
       - name: Comment preview URL with Lighthouse
         if: github.event_name == 'pull_request'
