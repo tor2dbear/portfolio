@@ -76,16 +76,62 @@ jobs:
             https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
           uploadArtifacts: true
           temporaryPublicStorage: true
+          configPath: .github/lighthouse/lighthouserc.json
 
-      - name: Format Lighthouse score
+      - name: Format Lighthouse score with TODOs
         id: lighthouse_score
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
             const results = ${{ steps.lighthouse.outputs.manifest }};
+            const links = ${{ steps.lighthouse.outputs.links }};
             const summary = results[0].summary;
             const formatScore = (score) => Math.round(score * 100);
             const emoji = (score) => score >= 0.9 ? '🟢' : score >= 0.5 ? '🟠' : '🔴';
+
+            // Read the full Lighthouse report for detailed audits
+            const lhrPath = results[0].jsonPath;
+            let todos = [];
+
+            try {
+              const lhr = JSON.parse(fs.readFileSync(lhrPath, 'utf8'));
+              const audits = lhr.audits;
+
+              // Categories to check for improvement opportunities
+              const categories = ['performance', 'accessibility', 'best-practices', 'seo'];
+
+              for (const cat of categories) {
+                const catData = lhr.categories[cat];
+                if (!catData) continue;
+
+                for (const auditRef of catData.auditRefs) {
+                  const audit = audits[auditRef.id];
+                  if (!audit) continue;
+
+                  // Include audits that failed or have warnings (score < 0.9)
+                  if (audit.score !== null && audit.score < 0.9 && audit.score !== 1) {
+                    const priority = audit.score < 0.5 ? '🔴' : '🟠';
+                    // Skip audits that are not applicable or informational
+                    if (audit.scoreDisplayMode === 'notApplicable' || audit.scoreDisplayMode === 'informative') continue;
+
+                    todos.push({
+                      priority,
+                      category: cat,
+                      title: audit.title,
+                      score: Math.round(audit.score * 100)
+                    });
+                  }
+                }
+              }
+
+              // Remove duplicates and sort by priority
+              todos = [...new Map(todos.map(t => [t.title, t])).values()]
+                .sort((a, b) => a.score - b.score)
+                .slice(0, 10); // Limit to top 10 issues
+            } catch (e) {
+              console.log('Could not parse LHR for TODOs:', e.message);
+            }
 
             const scores = {
               performance: formatScore(summary.performance),
@@ -93,6 +139,16 @@ jobs:
               bestPractices: formatScore(summary['best-practices']),
               seo: formatScore(summary.seo)
             };
+
+            let todoSection = '';
+            if (todos.length > 0) {
+              todoSection = `\n\n**Improvement Opportunities:**\n`;
+              for (const todo of todos) {
+                todoSection += `- [ ] ${todo.priority} ${todo.title}\n`;
+              }
+            }
+
+            const reportUrl = Object.values(links)[0] || results[0].htmlPath;
 
             const comment = `🔍 **Preview ready!**
 
@@ -106,7 +162,7 @@ https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/
 | ${emoji(summary['best-practices'])} Best Practices | ${scores.bestPractices} |
 | ${emoji(summary.seo)} SEO | ${scores.seo} |
 
-[View full report](${results[0].htmlPath})`;
+[View full report](${reportUrl})${todoSection}`;
 
             core.setOutput('comment', comment);
 
