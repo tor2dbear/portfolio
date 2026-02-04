@@ -22,14 +22,14 @@
       <li class="application-breadcrumb__item application-breadcrumb__item--caps">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
           <svg class="icon icon--sm" aria-hidden="true">
-            <use href="/img/svg/sprite.svg#icon-home"></use>
+            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-home"></use>
           </svg>
           <span>Start</span>
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="/img/svg/sprite.svg#icon-arrow-right-micro"></use>
+          <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-arrow-right-micro"></use>
         </svg>
       </li>
       <!-- company_name for localstorage -->

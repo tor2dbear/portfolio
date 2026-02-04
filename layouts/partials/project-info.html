@@ -67,7 +67,7 @@
             <a class="project-info__link" href="{{ $clientUrl }}" target="_blank" rel="noopener">
               {{ $clientUrl | replaceRE "^https?://(www\\.)?" "" | replaceRE "/$" "" }}
               <svg class="icon icon--sm project-info__icon" aria-hidden="true" focusable="false">
-                <use href="/img/svg/sprite.svg#icon-new-window"></use>
+                <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-new-window"></use>
               </svg>
             </a>
           </p>
