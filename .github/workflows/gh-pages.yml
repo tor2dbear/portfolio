@@ -59,7 +59,7 @@ jobs:
           extended: true
 
       - name: Build
-        run: hugo --minify --buildFuture --buildDrafts --baseURL "https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
+        run: hugo --minify --buildFuture --baseURL "https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
