@@ -292,7 +292,7 @@ jobs:
               details
             ].join('\n');
 
-            github.rest.issues.create({
+            await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'Accessibility issues: ' + branch,
@@ -324,7 +324,7 @@ jobs:
               todoSection
             ].join('\n');
 
-            github.rest.issues.create({
+            await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'Lighthouse improvements: ' + branch,
@@ -394,7 +394,7 @@ jobs:
         with:
           script: |
             const body = process.env.COMMENT_BODY + (process.env.AXE_SECTION || '') + (process.env.LINK_SECTION || '');
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: parseInt(process.env.PR_NUMBER),
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -430,7 +430,7 @@ jobs:
               '```'
             ].join('\n');
 
-            github.rest.issues.create({
+            await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'Broken links: ' + branch,
