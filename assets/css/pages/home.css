@@ -78,6 +78,7 @@
   max-width: var(--content-max-width-narrow);
   line-height: 1.4;
   font-size: clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl));
+  text-wrap: pretty;
 }
 
 .role-swapper {
