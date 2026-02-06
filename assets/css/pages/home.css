@@ -75,7 +75,7 @@
 }
 
 .hero-title {
-  max-width: var(--content-max-width-narrow);
+  /* Width controlled by grid placement (use .place-prose or --col on the element) */
   line-height: 1.4;
   font-size: clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl));
 }

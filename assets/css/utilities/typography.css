@@ -393,7 +393,10 @@ figcaption {
    PROSE CONTENT
    ========================================================================== */
 
-.prose :is(p, ul, ol, blockquote, table) {
+/* Text measure is now controlled by grid placement (.place-prose = 8 cols).
+   An optional .prose-measure class is available as a safety net for prose
+   content that renders outside the grid (e.g. CMS embeds). */
+.prose-measure :is(p, ul, ol, blockquote, table) {
   max-width: 70ch;
 }
 

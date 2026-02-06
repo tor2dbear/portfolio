@@ -330,6 +330,25 @@
   font-weight: 500;
 }
 
+/* Art-direction demo: items with --col set via class or inline style */
+.grid-demo .place-full,
+.grid-demo .place-wide,
+.grid-demo .place-prose,
+.grid-demo .place-narrow,
+.grid-demo .place-inset,
+.grid-demo .place-aside,
+.grid-demo .place-aside-left,
+.grid-demo .place-bleed,
+.grid-demo [style*="--col"] {
+  grid-column: var(--col);
+  grid-row: var(--row, auto);
+}
+
+/* Stepped demo items pick up --col from nth-child rules */
+.grid-demo[class*="stepped-"] > * {
+  grid-column: var(--col);
+}
+
 .code-example {
   margin-top: var(--spacing-8);
 }

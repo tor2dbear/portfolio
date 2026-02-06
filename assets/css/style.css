@@ -114,18 +114,8 @@ footer {
     row-gap: var(--spacing-24);
   }
 
-  .content.post>* {
-    grid-column: col-start 1 / span 4;
-  }
-
-  .content.post>figure.headerimg,
-  #main .content.post>figure:first-of-type,
-  .content.post>.post-nav {
-    grid-column: col-start 1 / span 4;
-  }
-
-  .content.post>.project-client {
-    grid-column: col-start 1 / span 4;
+  .content.post > * {
+    --col: col-start 1 / span 4;
   }
 }
 
@@ -140,14 +130,17 @@ footer>* {
   grid-column: content-start / content-end;
 }
 
-.content.post>* {
-  grid-column: col-start 1 / span 10;
+/* Post children use --col for art-directed placement.
+   Default: 10 cols. Override with .place-* or style="--col: …" */
+.content.post > * {
+  grid-column: var(--col, col-start 1 / span 10);
+  grid-row: var(--row, auto);
 }
 
-.content.post>figure.headerimg,
-#main .content.post>figure:first-of-type,
-.content.post>.post-nav {
-  grid-column: col-start 1 / span 12;
+.content.post > figure.headerimg,
+#main .content.post > figure:first-of-type,
+.content.post > .post-nav {
+  --col: col-start 1 / span 12;
 }
 
 
@@ -226,24 +219,21 @@ picture>img {
 /* NOTE: Article card styles (list page layout) moved to assets/css/components/article-card.css */
 
 /* || ========== Post pages ------------------------------------- */
-.content.post>* {
-  grid-column: col-start 1 / span 10;
-}
 
 /* Remove empty p-tags */
 p:empty {
   display: none;
 }
 
-/* lg: <= 79.9375em */
+/* lg: <= 79.9375em — expand default post placement to full content width */
 @media (max-width: 79.9375em) {
-  .content.post>* {
-    grid-column: col-start 1 / span 12;
+  .content.post > * {
+    --col: col-start 1 / span 12;
   }
 }
 
 .content.post {
-  max-width: 64rem;
+  /* Width controlled by grid placement on #main (--content-max-width) */
   --post-media-gap: var(--spacing-24);
 }
 

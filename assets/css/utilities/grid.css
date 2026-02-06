@@ -1,4 +1,9 @@
-/* Grid utilities for subgrid migration */
+/* ==========================================================================
+   GRID SYSTEM
+   12-column subgrid with art-direction API
+   ========================================================================== */
+
+/* --- Page grid (root) --------------------------------------------------- */
 
 .page-grid {
   display: grid;
@@ -7,6 +12,8 @@
   column-gap: var(--spacing-24);
   row-gap: var(--spacing-32);
 }
+
+/* --- Subgrid container -------------------------------------------------- */
 
 .use-subgrid {
   display: grid;
@@ -39,6 +46,116 @@
     grid-column-end: span 4;
   }
 }
+
+/* ==========================================================================
+   ART-DIRECTION API
+   Variable-driven placement for editorial grid control.
+
+   Any child of .use-subgrid can be placed via:
+     style="--col: col-start 3 / span 8;"
+   or via a preset class (.place-prose, .place-wide, etc.)
+   ========================================================================== */
+
+.use-subgrid > [style*="--col"],
+.use-subgrid > .place-full,
+.use-subgrid > .place-wide,
+.use-subgrid > .place-prose,
+.use-subgrid > .place-narrow,
+.use-subgrid > .place-inset,
+.use-subgrid > .place-aside,
+.use-subgrid > .place-aside-left,
+.use-subgrid > .place-bleed {
+  grid-column: var(--col);
+  grid-row: var(--row, auto);
+}
+
+/* sm: collapse art-directed items to full width unless --col-sm is set */
+@media (max-width: 47.9375em) {
+  .use-subgrid > [style*="--col"],
+  .use-subgrid > .place-full,
+  .use-subgrid > .place-wide,
+  .use-subgrid > .place-prose,
+  .use-subgrid > .place-narrow,
+  .use-subgrid > .place-inset,
+  .use-subgrid > .place-aside,
+  .use-subgrid > .place-aside-left,
+  .use-subgrid > .place-bleed {
+    grid-column: var(--col-sm, col-start 1 / -1);
+  }
+}
+
+/* --- Placement presets -------------------------------------------------- */
+
+.place-full       { --col: col-start 1  / span 12; }
+.place-wide       { --col: col-start 1  / span 10; }
+.place-prose      { --col: col-start 1  / span 8;  }
+.place-narrow     { --col: col-start 2  / span 8;  }
+.place-inset      { --col: col-start 3  / span 8;  }
+.place-aside      { --col: col-start 9  / span 4;  }
+.place-aside-left { --col: col-start 1  / span 4;  }
+.place-bleed      { --col: full-start / full-end;   }
+
+/* ==========================================================================
+   STEPPED TEXT — "tripp-trapp-trull" editorial pattern
+
+   Usage:
+     <div class="use-subgrid stepped-3-3">
+       <p>Line one</p>
+       <p>Line two</p>
+       <p>Line three</p>
+     </div>
+
+   Each child occupies its own grid row (auto).
+   Named variants encode offset + span: .stepped-{offset}-{span}
+   ========================================================================== */
+
+/* offset 2, span 4 (overlapping staircase) */
+.stepped-2-4 > :nth-child(1) { --col: col-start 1 / span 4; }
+.stepped-2-4 > :nth-child(2) { --col: col-start 3 / span 4; }
+.stepped-2-4 > :nth-child(3) { --col: col-start 5 / span 4; }
+.stepped-2-4 > :nth-child(4) { --col: col-start 7 / span 4; }
+.stepped-2-4 > :nth-child(5) { --col: col-start 9 / span 4; }
+
+/* offset 3, span 3 (clean staircase, no overlap) */
+.stepped-3-3 > :nth-child(1) { --col: col-start 1  / span 3; }
+.stepped-3-3 > :nth-child(2) { --col: col-start 4  / span 3; }
+.stepped-3-3 > :nth-child(3) { --col: col-start 7  / span 3; }
+.stepped-3-3 > :nth-child(4) { --col: col-start 10 / span 3; }
+
+/* offset 4, span 4 (wide non-overlapping staircase) */
+.stepped-4-4 > :nth-child(1) { --col: col-start 1 / span 4; }
+.stepped-4-4 > :nth-child(2) { --col: col-start 5 / span 4; }
+.stepped-4-4 > :nth-child(3) { --col: col-start 9 / span 4; }
+
+/* offset 1, span 6 (wide blocks, slow drift) */
+.stepped-1-6 > :nth-child(1) { --col: col-start 1 / span 6; }
+.stepped-1-6 > :nth-child(2) { --col: col-start 2 / span 6; }
+.stepped-1-6 > :nth-child(3) { --col: col-start 3 / span 6; }
+.stepped-1-6 > :nth-child(4) { --col: col-start 4 / span 6; }
+.stepped-1-6 > :nth-child(5) { --col: col-start 5 / span 6; }
+.stepped-1-6 > :nth-child(6) { --col: col-start 6 / span 6; }
+.stepped-1-6 > :nth-child(7) { --col: col-start 7 / span 6; }
+
+/* sm: collapse stepped layouts to full width */
+@media (max-width: 47.9375em) {
+  [class*="stepped-"] > * {
+    --col: col-start 1 / -1;
+  }
+}
+
+/* ==========================================================================
+   ROW BEHAVIOUR
+   Rows remain content-driven by default (auto).
+   Never use grid-auto-rows: 1fr — it equalises rows and causes overlap.
+   ========================================================================== */
+
+.grid-rows-auto    { grid-auto-rows: auto; }
+.grid-rows-content { grid-auto-rows: max-content; }
+
+/* ==========================================================================
+   LEGACY UTILITIES
+   Kept for backward compatibility. Prefer .place-* presets or --col.
+   ========================================================================== */
 
 .col-full {
   grid-column: full-start / full-end;
