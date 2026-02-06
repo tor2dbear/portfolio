@@ -6,6 +6,7 @@ url: "/sv/kontakt"
 aliases:
   - /sv/contact/
 sidemenu: true
+type: contact
 description: Skriv en rad om du vill diskutera något eller bara säga hallå. Jag gillar att höra från nyfikna människor och skapare.
 ---
 
