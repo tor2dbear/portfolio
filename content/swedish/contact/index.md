@@ -7,7 +7,6 @@ aliases:
   - /sv/contact/
 sidemenu: true
 description: Skriv en rad om du vill diskutera något eller bara säga hallå. Jag gillar att höra från nyfikna människor och skapare.
-layout: contact
 ---
 
 <div class="page-notice">

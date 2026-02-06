@@ -2,8 +2,7 @@
 title = "Say hello."
 date = "2014-04-09"
 sidemenu = "true"
-description = "Whether you’re curious about a project or simply want to say hi, my inbox is open. I enjoy hearing from thoughtful people and makers."
-layout = "contact"
+description = "Whether you're curious about a project or simply want to say hi, my inbox is open. I enjoy hearing from thoughtful people and makers."
 +++
 
 <div class="page-notice">
