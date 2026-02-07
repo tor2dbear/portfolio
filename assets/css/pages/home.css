@@ -196,19 +196,20 @@
 }
 
 .home-page .contact-info {
-  grid-column: col-start 1 / span 6;
+  --col: col-start 1 / span 6;
+  grid-column: var(--col);
   grid-row: 1;
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .contact-info {
-    grid-column: col-start 1 / span 4;
+    --col: col-start 1 / span 4;
     grid-row: 1;
   }
 
   .contact-portrait {
-    grid-column: col-start 1 / span 4;
+    --col: col-start 1 / span 4;
     grid-row: 2;
   }
 }
@@ -223,7 +224,7 @@
 @media (max-width: 47.9375em) {
   .summary-card--wide,
   .summary-card--compact {
-    grid-column: col-start 1 / span 4;
+    --col: col-start 1 / span 4;
   }
 }
 

@@ -84,12 +84,13 @@ article {
 }
 
 .content.list article {
-  grid-column: col-start 1 / span 6;
+  --col: col-start 1 / span 6;
+  grid-column: var(--col);
 }
 
 /* Make last odd article span full width */
 .content.list article:nth-last-of-type(1):nth-of-type(odd) {
-  grid-column: col-start 1 / span 12;
+  --col: col-start 1 / span 12;
 }
 
 /* sm: <= 47.9375em */
@@ -104,7 +105,7 @@ article {
   }
 
   .content.list article {
-    grid-column: col-start 1 / span 4;
+    --col: col-start 1 / span 4;
   }
 
   .content.list.works-list {
@@ -122,8 +123,8 @@ article {
    ========================================================================== */
 
 .content.post .related-items__item {
-  grid-column-start: auto;
-  grid-column-end: span 4;
+  --col: auto / span 4;
+  grid-column: var(--col);
 }
 
 #layout.clientpage .related-items__title,
@@ -143,7 +144,6 @@ article {
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .content.post .related-items__item:nth-of-type(n + 1) {
-    grid-column-start: auto;
-    grid-column-end: span 4;
+    --col: auto / span 4;
   }
 }
