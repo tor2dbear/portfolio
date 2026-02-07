@@ -3,7 +3,7 @@
  * Shows/hides a 12-column grid overlay for design verification.
  * Toggle via theme panel button or Ctrl+G keyboard shortcut.
  * State persisted in localStorage.
- * Columns animate in (left→right) and out (right→left) with stagger.
+ * Columns animate in/out only on explicit toggle (not page navigation).
  */
 (function () {
   var STORAGE_KEY = "grid-overlay";
@@ -17,6 +17,7 @@
 
   function enable() {
     closing = false;
+    document.documentElement.setAttribute("data-grid-animate", "");
     document.documentElement.setAttribute("data-grid-overlay", "");
     localStorage.setItem(STORAGE_KEY, "true");
     updateUI(true);
@@ -26,6 +27,7 @@
     if (closing) return;
     closing = true;
 
+    document.documentElement.setAttribute("data-grid-animate", "");
     document.documentElement.setAttribute("data-grid-overlay", "closing");
     updateUI(false);
 
@@ -36,6 +38,7 @@
         "animationend",
         function () {
           document.documentElement.removeAttribute("data-grid-overlay");
+          document.documentElement.removeAttribute("data-grid-animate");
           localStorage.removeItem(STORAGE_KEY);
           closing = false;
         },
@@ -46,12 +49,14 @@
       setTimeout(function () {
         if (closing) {
           document.documentElement.removeAttribute("data-grid-overlay");
+          document.documentElement.removeAttribute("data-grid-animate");
           localStorage.removeItem(STORAGE_KEY);
           closing = false;
         }
       }, 600);
     } else {
       document.documentElement.removeAttribute("data-grid-overlay");
+      document.documentElement.removeAttribute("data-grid-animate");
       localStorage.removeItem(STORAGE_KEY);
       closing = false;
     }
@@ -72,18 +77,12 @@
     });
   }
 
-  // Restore state from localStorage (suppress animation on load)
+  // Restore state from localStorage — no animation on page load
   if (localStorage.getItem(STORAGE_KEY) === "true") {
     document.documentElement.setAttribute("data-grid-overlay", "");
-    document.documentElement.setAttribute("data-grid-no-animate", "");
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Remove no-animate flag after initial render
-    requestAnimationFrame(function () {
-      document.documentElement.removeAttribute("data-grid-no-animate");
-    });
-
     // Update button state on load
     updateUI(isActive());
 

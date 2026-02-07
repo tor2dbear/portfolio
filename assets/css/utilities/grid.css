@@ -167,6 +167,12 @@
 .stepped-1-6 > :nth-child(6) { --col: col-start 6 / span 6; --row: 6; }
 .stepped-1-6 > :nth-child(7) { --col: col-start 7 / span 6; --row: 7; }
 
+/* Base: apply --col / --row on all stepped children (desktop default) */
+[class*="stepped-"] > * {
+  grid-column: var(--col);
+  grid-row: var(--row, auto);
+}
+
 /* md: allow stepped overrides at tablet */
 @media (max-width: 63.9375em) {
   [class*="stepped-"] > * {
@@ -182,6 +188,7 @@
 @media (max-width: 47.9375em) {
   [class*="stepped-"] > :nth-child(n) {
     --col: col-start 1 / -1;
+    --col-md: col-start 1 / -1;
     --row: auto;
   }
 }

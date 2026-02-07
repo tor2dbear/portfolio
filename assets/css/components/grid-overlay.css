@@ -61,23 +61,19 @@ html[data-grid-overlay] .grid-overlay {
   to   { transform: scaleY(0); }
 }
 
-/* In: columns reveal left→right, each sliding down from top */
-html[data-grid-overlay]:not([data-grid-overlay="closing"]) .grid-overlay__col {
+/* In: columns reveal left→right, each sliding down from top.
+   Only animates when data-grid-animate is set (explicit toggle only). */
+html[data-grid-animate][data-grid-overlay]:not([data-grid-overlay="closing"]) .grid-overlay__col {
   transform-origin: top;
   animation: grid-col-in 0.2s ease-out both;
   animation-delay: calc(var(--i, 0) * 25ms);
 }
 
 /* Out: columns collapse right→left, sliding up */
-html[data-grid-overlay="closing"] .grid-overlay__col {
+html[data-grid-animate][data-grid-overlay="closing"] .grid-overlay__col {
   transform-origin: top;
   animation: grid-col-out 0.2s ease-in both;
   animation-delay: calc((13 - var(--i, 0)) * 25ms);
-}
-
-/* Skip animation on initial page load (restored from localStorage) */
-html[data-grid-no-animate] .grid-overlay__col {
-  animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
