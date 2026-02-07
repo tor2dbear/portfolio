@@ -1,0 +1,73 @@
+/* ==========================================================================
+   Toggle Switch Component
+   A reusable on/off toggle switch with track, thumb, label and optional shortcut hint.
+   Uses role="switch" and aria-pressed for accessibility.
+   ========================================================================== */
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 100%;
+  padding: var(--spacing-8) 0;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+}
+
+.toggle-switch__track {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+  background: var(--border-default);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.toggle-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-page);
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* On state */
+.toggle-switch[aria-pressed="true"] .toggle-switch__track {
+  background: var(--brand-primary, var(--text-accent));
+}
+
+.toggle-switch[aria-pressed="true"] .toggle-switch__thumb {
+  transform: translateX(16px);
+}
+
+/* Label */
+.toggle-switch__label {
+  font-size: var(--text-sm);
+  color: var(--text-default);
+  flex: 1;
+}
+
+/* Keyboard shortcut hint */
+.toggle-switch__shortcut {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+
+/* Focus ring */
+.toggle-switch:focus-visible .toggle-switch__track {
+  outline: 2px solid var(--brand-primary, var(--text-accent));
+  outline-offset: 2px;
+}

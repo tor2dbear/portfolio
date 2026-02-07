@@ -1,0 +1,52 @@
+/* Grid Overlay - Visual 12-column grid for development/design review */
+
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  grid-template-columns:
+    [full-start] var(--size-page-margins)
+    [content-start] repeat(12, [col-start] 1fr)
+    [content-end] var(--size-page-margins)
+    [full-end];
+  column-gap: var(--spacing-24);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+html[data-grid-overlay] .grid-overlay {
+  display: grid;
+}
+
+.grid-overlay__col {
+  grid-row: 1;
+  background: var(--grid-overlay-color, hsla(330, 80%, 60%, 0.08));
+  border-inline: 1px solid var(--grid-overlay-border, hsla(330, 80%, 60%, 0.15));
+}
+
+/* First and last columns are the page margins — no fill */
+.grid-overlay__col:first-child,
+.grid-overlay__col:last-child {
+  background: none;
+  border: none;
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .grid-overlay {
+    grid-template-columns:
+      [full-start] var(--size-page-margins)
+      [content-start] repeat(4, [col-start] 1fr)
+      [content-end] var(--size-page-margins)
+      [full-end];
+    column-gap: var(--spacing-16);
+  }
+
+  /* Hide extra columns on mobile (4 content + 2 margins = 6 total) */
+  .grid-overlay__col:nth-child(n+7) {
+    display: none;
+  }
+}
