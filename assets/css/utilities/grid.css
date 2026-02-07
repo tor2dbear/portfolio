@@ -42,6 +42,13 @@
     }
   }
 
+  .use-subgrid .col-span-5,
+  .use-subgrid .col-span-6,
+  .use-subgrid .col-span-7,
+  .use-subgrid .col-span-8,
+  .use-subgrid .col-span-9,
+  .use-subgrid .col-span-10,
+  .use-subgrid .col-span-11,
   .use-subgrid .col-span-12 {
     grid-column-end: span 4;
   }

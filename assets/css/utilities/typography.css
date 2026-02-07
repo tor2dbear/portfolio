@@ -262,6 +262,7 @@ h4,
   line-height: var(--line-height-tighter);
   color: var(--text-default);
   letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
 }
 
 /* Type: Display 2 */
@@ -272,12 +273,14 @@ h4,
   line-height: var(--line-height-tighter);
   color: var(--text-default);
   letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
 }
 
 /* Type: Headline 1 */
 h1,
 .type-headline-1 {
   font-size: clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl));
+  text-wrap: balance;
 }
 
 /* Type: Headline 2 */
@@ -286,26 +289,29 @@ h2,
   font-size: clamp(var(--text-6xl),
       calc(1.75rem + 0.625vw),
       var(--text-10xl));
+  text-wrap: balance;
 }
 
 /* Type: Headline 3 */
 h3,
 .type-headline-3 {
   font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
+  text-wrap: balance;
 }
 
 /* Type: Headline 4 */
 h4,
 .type-headline-4 {
   font-size: clamp(var(--text-xl), calc(1.167rem + 0.417vw), var(--text-3xl));
+  text-wrap: balance;
 }
 
 /* Type: Headline 5 */
 h5,
 .type-headline-5 {
   font-size: clamp(var(--text-xl), 1.05rem + 0.3vw, var(--text-2xl));
+  text-wrap: balance;
 }
-
 
 /* Type: Headline Small */
 .type-headline-small {
@@ -317,6 +323,7 @@ h5,
   color: var(--text-default);
   letter-spacing: var(--tracking-wider);
   text-align: left;
+  text-wrap: balance;
 }
 
 /* Type: Preamble (Ingress) */
@@ -327,6 +334,7 @@ h5,
   font-weight: var(--serif-weight-regular);
   font-family: var(--font-serif);
   letter-spacing: var(--tracking-wide);
+  text-wrap: balance;
 }
 
 /* Type: Body */
@@ -336,6 +344,8 @@ h5,
   color: var(--text-default);
   font-family: var(--font-serif);
   letter-spacing: var(--tracking-normal);
+  max-width: var(--measure-prose);
+  text-wrap-style: pretty;
 }
 
 /* Type: Lead */
@@ -345,6 +355,8 @@ h5,
   color: var(--text-default);
   font-family: var(--font-serif);
   letter-spacing: var(--tracking-normal);
+  max-width: var(--measure-prose);
+  text-wrap-style: pretty;
 }
 
 /* Type: Body Small */
@@ -353,6 +365,8 @@ h5,
   line-height: var(--line-height-normal);
   color: var(--text-default);
   font-family: var(--font-serif);
+  max-width: var(--measure-prose);
+  text-wrap-style: pretty;
 }
 
 /* Type: Information */
@@ -397,7 +411,7 @@ figcaption {
    An optional .prose-measure class is available as a safety net for prose
    content that renders outside the grid (e.g. CMS embeds). */
 .prose-measure :is(p, ul, ol, blockquote, table) {
-  max-width: 70ch;
+  max-width: var(--measure-prose);
 }
 
 .prose p {
