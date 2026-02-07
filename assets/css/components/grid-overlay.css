@@ -34,6 +34,58 @@ html[data-grid-overlay] .grid-overlay {
   border: none;
 }
 
+/* --- Column index for staggered animation --- */
+.grid-overlay__col:nth-child(1)  { --i: 0; }
+.grid-overlay__col:nth-child(2)  { --i: 1; }
+.grid-overlay__col:nth-child(3)  { --i: 2; }
+.grid-overlay__col:nth-child(4)  { --i: 3; }
+.grid-overlay__col:nth-child(5)  { --i: 4; }
+.grid-overlay__col:nth-child(6)  { --i: 5; }
+.grid-overlay__col:nth-child(7)  { --i: 6; }
+.grid-overlay__col:nth-child(8)  { --i: 7; }
+.grid-overlay__col:nth-child(9)  { --i: 8; }
+.grid-overlay__col:nth-child(10) { --i: 9; }
+.grid-overlay__col:nth-child(11) { --i: 10; }
+.grid-overlay__col:nth-child(12) { --i: 11; }
+.grid-overlay__col:nth-child(13) { --i: 12; }
+.grid-overlay__col:nth-child(14) { --i: 13; }
+
+/* --- Animations --- */
+@keyframes grid-col-in {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+@keyframes grid-col-out {
+  from { transform: scaleY(1); }
+  to   { transform: scaleY(0); }
+}
+
+/* In: columns reveal left→right, each sliding down from top */
+html[data-grid-overlay]:not([data-grid-overlay="closing"]) .grid-overlay__col {
+  transform-origin: top;
+  animation: grid-col-in 0.2s ease-out both;
+  animation-delay: calc(var(--i, 0) * 25ms);
+}
+
+/* Out: columns collapse right→left, sliding up */
+html[data-grid-overlay="closing"] .grid-overlay__col {
+  transform-origin: top;
+  animation: grid-col-out 0.2s ease-in both;
+  animation-delay: calc((13 - var(--i, 0)) * 25ms);
+}
+
+/* Skip animation on initial page load (restored from localStorage) */
+html[data-grid-no-animate] .grid-overlay__col {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-overlay__col {
+    animation: none !important;
+  }
+}
+
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .grid-overlay {

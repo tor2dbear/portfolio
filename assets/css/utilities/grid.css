@@ -180,8 +180,9 @@
 
 /* sm: collapse stepped layouts to full width */
 @media (max-width: 47.9375em) {
-  [class*="stepped-"] > * {
+  [class*="stepped-"] > :nth-child(n) {
     --col: col-start 1 / -1;
+    --row: auto;
   }
 }
 

@@ -16,7 +16,7 @@
         {{ if not (modBool $index 2) }}
           {{ $delayClass = "reveal--delay" }}
         {{ end }}
-        <div class="reveal {{ $delayClass }} {{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: col-start 1 / span {{ if $isWide }}8{{ else }}4{{ end }}">
+        <div class="reveal {{ $delayClass }} {{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: span {{ if $isWide }}8{{ else }}4{{ end }}">
           {{ $page.Render "summary" }}
         </div>
       {{ end }}
