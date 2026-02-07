@@ -2,10 +2,7 @@
 
 .grid-overlay {
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: var(--scrollbar-width, 0px);
+  inset: 0;
   z-index: 9999;
   pointer-events: none;
   display: none;
@@ -17,6 +14,7 @@
   column-gap: var(--spacing-24);
   max-width: var(--content-max-width);
   margin: 0 auto;
+  width: 100%;
 }
 
 html[data-grid-overlay] .grid-overlay {
