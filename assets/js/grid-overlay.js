@@ -96,15 +96,10 @@
         });
       });
 
-    // Keyboard shortcut: Ctrl+G
+    // Keyboard shortcut: Ctrl+G (Win/Linux) or Cmd+G (Mac)
     document.addEventListener("keydown", function (e) {
-      if (
-        e.ctrlKey &&
-        e.key === "g" &&
-        !e.shiftKey &&
-        !e.altKey &&
-        !e.metaKey
-      ) {
+      var mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key === "g" && !e.shiftKey && !e.altKey) {
         e.preventDefault();
         toggle();
       }
