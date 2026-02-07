@@ -1361,7 +1361,8 @@ p:empty {
   padding: 2rem 2rem;
   margin-bottom: var(--spacing-32);
   background-color: var(--bg-surface);
-  grid-column: col-start 1 / span 12;
+  --col: col-start 1 / span 12;
+  grid-column: var(--col);
   grid-column-gap: 3rem;
 }
 
