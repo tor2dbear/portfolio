@@ -321,6 +321,14 @@
   border-radius: 6px;
 }
 
+/* Grid demos are standalone containers inside accordions, not true
+   subgrid participants. Force explicit 12-column tracks so named
+   lines ([col-start]) resolve correctly for .place-* and stepped-* classes. */
+.grid-demo.use-subgrid {
+  grid-template-columns: repeat(12, [col-start] 1fr);
+  column-gap: var(--spacing-24);
+}
+
 .grid-demo__item {
   padding: var(--spacing-16);
   background-color: var(--brand-primary);
