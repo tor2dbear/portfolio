@@ -1151,6 +1151,28 @@
               </details>
             </div>
 
+            <!-- stepped-6-6 -->
+            <div class="grid-section mt-24">
+              <h4 class="type-subheading mb-8">.stepped-6-6 ({{ if eq .Language.Lang "sv" }}förskjutning 6, spann 6, diagonal tvåblock{{ else }}offset 6, span 6, two-block diagonal{{ end }})</h4>
+              <div class="grid-demo mb-16 use-subgrid stepped-6-6">
+                <div class="grid-demo__item">{{ if eq .Language.Lang "sv" }}Block 1 (col 1–6){{ else }}Block 1 (col 1–6){{ end }}</div>
+                <div class="grid-demo__item">{{ if eq .Language.Lang "sv" }}Block 2 (col 7–12){{ else }}Block 2 (col 7–12){{ end }}</div>
+              </div>
+              <p class="mt-8" style="font-size: 0.875rem; color: var(--text-muted);">{{ if eq .Language.Lang "sv" }}Responsivt: breddas till 8 col vid tablet (md), full bredd vid mobil (sm).{{ else }}Responsive: widens to 8 col at tablet (md), full width at mobile (sm).{{ end }}</p>
+              <details class="code-example">
+                <summary>{{ if eq .Language.Lang "sv" }}Visa HTML{{ else }}Show HTML{{ end }}</summary>
+                <pre><code>&lt;div class="use-subgrid stepped-6-6"&gt;
+  &lt;div&gt;Block 1&lt;/div&gt;
+  &lt;div&gt;Block 2&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Responsive behaviour (built-in):
+  Desktop: 6+6 cols, diagonal
+  Tablet:  8+8 cols, overlapping
+  Mobile:  full width, stacked --&gt;</code></pre>
+              </details>
+            </div>
+
           </div>
         </details>
 

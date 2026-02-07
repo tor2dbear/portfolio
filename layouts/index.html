@@ -25,7 +25,7 @@
 
   <section id="about" class="home-section about-section">
     <h2 class="section-heading reveal">{{ i18n "about_me" }}</h2>
-    <div class="about-content use-subgrid">
+    <div class="about-content use-subgrid stepped-6-6">
       {{ $aboutPartial := printf "about_main_%s.html" .Language.Lang }}
       {{ partial $aboutPartial . }}
       {{ partial "about_cv.html" . }}

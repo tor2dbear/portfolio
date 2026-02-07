@@ -150,16 +150,7 @@
   row-gap: var(--spacing-32);
 }
 
-.about-main__primary {
-  grid-column: col-start 1 / span 6;
-  grid-row: 1;
-}
-
-.about-main__secondary {
-  grid-column: col-start 7 / span 6;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
+/* Placement now handled by .stepped-6-6 on parent (.about-content) */
 
 .about-main__text {
   margin-bottom: var(--spacing-24);
@@ -238,11 +229,7 @@
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  .about-main__primary,
-  .about-main__secondary {
-    grid-column: col-start 1 / span 4;
-    grid-row: auto;
-  }
+  /* about-main placement now handled by stepped-6-6 sm collapse */
 
   .home-section {
     padding: var(--spacing-48) 0;

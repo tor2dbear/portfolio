@@ -154,6 +154,10 @@
 .stepped-4-4 > :nth-child(2) { --col: col-start 5 / span 4; --row: 2; }
 .stepped-4-4 > :nth-child(3) { --col: col-start 9 / span 4; --row: 3; }
 
+/* offset 6, span 6 (two-block diagonal) */
+.stepped-6-6 > :nth-child(1) { --col: col-start 1 / span 6; --row: 1; }
+.stepped-6-6 > :nth-child(2) { --col: col-start 7 / span 6; --row: 2; }
+
 /* offset 1, span 6 (wide blocks, slow drift) */
 .stepped-1-6 > :nth-child(1) { --col: col-start 1 / span 6; --row: 1; }
 .stepped-1-6 > :nth-child(2) { --col: col-start 2 / span 6; --row: 2; }
@@ -168,6 +172,10 @@
   [class*="stepped-"] > * {
     grid-column: var(--col-md, var(--col));
   }
+
+  /* stepped-6-6: widen to 8 cols at tablet */
+  .stepped-6-6 > :nth-child(1) { --col-md: col-start 1 / span 8; }
+  .stepped-6-6 > :nth-child(2) { --col-md: col-start 5 / span 8; }
 }
 
 /* sm: collapse stepped layouts to full width */
