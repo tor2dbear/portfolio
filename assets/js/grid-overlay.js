@@ -83,6 +83,13 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    // Show ⌘G on Mac, Ctrl+G elsewhere
+    if (/Mac|iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      document.querySelectorAll(".toggle-switch__shortcut, kbd").forEach(function (el) {
+        if (el.textContent.trim() === "Ctrl+G") el.textContent = "⌘G";
+      });
+    }
+
     // Update button state on load
     updateUI(isActive());
 
