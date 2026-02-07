@@ -61,6 +61,11 @@
    Any child of .use-subgrid can be placed via:
      style="--col: col-start 3 / span 8;"
    or via a preset class (.place-prose, .place-wide, etc.)
+
+   Responsive overrides:
+     --col       Desktop (default)
+     --col-md    Tablet (≤63.9375em), falls back to --col
+     --col-sm    Mobile (≤47.9375em), falls back to full width
    ========================================================================== */
 
 .use-subgrid > [style*="--col"],
@@ -74,6 +79,21 @@
 .use-subgrid > .place-bleed {
   grid-column: var(--col);
   grid-row: var(--row, auto);
+}
+
+/* md: tablet override, falls back to --col if --col-md is not set */
+@media (max-width: 63.9375em) {
+  .use-subgrid > [style*="--col"],
+  .use-subgrid > .place-full,
+  .use-subgrid > .place-wide,
+  .use-subgrid > .place-prose,
+  .use-subgrid > .place-narrow,
+  .use-subgrid > .place-inset,
+  .use-subgrid > .place-aside,
+  .use-subgrid > .place-aside-left,
+  .use-subgrid > .place-bleed {
+    grid-column: var(--col-md, var(--col));
+  }
 }
 
 /* sm: collapse art-directed items to full width unless --col-sm is set */
@@ -142,6 +162,13 @@
 .stepped-1-6 > :nth-child(5) { --col: col-start 5 / span 6; --row: 5; }
 .stepped-1-6 > :nth-child(6) { --col: col-start 6 / span 6; --row: 6; }
 .stepped-1-6 > :nth-child(7) { --col: col-start 7 / span 6; --row: 7; }
+
+/* md: allow stepped overrides at tablet */
+@media (max-width: 63.9375em) {
+  [class*="stepped-"] > * {
+    grid-column: var(--col-md, var(--col));
+  }
+}
 
 /* sm: collapse stepped layouts to full width */
 @media (max-width: 47.9375em) {
