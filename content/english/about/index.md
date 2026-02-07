@@ -6,7 +6,7 @@ url: "/about"
 sidemenu: true
 header_image: DSCF7894
 description: Product Owner & Art Director based in Gothenburg. I bridge design and product strategy.
-layout: about
+type: about
 ---
 
 <div class="page-notice">

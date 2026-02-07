@@ -117,7 +117,7 @@
     .application-page__main,
     .application-page__sidebar {
         margin-left: 0;
-        grid-column: col-start 1 / span 12;
+        --col: col-start 1 / span 12;
     }
 
     /* Disable sticky on smaller screens */

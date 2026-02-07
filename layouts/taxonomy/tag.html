@@ -1,7 +1,7 @@
 {{ partial "header.html" . }}
 
 <div class="content startpage use-subgrid">
-  <div class="post-header col-span-12">
+  <div class="post-header place-full">
     <h1 class="type-headline-small">{{ .Title }}</h1>
   </div>
   {{ $path := .RelPermalink }}
@@ -17,7 +17,7 @@
     {{- if gt $index 5 -}}
       {{- $isWide = or (eq $mod 0) (eq $mod 3) (eq $mod 4) -}}
     {{- end -}}
-    <div class="{{ if $isWide }}col-span-8 summary-card--wide{{ else }}col-span-4 summary-card--compact{{ end }}">
+    <div class="{{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: col-start 1 / span {{ if $isWide }}8{{ else }}4{{ end }}">
       {{ $page.Render "summary" }}
     </div>
   {{- end -}}

@@ -4,7 +4,8 @@
   margin-top: var(--spacing-80);
   margin-bottom: var(--spacing-64);
   display: grid;
-  grid-column: col-start 1 / span 12;
+  --col: col-start 1 / span 12;
+  grid-column: var(--col);
   grid-template-columns: subgrid;
   column-gap: var(--spacing-24);
 }
@@ -17,12 +18,14 @@
 
 .content.contact .contact-form {
   margin: 0;
-  grid-column: col-start 1 / span 8;
+  --col: col-start 1 / span 8;
+  grid-column: var(--col);
 }
 
 .content.contact .contact-info {
   margin: 0;
-  grid-column: col-start 10 / span 3;
+  --col: col-start 10 / span 3;
+  grid-column: var(--col);
 }
 
 /* sm: <= 47.9375em */
@@ -34,7 +37,7 @@
 
   .content.contact .contact-form,
   .content.contact .contact-info {
-    grid-column: col-start 1 / span 4;
+    --col: col-start 1 / span 4;
   }
 
   .content.contact .contact-form {
@@ -51,5 +54,6 @@
 }
 
 .content.page .page-notice {
-  grid-column: col-start 1 / span 12;
+  --col: col-start 1 / span 12;
+  grid-column: var(--col);
 }

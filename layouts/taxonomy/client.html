@@ -42,8 +42,8 @@
   <span class="application-page__company">{{ .Params.company_name }}</span>
 
   <!-- Main column -->
-  <div class="col-start-1 col-span-8 application-page__main">
-    <div class="application-page__section application-page__section--letter col-span-4 reveal">
+  <div class="application-page__main" style="--col: col-start 1 / span 8">
+    <div class="application-page__section application-page__section--letter reveal">
       <!-- put this just above the section you wanna go to -->
       <a id="letter" data-toc-section="letter"></a>
       <h3 class="type-headline-small section-headline">Letter</h3>
@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <div class="application-page__section application-page__section--portfolio col-span-4 reveal">
+    <div class="application-page__section application-page__section--portfolio reveal">
       <!-- put this just above the section you wanna go to -->
       <a id="portfolio" data-toc-section="portfolio"></a>
       <h3 class="type-headline-small section-headline">Portfolio</h3>
@@ -79,15 +79,15 @@
       </div>
     </div>
 
-    <div class="application-page__section application-page__section--cv col-span-4">
+    <div class="application-page__section application-page__section--cv">
       <!-- put this just above the section you wanna go to -->
-      <a id="cv" class="col-span-4" data-toc-section="cv"></a>
-      <h3 class="type-headline-small col-span-4 section-headline reveal">CV</h3>
-      <div class="col-span-4">{{ partial "about_cv_extended.html" . }}</div>
+      <a id="cv" data-toc-section="cv"></a>
+      <h3 class="type-headline-small section-headline reveal">CV</h3>
+      <div>{{ partial "about_cv_extended.html" . }}</div>
     </div>
 
     <!-- Contact section moved to main column -->
-    <div class="application-page__section application-page__section--contact col-span-4 reveal">
+    <div class="application-page__section application-page__section--contact reveal">
       <a id="contact" class="anchor-offset" data-toc-section="contact"></a>
       <h3 class="type-headline-small section-headline">Contact</h3>
       {{ partial "contact_info.html" . }}
@@ -96,7 +96,7 @@
   </div>
 
   <!-- Sidebar with ToC and Downloads -->
-  <div class="col-start-9 col-span-4 application-page__sidebar">
+  <div class="application-page__sidebar" style="--col: col-start 9 / span 4">
     <div class="application-page__sidebar-sticky reveal reveal--delay">
       <!-- Table of Contents -->
       <ul class="toc">

@@ -26,7 +26,8 @@
 }
 
 .gallery--full > * {
-  grid-column: col-start 1 / span 12;
+  --col: col-start 1 / span 12;
+  grid-column: var(--col);
 }
 
 .gallery.grid-cols-2 > figure:nth-of-type(even) {
