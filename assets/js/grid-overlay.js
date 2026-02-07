@@ -77,6 +77,14 @@
     });
   }
 
+  // Track scrollbar width so the fixed-position overlay matches content alignment
+  function syncScrollbarWidth() {
+    var sw = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.setProperty("--scrollbar-width", sw + "px");
+  }
+  syncScrollbarWidth();
+  window.addEventListener("resize", syncScrollbarWidth);
+
   // Restore state from localStorage — no animation on page load
   if (localStorage.getItem(STORAGE_KEY) === "true") {
     document.documentElement.setAttribute("data-grid-overlay", "");
