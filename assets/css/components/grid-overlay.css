@@ -101,4 +101,10 @@ html[data-grid-no-animate] .grid-overlay__col {
   .grid-overlay__col:nth-child(n+7) {
     display: none;
   }
+
+  /* 6th child is the right margin on mobile — clear fill */
+  .grid-overlay__col:nth-child(6) {
+    background: none;
+    border: none;
+  }
 }
