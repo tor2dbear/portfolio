@@ -352,9 +352,10 @@
   grid-row: var(--row, auto);
 }
 
-/* Stepped demo items pick up --col from nth-child rules */
+/* Stepped demo items pick up --col and --row from nth-child rules */
 .grid-demo[class*="stepped-"] > * {
   grid-column: var(--col);
+  grid-row: var(--row, auto);
 }
 
 .code-example {

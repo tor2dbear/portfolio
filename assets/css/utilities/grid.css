@@ -117,31 +117,31 @@
    ========================================================================== */
 
 /* offset 2, span 4 (overlapping staircase) */
-.stepped-2-4 > :nth-child(1) { --col: col-start 1 / span 4; }
-.stepped-2-4 > :nth-child(2) { --col: col-start 3 / span 4; }
-.stepped-2-4 > :nth-child(3) { --col: col-start 5 / span 4; }
-.stepped-2-4 > :nth-child(4) { --col: col-start 7 / span 4; }
-.stepped-2-4 > :nth-child(5) { --col: col-start 9 / span 4; }
+.stepped-2-4 > :nth-child(1) { --col: col-start 1 / span 4; --row: 1; }
+.stepped-2-4 > :nth-child(2) { --col: col-start 3 / span 4; --row: 2; }
+.stepped-2-4 > :nth-child(3) { --col: col-start 5 / span 4; --row: 3; }
+.stepped-2-4 > :nth-child(4) { --col: col-start 7 / span 4; --row: 4; }
+.stepped-2-4 > :nth-child(5) { --col: col-start 9 / span 4; --row: 5; }
 
 /* offset 3, span 3 (clean staircase, no overlap) */
-.stepped-3-3 > :nth-child(1) { --col: col-start 1  / span 3; }
-.stepped-3-3 > :nth-child(2) { --col: col-start 4  / span 3; }
-.stepped-3-3 > :nth-child(3) { --col: col-start 7  / span 3; }
-.stepped-3-3 > :nth-child(4) { --col: col-start 10 / span 3; }
+.stepped-3-3 > :nth-child(1) { --col: col-start 1  / span 3; --row: 1; }
+.stepped-3-3 > :nth-child(2) { --col: col-start 4  / span 3; --row: 2; }
+.stepped-3-3 > :nth-child(3) { --col: col-start 7  / span 3; --row: 3; }
+.stepped-3-3 > :nth-child(4) { --col: col-start 10 / span 3; --row: 4; }
 
 /* offset 4, span 4 (wide non-overlapping staircase) */
-.stepped-4-4 > :nth-child(1) { --col: col-start 1 / span 4; }
-.stepped-4-4 > :nth-child(2) { --col: col-start 5 / span 4; }
-.stepped-4-4 > :nth-child(3) { --col: col-start 9 / span 4; }
+.stepped-4-4 > :nth-child(1) { --col: col-start 1 / span 4; --row: 1; }
+.stepped-4-4 > :nth-child(2) { --col: col-start 5 / span 4; --row: 2; }
+.stepped-4-4 > :nth-child(3) { --col: col-start 9 / span 4; --row: 3; }
 
 /* offset 1, span 6 (wide blocks, slow drift) */
-.stepped-1-6 > :nth-child(1) { --col: col-start 1 / span 6; }
-.stepped-1-6 > :nth-child(2) { --col: col-start 2 / span 6; }
-.stepped-1-6 > :nth-child(3) { --col: col-start 3 / span 6; }
-.stepped-1-6 > :nth-child(4) { --col: col-start 4 / span 6; }
-.stepped-1-6 > :nth-child(5) { --col: col-start 5 / span 6; }
-.stepped-1-6 > :nth-child(6) { --col: col-start 6 / span 6; }
-.stepped-1-6 > :nth-child(7) { --col: col-start 7 / span 6; }
+.stepped-1-6 > :nth-child(1) { --col: col-start 1 / span 6; --row: 1; }
+.stepped-1-6 > :nth-child(2) { --col: col-start 2 / span 6; --row: 2; }
+.stepped-1-6 > :nth-child(3) { --col: col-start 3 / span 6; --row: 3; }
+.stepped-1-6 > :nth-child(4) { --col: col-start 4 / span 6; --row: 4; }
+.stepped-1-6 > :nth-child(5) { --col: col-start 5 / span 6; --row: 5; }
+.stepped-1-6 > :nth-child(6) { --col: col-start 6 / span 6; --row: 6; }
+.stepped-1-6 > :nth-child(7) { --col: col-start 7 / span 6; --row: 7; }
 
 /* sm: collapse stepped layouts to full width */
 @media (max-width: 47.9375em) {
