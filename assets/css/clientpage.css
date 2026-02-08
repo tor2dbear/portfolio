@@ -1,10 +1,24 @@
+/* Prevent min-width:auto from overriding max-width on #main */
 .application-main {
     width: 100%;
+    min-width: 0;
 }
 
+/* Also prevent overflow at the subgrid container level */
+.content.application-page {
+    min-width: 0;
+}
 
+/* Breadcrumb spans all columns so its content doesn't inflate a single track */
+.content.application-page > .application-breadcrumb {
+    grid-column: 1 / -1;
+}
+
+/* Prevent grid items from overflowing their tracks (min-width: auto default) */
+.application-page__main,
 .application-page__sidebar {
-    margin-left: 1.5rem;
+    min-width: 0;
+    margin-left: 0;
 }
 
 .application-page__section {
@@ -74,6 +88,11 @@
     margin-top: 0;
 }
 
+/* CV: 2 columns instead of 3 to fit the 8-col main area */
+.content.application-page .about-cv__columns {
+    column-count: 2;
+}
+
 .content.application-page .about-cv .curl-icon {
     display: none;
 }
@@ -117,7 +136,7 @@
     .application-page__main,
     .application-page__sidebar {
         margin-left: 0;
-        grid-column: col-start 1 / span 12;
+        --col-md: col-start 1 / span 12;
     }
 
     /* Disable sticky on smaller screens */

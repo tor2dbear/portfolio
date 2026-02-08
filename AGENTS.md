@@ -395,7 +395,7 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
 - `assets/css/utilities/typography.css` - Typography utilities
 - `assets/css/utilities/layout.css` - Layout utilities
-- `assets/css/utilities/grid.css` - 12-column subgrid utilities
+- `assets/css/utilities/grid.css` - 12-column subgrid + art-direction placement API
 - `assets/css/utilities/display.css` - Visibility helpers
 - `assets/css/utilities/icons.css` - SVG sprite icon utilities
 - `assets/css/components/button.css` - Button component
@@ -492,6 +492,37 @@ The site uses CSS Grid for a sticky footer that works even with short content:
 }
 ```
 This ensures the footer stays at the bottom of the viewport even when page content is minimal (e.g., 404 page).
+
+### Grid Art-Direction API
+The site uses a 12-column subgrid with a variable-driven placement system for editorial layout control.
+
+**Core concept**: Every child of `.use-subgrid` reads `--col` and `--row` custom properties to determine its grid placement. Set via classes (`.place-prose`) or inline styles (`style="--col: col-start 3 / span 8;"`).
+
+**Placement presets** (defined in `grid.css`):
+- `.place-full` — col 1–12 (full content width)
+- `.place-wide` — col 1–10 (images, figures)
+- `.place-prose` — col 1–8 (running text, replaces max-width: 70ch)
+- `.place-narrow` — col 2–9 (pull-quotes, callouts)
+- `.place-inset` — col 3–10 (deeply indented)
+- `.place-aside` — col 9–12 (sidebar, metadata)
+- `.place-aside-left` — col 1–4 (left sidebar)
+- `.place-bleed` — full-start / full-end (break out of content area)
+
+**Responsive tiers** (cascade with fallback):
+- `--col` — Desktop (default)
+- `--col-md` — Tablet (≤63.9375em), falls back to `--col`
+- `--col-sm` — Mobile (≤47.9375em), falls back to full width
+
+**Stepped text** ("tripp-trapp-trull" staircase patterns):
+- `.stepped-3-3` — offset 3, span 3 (clean staircase)
+- `.stepped-2-4` — offset 2, span 4 (overlapping)
+- `.stepped-4-4` — offset 4, span 4 (wide non-overlapping)
+- `.stepped-1-6` — offset 1, span 6 (slow drift)
+
+**Rules**:
+- Text measure (width) is controlled by grid placement, not `max-width` in `ch`. The `.prose-measure` class exists as a safety net for content outside the grid.
+- Rows must remain content-driven (`auto` or `max-content`). Never use `grid-auto-rows: 1fr`.
+- Mobile (≤47.9375em) switches from 12 to 4 columns.
 
 ### Breakpoints
 - Units: em-based, desktop-first with max-width queries.
@@ -827,7 +858,7 @@ if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
 
 **Structure**:
 - **Tokens Tab**: All color scales (primitives, brand, semantic), typography, spacing
-- **Grid Tab**: 12-column subgrid system examples
+- **Grid Tab**: 12-column subgrid examples, art-direction placement presets, stepped text patterns
 - **Components Tab**: Live component examples with meta-info (classes, files, tokens)
 - **Utilities Tab**: Typography and spacing utilities
 
