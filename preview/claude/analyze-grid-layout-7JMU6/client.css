@@ -1,7 +1,13 @@
+/* Prevent min-width:auto from overriding max-width on #main */
 .application-main {
     width: 100%;
+    min-width: 0;
 }
 
+/* Also prevent overflow at the subgrid container level */
+.content.application-page {
+    min-width: 0;
+}
 
 /* Prevent grid items from overflowing their tracks (min-width: auto default) */
 .application-page__main,
