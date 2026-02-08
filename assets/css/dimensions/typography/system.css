@@ -1,0 +1,15 @@
+/* ============================================================================
+   TYPOGRAPHY: System
+
+   Platform-native fonts. Zero font loading.
+   ============================================================================ */
+
+:root[data-typography="system"] {
+  --font-display:     ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading:     ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-body:        ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-ui:          ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --display-weight:   700;
+  --heading-weight:   700;
+  --heading-tracking: var(--tracking-tight);
+}

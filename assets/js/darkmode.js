@@ -1,6 +1,6 @@
 /**
- * Theme Management System (Mode + Palette)
- * Handles both color mode (light/dark/system) and color palette (standard/pantone)
+ * Theme Management System (Mode + Palette + Typography)
+ * Handles color mode (light/dark/system), color palette, and typography presets
  * with localStorage persistence and dropdown UI
  */
 
@@ -14,6 +14,7 @@
   let themeIcon;
   let modeOptions;
   let paletteOptions;
+  let typographyOptions;
 
   // ==========================================================================
   // DROPDOWN TOGGLE
@@ -135,6 +136,36 @@
   }
 
   // ==========================================================================
+  // TYPOGRAPHY MANAGEMENT (editorial/refined/expressive/technical/system)
+  // ==========================================================================
+
+  function setTypography(typography) {
+    localStorage.setItem('theme-typography', typography);
+    applyTypography(typography);
+    updateTypographyUI(typography);
+    closePanel();
+    closeSettingsPanel();
+  }
+
+  function applyTypography(typography) {
+    document.documentElement.setAttribute('data-typography', typography);
+    updateFooterTypographyLabel(typography);
+  }
+
+  function updateTypographyUI(currentTypography) {
+    typographyOptions.forEach(option => {
+      const typography = option.getAttribute('data-typography');
+      if (typography === currentTypography) {
+        option.classList.add('active');
+        option.setAttribute('aria-current', 'true');
+      } else {
+        option.classList.remove('active');
+        option.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  // ==========================================================================
   // ICON MANAGEMENT
   // ==========================================================================
 
@@ -186,6 +217,13 @@
     paletteLabel.textContent = label;
   }
 
+  function updateFooterTypographyLabel(typography) {
+    const typographyLabel = document.querySelector('[data-js="footer-typography"]');
+    if (!typographyLabel) return;
+    const label = typographyLabel.getAttribute(`data-label-${typography}`) || typography;
+    typographyLabel.textContent = label;
+  }
+
   // ==========================================================================
   // SYSTEM PREFERENCE LISTENER
   // ==========================================================================
@@ -209,18 +247,22 @@
     themeIcon = document.querySelector('[data-js="theme-icon"]');
     modeOptions = document.querySelectorAll('[data-js="mode-option"]');
     paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
+    typographyOptions = document.querySelectorAll('[data-js="typography-option"]');
 
     // Load stored preferences or use defaults
     const storedMode = localStorage.getItem('theme-mode') || 'system';
     const storedPalette = localStorage.getItem('theme-palette') || 'standard';
+    const storedTypography = localStorage.getItem('theme-typography') || 'editorial';
 
     // Apply stored preferences
     applyMode(storedMode);
     applyPalette(storedPalette);
+    applyTypography(storedTypography);
 
     // Update UI to reflect current settings
     updateModeUI(storedMode);
     updatePaletteUI(storedPalette);
+    updateTypographyUI(storedTypography);
 
     // Setup event listeners
     if (themeToggle && themePanel) {
@@ -305,6 +347,14 @@
       option.addEventListener('click', function() {
         const palette = this.getAttribute('data-palette');
         setPalette(palette);
+      });
+    });
+
+    // Typography option listeners
+    typographyOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const typography = this.getAttribute('data-typography');
+        setTypography(typography);
       });
     });
   });

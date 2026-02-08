@@ -1,0 +1,16 @@
+/* ============================================================================
+   TYPOGRAPHY: Expressive
+
+   Tension. Reverse-contrast Gopher headlines meet warm Freight Text prose.
+   The unconventional against the classical.
+   ============================================================================ */
+
+:root[data-typography="expressive"] {
+  --font-display:     gopher, ui-sans-serif, system-ui, sans-serif;
+  --font-heading:     gopher, ui-sans-serif, system-ui, sans-serif;
+  --font-body:        var(--font-serif);
+  --font-ui:          var(--font-sans);
+  --display-weight:   500;
+  --heading-weight:   500;
+  --heading-tracking: var(--tracking-normal);
+}

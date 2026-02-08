@@ -13,7 +13,7 @@
    ========================================================================== */
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   margin: 0px;
 }
 
@@ -248,17 +248,17 @@ h3,
 h4,
 .type-headline-4 {
   color: var(--text-default);
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--heading-weight);
   line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
-  font-family: var(--font-sans);
+  letter-spacing: var(--heading-tracking);
+  font-family: var(--font-heading);
 }
 
 /* Type: Display 1 */
 .type-display-1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(var(--text-8xl), calc(2.667rem + 1.667vw), var(--text-9xl));
-  font-weight: 400;
+  font-weight: var(--display-weight);
   line-height: var(--line-height-tighter);
   color: var(--text-default);
   letter-spacing: var(--tracking-tight);
@@ -267,9 +267,9 @@ h4,
 
 /* Type: Display 2 */
 .type-display-2 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl));
-  font-weight: 400;
+  font-weight: var(--display-weight);
   line-height: var(--line-height-tighter);
   color: var(--text-default);
   letter-spacing: var(--tracking-tight);
@@ -315,7 +315,7 @@ h5,
 
 /* Type: Headline Small */
 .type-headline-small {
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: var(--text-xs);
   font-weight: var(--sans-weight-regular);
   text-transform: uppercase;
@@ -332,7 +332,7 @@ h5,
   color: var(--text-default);
   line-height: var(--line-height-tight);
   font-weight: var(--serif-weight-regular);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   letter-spacing: var(--tracking-wide);
   text-wrap: balance;
 }
@@ -342,7 +342,7 @@ h5,
   font-size: var(--text-lg);
   line-height: var(--line-height-normal);
   color: var(--text-default);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   letter-spacing: var(--tracking-normal);
   max-width: var(--measure-prose);
   text-wrap-style: pretty;
@@ -353,7 +353,7 @@ h5,
   font-size: clamp(var(--text-lg), calc(1.083rem + 0.208vw), var(--text-xl));
   line-height: var(--line-height-normal);
   color: var(--text-default);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   letter-spacing: var(--tracking-normal);
   max-width: var(--measure-prose);
   text-wrap-style: pretty;
@@ -364,7 +364,7 @@ h5,
   font-size: var(--text-sm);
   line-height: var(--line-height-normal);
   color: var(--text-default);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   max-width: var(--measure-prose);
   text-wrap-style: pretty;
 }
@@ -374,7 +374,7 @@ h5,
   font-size: var(--text-xs);
   line-height: var(--line-height-tighter);
   color: var(--text-default);
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-weight: var(--sans-weight-regular);
 }
 
@@ -397,7 +397,7 @@ code {
 }
 
 figcaption {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--text-sm);
   color: var(--text-muted);
   font-style: italic;
@@ -415,7 +415,7 @@ figcaption {
 }
 
 .prose p {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--text-lg);
   line-height: var(--line-height-normal);
   color: var(--text-default);
@@ -438,7 +438,7 @@ figcaption {
 .prose ol {
   margin-bottom: var(--spacing-24);
   padding-left: var(--spacing-24);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--text-lg);
   line-height: var(--line-height-normal);
   color: var(--text-default);
@@ -454,14 +454,14 @@ figcaption {
 
 .prose li {
   margin-bottom: var(--spacing-8);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--text-lg);
   line-height: var(--line-height-normal);
   color: var(--text-default);
 }
 
 .prose blockquote {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--text-xl);
   font-style: italic;
   line-height: var(--line-height-tight);
@@ -494,7 +494,7 @@ figcaption {
 .brand {
   font-size: var(--text-3xl);
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-weight: var(--sans-weight-bold);
   letter-spacing: var(--tracking-normal);
   text-transform: none;

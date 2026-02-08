@@ -410,7 +410,7 @@ select:disabled,
 .contact-form__submit {
   width: 100%;
   font-size: var(--text-lg);
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-weight: var(--sans-weight-bold);
 }
 

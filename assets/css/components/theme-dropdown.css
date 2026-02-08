@@ -198,6 +198,62 @@
 }
 
 
+/* Typography specific styles */
+.theme-options--typography {
+  flex-direction: row;
+  gap: var(--spacing-8);
+  padding: 0 var(--spacing-4);
+}
+
+.theme-option--typography {
+  position: relative;
+  width: auto;
+  padding: var(--spacing-4);
+  gap: var(--spacing-4);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-8);
+}
+
+.theme-option--typography.active {
+  background: var(--state-on-light-active);
+}
+
+.typography-preview {
+  font-size: var(--text-lg);
+  line-height: 1;
+  width: var(--size-32);
+  height: var(--size-32);
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-4);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.typography-preview--refined {
+  font-family: ivypresto-display, ui-serif, Georgia, serif;
+}
+
+.typography-preview--expressive {
+  font-family: gopher, ui-sans-serif, system-ui, sans-serif;
+}
+
+.typography-preview--technical {
+  font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+}
+
+.typography-preview--system {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.typography-label {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 /* Mobile bottom sheet */
 /* xs: <= 29.9375em */
 @media (max-width: 29.9375em) {

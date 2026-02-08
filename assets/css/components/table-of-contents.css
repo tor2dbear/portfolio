@@ -43,7 +43,7 @@
 
 .toc__item {
   margin-bottom: var(--spacing-4);
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: var(--text-base);
   color: var(--text-muted);
   font-weight: var(--sans-weight-bold);

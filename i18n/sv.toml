@@ -205,6 +205,9 @@ other = "Läge"
 [palette]
 other = "Palett"
 
+[typography]
+other = "Typografi"
+
 [navigation]
 other = "Navigering"
 

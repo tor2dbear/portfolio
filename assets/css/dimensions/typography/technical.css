@@ -1,0 +1,15 @@
+/* ============================================================================
+   TYPOGRAPHY: Technical
+
+   Terminal. Mono on everything. No compromises.
+   ============================================================================ */
+
+:root[data-typography="technical"] {
+  --font-display:     var(--font-mono);
+  --font-heading:     var(--font-mono);
+  --font-body:        var(--font-mono);
+  --font-ui:          var(--font-mono);
+  --display-weight:   400;
+  --heading-weight:   400;
+  --heading-tracking: var(--tracking-wide);
+}
