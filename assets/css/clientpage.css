@@ -9,6 +9,11 @@
     min-width: 0;
 }
 
+/* Breadcrumb spans all columns so its content doesn't inflate a single track */
+.content.application-page > .application-breadcrumb {
+    grid-column: 1 / -1;
+}
+
 /* Prevent grid items from overflowing their tracks (min-width: auto default) */
 .application-page__main,
 .application-page__sidebar {
