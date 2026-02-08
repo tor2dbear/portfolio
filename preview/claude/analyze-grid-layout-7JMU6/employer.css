@@ -3,7 +3,10 @@
 }
 
 
+/* Prevent grid items from overflowing their tracks (min-width: auto default) */
+.application-page__main,
 .application-page__sidebar {
+    min-width: 0;
     margin-left: 0;
 }
 
@@ -72,6 +75,11 @@
 
 #layout .content.application-page .about-cv {
     margin-top: 0;
+}
+
+/* CV: 2 columns instead of 3 to fit the 8-col main area */
+.content.application-page .about-cv__columns {
+    column-count: 2;
 }
 
 .content.application-page .about-cv .curl-icon {
