@@ -95,6 +95,10 @@
     {{ end }}
   {{ end }}
 
+  <!-- Preload primary fonts (Clash Grotesk + Crimson Pro latin) -->
+  <link rel="preload" href="{{ "fonts/clash-grotesk-variable.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ "fonts/crimson-pro-latin-wght-normal.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+
   <!-- CSS base (reset) -->
   {{ $base_reset := resources.Get "css/base/reset.css" }}
 
