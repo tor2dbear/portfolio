@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>UI Library on Torbjörn Hedberg · Designer</title>
-    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/ui-library/</link>
-    <description>Recent content in UI Library on Torbjörn Hedberg · Designer</description>
-    <generator>Hugo</generator>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate></lastBuildDate>
-    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/ui-library/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Feb 2026 09:10:50 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/ui-library/" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

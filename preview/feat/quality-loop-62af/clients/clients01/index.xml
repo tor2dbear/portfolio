@@ -1,19 +1,73 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Clients01 on Torbjörn Hedberg · Designer</title>
-    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/clients/clients01/</link>
-    <description>Recent content in Clients01 on Torbjörn Hedberg · Designer</description>
-    <generator>Hugo</generator>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Sat, 16 May 2015 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/clients/clients01/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Feb 2026 09:10:50 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/clients/clients01/" rel="self" type="application/rss+xml" />
     <item>
       <title>Utblick no.2</title>
       <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/</link>
-      <pubDate>Sat, 16 May 2015 00:00:00 +0000</pubDate>
-      <guid>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/</guid>
-      <description>&lt;p&gt;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;  &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;    &#xA;      &lt;figure class=&#34;header-img&#34;&gt;&#xA;        &lt;picture&gt;&#xA;          &lt;source&#xA;            media=&#34;(max-width: 393px)&#34;&#xA;            srcset=&#34;&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2a41aae785e0ce1a.webp 1x,&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2a78f0ee475c7010.webp 2x&#xA;            &#34;&#xA;            sizes=&#34;(max-width: 393px) 100vw&#34;&#xA;          /&gt;&#xA;          &lt;source&#xA;            media=&#34;(max-width: 430px)&#34;&#xA;            srcset=&#34;&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2a78f0ee475c7010.webp 1x,&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_481c8262c16c7add.webp 2x&#xA;            &#34;&#xA;            sizes=&#34;(max-width: 430px) 100vw&#34;&#xA;          /&gt;&#xA;          &lt;source&#xA;            media=&#34;(max-width: 768px)&#34;&#xA;            srcset=&#34;&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_481c8262c16c7add.webp 1x,&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2cb31377df6c3d3e.webp 2x&#xA;            &#34;&#xA;            sizes=&#34;(max-width: 768px) 100vw&#34;&#xA;          /&gt;&#xA;          &lt;source&#xA;            media=&#34;(max-width: 1400px)&#34;&#xA;            srcset=&#34;&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2cb31377df6c3d3e.webp 1x,&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_c396fd1fc90f3c3d.webp 2x&#xA;            &#34;&#xA;            sizes=&#34;(max-width: 1400px) 100vw&#34;&#xA;          /&gt;&#xA;          &lt;source&#xA;            media=&#34;(min-width: 1401px)&#34;&#xA;            srcset=&#34;&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_c396fd1fc90f3c3d.webp 1x,&#xA;              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_c396fd1fc90f3c3d.webp 2x&#xA;            &#34;&#xA;            sizes=&#34;100vw&#34;&#xA;          /&gt;&#xA;          &lt;img&#xA;            alt=&#34;Header example&#34;&#xA;            title=&#34;Description of heroimage&#34;&#xA;            src=&#34;../../portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_30f81ee0868a7257.jpeg&#34;&#xA;            height=&#34;2500&#34;&#xA;            width=&#34;2500&#34;&#xA;            class=&#34;img-fluid&#34;&#xA;            loading=&#34;lazy&#34;&#xA;          /&gt;&#xA;        &lt;/picture&gt;&#xA;        &lt;figcaption&gt;Description of heroimage&lt;/figcaption&gt;&#xA;      &lt;/figure&gt;&#xA;    &lt;/p&gt;&#xA;&lt;h3&gt;About&lt;/h3&gt;&#xA;&lt;p&gt;The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&lt;br&gt;&#xA;The magazine was printed on a uncoated paper using two Pantone colors and black.&lt;/p&gt;</description>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/</guid>
+      <pubDate>Sat, 16 May 2015 00:00:00 &#43;0000</pubDate>
+      <description>&lt;figure class=&#34;reveal header-img reveal--delay&#34;&gt;
+        &lt;picture&gt;
+          &lt;source
+            media=&#34;(max-width: 393px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2a41aae785e0ce1a.webp 1x,
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2a78f0ee475c7010.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 393px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 430px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2a78f0ee475c7010.webp 1x,
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_481c8262c16c7add.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 430px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 768px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_481c8262c16c7add.webp 1x,
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2cb31377df6c3d3e.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 768px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 1400px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_2cb31377df6c3d3e.webp 1x,
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_c396fd1fc90f3c3d.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 1400px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(min-width: 1401px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_c396fd1fc90f3c3d.webp 1x,
+              /portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_c396fd1fc90f3c3d.webp 2x
+            &#34;
+            sizes=&#34;100vw&#34;
+          /&gt;
+          &lt;img
+            alt=&#34;Header example&#34;
+            title=&#34;Header example&#34;
+            src=&#34;https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/works/utblick-no.2/header-img-utblick_no2-0002_hu_30f81ee0868a7257.jpeg&#34;
+            height=&#34;2500&#34;
+            width=&#34;2500&#34;
+            class=&#34;img-fluid&#34;
+            loading=&#34;lazy&#34;
+          /&gt;
+        &lt;/picture&gt;
+      &lt;/figure&gt;&lt;h3&gt;About&lt;/h3&gt;
+&lt;p&gt;Utblick no.2 explores the theme of Responsibility and Growth through typographic hierarchy and organic illustration. The editorial design balances structured text layouts with hand-drawn botanical elements, creating rhythm through the publication while maintaining readability.&lt;/p&gt;
+&lt;p&gt;Working with a limited color palette—two Pantone spot colors and black on uncoated paper—the design emphasizes material quality and print craft. The typographic system creates clear hierarchies between article text, quotes, and editorial content, while the organic illustrations provide visual breathing space without disrupting the reading experience.&lt;/p&gt;
+&lt;p&gt;This project demonstrates how editorial design principles—establishing hierarchy, pacing content, and guiding the reader—translate directly to designing digital products. The medium changes, but the fundamental approach to structure and user experience remains the same.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -1,25 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Topics on Torbjörn Hedberg · Designer</title>
-    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/</link>
-    <description>Recent content in Topics on Torbjörn Hedberg · Designer</description>
-    <generator>Hugo</generator>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/</link>
+    <description>Hej! Jag är en multidisciplinär designer. I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt organisationer från idé till färdig produkt genom att kombinera design, affärsvärde och teknik.</description>
     <language>sv</language>
-    <lastBuildDate>Thu, 24 Feb 2022 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Feb 2026 09:11:14 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/" rel="self" type="application/rss+xml" />
     <item>
       <title>Topic01</title>
       <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/topic01/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/topic01/</guid>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/topic01/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
       <description></description>
     </item>
     <item>
       <title>Topic02</title>
       <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/topic02/</link>
-      <pubDate>Thu, 24 Feb 2022 00:00:00 +0000</pubDate>
-      <guid>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/topic02/</guid>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/sv/topics/topic02/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
       <description></description>
     </item>
   </channel>

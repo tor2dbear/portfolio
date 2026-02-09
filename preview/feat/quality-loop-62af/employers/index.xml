@@ -1,18 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Torbjörn Hedberg · Designer</title>
-    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/employers/</link>
-    <description>Recent content on Torbjörn Hedberg · Designer</description>
-    <generator>Hugo</generator>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Sat, 04 Jan 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/employers/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Feb 2026 09:10:50 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/employers/" rel="self" type="application/rss+xml" />
     <item>
       <title>Job Application for Senior Product Designer at TechCorp</title>
       <link>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/employers/techcorp/</link>
-      <pubDate>Sat, 04 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/employers/techcorp/</guid>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/feat/quality-loop-62af/employers/techcorp/</guid>
+      <pubDate>Sat, 04 Jan 2025 00:00:00 &#43;0000</pubDate>
       <description></description>
     </item>
   </channel>
