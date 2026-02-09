@@ -1,0 +1,10 @@
+[build]
+  command = "hugo --minify"
+  publish = "public"
+
+  # Skip deploy previews entirely (PRs). This prevents Netlify from blocking PRs with
+  # repeated deploy-preview failures/checks when Netlify isn't part of the workflow.
+  #
+  # Netlify behavior: if `ignore` exits 0 -> build is skipped; non-zero -> build proceeds.
+  ignore = "bash scripts/netlify/ignore.sh"
+
