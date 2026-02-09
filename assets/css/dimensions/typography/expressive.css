@@ -9,7 +9,7 @@
   --font-display:     gopher, ui-sans-serif, system-ui, sans-serif;
   --font-heading:     gopher, ui-sans-serif, system-ui, sans-serif;
   --font-body:        var(--font-serif);
-  --font-ui:          var(--font-sans);
+  --font-ui:          gopher, ui-sans-serif, system-ui, sans-serif;
   --display-weight:   500;
   --heading-weight:   500;
   --heading-tracking: var(--tracking-normal);
