@@ -397,6 +397,20 @@
       ><link rel="stylesheet" href="https://use.typekit.net/qzz7wpk.css"
     /></noscript>
 
+    <!-- Fallback: force TypeKit activation if inline onload is blocked (Arc, strict CSP) -->
+    <script>
+      (function(){
+        var links = document.querySelectorAll('link[href*="typekit.net"][media="print"]');
+        if (links.length) {
+          var activate = function(){
+            links.forEach(function(l){ l.media = 'all'; });
+          };
+          if (document.readyState === 'complete') { activate(); }
+          else { window.addEventListener('load', activate); }
+        }
+      })();
+    </script>
+
     <!-- MathJax -->
     <!-- <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
 
