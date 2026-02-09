@@ -7,12 +7,16 @@
 
   <section id="works" class="home-section works-section">
     <div class="content startpage use-subgrid">
-      <div class="post-header mb-8 col-span-12">
+      <div class="post-header mb-8 place-full">
         <h2 class="type-headline-small">{{ i18n "Featured" }}</h2>
       </div>
       {{ range $index, $page := first 6 (where (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) }}
         {{ $isWide := or (eq $index 0) (eq $index 3) (eq $index 4) }}
-        <div class="{{ if $isWide }}col-span-8 summary-card--wide{{ else }}col-span-4 summary-card--compact{{ end }}">
+        {{ $delayClass := "" }}
+        {{ if not (modBool $index 2) }}
+          {{ $delayClass = "reveal--delay" }}
+        {{ end }}
+        <div class="reveal {{ $delayClass }} {{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: span {{ if $isWide }}8{{ else }}4{{ end }}">
           {{ $page.Render "summary" }}
         </div>
       {{ end }}
@@ -20,8 +24,8 @@
   </section>
 
   <section id="about" class="home-section about-section">
-    <h2 class="section-heading">{{ i18n "about_me" }}</h2>
-    <div class="about-content use-subgrid">
+    <h2 class="section-heading reveal">{{ i18n "about_me" }}</h2>
+    <div class="about-content use-subgrid stepped-6-6">
       {{ $aboutPartial := printf "about_main_%s.html" .Language.Lang }}
       {{ partial $aboutPartial . }}
       {{ partial "about_cv.html" . }}
@@ -29,10 +33,10 @@
   </section>
 
   <section id="contact" class="home-section contact-section">
-    <h2 class="section-heading">{{ i18n "contact_me" }}</h2>
+    <h2 class="section-heading reveal">{{ i18n "contact_me" }}</h2>
     <div class="contact-content use-subgrid">
       {{ with .Site.GetPage "/about" }}
-        <figure class="contact-portrait col-start-7 col-span-6">
+        <figure class="contact-portrait reveal reveal--delay" style="--col: col-start 7 / span 6">
           {{ partial "headerimage.html" . }}
         </figure>
       {{ end }}
@@ -42,7 +46,6 @@
 
   <section id="subscribe" class="home-section subscribe-section">
     <div class="breakout col-full">
-      {{ partial "subscribe.html" . }}
     </div>
   </section>
 </div>

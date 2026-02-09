@@ -1,0 +1,21 @@
+{{ partial "header.html" . }}
+
+<div class="content startpage use-subgrid">
+  <div class="post-header mb-8 place-full">
+    <h1 class="type-headline-small">{{ i18n "all_works" }}</h1>
+  </div>
+  {{- $works := where .Site.RegularPages "Section" "works" -}}
+  {{- $works = where $works ".Params.hidden" "!=" true -}}
+  {{- range $index, $page := $works.ByDate.Reverse -}}
+    {{- $isWide := or (eq $index 0) (eq $index 3) (eq $index 4) -}}
+    {{- $mod := mod $index 6 -}}
+    {{- if gt $index 5 -}}
+      {{- $isWide = or (eq $mod 0) (eq $mod 3) (eq $mod 4) -}}
+    {{- end -}}
+    <div class="{{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: col-start 1 / span {{ if $isWide }}8{{ else }}4{{ end }}">
+      {{ $page.Render "summary" }}
+    </div>
+  {{- end -}}
+</div>
+
+{{ partial "footer.html" . }}

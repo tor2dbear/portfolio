@@ -6,7 +6,7 @@ title: Lokalguiden Admin Interface Redesign
 subtitle: Product Design & UX
 slug: works
 weight: 12
-tags: ["ui-ux", "product design", "web design"]
+tags: ["Digital Product"]
 clients: []
 employers: [techcorp]
 description: Complete redesign of Lokalguiden's internal admin interface, improving structure, usability, and visual design for internal teams.
@@ -14,9 +14,15 @@ header_image:
 featured: true
 draft: false
 hidden: true
-client: Lokalguiden (Internal)
-clientweb: https://www.lokalguiden.se/
-clientabout: Internal admin system used by Lokalguiden staff to manage business listings, customer accounts, and content.
+role: "Art Director, Product Designer"
+details:
+  year: 2023
+  platform: "Web admin"
+  scope: "UX research, IA, UI design"
+client:
+  name: "Lokalguiden (Internal)"
+  url: "https://www.lokalguiden.se/"
+  about: "Internal admin system used by Lokalguiden staff to manage business listings, customer accounts, and content."
 ---
 
 ### Challenge

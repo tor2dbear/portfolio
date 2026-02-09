@@ -1,9 +1,9 @@
 +++
-title = "Contact"
+title = "Say hello."
 date = "2014-04-09"
 sidemenu = "true"
-description = "If you have any questions or suggestions on how we could work together, please get in touch."
-layout = "contact"
+type = "contact"
+description = "Whether you're curious about a project or simply want to say hi, my inbox is open. I enjoy hearing from thoughtful people and makers."
 +++
 
 <div class="page-notice">
@@ -11,8 +11,4 @@ layout = "contact"
 </div>
 
 
-{{< contact_form >}}
-
-{{< contact_info >}}
-
-{{< subscribe >}}
+{{< contact_layout >}}

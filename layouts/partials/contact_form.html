@@ -1,14 +1,24 @@
-<div class="contact-form mt-80 mb-64 col-start-1 col-span-6">
-  <h2 class="contact-form__title type-headline-3 mb-16">
-    {{ i18n "contact_send_message" }}
-  </h2>
+<div class="contact-form">
   <form
     id="contact-form"
     class="contact-form__form"
-    data-js="contact-form"
-    action="https://hook.eu1.make.com/mmg61440srh4u1ttmfqdtho0ys6t9w27"
-    method="post"
+    name="contact"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
   >
+    <input type="hidden" name="form-name" value="contact" />
+    <!-- Honeypot field for spam protection (hidden from users) -->
+    <p
+      style="position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden;"
+      aria-hidden="true"
+    >
+      <label
+        >Don't fill this out:
+        <input name="bot-field" tabindex="-1" autocomplete="off"
+      /></label>
+    </p>
+
     <label>{{ i18n "contact_name" }}</label>
     <input
       type="text"
@@ -27,16 +37,6 @@
       required
     />
 
-    <label for="contact_subject">{{ i18n "contact_subject" }}</label>
-    <input
-      id="contact_subject"
-      type="text"
-      placeholder="{{ i18n "contact_subject_placeholder" }}"
-      class="contact-form__input contact-form__input--subject form-input mb-8"
-      name="subject"
-      required
-    />
-
     <label>{{ i18n "contact_message" }}</label>
     <textarea
       rows="5"
@@ -44,49 +44,57 @@
       class="contact-form__textarea form-input"
       name="message"
     ></textarea>
-    <p class="contact-form__note type-information mb-16 text-color-lighter">
-      {{ i18n "re_captcha" }}
-      <a href="https://policies.google.com/privacy" class="text-color-lighter"
-        >{{ i18n "privacy_policy" }}</a
-      >
-      {{ i18n "and" }}
-      <a href="https://policies.google.com/terms" class="text-color-lighter"
-        >{{ i18n "terms_of_service" }}</a
-      >
-      {{ i18n "apply" }}.
-    </p>
 
-    <input
-      type="hidden"
-      name="g-recaptcha-response"
-      id="recaptchaToken"
-      data-js="contact-recaptcha"
-    />
-    <button
-      type="button"
-      id="submitButton"
-      class="contact-form__submit g-recaptcha icon text-lg font-sans font-medium"
-      data-js="contact-submit"
-      data-sitekey="6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"
-      data-callback="onSubmit"
-    >
+    <button type="submit" class="contact-form__submit button">
       {{ i18n "contact_submit" }}
     </button>
+
     <p
-      id="successMessage"
-      style="display:none;"
-      class="contact-form__message contact-form__message--success type-information mt-16 message"
-      data-js="contact-success"
+      id="contact-success"
+      class="contact-form__message contact-form__message--success type-information message"
+      style="display: none;"
     >
       {{ i18n "contact_submitted" }}
     </p>
     <p
-      id="errorMessage"
-      style="display:none;"
-      class="contact-form__message contact-form__message--error type-information mt-16 message"
-      data-js="contact-error"
+      id="contact-error"
+      class="contact-form__message contact-form__message--error type-information message"
+      style="display: none;"
     >
       {{ i18n "contact_error" }}
     </p>
   </form>
+
+  <script>
+    (function () {
+      var form = document.getElementById("contact-form");
+      var successMsg = document.getElementById("contact-success");
+      var errorMsg = document.getElementById("contact-error");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(form);
+
+        fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(formData).toString(),
+        })
+          .then(function (response) {
+            if (response.ok) {
+              form.reset();
+              successMsg.style.display = "block";
+              errorMsg.style.display = "none";
+            } else {
+              throw new Error("Network response was not ok");
+            }
+          })
+          .catch(function () {
+            errorMsg.style.display = "block";
+            successMsg.style.display = "none";
+          });
+      });
+    })();
+  </script>
 </div>

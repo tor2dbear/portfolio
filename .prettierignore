@@ -4,3 +4,5 @@ resources/
 package-lock.json
 *.min.js
 coverage/
+# Complex Hugo template that prettier-plugin-go-template can't parse
+layouts/partials/head.html

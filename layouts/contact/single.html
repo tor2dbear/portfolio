@@ -1,0 +1,9 @@
+{{ partial "header.html" . }}
+
+  <div class="content page contact use-subgrid">
+    <h1 class="type-display-1 mb-24 place-full">{{ .Title }}</h1>
+    <p class="type-preamble place-full">{{ .Description }}</p>
+    {{ .Content }}
+  </div>
+
+{{ partial "footer.html" . }}

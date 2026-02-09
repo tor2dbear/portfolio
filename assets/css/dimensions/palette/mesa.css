@@ -1,0 +1,39 @@
+/* ============================================================================
+   PALETTE: Mesa
+
+   Dual-palette theme: teal accents on warm amber surfaces.
+   ============================================================================ */
+
+:root[data-palette="mesa"] {
+  /* Image effects */
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
+  --image-background: transparent;
+
+  /* Teal accents */
+  --text-accent: var(--teal-11);
+  --brand-primary: var(--teal-9);
+
+  --text-default: var(--teal-12);
+  --text-muted: var(--teal-10);
+  --text-nav: var(--teal-12);
+  --text-link-hover: var(--teal-11);
+
+  /* Amber surfaces */
+  --bg-page: var(--amber-2);
+  --bg-tag: var(--amber-4);
+  --bg-tag-hover: var(--amber-5);
+  --bg-surface: var(--amber-4);
+  --bg-nav: var(--amber-5);
+
+  --border-subtle: var(--amber-5);
+
+  --component-form-bg: var(--amber-3);
+  --component-form-placeholder: var(--amber-4);
+
+  --component-newsletter-bg: var(--teal-12);
+  --component-newsletter-text: var(--amber-2);
+  --component-newsletter-illustration-bg: var(--amber-3);
+  --component-newsletter-button-bg: var(--amber-4);
+  --component-newsletter-button-text: var(--teal-11);
+}

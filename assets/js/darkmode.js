@@ -88,6 +88,7 @@
     }
     updateThemeIcon(mode);
     updateThemeColorMeta();
+    updateFooterModeLabel(mode);
   }
 
   function updateModeUI(currentMode) {
@@ -117,6 +118,7 @@
 
   function applyPalette(palette) {
     document.documentElement.setAttribute('data-palette', palette);
+    updateFooterPaletteLabel(palette);
   }
 
   function updatePaletteUI(currentPalette) {
@@ -139,30 +141,19 @@
   function updateThemeIcon(mode) {
     if (!themeIcon) return;
 
-    let svgPath = '';
+    let iconId = '';
     if (mode === 'light') {
-      svgPath = '/img/svg/light.svg';
+      iconId = 'icon-light';
     } else if (mode === 'dark') {
-      svgPath = '/img/svg/dark.svg';
+      iconId = 'icon-dark';
     } else if (mode === 'system') {
-      svgPath = '/img/svg/system.svg';
+      iconId = 'icon-system';
     }
 
-    fetch(svgPath)
-      .then(response => response.text())
-      .then(svg => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(svg, 'image/svg+xml');
-        const svgElement = doc.documentElement;
-
-        // Set to 24px
-        svgElement.setAttribute('width', '24');
-        svgElement.setAttribute('height', '24');
-
-        themeIcon.innerHTML = '';
-        themeIcon.appendChild(svgElement);
-      })
-      .catch(err => console.warn('Failed to load theme icon:', err));
+    // Use SVG sprite system for instant icon updates
+    themeIcon.innerHTML = `<svg width="24" height="24" aria-hidden="true">
+      <use href="/img/svg/sprite.svg#${iconId}"></use>
+    </svg>`;
   }
 
   // ==========================================================================
@@ -179,6 +170,20 @@
     } else {
       themeColorMeta.setAttribute('content', '#FFFFFF');
     }
+  }
+
+  function updateFooterModeLabel(mode) {
+    const modeLabel = document.querySelector('[data-js="footer-mode"]');
+    if (!modeLabel) return;
+    const label = modeLabel.getAttribute(`data-label-${mode}`) || mode;
+    modeLabel.textContent = label;
+  }
+
+  function updateFooterPaletteLabel(palette) {
+    const paletteLabel = document.querySelector('[data-js="footer-palette"]');
+    if (!paletteLabel) return;
+    const label = paletteLabel.getAttribute(`data-label-${palette}`) || palette;
+    paletteLabel.textContent = label;
   }
 
   // ==========================================================================
@@ -238,6 +243,52 @@
         if (e.key === 'Escape') {
           closePanel();
         }
+      });
+
+      // Touch support for swipe-to-close on mobile bottom sheet
+      let touchStartY = 0;
+      let touchCurrentY = 0;
+
+      themePanel.addEventListener('touchstart', function(e) {
+        touchStartY = e.changedTouches[0].screenY;
+        themePanel.style.transition = 'none';
+        themeOverlay.style.transition = 'none';
+      });
+
+      themePanel.addEventListener('touchmove', function(e) {
+        touchCurrentY = e.changedTouches[0].screenY;
+        const deltaY = touchCurrentY - touchStartY;
+
+        // Only allow dragging downwards
+        if (deltaY > 0) {
+          e.preventDefault();
+          themePanel.style.transform = `translateY(${deltaY}px)`;
+
+          // Update overlay opacity based on drag distance
+          const panelHeight = themePanel.getBoundingClientRect().height;
+          const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
+          const opacity = 1 - (deltaY / maxDeltaY);
+          themeOverlay.style.opacity = Math.max(opacity, 0);
+        }
+      });
+
+      themePanel.addEventListener('touchend', function(e) {
+        const deltaY = touchCurrentY - touchStartY;
+
+        themePanel.style.transition = 'transform 0.3s ease-in-out';
+        themeOverlay.style.transition = 'opacity 0.3s ease-in-out';
+
+        // Close if dragged down more than 50px
+        if (deltaY > 50) {
+          closePanel();
+        } else {
+          // Return to original position
+          themePanel.style.transform = 'translateY(0)';
+          themeOverlay.style.opacity = '1';
+        }
+
+        touchStartY = 0;
+        touchCurrentY = 0;
       });
     }
 

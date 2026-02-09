@@ -1,0 +1,108 @@
+/* Grid Overlay - Visual 12-column grid for development/design review */
+
+.grid-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: var(--scrollbar-width, 0px);
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  grid-template-columns:
+    [full-start] var(--size-page-margins)
+    [content-start] repeat(12, [col-start] 1fr)
+    [content-end] var(--size-page-margins)
+    [full-end];
+  column-gap: var(--spacing-24);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+html[data-grid-overlay] .grid-overlay {
+  display: grid;
+}
+
+.grid-overlay__col {
+  grid-row: 1;
+  background: var(--grid-overlay-color, hsla(330, 80%, 60%, 0.08));
+  border-inline: 1px solid var(--grid-overlay-border, hsla(330, 80%, 60%, 0.15));
+}
+
+/* First and last columns are the page margins — no fill */
+.grid-overlay__col:first-child,
+.grid-overlay__col:last-child {
+  background: none;
+  border: none;
+}
+
+/* --- Column index for staggered animation --- */
+.grid-overlay__col:nth-child(1)  { --i: 0; }
+.grid-overlay__col:nth-child(2)  { --i: 1; }
+.grid-overlay__col:nth-child(3)  { --i: 2; }
+.grid-overlay__col:nth-child(4)  { --i: 3; }
+.grid-overlay__col:nth-child(5)  { --i: 4; }
+.grid-overlay__col:nth-child(6)  { --i: 5; }
+.grid-overlay__col:nth-child(7)  { --i: 6; }
+.grid-overlay__col:nth-child(8)  { --i: 7; }
+.grid-overlay__col:nth-child(9)  { --i: 8; }
+.grid-overlay__col:nth-child(10) { --i: 9; }
+.grid-overlay__col:nth-child(11) { --i: 10; }
+.grid-overlay__col:nth-child(12) { --i: 11; }
+.grid-overlay__col:nth-child(13) { --i: 12; }
+.grid-overlay__col:nth-child(14) { --i: 13; }
+
+/* --- Animations --- */
+@keyframes grid-col-in {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+@keyframes grid-col-out {
+  from { transform: scaleY(1); }
+  to   { transform: scaleY(0); }
+}
+
+/* In: columns reveal left→right, each sliding down from top.
+   Only animates when data-grid-animate is set (explicit toggle only). */
+html[data-grid-animate][data-grid-overlay]:not([data-grid-overlay="closing"]) .grid-overlay__col {
+  transform-origin: top;
+  animation: grid-col-in 0.2s ease-out both;
+  animation-delay: calc(var(--i, 0) * 25ms);
+}
+
+/* Out: columns collapse right→left, sliding up */
+html[data-grid-animate][data-grid-overlay="closing"] .grid-overlay__col {
+  transform-origin: top;
+  animation: grid-col-out 0.2s ease-in both;
+  animation-delay: calc((13 - var(--i, 0)) * 25ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-overlay__col {
+    animation: none !important;
+  }
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .grid-overlay {
+    grid-template-columns:
+      [full-start] var(--size-page-margins)
+      [content-start] repeat(4, [col-start] 1fr)
+      [content-end] var(--size-page-margins)
+      [full-end];
+    column-gap: var(--spacing-16);
+  }
+
+  /* Hide extra columns on mobile (4 content + 2 margins = 6 total) */
+  .grid-overlay__col:nth-child(n+7) {
+    display: none;
+  }
+
+  /* 6th child is the right margin on mobile — clear fill */
+  .grid-overlay__col:nth-child(6) {
+    background: none;
+    border: none;
+  }
+}

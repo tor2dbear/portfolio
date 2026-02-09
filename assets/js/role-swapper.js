@@ -29,6 +29,60 @@
       return;
     }
 
+    const suffix = swapper.getAttribute("data-suffix") || "";
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const roleItems = Array.from(swapper.querySelectorAll("[data-role]"));
+    const startMode = swapper.getAttribute("data-start");
+
+    if (roleItems.length) {
+      const interval =
+        Number(swapper.getAttribute("data-interval")) || DEFAULT_INTERVAL;
+      const fade = Number(swapper.getAttribute("data-fade")) || DEFAULT_FADE;
+      let currentIndex = roleItems.findIndex((role) =>
+        role.classList.contains("is-active")
+      );
+      if (currentIndex < 0) {
+        currentIndex = 0;
+      }
+      if (startMode === "random") {
+        currentIndex = Math.floor(Math.random() * roleItems.length);
+      }
+
+      const maxLen = roleItems.reduce(
+        (max, item) => Math.max(max, item.textContent.trim().length),
+        0
+      );
+      if (maxLen > 0) {
+        swapper.style.minWidth = `${maxLen}ch`;
+      }
+      roleItems.forEach((item) => {
+        item.style.transitionDuration = `${fade}ms`;
+      });
+
+      const setActive = (index) => {
+        roleItems.forEach((item, itemIndex) => {
+          const isActive = itemIndex === index;
+          item.classList.toggle("is-active", isActive);
+          item.setAttribute("aria-hidden", isActive ? "false" : "true");
+        });
+      };
+
+      setActive(currentIndex);
+
+      if (roleItems.length < 2 || prefersReducedMotion) {
+        return;
+      }
+
+      window.setInterval(() => {
+        currentIndex = (currentIndex + 1) % roleItems.length;
+        setActive(currentIndex);
+      }, interval);
+      return;
+    }
+
     const roleText =
       swapper.querySelector('[data-js="role-swapper-text"]') || swapper;
     const roles = parseRoles(swapper.getAttribute("data-roles"));
@@ -36,7 +90,6 @@
       return;
     }
 
-    const suffix = swapper.getAttribute("data-suffix") || "";
     const normalizeRole = (value) => {
       const trimmed = value.trim();
       if (!suffix) {
@@ -47,13 +100,6 @@
         : trimmed;
     };
 
-    if (!roleText.textContent.trim()) {
-      roleText.textContent = roles[0] + suffix;
-    }
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
     if (prefersReducedMotion) {
       return;
     }
@@ -63,8 +109,16 @@
     const fade = Number(swapper.getAttribute("data-fade")) || DEFAULT_FADE;
 
     let currentIndex = roles.indexOf(normalizeRole(roleText.textContent));
-    if (currentIndex < 0) {
-      currentIndex = 0;
+    if (startMode === "random") {
+      currentIndex = Math.floor(Math.random() * roles.length);
+      roleText.textContent = roles[currentIndex] + suffix;
+    } else {
+      if (currentIndex < 0) {
+        currentIndex = 0;
+      }
+      if (!roleText.textContent.trim()) {
+        roleText.textContent = roles[currentIndex] + suffix;
+      }
     }
 
     function updateText() {

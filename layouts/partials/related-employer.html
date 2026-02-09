@@ -1,0 +1,25 @@
+{{ $related := site.RegularPages.RelatedIndices . "employers" }}
+{{ $related = where $related "Type" "works" }}
+{{ $related = where $related ".Params.hidden" "!=" true }}
+{{ $related = where $related "Permalink" "!=" .Permalink }}
+{{ with $related }}
+<h3 class="related-items__title type-headline-small show-on-employer">More from portfolio</h3>
+  {{ range $index, $page := first 3 . }}
+    {{ $delayClass := "" }}
+    {{ if eq $index 1 }}
+      {{ $delayClass = "reveal--delay" }}
+    {{ else if eq $index 2 }}
+      {{ $delayClass = "reveal--delay-2" }}
+    {{ end }}
+    <article class="related-items__item show-on-employer reveal {{ $delayClass }}" data-employers="{{ delimit $page.Params.employers "," }}">
+      <div class="related-items__image">
+        <a href="{{ $page.RelPermalink }}">{{ partial "headerimage.html" $page }}</a>
+      </div>
+      <header class="related-items__header">
+        <h2 class="type-headline-4"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h2>
+        <h4 class="type-information text-color-lighter">{{ partial "date.html" $page }}</h4>
+      </header>
+      {{ partial "post_tags.html" $page }}
+    </article>
+  {{ end }}
+{{ end }}

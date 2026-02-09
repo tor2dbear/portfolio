@@ -1,8 +1,16 @@
+/* ===========================================
+   PRINT STYLES FOR EMPLOYER/CLIENT PAGES
+   Letter + CV print optimization
+   =========================================== */
+
 @media print {
 
-    /* All your print styles go here */
-    #header,
-    #footer,
+    /* ===========================================
+       HIDE UI ELEMENTS
+       =========================================== */
+    #topmenu,
+    .top-menu,
+    .footer,
     #nav,
     .application-breadcrumb,
     .palette-switcher,
@@ -11,48 +19,430 @@
     .contact-form,
     .content.post .toc,
     .application-page__section--portfolio,
-    ul.toc :nth-child(3),
-    ul.toc :nth-child(5) {
+    .application-page__sidebar,
+    ul.toc,
+    .about-cv__icon,
+    .contact-info__icon,
+    .theme-dropdown,
+    .language-dropdown {
         display: none !important;
     }
 
+    /* ===========================================
+       PRINT CONTACT HEADER
+       =========================================== */
+
+    .print-contact-header {
+        display: block !important;
+    }
+
+    .print-contact-header .contact-info {
+        display: block !important;
+        margin-bottom: 1.5rem !important;
+        padding-bottom: 1rem;
+        border-bottom: 1pt solid #ccc;
+        column-span: all;
+    }
+
+    .print-contact-header .contact-info__title {
+        font-size: 14pt !important;
+        font-weight: bold;
+        margin-bottom: 0.25rem !important;
+    }
+
+    .print-contact-header .contact-info__text {
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
+        margin-bottom: 0.25rem !important;
+        color: #333;
+    }
+
+    /* ===========================================
+       PAGE LAYOUT
+       =========================================== */
+
+    /* Reset grid to single column for print */
+    .application-page {
+        display: block !important;
+    }
+
+    .application-page__main {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Remove any animations/transitions */
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    /* Letter section - own page */
     .application-page__section--letter {
         page-break-after: always;
     }
+
+    /* CV section - show it! */
+    .application-page__section--cv {
+        display: block !important;
+        page-break-before: avoid;
+    }
+
+    .about-cv {
+        display: block !important;
+    }
+
+    /* ===========================================
+       CV LAYOUT FOR PRINT
+       =========================================== */
+
+    .about-cv {
+        margin-top: 0 !important;
+    }
+
+    .about-cv__title {
+        margin-bottom: 1.5rem;
+        font-size: 14pt;
+        font-weight: bold;
+    }
+
+    .about-cv__columns {
+        column-count: 2 !important;
+        column-gap: 2rem;
+        column-fill: balance;
+    }
+
+    .about-cv__section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+
+    .about-cv__heading {
+        font-size: 11pt;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 0.5rem;
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    .about-cv__text {
+        font-size: 9pt;
+        line-height: 1.4;
+        margin-bottom: 0.75rem;
+    }
+
+    /* ===========================================
+       TYPOGRAPHY
+       =========================================== */
+
+    body {
+        font-size: 11pt;
+        line-height: 1.5;
+        color: #000 !important;
+        background: #fff !important;
+        orphans: 3;
+        widows: 3;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Keep headings with following content */
+    h1, h2, h3, h4, h5, h6 {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    h1, .type-headline-2 {
+        font-size: 18pt;
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+    }
+
+    h2, .type-preamble {
+        font-size: 12pt;
+        line-height: 1.4;
+        margin-bottom: 0.5rem;
+    }
+
+    h3, .type-headline-small {
+        font-size: 11pt;
+    }
+
+    p, .type-body {
+        font-size: 10pt;
+        line-height: 1.5;
+    }
+
+    .type-information {
+        font-size: 9pt;
+        color: #666 !important;
+    }
+
+    /* ===========================================
+       SECTION HEADLINES
+       =========================================== */
+
+    .section-headline {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        padding: 0.25rem 0.5rem;
+        color: #333;
+        display: inline-block;
+        background-color: white;
+        border: 1.5pt solid #333;
+        font-weight: bold;
+        font-size: 9pt;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    /* ===========================================
+       SPACING OVERRIDES
+       =========================================== */
 
     #layout .mb-64,
     .mb-64 {
         margin-bottom: 1.5rem;
     }
 
-    p {
-        font-size: 12pt;
+    .mb-16 {
+        margin-bottom: 0.5rem;
     }
 
-    .text-base {
-        font-size: 10pt;
+    .mt-64 {
+        margin-top: 1rem;
     }
 
-    .section-headline {
-        margin-top: 2rem;
+    /* ===========================================
+       PRINT FOOTER WITH URL
+       (Shows at bottom of each printed page)
+       =========================================== */
+
+    .print-footer {
+        display: block !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0.5rem 0;
+        font-size: 8pt;
+        color: #666;
+        text-align: center;
+        border-top: 0.5pt solid #ccc;
+        background: #fff;
     }
 
-    .section-headline {
-        color: var(--bg-section-headline);
-        display: inline-block;
-        background-color: white;
-        border: 2pt solid var(--bg-section-headline);
-        font-weight: bold;
+    .print-footer__url {
+        font-family: monospace;
+        color: #333;
+        font-size: 7pt;
+        word-break: break-all;
     }
 
-    .tag {
-        background-color: white;
-        border: 1pt solid var(--text-muted);
+    /* ===========================================
+       LINKS
+       =========================================== */
+
+    a {
+        color: #000 !important;
+        text-decoration: none !important;
+    }
+
+    /* Show URL after external links in body text */
+    .type-body a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 8pt;
+        color: #666;
+    }
+
+    /* ===========================================
+       PORTFOLIO PRINT PAGE
+       =========================================== */
+
+    .portfolio-print__nav {
+        display: none !important;
+    }
+
+    .portfolio-print__project {
+        page-break-after: always;
+    }
+
+    .portfolio-print__project:last-child {
+        page-break-after: avoid;
+    }
+
+    .portfolio-print__meta {
+        background: none !important;
+        border: 1px solid #ddd;
+    }
+
+    .portfolio-print__images img {
+        border-radius: 0;
     }
 }
 
+/* Screen-only: hide print elements */
+@media screen {
+    .print-footer,
+    .print-contact-header,
+    .print-only {
+        display: none !important;
+    }
+}
 
 @page {
-    size: a4;
-    margin: 7mm 5mm;
+    size: A4;
+    margin: 15mm 20mm 20mm 20mm;
+}
+
+@page :first {
+    margin-top: 25mm;
+}
+
+/* ===========================================
+   PORTFOLIO PRINT PAGE (Screen styles)
+   =========================================== */
+
+.portfolio-print {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.portfolio-print__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    background: var(--bg-surface, #f5f5f5);
+    border-radius: 4px;
+}
+
+.portfolio-print__nav a {
+    color: var(--text-default, #333);
+}
+
+.portfolio-print__header {
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid currentColor;
+}
+
+.portfolio-print__header h1 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.portfolio-print__subtitle {
+    font-size: 1.125rem;
+    color: var(--text-muted, #666);
+    margin: 0;
+}
+
+.portfolio-print__project {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-default, #ddd);
+}
+
+.portfolio-print__project:last-child {
+    border-bottom: none;
+}
+
+.portfolio-print__project-header {
+    margin-bottom: 1rem;
+}
+
+.portfolio-print__project-title {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.portfolio-print__project-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted, #666);
+    margin: 0;
+}
+
+.portfolio-print__description {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.portfolio-print__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-surface, #f9f9f9);
+    border-radius: 4px;
+}
+
+.portfolio-print__meta dt {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted, #666);
+    margin-bottom: 0.25rem;
+}
+
+.portfolio-print__meta dd {
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.portfolio-print__images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.portfolio-print__images figure {
+    margin: 0;
+}
+
+.portfolio-print__images img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.portfolio-print__content {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.portfolio-print__content h3 {
+    font-size: 1rem;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.portfolio-print__content p {
+    margin: 0 0 1rem 0;
+}
+
+.portfolio-print__content ul,
+.portfolio-print__content ol {
+    margin: 0 0 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.portfolio-print__footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-default, #ccc);
+    font-size: 0.875rem;
+    color: var(--text-muted, #666);
 }

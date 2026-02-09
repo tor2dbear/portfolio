@@ -1,0 +1,23 @@
+{{ partial "header.html" . }}
+
+<div class="content list use-subgrid">
+  <div class="post-header mb-8">
+    <h1 class="type-headline-small">{{ .Title }}</h1>
+    {{ if .Description }}
+    <p class="type-body-large text-color-lighter mt-4">{{ .Description }}</p>
+    {{ end }}
+  </div>
+
+  {{ $pages := where .Data.Pages ".Params.draft" "!=" true }}
+  {{ $pages := where $pages ".Params.hidden" "!=" true }}
+
+  {{ if gt (len $pages) 0 }}
+    {{ range $pages }}
+      {{ .Render "summary" }}
+    {{ end }}
+  {{ else }}
+    <p class="text-color-lighter">{{ i18n "no_posts_yet" }}</p>
+  {{ end }}
+</div>
+
+{{ partial "footer.html" . }}

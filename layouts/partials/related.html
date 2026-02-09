@@ -1,21 +1,44 @@
 {{ $related := site.RegularPages.RelatedIndices . "tags" }}
+{{ $relatedWorks := where $related "Type" "works" }}
+{{ $relatedFiltered := where $relatedWorks ".Params.hidden" "!=" true }}
 {{ $relatedFiltered := where $related ".Params.hidden" "!=" true }}
-{{ with $relatedFiltered }}
-  <h3 class="related-items__title mt-64 mb-8 type-headline-small">Related</h3>
-  {{ range first 3 . }}
-    <article class="related-items__item">
-      <div class="related-items__image line-height-tighter">
-        <a href="{{ .Permalink }}">{{ partial "headerimage.html" . }}</a>
+{{ $relatedFiltered = where $relatedFiltered "Type" .Type }}
+{{ $relatedFiltered = where $relatedFiltered "Permalink" "!=" .Permalink }}
+{{ $relatedList := $relatedFiltered }}
+{{ if lt (len $relatedList) 3 }}
+  {{ $relatedPermalinks := slice }}
+  {{ range $relatedList }}
+    {{ $relatedPermalinks = $relatedPermalinks | append .Permalink }}
+  {{ end }}
+  {{ $fallback := where site.RegularPages ".Params.hidden" "!=" true }}
+  {{ $fallback = where $fallback "Type" .Type }}
+  {{ $fallback = where $fallback "Permalink" "!=" .Permalink }}
+  {{ $fallback = where $fallback "Permalink" "not in" $relatedPermalinks }}
+  {{ $fallback = first (sub 3 (len $relatedList)) $fallback }}
+  {{ $relatedList = $relatedList | append $fallback }}
+{{ end }}
+{{ with $relatedList }}
+  <h3 class="related-items__title type-headline-small">Related</h3>
+  {{ range $index, $page := first 3 . }}
+    {{ $delayClass := "" }}
+    {{ if eq $index 1 }}
+      {{ $delayClass = "reveal--delay" }}
+    {{ else if eq $index 2 }}
+      {{ $delayClass = "reveal--delay-2" }}
+    {{ end }}
+    <article class="related-items__item reveal {{ $delayClass }}">
+      <div class="related-items__image">
+        <a href="{{ $page.RelPermalink }}">{{ partial "headerimage.html" $page }}</a>
       </div>
       <header class="related-items__header">
-        <h2 class="type-headline-4 mt-12">
-          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <h2 class="type-headline-4">
+          <a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a>
         </h2>
-        <div class="type-information text-color-lighter mb-12 mt-12">
-          {{ partial "date.html" . }}
+        <div class="type-information text-color-lighter">
+          {{ partial "date.html" $page }}
         </div>
       </header>
-      {{ partial "post_tags.html" . }}
+      {{ partial "post_tags.html" $page }}
     </article>
   {{ end }}
 

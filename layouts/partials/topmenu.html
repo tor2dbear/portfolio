@@ -8,13 +8,9 @@
         {{- range .Site.Menus.top -}}
           {{- $nameLower := lower .Name -}}
           {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}
-          {{- $isAbout := or (eq .Identifier "about") (eq $nameLower "about") (eq $nameLower "om") -}}
           {{- if not $isContact -}}
             {{- $linkURL := .URL | relLangURL -}}
-            {{- if $isAbout -}}
-              {{- $linkURL = printf "%s#about" $homeURL -}}
-            {{- end -}}
-          <li class="top-menu__item top-menu__item--nav">
+          <li class="top-menu__item top-menu__item--nav" data-menu-id="{{ .Identifier }}">
             <a
               class="top-menu__link {{ if eq $urltop $linkURL }}active{{ end }}"
               title="{{ .Name }}"
@@ -43,15 +39,33 @@
         <li class="top-menu__item top-menu__item--contact">
           <a
             class="top-menu__link top-menu__link--button"
-            href="{{ printf "%s#contact" $homeURL }}"
+            href="{{ "/contact" | relLangURL }}"
+            aria-label="{{ i18n "contact_me" }}"
           >
-            <span class="top-menu__label top-menu__label--long">{{ i18n "contact_me" }}</span>
+            <span
+              class="top-menu__label top-menu__label--long"
+              data-focus-label="{{ i18n "contact_me_focus" }}"
+              data-focus-label-template="{{ i18n "to_client" }}"
+              data-focus-label-default="{{ i18n "contact_me" }}"
+            >{{ i18n "contact_me" }}</span>
             <span class="top-menu__label top-menu__label--icon" aria-hidden="true">
-              {{ readFile "static/img/svg/contact.svg" | safeHTML }}
+              <span class="top-menu__icon top-menu__icon--contact" data-focus-icon="contact-default">
+                {{ readFile "static/img/svg/contact.svg" | safeHTML }}
+              </span>
+              <svg class="icon icon--sm top-menu__icon top-menu__icon--profile" data-focus-icon="contact-profile">
+                <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-profile-male"></use>
+              </svg>
             </span>
           </a>
         </li>
       </ul>
     </nav>
   </div>
+  {{ $jsProgress := resources.Get "js/progressbar.js" }}
+  {{ if eq hugo.Environment "development" }}
+    <script src="{{ $jsProgress.Permalink }}"></script>
+  {{ else }}
+    {{ $jsProgressMin := $jsProgress | minify | fingerprint }}
+    <script src="{{ $jsProgressMin.Permalink }}"></script>
+  {{ end }}
 </header>

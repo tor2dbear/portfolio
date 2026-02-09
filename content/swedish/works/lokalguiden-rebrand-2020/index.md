@@ -6,7 +6,7 @@ title: Lokalguidens varumärkesuppdatering 2020
 subtitle: Varumärkesidentitet & Digital redesign
 slug: works
 weight: 15
-tags: ["branding", "ui-ux", "design", "web design"]
+tags: ["Varumärke & Identitet"]
 clients: []
 employers: [techcorp]
 description: Komplett varumärkesuppdatering för Lokalguiden inklusive ny logotyp, visuella riktlinjer, tryckmaterial, magasin-redesign och ny webbsida.
@@ -14,9 +14,15 @@ header_image:
 featured: true
 draft: false
 hidden: true
-client: Lokalguiden
-clientweb: https://www.lokalguiden.se/
-clientabout: Lokalguiden är en ledande plattform som kopplar samman lokala företag med kunder över hela Sverige, med omfattande företagskataloger och annonslösningar.
+role: "Art Director"
+details:
+  year: 2020
+  deliverables: "Logotyp, guidelines, print, webb"
+  scope: "Varumärke, magasin, webbplats"
+client:
+  name: "Lokalguiden"
+  url: "https://www.lokalguiden.se/"
+  about: "Lokalguiden är en ledande plattform som kopplar samman lokala företag med kunder över hela Sverige, med omfattande företagskataloger och annonslösningar."
 ---
 
 ### Utmaning

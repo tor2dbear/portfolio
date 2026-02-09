@@ -12,6 +12,22 @@ article {
 }
 
 /* ==========================================================================
+   Article Card
+   ========================================================================== */
+
+.article-card__title {
+  margin: 0 0 var(--spacing-12);
+}
+
+.article-card__description {
+  margin: 0 0 var(--spacing-12);
+}
+
+.article-card__meta {
+  margin: 0 0 var(--spacing-12);
+}
+
+/* ==========================================================================
    Summary Card - Hover Effects
    ========================================================================== */
 
@@ -27,23 +43,78 @@ article {
   transition: filter 1s ease, -webkit-filter 1s ease;
 }
 
+.related-items__image {
+  line-height: var(--line-height-tighter);
+}
+
 /* ==========================================================================
    List Page Grid Layout
    ========================================================================== */
 
+.content.list.tag-page {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--spacing-24);
+  row-gap: var(--spacing-32);
+}
+
+.content.list.tag-page > .taxonomy-header,
+.content.list.tag-page > .tag-list {
+  grid-column: 1 / -1;
+  margin-bottom: var(--spacing-8);
+}
+
+.content.list.tag-page article {
+  grid-column: auto;
+  margin-bottom: 0;
+}
+
+.content.list.works-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--spacing-24);
+  row-gap: var(--spacing-32);
+}
+
+.content.list.works-list > .post-header {
+  grid-column: 1 / -1;
+}
+
+.content.list.works-list article {
+  grid-column: auto;
+  margin-bottom: 0;
+}
+
 .content.list article {
-  grid-column: col-start 1 / span 6;
+  --col: col-start 1 / span 6;
+  grid-column: var(--col);
 }
 
 /* Make last odd article span full width */
 .content.list article:nth-last-of-type(1):nth-of-type(odd) {
-  grid-column: col-start 1 / span 12;
+  --col: col-start 1 / span 12;
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
+  .content.list.tag-page {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: var(--spacing-16);
+  }
+
+  .content.list.tag-page article {
+    grid-column: auto;
+  }
+
   .content.list article {
-    grid-column: col-start 1 / span 4;
+    --col: col-start 1 / span 4;
+  }
+
+  .content.list.works-list {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: var(--spacing-16);
+  }
+
+  .content.list.works-list article {
+    grid-column: auto;
   }
 }
 
@@ -52,14 +123,27 @@ article {
    ========================================================================== */
 
 .content.post .related-items__item {
-  grid-column-start: auto;
-  grid-column-end: span 4;
+  --col: auto / span 4;
+  grid-column: var(--col);
+}
+
+#layout.clientpage .related-items__title,
+#layout.clientpage .related-items__item,
+#layout.employerpage .related-items__title,
+#layout.employerpage .related-items__item {
+  display: none;
+}
+
+#layout.clientpage .related-items__title.show-on-client,
+#layout.clientpage .related-items__item.show-on-client,
+#layout.employerpage .related-items__title.show-on-employer,
+#layout.employerpage .related-items__item.show-on-employer {
+  display: block;
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .content.post .related-items__item:nth-of-type(n + 1) {
-    grid-column-start: auto;
-    grid-column-end: span 4;
+    --col: auto / span 4;
   }
 }

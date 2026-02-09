@@ -15,6 +15,7 @@
 .accordion__trigger,
 .accordion__title,
 .accordion-nested__trigger,
+.accordion-nested__trigger h4,
 .token-section>h4,
 .typography-example__token,
 .spacing-example__token,
@@ -76,7 +77,7 @@
 }
 
 .ui-library__header {
-  grid-column: span 12;
+  grid-column: content-start / content-end;
   margin-bottom: var(--spacing-32);
 }
 
@@ -85,7 +86,7 @@
    ========================================================================== */
 
 .ui-library__tabs {
-  grid-column: span 12;
+  grid-column: content-start / content-end;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-24);
@@ -150,6 +151,7 @@
   border: 1px solid var(--border-default);
   border-radius: 8px;
   margin-bottom: var(--spacing-16);
+  overflow: hidden;
 }
 
 .accordion__trigger {
@@ -185,6 +187,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   margin-bottom: var(--spacing-8);
+  overflow: hidden;
 }
 
 .accordion-nested__trigger {
@@ -318,6 +321,14 @@
   border-radius: 6px;
 }
 
+/* Grid demos are standalone containers inside accordions, not true
+   subgrid participants. Force explicit 12-column tracks so named
+   lines ([col-start]) resolve correctly for .place-* and stepped-* classes. */
+.grid-demo.use-subgrid {
+  grid-template-columns: repeat(12, [col-start] 1fr);
+  column-gap: var(--spacing-24);
+}
+
 .grid-demo__item {
   padding: var(--spacing-16);
   background-color: var(--brand-primary);
@@ -325,6 +336,26 @@
   border-radius: 4px;
   text-align: center;
   font-weight: 500;
+}
+
+/* Art-direction demo: items with --col set via class or inline style */
+.grid-demo .place-full,
+.grid-demo .place-wide,
+.grid-demo .place-prose,
+.grid-demo .place-narrow,
+.grid-demo .place-inset,
+.grid-demo .place-aside,
+.grid-demo .place-aside-left,
+.grid-demo .place-bleed,
+.grid-demo [style*="--col"] {
+  grid-column: var(--col);
+  grid-row: var(--row, auto);
+}
+
+/* Stepped demo items pick up --col and --row from nth-child rules */
+.grid-demo[class*="stepped-"] > * {
+  grid-column: var(--col);
+  grid-row: var(--row, auto);
 }
 
 .code-example {

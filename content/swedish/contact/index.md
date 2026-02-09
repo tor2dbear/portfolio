@@ -1,21 +1,17 @@
 ---
-title: Kontakt
+title: Säg hej
 linktitle: Kontakt
 slug: kontakt
 url: "/sv/kontakt"
 aliases:
   - /sv/contact/
 sidemenu: true
-description: Om du har frågor eller förslag på hur vi kan samarbeta, hör av dig.
-layout: contact
+type: contact
+description: Skriv en rad om du vill diskutera något eller bara säga hallå. Jag gillar att höra från nyfikna människor och skapare.
 ---
 
 <div class="page-notice">
   <p>{{ i18n "also_on_homepage" }} <a href="{{ "/" | relLangURL }}">{{ i18n "go_to_homepage" }}</a></p>
 </div>
 
-{{< contact_form >}}
-
-{{< contact_info >}}
-
-{{< subscribe >}}
+{{< contact_layout >}}

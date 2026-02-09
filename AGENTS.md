@@ -236,41 +236,84 @@ Configured in `package.json` with lint-staged:
 
 ---
 
-## Documentation Workflow
+## Git Workflow (v4)
 
-### Migration Plans
-- Store migration/refactor plans in `docs/migrations/` as standalone `.md` files.
-- Keep each plan actionable with phases, checklist, and rollback notes.
+### Core Principles (Strict)
+- **Isolation**: One task = one branch.
+- **No Worktrees**: Development happens directly in the repo on a task branch.
+- **Verification**: Before editing any file, verify your location and branch.
 
-### Feature Plans
-- Store new feature development plans in `docs/features/` as standalone `.md` files.
-- Include: overview, architecture decisions, implementation phases, success criteria, and rollback plan.
-- Keep plans actionable with clear phases and checklists.
+### Branch Naming
+- **Format**: `<type>/<slug>-<sessionId>` (required, e.g., `feature/login-system-a1b2`)
+- **Types**: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
+- **Session ID**: Generate using `openssl rand -hex 2`.
 
-**General Guidelines**:
-- Update `AGENTS.md` when adding or changing documentation workflows.
-- Plans should be living documents - update as implementation progresses.
+### Creating a New Task
+```bash
+git switch master
+git pull
+git switch -c <type>/<slug>-<sessionId>
+```
+
+### Working in a Branch (The "Gold" Rules)
+1. **Verification Step**: Always run `pwd`, `git rev-parse --show-toplevel` and `git branch --show-current` before the first edit in a session to confirm repo root + branch.
+2. **Scope**: Only modify files related to the current task branch.
+3. **Commits**: All `git add`, `git commit`, and `git push` commands must be executed from the repo root.
+
+### Syncing & Updates
+To bring in latest changes from master:
+```bash
+git fetch origin
+git merge origin/master # Avoid rebase unless explicitly requested.
+```
+
+### Finishing a Task (Cleanup)
+Once the PR is merged on GitHub:
+```bash
+# Delete Branch:
+git branch -d <branch-name>
+
+# Prune:
+git fetch --prune
+```
+
+### Safety Guardrails
+- **Never** run two agents in the same repo folder at the same time.
 
 ---
 
-## Git Workflow
+## Deployment & Preview System
 
-### Branching
-- **IMPORTANT**: Always create a new branch when starting significant work (features, redesigns, major refactors)
-- Branch format: `<type>/<slug>-<sessionId>`
-- Types: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
-- Example: `feature/header-footer-redesign-e47b`
-- Generate random session ID: `$(openssl rand -hex 2)` or manually
-- If you forget to branch before starting work and changes are unstaged, switch branches immediately with `git checkout -b <branch-name>` (changes follow you)
+### Production
+- **URL**: https://www.tor-bjorn.com/
+- **Host**: Netlify (main/master branch only)
+- **Build**: Automatic on push to main/master
 
-### Commits
-- Clear, descriptive commit messages
-- Follow conventional commits when applicable
-- One logical change per commit
+### Preview Builds
+Preview builds use **GitHub Pages** instead of Netlify to save build credits.
 
-### Pushing
-- Always push with upstream: `git push -u origin <branch-name>`
-- Branch must follow naming convention or push will fail (403)
+**How it works**:
+1. Push to any non-main/master branch triggers GitHub Actions
+2. Hugo builds with branch-specific baseURL
+3. Deploys to GitHub Pages at `/preview/<branch-name>/`
+
+**Preview URLs**:
+- Branch `feature/new-thing-a1b2` → `https://tor2dbear.github.io/portfolio/preview/feature/new-thing-a1b2/`
+- PR comments automatically include preview link
+
+### Forcing a Netlify Preview
+By default, Netlify skips all non-production builds. To force a Netlify preview:
+
+**Add `[netlify]` to your commit message**:
+```bash
+git commit -m "feat: my changes [netlify]"
+```
+
+This triggers a full Netlify deploy preview with all Netlify features (redirects, headers, etc.).
+
+### Configuration Files
+- **GitHub Actions**: `.github/workflows/gh-pages.yml`
+- **Netlify**: `netlify.toml`
 
 ---
 
@@ -284,6 +327,23 @@ date: 2024-01-01
 tags: ["design", "branding", "ui-ux"]
 featured_image: "/images/project/hero.jpg"
 ```
+
+Project info block (renders via `layouts/partials/project-info.html`):
+```yaml
+role: "Art Direction, Illustration"
+details:
+  year: 2015
+  format: "A4"
+  paper: "Uncoated, 120g"
+  print_method: "2 Pantone spot colors + black"
+client:
+  name: "Society of International Affairs"
+  url: "https://www.utblick.org/"
+  about: ""
+```
+- `role` is a single string (comma-separated if multiple roles).
+- `details` keys use `snake_case` for consistent labels.
+- Omit `client` for self-initiated/personal projects.
 
 ### Client Applications (`/clients/`)
 Front matter structure:
@@ -308,6 +368,19 @@ attach_letter: "/path/to/letter.pdf"
   - **Border Radius**: Apply `border-radius` and `overflow: hidden` to the `<picture>` container (not the `<img>`). This ensures `::after` overlays and the image are clipped to the corners. Use `--radius-*` tokens.
 - **Header Images**: Use `.Params.header_image` in front matter and call `{{ partial "headerimage.html" . }}` in templates.
 
+### Gallery Shortcode
+Wrap Markdown images in a layout-aware grid:
+```markdown
+{{< gallery layout="1+1" >}}
+![Alt](image-1.webp)
+![Alt](image-2.webp)
+{{< /gallery >}}
+```
+Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
+
+### Tag Links
+- Tag URLs are section-scoped (`/works/tags/`, `/writing/tags/`, `/texter/tags/`).
+
 ---
 
 ## CSS Architecture
@@ -322,8 +395,9 @@ attach_letter: "/path/to/letter.pdf"
 - `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
 - `assets/css/utilities/typography.css` - Typography utilities
 - `assets/css/utilities/layout.css` - Layout utilities
-- `assets/css/utilities/grid.css` - 12-column subgrid utilities
+- `assets/css/utilities/grid.css` - 12-column subgrid + art-direction placement API
 - `assets/css/utilities/display.css` - Visibility helpers
+- `assets/css/utilities/icons.css` - SVG sprite icon utilities
 - `assets/css/components/button.css` - Button component
 - `assets/css/components/footer.css` - Footer component
 - `assets/css/components/theme-dropdown.css` - Theme dropdown
@@ -354,9 +428,101 @@ attach_letter: "/path/to/letter.pdf"
 ### CSS Load Order (head.html)
 1. tokens (primitives → semantic → components → legacy)
 2. dimensions (mode → palette → palette previews)
-3. utilities (typography → layout → grid → display)
+3. utilities (typography → layout → grid → display → icons)
 4. components (button → footer → theme-dropdown → language-dropdown → settings-dropdown)
 5. pages (home → ui-library → style → clientpage → print)
+
+### SVG Sprite System
+All icons use a centralized SVG sprite system for better performance and maintainability.
+
+**Sprite File**: `static/img/svg/sprite.svg`
+
+**Available Icons**:
+- `icon-pdf` - PDF document icon
+- `icon-download` - Download/circle icon
+- `icon-new-window` - External link/new window icon
+- `icon-light` - Light mode sun icon
+- `icon-dark` - Dark mode moon icon
+- `icon-system` - System preference icon
+- `icon-mode-micro` - Micro mode icon (10x10)
+- `icon-palette-micro` - Micro palette icon (10x10)
+- `icon-language-micro` - Micro language icon (10x10)
+- `icon-arrow-left` - Left arrow navigation
+- `icon-arrow-right` - Right arrow (used in buttons)
+- `icon-language` - Language selector icon
+
+**Usage Patterns**:
+```html
+<!-- Direct usage with .icon class -->
+<svg class="icon">
+  <use href="/img/svg/sprite.svg#icon-pdf"></use>
+</svg>
+
+<!-- With size variants -->
+<svg class="icon icon--sm"></svg>  <!-- 1rem -->
+<svg class="icon icon--xs"></svg>  <!-- 10px -->
+<svg class="icon icon--lg"></svg>  <!-- 2rem -->
+<svg class="icon icon--xl"></svg>  <!-- 2.5rem -->
+
+<!-- Legacy containers (backward compatibility) -->
+<div class="pdf-icon">
+  <svg><use href="/img/svg/sprite.svg#icon-pdf"></use></svg>
+</div>
+```
+
+**Adding New Icons**:
+1. Add `<symbol id="icon-name" viewBox="...">` to `static/img/svg/sprite.svg`
+2. Use sprite reference: `<svg><use href="/img/svg/sprite.svg#icon-name"></use></svg>`
+3. Optionally add legacy container class to `assets/css/utilities/icons.css`
+4. Document in UI Library (`layouts/ui-library/single.html`)
+
+**Icon Styling**:
+- Icons inherit color from parent via `currentColor`
+- Size controlled by `width`/`height` or `.icon` size variants
+- Legacy containers (`.pdf-icon`, `.language-icon`, etc.) provide consistent 1.5rem sizing
+
+### Sticky Footer Pattern
+The site uses CSS Grid for a sticky footer that works even with short content:
+```css
+#layout {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto 1fr auto;  /* header, main (fills space), footer */
+  grid-template-areas: "header" "main" "footer";
+}
+```
+This ensures the footer stays at the bottom of the viewport even when page content is minimal (e.g., 404 page).
+
+### Grid Art-Direction API
+The site uses a 12-column subgrid with a variable-driven placement system for editorial layout control.
+
+**Core concept**: Every child of `.use-subgrid` reads `--col` and `--row` custom properties to determine its grid placement. Set via classes (`.place-prose`) or inline styles (`style="--col: col-start 3 / span 8;"`).
+
+**Placement presets** (defined in `grid.css`):
+- `.place-full` — col 1–12 (full content width)
+- `.place-wide` — col 1–10 (images, figures)
+- `.place-prose` — col 1–8 (running text, replaces max-width: 70ch)
+- `.place-narrow` — col 2–9 (pull-quotes, callouts)
+- `.place-inset` — col 3–10 (deeply indented)
+- `.place-aside` — col 9–12 (sidebar, metadata)
+- `.place-aside-left` — col 1–4 (left sidebar)
+- `.place-bleed` — full-start / full-end (break out of content area)
+
+**Responsive tiers** (cascade with fallback):
+- `--col` — Desktop (default)
+- `--col-md` — Tablet (≤63.9375em), falls back to `--col`
+- `--col-sm` — Mobile (≤47.9375em), falls back to full width
+
+**Stepped text** ("tripp-trapp-trull" staircase patterns):
+- `.stepped-3-3` — offset 3, span 3 (clean staircase)
+- `.stepped-2-4` — offset 2, span 4 (overlapping)
+- `.stepped-4-4` — offset 4, span 4 (wide non-overlapping)
+- `.stepped-1-6` — offset 1, span 6 (slow drift)
+
+**Rules**:
+- Text measure (width) is controlled by grid placement, not `max-width` in `ch`. The `.prose-measure` class exists as a safety net for content outside the grid.
+- Rows must remain content-driven (`auto` or `max-content`). Never use `grid-auto-rows: 1fr`.
+- Mobile (≤47.9375em) switches from 12 to 4 columns.
 
 ### Breakpoints
 - Units: em-based, desktop-first with max-width queries.
@@ -389,6 +555,15 @@ attach_letter: "/path/to/letter.pdf"
 - Legacy aliases live in `assets/css/tokens/legacy.css` and must include `/* deprecated */`.
 - Legacy aliases map one-to-one to canonical tokens; remove legacy only after confirming no references remain.
 - **State-layer tokens (state-*)** must be applied as overlays (e.g. `background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover))`) on top of existing backgrounds, not as replacement background colors.
+
+### Button Link Styling
+When styling links, always exclude `.button` elements to prevent visited link colors from overriding button styles:
+```css
+a:visited:not(.button) {
+  color: var(--text-default);
+}
+```
+This pattern is used in `assets/css/utilities/typography.css`.
 
 ### CSS / HTML Naming Spec
 - **Utilities**: short, functional, scale-based names (e.g. `mt-24`, `grid-1-3`, `text-sm`).
@@ -446,7 +621,77 @@ npm run test:coverage       # Generate coverage report
 7. **Git Conventions**: Follow the branch format defined in this document
 8. **Taxonomy System**: Employers/clients use Hugo taxonomies - projects need taxonomy tags to appear on company pages
 9. **Hidden Projects**: Respect `hidden: true` parameter - must be filtered in main portfolio templates
-10. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
+10. **Request Handling**: Follow the "Request Handling Guidelines" section below - propose plans for analysis requests, implement directly only for clear action requests
+11. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
+
+---
+
+## Request Handling Guidelines
+
+### When to Propose vs. Implement
+
+**Key Principle**: Distinguish between requests for analysis/suggestions and requests for direct action.
+
+### Language Cues
+
+**Analysis/Proposal Requests** (respond with plan, wait for approval):
+- "Can you analyze..."
+- "What would be the best way to..."
+- "How should I..."
+- "Could you suggest..."
+- "What do you recommend..."
+- "Föreslå hur..." (Swedish: "suggest how...")
+- Questions that ask "how" or "what" about approach
+
+**Direct Action Requests** (proceed with implementation):
+- "Please add..."
+- "Create a..."
+- "Update the..."
+- "Fix the..."
+- "Lägg till..." (Swedish: "add...")
+- "Skapa..." (Swedish: "create...")
+- Clear imperative commands
+
+### Response Pattern for Analysis Requests
+
+When user asks for analysis or suggestions:
+
+1. **Analyze**: Use appropriate tools (Explore agent, Read, Grep) to understand current state
+2. **Present findings**: Summarize what you discovered about the codebase
+3. **Propose solution**: Present a clear implementation plan with:
+   - Files to be created/modified
+   - Structural changes needed
+   - Configuration updates required
+   - Example code/content snippets
+   - Trade-offs and alternatives if applicable
+4. **Ask for confirmation**: "Does this approach look good? Should I proceed with implementation?"
+5. **Wait for approval**: Do not proceed until user explicitly confirms
+
+### Response Pattern for Action Requests
+
+When user gives clear implementation instructions:
+
+1. **Acknowledge**: Briefly confirm what you'll do
+2. **Plan** (if complex): Use TodoWrite for multi-step tasks
+3. **Execute**: Implement the requested changes
+4. **Report**: Summarize what was completed
+
+### Gray Areas
+
+When in doubt, **default to proposing first**. It's better to over-communicate than to implement unwanted changes.
+
+**Example gray area**: "I want to add a blog section" could be:
+- Analysis request: User wants to discuss options and structure first
+- Action request: User has decided and wants it done immediately
+
+**Resolution**: If the request is substantial (affects multiple files, adds new features, changes site architecture), treat it as an analysis request and propose a plan first, even if the wording seems action-oriented.
+
+### Handling Swedish Language Requests
+
+The same principles apply to Swedish requests. Common Swedish phrases:
+
+- **Analysis**: "Kan du analysera...", "Hur skulle jag...", "Vad är bästa sättet...", "Föreslå hur..."
+- **Action**: "Lägg till...", "Skapa...", "Uppdatera...", "Fixa...", "Implementera..."
 
 ---
 
@@ -473,10 +718,112 @@ npm run test:coverage       # Generate coverage report
 2. Add `_index.md` with employer front matter (include `taxonomy_indexes: true`)
 3. Ensure `company_name` matches company slug
 4. Mirror in Swedish: `content/swedish/employers/company-slug/`
-5. Add PDF attachments to `static/images/`
+5. Add PDF attachments to `static/images/` or as page bundle resources in the employer folder
 6. Tag relevant projects: `employers: [company-slug]` in project front matter
 7. Optionally mark projects as `hidden: true` to exclude from main portfolio
 8. Test focus mode: `/employers/company-slug/` → verify projects display → click project → verify `?view=employer`
+9. Optionally create portfolio-print page (see "PDF Export & Print System" section)
+
+---
+
+## CV System
+
+The CV is split into modular partials for reuse across different contexts:
+
+### Partials Structure
+```
+layouts/partials/
+├── about_cv_base.html      # Shared sections (Work, Skills, Education, etc.)
+├── about_cv.html           # Short version for about/start page
+└── about_cv_extended.html  # Full version for employer/client pages
+```
+
+### Usage
+- **Start page / About**: Uses `about_cv.html` (includes base only)
+- **Employer/Client pages**: Uses `about_cv_extended.html` (includes base + extra sections)
+
+### Extended CV Sections
+The extended version adds (with bilingual support):
+- Freelance assignments
+- Non-profit work
+- Languages
+- Driver's license
+- Software skills
+- Programming skills
+- Selected experience
+
+### Language Support
+Extended CV uses `{{ if eq .Language.Lang "sv" }}` conditionals for bilingual content.
+
+### Updating CV Content
+- **Shared sections**: Edit `about_cv_base.html` (updates everywhere)
+- **Extended-only sections**: Edit `about_cv_extended.html`
+
+---
+
+## PDF Export & Print System
+
+The site supports generating PDFs via browser print (Ctrl+P → Save as PDF).
+
+### Print Styling
+**File**: `assets/css/print.css`
+
+**Features**:
+- Hides navigation, footer, sidebar elements
+- Optimizes typography for A4 print
+- Adds print-header with contact info
+- Adds print-footer with page URL
+- Prevents orphaned headings (`break-after: avoid`)
+
+### Print Header (Contact Info)
+Uses the existing `layouts/partials/contact_info.html` partial:
+- Styled differently for print (smaller fonts, border-bottom)
+- Icon hidden in print
+- No separate partial needed - single source of truth
+
+### Print Footer
+- Shows page URL for reference
+- Uses `position: fixed` to appear on all pages (browser support varies)
+
+### Portfolio Print Page
+A dedicated page for printing all tagged projects for an employer/client.
+
+**URL pattern**: `/employers/[company]/portfolio-print/` or `/clients/[company]/portfolio-print/`
+
+**Content file structure**:
+```yaml
+# content/english/employers/techcorp/portfolio-print.md
+---
+title: "Portfolio – TechCorp"
+type: "portfolio-print"
+company_name: "techcorp"
+taxonomy: "employers"
+back_url: "/employers/techcorp/"
+index: false
+---
+```
+
+**Layout**: `layouts/portfolio-print/single.html`
+
+### Creating Portfolio-Print for New Employer/Client
+1. Create `portfolio-print.md` in the employer/client content folder
+2. Set `type: "portfolio-print"`
+3. Set `company_name` to match the employer/client slug
+4. Set `taxonomy` to either "employers" or "clients"
+5. Set `back_url` to the parent employer/client page
+6. Mirror in other language folder
+
+### PDF Generation Workflow
+1. Navigate to employer/client page
+2. Press Ctrl+P (Chrome recommended for best support)
+3. Select "Save as PDF"
+4. Upload PDF to employer/client folder as page bundle resource
+5. Reference in front matter: `attach_letter: "filename.pdf"`
+
+### Download Cards
+**Partial**: `layouts/partials/download-card.html`
+- Supports both absolute paths (`/images/file.pdf`) and page bundle resources (`file.pdf`)
+- Used in employer/client sidebars for PDF downloads
 
 ### Modifying JavaScript
 1. Edit module in `assets/js/`
@@ -485,6 +832,25 @@ npm run test:coverage       # Generate coverage report
 4. Run linting: `npm run lint:fix`
 5. Pre-commit hooks will format automatically
 
+### 404 Pages
+Hugo generates bilingual 404 pages:
+- English: `/404.html`
+- Swedish: `/sv/404.html`
+
+**GitHub Pages Limitation**: GitHub Pages only serves `/404.html` for all 404 errors.
+
+**Solution**: A JavaScript redirect (`static/js/404-redirect.js`) detects Swedish paths and redirects:
+```javascript
+// If URL starts with /sv/, redirect to Swedish 404
+if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
+  window.location.replace('/sv/404.html');
+}
+```
+
+**Template**: `layouts/404.html`
+- Uses `.Lang` to show correct language content
+- Language dropdown uses `.Kind "404"` to detect 404 pages and link directly to other language's 404.html
+
 ### UI Library
 **Access**: `/ui-library/` (English) or `/sv/ui-library/` (Swedish)
 **Purpose**: Internal documentation of design tokens, components, and grid system
@@ -492,13 +858,13 @@ npm run test:coverage       # Generate coverage report
 
 **Structure**:
 - **Tokens Tab**: All color scales (primitives, brand, semantic), typography, spacing
-- **Grid Tab**: 12-column subgrid system examples
+- **Grid Tab**: 12-column subgrid examples, art-direction placement presets, stepped text patterns
 - **Components Tab**: Live component examples with meta-info (classes, files, tokens)
 - **Utilities Tab**: Typography and spacing utilities
 
 **Adding a New Component to UI Library**:
 1. Extract component CSS to `assets/css/components/[component].css`
-2. Import in `layouts/partials/head.html` (maintain load order)
+2. Import in `layouts/partials/head.html` (maintain load order in both the dev `<link>` list and the production concat slice)
 3. Add accordion in Components tab (`layouts/ui-library/single.html`)
 4. Include component meta-info:
    - **Classes**: List all variant classes (e.g., `.button--primary`)
@@ -543,4 +909,4 @@ npm run test:coverage       # Generate coverage report
 
 ---
 
-Last updated: 2026-01-06
+Last updated: 2026-02-04

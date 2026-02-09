@@ -8,11 +8,12 @@
 
 {{/* IF mp4 */}}
 {{ if eq $ext "mp4" }}
-  <video width="100%" height="auto" autoplay muted>
-    >
-    <source src="{{ $src.Permalink }}" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
+  <div class="video-wrapper">
+    <video width="100%" height="auto" autoplay muted loop playsinline>
+      <source src="{{ $src.Permalink }}" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
 {{ else }}
   {{ .Scratch.Set "small" ($src.Resize "500x webp") }}
   {{ .Scratch.Set "medium" ($src.Resize "800x webp") }}
@@ -77,6 +78,8 @@
       src="{{ $fallback.Permalink }}"
       height="{{ $src.Height }}"
       width="{{ $src.Width }}"
+      loading="lazy"
+      decoding="async"
       class="img-fluid"
     />
   </picture>

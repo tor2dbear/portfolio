@@ -28,7 +28,7 @@
 
 .top-menu>div {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   justify-content: space-between;
   column-gap: 1.5rem;
@@ -90,6 +90,10 @@
   display: block;
 }
 
+.top-menu__label--icon .top-menu__icon--profile {
+  display: none;
+}
+
 .top-menu__item--contact .top-menu__link--button:hover,
 .top-menu__item--contact .top-menu__link--button:focus-visible {
   background: color-mix(in srgb, var(--text-default) 85%, var(--bg-page));
@@ -119,8 +123,35 @@
   background: var(--bg-surface);
 }
 
+#layout.clientpage .top-menu__item--nav[data-menu-id="works"],
+#layout.clientpage .top-menu__item--nav[data-menu-id="about"],
+#layout.employerpage .top-menu__item--nav[data-menu-id="works"],
+#layout.employerpage .top-menu__item--nav[data-menu-id="about"] {
+  display: none;
+}
+
 .top-menu__list .top-menu__item--nav:not(:has(~ .top-menu__item--nav)) {
   margin-right: var(--spacing-16);
+}
+
+.top-menu__icon--profile {
+  display: none;
+}
+
+.top-menu__link--button.is-focus-subpage .top-menu__icon--profile {
+  display: inline-flex;
+}
+
+.top-menu__link--button.is-focus-subpage .top-menu__icon--contact {
+  display: none;
+}
+
+.top-menu__icon--contact svg {
+  color: inherit;
+}
+
+.top-menu__icon--profile {
+  color: inherit;
 }
 
 /* ==========================================================================
@@ -131,6 +162,7 @@
   display: flex;
   flex-direction: row;
   position: relative;
+  min-width: 0;
 }
 
 .brand__word--lead {
@@ -143,21 +175,45 @@
 
 .brand__link {
   height: 2rem;
-  min-width: 11rem;
-  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  width: auto;
+  max-width: 100%;
 }
 
-.brand__hyphen {
-  height: 2px;
-  background-color: var(--text-default);
+.brand__mark {
+  display: block;
+  height: 1.5rem;
+  width: 6rem;
+  color: var(--text-default);
+  max-width: 100%;
 }
 
-.brand__hyphen--left {
-  margin-top: 13px;
+.brand__mark-line {
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
 }
 
-.brand__hyphen--right {
-  margin-top: 15px;
+.brand__mark-loop {
+  transform-origin: 12px 12px;
+}
+
+.brand__mark-loop-path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand__mark-loop-path animate {
+    display: none;
+  }
 }
 
 /* ==========================================================================
@@ -203,7 +259,7 @@
   }
 
   .brand__link {
-    width: 11rem !important;
+    width: auto;
   }
 
   .top-menu,
@@ -238,5 +294,10 @@
   .top-menu__label--icon {
     display: inline-flex;
     align-items: center;
+  }
+
+  .top-menu__item--contact .top-menu__label--icon svg {
+    width: calc(var(--size-16) + var(--size-4));
+    height: calc(var(--size-16) + var(--size-4));
   }
 }

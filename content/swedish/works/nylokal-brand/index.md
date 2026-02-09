@@ -6,7 +6,7 @@ title: Nylokal Varumärkesidentitet
 subtitle: Sub-brand utveckling
 slug: works
 weight: 13
-tags: ["branding", "design"]
+tags: ["Varumärke & Identitet"]
 clients: []
 employers: [techcorp]
 description: Varumärkesutveckling för Nylokal, Lokalguidens tjänst för nyöppnade företag.
@@ -14,9 +14,15 @@ header_image:
 featured: false
 draft: false
 hidden: true
-client: Lokalguiden / Nylokal
-clientweb:
-clientabout: Nylokal är en tjänst som hjälper nya företag att bli upptäckta och framgångsrikt lansera på sina lokala marknader.
+role: "Art Director"
+details:
+  year: 2022
+  deliverables: "Varumärkesidentitet, marknadsföring"
+  scope: "Varumärkessystem, material"
+client:
+  name: "Lokalguiden / Nylokal"
+  url: ""
+  about: "Nylokal är en tjänst som hjälper nya företag att bli upptäckta och framgångsrikt lansera på sina lokala marknader."
 ---
 
 ### Utmaning

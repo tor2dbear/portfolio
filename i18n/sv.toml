@@ -2,7 +2,7 @@
 other = "är en multidisiplinär designer, verksam i Göteborg"
 
 [hero_intro_lead]
-other = "Hej på dig. Jag är en"
+other = "Hej, Torbjörn här – en"
 
 [hero_intro_middle]
 other = "I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt verksamheter att navigera från koncept till färdig produkt genom att förena"
@@ -65,7 +65,7 @@ other = "Utvalda"
 other = "är"
 
 [home]
-other = "Home"
+other = "Hem"
 
 [menu_title]
 other = "Huvudmeny"
@@ -226,6 +226,15 @@ other = "Om mig"
 [contact_me]
 other = "Kontakta mig"
 
+[contact_me_focus]
+other = "Kontakta mig"
+
+[to_client]
+other = "Till %s"
+
+[contact]
+other = "Kontakt"
+
 [all_works]
 other = "Alla projekt"
 
@@ -237,3 +246,90 @@ other = "Gå till startsidan"
 
 [to_homepage]
 other = "till startsidan"
+
+[footer_navigation]
+other = "Navigering"
+
+[footer_portfolio]
+other = "Portfolio"
+
+[footer_contact]
+other = "Kontakt"
+
+[footer_linkedin]
+other = "LinkedIn"
+
+[footer_newsletter_title]
+other = "Nyhetsbrev"
+
+[footer_newsletter_label]
+other = "E-postadress"
+
+[footer_newsletter_placeholder]
+other = "Din e-post"
+
+[footer_newsletter_submit]
+other = "Prenumerera"
+
+[footer_rights_reserved]
+other = "CC BY-NC-SA 4.0"
+
+[footer_rss]
+other = "RSS"
+
+[footer_privacy]
+other = "Integritet"
+
+[footer_license]
+other = "Licens"
+
+[privacy_url]
+other = "integritet"
+
+[license_url]
+other = "licens"
+
+[footer_meta_label]
+other = "Sidfotsmetadata"
+
+[footer_mode_label]
+other = "Läge"
+
+[footer_palette_label]
+other = "Palett"
+
+[footer_language_label]
+other = "Språk"
+
+[palette_standard]
+other = "Standard"
+
+[palette_forest]
+other = "Forest"
+
+[palette_mesa]
+other = "Mesa"
+
+[palette_pantone]
+other = "Pantone"
+
+[no_posts_yet]
+other = "Inga inlägg ännu. Kom tillbaka snart!"
+
+[writing_url]
+other = "texter"
+
+[read_more]
+other = "Läs mer"
+
+[published_on]
+other = "Publicerad"
+
+[writing]
+other = "Texter"
+
+[ui_library]
+other = "UI-bibliotek"
+
+[all_posts]
+other = "Alla inlägg"

@@ -5,13 +5,19 @@ linktitle: Things in a Conversation
 title: Things in a Conversation
 slug: works
 weight: 10
-tags: ["books", "design", "ui-ux"]
+tags: ["Experimental"]
 description: An experimental project that investigates our perception of artifacts through speculative design.
 header_image: things08.webp
 featured: true
-client: Self initiated project
-clientweb: https://www.gu.se/en/fine-applied-performing-arts
-clientabout: Speculative design project. Part of MA class at HDK – Academy of Art and Design.
+role: "Designer"
+details:
+  year: 2016
+  format: "Book"
+  scope: "Artifact design, fabrication"
+client:
+  name: "Self initiated project"
+  url: "https://www.gu.se/en/fine-applied-performing-arts"
+  about: "Speculative design project. Part of MA class at HDK – Academy of Art and Design."
 ---
 
 ![Header example](things08.webp)

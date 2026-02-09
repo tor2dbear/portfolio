@@ -1,0 +1,159 @@
+{{ $schemas := slice }}
+{{ $siteTitle := or .Site.Params.title .Site.Title }}
+{{ $siteDesc := .Site.Params.description }}
+{{ $siteUrl := .Site.BaseURL }}
+{{ $personName := "Torbjörn Hedberg" }}
+
+{{ $website := dict
+  "@context" "https://schema.org"
+  "@type" "WebSite"
+  "name" $siteTitle
+  "url" $siteUrl
+  "description" $siteDesc
+}}
+{{ $schemas = $schemas | append $website }}
+
+{{ if .IsHome }}
+  {{ $roles := slice "DesignOps" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
+  {{ if eq .Site.Language.Lang "sv" }}
+    {{ $roles = slice "DesignOps" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
+  {{ end }}
+  {{ $workLocation := slice
+    (dict "@type" "Place" "name" "Remote")
+    (dict "@type" "Place" "address" (dict
+      "@type" "PostalAddress"
+      "addressLocality" "Gothenburg"
+      "addressRegion" "Västra Götaland"
+      "addressCountry" "SE"
+    ))
+  }}
+  {{ $person := dict
+    "@type" "Person"
+    "name" $personName
+    "url" $siteUrl
+    "jobTitle" $roles
+    "description" $siteDesc
+    "address" (dict
+      "@type" "PostalAddress"
+      "addressLocality" "Gothenburg"
+      "addressRegion" "Västra Götaland"
+      "addressCountry" "SE"
+    )
+    "workLocation" $workLocation
+  }}
+  {{ $profile := dict
+    "@context" "https://schema.org"
+    "@type" "ProfilePage"
+    "mainEntity" $person
+  }}
+  {{ $schemas = $schemas | append $profile }}
+{{ end }}
+
+{{ $imageUrl := "" }}
+{{ with .Params.header_image }}
+  {{ $imageUrl = (printf "%s%s" $.RelPermalink .) | absURL }}
+{{ end }}
+
+{{ if eq .Type "works" }}
+  {{ $creative := dict
+    "@context" "https://schema.org"
+    "@type" "CreativeWork"
+    "name" .Title
+    "description" (or .Description .Summary)
+    "dateCreated" (.Date.Format "2006-01-02")
+    "creator" (dict "@type" "Person" "name" $personName)
+    "keywords" .Params.tags
+  }}
+  {{ if ne $imageUrl "" }}
+    {{ $imageObject := dict
+      "@type" "ImageObject"
+      "url" $imageUrl
+      "contentUrl" $imageUrl
+    }}
+    {{ $creative = merge $creative (dict "image" $imageObject) }}
+  {{ end }}
+  {{ $schemas = $schemas | append $creative }}
+{{ end }}
+
+{{ if or (eq .Type "writing") (eq .Type "texter") }}
+  {{ $article := dict
+    "@context" "https://schema.org"
+    "@type" "Article"
+    "headline" .Title
+    "datePublished" (.Date.Format "2006-01-02")
+    "dateModified" (.Lastmod.Format "2006-01-02")
+    "author" (dict "@type" "Person" "name" $personName)
+  }}
+  {{ if ne $imageUrl "" }}
+    {{ $imageObject := dict
+      "@type" "ImageObject"
+      "url" $imageUrl
+      "contentUrl" $imageUrl
+    }}
+    {{ $article = merge $article (dict "image" $imageObject) }}
+  {{ end }}
+  {{ $schemas = $schemas | append $article }}
+{{ end }}
+
+{{/* ContactPage schema for contact pages */}}
+{{ if or (eq .RelPermalink "/contact/") (eq .RelPermalink "/sv/kontakt/") (strings.Contains .RelPermalink "/clients/") }}
+  {{ $contactPage := dict
+    "@context" "https://schema.org"
+    "@type" "ContactPage"
+    "name" .Title
+    "url" .Permalink
+    "description" (or .Description .Summary $siteDesc)
+    "mainEntity" (dict
+      "@type" "Person"
+      "name" $personName
+      "url" $siteUrl
+    )
+  }}
+  {{ $schemas = $schemas | append $contactPage }}
+{{ end }}
+
+{{/* BreadcrumbList schema for non-home pages */}}
+{{ if not .IsHome }}
+  {{ $breadcrumbItems := slice }}
+  {{ $homeItem := dict
+    "@type" "ListItem"
+    "position" 1
+    "name" "Start"
+    "item" ($siteUrl | absURL)
+  }}
+  {{ $breadcrumbItems = $breadcrumbItems | append $homeItem }}
+
+  {{/* Add section level if present */}}
+  {{ with .CurrentSection }}
+    {{ if not .IsHome }}
+      {{ $sectionItem := dict
+        "@type" "ListItem"
+        "position" 2
+        "name" .Title
+        "item" (.Permalink | absURL)
+      }}
+      {{ $breadcrumbItems = $breadcrumbItems | append $sectionItem }}
+    {{ end }}
+  {{ end }}
+
+  {{/* Add current page */}}
+  {{ $currentPosition := add (len $breadcrumbItems) 1 }}
+  {{ $currentItem := dict
+    "@type" "ListItem"
+    "position" $currentPosition
+    "name" .Title
+    "item" (.Permalink | absURL)
+  }}
+  {{ $breadcrumbItems = $breadcrumbItems | append $currentItem }}
+
+  {{ $breadcrumb := dict
+    "@context" "https://schema.org"
+    "@type" "BreadcrumbList"
+    "itemListElement" $breadcrumbItems
+  }}
+  {{ $schemas = $schemas | append $breadcrumb }}
+{{ end }}
+
+{{ range $schemas }}
+  <script type="application/ld+json">{{ . | jsonify | safeJS }}</script>
+{{ end }}

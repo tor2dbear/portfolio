@@ -5,13 +5,19 @@ linktitle: Things in a Conversation
 title: Things in a Conversation
 slug: arbeten
 weight: 10
-tags: ["böcker", "design", "ui-ux"]
+tags: ["Experimentellt"]
 description: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
 header_image: things08.webp
 featured: true
-client: Self initiated project
-clientweb:
-clientabout: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
+role: "Designer"
+details:
+  year: 2016
+  format: "Bok"
+  scope: "Objektdesign, tillverkning"
+client:
+  name: "Self initiated project"
+  url: ""
+  about: "Spekulativt designprojekt. Del av MA‑kurs vid HDK – Akademin för konst och design."
 ---
 
 ![Header example](things08.webp)

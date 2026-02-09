@@ -1,12 +1,26 @@
 {{ partial "header.html" . }}
 
-<div class="content list tag-page use-subgrid">
-  <div class="taxonomy-header taxonomy-header--tag mb-8">
-    <h2 class="type-headline-small">{{ .Title }}</h2>
+<div class="content startpage use-subgrid">
+  <div class="post-header place-full">
+    <h1 class="type-headline-small">{{ .Title }}</h1>
   </div>
-  {{ range .Data.Pages }}
-    {{ .Render "summary"}}
+  {{ $path := .RelPermalink }}
+  {{ $pages := where .Data.Pages ".Params.hidden" "!=" true }}
+  {{ if or (in $path "/works/tags/") (in $path "/arbeten/tags/") }}
+    {{ $pages = where $pages "Section" "works" }}
+  {{ else if or (in $path "/writing/tags/") (in $path "/texter/tags/") }}
+    {{ $pages = where $pages "Section" "writing" }}
   {{ end }}
+  {{- range $index, $page := $pages -}}
+    {{- $isWide := or (eq $index 0) (eq $index 3) (eq $index 4) -}}
+    {{- $mod := mod $index 6 -}}
+    {{- if gt $index 5 -}}
+      {{- $isWide = or (eq $mod 0) (eq $mod 3) (eq $mod 4) -}}
+    {{- end -}}
+    <div class="{{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: col-start 1 / span {{ if $isWide }}8{{ else }}4{{ end }}">
+      {{ $page.Render "summary" }}
+    </div>
+  {{- end -}}
 </div>
 
 {{ partial "footer.html" . }}

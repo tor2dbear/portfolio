@@ -19,21 +19,64 @@
     content="#18181b"
     media="(prefers-color-scheme: dark)"
   />
-  {{ if eq .Params.index false }}
+  <script>
+    (function () {
+      try {
+        var doc = document.documentElement;
+        var scrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop ||
+          0;
+        var height =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        var progress = height > 0 ? scrollTop / height : 0;
+        if (progress < 0) progress = 0;
+        if (progress > 1) progress = 1;
+        doc.style.setProperty("--brand-progress", progress);
+      } catch (e) {}
+    })();
+  </script>
+  {{ if or (eq .Params.index false) (eq .Params.hidden true) }}
     <meta name="robots" content="noindex" />
   {{ end }}
+
+  <!-- Google Search Console verification -->
+  <meta name="google-site-verification" content="7a1qvb7XC4NVOarpiAgYDg7pnCgz4Gg3GKFvfFk6_Ls" />
 
   {{ hugo.Generator }}
 
 
-  <title>
-    {{ if .IsHome }}
-      {{ .Title }}
-    {{ else }}
-      {{ .Title }} &middot; {{ .Site.Params.title }}
-    {{ end }}
+  {{/* Construct page title - more descriptive for SEO */}}
+  {{ $pageTitle := "" }}
+  {{ if .IsHome }}
+    {{ $pageTitle = .Site.Params.title }}
+  {{ else }}
+    {{ $pageTitle = printf "%s · %s" .Title .Site.Params.title }}
+  {{ end }}
 
-  </title>
+  <title>{{ $pageTitle }}</title>
+
+  {{/* Open Graph meta tags for better search/social appearance */}}
+  <meta property="og:title" content="{{ $pageTitle }}" />
+  <meta property="og:description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}" />
+  <meta property="og:url" content="{{ .Permalink }}" />
+  <meta property="og:site_name" content="{{ .Site.Params.title }}" />
+  {{ if .IsHome }}
+  <meta property="og:type" content="website" />
+  {{ else }}
+  <meta property="og:type" content="article" />
+  {{ end }}
+  {{/* OG Image - use header_image if available, otherwise site default */}}
+  {{ with .Params.header_image }}
+  <meta property="og:image" content="{{ (printf "%s%s" $.RelPermalink .) | absURL }}" />
+  {{ end }}
+
+  {{/* Twitter Card meta tags */}}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ $pageTitle }}" />
+  <meta name="twitter:description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}" />
 
   {{ if .Params.canonical }}
     <link rel="canonical" href="{{ .Params.canonical }}" />
@@ -42,6 +85,18 @@
     <link rel="canonical" href="{{ .Permalink }}" />
   {{ end }}
 
+  {{/* Hreflang tags for multilingual SEO */}}
+  {{ range .AllTranslations }}
+    <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" />
+  {{ end }}
+  {{ range .AllTranslations }}
+    {{ if eq .Language.Lang "en" }}
+      <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}" />
+    {{ end }}
+  {{ end }}
+
+  <!-- CSS base (reset) -->
+  {{ $base_reset := resources.Get "css/base/reset.css" }}
 
   <!-- CSS tokens (3-layer architecture) -->
   {{ $tokens_primitives := resources.Get "css/tokens/primitives.css" }}
@@ -52,6 +107,8 @@
   {{ $dimensions_mode_light := resources.Get "css/dimensions/mode/light.css" }}
   {{ $dimensions_mode_dark := resources.Get "css/dimensions/mode/dark.css" }}
   {{ $dimensions_palette_standard := resources.Get "css/dimensions/palette/standard.css" }}
+  {{ $dimensions_palette_forest := resources.Get "css/dimensions/palette/forest.css" }}
+  {{ $dimensions_palette_mesa := resources.Get "css/dimensions/palette/mesa.css" }}
   {{ $dimensions_palette_pantone := resources.Get "css/dimensions/palette/pantone.css" }}
   {{ $dimensions_palette_previews := resources.Get "css/dimensions/palette/previews.css" }}
 
@@ -60,6 +117,7 @@
   {{ $utilities_layout := resources.Get "css/utilities/layout.css" }}
   {{ $utilities_grid := resources.Get "css/utilities/grid.css" }}
   {{ $utilities_display := resources.Get "css/utilities/display.css" }}
+  {{ $utilities_icons := resources.Get "css/utilities/icons.css" }}
 
   <!-- CSS components (NEW - redesign) -->
   {{ $components_button := resources.Get "css/components/button.css" }}
@@ -69,32 +127,110 @@
   {{ $components_language_dropdown := resources.Get "css/components/language-dropdown.css" }}
   {{ $components_settings_dropdown := resources.Get "css/components/settings-dropdown.css" }}
   {{ $components_article_card := resources.Get "css/components/article-card.css" }}
+  {{ $components_summary_card := resources.Get "css/components/summary-card.css" }}
   {{ $components_navigation := resources.Get "css/components/navigation.css" }}
+  {{ $components_pagination := resources.Get "css/components/pagination.css" }}
+  {{ $components_breadcrumb := resources.Get "css/components/breadcrumb.css" }}
+  {{ $components_tags := resources.Get "css/components/tags.css" }}
+  {{ $components_newsletter := resources.Get "css/components/newsletter.css" }}
+  {{ $components_tooltip := resources.Get "css/components/tooltip.css" }}
+  {{ $components_download_card := resources.Get "css/components/download-card.css" }}
+  {{ $components_table_of_contents := resources.Get "css/components/table-of-contents.css" }}
+  {{ $components_gallery := resources.Get "css/components/gallery.css" }}
+  {{ $components_toggle_switch := resources.Get "css/components/toggle-switch.css" }}
+  {{ $components_grid_overlay := resources.Get "css/components/grid-overlay.css" }}
 
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
   {{ $pages_ui_library := resources.Get "css/pages/ui-library.css" }}
+  {{ $pages_contact := resources.Get "css/pages/contact.css" }}
 
   <!-- CSS main styles -->
   {{ $style := resources.Get "css/style.css" }}
   {{ $print := resources.Get "css/print.css" }}
 
 
+  <!-- Critical CSS - Above the fold -->
+  <style>
+    /* Hero Section - Critical for LCP */
+    .hero-section { padding: var(--spacing-96) 0; }
+    .hero-title {
+      max-width: var(--content-max-width-narrow);
+      line-height: 1.4;
+      font-size: var(--text-4xl);
+    }
+    .role-swapper {
+      color: var(--text-accent);
+      font-weight: var(--sans-weight-bold);
+      display: inline-block;
+      min-width: 0;
+      position: relative;
+      white-space: nowrap;
+      transition: opacity 0.5s ease;
+    }
+    .role-swapper__item {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .role-swapper__item.is-active {
+      position: relative;
+      opacity: 1;
+    }
+    .hero-emphasis {
+      background: var(--bg-tag);
+      padding: 0 var(--spacing-4);
+      border-radius: var(--spacing-4);
+      font-weight: var(--sans-weight-bold);
+    }
+    /* Reveal animation - immediate variant for hero */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 600ms ease-out, transform 600ms ease-out;
+      will-change: opacity, transform;
+    }
+    .reveal--immediate {
+      --reveal-delay: 0ms;
+      --reveal-duration: 400ms;
+      transition: opacity 400ms ease-out, transform 400ms ease-out;
+    }
+    .reveal.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 47.9375em) {
+      .hero-section { padding: var(--spacing-64) 0; }
+      .hero-title { font-size: var(--text-3xl); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .role-swapper { transition: none; }
+      .role-swapper__item { transition: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+
   <!-- CSS loading -->
   {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
+    <link rel="stylesheet" type="text/css" href="{{ $base_reset.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_light.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_mode_dark.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_forest.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_mesa.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_previews.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_grid.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_display.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $utilities_icons.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_button.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_form.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_footer.RelPermalink }}" />
@@ -102,14 +238,39 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_language_dropdown.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_settings_dropdown.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_article_card.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_summary_card.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_navigation.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_pagination.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_breadcrumb.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_tags.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_newsletter.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_tooltip.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_download_card.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_table_of_contents.RelPermalink }}" />
+    {{ with $components_gallery }}
+      <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
+    {{ end }}
+    <link rel="stylesheet" type="text/css" href="{{ $components_toggle_switch.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_grid_overlay.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
+    {{ with $pages_contact }}
+      <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
+    {{ end }}
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_navigation $pages_home $pages_ui_library $style $print | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ with $components_gallery }}
+      {{ $css = $css | append . }}
+    {{ end }}
+    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $pages_home $pages_ui_library }}
+    {{ with $pages_contact }}
+      {{ $css = $css | append . }}
+    {{ end }}
+    {{ $css = $css | append $style $print }}
+    {{ $css = $css | resources.Concat "css.css" | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
@@ -121,7 +282,24 @@
 
 
   <!-- Dark mode -->
-  <script src="{{ .Site.BaseURL }}js/darkmode-initial.js"></script>
+  <script>
+    (function () {
+      // Set mode (light/dark/system)
+      var storedMode = localStorage.getItem("theme-mode") || "system";
+      if (storedMode === "system") {
+        var systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+        document.documentElement.setAttribute("data-mode", systemTheme);
+      } else {
+        document.documentElement.setAttribute("data-mode", storedMode);
+      }
+
+      // Set palette (standard/pantone)
+      var storedPalette = localStorage.getItem("theme-palette") || "standard";
+      document.documentElement.setAttribute("data-palette", storedPalette);
+    })();
+  </script>
 
   <!-- JavaScript resources -->
   {{/*  <script src="js/darkmode-initial.js" defer></script>
@@ -142,11 +320,15 @@
   {{ $js4 := resources.Get "js/darkmode.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
-  {{ $js7 := resources.Get "js/progressbar.js" }}
   {{ $js8 := resources.Get "js/smooth-scroll.js" }}
   {{ $js9 := resources.Get "js/role-swapper.js" }}
   {{ $js10 := resources.Get "js/ui-library-tabs.js" }}
   {{ $js11 := resources.Get "js/settings-dropdown.js" }}
+  {{ $js12 := resources.Get "js/reveal-on-scroll.js" }}
+  {{ $js13 := resources.Get "js/newsletter-form.js" }}
+  {{ $js14 := resources.Get "js/toc-active.js" }}
+  {{ $js15 := resources.Get "js/brand-curl-random.js" }}
+  {{ $js16 := resources.Get "js/grid-overlay.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -158,21 +340,26 @@
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
-    <script src="{{ $js7.RelPermalink }}" defer></script>
     <script src="{{ $js8.RelPermalink }}" defer></script>
     <script src="{{ $js9.RelPermalink }}" defer></script>
     <script src="{{ $js10.RelPermalink }}" defer></script>
     <script src="{{ $js11.RelPermalink }}" defer></script>
+    <script src="{{ $js12.RelPermalink }}" defer></script>
+    <script src="{{ $js13.RelPermalink }}" defer></script>
+    <script src="{{ $js14.RelPermalink }}" defer></script>
+    <script src="{{ $js15.RelPermalink }}" defer></script>
+    <script src="{{ $js16.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js7 $js8 $js9 $js10 $js11 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
-  
 
-    <!-- Google Analytics -->
-    {{ partial "google_analytics.html" . }}
+    {{ partial "schema.html" . }}
+
     <!-- Adobe TypeKit -->
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+    <link rel="preconnect" href="https://p.typekit.net" crossorigin>
     <link
       rel="stylesheet"
       href="https://use.typekit.net/diz3sha.css"
@@ -193,6 +380,16 @@
         type="application/rss+xml"
         title="{{ .Site.Title }}"
         href="{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}"
+      />
+    {{ end }}
+
+    <!-- JSON Feed -->
+    {{ if .OutputFormats.Get "JSON" }}
+      <link
+        rel="alternate"
+        type="application/feed+json"
+        title="{{ .Site.Title }}"
+        href="{{ with .OutputFormats.Get "JSON" }}{{ .RelPermalink }}{{ end }}"
       />
     {{ end }}
 
@@ -239,12 +436,5 @@
     {{ else }}
       <script src="{{ $.Site.BaseURL }}{{ . }}"></script>
     {{ end }}
-  {{ end }}
-
-
-  <!-- reCAPTCHA -->
-  {{ if or (eq .RelPermalink "/contact/") (strings.Contains .RelPermalink "/clients/") (strings.Contains .RelPermalink "/sv/kontakt/") }}
-    <script src="https://www.google.com/recaptcha/api.js?render=6LeDDAAqAAAAAHLkCglixFS15w54eLJyTocW4k7U"></script>
-    <script src="{{ .Site.BaseURL }}js/recaptcha.js"></script>
   {{ end }}
 </head>

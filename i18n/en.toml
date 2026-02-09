@@ -2,10 +2,10 @@
 other = "is a multi-disciplinary designer based in Gothenburg, Sweden"
 
 [hero_intro_lead]
-other = "Hello there. I'm a"
+other = "Hi, I’m Torbjörn — a"
 
 [hero_intro_middle]
-other = "For over 10 years I've moved between strategy and craft. I've helped organizations navigate from concept to finished product by combining"
+other = "For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining"
 
 [hero_emphasis_design]
 other = "design"
@@ -223,6 +223,15 @@ other = "About Me"
 [contact_me]
 other = "Get in Touch"
 
+[contact_me_focus]
+other = "Contact me"
+
+[to_client]
+other = "To %s"
+
+[contact]
+other = "Contact"
+
 [all_works]
 other = "All Works"
 
@@ -237,3 +246,90 @@ other = "Home"
 
 [to_homepage]
 other = "to homepage"
+
+[footer_navigation]
+other = "Navigation"
+
+[footer_portfolio]
+other = "Portfolio"
+
+[footer_contact]
+other = "Contact"
+
+[footer_linkedin]
+other = "LinkedIn"
+
+[footer_newsletter_title]
+other = "Newsletter"
+
+[footer_newsletter_label]
+other = "Email address"
+
+[footer_newsletter_placeholder]
+other = "Your email"
+
+[footer_newsletter_submit]
+other = "Subscribe"
+
+[footer_rights_reserved]
+other = "CC BY-NC-SA 4.0"
+
+[footer_rss]
+other = "RSS"
+
+[footer_privacy]
+other = "Privacy"
+
+[footer_license]
+other = "License"
+
+[privacy_url]
+other = "privacy"
+
+[license_url]
+other = "license"
+
+[footer_meta_label]
+other = "Footer metadata"
+
+[footer_mode_label]
+other = "Mode"
+
+[footer_palette_label]
+other = "Palette"
+
+[footer_language_label]
+other = "Language"
+
+[palette_standard]
+other = "Standard"
+
+[palette_forest]
+other = "Forest"
+
+[palette_mesa]
+other = "Mesa"
+
+[palette_pantone]
+other = "Pantone"
+
+[no_posts_yet]
+other = "No posts yet. Check back soon!"
+
+[writing_url]
+other = "writing"
+
+[read_more]
+other = "Read more"
+
+[published_on]
+other = "Published"
+
+[writing]
+other = "Writing"
+
+[ui_library]
+other = "UI Library"
+
+[all_posts]
+other = "All posts"

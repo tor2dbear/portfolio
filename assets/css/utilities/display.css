@@ -49,3 +49,53 @@
 #layout:not(.employerpage) .show-on-employer {
   display: none;
 }
+
+/* ==========================================================================
+   SCROLL REVEAL
+   ========================================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance, 16px));
+  transition:
+    opacity var(--reveal-duration, 600ms) ease-out var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, 600ms) ease-out var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal--delay {
+  --reveal-delay: 220ms;
+}
+
+.reveal--delay-2 {
+  --reveal-delay: 440ms;
+}
+
+.reveal--immediate {
+  --reveal-delay: 0ms;
+  --reveal-duration: 400ms;
+}
+
+.reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* <= 43.125em (690px) */
+@media (max-width: 43.125em) {
+  .reveal--delay {
+    --reveal-delay: 0ms;
+  }
+
+  .reveal--delay-2 {
+    --reveal-delay: 0ms;
+  }
+}

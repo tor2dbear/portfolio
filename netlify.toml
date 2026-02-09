@@ -1,10 +1,94 @@
-[build]
-  command = "hugo --minify"
-  publish = "public"
+# Netlify configuration
+# https://docs.netlify.com/configure-builds/file-based-configuration/
 
-  # Skip deploy previews entirely (PRs). This prevents Netlify from blocking PRs with
-  # repeated deploy-preview failures/checks when Netlify isn't part of the workflow.
-  #
-  # Netlify behavior: if `ignore` exits 0 -> build is skipped; non-zero -> build proceeds.
+[build]
+  publish = "public"
+  command = "hugo --minify --baseURL $URL"
+  # Skip all preview builds - use GitHub Pages for previews instead
+  # To force a Netlify preview, add [netlify] to your commit message
   ignore = "bash scripts/netlify/ignore.sh"
 
+[build.environment]
+  HUGO_VERSION = "0.154.2"
+  NODE_VERSION = "20"
+
+[context.production]
+  environment = { HUGO_ENV = "production" }
+
+[context.deploy-preview]
+  command = "hugo --minify --buildFuture --buildDrafts --baseURL $DEPLOY_PRIME_URL"
+
+[context.branch-deploy]
+  command = "hugo --minify --buildFuture --buildDrafts --baseURL $DEPLOY_PRIME_URL"
+
+# Redirects - English
+[[redirects]]
+  from = "/contact"
+  to = "/#contact"
+  status = 301
+
+[[redirects]]
+  from = "/contact/"
+  to = "/#contact"
+  status = 301
+
+[[redirects]]
+  from = "/about"
+  to = "/#about"
+  status = 301
+
+[[redirects]]
+  from = "/about/"
+  to = "/#about"
+  status = 301
+
+# Redirects - Swedish
+[[redirects]]
+  from = "/sv/kontakt"
+  to = "/sv/#contact"
+  status = 301
+
+[[redirects]]
+  from = "/sv/kontakt/"
+  to = "/sv/#contact"
+  status = 301
+
+[[redirects]]
+  from = "/sv/om-mig"
+  to = "/sv/#about"
+  status = 301
+
+[[redirects]]
+  from = "/sv/om-mig/"
+  to = "/sv/#about"
+  status = 301
+
+# 404 handling per language
+[[redirects]]
+  from = "/sv/*"
+  to = "/sv/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
+# Headers for security and caching
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

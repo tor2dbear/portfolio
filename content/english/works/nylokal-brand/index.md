@@ -6,7 +6,7 @@ title: Nylokal Brand Identity
 subtitle: Sub-brand Development
 slug: works
 weight: 13
-tags: ["branding", "design"]
+tags: ["Brand & Identity"]
 clients: []
 employers: [techcorp]
 description: Brand identity development for Nylokal, Lokalguiden's new business launch service.
@@ -14,9 +14,15 @@ header_image:
 featured: false
 draft: false
 hidden: true
-client: Lokalguiden / Nylokal
-clientweb:
-clientabout: Nylokal is a service helping new businesses get discovered and successfully launch in their local markets.
+role: "Art Director"
+details:
+  year: 2022
+  deliverables: "Brand identity, marketing"
+  scope: "Brand system, collateral"
+client:
+  name: "Lokalguiden / Nylokal"
+  url: ""
+  about: "Nylokal is a service helping new businesses get discovered and successfully launch in their local markets."
 ---
 
 ### Challenge

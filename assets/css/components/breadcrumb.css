@@ -1,0 +1,52 @@
+/**
+ * Breadcrumb Component
+ * Navigation showing page hierarchy (e.g., Company / Applications / Job Title)
+ */
+
+/* ==========================================================================
+   Breadcrumb Navigation
+   ========================================================================== */
+
+nav.application-breadcrumb ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  gap: var(--spacing-4);
+}
+
+nav.application-breadcrumb ul li {
+  display: inline-flex;
+  align-items: center;
+}
+
+nav.application-breadcrumb {
+  font-size: var(--text-sm);
+  margin-bottom: var(--spacing-24);
+}
+
+nav.application-breadcrumb.application-breadcrumb--footer {
+  margin-top: var(--spacing-64);
+}
+
+nav.application-breadcrumb .application-breadcrumb__item--caps {
+  text-transform: capitalize;
+}
+
+nav.application-breadcrumb .application-breadcrumb__item--muted {
+  color: var(--text-muted);
+}
+
+nav.application-breadcrumb .application-breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+nav.application-breadcrumb .application-breadcrumb__separator {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--spacing-8);
+  color: var(--text-muted);
+}

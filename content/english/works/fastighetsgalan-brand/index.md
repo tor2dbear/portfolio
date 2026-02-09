@@ -6,7 +6,7 @@ title: Fastighetsgalan Brand Identity & Website
 subtitle: Sub-brand Development
 slug: works
 weight: 14
-tags: ["branding", "web design", "ui-ux"]
+tags: ["Brand & Identity"]
 clients: []
 employers: [techcorp]
 description: Brand identity and website design for Fastighetsgalan, Lokalguiden's real estate industry awards event.
@@ -14,9 +14,15 @@ header_image:
 featured: false
 draft: false
 hidden: true
-client: Lokalguiden / Fastighetsgalan
-clientweb:
-clientabout: Fastighetsgalan is an awards ceremony celebrating excellence in the real estate industry, organized by Lokalguiden.
+role: "Art Director"
+details:
+  year: 2021
+  deliverables: "Brand identity, website"
+  scope: "Brand system, web design"
+client:
+  name: "Lokalguiden / Fastighetsgalan"
+  url: ""
+  about: "Fastighetsgalan is an awards ceremony celebrating excellence in the real estate industry, organized by Lokalguiden."
 ---
 
 ### Challenge

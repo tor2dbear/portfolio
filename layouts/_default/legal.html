@@ -1,0 +1,17 @@
+{{ partial "header.html" . }}
+
+  <div class="content page use-subgrid">
+    <h1 class="type-headline-1 mt-0 mb-16 place-full">
+      {{ .Title }}
+    </h1>
+    {{ with .Description }}
+      <p class="type-preamble mb-32 text-color-lighter place-prose">
+        {{ . }}
+      </p>
+    {{ end }}
+    <div class="legal-content prose place-prose">
+      {{ .Content }}
+    </div>
+  </div>
+
+{{ partial "footer.html" . }}

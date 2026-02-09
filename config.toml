@@ -1,9 +1,9 @@
 baseurl = "https://www.tor-bjorn.com/"
 languageCode = "en-us"
-title = "Torbjörn Hedberg · Designer"
+title = "Torbjörn Hedberg · Multidisciplinary Designer"
 author = "Torbjörn Hedberg"
 canonifyurls = true
-relativeURLs = true
+relativeURLs = false
 preserveTaxonomyNames = true
 
 [pagination]
@@ -47,11 +47,12 @@ DefaultContentLanguage = "en"
 [languages]
   [languages.en]
     languageName = "English"
+    languageCode = "en"
     weight = 1
     contentDir = "content/english"
     [languages.en.params]
-      title = "Torbjörn Hedberg · Designer"
-      description = "Torbjörn Hedberg is a graphic designer based in Gothenburg, Sweden. Available for freelance work & collaborations."
+      title = "Torbjörn Hedberg · Multidisciplinary Designer"
+      description = "Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology."
     [[languages.en.menu.start]]
       name = "home"
       weight = 1
@@ -71,20 +72,21 @@ DefaultContentLanguage = "en"
       name = "About me"
       weight = 3
       identifier = "about"
-      url = "/#about"
+      url = "/about"
     [[languages.en.menu.top]]
       name = "contact"
       weight = 4
       identifier = "contact"
-      url = "/#contact"
+      url = "/contact"
 
   [languages.sv]
     languageName = "Svenska"
+    languageCode = "sv-SE"
     weight = 2
     contentDir = "content/swedish"
     [languages.sv.params]
-      title = "Torbjörn Hedberg · Designer"
-      description = "Torbjörn Hedberg är en grafiskt designer verksam i Göteborg. Tillgänglig för frilansuppdrag och sammarbeten."
+      title = "Torbjörn Hedberg · Multidisciplinär designer"
+      description = "Hej! Jag är en multidisciplinär designer. I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt organisationer från idé till färdig produkt genom att kombinera design, affärsvärde och teknik."
     [[languages.sv.menu.start]]
       name = "hem"
       weight = 1
@@ -104,24 +106,28 @@ DefaultContentLanguage = "en"
       name = "Om mig"
       weight = 3
       identifier = "about"
-      url = "/#about"
+      url = "/sv/om"
     [[languages.sv.menu.top]]
       name = "kontakt"
       weight = 4
       identifier = "contact"
-      url = "/#contact"
+      url = "/sv/kontakt"
 
 [permalinks]
   works = '/:slug/:title/'
+  writing = '/:slug/:title/'
+  texter = '/:slug/:title/'
   tags = "/:slug/tags/:title/"
 
 [params]
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
-  googleAnalytics = "G-B270MQG9GZ"
   dateFormat = "02 Jan 2006, 15:04"
-  mainSections = ['blog', 'docs']
+  mainSections = ['writing', 'texter', 'works']
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
 [markup]
   [markup.goldmark]
@@ -137,6 +143,7 @@ DefaultContentLanguage = "en"
     [markup.goldmark.parser]
       autoHeadingID = false
       autoHeadingIDType = 'github'
+      wrapStandAloneImageWithinParagraph = false
       [markup.goldmark.parser.attribute]
         block = true
         title = true

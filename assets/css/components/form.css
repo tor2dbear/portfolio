@@ -23,12 +23,12 @@ textarea,
   box-sizing: border-box;
   padding: var(--spacing-12) var(--spacing-16);
   font-family: inherit;
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   background-color: var(--bg-page);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-8);
   transition: all 0.2s ease;
 }
 
@@ -177,7 +177,7 @@ textarea.error:focus,
 }
 
 .radio__label {
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   user-select: none;
@@ -262,7 +262,7 @@ textarea.error:focus,
 }
 
 .checkbox__label {
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   user-select: none;
@@ -278,7 +278,7 @@ select,
   width: 100%;
   padding: var(--spacing-12) var(--spacing-40) var(--spacing-12) var(--spacing-16);
   font-family: inherit;
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
   background-color: var(--bg-page);
@@ -287,7 +287,7 @@ select,
   background-position: right var(--spacing-12) center;
   background-size: 20px;
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-8);
   cursor: pointer;
   appearance: none;
   transition: all 0.2s ease;
@@ -328,7 +328,7 @@ select:disabled,
 }
 
 .form-label {
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
   font-weight: 500;
   color: var(--text-default);
   line-height: var(--line-height-normal);
@@ -365,4 +365,81 @@ select:disabled,
   flex-direction: row;
   flex-wrap: wrap;
   gap: var(--spacing-16);
+}
+
+/* ==========================================================================
+   Form Messages
+   ========================================================================== */
+
+/* Contact form */
+.contact-form__title {
+  margin-bottom: var(--spacing-16);
+}
+
+.contact-info__icon {
+  margin-bottom: var(--spacing-8);
+}
+
+.contact-info__title,
+.contact-info__text {
+  margin-bottom: var(--spacing-8);
+}
+
+.contact-form__form input,
+.contact-form__form textarea {
+  margin-bottom: var(--spacing-8);
+}
+
+.contact-form__form .contact-form__textarea {
+  margin-bottom: var(--spacing-16);
+}
+
+.contact-form__input--subject {
+  margin-bottom: var(--spacing-8);
+}
+
+.contact-form__note {
+  margin-bottom: var(--spacing-16);
+  color: var(--text-muted);
+}
+
+.contact-form__note a {
+  color: inherit;
+}
+
+.contact-form__submit {
+  width: 100%;
+  font-size: var(--text-lg);
+  font-family: var(--font-sans);
+  font-weight: var(--sans-weight-bold);
+}
+
+.contact-form__message {
+  margin-top: var(--spacing-16);
+}
+
+/* Contact form paragraph spacing */
+.content.post form p,
+.content.page form p {
+  margin-bottom: 0;
+}
+
+/* Form message container */
+form .message {
+  padding: 1rem;
+  max-width: 100%;
+}
+
+/* Error message */
+form .contact-form__message--error.message {
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text, hsl(0 84% 30%));
+  border: 1px solid var(--status-error-border);
+}
+
+/* Success message */
+form .contact-form__message--success.message {
+  background-color: var(--status-success-bg, hsl(142 76% 94%));
+  color: var(--status-success-text, hsl(142 71% 29%));
+  border: 1px solid var(--status-success-border, hsl(142 76% 80%));
 }

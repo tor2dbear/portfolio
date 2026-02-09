@@ -1,0 +1,14 @@
+{{ partial "header.html" . }}
+
+<div class="content list tag-page use-subgrid">
+  <div class="taxonomy-header taxonomy-header--tag mb-8 place-full">
+    <h1 class="type-headline-small">{{ .Title }}</h1>
+  </div>
+  {{ $pages := where .Data.Pages ".Params.hidden" "!=" true }}
+  {{ $pages = where $pages "Section" "works" }}
+  {{ range $pages }}
+    {{ .Render "summary"}}
+  {{ end }}
+</div>
+
+{{ partial "footer.html" . }}

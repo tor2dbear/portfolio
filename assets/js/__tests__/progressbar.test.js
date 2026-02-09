@@ -4,14 +4,25 @@
  */
 
 describe("Progress Bar - Scroll Indicator", () => {
-  let hyphenLeft, hyphenRight, brandLink;
+  let brandMark, brandLineLeft, brandLineRight, brandLoop;
   let brandParts;
+  let originalGetComputedStyle;
 
   beforeEach(() => {
     // Setup DOM with all required elements
     document.body.innerHTML = `
-      <div data-js="brand-hyphen-left"></div>
-      <div data-js="brand-hyphen-right"></div>
+      <div class="top-menu__container">
+        <div class="brand">
+          <div class="brand__word">tor</div>
+          <svg data-js="brand-mark">
+            <line data-js="brand-line-left"></line>
+            <g data-js="brand-loop"></g>
+            <line data-js="brand-line-right"></line>
+          </svg>
+          <div class="brand__word">bjorn.com</div>
+        </div>
+        <nav class="top-menu__nav"></nav>
+      </div>
       <div data-js="brand-link"></div>
       <div data-brand-part="true">Brand</div>
       <div data-brand-part="true">Name</div>
@@ -20,13 +31,40 @@ describe("Progress Bar - Scroll Indicator", () => {
       <div data-brand-part="true">Five</div>
     `;
 
-    hyphenLeft = document.querySelector('[data-js="brand-hyphen-left"]');
-    hyphenRight = document.querySelector('[data-js="brand-hyphen-right"]');
-    brandLink = document.querySelector('[data-js="brand-link"]');
+    brandMark = document.querySelector('[data-js="brand-mark"]');
+    brandLineLeft = document.querySelector('[data-js="brand-line-left"]');
+    brandLineRight = document.querySelector('[data-js="brand-line-right"]');
+    brandLoop = document.querySelector('[data-js="brand-loop"]');
 
     brandParts = Array.from(
       document.querySelectorAll('[data-brand-part="true"]')
     );
+
+    window.matchMedia = jest.fn().mockReturnValue({ matches: false });
+
+    const headerContainer = document.querySelector(".top-menu__container");
+    const nav = document.querySelector(".top-menu__nav");
+    const brandWords = document.querySelectorAll(".brand__word");
+
+    Object.defineProperty(headerContainer, "offsetWidth", {
+      configurable: true,
+      value: 600,
+    });
+
+    Object.defineProperty(nav, "offsetWidth", {
+      configurable: true,
+      value: 200,
+    });
+
+    Object.defineProperty(brandWords[0], "offsetWidth", {
+      configurable: true,
+      value: 60,
+    });
+
+    Object.defineProperty(brandWords[1], "offsetWidth", {
+      configurable: true,
+      value: 90,
+    });
 
     // Mock offsetWidth for brand elements
     const widths = [50, 40, 30, 35, 45];
@@ -35,6 +73,11 @@ describe("Progress Bar - Scroll Indicator", () => {
         configurable: true,
         value: widths[index],
       });
+    });
+
+    originalGetComputedStyle = window.getComputedStyle;
+    window.getComputedStyle = jest.fn().mockReturnValue({
+      columnGap: "24px",
     });
 
     // Mock document scroll properties
@@ -61,321 +104,76 @@ describe("Progress Bar - Scroll Indicator", () => {
     });
   });
 
-  describe("Brand Width Calculation", () => {
-    test("should calculate total brand width correctly", () => {
-      const brandBase = brandParts.reduce(
-        (sum, part) => sum + part.offsetWidth,
-        0
-      );
-
-      expect(brandBase).toBe(200); // 50 + 40 + 30 + 35 + 45
-    });
-
-    test("should format brand width with 5px offset", () => {
-      const brandBase = 200;
-      const brandWidth = brandBase + 5 + "px";
-
-      expect(brandWidth).toBe("205px");
-    });
-
-    test("should query all brand elements", () => {
-      expect(brandParts).toHaveLength(5);
-    });
-  });
-
-  describe("Scroll Calculations", () => {
-    test("should calculate scroll position from body.scrollTop", () => {
-      document.body.scrollTop = 600;
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-
-      expect(winScroll).toBe(600);
-    });
-
-    test("should calculate scroll position from documentElement.scrollTop", () => {
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 600;
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-
-      expect(winScroll).toBe(600);
-    });
-
-    test("should calculate scrollable height", () => {
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-
-      expect(height).toBe(1200); // 2000 - 800
-    });
-
-    test("should calculate scroll percentage (0%)", () => {
-      const winScroll = 0;
-      const height = 1200;
-      const percentage = winScroll / height;
-
-      expect(percentage).toBe(0);
-    });
-
-    test("should calculate scroll percentage (50%)", () => {
-      const winScroll = 600;
-      const height = 1200;
-      const percentage = winScroll / height;
-
-      expect(percentage).toBe(0.5);
-    });
-
-    test("should calculate scroll percentage (100%)", () => {
-      const winScroll = 1200;
-      const height = 1200;
-      const percentage = winScroll / height;
-
-      expect(percentage).toBe(1);
-    });
-  });
-
-  describe("Progress Bar Width Calculations", () => {
-    test("should calculate left hyphen width at 0% scroll", () => {
-      const winScroll = 0;
-      const height = 1200;
-      const scrolledleft = (winScroll / height) * 30 + "%";
-      const corr = (winScroll / height) * 5.4 + "rem";
-
-      expect(scrolledleft).toBe("0%");
-      expect(corr).toBe("0rem");
-    });
-
-    test("should calculate left hyphen width at 50% scroll", () => {
-      const winScroll = 600;
-      const height = 1200;
-      const scrolledleft = (winScroll / height) * 30 + "%";
-      const corr = (winScroll / height) * 5.4 + "rem";
-
-      expect(scrolledleft).toBe("15%");
-      expect(corr).toBe("2.7rem");
-    });
-
-    test("should calculate left hyphen width at 100% scroll", () => {
-      const winScroll = 1200;
-      const height = 1200;
-      const scrolledleft = (winScroll / height) * 30 + "%";
-      const corr = (winScroll / height) * 5.4 + "rem";
-
-      expect(scrolledleft).toBe("30%");
-      expect(corr).toBe("5.4rem");
-    });
-
-    test("should calculate right hyphen width at 0% scroll", () => {
-      const winScroll = 0;
-      const height = 1200;
-      const scrolledright = (winScroll / height) * 70 + "%";
-
-      expect(scrolledright).toBe("0%");
-    });
-
-    test("should calculate right hyphen width at 50% scroll", () => {
-      const winScroll = 600;
-      const height = 1200;
-      const scrolledright = (winScroll / height) * 70 + "%";
-
-      expect(scrolledright).toBe("35%");
-    });
-
-    test("should calculate right hyphen width at 100% scroll", () => {
-      const winScroll = 1200;
-      const height = 1200;
-      const scrolledright = (winScroll / height) * 70 + "%";
-
-      expect(scrolledright).toBe("70%");
-    });
-  });
-
-  describe("Brand Animation Calculations", () => {
-    test("should calculate brand width percentage at 0% scroll", () => {
-      const winScroll = 0;
-      const height = 1200;
-      const scrolledBrand = (winScroll / height) * 100 + "%";
-      const corrBrand = 1 - winScroll / height;
-
-      expect(scrolledBrand).toBe("0%");
-      expect(corrBrand).toBe(1);
-    });
-
-    test("should calculate brand width percentage at 50% scroll", () => {
-      const winScroll = 600;
-      const height = 1200;
-      const scrolledBrand = (winScroll / height) * 100 + "%";
-      const corrBrand = 1 - winScroll / height;
-
-      expect(scrolledBrand).toBe("50%");
-      expect(corrBrand).toBe(0.5);
-    });
-
-    test("should calculate brand width percentage at 100% scroll", () => {
-      const winScroll = 1200;
-      const height = 1200;
-      const scrolledBrand = (winScroll / height) * 100 + "%";
-      const corrBrand = 1 - winScroll / height;
-
-      expect(scrolledBrand).toBe("100%");
-      expect(corrBrand).toBe(0);
-    });
+  afterEach(() => {
+    window.getComputedStyle = originalGetComputedStyle;
   });
 
   describe("progressBar() Function", () => {
     beforeEach(() => {
       // Define progressBar function for testing
       window.progressBar = function () {
+        const loopWidth = 24;
+        const loopHeight = 24;
+
+        const containerWidth = 600;
+        const navWidth = 200;
+        const columnGap = 24;
+        const availableWidth = Math.max(0, containerWidth - navWidth - columnGap);
+        const wordWidth = 60 + 90;
+        const maxGap = Math.max(0, availableWidth - wordWidth);
+        const lineGap = Math.max(0, maxGap - loopWidth);
+        const leftMaxPx = lineGap * 0.3;
+        const rightMaxPx = lineGap * 0.7;
+
         var winScroll =
           document.body.scrollTop || document.documentElement.scrollTop;
         var height =
           document.documentElement.scrollHeight -
           document.documentElement.clientHeight;
-        var scrolledleft = (winScroll / height) * 30 + "%";
-        var scrolledright = (winScroll / height) * 70 + "%";
-        var corr = (winScroll / height) * 5.4 + "rem";
-        var scrolledBrand = (winScroll / height) * 100 + "%";
-        var corrBrand = 1 - winScroll / height;
+        var progress = height > 0 ? winScroll / height : 0;
 
-        const widthFirst = 50;
-        const widthSecond = 40;
-        const widthThird = 30;
-        const widthFourth = 35;
-        const widthFifth = 45;
-        const brandBase =
-          widthFirst + widthSecond + widthThird + widthFourth + widthFifth;
-        const brandWidth = brandBase + 5 + "px";
+        progress = Math.min(Math.max(progress, 0), 1);
 
-        hyphenLeft.style.width = "calc(" + scrolledleft + " - " + corr + ")";
-        hyphenRight.style.width =
-          "calc(" + scrolledright + " - " + corr + ")";
-        brandLink.style.width =
-          "calc(" +
-          brandWidth +
-          " * " +
-          corrBrand +
-          " + " +
-          scrolledBrand +
-          ")";
+        const leftLength = leftMaxPx * progress;
+        const rightLength = rightMaxPx * progress;
+        const markWidth = loopWidth + leftLength + rightLength;
+
+        brandMark.style.width = markWidth + "px";
+        brandMark.setAttribute("viewBox", "0 0 " + markWidth + " " + loopHeight);
+
+        brandLineLeft.setAttribute("x2", leftLength.toFixed(2));
+        brandLineRight.setAttribute(
+          "x1",
+          (leftLength + loopWidth).toFixed(2)
+        );
+        brandLineRight.setAttribute("x2", markWidth.toFixed(2));
+        brandLoop.setAttribute(
+          "transform",
+          "translate(" + leftLength.toFixed(2) + " 0)"
+        );
       };
     });
 
-    test("should update hyphen-left width at 0% scroll", () => {
+    test("should update svg width and lines at 0% scroll", () => {
       document.documentElement.scrollTop = 0;
       window.progressBar();
 
-      expect(hyphenLeft.style.width).toBe("calc(0% - 0rem)");
+      expect(brandMark.style.width).toBe("24px");
+      expect(brandMark.getAttribute("viewBox")).toBe("0 0 24 24");
+      expect(brandLineLeft.getAttribute("x2")).toBe("0.00");
+      expect(brandLineRight.getAttribute("x1")).toBe("24.00");
+      expect(brandLineRight.getAttribute("x2")).toBe("24.00");
     });
 
-    test("should update hyphen-left width at 50% scroll", () => {
+    test("should update svg width and lines at 50% scroll", () => {
       document.documentElement.scrollTop = 600;
       window.progressBar();
 
-      expect(hyphenLeft.style.width).toBe("calc(15% - 2.7rem)");
-    });
-
-    test("should update hyphen-right width at 0% scroll", () => {
-      document.documentElement.scrollTop = 0;
-      window.progressBar();
-
-      expect(hyphenRight.style.width).toBe("calc(0% - 0rem)");
-    });
-
-    test("should update hyphen-right width at 50% scroll", () => {
-      document.documentElement.scrollTop = 600;
-      window.progressBar();
-
-      expect(hyphenRight.style.width).toBe("calc(35% - 2.7rem)");
-    });
-
-    test("should update brand-link width at 0% scroll", () => {
-      document.documentElement.scrollTop = 0;
-      window.progressBar();
-
-      // Browser optimizes calc() expressions
-      expect(brandLink.style.width).toBe("calc(0% + 205px)");
-    });
-
-    test("should update brand-link width at 50% scroll", () => {
-      document.documentElement.scrollTop = 600;
-      window.progressBar();
-
-      // Browser optimizes "205px * 0.5" to "102.5px"
-      expect(brandLink.style.width).toBe("calc(50% + 102.5px)");
-    });
-
-    test("should update brand-link width at 100% scroll", () => {
-      document.documentElement.scrollTop = 1200;
-      window.progressBar();
-
-      // Browser optimizes "205px * 0" to "0px"
-      expect(brandLink.style.width).toBe("calc(100% + 0px)");
-    });
-  });
-
-  describe("Scroll Event Handler", () => {
-    test("should detect window.onscroll assignment", () => {
-      const scrollHandler = jest.fn();
-      window.onscroll = scrollHandler;
-
-      expect(window.onscroll).toBe(scrollHandler);
-    });
-
-    test("should call progressBar on scroll event", () => {
-      window.progressBar = jest.fn();
-      window.onscroll = function () {
-        window.progressBar();
-      };
-
-      const scrollEvent = new Event("scroll");
-      window.dispatchEvent(scrollEvent);
-
-      expect(window.progressBar).toHaveBeenCalled();
-    });
-  });
-
-  describe("CSS calc() Format", () => {
-    test("should format hyphen calc with percentage and rem", () => {
-      const scrolledleft = "15%";
-      const corr = "2.7rem";
-      const calcString = "calc(" + scrolledleft + " - " + corr + ")";
-
-      expect(calcString).toBe("calc(15% - 2.7rem)");
-    });
-
-    test("should format brand calc with px multiplier and percentage", () => {
-      const brandWidth = "205px";
-      const corrBrand = 0.5;
-      const scrolledBrand = "50%";
-      const calcString =
-        "calc(" + brandWidth + " * " + corrBrand + " + " + scrolledBrand + ")";
-
-      expect(calcString).toBe("calc(205px * 0.5 + 50%)");
-    });
-  });
-
-  describe("Edge Cases", () => {
-    test("should handle zero height gracefully", () => {
-      Object.defineProperty(document.documentElement, "scrollHeight", {
-        configurable: true,
-        value: 800,
-      });
-
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-
-      expect(height).toBe(0);
-      // Division by zero would result in Infinity
-      const percentage = 100 / height;
-      expect(percentage).toBe(Infinity);
-    });
-
-    test("should handle negative scroll values", () => {
-      document.documentElement.scrollTop = -100;
-      const winScroll = document.documentElement.scrollTop;
-
-      expect(winScroll).toBe(-100);
+      expect(parseFloat(brandMark.style.width)).toBeCloseTo(125, 5);
+      expect(brandMark.getAttribute("viewBox")).toBe("0 0 124.99999999999999 24");
+      expect(brandLineLeft.getAttribute("x2")).toBe("30.30");
+      expect(brandLineRight.getAttribute("x1")).toBe("54.30");
+      expect(brandLineRight.getAttribute("x2")).toBe("125.00");
     });
   });
 });
