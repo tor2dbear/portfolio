@@ -25,6 +25,14 @@ async function main() {
   if (blockers.length > 0) {
     // eslint-disable-next-line no-console
     console.error(`BLOCKERS: ${blockers.length}`);
+    for (const b of blockers.slice(0, 20)) {
+      // eslint-disable-next-line no-console
+      console.error(`- ${b.message ?? JSON.stringify(b)}`);
+    }
+    if (blockers.length > 20) {
+      // eslint-disable-next-line no-console
+      console.error(`- …and ${blockers.length - 20} more`);
+    }
     process.exit(1);
   }
 
@@ -37,4 +45,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(2);
 });
-

@@ -87,21 +87,15 @@ jobs:
           sleep 2
 
       - name: Lighthouse (collect)
-        continue-on-error: true
         run: node scripts/quality/run-lighthouse.mjs --policy quality-policy.yml --mode full --baseUrl "http://127.0.0.1:4173" --outDir "artifacts/lighthouse"
 
       - name: Install Playwright (Chromium)
-        continue-on-error: true
         run: npx -y --package=playwright@1.49.1 playwright install --with-deps chromium
 
       - name: axe (collect)
-        continue-on-error: true
         run: |
           ROUTES="$(node scripts/quality/print-routes.mjs --policy quality-policy.yml --mode full)"
-          npx -y --package=playwright@1.49.1 --package=@axe-core/playwright@4.10.2 node scripts/quality/run-axe.mjs \
-            --baseUrl "http://127.0.0.1:4173" \
-            --routes "$ROUTES" \
-            --outFile "artifacts/axe/axe-results.json"
+          node scripts/quality/run-axe.mjs --baseUrl "http://127.0.0.1:4173" --routes "$ROUTES" --outFile "artifacts/axe/axe-results.json"
 
       - name: Evaluate + summarize
         if: always()
@@ -164,4 +158,3 @@ jobs:
           if [ -f /tmp/site_server.pid ]; then
             kill "$(cat /tmp/site_server.pid)" || true
           fi
-

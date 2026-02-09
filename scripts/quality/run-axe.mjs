@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 
@@ -33,6 +35,8 @@ async function main() {
   const baseUrl = String(args.get("baseUrl") ?? "");
   const routesCsv = String(args.get("routes") ?? "");
   const outFile = String(args.get("outFile") ?? "artifacts/axe/axe-results.json");
+  const playwrightVersion = String(args.get("playwrightVersion") ?? "1.49.1");
+  const axePlaywrightVersion = String(args.get("axePlaywrightVersion") ?? "4.10.2");
 
   if (!baseUrl) throw new Error("--baseUrl is required");
   const routes = routesCsv
@@ -41,8 +45,31 @@ async function main() {
     .filter(Boolean);
   if (routes.length === 0) throw new Error("--routes is required (comma-separated)");
 
-  const { chromium } = await import("playwright");
-  const AxeBuilder = (await import("@axe-core/playwright")).default;
+  const runnerDir = await fs.mkdtemp(path.join(os.tmpdir(), "axe-runner-"));
+  const runnerPath = path.join(runnerDir, "run-axe.cjs");
+
+  // CJS runner so it works with npx-provided modules without ESM resolution quirks.
+  const runnerSource = `
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const { chromium } = require('playwright');
+const AxeBuilder = require('@axe-core/playwright').default;
+
+function normalizeRoute(route) {
+  if (!route) return '/';
+  return route.startsWith('/') ? route : '/' + route;
+}
+
+function joinUrl(baseUrl, route) {
+  const base = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const r = normalizeRoute(route);
+  return \`\${base}\${r}\`;
+}
+
+async function run() {
+  const baseUrl = process.env.AXE_BASE_URL;
+  const routes = JSON.parse(process.env.AXE_ROUTES_JSON);
+  const outFile = process.env.AXE_OUT_FILE;
 
   const browser = await chromium.launch({ headless: true });
   const runs = [];
@@ -52,7 +79,7 @@ async function main() {
       const url = joinUrl(baseUrl, route);
       const page = await browser.newPage();
       try {
-        await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 });
+        await page.goto(url, { waitUntil: 'networkidle', timeout: 60_000 });
         const results = await new AxeBuilder({ page }).analyze();
         runs.push({
           route,
@@ -72,15 +99,54 @@ async function main() {
 
   await fs.mkdir(path.dirname(outFile), { recursive: true });
   const payload = {
-    tool: "axe",
+    tool: 'axe',
     generatedAt: new Date().toISOString(),
     baseUrl,
     routes,
     runs,
   };
-  await fs.writeFile(outFile, JSON.stringify(payload, null, 2), "utf8");
+  await fs.writeFile(outFile, JSON.stringify(payload, null, 2), 'utf8');
+  console.log(\`Wrote \${outFile}\`);
+}
+
+run().catch((err) => {
+  console.error(err);
+  process.exit(2);
+});
+`.trimStart();
+
+  await fs.writeFile(runnerPath, runnerSource, "utf8");
+
+  const env = {
+    ...process.env,
+    AXE_BASE_URL: baseUrl,
+    AXE_ROUTES_JSON: JSON.stringify(routes),
+    AXE_OUT_FILE: outFile,
+  };
+
+  await new Promise((resolve, reject) => {
+    const child = spawn(
+      "npx",
+      [
+        "-y",
+        `--package=playwright@${playwrightVersion}`,
+        `--package=@axe-core/playwright@${axePlaywrightVersion}`,
+        "node",
+        runnerPath,
+      ],
+      { stdio: "inherit", env }
+    );
+    child.on("error", reject);
+    child.on("exit", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`axe runner exited with code ${code}`));
+    });
+  });
+
+  await fs.rm(runnerDir, { recursive: true, force: true });
+
   // eslint-disable-next-line no-console
-  console.log(`Wrote ${outFile}`);
+  console.log(`axe completed for ${routes.length} route(s)`);
 }
 
 main().catch((err) => {
@@ -88,4 +154,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(2);
 });
-
