@@ -231,15 +231,15 @@
   border: 1px solid var(--border-subtle);
   background: var(--bg-surface);
   /* Editorial default — locked so active theme doesn't bleed in */
-  font-family: freight-text-pro, ui-serif, Georgia, serif;
+  font-family: "Crimson Pro", ui-serif, Georgia, serif;
 }
 
 .typography-preview--refined {
-  font-family: ivypresto-display, ui-serif, Georgia, serif;
+  font-family: "Playfair Display", ui-serif, Georgia, serif;
 }
 
 .typography-preview--expressive {
-  font-family: gopher, ui-sans-serif, system-ui, sans-serif;
+  font-family: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
 }
 
 .typography-preview--technical {

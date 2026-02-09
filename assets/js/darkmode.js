@@ -143,8 +143,8 @@
   // This lets us keep font-display:optional in TypeKit (zero CLS) while
   // guaranteeing fonts render when the user actively switches presets.
   var TYPOGRAPHY_FONTS = {
-    refined:    ['300 1em ivypresto-display'],
-    expressive: ['500 1em gopher']
+    refined:    ['400 1em "Playfair Display"'],
+    expressive: ['500 1em "Bricolage Grotesque"']
   };
 
   function setTypography(typography) {

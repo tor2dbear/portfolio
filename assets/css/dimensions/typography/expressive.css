@@ -1,15 +1,15 @@
 /* ============================================================================
    TYPOGRAPHY: Expressive
 
-   Tension. Reverse-contrast Gopher headlines meet warm Freight Text prose.
+   Tension. Quirky Bricolage Grotesque headlines meet warm Crimson Pro prose.
    The unconventional against the classical.
    ============================================================================ */
 
 :root[data-typography="expressive"] {
-  --font-display:     gopher, ui-sans-serif, system-ui, sans-serif;
-  --font-heading:     gopher, ui-sans-serif, system-ui, sans-serif;
+  --font-display:     "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-heading:     "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-body:        var(--font-serif);
-  --font-ui:          gopher, ui-sans-serif, system-ui, sans-serif;
+  --font-ui:          "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --display-weight:   500;
   --heading-weight:   500;
   --heading-tracking: var(--tracking-normal);

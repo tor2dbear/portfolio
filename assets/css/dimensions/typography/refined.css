@@ -1,16 +1,16 @@
 /* ============================================================================
    TYPOGRAPHY: Refined
 
-   Magazine feel. High-contrast IvyPresto Display headlines,
-   clean Neue Haas Grotesk body.
+   Magazine feel. High-contrast Playfair Display headlines,
+   clean Clash Grotesk body.
    ============================================================================ */
 
 :root[data-typography="refined"] {
-  --font-display:     ivypresto-display, ui-serif, Georgia, serif;
-  --font-heading:     ivypresto-display, ui-serif, Georgia, serif;
+  --font-display:     "Playfair Display", ui-serif, Georgia, serif;
+  --font-heading:     "Playfair Display", ui-serif, Georgia, serif;
   --font-body:        var(--font-sans);
   --font-ui:          var(--font-sans);
-  --display-weight:   300;
-  --heading-weight:   300;
+  --display-weight:   400;
+  --heading-weight:   400;
   --heading-tracking: var(--tracking-tight);
 }
