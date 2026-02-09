@@ -151,20 +151,18 @@ table {
     TYPOGRAPHY: Font Families
     ========================================================================== */
 
-  --font-sans: neue-haas-grotesk-text, ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "Clash Grotesk", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: freight-text-pro, ui-serif, Georgia, Cambria, "Times New Roman",
+  --font-serif: "Crimson Pro", ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, "Courier New", Menlo, Monaco,
     Consolas, "Liberation Mono", monospace;
 
-  /* Self-hosted alternatives (for comparison — swap into presets to test) */
-  --font-sans-alt: "Clash Grotesk", ui-sans-serif, system-ui, sans-serif,
+  /* TypeKit originals (kept for A/B comparison — swap back if needed) */
+  --font-sans-typekit: neue-haas-grotesk-text, ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif-alt: "Crimson Pro", ui-serif, Georgia, Cambria, "Times New Roman",
+  --font-serif-typekit: freight-text-pro, ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
-  --font-display-alt: "Playfair Display", ui-serif, Georgia, serif;
-  --font-expressive-alt: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
 
   /* ==========================================================================
     TYPOGRAPHY: Font Weights
