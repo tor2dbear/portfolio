@@ -180,6 +180,7 @@
   position: relative;
   width: auto;
   max-width: 100%;
+  font-family: var(--font-sans);
 }
 
 .brand__mark {
