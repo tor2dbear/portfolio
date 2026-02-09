@@ -139,12 +139,41 @@
   // TYPOGRAPHY MANAGEMENT (editorial/refined/expressive/technical/system)
   // ==========================================================================
 
+  // Web fonts that must be loaded before applying each typography preset.
+  // This lets us keep font-display:optional in TypeKit (zero CLS) while
+  // guaranteeing fonts render when the user actively switches presets.
+  var TYPOGRAPHY_FONTS = {
+    refined:    ['300 1em ivypresto-display'],
+    expressive: ['500 1em gopher']
+  };
+
   function setTypography(typography) {
     localStorage.setItem('theme-typography', typography);
-    applyTypography(typography);
+    // Highlight the selected option immediately for instant feedback
     updateTypographyUI(typography);
-    closePanel();
-    closeSettingsPanel();
+
+    var fontsNeeded = TYPOGRAPHY_FONTS[typography];
+    if (fontsNeeded && fontsNeeded.length > 0) {
+      // Preload web fonts before applying the preset so the font is
+      // already in the FontFaceSet when CSS references it — avoids
+      // the font-display:optional block-period miss.
+      Promise.all(fontsNeeded.map(function(spec) {
+        return document.fonts.load(spec);
+      })).then(function() {
+        applyTypography(typography);
+        closePanel();
+        closeSettingsPanel();
+      }).catch(function() {
+        // Font loading failed; apply anyway (CSS fallback stack kicks in)
+        applyTypography(typography);
+        closePanel();
+        closeSettingsPanel();
+      });
+    } else {
+      applyTypography(typography);
+      closePanel();
+      closeSettingsPanel();
+    }
   }
 
   function applyTypography(typography) {
