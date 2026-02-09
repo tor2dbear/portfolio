@@ -393,6 +393,7 @@ table {
   --display-weight:      400;
   --heading-weight:      var(--sans-weight-bold);
   --heading-tracking:    var(--tracking-normal);
+  --type-scale-display:  1;
 
   /* === IMAGE === */
   --image-background: var(--iris-12);
@@ -818,7 +819,7 @@ h4,
 /* Type: Display 1 */
 .type-display-1 {
   font-family: var(--font-display);
-  font-size: clamp(var(--text-8xl), calc(2.667rem + 1.667vw), var(--text-9xl));
+  font-size: calc(clamp(var(--text-8xl), calc(2.667rem + 1.667vw), var(--text-9xl)) * var(--type-scale-display));
   font-weight: var(--display-weight);
   line-height: var(--line-height-tighter);
   color: var(--text-default);
@@ -829,7 +830,7 @@ h4,
 /* Type: Display 2 */
 .type-display-2 {
   font-family: var(--font-display);
-  font-size: clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl));
+  font-size: calc(clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl)) * var(--type-scale-display));
   font-weight: var(--display-weight);
   line-height: var(--line-height-tighter);
   color: var(--text-default);
