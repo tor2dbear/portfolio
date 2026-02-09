@@ -129,10 +129,12 @@ run().catch((err) => {
       "npx",
       [
         "-y",
-        `--package=playwright@${playwrightVersion}`,
-        `--package=@axe-core/playwright@${axePlaywrightVersion}`,
-        "node",
-        runnerPath,
+        "-p",
+        `playwright@${playwrightVersion}`,
+        "-p",
+        `@axe-core/playwright@${axePlaywrightVersion}`,
+        "-c",
+        `node "${runnerPath}"`,
       ],
       { stdio: "inherit", env }
     );

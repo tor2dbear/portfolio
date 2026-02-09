@@ -63,17 +63,17 @@ async function main() {
   // LHCI writes to .lighthouseci in CWD; keep it predictable.
   await fs.rm(".lighthouseci", { recursive: true, force: true });
 
-  const lhciArgs = [
-    "-y",
-    "--package=@lhci/cli@0.14.0",
+  const cmd = [
     "lhci",
     "collect",
     "--numberOfRuns=1",
     "--settings.chromeFlags=--no-sandbox",
     ...urls.flatMap((url) => ["--url", url]),
-  ];
+  ]
+    .map((part) => (part.includes(" ") ? JSON.stringify(part) : part))
+    .join(" ");
 
-  await run("npx", lhciArgs);
+  await run("npx", ["-y", "-p", "@lhci/cli@0.14.0", "-c", cmd]);
 
   await fs.mkdir(outDir, { recursive: true });
   const dest = path.join(outDir, ".lighthouseci");
@@ -89,4 +89,3 @@ main().catch((err) => {
   console.error(err?.message ?? err);
   process.exit(2);
 });
-
