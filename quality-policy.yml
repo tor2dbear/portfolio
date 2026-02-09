@@ -1,0 +1,43 @@
+version: 1
+
+# Routes are tested against a locally served build in CI.
+# Keep this list small and representative (template coverage > page coverage).
+routes:
+  quick:
+    - /
+  full:
+    - /
+    - /works/
+    - /contact/
+    - /ui-library/
+
+# Triage policy
+policy:
+  # A) BLOCKERS (fail CI / block merge)
+  blockers:
+    axeImpacts:
+      - critical
+      - serious
+
+    lighthouse:
+      # Fail if category score is below minScore (0-100).
+      # (Regression rules vs baseline can be added later.)
+      categories:
+        performance:
+          minScore: 75
+        accessibility:
+          minScore: 90
+        bestPractices:
+          minScore: 90
+        seo:
+          minScore: 90
+
+  # B) FIX-SOON (visible in PR comment, not failing CI)
+  fixSoon:
+    axeImpacts:
+      - moderate
+
+  # C) BACKLOG (visible in PR comment, not failing CI)
+  backlog:
+    axeImpacts:
+      - minor
