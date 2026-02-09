@@ -230,6 +230,8 @@
   border-radius: var(--radius-4);
   border: 1px solid var(--border-subtle);
   background: var(--bg-surface);
+  /* Editorial default — locked so active theme doesn't bleed in */
+  font-family: freight-text-pro, ui-serif, Georgia, serif;
 }
 
 .typography-preview--refined {
