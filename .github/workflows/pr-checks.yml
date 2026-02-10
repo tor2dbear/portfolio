@@ -74,6 +74,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install quality tools (no lockfile changes)
+        run: npm install --no-save --no-package-lock @lhci/cli@0.14.0 playwright@1.49.1 @axe-core/playwright@4.10.2
+
       - name: Run linter
         run: npm run lint
 
