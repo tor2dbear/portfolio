@@ -155,7 +155,7 @@ table {
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: "Crimson Pro", ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
-  --font-mono: ui-monospace, SFMono-Regular, "Courier New", Menlo, Monaco,
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "Courier New", Menlo, Monaco,
     Consolas, "Liberation Mono", monospace;
 
   /* TypeKit originals (kept for A/B comparison — swap back if needed) */
