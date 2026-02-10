@@ -6,7 +6,7 @@
   command = "hugo --minify --baseURL $URL"
   # Skip all preview builds - use GitHub Pages for previews instead
   # To force a Netlify preview, add [netlify] to your commit message
-  ignore = "test \"$BRANCH\" != \"main\" && test \"$BRANCH\" != \"master\" && ! git log -1 --pretty=%B | grep -q '\\[netlify\\]'"
+  ignore = "bash scripts/netlify/ignore.sh"
 
 [build.environment]
   HUGO_VERSION = "0.154.2"
