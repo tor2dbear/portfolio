@@ -316,11 +316,14 @@ other = "Mesa"
 [palette_pantone]
 other = "Pantone"
 
+[toast_grid_title]
+other = "Grid"
+
 [toast_grid_on]
-other = "Grid: På"
+other = "På"
 
 [toast_grid_off]
-other = "Grid: Av"
+other = "Av"
 
 [no_posts_yet]
 other = "Inga inlägg ännu. Kom tillbaka snart!"

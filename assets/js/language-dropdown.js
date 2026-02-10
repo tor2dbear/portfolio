@@ -74,8 +74,13 @@
     panel.querySelectorAll('a.language-option').forEach(function(link) {
       link.addEventListener('click', function() {
         var name = link.querySelector('.language-name');
+        var catEl = document.querySelector('[data-toast-category="language"]');
+        var title = catEl ? catEl.getAttribute('data-toast-label') : '';
         if (name) {
-          sessionStorage.setItem('pending-toast', name.textContent.trim());
+          sessionStorage.setItem('pending-toast', JSON.stringify({
+            title: title,
+            value: name.textContent.trim()
+          }));
         }
       });
     });

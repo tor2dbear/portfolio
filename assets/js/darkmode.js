@@ -80,8 +80,9 @@
     closeSettingsPanel();
 
     var el = document.querySelector('[data-js="footer-mode"]');
+    var category = el ? el.getAttribute('data-category') : '';
     var label = el ? (el.getAttribute('data-label-' + mode) || mode) : mode;
-    if (window.Toast) window.Toast.show(label);
+    if (window.Toast) window.Toast.show(category, label);
   }
 
   function applyMode(mode) {
@@ -121,8 +122,9 @@
     closeSettingsPanel();
 
     var el = document.querySelector('[data-js="footer-palette"]');
+    var category = el ? el.getAttribute('data-category') : '';
     var label = el ? (el.getAttribute('data-label-' + palette) || palette) : palette;
-    if (window.Toast) window.Toast.show(label);
+    if (window.Toast) window.Toast.show(category, label);
   }
 
   function applyPalette(palette) {
@@ -161,8 +163,11 @@
     // Highlight the selected option immediately for instant feedback
     updateTypographyUI(typography);
 
-    var typoEl = document.querySelector('[data-js="footer-typography"]');
-    var typoLabel = typoEl ? (typoEl.getAttribute('data-label-' + typography) || typography) : typography;
+    // Get the readable label from the clicked option's aria-label
+    var clickedOpt = document.querySelector('[data-js="typography-option"][data-typography="' + typography + '"]');
+    var typoLabel = clickedOpt ? clickedOpt.getAttribute('aria-label') : typography;
+    var typoCategory = document.querySelector('[data-toast-category="typography"]');
+    var typoCategoryLabel = typoCategory ? typoCategory.getAttribute('data-toast-label') : '';
 
     var fontsNeeded = TYPOGRAPHY_FONTS[typography];
     if (fontsNeeded && fontsNeeded.length > 0) {
@@ -175,19 +180,19 @@
         applyTypography(typography);
         closePanel();
         closeSettingsPanel();
-        if (window.Toast) window.Toast.show(typoLabel);
+        if (window.Toast) window.Toast.show(typoCategoryLabel, typoLabel);
       }).catch(function() {
         // Font loading failed; apply anyway (CSS fallback stack kicks in)
         applyTypography(typography);
         closePanel();
         closeSettingsPanel();
-        if (window.Toast) window.Toast.show(typoLabel);
+        if (window.Toast) window.Toast.show(typoCategoryLabel, typoLabel);
       });
     } else {
       applyTypography(typography);
       closePanel();
       closeSettingsPanel();
-      if (window.Toast) window.Toast.show(typoLabel);
+      if (window.Toast) window.Toast.show(typoCategoryLabel, typoLabel);
     }
   }
 

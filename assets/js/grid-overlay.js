@@ -23,8 +23,9 @@
     updateUI(true);
     if (showToast && window.Toast) {
       var btn = document.querySelector('[data-js="grid-toggle"]');
-      var msg = btn ? btn.getAttribute("data-toast-on") : null;
-      if (msg) window.Toast.show(msg);
+      var title = btn ? btn.getAttribute("data-toast-title") : "Grid";
+      var val = btn ? btn.getAttribute("data-toast-on") : "";
+      window.Toast.show(title, val);
     }
   }
 
@@ -37,8 +38,9 @@
     updateUI(false);
     if (showToast && window.Toast) {
       var btn = document.querySelector('[data-js="grid-toggle"]');
-      var msg = btn ? btn.getAttribute("data-toast-off") : null;
-      if (msg) window.Toast.show(msg);
+      var title = btn ? btn.getAttribute("data-toast-title") : "Grid";
+      var val = btn ? btn.getAttribute("data-toast-off") : "";
+      window.Toast.show(title, val);
     }
 
     // Column 1 finishes last in reverse stagger — listen for its animationend

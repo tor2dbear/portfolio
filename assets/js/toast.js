@@ -1,14 +1,14 @@
 /**
  * Toast — lightweight setting-change confirmations
- * Centred top of viewport, fade-in / auto-dismiss.
+ * Centred top of viewport, two-line layout (title + value), auto-dismiss.
  *
- * API:  window.Toast.show(message, options?)
+ * API:  window.Toast.show(title, value, options?)
+ *       title    — category label  (e.g. "Läge")
+ *       value    — selected option  (e.g. "Mörkt")
  *       options.duration — ms before auto-hide (default 2500)
  *
- * Pending-toast support:
- *   sessionStorage.setItem('pending-toast', 'message')
- *   → shown automatically on next page load (for page-navigation actions
- *     like language switching).
+ * Pending-toast (survives navigation):
+ *   sessionStorage.setItem('pending-toast', JSON.stringify({ title, value }))
  */
 (function () {
   'use strict';
@@ -16,6 +16,8 @@
   var PENDING_KEY = 'pending-toast';
   var DEFAULT_DURATION = 2500;
   var el = null;
+  var titleEl = null;
+  var valueEl = null;
   var hideTimer = null;
 
   function getOrCreate() {
@@ -24,21 +26,31 @@
     el.className = 'toast';
     el.setAttribute('role', 'status');
     el.setAttribute('aria-live', 'polite');
+
+    titleEl = document.createElement('span');
+    titleEl.className = 'toast__title';
+
+    valueEl = document.createElement('span');
+    valueEl.className = 'toast__value';
+
+    el.appendChild(titleEl);
+    el.appendChild(valueEl);
     document.body.appendChild(el);
     return el;
   }
 
-  function show(message, options) {
+  function show(title, value, options) {
     var duration = (options && options.duration) || DEFAULT_DURATION;
     var toast = getOrCreate();
 
-    // If already showing — reset
+    // Reset any in-progress animation
     clearTimeout(hideTimer);
     toast.classList.remove('toast--hiding');
 
-    toast.textContent = message;
+    titleEl.textContent = title || '';
+    valueEl.textContent = value || '';
 
-    // Force reflow so the browser recognises the class change
+    // Force reflow so the browser sees the class change
     void toast.offsetWidth;
     toast.classList.add('toast--visible');
 
@@ -59,23 +71,25 @@
     };
 
     el.addEventListener('transitionend', afterHide, { once: true });
-
-    // Safety fallback if transitionend doesn't fire
+    // Safety fallback
     setTimeout(afterHide, 300);
   }
 
   // Check for a pending toast left by a page-navigation action
   document.addEventListener('DOMContentLoaded', function () {
-    var pending = sessionStorage.getItem(PENDING_KEY);
-    if (pending) {
+    var raw = sessionStorage.getItem(PENDING_KEY);
+    if (raw) {
       sessionStorage.removeItem(PENDING_KEY);
-      // Small delay so the page settles before showing
-      setTimeout(function () {
-        show(pending);
-      }, 300);
+      try {
+        var data = JSON.parse(raw);
+        setTimeout(function () {
+          show(data.title, data.value);
+        }, 300);
+      } catch (e) {
+        // Ignore malformed data
+      }
     }
   });
 
-  // Public API
   window.Toast = { show: show, hide: hide };
 })();
