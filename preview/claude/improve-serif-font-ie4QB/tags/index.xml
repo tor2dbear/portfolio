@@ -1,0 +1,110 @@
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 10 Feb 2026 17:42:36 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/tags/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creativity</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/creativity/tags/creativity/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/creativity/tags/creativity/</guid>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Design</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/design/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/design/</guid>
+      <pubDate>Sat, 10 Jan 2026 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Branding</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/branding/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/branding/</guid>
+      <pubDate>Fri, 09 Jan 2026 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>UI/UX</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/ui-ux/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/ui-ux/</guid>
+      <pubDate>Fri, 09 Jan 2026 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Digital Product</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/digital-product/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/digital-product/</guid>
+      <pubDate>Mon, 01 May 2023 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Brand &amp; Identity</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/brand-identity/tags/brand-identity/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/brand-identity/tags/brand-identity/</guid>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Editorial</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/editorial/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/editorial/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Experimental</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/experimental/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/experimental/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Print</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/print/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/print/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Books</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/books/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/books/</guid>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;{{ range .Pages }}&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;</description>
+    </item>
+    <item>
+      <title>Brand &amp; Identity</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/brand-identity/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/brand-identity/</guid>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Editorial Design</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/editorial-design/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/editorial-design/</guid>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Graphic Design</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/graphic-design/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/graphic-design/</guid>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+    <item>
+      <title>Illustrations</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/illustrations/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/improve-serif-font-ie4QB/works/tags/illustrations/</guid>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+      <description></description>
+    </item>
+  </channel>
+</rss>
