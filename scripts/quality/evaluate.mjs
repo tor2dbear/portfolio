@@ -151,6 +151,10 @@ function countAxeByImpact(axeRuns) {
 function computeBlockers({ policy, lighthouseRuns, axeRuns }) {
   const blockers = [];
 
+  // Missing tool outputs are blockers to avoid false-green PRs.
+  if (!lighthouseRuns) blockers.push({ type: "tool", tool: "lighthouse", message: "Missing Lighthouse results" });
+  if (!axeRuns) blockers.push({ type: "tool", tool: "axe", message: "Missing axe results" });
+
   // Lighthouse category minimums
   if (lighthouseRuns) {
     for (const run of lighthouseRuns) {
