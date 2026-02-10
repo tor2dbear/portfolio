@@ -243,7 +243,7 @@
 }
 
 .typography-preview--technical {
-  font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, "Courier New", monospace;
 }
 
 .typography-preview--system {

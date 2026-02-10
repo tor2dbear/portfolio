@@ -144,7 +144,8 @@
   // guaranteeing fonts render when the user actively switches presets.
   var TYPOGRAPHY_FONTS = {
     refined:    ['400 1em "Playfair Display"'],
-    expressive: ['500 1em "Bricolage Grotesque"']
+    expressive: ['500 1em "Bricolage Grotesque"'],
+    technical:  ['400 1em "JetBrains Mono"']
   };
 
   function setTypography(typography) {
