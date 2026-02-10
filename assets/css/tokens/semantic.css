@@ -79,6 +79,7 @@
   --heading-weight:      var(--sans-weight-bold);
   --heading-tracking:    var(--tracking-normal);
   --type-scale-display:  1;
+  --display-tracking:    -0.035em;
 
   /* === IMAGE === */
   --image-background: var(--iris-12);

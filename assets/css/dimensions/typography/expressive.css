@@ -13,6 +13,7 @@
   --display-weight:   500;
   --heading-weight:   500;
   --heading-tracking: var(--tracking-normal);
+  --display-tracking: -0.025em;
 }
 
 /* Prevent faux italic on Bricolage — use weight for emphasis instead */
