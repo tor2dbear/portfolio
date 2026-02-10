@@ -50,7 +50,8 @@ async function main() {
   try {
     for (const route of routes) {
       const url = joinUrl(baseUrl, route);
-      const page = await browser.newPage();
+      const context = await browser.newContext();
+      const page = await context.newPage();
       try {
         await page.goto(url, { waitUntil: "networkidle", timeout: 60_000 });
         const results = await new AxeBuilder({ page }).analyze();
@@ -63,7 +64,7 @@ async function main() {
           inapplicable: results.inapplicable ? results.inapplicable.length : 0,
         });
       } finally {
-        await page.close();
+        await context.close();
       }
     }
   } finally {
