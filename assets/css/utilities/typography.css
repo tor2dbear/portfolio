@@ -279,7 +279,7 @@ h4,
 /* Type: Headline 1 */
 h1,
 .type-headline-1 {
-  font-size: clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl));
+  font-size: calc(clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl)) * var(--type-scale-display));
   letter-spacing: var(--display-tracking);
   text-wrap: balance;
 }
