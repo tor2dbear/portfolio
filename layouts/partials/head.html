@@ -116,8 +116,9 @@
   <link rel="preload" href="{{ $fontSwitzer400.RelPermalink }}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{{ $fontCrimsonProLatin.RelPermalink }}" as="font" type="font/woff2" crossorigin>
 
-  <!-- CSS base (reset) -->
+  <!-- CSS base (reset + syntax) -->
   {{ $base_reset := resources.Get "css/base/reset.css" }}
+  {{ $base_syntax := resources.Get "css/base/syntax.css" }}
 
   <!-- CSS tokens (3-layer architecture) -->
   {{ $tokens_primitives := resources.Get "css/tokens/primitives.css" }}
@@ -366,6 +367,7 @@
   {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
     <link rel="stylesheet" type="text/css" href="{{ $base_reset.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $base_syntax.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
@@ -416,7 +418,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
