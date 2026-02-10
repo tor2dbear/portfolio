@@ -202,6 +202,9 @@ other = "Mode"
 [palette]
 other = "Palette"
 
+[typography]
+other = "Typography"
+
 [navigation]
 other = "Navigation"
 

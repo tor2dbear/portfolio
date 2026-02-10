@@ -70,6 +70,17 @@
   --status-info-text: var(--blue-11);
   --status-info-icon: var(--status-info-text);
 
+  /* === TYPOGRAPHY (semantic) === */
+  --font-display:        var(--font-serif);
+  --font-heading:        var(--font-sans);
+  --font-body:           var(--font-serif);
+  --font-ui:             var(--font-sans);
+  --display-weight:      400;
+  --heading-weight:      var(--sans-weight-bold);
+  --heading-tracking:    var(--tracking-normal);
+  --type-scale-display:  1;
+  --display-tracking:    -0.035em;
+
   /* === IMAGE === */
   --image-background: var(--iris-12);
   --image-grayscale: 0%;

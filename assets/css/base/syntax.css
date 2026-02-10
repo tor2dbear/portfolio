@@ -1,0 +1,120 @@
+/* ============================================================================
+   SYNTAX HIGHLIGHTING (Hugo Chroma)
+
+   Maps Chroma token classes to design tokens so highlighting adapts
+   automatically to palette and light/dark mode.
+   ============================================================================ */
+
+/* Container */
+.highlight pre {
+  margin: 0;
+  padding: var(--spacing-16);
+  background: var(--gray-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.highlight code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-default);
+  background: none;
+  padding: 0;
+}
+
+/* --- Token colors mapped to design tokens --- */
+
+/* Keywords (if, else, return, class, function, etc.) */
+.chroma .k,    /* Keyword */
+.chroma .kc,   /* KeywordConstant */
+.chroma .kd,   /* KeywordDeclaration */
+.chroma .kn,   /* KeywordNamespace */
+.chroma .kp,   /* KeywordPseudo */
+.chroma .kr,   /* KeywordReserved */
+.chroma .kt {  /* KeywordType */
+  color: var(--iris-11);
+  font-weight: 500;
+}
+
+/* Strings */
+.chroma .s,    /* LiteralString */
+.chroma .sa,   /* LiteralStringAffix */
+.chroma .sb,   /* LiteralStringBacktick */
+.chroma .sc,   /* LiteralStringChar */
+.chroma .dl,   /* LiteralStringDelimiter */
+.chroma .sd,   /* LiteralStringDoc */
+.chroma .s2,   /* LiteralStringDouble */
+.chroma .se,   /* LiteralStringEscape */
+.chroma .sh,   /* LiteralStringHeredoc */
+.chroma .si,   /* LiteralStringInterpol */
+.chroma .sx,   /* LiteralStringOther */
+.chroma .sr,   /* LiteralStringRegex */
+.chroma .s1,   /* LiteralStringSingle */
+.chroma .ss {  /* LiteralStringSymbol */
+  color: var(--green-11);
+}
+
+/* Comments */
+.chroma .c,    /* Comment */
+.chroma .ch,   /* CommentHashbang */
+.chroma .cm,   /* CommentMultiline */
+.chroma .c1,   /* CommentSingle */
+.chroma .cs,   /* CommentSpecial */
+.chroma .cp,   /* CommentPreproc */
+.chroma .cpf { /* CommentPreprocFile */
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* HTML tags and element names */
+.chroma .nt {  /* NameTag */
+  color: var(--iris-11);
+}
+
+/* Attribute names */
+.chroma .na {  /* NameAttribute */
+  color: var(--blue-11);
+}
+
+/* Numbers */
+.chroma .m,    /* LiteralNumber */
+.chroma .mb,   /* LiteralNumberBin */
+.chroma .mf,   /* LiteralNumberFloat */
+.chroma .mh,   /* LiteralNumberHex */
+.chroma .mi,   /* LiteralNumberInteger */
+.chroma .il,   /* LiteralNumberIntegerLong */
+.chroma .mo,   /* LiteralNumberOct */
+.chroma .o,    /* Operator */
+.chroma .ow {  /* OperatorWord */
+  color: var(--orange-11);
+}
+
+/* Functions and built-in names */
+.chroma .nf,   /* NameFunction */
+.chroma .nb,   /* NameBuiltin */
+.chroma .fm {  /* NameFunctionMagic */
+  color: var(--blue-11);
+}
+
+/* Punctuation (brackets, angle brackets) */
+.chroma .p {   /* Punctuation */
+  color: var(--text-muted);
+}
+
+/* Generic (diff output, errors, etc.) */
+.chroma .gd {  /* GenericDeleted */
+  color: var(--red-11);
+}
+
+.chroma .gi {  /* GenericInserted */
+  color: var(--green-11);
+}
+
+.chroma .ge {  /* GenericEmph */
+  font-style: italic;
+}
+
+.chroma .gs {  /* GenericStrong */
+  font-weight: 700;
+}

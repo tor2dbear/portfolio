@@ -1,0 +1,17 @@
+/* ============================================================================
+   TYPOGRAPHY: Refined
+
+   Magazine feel. High-contrast Playfair Display headlines,
+   clean Switzer body.
+   ============================================================================ */
+
+:root[data-typography="refined"] {
+  --font-display:     "Playfair Display", ui-serif, Georgia, serif;
+  --font-heading:     "Playfair Display", ui-serif, Georgia, serif;
+  --font-body:        var(--font-sans);
+  --font-ui:          var(--font-sans);
+  --display-weight:   400;
+  --heading-weight:   400;
+  --heading-tracking: var(--tracking-tight);
+  --display-tracking: -0.02em;
+}

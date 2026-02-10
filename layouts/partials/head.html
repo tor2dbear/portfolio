@@ -95,8 +95,30 @@
     {{ end }}
   {{ end }}
 
-  <!-- CSS base (reset) -->
+  <!-- Self-hosted font resources -->
+  {{ $fontSwitzer400 := resources.Get "fonts/switzer-latin-400-normal.woff2" }}
+  {{ $fontSwitzer400i := resources.Get "fonts/switzer-latin-400-italic.woff2" }}
+  {{ $fontSwitzer500 := resources.Get "fonts/switzer-latin-500-normal.woff2" }}
+  {{ $fontCrimsonProLatin := resources.Get "fonts/crimson-pro-latin-wght-normal.woff2" }}
+  {{ $fontCrimsonProLatinExt := resources.Get "fonts/crimson-pro-latin-ext-wght-normal.woff2" }}
+  {{ $fontCrimsonProItalic := resources.Get "fonts/crimson-pro-latin-wght-italic.woff2" }}
+  {{ $fontCrimsonProItalicExt := resources.Get "fonts/crimson-pro-latin-ext-wght-italic.woff2" }}
+  {{ $fontPlayfairLatin := resources.Get "fonts/playfair-display-latin-wght-normal.woff2" }}
+  {{ $fontPlayfairLatinExt := resources.Get "fonts/playfair-display-latin-ext-wght-normal.woff2" }}
+  {{ $fontBricolageLatin := resources.Get "fonts/bricolage-grotesque-latin-standard-normal.woff2" }}
+  {{ $fontBricolageLatinExt := resources.Get "fonts/bricolage-grotesque-latin-ext-standard-normal.woff2" }}
+  {{ $fontJetBrainsLatin := resources.Get "fonts/jetbrains-mono-latin-wght-normal.woff2" }}
+  {{ $fontJetBrainsLatinExt := resources.Get "fonts/jetbrains-mono-latin-ext-wght-normal.woff2" }}
+  {{ $fontJetBrainsItalic := resources.Get "fonts/jetbrains-mono-latin-wght-italic.woff2" }}
+  {{ $fontJetBrainsItalicExt := resources.Get "fonts/jetbrains-mono-latin-ext-wght-italic.woff2" }}
+
+  <!-- Preload primary fonts (Switzer regular + Crimson Pro latin) -->
+  <link rel="preload" href="{{ $fontSwitzer400.RelPermalink }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ $fontCrimsonProLatin.RelPermalink }}" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS base (reset + syntax) -->
   {{ $base_reset := resources.Get "css/base/reset.css" }}
+  {{ $base_syntax := resources.Get "css/base/syntax.css" }}
 
   <!-- CSS tokens (3-layer architecture) -->
   {{ $tokens_primitives := resources.Get "css/tokens/primitives.css" }}
@@ -111,6 +133,13 @@
   {{ $dimensions_palette_mesa := resources.Get "css/dimensions/palette/mesa.css" }}
   {{ $dimensions_palette_pantone := resources.Get "css/dimensions/palette/pantone.css" }}
   {{ $dimensions_palette_previews := resources.Get "css/dimensions/palette/previews.css" }}
+
+  <!-- CSS dimensions (typography) -->
+  {{ $dimensions_typo_editorial := resources.Get "css/dimensions/typography/editorial.css" }}
+  {{ $dimensions_typo_refined := resources.Get "css/dimensions/typography/refined.css" }}
+  {{ $dimensions_typo_expressive := resources.Get "css/dimensions/typography/expressive.css" }}
+  {{ $dimensions_typo_technical := resources.Get "css/dimensions/typography/technical.css" }}
+  {{ $dimensions_typo_system := resources.Get "css/dimensions/typography/system.css" }}
 
   <!-- CSS utilities -->
   {{ $utilities_typography := resources.Get "css/utilities/typography.css" }}
@@ -150,6 +179,127 @@
   {{ $print := resources.Get "css/print.css" }}
 
 
+  <!-- Self-hosted web fonts -->
+  <style>
+    @font-face {
+      font-family: 'Switzer';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400;
+      src: url('{{ $fontSwitzer400.RelPermalink }}') format('woff2');
+    }
+    @font-face {
+      font-family: 'Switzer';
+      font-style: italic;
+      font-display: swap;
+      font-weight: 400;
+      src: url('{{ $fontSwitzer400i.RelPermalink }}') format('woff2');
+    }
+    @font-face {
+      font-family: 'Switzer';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 500;
+      src: url('{{ $fontSwitzer500.RelPermalink }}') format('woff2');
+    }
+    @font-face {
+      font-family: 'Crimson Pro';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 200 900;
+      src: url('{{ $fontCrimsonProLatin.RelPermalink }}') format('woff2');
+      unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    @font-face {
+      font-family: 'Crimson Pro';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 200 900;
+      src: url('{{ $fontCrimsonProLatinExt.RelPermalink }}') format('woff2');
+      unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'Crimson Pro';
+      font-style: italic;
+      font-display: swap;
+      font-weight: 200 900;
+      src: url('{{ $fontCrimsonProItalic.RelPermalink }}') format('woff2');
+      unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    @font-face {
+      font-family: 'Crimson Pro';
+      font-style: italic;
+      font-display: swap;
+      font-weight: 200 900;
+      src: url('{{ $fontCrimsonProItalicExt.RelPermalink }}') format('woff2');
+      unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'Playfair Display';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400 900;
+      src: url('{{ $fontPlayfairLatin.RelPermalink }}') format('woff2');
+      unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    @font-face {
+      font-family: 'Playfair Display';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 400 900;
+      src: url('{{ $fontPlayfairLatinExt.RelPermalink }}') format('woff2');
+      unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'Bricolage Grotesque';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 200 800;
+      src: url('{{ $fontBricolageLatin.RelPermalink }}') format('woff2');
+      unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    @font-face {
+      font-family: 'Bricolage Grotesque';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 200 800;
+      src: url('{{ $fontBricolageLatinExt.RelPermalink }}') format('woff2');
+      unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 100 800;
+      src: url('{{ $fontJetBrainsLatin.RelPermalink }}') format('woff2');
+      unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 100 800;
+      src: url('{{ $fontJetBrainsLatinExt.RelPermalink }}') format('woff2');
+      unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      font-style: italic;
+      font-display: swap;
+      font-weight: 100 800;
+      src: url('{{ $fontJetBrainsItalic.RelPermalink }}') format('woff2');
+      unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      font-style: italic;
+      font-display: swap;
+      font-weight: 100 800;
+      src: url('{{ $fontJetBrainsItalicExt.RelPermalink }}') format('woff2');
+      unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
+  </style>
+
   <!-- Critical CSS - Above the fold -->
   <style>
     /* Hero Section - Critical for LCP */
@@ -157,11 +307,12 @@
     .hero-title {
       max-width: var(--content-max-width-narrow);
       line-height: 1.4;
-      font-size: var(--text-4xl);
+      font-size: calc(var(--text-4xl) * var(--type-scale-display));
+      letter-spacing: var(--display-tracking);
     }
     .role-swapper {
       color: var(--text-accent);
-      font-weight: var(--sans-weight-bold);
+      font-weight: inherit;
       display: inline-block;
       min-width: 0;
       position: relative;
@@ -183,7 +334,7 @@
       background: var(--bg-tag);
       padding: 0 var(--spacing-4);
       border-radius: var(--spacing-4);
-      font-weight: var(--sans-weight-bold);
+      font-weight: inherit;
     }
     /* Reveal animation - immediate variant for hero */
     .reveal {
@@ -203,7 +354,7 @@
     }
     @media (max-width: 47.9375em) {
       .hero-section { padding: var(--spacing-64) 0; }
-      .hero-title { font-size: var(--text-3xl); }
+      .hero-title { font-size: calc(var(--text-3xl) * var(--type-scale-display)); }
     }
     @media (prefers-reduced-motion: reduce) {
       .role-swapper { transition: none; }
@@ -216,6 +367,7 @@
   {{ if eq hugo.Environment "development" }}
     <!-- CSS development -->
     <link rel="stylesheet" type="text/css" href="{{ $base_reset.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $base_syntax.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_primitives.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_semantic.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $tokens_components.RelPermalink }}" />
@@ -226,6 +378,11 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_mesa.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_previews.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_editorial.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_refined.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_expressive.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_technical.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_system.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_grid.RelPermalink }}" />
@@ -261,7 +418,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -298,6 +455,10 @@
       // Set palette (standard/pantone)
       var storedPalette = localStorage.getItem("theme-palette") || "standard";
       document.documentElement.setAttribute("data-palette", storedPalette);
+
+      // Set typography
+      var storedTypography = localStorage.getItem("theme-typography") || "editorial";
+      document.documentElement.setAttribute("data-typography", storedTypography);
     })();
   </script>
 
@@ -357,7 +518,7 @@
 
     {{ partial "schema.html" . }}
 
-    <!-- Adobe TypeKit -->
+    <!-- Adobe TypeKit — base fonts (font-display: optional) -->
     <link rel="preconnect" href="https://use.typekit.net" crossorigin>
     <link rel="preconnect" href="https://p.typekit.net" crossorigin>
     <link
@@ -369,6 +530,31 @@
     <noscript
       ><link rel="stylesheet" href="https://use.typekit.net/diz3sha.css"
     /></noscript>
+
+    <!-- Adobe TypeKit — extra typography fonts (font-display: swap) -->
+    <link
+      rel="stylesheet"
+      href="https://use.typekit.net/qzz7wpk.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript
+      ><link rel="stylesheet" href="https://use.typekit.net/qzz7wpk.css"
+    /></noscript>
+
+    <!-- Fallback: force TypeKit activation if inline onload is blocked (Arc, strict CSP) -->
+    <script>
+      (function(){
+        var links = document.querySelectorAll('link[href*="typekit.net"][media="print"]');
+        if (links.length) {
+          var activate = function(){
+            links.forEach(function(l){ l.media = 'all'; });
+          };
+          if (document.readyState === 'complete') { activate(); }
+          else { window.addEventListener('load', activate); }
+        }
+      })();
+    </script>
 
     <!-- MathJax -->
     <!-- <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->

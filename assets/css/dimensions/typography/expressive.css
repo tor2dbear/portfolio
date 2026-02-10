@@ -1,0 +1,27 @@
+/* ============================================================================
+   TYPOGRAPHY: Expressive
+
+   Bold personality. Quirky Bricolage Grotesque headlines + clean Switzer body.
+   Bricolage has no italic — emphasis uses weight instead.
+   ============================================================================ */
+
+:root[data-typography="expressive"] {
+  --font-display:     "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-heading:     "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body:        var(--font-sans);
+  --font-ui:          "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --display-weight:   500;
+  --heading-weight:   500;
+  --heading-tracking: var(--tracking-normal);
+  --display-tracking: -0.025em;
+}
+
+/* Prevent faux italic on Bricolage — use weight for emphasis instead */
+[data-typography="expressive"] :is(h1, h2, h3, h4, h5, h6, .type-display-1, .type-display-2) {
+  font-synthesis: none;
+}
+
+[data-typography="expressive"] :is(h1, h2, h3, h4, h5, h6, .type-display-1, .type-display-2) :is(em, i) {
+  font-style: normal;
+  font-weight: 600;
+}

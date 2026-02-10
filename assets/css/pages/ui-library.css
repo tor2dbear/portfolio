@@ -374,17 +374,20 @@
   background-color: var(--bg-surface-hover);
 }
 
+.code-example .highlight {
+  margin-top: var(--spacing-8);
+}
+
+.code-example .highlight pre {
+  margin: 0;
+}
+
 .code-example pre {
   margin-top: var(--spacing-8);
-  padding: var(--spacing-16);
-  background-color: #1a1a1a;
-  color: #e0e0e0;
-  border-radius: 6px;
-  overflow-x: auto;
 }
 
 .code-example code {
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 0.875rem;
 }
 

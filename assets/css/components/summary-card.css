@@ -3,8 +3,8 @@
   line-height: var(--line-height-normal);
   color: var(--text-default);
   letter-spacing: var(--tracking-normal);
-  font-family: var(--font-sans);
-  font-weight: var(--sans-weight-bold);
+  font-family: var(--font-heading);
+  font-weight: var(--heading-weight);
   margin-top: var(--spacing-12);
   margin-bottom: var(--spacing-12);
 }
@@ -15,7 +15,7 @@
   font-weight: var(--sans-weight-regular);
   color: var(--text-muted);
   letter-spacing: var(--tracking-wide);
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   margin-bottom: var(--spacing-12);
 }
 
@@ -23,7 +23,7 @@
   font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
 }
 
 .summary-card--wide .summary-card__title {
