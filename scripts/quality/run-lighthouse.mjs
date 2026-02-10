@@ -42,6 +42,11 @@ function run(cmd, args, options = {}) {
   });
 }
 
+function localBin(name) {
+  const ext = process.platform === "win32" ? ".cmd" : "";
+  return path.join(process.cwd(), "node_modules", ".bin", `${name}${ext}`);
+}
+
 async function main() {
   const args = parseArgs(process.argv);
   const policyPath = String(args.get("policy") ?? "quality-policy.yml");
@@ -64,14 +69,28 @@ async function main() {
   await fs.rm(".lighthouseci", { recursive: true, force: true });
 
   const lhciArgs = [
-    "lhci",
     "collect",
     "--numberOfRuns=1",
     "--settings.chromeFlags=--no-sandbox",
     ...urls.flatMap((url) => ["--url", url]),
   ];
 
-  await run("npx", lhciArgs);
+  const lhciPath = localBin("lhci");
+  try {
+    await fs.access(lhciPath);
+  } catch {
+    throw new Error(
+      `Missing LHCI binary at ${lhciPath}. Ensure @lhci/cli is installed before running this script.`
+    );
+  }
+
+  await run(lhciPath, lhciArgs);
+
+  try {
+    await fs.access(".lighthouseci");
+  } catch {
+    throw new Error("LHCI did not produce a .lighthouseci directory (collect likely failed).");
+  }
 
   await fs.mkdir(outDir, { recursive: true });
   const dest = path.join(outDir, ".lighthouseci");
