@@ -849,6 +849,7 @@ h4,
 h1,
 .type-headline-1 {
   font-size: clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl));
+  letter-spacing: var(--display-tracking);
   text-wrap: balance;
 }
 
@@ -858,6 +859,7 @@ h2,
   font-size: clamp(var(--text-6xl),
       calc(1.75rem + 0.625vw),
       var(--text-10xl));
+  letter-spacing: var(--display-tracking);
   text-wrap: balance;
 }
 
