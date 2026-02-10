@@ -231,7 +231,7 @@
   border: 1px solid var(--border-subtle);
   background: var(--bg-surface);
   /* Editorial default — locked so active theme doesn't bleed in */
-  font-family: "Crimson Pro", ui-serif, Georgia, serif;
+  font-family: "Source Serif 4", ui-serif, Georgia, serif;
 }
 
 .typography-preview--refined {
