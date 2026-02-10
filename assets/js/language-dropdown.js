@@ -70,6 +70,16 @@
       }
     });
 
+    // Store pending toast before language navigation
+    panel.querySelectorAll('a.language-option').forEach(function(link) {
+      link.addEventListener('click', function() {
+        var name = link.querySelector('.language-name');
+        if (name) {
+          sessionStorage.setItem('pending-toast', name.textContent.trim());
+        }
+      });
+    });
+
     // Touch support for swipe-to-close on mobile bottom sheet
     let touchStartY = 0;
     let touchCurrentY = 0;

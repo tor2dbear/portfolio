@@ -168,6 +168,7 @@
   {{ $components_gallery := resources.Get "css/components/gallery.css" }}
   {{ $components_toggle_switch := resources.Get "css/components/toggle-switch.css" }}
   {{ $components_grid_overlay := resources.Get "css/components/grid-overlay.css" }}
+  {{ $components_toast := resources.Get "css/components/toast.css" }}
 
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
@@ -409,6 +410,7 @@
     {{ end }}
     <link rel="stylesheet" type="text/css" href="{{ $components_toggle_switch.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_grid_overlay.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_toast.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
     {{ with $pages_contact }}
@@ -422,7 +424,7 @@
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
-    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $pages_home $pages_ui_library }}
+    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $pages_home $pages_ui_library }}
     {{ with $pages_contact }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -478,6 +480,7 @@
   {{ $js1 := resources.Get "js/ui.js" }}
   {{ $js2 := resources.Get "js/header-line.js" }}
   {{ $js3 := resources.Get "js/header-hide.js" }}
+  {{ $js_toast := resources.Get "js/toast.js" }}
   {{ $js4 := resources.Get "js/darkmode.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
@@ -498,6 +501,7 @@
     <script src="{{ $js1.RelPermalink }}" defer></script>
     <script src="{{ $js2.RelPermalink }}" defer></script>
     <script src="{{ $js3.RelPermalink }}" defer></script>
+    <script src="{{ $js_toast.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
@@ -512,7 +516,7 @@
     <script src="{{ $js16.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
 

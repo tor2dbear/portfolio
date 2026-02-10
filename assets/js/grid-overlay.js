@@ -15,21 +15,31 @@
     );
   }
 
-  function enable() {
+  function enable(showToast) {
     closing = false;
     document.documentElement.setAttribute("data-grid-animate", "");
     document.documentElement.setAttribute("data-grid-overlay", "");
     localStorage.setItem(STORAGE_KEY, "true");
     updateUI(true);
+    if (showToast && window.Toast) {
+      var btn = document.querySelector('[data-js="grid-toggle"]');
+      var msg = btn ? btn.getAttribute("data-toast-on") : null;
+      if (msg) window.Toast.show(msg);
+    }
   }
 
-  function disable() {
+  function disable(showToast) {
     if (closing) return;
     closing = true;
 
     document.documentElement.setAttribute("data-grid-animate", "");
     document.documentElement.setAttribute("data-grid-overlay", "closing");
     updateUI(false);
+    if (showToast && window.Toast) {
+      var btn = document.querySelector('[data-js="grid-toggle"]');
+      var msg = btn ? btn.getAttribute("data-toast-off") : null;
+      if (msg) window.Toast.show(msg);
+    }
 
     // Column 1 finishes last in reverse stagger — listen for its animationend
     var lastCol = document.querySelector(".grid-overlay__col:first-child");
@@ -64,9 +74,9 @@
 
   function toggle() {
     if (isActive()) {
-      disable();
+      disable(true);
     } else {
-      enable();
+      enable(true);
     }
   }
 

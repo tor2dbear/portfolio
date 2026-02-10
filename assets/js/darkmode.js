@@ -78,6 +78,10 @@
     updateModeUI(mode);
     closePanel();
     closeSettingsPanel();
+
+    var el = document.querySelector('[data-js="footer-mode"]');
+    var label = el ? (el.getAttribute('data-label-' + mode) || mode) : mode;
+    if (window.Toast) window.Toast.show(label);
   }
 
   function applyMode(mode) {
@@ -115,6 +119,10 @@
     updatePaletteUI(palette);
     closePanel();
     closeSettingsPanel();
+
+    var el = document.querySelector('[data-js="footer-palette"]');
+    var label = el ? (el.getAttribute('data-label-' + palette) || palette) : palette;
+    if (window.Toast) window.Toast.show(label);
   }
 
   function applyPalette(palette) {
@@ -153,6 +161,9 @@
     // Highlight the selected option immediately for instant feedback
     updateTypographyUI(typography);
 
+    var typoEl = document.querySelector('[data-js="footer-typography"]');
+    var typoLabel = typoEl ? (typoEl.getAttribute('data-label-' + typography) || typography) : typography;
+
     var fontsNeeded = TYPOGRAPHY_FONTS[typography];
     if (fontsNeeded && fontsNeeded.length > 0) {
       // Preload web fonts before applying the preset so the font is
@@ -164,16 +175,19 @@
         applyTypography(typography);
         closePanel();
         closeSettingsPanel();
+        if (window.Toast) window.Toast.show(typoLabel);
       }).catch(function() {
         // Font loading failed; apply anyway (CSS fallback stack kicks in)
         applyTypography(typography);
         closePanel();
         closeSettingsPanel();
+        if (window.Toast) window.Toast.show(typoLabel);
       });
     } else {
       applyTypography(typography);
       closePanel();
       closeSettingsPanel();
+      if (window.Toast) window.Toast.show(typoLabel);
     }
   }
 

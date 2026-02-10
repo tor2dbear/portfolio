@@ -1,0 +1,68 @@
+/* ============================================================================
+   TOAST — Lightweight setting-change confirmation
+   Centered top, blur backdrop, fade-in / fade-out.
+   ============================================================================ */
+
+.toast {
+  position: fixed;
+  top: var(--spacing-16);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-16);
+  border-radius: var(--radius-8);
+
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+
+  color: var(--text-default);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+/* Dark mode */
+[data-mode="dark"] .toast {
+  background: rgba(24, 24, 27, 0.82);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
+}
+
+/* Visible state */
+.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Hiding state (reverse) */
+.toast--hiding {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-8px);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transform: translateX(-50%);
+    transition: opacity 200ms ease-out;
+  }
+  .toast--visible {
+    transform: translateX(-50%);
+  }
+  .toast--hiding {
+    transform: translateX(-50%);
+  }
+}
