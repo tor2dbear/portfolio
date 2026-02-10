@@ -4,25 +4,15 @@
    Alternative fonts for comparison alongside Adobe Fonts (TypeKit).
    All files are variable WOFF2 served from /fonts/.
 
-   Clash Grotesk       →  replaces Neue Haas Grotesk  (--font-sans)
+   Switzer              →  replaces Neue Haas Grotesk  (--font-sans)
    Crimson Pro          →  replaces Freight Text Pro    (--font-serif)
    Playfair Display     →  replaces IvyPresto Display   (Refined preset)
    Bricolage Grotesque  →  replaces Gopher              (Expressive preset)
+
+   NOTE: @font-face declarations are in layouts/partials/head.html
+         (inline <style> using Hugo resources.Get for correct paths).
+         This file is kept as documentation only.
    ============================================================================ */
-
-/* ==========================================================================
-   CLASH GROTESK (sans — replaces Neue Haas Grotesk)
-   Source: fontshare.com  |  License: ITF Free Font License
-   Weight range: 200–700  |  No italic
-   ========================================================================== */
-
-@font-face {
-  font-family: 'Clash Grotesk';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 200 700;
-  src: url('/fonts/clash-grotesk-variable.woff2') format('woff2');
-}
 
 /* ==========================================================================
    CRIMSON PRO (serif — replaces Freight Text Pro)

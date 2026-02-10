@@ -96,7 +96,9 @@
   {{ end }}
 
   <!-- Self-hosted font resources -->
-  {{ $fontClashGrotesk := resources.Get "fonts/clash-grotesk-variable.woff2" }}
+  {{ $fontSwitzer400 := resources.Get "fonts/switzer-latin-400-normal.woff2" }}
+  {{ $fontSwitzer400i := resources.Get "fonts/switzer-latin-400-italic.woff2" }}
+  {{ $fontSwitzer500 := resources.Get "fonts/switzer-latin-500-normal.woff2" }}
   {{ $fontCrimsonProLatin := resources.Get "fonts/crimson-pro-latin-wght-normal.woff2" }}
   {{ $fontCrimsonProLatinExt := resources.Get "fonts/crimson-pro-latin-ext-wght-normal.woff2" }}
   {{ $fontCrimsonProItalic := resources.Get "fonts/crimson-pro-latin-wght-italic.woff2" }}
@@ -106,8 +108,8 @@
   {{ $fontBricolageLatin := resources.Get "fonts/bricolage-grotesque-latin-standard-normal.woff2" }}
   {{ $fontBricolageLatinExt := resources.Get "fonts/bricolage-grotesque-latin-ext-standard-normal.woff2" }}
 
-  <!-- Preload primary fonts (Clash Grotesk + Crimson Pro latin) -->
-  <link rel="preload" href="{{ $fontClashGrotesk.RelPermalink }}" as="font" type="font/woff2" crossorigin>
+  <!-- Preload primary fonts (Switzer regular + Crimson Pro latin) -->
+  <link rel="preload" href="{{ $fontSwitzer400.RelPermalink }}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{{ $fontCrimsonProLatin.RelPermalink }}" as="font" type="font/woff2" crossorigin>
 
   <!-- CSS base (reset) -->
@@ -175,11 +177,25 @@
   <!-- Self-hosted web fonts -->
   <style>
     @font-face {
-      font-family: 'Clash Grotesk';
+      font-family: 'Switzer';
       font-style: normal;
       font-display: swap;
-      font-weight: 200 700;
-      src: url('{{ $fontClashGrotesk.RelPermalink }}') format('woff2');
+      font-weight: 400;
+      src: url('{{ $fontSwitzer400.RelPermalink }}') format('woff2');
+    }
+    @font-face {
+      font-family: 'Switzer';
+      font-style: italic;
+      font-display: swap;
+      font-weight: 400;
+      src: url('{{ $fontSwitzer400i.RelPermalink }}') format('woff2');
+    }
+    @font-face {
+      font-family: 'Switzer';
+      font-style: normal;
+      font-display: swap;
+      font-weight: 500;
+      src: url('{{ $fontSwitzer500.RelPermalink }}') format('woff2');
     }
     @font-face {
       font-family: 'Crimson Pro';
