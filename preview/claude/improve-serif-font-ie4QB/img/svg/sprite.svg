@@ -110,12 +110,10 @@
   </symbol>
 
   <symbol id="icon-grid-micro" viewBox="0 0 10 10">
-    <rect x="0.5" y="0.5" width="2.5" height="4" rx="0.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-    <rect x="3.75" y="0.5" width="2.5" height="4" rx="0.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-    <rect x="7" y="0.5" width="2.5" height="4" rx="0.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-    <rect x="0.5" y="5.5" width="2.5" height="4" rx="0.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-    <rect x="3.75" y="5.5" width="2.5" height="4" rx="0.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-    <rect x="7" y="5.5" width="2.5" height="4" rx="0.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+    <path d="M8.5 0.5h-7a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1 -1v-7a1 1 0 0 0 -1 -1Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+    <path d="M9.5 3.5h-9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+    <path d="M6.5 3.5v6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+    <path d="M3.5 3.5v6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
   </symbol>
 
   <!-- Home Icon (16px) -->
