@@ -11,7 +11,7 @@
   >
     <span class="settings-icon" aria-hidden="true">
       <svg class="icon" aria-hidden="true">
-        <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-settings"></use>
+        <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-settings"></use>
       </svg>
     </span>
   </button>
@@ -29,7 +29,7 @@
           aria-label="{{ i18n "light_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-light"></use>
+            <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-light"></use>
           </svg>
           <span>{{ i18n "light_mode" }}</span>
         </button>
@@ -41,7 +41,7 @@
           aria-label="{{ i18n "dark_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-dark"></use>
+            <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-dark"></use>
           </svg>
           <span>{{ i18n "dark_mode" }}</span>
         </button>
@@ -53,7 +53,7 @@
           aria-label="{{ i18n "system_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-system"></use>
+            <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-system"></use>
           </svg>
           <span>{{ i18n "system_mode" }}</span>
         </button>
@@ -108,13 +108,13 @@
           class="theme-option theme-option--palette"
           data-palette="pantone"
           data-js="palette-option"
-          aria-label="Pantone"
+          aria-label="{{ i18n "palette_pantone" }}"
         >
           <span class="palette-preview palette-preview--pantone">
             <span class="palette-preview-segment"></span>
             <span class="palette-preview-segment"></span>
           </span>
-          <span class="palette-label">Pantone</span>
+          <span class="palette-label">{{ i18n "palette_pantone" }}</span>
         </button>
 
       </div>

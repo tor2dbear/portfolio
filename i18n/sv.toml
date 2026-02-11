@@ -314,7 +314,7 @@ other = "Forest"
 other = "Mesa"
 
 [palette_pantone]
-other = "Pantone"
+other = "PANTONE 11-4201"
 
 [toast_grid_title]
 other = "Grid"

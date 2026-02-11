@@ -38,6 +38,11 @@
   border-color: var(--border-subtle);
 }
 
+/* When grid is active, avoid trapping dropdown panels in the header stacking context. */
+html[data-grid-overlay] .top-menu {
+  z-index: auto;
+}
+
 /* ==========================================================================
    Navigation Lists
    ========================================================================== */

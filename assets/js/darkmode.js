@@ -234,7 +234,7 @@
 
     // Use SVG sprite system for instant icon updates
     themeIcon.innerHTML = `<svg width="24" height="24" aria-hidden="true">
-      <use href="/img/svg/sprite.svg#${iconId}"></use>
+      <use href="/img/svg/sprite.svg?v=20260211b#${iconId}"></use>
     </svg>`;
   }
 

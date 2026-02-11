@@ -17,6 +17,7 @@
 
   var PENDING_KEY = 'pending-toast';
   var DEFAULT_DURATION = 2500;
+  var SWIPE_DISMISS_THRESHOLD = 50;
   var el = null;
   var iconWrap = null;
   var textWrap = null;
@@ -24,16 +25,63 @@
   var valueEl = null;
   var hideTimer = null;
   var spriteBase = '';
+  var swipeStartX = 0;
+  var swipeStartY = 0;
+  var swipeTracking = false;
+
+  function getUseHref(use) {
+    return use.getAttribute('href') ||
+      use.getAttribute('xlink:href') ||
+      use.getAttributeNS('http://www.w3.org/1999/xlink', 'href') ||
+      '';
+  }
 
   /** Resolve the sprite.svg base path from an existing <use> in the DOM */
   function getSpriteBase() {
     if (spriteBase) return spriteBase;
-    var use = document.querySelector('svg use[href*="sprite.svg"]');
-    if (use) {
-      var href = use.getAttribute('href') || '';
-      spriteBase = href.split('#')[0];
+    var uses = document.querySelectorAll('svg use');
+    for (var i = 0; i < uses.length; i += 1) {
+      var href = getUseHref(uses[i]);
+      if (href && href.indexOf('sprite.svg') !== -1) {
+        spriteBase = href.split('#')[0];
+        break;
+      }
     }
+    if (!spriteBase) spriteBase = '/img/svg/sprite.svg?v=20260211b';
     return spriteBase;
+  }
+
+  function resetSwipe() {
+    swipeTracking = false;
+    swipeStartX = 0;
+    swipeStartY = 0;
+  }
+
+  function onTouchStart(e) {
+    if (!el || !el.classList.contains('toast--visible')) return;
+    if (!e.changedTouches || !e.changedTouches.length) return;
+    swipeTracking = true;
+    swipeStartX = e.changedTouches[0].clientX;
+    swipeStartY = e.changedTouches[0].clientY;
+  }
+
+  function onTouchMove(e) {
+    if (!swipeTracking || !e.changedTouches || !e.changedTouches.length) return;
+    var deltaY = e.changedTouches[0].clientY - swipeStartY;
+    var deltaX = e.changedTouches[0].clientX - swipeStartX;
+    if (deltaY < 0 && Math.abs(deltaY) > Math.abs(deltaX)) {
+      e.preventDefault();
+    }
+  }
+
+  function onTouchEnd(e) {
+    if (!swipeTracking || !e.changedTouches || !e.changedTouches.length) return;
+    var deltaY = e.changedTouches[0].clientY - swipeStartY;
+    var deltaX = e.changedTouches[0].clientX - swipeStartX;
+    resetSwipe();
+    if (deltaY <= -SWIPE_DISMISS_THRESHOLD && Math.abs(deltaY) > Math.abs(deltaX)) {
+      hide();
+    }
   }
 
   function getOrCreate() {
@@ -60,6 +108,10 @@
     el.appendChild(iconWrap);
     el.appendChild(textWrap);
     document.body.appendChild(el);
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    el.addEventListener('touchcancel', resetSwipe, { passive: true });
     return el;
   }
 
@@ -68,9 +120,11 @@
     iconWrap.innerHTML = '';
     if (!iconId) {
       iconWrap.style.display = 'none';
+      el.classList.add('toast--no-icon');
       return;
     }
     iconWrap.style.display = '';
+    el.classList.remove('toast--no-icon');
     var base = getSpriteBase();
     var ns = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(ns, 'svg');
