@@ -79,7 +79,8 @@
           try {
             localStorage.setItem('pending-toast', JSON.stringify({
               category: 'language',
-              value: name.textContent.trim()
+              value: name.textContent.trim(),
+              icon: 'icon-language-micro'
             }));
           } catch (e) {}
         }

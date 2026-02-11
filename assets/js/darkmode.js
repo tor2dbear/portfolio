@@ -82,7 +82,8 @@
     var el = document.querySelector('[data-js="footer-mode"]');
     var category = el ? el.getAttribute('data-category') : '';
     var label = el ? (el.getAttribute('data-label-' + mode) || mode) : mode;
-    if (window.Toast) window.Toast.show(category, label);
+    var icon = el ? el.getAttribute('data-toast-icon') : '';
+    if (window.Toast) window.Toast.show(category, label, { icon: icon });
   }
 
   function applyMode(mode) {
@@ -124,7 +125,8 @@
     var el = document.querySelector('[data-js="footer-palette"]');
     var category = el ? el.getAttribute('data-category') : '';
     var label = el ? (el.getAttribute('data-label-' + palette) || palette) : palette;
-    if (window.Toast) window.Toast.show(category, label);
+    var icon = el ? el.getAttribute('data-toast-icon') : '';
+    if (window.Toast) window.Toast.show(category, label, { icon: icon });
   }
 
   function applyPalette(palette) {

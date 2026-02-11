@@ -25,8 +25,9 @@
       var btn = document.querySelector('[data-js="grid-toggle"]');
       var title = btn ? btn.getAttribute("data-toast-title") : "Grid";
       var val = btn ? btn.getAttribute("data-toast-on") : "";
-      window.Toast.show(title, val);
+      window.Toast.show(title, val, { icon: "icon-grid-micro" });
     }
+    updateFooterGrid(true);
   }
 
   function disable(showToast) {
@@ -40,8 +41,9 @@
       var btn = document.querySelector('[data-js="grid-toggle"]');
       var title = btn ? btn.getAttribute("data-toast-title") : "Grid";
       var val = btn ? btn.getAttribute("data-toast-off") : "";
-      window.Toast.show(title, val);
+      window.Toast.show(title, val, { icon: "icon-grid-micro" });
     }
+    updateFooterGrid(false);
 
     // Column 1 finishes last in reverse stagger — listen for its animationend
     var lastCol = document.querySelector(".grid-overlay__col:first-child");
@@ -89,6 +91,17 @@
     });
   }
 
+  function updateFooterGrid(on) {
+    var el = document.querySelector('[data-js="footer-grid"]');
+    if (!el) return;
+    var btn = document.querySelector('[data-js="grid-toggle"]');
+    var title = btn ? btn.getAttribute("data-toast-title") : "Grid";
+    var label = on
+      ? (btn ? btn.getAttribute("data-toast-on") : "")
+      : (btn ? btn.getAttribute("data-toast-off") : "");
+    el.textContent = title + " " + label;
+  }
+
   // Track scrollbar width so the fixed-position overlay matches content alignment
   function syncScrollbarWidth() {
     var sw = window.innerWidth - document.documentElement.clientWidth;
@@ -110,8 +123,9 @@
       });
     }
 
-    // Update button state on load
+    // Update button state and footer on load
     updateUI(isActive());
+    updateFooterGrid(isActive());
 
     // Click handlers for toggle buttons in theme/settings panels
     document

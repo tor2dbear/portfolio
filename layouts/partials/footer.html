@@ -99,6 +99,7 @@
           <span
             data-js="footer-mode"
             data-category="{{ i18n "mode" }}"
+            data-toast-icon="icon-mode-micro"
             data-label-light="{{ i18n "light_mode" }}"
             data-label-dark="{{ i18n "dark_mode" }}"
             data-label-system="{{ i18n "system_mode" }}"
@@ -114,6 +115,7 @@
           <span
             data-js="footer-palette"
             data-category="{{ i18n "palette" }}"
+            data-toast-icon="icon-palette-micro"
             data-label-standard="{{ i18n "palette_standard" }}"
             data-label-forest="{{ i18n "palette_forest" }}"
             data-label-mesa="{{ i18n "palette_mesa" }}"
@@ -128,6 +130,15 @@
           </span>
           <span class="sr-only">{{ i18n "footer_language_label" }}</span>
           <span>{{ .Language.LanguageName }}</span>
+        </li>
+        <li class="footer-meta__item footer-meta__item--status">
+          <span class="footer-meta__label" aria-hidden="true">
+            <svg class="icon icon--xs">
+              <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-grid-micro"></use>
+            </svg>
+          </span>
+          <span class="sr-only">Grid</span>
+          <span data-js="footer-grid">{{ i18n "toast_grid_title" }} {{ i18n "toast_grid_off" }}</span>
         </li>
         <li class="footer-meta__item">
           <a href="{{ "/index.xml" | relLangURL }}">{{ i18n "footer_rss" }}</a>
@@ -144,7 +155,7 @@
 </footer>
 <!-- Toast category labels (read by toast.js for title line) -->
 <span hidden data-toast-category="typography" data-toast-label="{{ i18n "typography" }}"></span>
-<span hidden data-toast-category="language" data-toast-label="{{ i18n "footer_language_label" }}"></span>
+<span hidden data-toast-category="language" data-toast-label="{{ i18n "footer_language_label" }}" data-toast-icon="icon-language-micro"></span>
 
 <!-- Grid overlay (toggled via theme panel or Ctrl+G) -->
 <div class="grid-overlay" aria-hidden="true">
