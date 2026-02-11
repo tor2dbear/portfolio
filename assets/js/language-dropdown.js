@@ -71,8 +71,8 @@
     });
 
     // Store pending toast before language navigation
-    // Write directly to localStorage (no dependency on window.Toast being loaded)
-    panel.querySelectorAll('a.language-option').forEach(function(link) {
+    // Use document-level query to cover both language-panel AND settings-panel links
+    document.querySelectorAll('a.language-option').forEach(function(link) {
       link.addEventListener('click', function() {
         var name = link.querySelector('.language-name');
         var catEl = document.querySelector('[data-toast-category="language"]');
