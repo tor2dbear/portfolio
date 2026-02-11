@@ -15,6 +15,45 @@
   let modeOptions;
   let paletteOptions;
   let typographyOptions;
+  let spriteBase = '';
+
+  function getUseHref(use) {
+    return use.getAttribute('href')
+      || use.getAttribute('xlink:href')
+      || (use.href && use.href.baseVal)
+      || use.getAttributeNS('http://www.w3.org/1999/xlink', 'href')
+      || '';
+  }
+
+  function inferSpriteBaseFromScripts() {
+    const scripts = document.querySelectorAll('script[src]');
+    for (let i = scripts.length - 1; i >= 0; i -= 1) {
+      const src = scripts[i].getAttribute('src') || scripts[i].src || '';
+      if (!src) continue;
+      if (src.indexOf('/js') !== -1 || src.indexOf('js.') !== -1) {
+        try {
+          return new URL('img/svg/sprite.svg?v=20260211b', src).toString();
+        } catch (e) {
+          // Ignore malformed script src values
+        }
+      }
+    }
+    return '/img/svg/sprite.svg?v=20260211b';
+  }
+
+  function getSpriteBase() {
+    if (spriteBase) return spriteBase;
+    const uses = document.querySelectorAll('svg use');
+    for (let i = 0; i < uses.length; i += 1) {
+      const href = getUseHref(uses[i]);
+      if (href && href.indexOf('sprite.svg') !== -1) {
+        spriteBase = href.split('#')[0];
+        break;
+      }
+    }
+    if (!spriteBase) spriteBase = inferSpriteBaseFromScripts();
+    return spriteBase;
+  }
 
   // ==========================================================================
   // DROPDOWN TOGGLE
@@ -233,8 +272,9 @@
     }
 
     // Use SVG sprite system for instant icon updates
+    const base = getSpriteBase();
     themeIcon.innerHTML = `<svg width="24" height="24" aria-hidden="true">
-      <use href="/img/svg/sprite.svg?v=20260211b#${iconId}"></use>
+      <use href="${base}#${iconId}"></use>
     </svg>`;
   }
 

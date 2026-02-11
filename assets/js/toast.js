@@ -32,8 +32,25 @@
   function getUseHref(use) {
     return use.getAttribute('href') ||
       use.getAttribute('xlink:href') ||
+      (use.href && use.href.baseVal) ||
       use.getAttributeNS('http://www.w3.org/1999/xlink', 'href') ||
       '';
+  }
+
+  function inferSpriteBaseFromScripts() {
+    var scripts = document.querySelectorAll('script[src]');
+    for (var i = scripts.length - 1; i >= 0; i -= 1) {
+      var src = scripts[i].getAttribute('src') || scripts[i].src || '';
+      if (!src) continue;
+      if (src.indexOf('/js') !== -1 || src.indexOf('js.') !== -1) {
+        try {
+          return new URL('img/svg/sprite.svg?v=20260211b', src).toString();
+        } catch (e) {
+          // Ignore malformed script src values
+        }
+      }
+    }
+    return '/img/svg/sprite.svg?v=20260211b';
   }
 
   /** Resolve the sprite.svg base path from an existing <use> in the DOM */
@@ -47,7 +64,7 @@
         break;
       }
     }
-    if (!spriteBase) spriteBase = '/img/svg/sprite.svg?v=20260211b';
+    if (!spriteBase) spriteBase = inferSpriteBaseFromScripts();
     return spriteBase;
   }
 
