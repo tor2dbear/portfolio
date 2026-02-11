@@ -8,7 +8,8 @@
  *       options.duration — ms before auto-hide (default 2500)
  *
  * Pending-toast (survives navigation):
- *   sessionStorage.setItem('pending-toast', JSON.stringify({ title, value }))
+ *   localStorage.setItem('pending-toast', JSON.stringify({ title, value }))
+ *   → shown and removed automatically on next page load.
  */
 (function () {
   'use strict';
@@ -45,7 +46,7 @@
 
     // Reset any in-progress animation
     clearTimeout(hideTimer);
-    toast.classList.remove('toast--hiding');
+    toast.classList.remove('toast--hiding', 'toast--visible');
 
     titleEl.textContent = title || '';
     valueEl.textContent = value || '';
@@ -75,11 +76,31 @@
     setTimeout(afterHide, 300);
   }
 
-  // Check for a pending toast left by a page-navigation action
+  /**
+   * Store a toast to be shown after the next page load.
+   * Used for actions that trigger navigation (e.g. language switch).
+   */
+  function queue(title, value) {
+    try {
+      localStorage.setItem(PENDING_KEY, JSON.stringify({
+        title: title || '',
+        value: value || ''
+      }));
+    } catch (e) {
+      // localStorage might be full or unavailable
+    }
+  }
+
+  // Check for a pending toast left by a previous page
   document.addEventListener('DOMContentLoaded', function () {
-    var raw = sessionStorage.getItem(PENDING_KEY);
+    var raw;
+    try {
+      raw = localStorage.getItem(PENDING_KEY);
+      if (raw) localStorage.removeItem(PENDING_KEY);
+    } catch (e) {
+      return;
+    }
     if (raw) {
-      sessionStorage.removeItem(PENDING_KEY);
       try {
         var data = JSON.parse(raw);
         setTimeout(function () {
@@ -91,5 +112,5 @@
     }
   });
 
-  window.Toast = { show: show, hide: hide };
+  window.Toast = { show: show, hide: hide, queue: queue };
 })();
