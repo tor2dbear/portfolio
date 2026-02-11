@@ -103,8 +103,14 @@
     if (raw) {
       try {
         var data = JSON.parse(raw);
+        var title = data.title || '';
+        // If a category is specified, read the title from the current page's i18n
+        if (data.category) {
+          var catEl = document.querySelector('[data-toast-category="' + data.category + '"]');
+          if (catEl) title = catEl.getAttribute('data-toast-label') || title;
+        }
         setTimeout(function () {
-          show(data.title, data.value);
+          show(title, data.value);
         }, 300);
       } catch (e) {
         // Ignore malformed data
