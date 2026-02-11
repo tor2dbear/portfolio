@@ -71,13 +71,19 @@
     });
 
     // Store pending toast before language navigation
+    // Write directly to localStorage (no dependency on window.Toast being loaded)
     panel.querySelectorAll('a.language-option').forEach(function(link) {
       link.addEventListener('click', function() {
         var name = link.querySelector('.language-name');
         var catEl = document.querySelector('[data-toast-category="language"]');
         var title = catEl ? catEl.getAttribute('data-toast-label') : '';
-        if (name && window.Toast) {
-          window.Toast.queue(title, name.textContent.trim());
+        if (name) {
+          try {
+            localStorage.setItem('pending-toast', JSON.stringify({
+              title: title,
+              value: name.textContent.trim()
+            }));
+          } catch (e) {}
         }
       });
     });

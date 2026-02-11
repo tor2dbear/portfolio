@@ -92,7 +92,7 @@
   }
 
   // Check for a pending toast left by a previous page
-  document.addEventListener('DOMContentLoaded', function () {
+  function checkPendingToast() {
     var raw;
     try {
       raw = localStorage.getItem(PENDING_KEY);
@@ -110,6 +110,18 @@
         // Ignore malformed data
       }
     }
+  }
+
+  // Run when DOM is ready (or immediately if already parsed)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkPendingToast);
+  } else {
+    checkPendingToast();
+  }
+
+  // Also handle bfcache restoration (back/forward navigation)
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) checkPendingToast();
   });
 
   window.Toast = { show: show, hide: hide, queue: queue };
