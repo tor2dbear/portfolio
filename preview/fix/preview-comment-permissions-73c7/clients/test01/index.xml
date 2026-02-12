@@ -1,0 +1,73 @@
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/fix/preview-comment-permissions-73c7/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Thu, 12 Feb 2026 17:06:52 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/fix/preview-comment-permissions-73c7/clients/test01/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Cut up World</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/</guid>
+      <pubDate>Wed, 04 Jun 2014 00:00:00 &#43;0000</pubDate>
+      <description>&lt;figure class=&#34;reveal&#34;&gt;
+        &lt;picture&gt;
+          &lt;source
+            media=&#34;(max-width: 393px)&#34;
+            srcset=&#34;
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_89117d6272ffd07a.webp 1x,
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_c7cb7241353be713.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 393px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 430px)&#34;
+            srcset=&#34;
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_c7cb7241353be713.webp 1x,
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_a68beec79ef04a7c.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 430px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 768px)&#34;
+            srcset=&#34;
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_a68beec79ef04a7c.webp 1x,
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_c8868ebc879ba1d3.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 768px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 1400px)&#34;
+            srcset=&#34;
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_c8868ebc879ba1d3.webp 1x,
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_fad89eb5524caa90.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 1400px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(min-width: 1401px)&#34;
+            srcset=&#34;
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_fad89eb5524caa90.webp 1x,
+              /portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_fad89eb5524caa90.webp 2x
+            &#34;
+            sizes=&#34;100vw&#34;
+          /&gt;
+          &lt;img
+            alt=&#34;Header example&#34;
+            title=&#34;Header example&#34;
+            src=&#34;https://tor2dbear.github.io/portfolio/preview/fix/preview-comment-permissions-73c7/works/a-cut-up-world/cut-up-world11_hu_f2235348d66162fd.jpg&#34;
+            height=&#34;1280&#34;
+            width=&#34;1920&#34;
+            class=&#34;img-fluid&#34;
+            loading=&#34;lazy&#34;
+          /&gt;
+        &lt;/picture&gt;
+      &lt;/figure&gt;&lt;h3&gt;About&lt;/h3&gt;
+&lt;p&gt;A Cut up World is a bachelor thesis project investigating how digital tools shape narrative and identity. Using Google&amp;rsquo;s search suggestions as source material, the book applies cut-up technique to create fragmented stories that mirror our relationship with algorithmic systems.&lt;/p&gt;
+&lt;p&gt;The book design reflects this fragmented digital reality through collage, typography, and mixed media. Digital screenshots sit alongside analog textures, creating visual tension between screen and print. The layout embraces discontinuity—pages break apart, overlap, and recombine, making the reader actively piece together meaning rather than passively consume it.&lt;/p&gt;
+&lt;p&gt;This project represents an early exploration of how design can critically engage with technology rather than simply illustrate it—a thread that runs through my work from print to digital product design.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
