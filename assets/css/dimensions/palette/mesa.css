@@ -10,14 +10,21 @@
   --image-blend-mode: normal;
   --image-background: transparent;
 
-  /* Teal accents */
-  --text-accent: var(--teal-11);
-  --brand-primary: var(--teal-9);
+  /* Accent roles (dual-family test theme) */
+  --accent-primary: var(--teal-9);
+  --accent-primary-strong: var(--teal-11);
+  --accent-secondary: var(--amber-4);
+  --accent-secondary-strong: var(--amber-8);
 
-  --text-default: var(--teal-12);
-  --text-muted: var(--teal-10);
-  --text-nav: var(--teal-12);
-  --text-link-hover: var(--teal-11);
+  --text-accent: var(--accent-primary-strong);
+  --brand-primary: var(--accent-primary);
+
+  /* Keep body text anchored to warm surface family for calmer contrast */
+  --text-default: var(--amber-12);
+  --text-tag: var(--amber-11);
+  --surface-ink-strong: var(--amber-11);
+  --text-nav: var(--amber-12);
+  --text-link-hover: var(--accent-primary-strong);
 
   /* Amber surfaces */
   --bg-page: var(--amber-2);
@@ -29,11 +36,17 @@
   --border-subtle: var(--amber-5);
 
   --component-form-bg: var(--amber-3);
-  --component-form-placeholder: var(--amber-4);
+  --component-form-placeholder: var(--text-muted);
 
-  --component-newsletter-bg: var(--teal-12);
+  --component-newsletter-bg: var(--amber-12);
   --component-newsletter-text: var(--amber-2);
-  --component-newsletter-illustration-bg: var(--amber-3);
-  --component-newsletter-button-bg: var(--amber-4);
-  --component-newsletter-button-text: var(--teal-11);
+  --component-newsletter-illustration-bg: var(--amber-4);
+  --component-newsletter-button-bg: var(--accent-secondary);
+  --component-newsletter-button-text: var(--accent-primary-strong);
+
+  /* Mesa-specific CTA treatment in top nav */
+  --component-nav-cta-bg: var(--accent-primary);
+  --component-nav-cta-text: var(--brand-on-primary);
+  --component-toc-active-indicator: var(--accent-secondary-strong);
+  --component-section-headline-bg: var(--accent-secondary-strong);
 }

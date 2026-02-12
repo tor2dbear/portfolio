@@ -1,0 +1,23 @@
+# Theme spec: Mesa (dual-family test)
+
+[meta]
+name = "mesa"
+
+[roles]
+text = "amber"
+surface = "amber"
+primary = "teal"
+secondary = "amber"
+
+[policies]
+tone_mode = "duo"
+surface_profile = "deep"
+form_policy = "surface-derived"
+image_treatment = "none"
+
+[overrides]
+# None
+
+[component_overrides]
+nav_cta_bg_source = "primary.base"
+nav_cta_text_source = "primary.on"

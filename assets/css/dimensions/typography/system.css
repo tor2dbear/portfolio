@@ -12,5 +12,6 @@
   --display-weight:   600;
   --heading-weight:   500;
   --heading-tracking: var(--tracking-tight);
+  --headline-tracking: var(--tracking-tight);
   --display-tracking: -0.025em;
 }

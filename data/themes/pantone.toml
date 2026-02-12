@@ -1,0 +1,22 @@
+# Theme spec: Pantone
+
+[meta]
+name = "pantone"
+
+[roles]
+text = "cloud"
+surface = "cloud"
+primary = "cloud"
+secondary = "cloud"
+
+[policies]
+tone_mode = "mono"
+surface_profile = "deep"
+form_policy = "surface-derived"
+image_treatment = "pantone-blend"
+
+[overrides]
+# Pantone has special image behavior in CSS, handled outside this data model.
+
+[component_overrides]
+# None

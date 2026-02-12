@@ -11,9 +11,17 @@
   --image-blend-mode: normal;
   --image-background: transparent;
 
-  /* Primary iris color mapping */
-  --text-accent: var(--iris-11);
-  --brand-primary: var(--iris-9);
+  /* Accent roles (single-family) */
+  --accent-primary: var(--iris-9);
+  --accent-primary-strong: var(--iris-11);
+  --accent-secondary: var(--iris-4);
+  --accent-secondary-strong: var(--iris-8);
+
+  --text-accent: var(--accent-primary-strong);
+  --text-tag: var(--iris-11);
+  --surface-ink-strong: var(--iris-11);
+  --brand-primary: var(--accent-primary);
+  --component-form-placeholder: var(--gray-10);
 
   --bg-page: var(--iris-1);
 }

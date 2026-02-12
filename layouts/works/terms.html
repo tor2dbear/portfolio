@@ -12,7 +12,7 @@
     {{- if gt $index 5 -}}
       {{- $isWide = or (eq $mod 0) (eq $mod 3) (eq $mod 4) -}}
     {{- end -}}
-    <div class="{{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: col-start 1 / span {{ if $isWide }}8{{ else }}4{{ end }}">
+    <div class="{{ if $isWide }}summary-card--wide{{ else }}summary-card--compact{{ end }}" style="--col: span {{ if $isWide }}8{{ else }}4{{ end }}">
       {{ $page.Render "summary" }}
     </div>
   {{- end -}}

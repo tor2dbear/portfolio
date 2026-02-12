@@ -10,44 +10,64 @@
 :root {
   /* === TEXT === */
   --text-default: var(--gray-12);
-  --text-muted: var(--gray-11);
+  --text-muted: color-mix(in oklch, var(--gray-11) 60%, var(--surface-ink-strong));
   --text-inverse: var(--white);
   --text-nav: var(--brand-on-primary);
   --text-link: var(--iris-11);
   --text-link-hover: var(--iris-12);
-  --text-accent: var(--iris-11);
+  --text-accent: var(--accent-primary-strong);
+  --text-tag: var(--iris-11);
 
   /* === BACKGROUND / SURFACE === */
   --bg-page: var(--white);
   --bg-surface: var(--iris-2);
   --bg-elevated: var(--gray-1);
   --bg-inverse: var(--gray-12);
+  --bg-surface-subtle: var(--bg-elevated);
   --bg-nav: var(--brand-primary);
   --bg-tag: var(--iris-3);
   --bg-tag-hover: var(--iris-4);
-  --bg-section-headline: var(--iris-9);
+  --bg-section-headline: var(--accent-primary);
+  --surface-ink-strong: var(--iris-11);
 
   /* === BORDER / OUTLINE === */
   --border-subtle: var(--gray-4);
   --border-default: var(--gray-6);
   --border-strong: var(--gray-8);
+  --border-hover: var(--border-strong);
   --outline-neutral: rgba(0, 0, 0, 0.08);
+  --border-radius-sm: var(--radius-4);
 
   /* === STATE (OVERLAYS) === */
   --state-on-light-hover: rgba(0, 0, 0, 0.04);
   --state-on-light-active: rgba(0, 0, 0, 0.08);
   --state-on-dark-hover: rgba(255, 255, 255, 0.04);
   --state-on-dark-active: rgba(255, 255, 255, 0.08);
+  --state-surface-hover: var(--state-on-light-hover);
+  --state-surface-active: var(--state-on-light-active);
   --state-focus: var(--iris-9);
+  --state-selected: var(--text-accent);
   --text-disabled: var(--gray-7);
   --bg-disabled: var(--gray-3);
   --border-disabled: var(--gray-4);
 
+  /* === ACCENT ROLES === */
+  --accent-primary: var(--iris-9);
+  --accent-primary-strong: var(--iris-11);
+  --accent-secondary: var(--iris-4);
+  --accent-secondary-strong: var(--iris-8);
+
   /* === BRAND === */
-  --brand-primary: var(--iris-9);
+  --brand-primary: var(--accent-primary);
   --brand-on-primary: var(--white);
   --brand-container: var(--iris-3);
   --brand-on-container: var(--iris-11);
+
+  /* === COMPONENT ROLES === */
+  --component-nav-cta-bg: var(--text-default);
+  --component-nav-cta-text: var(--bg-page);
+  --component-toc-active-indicator: var(--brand-primary);
+  --component-section-headline-bg: var(--bg-section-headline);
 
   /* === STATUS === */
   --status-error-bg: var(--red-8);
@@ -78,6 +98,7 @@
   --display-weight:      400;
   --heading-weight:      var(--sans-weight-bold);
   --heading-tracking:    var(--tracking-normal);
+  --headline-tracking:   var(--tracking-normal);
   --type-scale-display:  1;
   --display-tracking:    -0.035em;
 

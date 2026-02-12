@@ -53,7 +53,7 @@
                 {{ readFile "static/img/svg/contact.svg" | safeHTML }}
               </span>
               <svg class="icon icon--sm top-menu__icon top-menu__icon--profile" data-focus-icon="contact-profile">
-                <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-profile-male"></use>
+                <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-profile-male"></use>
               </svg>
             </span>
           </a>
@@ -62,10 +62,11 @@
     </nav>
   </div>
   {{ $jsProgress := resources.Get "js/progressbar.js" }}
-  {{ if eq hugo.Environment "development" }}
-    <script src="{{ $jsProgress.Permalink }}"></script>
+  {{ $isDevBuild := or hugo.IsServer (eq hugo.Environment "development") }}
+  {{ if $isDevBuild }}
+    <script src="{{ $jsProgress.RelPermalink }}"></script>
   {{ else }}
     {{ $jsProgressMin := $jsProgress | minify | fingerprint }}
-    <script src="{{ $jsProgressMin.Permalink }}"></script>
+    <script src="{{ $jsProgressMin.RelPermalink }}"></script>
   {{ end }}
 </header>

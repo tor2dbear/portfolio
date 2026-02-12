@@ -280,7 +280,7 @@ h4,
 h1,
 .type-headline-1 {
   font-size: calc(clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl)) * var(--type-scale-display));
-  letter-spacing: var(--display-tracking);
+  letter-spacing: var(--headline-tracking);
   text-wrap: balance;
 }
 
@@ -290,7 +290,7 @@ h2,
   font-size: clamp(var(--text-6xl),
       calc(1.75rem + 0.625vw),
       var(--text-10xl));
-  letter-spacing: var(--display-tracking);
+  letter-spacing: var(--headline-tracking);
   text-wrap: balance;
 }
 
@@ -484,7 +484,7 @@ figcaption {
 
 .section-headline {
   padding: 0.25rem 0.75rem;
-  background-color: var(--bg-section-headline);
+  background-color: var(--component-section-headline-bg);
   color: var(--brand-on-primary);
   display: inline-block;
 }
@@ -539,7 +539,7 @@ body a:active {
   color: var(--text-link-hover);
 }
 
-a:visited:not(.button):not(.top-menu__link--button):not(.tag):not(.tag-list__link):not(.post-meta__link--tag),
+a:visited:not(.button):not(.top-menu__link--button):not(.tag):not(.tag-list__link):not(.post-meta__link--tag):not([data-toc-link]),
 a.menu-heading:hover {
   text-decoration: none;
   color: var(--text-default);

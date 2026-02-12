@@ -1,0 +1,22 @@
+# Theme spec: Standard
+
+[meta]
+name = "standard"
+
+[roles]
+text = "gray"
+surface = "iris"
+primary = "iris"
+secondary = "iris"
+
+[policies]
+tone_mode = "mono"
+surface_profile = "standard"
+form_policy = "neutral"
+image_treatment = "none"
+
+[overrides]
+# Standard is the canonical baseline and should require no token overrides.
+
+[component_overrides]
+# None

@@ -1,5 +1,9 @@
 {{- $translations := .Translations -}}
 {{- $languageCount := add (len $translations) 1 -}}
+{{- $translationsByLang := dict -}}
+{{- range $translations -}}
+  {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+{{- end -}}
 
 <div class="settings-dropdown">
   <button
@@ -11,7 +15,7 @@
   >
     <span class="settings-icon" aria-hidden="true">
       <svg class="icon" aria-hidden="true">
-        <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-settings"></use>
+        <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-settings"></use>
       </svg>
     </span>
   </button>
@@ -29,9 +33,10 @@
           aria-label="{{ i18n "light_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-light"></use>
+            <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-light"></use>
           </svg>
           <span>{{ i18n "light_mode" }}</span>
+          <span class="toggle-switch__shortcut" data-shortcut="T L">T L</span>
         </button>
 
         <button
@@ -41,9 +46,10 @@
           aria-label="{{ i18n "dark_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-dark"></use>
+            <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-dark"></use>
           </svg>
           <span>{{ i18n "dark_mode" }}</span>
+          <span class="toggle-switch__shortcut" data-shortcut="T D">T D</span>
         </button>
 
         <button
@@ -53,9 +59,10 @@
           aria-label="{{ i18n "system_mode" }}"
         >
           <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-            <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-system"></use>
+            <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-system"></use>
           </svg>
           <span>{{ i18n "system_mode" }}</span>
+          <span class="toggle-switch__shortcut" data-shortcut="T S">T S</span>
         </button>
       </div>
     </div>
@@ -63,7 +70,10 @@
     <div class="theme-divider"></div>
 
     <div class="theme-section">
-      <h3 class="theme-section-title">{{ i18n "palette" }}</h3>
+      <div class="theme-section-heading">
+        <h3 class="theme-section-title">{{ i18n "palette" }}</h3>
+        <span class="toggle-switch__shortcut" data-shortcut="P 1-5">P 1-5</span>
+      </div>
       <div class="theme-options theme-options--palette">
         <button
           class="theme-option theme-option--palette"
@@ -100,6 +110,7 @@
           <span class="palette-preview palette-preview--mesa">
             <span class="palette-preview-segment"></span>
             <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
           </span>
           <span class="palette-label">Mesa</span>
         </button>
@@ -108,13 +119,29 @@
           class="theme-option theme-option--palette"
           data-palette="pantone"
           data-js="palette-option"
-          aria-label="Pantone"
+          aria-label="{{ i18n "palette_pantone" }}"
         >
           <span class="palette-preview palette-preview--pantone">
             <span class="palette-preview-segment"></span>
             <span class="palette-preview-segment"></span>
           </span>
-          <span class="palette-label">Pantone</span>
+          <span class="palette-label">{{ i18n "palette_pantone" }}</span>
+        </button>
+
+        <button
+          class="theme-option theme-option--palette"
+          data-palette="custom"
+          data-js="palette-option"
+          data-role="palette-custom-option"
+          aria-label="{{ i18n "palette_custom" }}"
+          hidden
+        >
+          <span class="palette-preview palette-preview--custom">
+            <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
+          </span>
+          <span class="palette-label">{{ i18n "palette_custom" }}</span>
         </button>
 
       </div>
@@ -123,7 +150,10 @@
     <div class="theme-divider"></div>
 
     <div class="theme-section">
-      <h3 class="theme-section-title">{{ i18n "typography" }}</h3>
+      <div class="theme-section-heading">
+        <h3 class="theme-section-title">{{ i18n "typography" }}</h3>
+        <span class="toggle-switch__shortcut" data-shortcut="F 1-4">F 1-4</span>
+      </div>
       <div class="theme-options theme-options--typography">
         <button
           class="theme-option theme-option--typography"
@@ -184,6 +214,9 @@
       <button
         class="toggle-switch"
         data-js="grid-toggle"
+        data-toast-title="{{ i18n "toast_grid_title" }}"
+        data-toast-on="{{ i18n "toast_grid_on" }}"
+        data-toast-off="{{ i18n "toast_grid_off" }}"
         role="switch"
         aria-pressed="false"
         aria-label="Toggle grid overlay"
@@ -192,7 +225,7 @@
           <span class="toggle-switch__thumb"></span>
         </span>
         <span class="toggle-switch__label">Show grid</span>
-        <span class="toggle-switch__shortcut">Ctrl+G</span>
+        <span class="toggle-switch__shortcut" data-shortcut="G">G</span>
       </button>
     </div>
 
@@ -200,40 +233,63 @@
     <div class="theme-divider"></div>
 
     <div class="theme-section">
-      <h3 class="theme-section-title">{{ i18n "lang_select_title" }}</h3>
-      <div class="language-list">
-        {{- range .Translations -}}
-          <a
-            href="{{ .RelPermalink }}"
-            class="language-option"
-            lang="{{ .Language.Lang }}"
-            hreflang="{{ .Language.Lang }}"
-          >
-            <span class="language-radio" aria-hidden="true"></span>
-            <span class="language-name">{{ .Language.LanguageName }}</span>
-          </a>
-        {{- end -}}
-
-        <span class="language-option language-option--current" aria-current="true">
-          <span class="language-radio" aria-hidden="true"></span>
-          <span class="language-name">{{ .Language.LanguageName }}</span>
-        </span>
-
-        {{- if eq (len $translations) 0 -}}
-          {{- range $.Site.Languages -}}
-            {{- if ne .Lang $.Language.Lang -}}
-              <a
-                href="{{ "/" | relLangURL . }}"
-                class="language-option language-option--fallback"
-                lang="{{ .Lang }}"
-                hreflang="{{ .Lang }}"
-                title="{{ i18n "also_on_homepage" }}"
+      <div class="theme-section-heading">
+        <h3 class="theme-section-title">{{ i18n "lang_select_title" }}</h3>
+      </div>
+      <div class="language-list" role="radiogroup" aria-label="{{ i18n "lang_select_title" }}">
+        {{- range $.Site.Languages -}}
+          {{- $isCurrent := eq .Lang $.Language.Lang -}}
+          {{- $target := index $translationsByLang .Lang -}}
+          {{- if $isCurrent -}}
+            <label class="language-option radio language-option--current" lang="{{ .Lang }}">
+              <input
+                type="radio"
+                name="language-selector-settings"
+                value="{{ .Lang }}"
+                data-language-code="{{ .Lang }}"
+                data-language-name="{{ .LanguageName }}"
+                checked
+                aria-current="true"
               >
-                <span class="language-radio" aria-hidden="true"></span>
-                <span class="language-name">{{ .LanguageName }}</span>
-                <span class="fallback-indicator">{{ i18n "to_homepage" }}</span>
-              </a>
-            {{- end -}}
+              <span class="radio__visual" aria-hidden="true"></span>
+              <span class="radio__label language-name">{{ .LanguageName }}</span>
+              {{- if eq .Lang "en" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L E">L E</span>{{- end -}}
+              {{- if eq .Lang "sv" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L S">L S</span>{{- end -}}
+            </label>
+          {{- else if $target -}}
+            <label class="language-option radio" lang="{{ .Lang }}" data-language-href="{{ $target.RelPermalink }}">
+              <input
+                type="radio"
+                name="language-selector-settings"
+                value="{{ .Lang }}"
+                data-language-code="{{ .Lang }}"
+                data-language-name="{{ .LanguageName }}"
+                data-language-href="{{ $target.RelPermalink }}"
+              >
+              <span class="radio__visual" aria-hidden="true"></span>
+              <span class="radio__label language-name">{{ .LanguageName }}</span>
+              {{- if eq .Lang "en" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L E">L E</span>{{- end -}}
+              {{- if eq .Lang "sv" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L S">L S</span>{{- end -}}
+            </label>
+          {{- else -}}
+            <label
+              class="language-option radio language-option--fallback"
+              lang="{{ .Lang }}"
+              title="{{ i18n "also_on_homepage" }}"
+              data-language-href="{{ "/" | relLangURL . }}"
+            >
+              <input
+                type="radio"
+                name="language-selector-settings"
+                value="{{ .Lang }}"
+                data-language-code="{{ .Lang }}"
+                data-language-name="{{ .LanguageName }}"
+                data-language-href="{{ "/" | relLangURL . }}"
+              >
+              <span class="radio__visual" aria-hidden="true"></span>
+              <span class="radio__label language-name">{{ .LanguageName }}</span>
+              <span class="fallback-indicator">{{ i18n "to_homepage" }}</span>
+            </label>
           {{- end -}}
         {{- end -}}
       </div>

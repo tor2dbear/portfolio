@@ -1,0 +1,39 @@
+/* ==========================================================================
+   Chord HUD
+   ========================================================================== */
+
+.chord-hud {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--spacing-24) + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 1100;
+  padding: var(--spacing-8) var(--spacing-12);
+  border-radius: var(--radius-8);
+  border: 1px solid var(--border-default);
+  background: color-mix(in srgb, var(--bg-page) 92%, transparent);
+  color: var(--text-default);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-normal);
+  box-shadow: var(--shadow-01);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.chord-hud__keys {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.chord-hud .shortcut-key {
+  height: calc(var(--spacing-8) + var(--spacing-8));
+  padding: 0 var(--spacing-4);
+}
+
+.chord-hud[hidden] {
+  display: none;
+}

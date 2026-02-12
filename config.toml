@@ -2,7 +2,7 @@ baseurl = "https://www.tor-bjorn.com/"
 languageCode = "en-us"
 title = "Torbjörn Hedberg · Multidisciplinary Designer"
 author = "Torbjörn Hedberg"
-canonifyurls = true
+canonifyurls = false
 relativeURLs = false
 preserveTaxonomyNames = true
 
@@ -67,7 +67,7 @@ DefaultContentLanguage = "en"
       name = "Works"
       weight = 2
       identifier = "works"
-      url = "/#works"
+      url = "/works/tags/"
     [[languages.en.menu.top]]
       name = "About me"
       weight = 3
@@ -101,7 +101,7 @@ DefaultContentLanguage = "en"
       name = "Arbeten"
       weight = 2
       identifier = "works"
-      url = "/#works"
+      url = "/sv/arbeten/tags/"
     [[languages.sv.menu.top]]
       name = "Om mig"
       weight = 3

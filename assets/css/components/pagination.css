@@ -30,7 +30,7 @@
 }
 
 .pagination__link:hover {
-  background-color: var(--state-on-light-hover);
+  background-color: var(--state-surface-hover);
 }
 
 .pagination__link:focus-visible {

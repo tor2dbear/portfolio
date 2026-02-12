@@ -1,0 +1,63 @@
+# Theme baseline recipe
+#
+# Purpose:
+# - Defines default contrast steps per semantic role.
+# - Theme files map color families to these roles.
+# - Optional per-theme overrides can adjust any generated token.
+#
+# Notes:
+# - Used by the live palette generator (`assets/js/palette-generator.js`).
+# - Defines baseline role math; themes may still override tokens directly in CSS.
+
+[meta]
+version = 1
+description = "Baseline role recipe for palette generation"
+
+[roles.text]
+default_step = 12
+inverse_token = "white"
+link_source = "primary.strong"
+link_hover_source = "primary.hover"
+accent_source = "primary.strong"
+
+[roles.surface]
+page_step = 1
+surface_step = 2
+muted_text_step = 10
+tag_step = 3
+tag_hover_step = 4
+tag_text_step = 11
+surface_ink_strong_step = 11
+nav_source = "brand-primary"
+border_subtle_source = "gray-4"
+
+[roles.primary]
+base_step = 9
+strong_step = 11
+hover_step = 12
+on_token = "white"
+
+[roles.secondary]
+base_step = 4
+strong_step = 8
+
+[roles.state]
+# These are not scale-based; they are semantic aliases.
+selected_source = "text.accent"
+focus_source = "primary.base"
+
+[roles.component.form]
+bg_source = "gray-2"
+placeholder_source = "gray-10"
+
+[roles.component.newsletter]
+bg_step = 12
+text_step = 2
+illustration_bg_step = 3
+button_bg_step = 4
+button_text_step = 11
+button_text_role = "primary"
+
+[roles.component.nav_cta]
+bg_source = "text.default"
+text_source = "surface.page"

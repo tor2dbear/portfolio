@@ -10,12 +10,18 @@
   --image-blend-mode: normal;
   --image-background: transparent;
 
-  /* Primary green color mapping */
-  --text-accent: var(--green-11);
-  --brand-primary: var(--green-9);
+  /* Accent roles (single-family) */
+  --accent-primary: var(--green-9);
+  --accent-primary-strong: var(--green-11);
+  --accent-secondary: var(--green-4);
+  --accent-secondary-strong: var(--green-8);
+
+  --text-accent: var(--accent-primary-strong);
+  --brand-primary: var(--accent-primary);
 
   --text-default: var(--green-12);
-  --text-muted: var(--green-10);
+  --text-tag: var(--green-11);
+  --surface-ink-strong: var(--green-11);
   --text-nav: var(--green-12);
   --text-link-hover: var(--green-11);
 
@@ -28,7 +34,7 @@
   --border-subtle: var(--green-5);
 
   --component-form-bg: var(--green-3);
-  --component-form-placeholder: var(--green-4);
+  --component-form-placeholder: var(--text-muted);
 
   --component-newsletter-bg: var(--green-12);
   --component-newsletter-text: var(--green-2);

@@ -38,6 +38,11 @@
   border-color: var(--border-subtle);
 }
 
+/* Keep header above page content while grid is active. */
+html[data-grid-overlay] .top-menu {
+  z-index: 800;
+}
+
 /* ==========================================================================
    Navigation Lists
    ========================================================================== */
@@ -69,8 +74,8 @@
   gap: var(--spacing-8);
   padding: var(--spacing-8) var(--spacing-12);
   min-height: var(--size-40);
-  background: var(--text-default);
-  color: var(--bg-page);
+  background: var(--component-nav-cta-bg);
+  color: var(--component-nav-cta-text);
   text-decoration: none;
   border: 0;
   border-radius: var(--spacing-8);
@@ -96,7 +101,7 @@
 
 .top-menu__item--contact .top-menu__link--button:hover,
 .top-menu__item--contact .top-menu__link--button:focus-visible {
-  background: color-mix(in srgb, var(--text-default) 85%, var(--bg-page));
+  background: color-mix(in srgb, var(--component-nav-cta-bg) 85%, var(--bg-page));
 }
 
 /* ==========================================================================
@@ -116,7 +121,7 @@
 
 .top-menu__item--nav .top-menu__link:hover,
 .top-menu__item--nav .top-menu__link:focus-visible {
-  background: var(--state-on-light-hover);
+  background: var(--state-surface-hover);
 }
 
 .top-menu__item--nav .top-menu__link.active {

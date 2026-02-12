@@ -1,5 +1,9 @@
 {{- $translations := .Translations -}}
 {{- if gt (len $translations) 0 -}}
+{{- $translationsByLang := dict -}}
+{{- range $translations -}}
+  {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+{{- end -}}
 <div class="language-dropdown">
   <button
     class="language-toggle"
@@ -9,31 +13,38 @@
   >
     <div class="language-icon">
       <svg width="20" height="20" aria-hidden="true">
-        <use href="{{ "/img/svg/sprite.svg" | relURL }}#icon-language"></use>
+        <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-language"></use>
       </svg>
     </div>
   </button>
 
   <div class="language-panel" hidden>
-    <div class="language-list">
-      {{- range .Translations -}}
-        <a
-          href="{{ .RelPermalink }}"
-          class="language-option"
-          lang="{{ .Language.Lang }}"
-          hreflang="{{ .Language.Lang }}"
-        >
-          <span class="language-radio" aria-hidden="true"></span>
-          <span class="language-name">{{ .Language.LanguageName }}</span>
-        </a>
+    <div class="language-list" role="radiogroup" aria-label="{{ i18n "lang_select_title" }}">
+      {{- range $.Site.Languages -}}
+        {{- $isCurrent := eq .Lang $.Language.Lang -}}
+        {{- $target := index $translationsByLang .Lang -}}
+        {{- if or $isCurrent $target -}}
+          <label
+            class="language-option radio{{ if $isCurrent }} language-option--current{{ end }}"
+            lang="{{ .Lang }}"
+            {{- if not $isCurrent }} data-language-href="{{ $target.RelPermalink }}"{{ end -}}
+          >
+            <input
+              type="radio"
+              name="language-selector-desktop"
+              value="{{ .Lang }}"
+              data-language-code="{{ .Lang }}"
+              data-language-name="{{ .LanguageName }}"
+              {{- if not $isCurrent }} data-language-href="{{ $target.RelPermalink }}"{{ end -}}
+              {{- if $isCurrent }} checked aria-current="true"{{ end -}}
+            >
+            <span class="radio__visual" aria-hidden="true"></span>
+            <span class="radio__label language-name">{{ .LanguageName }}</span>
+            {{- if eq .Lang "en" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L E">L E</span>{{- end -}}
+            {{- if eq .Lang "sv" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L S">L S</span>{{- end -}}
+          </label>
+        {{- end -}}
       {{- end -}}
-
-      {{- /* Current language (shown but not clickable) */ -}}
-      <span class="language-option language-option--current" aria-current="true">
-        <span class="language-radio" aria-hidden="true"></span>
-        <span class="language-name">{{ .Language.LanguageName }}</span>
-      </span>
-
     </div>
   </div>
   <div class="language-overlay" hidden></div>

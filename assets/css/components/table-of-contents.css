@@ -83,7 +83,7 @@
 }
 
 .toc__item a.is-active::before {
-  background-color: var(--brand-primary);
+  background-color: var(--component-toc-active-indicator);
 }
 
 .toc__item a:focus {

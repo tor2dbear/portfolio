@@ -314,7 +314,22 @@ other = "Forest"
 other = "Mesa"
 
 [palette_pantone]
-other = "Pantone"
+other = "PANTONE 11-4201"
+
+[palette_custom]
+other = "Custom palette"
+
+[toast_palette_saved]
+other = "Palett sparad"
+
+[toast_grid_title]
+other = "Grid"
+
+[toast_grid_on]
+other = "På"
+
+[toast_grid_off]
+other = "Av"
 
 [no_posts_yet]
 other = "Inga inlägg ännu. Kom tillbaka snart!"
@@ -333,6 +348,9 @@ other = "Texter"
 
 [ui_library]
 other = "UI-bibliotek"
+
+[palette_generator]
+other = "Palettgenerator"
 
 [all_posts]
 other = "Alla inlägg"
