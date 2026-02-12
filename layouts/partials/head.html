@@ -367,6 +367,7 @@
   </style>
 
   {{ $isDevBuild := or hugo.IsServer (eq hugo.Environment "development") }}
+  {{ $isPaletteGeneratorPage := eq .Type "palette-generator" }}
 
   <!-- CSS loading -->
   {{ if $isDevBuild }}
@@ -418,7 +419,9 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_chord_hud.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $pages_palette_generator.RelPermalink }}" />
+    {{ if $isPaletteGeneratorPage }}
+      <link rel="stylesheet" type="text/css" href="{{ $pages_palette_generator.RelPermalink }}" />
+    {{ end }}
     {{ with $pages_contact }}
       <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
     {{ end }}
@@ -430,7 +433,10 @@
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
-    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $pages_home $pages_ui_library $pages_palette_generator }}
+    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $pages_home $pages_ui_library }}
+    {{ if $isPaletteGeneratorPage }}
+      {{ $css = $css | append $pages_palette_generator }}
+    {{ end }}
     {{ with $pages_contact }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -525,10 +531,16 @@
     <script src="{{ $js15.RelPermalink }}" defer></script>
     <script src="{{ $js16.RelPermalink }}" defer></script>
     <script src="{{ $js17.RelPermalink }}" defer></script>
-    <script src="{{ $js18.RelPermalink }}" defer></script>
+    {{ if $isPaletteGeneratorPage }}
+      <script src="{{ $js18.RelPermalink }}" defer></script>
+    {{ end }}
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 }}
+    {{ if $isPaletteGeneratorPage }}
+      {{ $js = $js | append $js18 }}
+    {{ end }}
+    {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
   {{ end }}
 
