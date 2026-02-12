@@ -276,50 +276,39 @@
       ctx.text.link_hover = ctx.primary.hover;
 
       clearTokens();
+      const getDerivedToken = name => (derivedPalette && derivedPalette[name]) || '';
+      const setDerivedToken = (name, fallbackValue) => {
+        setToken(name, getDerivedToken(name) || fallbackValue);
+      };
 
-      setToken('--accent-primary', (derivedPalette && derivedPalette['--accent-primary']) || ctx.primary.base);
-      setToken('--accent-primary-strong', (derivedPalette && derivedPalette['--accent-primary-strong']) || ctx.primary.strong);
-      setToken('--accent-secondary', (derivedPalette && derivedPalette['--accent-secondary']) || ctx.secondary.base);
-      setToken('--accent-secondary-strong', (derivedPalette && derivedPalette['--accent-secondary-strong']) || ctx.secondary.strong);
+      setDerivedToken('--accent-primary', ctx.primary.base);
+      setDerivedToken('--accent-primary-strong', ctx.primary.strong);
+      setDerivedToken('--accent-secondary', ctx.secondary.base);
+      setDerivedToken('--accent-secondary-strong', ctx.secondary.strong);
 
-      setToken('--brand-primary', (derivedPalette && derivedPalette['--brand-primary']) || ctx.primary.base);
-      setToken('--text-accent', (derivedPalette && derivedPalette['--text-accent']) || resolveSource(textSteps.accent_source, ctx));
-      setToken(
-        '--component-toc-active-indicator',
-        (derivedPalette && derivedPalette['--component-toc-active-indicator']) || ctx.primary.base
-      );
-      setToken(
-        '--component-section-headline-bg',
-        (derivedPalette && derivedPalette['--component-section-headline-bg']) || ctx.primary.base
-      );
+      setDerivedToken('--brand-primary', ctx.primary.base);
+      setDerivedToken('--text-accent', resolveSource(textSteps.accent_source, ctx));
+      setDerivedToken('--component-toc-active-indicator', ctx.primary.base);
+      setDerivedToken('--component-section-headline-bg', ctx.primary.base);
 
-      setToken('--text-default', (derivedPalette && derivedPalette['--text-default']) || ctx.text.default);
-      setToken(
-        '--text-tag',
-        (derivedPalette && derivedPalette['--text-tag']) || scaleVar(effectiveRoles.surface, surfaceSteps.tag_text_step || 11)
-      );
-      setToken(
-        '--surface-ink-strong',
-        (derivedPalette && derivedPalette['--surface-ink-strong']) || scaleVar(effectiveRoles.surface, surfaceSteps.surface_ink_strong_step || surfaceSteps.tag_text_step || 11)
-      );
-      setToken(
-        '--text-muted',
-        (derivedPalette && derivedPalette['--text-muted']) || ctx.text.muted
-      );
-      setToken('--text-link', (derivedPalette && derivedPalette['--text-link']) || ctx.text.link);
-      setToken('--text-link-hover', (derivedPalette && derivedPalette['--text-link-hover']) || ctx.text.link_hover);
-      setToken('--text-inverse', (derivedPalette && derivedPalette['--text-inverse']) || ctx.text.inverse);
-      setToken('--text-nav', (derivedPalette && derivedPalette['--text-nav']) || ctx.text.default);
+      setDerivedToken('--text-default', ctx.text.default);
+      setDerivedToken('--text-tag', scaleVar(effectiveRoles.surface, surfaceSteps.tag_text_step || 11));
+      setDerivedToken('--surface-ink-strong', scaleVar(effectiveRoles.surface, surfaceSteps.surface_ink_strong_step || surfaceSteps.tag_text_step || 11));
+      setDerivedToken('--text-muted', ctx.text.muted);
+      setDerivedToken('--text-link', ctx.text.link);
+      setDerivedToken('--text-link-hover', ctx.text.link_hover);
+      setDerivedToken('--text-inverse', ctx.text.inverse);
+      setDerivedToken('--text-nav', ctx.text.default);
 
-      setToken('--bg-page', (derivedPalette && derivedPalette['--bg-page']) || ctx.surface.page);
-      setToken('--bg-surface', (derivedPalette && derivedPalette['--bg-surface']) || ctx.surface.surface);
-      setToken('--bg-tag', (derivedPalette && derivedPalette['--bg-tag']) || ctx.surface.tag);
-      setToken('--bg-tag-hover', (derivedPalette && derivedPalette['--bg-tag-hover']) || ctx.surface.tag_hover);
-      setToken('--bg-nav', (derivedPalette && derivedPalette['--bg-nav']) || ctx.surface.nav);
-      setToken('--border-subtle', (derivedPalette && derivedPalette['--border-subtle']) || ctx.surface.border_subtle);
+      setDerivedToken('--bg-page', ctx.surface.page);
+      setDerivedToken('--bg-surface', ctx.surface.surface);
+      setDerivedToken('--bg-tag', ctx.surface.tag);
+      setDerivedToken('--bg-tag-hover', ctx.surface.tag_hover);
+      setDerivedToken('--bg-nav', ctx.surface.nav);
+      setDerivedToken('--border-subtle', ctx.surface.border_subtle);
 
-      setToken('--state-focus', (derivedPalette && derivedPalette['--state-focus']) || resolveSource(baseline.roles.state.focus_source, ctx));
-      setToken('--state-selected', (derivedPalette && derivedPalette['--state-selected']) || resolveSource(baseline.roles.state.selected_source, ctx));
+      setDerivedToken('--state-focus', resolveSource(baseline.roles.state.focus_source, ctx));
+      setDerivedToken('--state-selected', resolveSource(baseline.roles.state.selected_source, ctx));
 
       if (imageTreatment === 'pantone-blend') {
         setToken('--image-grayscale', '100%');
@@ -339,14 +328,8 @@
       let navCtaTextSource = baseline.roles.component.nav_cta.text_source;
       navCtaBgSource = componentOverrides.nav_cta_bg_source || navCtaBgSource;
       navCtaTextSource = componentOverrides.nav_cta_text_source || navCtaTextSource;
-      setToken(
-        '--component-nav-cta-bg',
-        (derivedPalette && derivedPalette['--component-nav-cta-bg']) || resolveSource(navCtaBgSource, ctx)
-      );
-      setToken(
-        '--component-nav-cta-text',
-        (derivedPalette && derivedPalette['--component-nav-cta-text']) || resolveSource(navCtaTextSource, ctx)
-      );
+      setDerivedToken('--component-nav-cta-bg', resolveSource(navCtaBgSource, ctx));
+      setDerivedToken('--component-nav-cta-text', resolveSource(navCtaTextSource, ctx));
 
       const form = baseline.roles.component.form;
       let formBg = form.bg_source ? resolveSource(form.bg_source, ctx) : scaleVar(effectiveRoles.surface, form.bg_step);
@@ -362,7 +345,7 @@
       if (formPolicy !== 'surface-derived' && derivedPalette && derivedPalette['--component-form-placeholder']) {
         formPlaceholder = derivedPalette['--component-form-placeholder'];
       }
-      setToken('--component-form-bg', (derivedPalette && derivedPalette['--component-form-bg']) || formBg);
+      setDerivedToken('--component-form-bg', formBg);
       setToken('--component-form-placeholder', formPlaceholder);
 
       const newsletter = baseline.roles.component.newsletter;
@@ -385,11 +368,11 @@
             newsletter.button_text_step
           );
 
-      setToken('--component-newsletter-bg', (derivedPalette && derivedPalette['--component-newsletter-bg']) || newsletterBg);
-      setToken('--component-newsletter-text', (derivedPalette && derivedPalette['--component-newsletter-text']) || newsletterText);
-      setToken('--component-newsletter-illustration-bg', (derivedPalette && derivedPalette['--component-newsletter-illustration-bg']) || newsletterIllustrationBg);
-      setToken('--component-newsletter-button-bg', (derivedPalette && derivedPalette['--component-newsletter-button-bg']) || newsletterButtonBg);
-      setToken('--component-newsletter-button-text', (derivedPalette && derivedPalette['--component-newsletter-button-text']) || newsletterButtonText);
+      setDerivedToken('--component-newsletter-bg', newsletterBg);
+      setDerivedToken('--component-newsletter-text', newsletterText);
+      setDerivedToken('--component-newsletter-illustration-bg', newsletterIllustrationBg);
+      setDerivedToken('--component-newsletter-button-bg', newsletterButtonBg);
+      setDerivedToken('--component-newsletter-button-text', newsletterButtonText);
 
       Object.keys(presetOverrides).forEach(key => {
         const tokenName = '--' + key.replace(/_/g, '-');
