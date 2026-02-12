@@ -62,10 +62,11 @@
     </nav>
   </div>
   {{ $jsProgress := resources.Get "js/progressbar.js" }}
-  {{ if eq hugo.Environment "development" }}
-    <script src="{{ $jsProgress.Permalink }}"></script>
+  {{ $isDevBuild := or hugo.IsServer (eq hugo.Environment "development") }}
+  {{ if $isDevBuild }}
+    <script src="{{ $jsProgress.RelPermalink }}"></script>
   {{ else }}
     {{ $jsProgressMin := $jsProgress | minify | fingerprint }}
-    <script src="{{ $jsProgressMin.Permalink }}"></script>
+    <script src="{{ $jsProgressMin.RelPermalink }}"></script>
   {{ end }}
 </header>

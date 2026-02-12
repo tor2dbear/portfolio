@@ -214,12 +214,34 @@
   background: var(--palette-forest-bg);
 }
 
-.palette-preview--mesa .palette-preview-segment:first-child {
-  background: var(--palette-mesa-accent);
+.palette-preview--mesa .palette-preview-segment:nth-child(1) {
+  background: var(--palette-mesa-primary);
+  flex: var(--palette-mesa-seg1);
 }
 
-.palette-preview--mesa .palette-preview-segment:last-child {
-  background: var(--palette-mesa-bg);
+.palette-preview--mesa .palette-preview-segment:nth-child(2) {
+  background: var(--palette-mesa-surface);
+  flex: var(--palette-mesa-seg2);
+}
+
+.palette-preview--mesa .palette-preview-segment:nth-child(3) {
+  background: var(--palette-mesa-secondary);
+  flex: var(--palette-mesa-seg3);
+}
+
+.palette-preview--custom .palette-preview-segment:first-child {
+  background: var(--palette-custom-primary);
+  flex: var(--palette-custom-seg1);
+}
+
+.palette-preview--custom .palette-preview-segment:nth-child(2) {
+  background: var(--palette-custom-surface);
+  flex: var(--palette-custom-seg2);
+}
+
+.palette-preview--custom .palette-preview-segment:nth-child(3) {
+  background: var(--palette-custom-secondary);
+  flex: var(--palette-custom-seg3);
 }
 
 

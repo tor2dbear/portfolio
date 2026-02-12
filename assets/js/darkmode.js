@@ -16,6 +16,8 @@
   let paletteOptions;
   let typographyOptions;
   let spriteBase = '';
+  const CUSTOM_PALETTE_KEY = 'theme-custom-palette';
+  let appliedCustomTokenNames = [];
 
   function getUseHref(use) {
     return use.getAttribute('href')
@@ -235,6 +237,11 @@
     updateThemeIcon(mode);
     updateThemeColorMeta();
     updateFooterModeLabel(mode);
+
+    // Recompute mode-sensitive runtime tokens for custom palettes
+    if ((document.documentElement.getAttribute('data-palette') || 'standard') === 'custom') {
+      applyStoredCustomPalette();
+    }
   }
 
   function updateModeUI(currentMode) {
@@ -255,9 +262,13 @@
   // ==========================================================================
 
   function setPalette(palette) {
+    if (palette === 'custom' && !hasCustomPalette()) return;
     localStorage.setItem('theme-palette', palette);
     applyPalette(palette);
     updatePaletteUI(palette);
+    window.dispatchEvent(new CustomEvent('theme:palette-changed', {
+      detail: { palette: palette }
+    }));
     closePanel();
     closeSettingsPanel();
 
@@ -269,6 +280,15 @@
   }
 
   function applyPalette(palette) {
+    if (palette === 'custom') {
+      if (!applyStoredCustomPalette()) {
+        clearAppliedCustomTokens();
+        palette = 'standard';
+        localStorage.setItem('theme-palette', palette);
+      }
+    } else {
+      clearAppliedCustomTokens();
+    }
     document.documentElement.setAttribute('data-palette', palette);
     updateFooterPaletteLabel(palette);
   }
@@ -284,6 +304,209 @@
         option.removeAttribute('aria-current');
       }
     });
+  }
+
+  function loadCustomPalette() {
+    try {
+      const raw = localStorage.getItem(CUSTOM_PALETTE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return null;
+      if (parsed.version >= 2) {
+        if (!parsed.roles || typeof parsed.roles !== 'object') return null;
+        return parsed;
+      }
+      if (!parsed.tokens || typeof parsed.tokens !== 'object') return null;
+      return parsed;
+    } catch (_err) {
+      return null;
+    }
+  }
+
+  function hasCustomPalette() {
+    return Boolean(loadCustomPalette());
+  }
+
+  function clearAppliedCustomTokens() {
+    appliedCustomTokenNames.forEach(name => {
+      document.documentElement.style.removeProperty(name);
+    });
+    appliedCustomTokenNames = [];
+  }
+
+  function setCustomRuntimeToken(name, value) {
+    document.documentElement.style.setProperty(name, value);
+    if (appliedCustomTokenNames.indexOf(name) === -1) {
+      appliedCustomTokenNames.push(name);
+    }
+  }
+
+  function applyCustomImageTreatment(custom) {
+    var treatment = (custom.policies && custom.policies.image_treatment) || 'none';
+    var isDark = (document.documentElement.getAttribute('data-mode') || 'light') === 'dark';
+    var surfaceFamily = custom.roles && custom.roles.surface;
+
+    if (treatment === 'pantone-blend') {
+      setCustomRuntimeToken('--image-grayscale', '100%');
+      setCustomRuntimeToken('--image-blend-mode', 'screen');
+      if (surfaceFamily) {
+        setCustomRuntimeToken('--image-background', 'var(--' + surfaceFamily + '-' + (isDark ? '7' : '12') + ')');
+      } else {
+        setCustomRuntimeToken('--image-background', isDark ? 'var(--gray-7)' : 'var(--gray-12)');
+      }
+      return;
+    }
+
+    setCustomRuntimeToken('--image-grayscale', '0%');
+    setCustomRuntimeToken('--image-blend-mode', 'normal');
+    setCustomRuntimeToken('--image-background', 'transparent');
+  }
+
+  function applyCustomDerivedTokens(custom) {
+    var derive = window.ThemeDerive && window.ThemeDerive.deriveRuntimeTokens;
+    if (typeof derive !== 'function') return;
+
+    var derived = derive({
+      roles: custom.roles || {},
+      policies: custom.policies || {}
+    });
+
+    Object.entries(derived).forEach(function(entry) {
+      var name = entry[0];
+      var value = entry[1];
+      setCustomRuntimeToken(name, value);
+    });
+  }
+
+  function normalizeOverrideTokenName(key) {
+    if (!key) return '';
+    if (key.indexOf('--') === 0) return key;
+    return '--' + key.replace(/_/g, '-');
+  }
+
+  function getCustomDerivedPaletteTokens(custom) {
+    var derive = window.ThemeDerive && window.ThemeDerive.derivePaletteTokens;
+    if (typeof derive !== 'function') return null;
+    if (!custom || !custom.roles) return null;
+    return derive({
+      roles: custom.roles,
+      policies: custom.policies || {},
+      component_overrides: custom.component_overrides || {}
+    });
+  }
+
+  function getCustomPreviewValues(custom) {
+    var preview = custom.preview || {};
+    var derived = getCustomDerivedPaletteTokens(custom) || {};
+    var tokens = custom.tokens || {};
+    var primary = preview.primary
+      || preview.accent
+      || derived['--accent-primary-strong']
+      || tokens['--accent-primary-strong']
+      || 'var(--gray-11)';
+    var surface = preview.surface
+      || preview.bg
+      || derived['--bg-page']
+      || tokens['--bg-page']
+      || 'var(--gray-2)';
+    var secondary = preview.secondary
+      || derived['--accent-secondary-strong']
+      || tokens['--accent-secondary-strong']
+      || primary;
+    var toneMode = preview.tone_mode
+      || (custom.policies && custom.policies.tone_mode)
+      || 'mono';
+
+    return {
+      primary: primary,
+      surface: surface,
+      secondary: secondary,
+      toneMode: toneMode
+    };
+  }
+
+  function applyStoredCustomPalette() {
+    const custom = loadCustomPalette();
+    if (!custom) return false;
+
+    clearAppliedCustomTokens();
+    if (custom.version >= 2) {
+      var derivedTokens = getCustomDerivedPaletteTokens(custom) || {};
+      Object.entries(derivedTokens).forEach(function(entry) {
+        var name = entry[0];
+        var value = entry[1];
+        setCustomRuntimeToken(name, String(value));
+      });
+
+      var overrides = custom.overrides || {};
+      Object.keys(overrides).forEach(function(key) {
+        var tokenName = normalizeOverrideTokenName(key);
+        var value = overrides[key];
+        if (!tokenName || typeof value === 'undefined' || value === null) return;
+        setCustomRuntimeToken(tokenName, String(value));
+      });
+    } else {
+      Object.entries(custom.tokens).forEach(([name, value]) => {
+        if (!name || typeof value === 'undefined' || value === null) return;
+        document.documentElement.style.setProperty(name, String(value));
+        appliedCustomTokenNames.push(name);
+      });
+    }
+
+    applyCustomDerivedTokens(custom);
+    applyCustomImageTreatment(custom);
+    const previewValues = getCustomPreviewValues(custom);
+    document.documentElement.style.setProperty('--palette-custom-accent', previewValues.primary);
+    document.documentElement.style.setProperty('--palette-custom-bg', previewValues.surface);
+    return true;
+  }
+
+  function syncCustomPaletteOptionVisibility() {
+    const custom = loadCustomPalette();
+    const customAvailable = Boolean(custom);
+    if (customAvailable) {
+      const previewValues = getCustomPreviewValues(custom);
+      const primary = previewValues.primary;
+      const surface = previewValues.surface;
+      const secondary = previewValues.secondary;
+      const toneMode = previewValues.toneMode;
+
+      document.documentElement.style.setProperty('--palette-custom-accent', primary);
+      document.documentElement.style.setProperty('--palette-custom-bg', surface);
+      document.documentElement.style.setProperty('--palette-custom-primary', primary);
+      document.documentElement.style.setProperty('--palette-custom-surface', surface);
+      document.documentElement.style.setProperty('--palette-custom-secondary', secondary);
+
+      if (toneMode === 'duo') {
+        document.documentElement.style.setProperty('--palette-custom-seg1', '1');
+        document.documentElement.style.setProperty('--palette-custom-seg2', '1');
+        document.documentElement.style.setProperty('--palette-custom-seg3', '1');
+      } else {
+        document.documentElement.style.setProperty('--palette-custom-seg1', '1');
+        document.documentElement.style.setProperty('--palette-custom-seg2', '1');
+        document.documentElement.style.setProperty('--palette-custom-seg3', '0');
+      }
+    }
+    const customOptions = document.querySelectorAll('[data-role="palette-custom-option"]');
+    customOptions.forEach(option => {
+      if (customAvailable) {
+        option.removeAttribute('hidden');
+      } else {
+        option.setAttribute('hidden', '');
+      }
+    });
+  }
+
+  function refreshCustomPaletteState() {
+    syncCustomPaletteOptionVisibility();
+    const current = document.documentElement.getAttribute('data-palette') || 'standard';
+    if (current === 'custom') {
+      if (!applyStoredCustomPalette()) {
+        setPalette('standard');
+        return;
+      }
+    }
+    updatePaletteUI(current);
   }
 
   // ==========================================================================
@@ -434,15 +657,20 @@
     const storedMode = localStorage.getItem('theme-mode') || 'system';
     const storedPalette = localStorage.getItem('theme-palette') || 'standard';
     const storedTypography = localStorage.getItem('theme-typography') || 'editorial';
+    const initialPalette = (storedPalette === 'custom' && !hasCustomPalette()) ? 'standard' : storedPalette;
+    if (initialPalette !== storedPalette) {
+      localStorage.setItem('theme-palette', initialPalette);
+    }
 
     // Apply stored preferences
     applyMode(storedMode);
-    applyPalette(storedPalette);
+    syncCustomPaletteOptionVisibility();
+    applyPalette(initialPalette);
     applyTypography(storedTypography);
 
     // Update UI to reflect current settings
     updateModeUI(storedMode);
-    updatePaletteUI(storedPalette);
+    updatePaletteUI(initialPalette);
     updateTypographyUI(storedTypography);
 
     window.ThemeActions = {
@@ -453,6 +681,7 @@
         const seen = new Set();
         const values = [];
         paletteOptions.forEach(option => {
+          if (option.hasAttribute('hidden')) return;
           const value = option.getAttribute('data-palette');
           if (value && !seen.has(value)) {
             seen.add(value);
@@ -472,8 +701,11 @@
           }
         });
         return values;
-      }
+      },
+      refreshCustomPalette: refreshCustomPaletteState
     };
+
+    window.addEventListener('theme:custom-palette-updated', refreshCustomPaletteState);
 
     // Setup event listeners
     if (themeToggle && themePanel) {

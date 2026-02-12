@@ -316,6 +316,12 @@ other = "Mesa"
 [palette_pantone]
 other = "PANTONE 11-4201"
 
+[palette_custom]
+other = "Custom palette"
+
+[toast_palette_saved]
+other = "Palette saved"
+
 [toast_grid_title]
 other = "Grid"
 
@@ -342,6 +348,9 @@ other = "Writing"
 
 [ui_library]
 other = "UI Library"
+
+[palette_generator]
+other = "Palette Generator"
 
 [all_posts]
 other = "All posts"

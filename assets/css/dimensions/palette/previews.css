@@ -12,8 +12,22 @@
   --palette-forest-accent: var(--green-11);
   --palette-mesa-bg: var(--amber-2);
   --palette-mesa-accent: var(--teal-11);
+  --palette-mesa-primary: var(--teal-11);
+  --palette-mesa-surface: var(--amber-2);
+  --palette-mesa-secondary: var(--amber-8);
+  --palette-mesa-seg1: 1;
+  --palette-mesa-seg2: 1;
+  --palette-mesa-seg3: 1;
   --palette-pantone-bg: var(--cloud-2);
   --palette-pantone-accent: var(--cloud-11);
+  --palette-custom-bg: var(--gray-2);
+  --palette-custom-accent: var(--gray-11);
+  --palette-custom-primary: var(--palette-custom-accent);
+  --palette-custom-surface: var(--palette-custom-bg);
+  --palette-custom-secondary: var(--palette-custom-bg);
+  --palette-custom-seg1: 1;
+  --palette-custom-seg2: 1;
+  --palette-custom-seg3: 0;
 }
 
 :root[data-mode="dark"] {
@@ -23,6 +37,20 @@
   --palette-forest-accent: var(--green-11);
   --palette-mesa-bg: var(--amber-2);
   --palette-mesa-accent: var(--teal-11);
+  --palette-mesa-primary: var(--teal-11);
+  --palette-mesa-surface: var(--amber-2);
+  --palette-mesa-secondary: var(--amber-8);
+  --palette-mesa-seg1: 1;
+  --palette-mesa-seg2: 1;
+  --palette-mesa-seg3: 1;
   --palette-pantone-bg: var(--cloud-2);
   --palette-pantone-accent: var(--cloud-11);
+  --palette-custom-bg: var(--gray-2);
+  --palette-custom-accent: var(--gray-11);
+  --palette-custom-primary: var(--palette-custom-accent);
+  --palette-custom-surface: var(--palette-custom-bg);
+  --palette-custom-secondary: var(--palette-custom-bg);
+  --palette-custom-seg1: 1;
+  --palette-custom-seg2: 1;
+  --palette-custom-seg3: 0;
 }

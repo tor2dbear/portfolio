@@ -15,6 +15,7 @@
           {{ end }}
           <li><a href="{{ printf "/%s/" (i18n "writing_url") | relLangURL }}">{{ i18n "writing" }}</a></li>
           <li><a href="{{ "/ui-library/" | relLangURL }}">{{ i18n "ui_library" }}</a></li>
+          <li><a href="{{ "/palette-generator/" | relLangURL }}">{{ i18n "palette_generator" }}</a></li>
         </ul>
       </nav>
 
@@ -126,6 +127,7 @@
             data-label-forest="{{ i18n "palette_forest" }}"
             data-label-mesa="{{ i18n "palette_mesa" }}"
             data-label-pantone="{{ i18n "palette_pantone" }}"
+            data-label-custom="{{ i18n "palette_custom" }}"
           >{{ i18n "palette_standard" }}</span>
         </li>
         <li class="footer-meta__item footer-meta__item--status">

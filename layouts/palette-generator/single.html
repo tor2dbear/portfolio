@@ -1,0 +1,85 @@
+{{ partial "header.html" . }}
+
+<div
+  class="content palette-generator use-subgrid"
+  data-js="palette-generator-root"
+  data-toast-palette-saved="{{ i18n "toast_palette_saved" }}"
+  data-palette-custom-label="{{ i18n "palette_custom" }}"
+>
+  <div class="palette-generator__header place-wide">
+    <h1 class="type-headline-1 mt-0 mb-8">{{ .Title }}</h1>
+    <p class="type-body-large mb-24">{{ .Description }}</p>
+  </div>
+
+  <section class="palette-generator__panel place-wide" aria-label="Palette generator">
+    <div class="palette-generator__row">
+      <label for="palette-preset" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Preset{{ else }}Preset{{ end }}</label>
+      <select id="palette-preset" data-js="palette-preset"></select>
+    </div>
+    <div class="palette-generator__row">
+      <label for="tone-mode" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Tone mode{{ else }}Tone mode{{ end }}</label>
+      <select id="tone-mode" data-js="tone-mode">
+        <option value="mono">{{ if eq .Language.Lang "sv" }}Monotone{{ else }}Monotone{{ end }}</option>
+        <option value="duo">{{ if eq .Language.Lang "sv" }}Duotone{{ else }}Duotone{{ end }}</option>
+      </select>
+    </div>
+    <div class="palette-generator__row">
+      <label for="policy-surface-profile" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Surface profile{{ else }}Surface profile{{ end }}</label>
+      <select id="policy-surface-profile" data-js="policy-surface-profile">
+        <option value="standard">{{ if eq .Language.Lang "sv" }}Standard{{ else }}Standard{{ end }}</option>
+        <option value="deep">{{ if eq .Language.Lang "sv" }}Deep{{ else }}Deep{{ end }}</option>
+      </select>
+    </div>
+    <div class="palette-generator__row">
+      <label for="policy-form-policy" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Form policy{{ else }}Form policy{{ end }}</label>
+      <select id="policy-form-policy" data-js="policy-form-policy">
+        <option value="neutral">{{ if eq .Language.Lang "sv" }}Neutral{{ else }}Neutral{{ end }}</option>
+        <option value="surface-derived">{{ if eq .Language.Lang "sv" }}Surface-derived{{ else }}Surface-derived{{ end }}</option>
+      </select>
+    </div>
+    <div class="palette-generator__row">
+      <label for="policy-image-treatment" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Image treatment{{ else }}Image treatment{{ end }}</label>
+      <select id="policy-image-treatment" data-js="policy-image-treatment">
+        <option value="none">{{ if eq .Language.Lang "sv" }}None{{ else }}None{{ end }}</option>
+        <option value="pantone-blend">{{ if eq .Language.Lang "sv" }}Pantone blend{{ else }}Pantone blend{{ end }}</option>
+      </select>
+    </div>
+    <div class="palette-generator__grid" data-js="roles-grid">
+      <div class="palette-generator__row">
+        <label for="role-text" class="palette-generator__label">Text</label>
+        <select id="role-text" data-role="text"></select>
+      </div>
+      <div class="palette-generator__row">
+        <label for="role-surface" class="palette-generator__label">Surface</label>
+        <select id="role-surface" data-role="surface"></select>
+      </div>
+      <div class="palette-generator__row">
+        <label for="role-primary" class="palette-generator__label">Primary</label>
+        <select id="role-primary" data-role="primary"></select>
+      </div>
+      <div class="palette-generator__row">
+        <label for="role-secondary" class="palette-generator__label">Secondary</label>
+        <select id="role-secondary" data-role="secondary"></select>
+      </div>
+    </div>
+
+    <div class="palette-generator__actions">
+      <button class="button button--secondary" type="button" data-js="palette-reset">{{ if eq .Language.Lang "sv" }}Återställ{{ else }}Reset{{ end }}</button>
+      <button class="button" type="button" data-js="palette-save">{{ if eq .Language.Lang "sv" }}Spara palette{{ else }}Save palette{{ end }}</button>
+      <button class="button button--primary" type="button" data-js="palette-copy">{{ if eq .Language.Lang "sv" }}Kopiera spec{{ else }}Copy spec{{ end }}</button>
+    </div>
+
+    <label class="palette-generator__label palette-generator__label--block">{{ if eq .Language.Lang "sv" }}Export (TOML){{ else }}Export (TOML){{ end }}</label>
+    <textarea id="palette-export" class="palette-generator__export" data-js="palette-export" rows="10" readonly></textarea>
+    <pre class="palette-generator__code"><code data-js="palette-export-code"></code></pre>
+
+    <p class="palette-generator__hint type-body-small mb-0">
+      {{ if eq .Language.Lang "sv" }}Ändringar appliceras live. Spara palette för att behålla den som Custom palette.{{ else }}Changes apply live. Save palette to persist as Custom palette.{{ end }}
+    </p>
+  </section>
+
+  <script type="application/json" data-js="palette-baseline-json">{{ index .Site.Data "theme-baseline" | jsonify | safeHTML }}</script>
+  <script type="application/json" data-js="palette-presets-json">{{ .Site.Data.themes | jsonify | safeHTML }}</script>
+</div>
+
+{{ partial "footer.html" . }}

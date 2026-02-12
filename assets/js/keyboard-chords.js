@@ -4,7 +4,7 @@
  * G
  * T + L/D/S
  * L + E/S
- * P + 1-4
+ * P + 1-5
  * F + 1-4
  */
 (function() {
@@ -79,7 +79,7 @@
 
     if (prefix === 'T') render('Theme +', ['L', 'D', 'S']);
     if (prefix === 'L') render('Language +', ['E', 'S']);
-    if (prefix === 'P') render('Palette +', ['1', '2', '3', '4']);
+    if (prefix === 'P') render('Palette +', ['1', '2', '3', '4', '5']);
     if (prefix === 'F') render('Typography +', ['1', '2', '3', '4']);
     hud.removeAttribute('hidden');
   }
@@ -174,7 +174,7 @@
     }
 
     if (prefixKey === 'P') {
-      if (key >= '1' && key <= '4') setPaletteByIndex(Number(key) - 1);
+      if (key >= '1' && key <= '5') setPaletteByIndex(Number(key) - 1);
       clearChord();
       return true;
     }

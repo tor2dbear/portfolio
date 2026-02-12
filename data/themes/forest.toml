@@ -1,0 +1,22 @@
+# Theme spec: Forest
+
+[meta]
+name = "forest"
+
+[roles]
+text = "green"
+surface = "green"
+primary = "green"
+secondary = "green"
+
+[policies]
+tone_mode = "mono"
+surface_profile = "deep"
+form_policy = "surface-derived"
+image_treatment = "none"
+
+[overrides]
+# None
+
+[component_overrides]
+# None

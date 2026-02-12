@@ -65,7 +65,7 @@
     <div class="theme-section">
       <div class="theme-section-heading">
         <h3 class="theme-section-title">{{ i18n "palette" }}</h3>
-        <span class="toggle-switch__shortcut" data-shortcut="P 1-4">P 1-4</span>
+        <span class="toggle-switch__shortcut" data-shortcut="P 1-5">P 1-5</span>
       </div>
       <div class="theme-options theme-options--palette">
         <button
@@ -103,6 +103,7 @@
           <span class="palette-preview palette-preview--mesa">
             <span class="palette-preview-segment"></span>
             <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
           </span>
           <span class="palette-label">Mesa</span>
         </button>
@@ -118,6 +119,22 @@
             <span class="palette-preview-segment"></span>
           </span>
           <span class="palette-label">{{ i18n "palette_pantone" }}</span>
+        </button>
+
+        <button
+          class="theme-option theme-option--palette"
+          data-palette="custom"
+          data-js="palette-option"
+          data-role="palette-custom-option"
+          aria-label="{{ i18n "palette_custom" }}"
+          hidden
+        >
+          <span class="palette-preview palette-preview--custom">
+            <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
+            <span class="palette-preview-segment"></span>
+          </span>
+          <span class="palette-label">{{ i18n "palette_custom" }}</span>
         </button>
 
       </div>

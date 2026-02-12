@@ -175,6 +175,7 @@
   {{ $pages_home := resources.Get "css/pages/home.css" }}
   {{ $pages_ui_library := resources.Get "css/pages/ui-library.css" }}
   {{ $pages_contact := resources.Get "css/pages/contact.css" }}
+  {{ $pages_palette_generator := resources.Get "css/pages/palette-generator.css" }}
 
   <!-- CSS main styles -->
   {{ $style := resources.Get "css/style.css" }}
@@ -365,8 +366,10 @@
     }
   </style>
 
+  {{ $isDevBuild := or hugo.IsServer (eq hugo.Environment "development") }}
+
   <!-- CSS loading -->
-  {{ if eq hugo.Environment "development" }}
+  {{ if $isDevBuild }}
     <!-- CSS development -->
     <link rel="stylesheet" type="text/css" href="{{ $base_reset.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $base_syntax.RelPermalink }}" />
@@ -415,6 +418,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_chord_hud.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $pages_palette_generator.RelPermalink }}" />
     {{ with $pages_contact }}
       <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
     {{ end }}
@@ -426,7 +430,7 @@
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
-    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $pages_home $pages_ui_library }}
+    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $pages_home $pages_ui_library $pages_palette_generator }}
     {{ with $pages_contact }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -435,7 +439,7 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ $css.Permalink }}"
+      href="{{ $css.RelPermalink }}"
       integrity="{{ $css.Data.Integrity }}"
       media="all"
     />
@@ -483,6 +487,7 @@
   {{ $js2 := resources.Get "js/header-line.js" }}
   {{ $js3 := resources.Get "js/header-hide.js" }}
   {{ $js_toast := resources.Get "js/toast.js" }}
+  {{ $js_theme_derive := resources.Get "js/theme-derive.js" | default (resources.FromString "js/theme-derive-fallback.js" "(function(){window.ThemeDerive=window.ThemeDerive||{};})();") }}
   {{ $js4 := resources.Get "js/darkmode.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
@@ -496,15 +501,17 @@
   {{ $js15 := resources.Get "js/brand-curl-random.js" }}
   {{ $js16 := resources.Get "js/grid-overlay.js" }}
   {{ $js17 := resources.Get "js/keyboard-chords.js" }}
+  {{ $js18 := resources.Get "js/palette-generator.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
-  {{ if eq hugo.Environment "development" }}
+  {{ if $isDevBuild }}
     <!-- JavaScript development -->
     <script src="{{ $js1.RelPermalink }}" defer></script>
     <script src="{{ $js2.RelPermalink }}" defer></script>
     <script src="{{ $js3.RelPermalink }}" defer></script>
     <script src="{{ $js_toast.RelPermalink }}" defer></script>
+    <script src="{{ $js_theme_derive.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
@@ -518,10 +525,11 @@
     <script src="{{ $js15.RelPermalink }}" defer></script>
     <script src="{{ $js16.RelPermalink }}" defer></script>
     <script src="{{ $js17.RelPermalink }}" defer></script>
+    <script src="{{ $js18.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 | resources.Concat "js.js" | minify | fingerprint }}
-    <script src="{{ $js.Permalink }}" defer></script>
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 | resources.Concat "js.js" | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" defer></script>
   {{ end }}
 
     {{ partial "schema.html" . }}

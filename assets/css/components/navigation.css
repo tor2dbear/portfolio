@@ -74,8 +74,8 @@ html[data-grid-overlay] .top-menu {
   gap: var(--spacing-8);
   padding: var(--spacing-8) var(--spacing-12);
   min-height: var(--size-40);
-  background: var(--text-default);
-  color: var(--bg-page);
+  background: var(--component-nav-cta-bg);
+  color: var(--component-nav-cta-text);
   text-decoration: none;
   border: 0;
   border-radius: var(--spacing-8);
@@ -101,7 +101,7 @@ html[data-grid-overlay] .top-menu {
 
 .top-menu__item--contact .top-menu__link--button:hover,
 .top-menu__item--contact .top-menu__link--button:focus-visible {
-  background: color-mix(in srgb, var(--text-default) 85%, var(--bg-page));
+  background: color-mix(in srgb, var(--component-nav-cta-bg) 85%, var(--bg-page));
 }
 
 /* ==========================================================================

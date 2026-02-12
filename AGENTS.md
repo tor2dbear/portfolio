@@ -391,7 +391,7 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/tokens/components.css` - Component exceptions
 - `assets/css/tokens/legacy.css` - Legacy aliases (deprecated)
 - `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
-- `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `pantone`)
+- `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `forest`, `mesa`, `pantone`)
 - `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
 - `assets/css/utilities/typography.css` - Typography utilities
 - `assets/css/utilities/layout.css` - Layout utilities
@@ -405,6 +405,7 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/components/settings-dropdown.css` - Combined settings dropdown (xs only)
 - `assets/css/pages/home.css` - Homepage styles
 - `assets/css/pages/ui-library.css` - UI library page styles
+- `assets/css/pages/palette-generator.css` - Internal palette generator page styles
 - `assets/css/style.css` - Remaining component styles
 - `assets/css/clientpage.css` - Client/employer page tweaks
 - `assets/css/print.css` - Print styles
@@ -424,6 +425,34 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - Canonical tokens are defined in `assets/css/tokens/semantic.css`.
 - Component exceptions live in `assets/css/tokens/components.css`.
 - Mode/palette overrides live in `assets/css/dimensions/mode/*` and `assets/css/dimensions/palette/*` and should only override canonical tokens.
+
+### Palette System (Role-Based)
+The project now uses a role-based palette model with a baseline recipe + per-palette specs.
+
+**Data files**:
+- `data/theme-baseline.toml` - Baseline role recipe (contrast steps + default sources).
+- `data/themes/*.toml` - Palette specs (`standard`, `forest`, `mesa`) with:
+  - `[roles]` (`text`, `surface`, `primary`, `secondary`)
+  - `[policies]` (`tone_mode`, `surface_profile`, `form_policy`, `image_treatment`)
+  - `[overrides]` optional token overrides
+  - `[component_overrides]` optional component exceptions
+
+**Runtime behavior**:
+- `assets/js/palette-generator.js` applies role/policy output to semantic CSS vars live in browser.
+- Theme menu palette selection updates both page theme and generator preset.
+- A saved custom palette is persisted in `localStorage` and exposed as `custom` in the palette menu.
+
+**Current role intent**:
+- `text`: readable typography/contrast
+- `surface`: page/surface/tag backgrounds and related muted tones
+- `primary`: interactive/accent actions
+- `secondary`: optional complementary accent (used mainly for duo-tone themes)
+- `text-muted`: derived globally via `color-mix` from neutral gray + `--surface-ink-strong` to reduce saturation noise while keeping palette character
+
+**Guidelines**:
+- Prefer role/policy changes over per-token overrides.
+- Keep component-specific overrides minimal and documented.
+- Keep `standard` as reference baseline when evaluating drift in other palettes.
 
 ### CSS Load Order (head.html)
 1. tokens (primitives → semantic → components → legacy)
@@ -543,6 +572,16 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - Add new dimensions by creating `assets/css/dimensions/<dimension>/*.css` and wiring in `layouts/partials/head.html`.
 - When adding a new palette, also add its preview tokens in `assets/css/dimensions/palette/previews.css` so the theme dropdown can show palette dots in both modes.
 
+### Theme Baseline Data (WIP)
+- Baseline role recipe lives in `data/theme-baseline.toml`.
+- Per-theme role mappings live in `data/themes/*.toml` (`standard`, `forest`, `mesa`, `pantone`).
+- This data model defines:
+  - role families (`text`, `surface`, `primary`, `secondary`)
+  - baseline contrast steps per role
+  - optional per-theme overrides
+  - optional component overrides for intentional exceptions
+- Current status: wired to `assets/js/palette-generator.js` for live browser previews and custom palette export/save.
+
 ---
 
 ## Naming Conventions
@@ -552,6 +591,9 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - Contrast scale order: `subtle` → `muted` → `default` → `strong`.
 - Avoid overloaded prefixes like `text-*` for font sizes. Use `font-*` for typography sizes.
 - Canonical tokens live in `assets/css/tokens/semantic.css`.
+- Accent roles are canonicalized as `--accent-primary`, `--accent-primary-strong`, `--accent-secondary`, and `--accent-secondary-strong`.
+- Keep compatibility aliases (`--brand-primary`, `--text-accent`) mapped to accent roles unless a migration explicitly removes them.
+- Use component-role tokens only for intentional exceptions (e.g. `--component-nav-cta-*`), not for general theming.
 - Legacy aliases live in `assets/css/tokens/legacy.css` and must include `/* deprecated */`.
 - Legacy aliases map one-to-one to canonical tokens; remove legacy only after confirming no references remain.
 - **State-layer tokens (state-*)** must be applied as overlays (e.g. `background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover))`) on top of existing backgrounds, not as replacement background colors.

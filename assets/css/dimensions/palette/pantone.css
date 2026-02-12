@@ -10,12 +10,18 @@
   --image-blend-mode: screen;
   --image-background: var(--cloud-12);
 
-  /* Primary cloud color mapping */
-  --text-accent: var(--cloud-11);
-  --brand-primary: var(--cloud-9);
+  /* Accent roles (single-family) */
+  --accent-primary: var(--cloud-9);
+  --accent-primary-strong: var(--cloud-11);
+  --accent-secondary: var(--cloud-4);
+  --accent-secondary-strong: var(--cloud-8);
+
+  --text-accent: var(--accent-primary-strong);
+  --brand-primary: var(--accent-primary);
 
   --text-default: var(--cloud-12);
-  --text-muted: var(--cloud-10);
+  --text-tag: var(--cloud-11);
+  --surface-ink-strong: var(--cloud-11);
   --text-nav: var(--cloud-12);
   --text-link-hover: var(--cloud-11);
 
@@ -28,7 +34,7 @@
   --border-subtle: var(--cloud-5);
 
   --component-form-bg: var(--cloud-3);
-  --component-form-placeholder: var(--cloud-4);
+  --component-form-placeholder: var(--text-muted);
 
   --component-newsletter-bg: var(--cloud-12);
   --component-newsletter-text: var(--cloud-2);

@@ -2,7 +2,7 @@ baseurl = "https://www.tor-bjorn.com/"
 languageCode = "en-us"
 title = "Torbjörn Hedberg · Multidisciplinary Designer"
 author = "Torbjörn Hedberg"
-canonifyurls = true
+canonifyurls = false
 relativeURLs = false
 preserveTaxonomyNames = true
 
