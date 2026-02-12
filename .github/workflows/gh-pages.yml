@@ -7,6 +7,10 @@ on:
       - master
   pull_request:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 concurrency:
   group: preview-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
@@ -86,8 +90,7 @@ jobs:
           echo "Page not available after 30 attempts"
           exit 1
 
-      - name: Find associated pull request
-        name: Comment PR with preview link (sticky)
+      - name: Comment PR with preview link (sticky)
         uses: actions/github-script@v7
         with:
           script: |
