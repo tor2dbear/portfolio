@@ -149,6 +149,29 @@
     };
   }
 
+  function deriveImageTokens(input) {
+    var roles = (input && input.roles) || {};
+    var policies = (input && input.policies) || {};
+    var mode = (input && input.mode) || 'light';
+    var treatment = policies.image_treatment || 'none';
+    var surfaceFamily = roles.surface || 'gray';
+    var isDark = mode === 'dark';
+
+    if (treatment === 'pantone-blend') {
+      return {
+        '--image-grayscale': '100%',
+        '--image-blend-mode': 'screen',
+        '--image-background': 'var(--' + surfaceFamily + '-' + (isDark ? '7' : '12') + ')'
+      };
+    }
+
+    return {
+      '--image-grayscale': '0%',
+      '--image-blend-mode': 'normal',
+      '--image-background': 'transparent'
+    };
+  }
+
   function derivePreview(input) {
     var roles = (input && input.roles) || {};
     var policies = (input && input.policies) || {};
@@ -175,6 +198,7 @@
   window.ThemeDerive = {
     derivePaletteTokens: derivePaletteTokens,
     deriveRuntimeTokens: deriveRuntimeTokens,
+    deriveImageTokens: deriveImageTokens,
     derivePreview: derivePreview
   };
 })();

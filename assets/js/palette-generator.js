@@ -310,7 +310,17 @@
       setDerivedToken('--state-focus', resolveSource(baseline.roles.state.focus_source, ctx));
       setDerivedToken('--state-selected', resolveSource(baseline.roles.state.selected_source, ctx));
 
-      if (imageTreatment === 'pantone-blend') {
+      const deriveImageTokens = window.ThemeDerive && window.ThemeDerive.deriveImageTokens;
+      if (typeof deriveImageTokens === 'function') {
+        const imageTokens = deriveImageTokens({
+          roles: effectiveRoles,
+          policies: {
+            image_treatment: imageTreatment
+          },
+          mode: document.documentElement.getAttribute('data-mode') || 'light'
+        });
+        Object.keys(imageTokens).forEach(name => setToken(name, imageTokens[name]));
+      } else if (imageTreatment === 'pantone-blend') {
         setToken('--image-grayscale', '100%');
         setToken('--image-blend-mode', 'screen');
         if (document.documentElement.getAttribute('data-mode') === 'dark') {

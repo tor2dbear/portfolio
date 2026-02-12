@@ -342,21 +342,21 @@
   }
 
   function applyCustomImageTreatment(custom) {
-    var treatment = (custom.policies && custom.policies.image_treatment) || 'none';
-    var isDark = (document.documentElement.getAttribute('data-mode') || 'light') === 'dark';
-    var surfaceFamily = custom.roles && custom.roles.surface;
-
-    if (treatment === 'pantone-blend') {
-      setCustomRuntimeToken('--image-grayscale', '100%');
-      setCustomRuntimeToken('--image-blend-mode', 'screen');
-      if (surfaceFamily) {
-        setCustomRuntimeToken('--image-background', 'var(--' + surfaceFamily + '-' + (isDark ? '7' : '12') + ')');
-      } else {
-        setCustomRuntimeToken('--image-background', isDark ? 'var(--gray-7)' : 'var(--gray-12)');
-      }
+    var deriveImageTokens = window.ThemeDerive && window.ThemeDerive.deriveImageTokens;
+    if (typeof deriveImageTokens === 'function') {
+      var mode = document.documentElement.getAttribute('data-mode') || 'light';
+      var imageTokens = deriveImageTokens({
+        roles: custom.roles || {},
+        policies: custom.policies || {},
+        mode: mode
+      });
+      Object.entries(imageTokens).forEach(function(entry) {
+        setCustomRuntimeToken(entry[0], entry[1]);
+      });
       return;
     }
 
+    // Fallback if derive module is unavailable.
     setCustomRuntimeToken('--image-grayscale', '0%');
     setCustomRuntimeToken('--image-blend-mode', 'normal');
     setCustomRuntimeToken('--image-background', 'transparent');
