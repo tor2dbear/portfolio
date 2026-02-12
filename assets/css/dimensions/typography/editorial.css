@@ -13,4 +13,5 @@
   --display-weight:   400;
   --heading-weight:   var(--sans-weight-bold);
   --heading-tracking: var(--tracking-normal);
+  --headline-tracking: var(--tracking-normal);
 }
