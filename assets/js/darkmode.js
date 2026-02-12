@@ -228,6 +228,7 @@
   }
 
   function applyMode(mode) {
+    var requestedMode = mode;
     if (mode === 'system') {
       const systemMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       document.documentElement.setAttribute('data-mode', systemMode);
@@ -242,6 +243,13 @@
     if ((document.documentElement.getAttribute('data-palette') || 'standard') === 'custom') {
       applyStoredCustomPalette();
     }
+
+    window.dispatchEvent(new CustomEvent('theme:mode-changed', {
+      detail: {
+        requestedMode: requestedMode,
+        mode: document.documentElement.getAttribute('data-mode') || 'light'
+      }
+    }));
   }
 
   function updateModeUI(currentMode) {

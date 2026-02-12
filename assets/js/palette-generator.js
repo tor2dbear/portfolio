@@ -681,6 +681,10 @@
       }
       syncingFromThemeEvent = false;
     });
+
+    window.addEventListener('theme:mode-changed', () => {
+      applyFromRoles(currentRoles(), presetSelect.value, currentPolicies(presetSelect.value));
+    });
   }
 
   if (document.readyState === 'loading') {
