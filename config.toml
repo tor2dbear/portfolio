@@ -5,6 +5,7 @@ author = "Torbjörn Hedberg"
 canonifyurls = false
 relativeURLs = false
 preserveTaxonomyNames = true
+environment = "development"
 
 [pagination]
   pagerSize = 10

@@ -1,11 +1,11 @@
 <article>
   <header class="summary-card">
     <div class="summary-card__image header-image">
-      <a href="{{ .Permalink }}">{{ partial "headerimage.html" . }}</a>
+      <a href="{{ .RelPermalink }}">{{ partial "headerimage.html" . }}</a>
     </div>
 
     <h2 class="summary-card__title">
-      <a href="{{ .Permalink }}"
+      <a href="{{ .RelPermalink }}"
         >{{ .Title }}{{ if isset .Params "subtitle" }}
           –
         {{ end }}{{ .Params.subtitle }}</a
