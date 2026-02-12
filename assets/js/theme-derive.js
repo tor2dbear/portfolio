@@ -149,8 +149,32 @@
     };
   }
 
+  function derivePreview(input) {
+    var roles = (input && input.roles) || {};
+    var policies = (input && input.policies) || {};
+    var toneMode = policies.tone_mode || 'mono';
+    var derived = derivePaletteTokens(input || {});
+    var primary = derived['--accent-primary-strong'] || derived['--accent-primary'] || 'var(--gray-11)';
+    var surface = derived['--bg-page'] || 'var(--gray-2)';
+    var secondary = derived['--accent-secondary-strong'] || derived['--accent-secondary'] || primary;
+
+    return {
+      primary: primary,
+      surface: surface,
+      secondary: secondary,
+      toneMode: toneMode,
+      seg1: '1',
+      seg2: '1',
+      seg3: toneMode === 'duo' ? '1' : '0',
+      // Keep raw source roles/policies for potential debugging/inspection.
+      roles: roles,
+      policies: policies
+    };
+  }
+
   window.ThemeDerive = {
     derivePaletteTokens: derivePaletteTokens,
-    deriveRuntimeTokens: deriveRuntimeTokens
+    deriveRuntimeTokens: deriveRuntimeTokens,
+    derivePreview: derivePreview
   };
 })();

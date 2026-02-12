@@ -397,23 +397,36 @@
 
   function getCustomPreviewValues(custom) {
     var preview = custom.preview || {};
+    var derivePreview = window.ThemeDerive && window.ThemeDerive.derivePreview;
+    var derivedPreview = null;
+    if (typeof derivePreview === 'function' && custom && custom.roles) {
+      derivedPreview = derivePreview({
+        roles: custom.roles,
+        policies: custom.policies || {},
+        component_overrides: custom.component_overrides || {}
+      });
+    }
     var derived = getCustomDerivedPaletteTokens(custom) || {};
     var tokens = custom.tokens || {};
     var primary = preview.primary
       || preview.accent
+      || (derivedPreview && derivedPreview.primary)
       || derived['--accent-primary-strong']
       || tokens['--accent-primary-strong']
       || 'var(--gray-11)';
     var surface = preview.surface
       || preview.bg
+      || (derivedPreview && derivedPreview.surface)
       || derived['--bg-page']
       || tokens['--bg-page']
       || 'var(--gray-2)';
     var secondary = preview.secondary
+      || (derivedPreview && derivedPreview.secondary)
       || derived['--accent-secondary-strong']
       || tokens['--accent-secondary-strong']
       || primary;
     var toneMode = preview.tone_mode
+      || (derivedPreview && derivedPreview.toneMode)
       || (custom.policies && custom.policies.tone_mode)
       || 'mono';
 
@@ -477,15 +490,9 @@
       document.documentElement.style.setProperty('--palette-custom-surface', surface);
       document.documentElement.style.setProperty('--palette-custom-secondary', secondary);
 
-      if (toneMode === 'duo') {
-        document.documentElement.style.setProperty('--palette-custom-seg1', '1');
-        document.documentElement.style.setProperty('--palette-custom-seg2', '1');
-        document.documentElement.style.setProperty('--palette-custom-seg3', '1');
-      } else {
-        document.documentElement.style.setProperty('--palette-custom-seg1', '1');
-        document.documentElement.style.setProperty('--palette-custom-seg2', '1');
-        document.documentElement.style.setProperty('--palette-custom-seg3', '0');
-      }
+      document.documentElement.style.setProperty('--palette-custom-seg1', '1');
+      document.documentElement.style.setProperty('--palette-custom-seg2', '1');
+      document.documentElement.style.setProperty('--palette-custom-seg3', toneMode === 'duo' ? '1' : '0');
     }
     const customOptions = document.querySelectorAll('[data-role="palette-custom-option"]');
     customOptions.forEach(option => {

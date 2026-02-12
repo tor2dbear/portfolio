@@ -636,6 +636,13 @@
               component_overrides: existing.component_overrides || {}
             })
           : {};
+        const derivedPreview = window.ThemeDerive && typeof window.ThemeDerive.derivePreview === 'function'
+          ? window.ThemeDerive.derivePreview({
+              roles: roles,
+              policies: policies,
+              component_overrides: existing.component_overrides || {}
+            })
+          : null;
 
         const payload = {
           version: 2,
@@ -645,10 +652,10 @@
           overrides: existing.overrides || {},
           component_overrides: existing.component_overrides || {},
           preview: {
-            primary: derived['--accent-primary-strong'] || derived['--accent-primary'] || '',
-            surface: derived['--bg-page'] || '',
-            secondary: derived['--accent-secondary-strong'] || derived['--accent-secondary'] || '',
-            tone_mode: policies.tone_mode || 'mono'
+            primary: (derivedPreview && derivedPreview.primary) || derived['--accent-primary-strong'] || derived['--accent-primary'] || '',
+            surface: (derivedPreview && derivedPreview.surface) || derived['--bg-page'] || '',
+            secondary: (derivedPreview && derivedPreview.secondary) || derived['--accent-secondary-strong'] || derived['--accent-secondary'] || '',
+            tone_mode: (derivedPreview && derivedPreview.toneMode) || policies.tone_mode || 'mono'
           }
         };
 
