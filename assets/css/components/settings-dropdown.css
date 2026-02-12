@@ -23,7 +23,7 @@
 }
 
 .settings-toggle:hover {
-  background: var(--state-on-light-hover);
+  background: var(--state-surface-hover);
   border-color: var(--border-strong);
 }
 
@@ -106,5 +106,9 @@
 @media (max-width: 29.9375em) {
   .settings-dropdown {
     display: block;
+  }
+
+  .settings-panel .toggle-switch__shortcut {
+    display: none;
   }
 }

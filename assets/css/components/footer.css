@@ -196,7 +196,7 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
   }
 
   .footer-column {
-    grid-column: span 6;
+    grid-column: span 4;
   }
 }
 
@@ -221,7 +221,7 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
   }
 
   .footer-column {
-    grid-column: span 12;
+    grid-column: span 6;
   }
 
   .footer-newsletter {
@@ -242,5 +242,12 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
 
   .footer-meta__item + .footer-meta__item::before {
     margin-right: var(--spacing-6);
+  }
+}
+
+/* xs: <= 29.9375em */
+@media (max-width: 29.9375em) {
+  .footer-column {
+    grid-column: span 12;
   }
 }

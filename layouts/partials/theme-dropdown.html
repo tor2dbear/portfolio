@@ -7,19 +7,9 @@
     data-js="theme-toggle"
   >
     <span class="theme-icon" data-js="theme-icon">
-      <script>
-        // Pre-render the correct icon to avoid flash
-        (function() {
-          const mode = localStorage.getItem('theme-mode') || 'system';
-          const iconId = mode === 'light' ? 'icon-light' : mode === 'dark' ? 'icon-dark' : 'icon-system';
-          document.write('<svg width="24" height="24" aria-hidden="true"><use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#' + iconId + '"></use></svg>');
-        })();
-      </script>
-      <noscript>
-        <svg width="24" height="24" aria-hidden="true">
-          <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-system"></use>
-        </svg>
-      </noscript>
+      <svg width="24" height="24" aria-hidden="true">
+        <use href="{{ "/img/svg/sprite.svg?v=20260212a" | relURL }}#icon-theme-palette"></use>
+      </svg>
     </span>
   </button>
 
@@ -39,6 +29,7 @@
             <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-light"></use>
           </svg>
           <span>{{ i18n "light_mode" }}</span>
+          <span class="toggle-switch__shortcut" data-shortcut="T L">T L</span>
         </button>
 
         <button
@@ -51,6 +42,7 @@
             <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-dark"></use>
           </svg>
           <span>{{ i18n "dark_mode" }}</span>
+          <span class="toggle-switch__shortcut" data-shortcut="T D">T D</span>
         </button>
 
         <button
@@ -63,6 +55,7 @@
             <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-system"></use>
           </svg>
           <span>{{ i18n "system_mode" }}</span>
+          <span class="toggle-switch__shortcut" data-shortcut="T S">T S</span>
         </button>
       </div>
     </div>
@@ -70,7 +63,10 @@
     <div class="theme-divider"></div>
 
     <div class="theme-section">
-      <h3 class="theme-section-title">{{ i18n "palette" }}</h3>
+      <div class="theme-section-heading">
+        <h3 class="theme-section-title">{{ i18n "palette" }}</h3>
+        <span class="toggle-switch__shortcut" data-shortcut="P 1-4">P 1-4</span>
+      </div>
       <div class="theme-options theme-options--palette">
         <button
           class="theme-option theme-option--palette"
@@ -130,7 +126,10 @@
     <div class="theme-divider"></div>
 
     <div class="theme-section">
-      <h3 class="theme-section-title">{{ i18n "typography" }}</h3>
+      <div class="theme-section-heading">
+        <h3 class="theme-section-title">{{ i18n "typography" }}</h3>
+        <span class="toggle-switch__shortcut" data-shortcut="F 1-4">F 1-4</span>
+      </div>
       <div class="theme-options theme-options--typography">
         <button
           class="theme-option theme-option--typography"
@@ -202,7 +201,7 @@
           <span class="toggle-switch__thumb"></span>
         </span>
         <span class="toggle-switch__label">Show grid</span>
-        <span class="toggle-switch__shortcut">Ctrl+G</span>
+        <span class="toggle-switch__shortcut" data-shortcut="G">G</span>
       </button>
     </div>
   </div>

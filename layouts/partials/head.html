@@ -169,6 +169,7 @@
   {{ $components_toggle_switch := resources.Get "css/components/toggle-switch.css" }}
   {{ $components_grid_overlay := resources.Get "css/components/grid-overlay.css" }}
   {{ $components_toast := resources.Get "css/components/toast.css" }}
+  {{ $components_chord_hud := resources.Get "css/components/chord-hud.css" }}
 
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
@@ -411,6 +412,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_toggle_switch.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_grid_overlay.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_toast.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_chord_hud.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
     {{ with $pages_contact }}
@@ -424,7 +426,7 @@
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
-    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $pages_home $pages_ui_library }}
+    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $pages_home $pages_ui_library }}
     {{ with $pages_contact }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -493,6 +495,7 @@
   {{ $js14 := resources.Get "js/toc-active.js" }}
   {{ $js15 := resources.Get "js/brand-curl-random.js" }}
   {{ $js16 := resources.Get "js/grid-overlay.js" }}
+  {{ $js17 := resources.Get "js/keyboard-chords.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -514,9 +517,10 @@
     <script src="{{ $js14.RelPermalink }}" defer></script>
     <script src="{{ $js15.RelPermalink }}" defer></script>
     <script src="{{ $js16.RelPermalink }}" defer></script>
+    <script src="{{ $js17.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 | resources.Concat "js.js" | minify | fingerprint }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.Permalink }}" defer></script>
   {{ end }}
 

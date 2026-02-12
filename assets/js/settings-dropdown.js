@@ -13,6 +13,53 @@
 
     if (!toggle || !panel) return;
 
+    function isGridActive() {
+      return document.documentElement.hasAttribute('data-grid-overlay');
+    }
+
+    function ensurePortalOrigin(el) {
+      if (!el || el.__portalPlaceholder) return;
+      const placeholder = document.createComment('settings-portal-anchor');
+      el.parentNode.insertBefore(placeholder, el);
+      el.__portalPlaceholder = placeholder;
+    }
+
+    function restorePortal(el) {
+      if (!el || !el.classList.contains('dropdown-panel--portal')) return;
+      const placeholder = el.__portalPlaceholder;
+      if (placeholder && placeholder.parentNode) {
+        placeholder.parentNode.insertBefore(el, placeholder);
+        placeholder.remove();
+      }
+      el.__portalPlaceholder = null;
+      el.classList.remove('dropdown-panel--portal');
+      el.style.position = '';
+      el.style.top = '';
+      el.style.left = '';
+      el.style.right = '';
+      el.style.bottom = '';
+    }
+
+    function mountPortal(el) {
+      if (!el) return;
+      ensurePortalOrigin(el);
+      if (el.parentNode !== document.body) {
+        document.body.appendChild(el);
+      }
+      el.classList.add('dropdown-panel--portal');
+    }
+
+    function syncSettingsPortal() {
+      const open = panel && !panel.hasAttribute('hidden');
+      if (open && isGridActive()) {
+        mountPortal(panel);
+        if (overlay) mountPortal(overlay);
+        return;
+      }
+      restorePortal(panel);
+      if (overlay) restorePortal(overlay);
+    }
+
     function closeThemePanel() {
       const themePanel = document.querySelector('.theme-panel');
       const themeToggle = document.querySelector('.theme-toggle');
@@ -53,6 +100,7 @@
         if (overlay) overlay.setAttribute('hidden', '');
         toggle.setAttribute('aria-expanded', 'false');
         resetPanelStyles();
+        syncSettingsPortal();
       }
     }
 
@@ -67,6 +115,7 @@
         if (overlay) overlay.removeAttribute('hidden');
         toggle.setAttribute('aria-expanded', 'true');
         resetPanelStyles();
+        syncSettingsPortal();
       } else {
         closePanel();
       }
@@ -88,6 +137,22 @@
       if (e.key === 'Escape') {
         closePanel();
       }
+    });
+
+    const syncOnStateChange = function() {
+      if (!panel.hasAttribute('hidden')) {
+        syncSettingsPortal();
+      }
+    };
+    window.addEventListener('resize', syncOnStateChange);
+    window.addEventListener('scroll', syncOnStateChange, { passive: true });
+
+    const gridObserver = new MutationObserver(function() {
+      syncOnStateChange();
+    });
+    gridObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-grid-overlay']
     });
 
     // Touch support for swipe-to-close on mobile bottom sheet

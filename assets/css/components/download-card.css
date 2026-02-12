@@ -22,11 +22,7 @@
 }
 
 .download-card:hover {
-  background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover));
-}
-
-:root[data-mode="dark"] .download-card:hover {
-  background-image: linear-gradient(var(--state-on-dark-hover), var(--state-on-dark-hover));
+  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
 }
 
 .download-card:hover > div {
@@ -91,12 +87,8 @@ p.download-card__item {
 }
 
 .print-button:hover {
-  background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover));
+  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
   color: var(--text-link-hover);
-}
-
-:root[data-mode="dark"] .print-button:hover {
-  background-image: linear-gradient(var(--state-on-dark-hover), var(--state-on-dark-hover));
 }
 
 .print-button + .print-button {

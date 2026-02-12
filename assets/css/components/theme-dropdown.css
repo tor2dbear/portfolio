@@ -23,7 +23,7 @@
 }
 
 .theme-toggle:hover {
-  background: var(--state-on-light-hover);
+  background: var(--state-surface-hover);
   border-color: var(--border-strong);
 }
 
@@ -74,6 +74,10 @@
   transform: translateY(0);
 }
 
+.theme-panel.dropdown-panel--portal {
+  z-index: 1001;
+}
+
 .theme-section-title {
   display: block;
   font-size: var(--text-xs);
@@ -83,6 +87,19 @@
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
   padding: 0 var(--spacing-8);
+}
+
+.theme-section-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  margin-bottom: var(--spacing-8);
+  padding: 0 var(--spacing-8);
+}
+
+.theme-section-heading .theme-section-title {
+  margin-bottom: 0;
+  padding: 0;
 }
 
 .theme-divider {
@@ -115,7 +132,7 @@
 }
 
 .theme-option:hover {
-  background: var(--state-on-light-hover);
+  background: var(--state-surface-hover);
 }
 
 .theme-option-icon {
@@ -123,6 +140,14 @@
   height: calc(var(--spacing-16) + var(--spacing-4));
   flex-shrink: 0;
   display: block;
+}
+
+.theme-option[data-mode].active .theme-option-icon {
+  color: var(--state-selected);
+}
+
+.theme-option[data-mode].active {
+  color: var(--state-selected);
 }
 
 /* Palette specific styles */
@@ -153,7 +178,7 @@
 
 .theme-option--palette.active .palette-preview {
   border-color: var(--border-strong);
-  box-shadow: 0 0 0 1px var(--bg-page), 0 0 0 3px var(--brand-primary);
+  box-shadow: 0 0 0 1px var(--bg-page), 0 0 0 3px var(--state-selected);
 }
 
 .palette-label {
@@ -209,7 +234,7 @@
   position: relative;
   width: auto;
   padding: var(--spacing-4);
-  gap: var(--spacing-4);
+  gap: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -217,7 +242,7 @@
 }
 
 .theme-option--typography.active {
-  background: var(--state-on-light-active);
+  background: transparent;
 }
 
 .typography-preview {
@@ -229,9 +254,27 @@
   place-items: center;
   border-radius: var(--radius-4);
   border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
+  background: transparent;
+  overflow: hidden;
+  color: var(--text-default);
   /* Editorial default — locked so active theme doesn't bleed in */
   font-family: "Source Serif 4", ui-serif, Georgia, serif;
+}
+
+.theme-option--typography:hover {
+  background: transparent;
+}
+
+.theme-option--typography:hover .typography-preview {
+  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
+}
+
+.theme-option--typography:active .typography-preview {
+  background-image: linear-gradient(var(--state-surface-active), var(--state-surface-active));
+}
+
+.theme-option--typography.active .typography-preview {
+  color: var(--state-selected);
 }
 
 .typography-preview--refined {
@@ -251,9 +294,7 @@
 }
 
 .typography-label {
-  font-size: 0.625rem;
-  color: var(--text-muted);
-  white-space: nowrap;
+  display: none;
 }
 
 /* Mobile bottom sheet */

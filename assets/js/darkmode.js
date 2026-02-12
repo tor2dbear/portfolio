@@ -55,6 +55,105 @@
     return spriteBase;
   }
 
+  function isGridActive() {
+    const value = document.documentElement.getAttribute('data-grid-overlay');
+    return value !== null && value !== 'closing';
+  }
+
+  function shouldUsePanelPortal(panel) {
+    if (!panel || panel.hasAttribute('hidden')) return false;
+    if (!window.matchMedia('(min-width: 30em)').matches) return false;
+    return isGridActive();
+  }
+
+  function ensurePanelPortalOrigin(panel) {
+    if (!panel || panel.__portalPlaceholder) return;
+    const placeholder = document.createComment('dropdown-portal-anchor');
+    panel.parentNode.insertBefore(placeholder, panel);
+    panel.__portalPlaceholder = placeholder;
+  }
+
+  function positionPanelAtToggle(panel, toggle) {
+    if (!panel || !toggle) return;
+
+    const toggleRect = toggle.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    const panelWidth = panelRect.width;
+    const viewportWidth = window.innerWidth;
+    const gutter = 8;
+
+    let left = toggleRect.right - panelWidth;
+    if (left < gutter) left = gutter;
+    if (left + panelWidth > viewportWidth - gutter) {
+      left = viewportWidth - panelWidth - gutter;
+    }
+
+    panel.style.top = `${toggleRect.bottom + 8}px`;
+    panel.style.left = `${Math.max(left, gutter)}px`;
+    panel.style.width = `${panelWidth}px`;
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+  }
+
+  function mountPanelPortal(panel, toggle) {
+    if (!panel) return;
+    ensurePanelPortalOrigin(panel);
+    if (panel.parentNode !== document.body) {
+      document.body.appendChild(panel);
+    }
+    panel.classList.add('dropdown-panel--portal');
+    panel.style.position = 'fixed';
+    positionPanelAtToggle(panel, toggle);
+  }
+
+  function restorePanelPortal(panel) {
+    if (!panel || !panel.classList.contains('dropdown-panel--portal')) return;
+
+    const placeholder = panel.__portalPlaceholder;
+    if (placeholder && placeholder.parentNode) {
+      placeholder.parentNode.insertBefore(panel, placeholder);
+      placeholder.remove();
+    }
+
+    panel.__portalPlaceholder = null;
+    panel.classList.remove('dropdown-panel--portal');
+    panel.style.position = '';
+    panel.style.top = '';
+    panel.style.left = '';
+    panel.style.width = '';
+    panel.style.right = '';
+    panel.style.bottom = '';
+  }
+
+  function syncThemePanelPortal() {
+    if (!themePanel) return;
+    if (shouldUsePanelPortal(themePanel)) {
+      mountPanelPortal(themePanel, themeToggle);
+      return;
+    }
+    restorePanelPortal(themePanel);
+  }
+
+  function restoreExternalPanelPortal(panel) {
+    if (!panel) return;
+    if (!panel.classList.contains('dropdown-panel--portal')) return;
+
+    const placeholder = panel.__portalPlaceholder;
+    if (placeholder && placeholder.parentNode) {
+      placeholder.parentNode.insertBefore(panel, placeholder);
+      placeholder.remove();
+    }
+
+    panel.__portalPlaceholder = null;
+    panel.classList.remove('dropdown-panel--portal');
+    panel.style.position = '';
+    panel.style.top = '';
+    panel.style.left = '';
+    panel.style.width = '';
+    panel.style.right = '';
+    panel.style.bottom = '';
+  }
+
   // ==========================================================================
   // DROPDOWN TOGGLE
   // ==========================================================================
@@ -68,10 +167,9 @@
       themePanel.removeAttribute('hidden');
       if (themeOverlay) themeOverlay.removeAttribute('hidden');
       themeToggle.setAttribute('aria-expanded', 'true');
+      syncThemePanelPortal();
     } else {
-      themePanel.setAttribute('hidden', '');
-      if (themeOverlay) themeOverlay.setAttribute('hidden', '');
-      themeToggle.setAttribute('aria-expanded', 'false');
+      closePanel();
     }
   }
 
@@ -80,6 +178,7 @@
       themePanel.setAttribute('hidden', '');
       if (themeOverlay) themeOverlay.setAttribute('hidden', '');
       themeToggle.setAttribute('aria-expanded', 'false');
+      syncThemePanelPortal();
     }
   }
 
@@ -92,6 +191,7 @@
       languagePanel.setAttribute('hidden', '');
       if (languageOverlay) languageOverlay.setAttribute('hidden', '');
       if (languageToggle) languageToggle.setAttribute('aria-expanded', 'false');
+      restoreExternalPanelPortal(languagePanel);
     }
   }
 
@@ -259,22 +359,12 @@
   // ICON MANAGEMENT
   // ==========================================================================
 
-  function updateThemeIcon(mode) {
+  function updateThemeIcon() {
     if (!themeIcon) return;
 
-    let iconId = '';
-    if (mode === 'light') {
-      iconId = 'icon-light';
-    } else if (mode === 'dark') {
-      iconId = 'icon-dark';
-    } else if (mode === 'system') {
-      iconId = 'icon-system';
-    }
-
-    // Use SVG sprite system for instant icon updates
-    const base = getSpriteBase();
+    // Theme toggle icon is static and no longer reflects active mode.
     themeIcon.innerHTML = `<svg width="24" height="24" aria-hidden="true">
-      <use href="${base}#${iconId}"></use>
+      <use href="/img/svg/sprite.svg?v=20260212a#icon-theme-palette"></use>
     </svg>`;
   }
 
@@ -355,9 +445,40 @@
     updatePaletteUI(storedPalette);
     updateTypographyUI(storedTypography);
 
+    window.ThemeActions = {
+      setMode: setMode,
+      setPalette: setPalette,
+      setTypography: setTypography,
+      getPaletteOrder: function() {
+        const seen = new Set();
+        const values = [];
+        paletteOptions.forEach(option => {
+          const value = option.getAttribute('data-palette');
+          if (value && !seen.has(value)) {
+            seen.add(value);
+            values.push(value);
+          }
+        });
+        return values;
+      },
+      getTypographyOrder: function() {
+        const seen = new Set();
+        const values = [];
+        typographyOptions.forEach(option => {
+          const value = option.getAttribute('data-typography');
+          if (value && !seen.has(value)) {
+            seen.add(value);
+            values.push(value);
+          }
+        });
+        return values;
+      }
+    };
+
     // Setup event listeners
     if (themeToggle && themePanel) {
       themeToggle.addEventListener('click', togglePanel);
+      syncThemePanelPortal();
 
       // Close on overlay click
       if (themeOverlay) {
@@ -369,6 +490,22 @@
         if (!themeToggle.contains(e.target) && !themePanel.contains(e.target)) {
           closePanel();
         }
+      });
+
+      const syncOnViewportChange = function() {
+        if (!themePanel.hasAttribute('hidden')) {
+          syncThemePanelPortal();
+        }
+      };
+      window.addEventListener('resize', syncOnViewportChange);
+      window.addEventListener('scroll', syncOnViewportChange, { passive: true });
+
+      const gridObserver = new MutationObserver(function() {
+        syncOnViewportChange();
+      });
+      gridObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-grid-overlay']
       });
 
       // Close on Escape key

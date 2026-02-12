@@ -38,9 +38,9 @@
   border-color: var(--border-subtle);
 }
 
-/* When grid is active, avoid trapping dropdown panels in the header stacking context. */
+/* Keep header above page content while grid is active. */
 html[data-grid-overlay] .top-menu {
-  z-index: auto;
+  z-index: 800;
 }
 
 /* ==========================================================================
@@ -121,7 +121,7 @@ html[data-grid-overlay] .top-menu {
 
 .top-menu__item--nav .top-menu__link:hover,
 .top-menu__item--nav .top-menu__link:focus-visible {
-  background: var(--state-on-light-hover);
+  background: var(--state-surface-hover);
 }
 
 .top-menu__item--nav .top-menu__link.active {

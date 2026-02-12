@@ -155,5 +155,7 @@
   --bg-page: var(--gray-1);
   --outline-neutral: rgba(255, 255, 255, 0.16);
   --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -2px;
+  --state-surface-hover: var(--state-on-dark-hover);
+  --state-surface-active: var(--state-on-dark-active);
   /* --secondary-container: var(--gray-3); */
 }

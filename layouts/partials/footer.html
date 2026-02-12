@@ -7,6 +7,12 @@
         <h3 class="footer-heading">{{ i18n "footer_navigation" }}</h3>
         <ul class="footer-menu">
           <li><a href="{{ "/" | relLangURL }}">{{ i18n "home" }}</a></li>
+          {{ with .Site.GetPage "/about" }}
+            <li><a href="{{ .RelPermalink }}">{{ i18n "about_me" }}</a></li>
+          {{ end }}
+          {{ with .Site.GetPage "/contact" }}
+            <li><a href="{{ .RelPermalink }}">{{ i18n "contact_me" }}</a></li>
+          {{ end }}
           <li><a href="{{ printf "/%s/" (i18n "writing_url") | relLangURL }}">{{ i18n "writing" }}</a></li>
           <li><a href="{{ "/ui-library/" | relLangURL }}">{{ i18n "ui_library" }}</a></li>
         </ul>
@@ -87,7 +93,7 @@
     <div class="footer-meta use-subgrid">
       <ul class="footer-meta__list" role="list" aria-label="{{ i18n "footer_meta_label" }}">
         <li class="footer-meta__item">
-          © 2026. {{ i18n "footer_rights_reserved" }}
+          © Torbjörn Hedberg 2026. {{ i18n "footer_rights_reserved" }}
         </li>
         <li class="footer-meta__item footer-meta__item--status">
           <span class="footer-meta__label" aria-hidden="true">
@@ -157,7 +163,7 @@
 <span hidden data-toast-category="typography" data-toast-label="{{ i18n "typography" }}"></span>
 <span hidden data-toast-category="language" data-toast-label="{{ i18n "footer_language_label" }}" data-toast-icon="icon-language-micro"></span>
 
-<!-- Grid overlay (toggled via theme panel or Ctrl+G) -->
+<!-- Grid overlay (toggled via theme panel or chord key G) -->
 <div class="grid-overlay" aria-hidden="true">
   <div class="grid-overlay__col"></div>
   <div class="grid-overlay__col"></div>

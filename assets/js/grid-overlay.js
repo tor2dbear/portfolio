@@ -1,7 +1,7 @@
 /**
  * Grid Overlay Toggle
  * Shows/hides a 12-column grid overlay for design verification.
- * Toggle via theme panel button or Ctrl+G keyboard shortcut.
+ * Toggle via theme panel button or keyboard chords.
  * State persisted in localStorage.
  * Columns animate in/out only on explicit toggle (not page navigation).
  */
@@ -84,6 +84,30 @@
     }
   }
 
+  function closeSettingsPanelOnMobile() {
+    if (!window.matchMedia("(max-width: 29.9375em)").matches) return;
+
+    var settingsPanel = document.querySelector('[data-js="settings-panel"]');
+    var settingsOverlay = document.querySelector('[data-js="settings-overlay"]');
+    var settingsToggle = document.querySelector('[data-js="settings-toggle"]');
+
+    if (settingsPanel && !settingsPanel.hasAttribute("hidden")) {
+      settingsPanel.setAttribute("hidden", "");
+      settingsPanel.style.transform = "";
+      settingsPanel.style.transition = "";
+    }
+
+    if (settingsOverlay && !settingsOverlay.hasAttribute("hidden")) {
+      settingsOverlay.setAttribute("hidden", "");
+      settingsOverlay.style.opacity = "";
+      settingsOverlay.style.transition = "";
+    }
+
+    if (settingsToggle) {
+      settingsToggle.setAttribute("aria-expanded", "false");
+    }
+  }
+
   function updateUI(on) {
     var buttons = document.querySelectorAll('[data-js="grid-toggle"]');
     buttons.forEach(function (btn) {
@@ -116,13 +140,6 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Show ⌘G on Mac, Ctrl+G elsewhere
-    if (/Mac|iPhone|iPad|iPod/.test(navigator.userAgent)) {
-      document.querySelectorAll(".toggle-switch__shortcut, kbd").forEach(function (el) {
-        if (el.textContent.trim() === "Ctrl+G") el.textContent = "⌘G";
-      });
-    }
-
     // Update button state and footer on load
     updateUI(isActive());
     updateFooterGrid(isActive());
@@ -134,16 +151,16 @@
         btn.addEventListener("click", function (e) {
           e.preventDefault();
           toggle();
+          closeSettingsPanelOnMobile();
         });
       });
-
-    // Keyboard shortcut: Ctrl+G (Win/Linux) or Cmd+G (Mac)
-    document.addEventListener("keydown", function (e) {
-      var mod = e.metaKey || e.ctrlKey;
-      if (mod && e.key === "g" && !e.shiftKey && !e.altKey) {
-        e.preventDefault();
-        toggle();
-      }
-    });
   });
+
+  window.GridOverlayActions = {
+    toggle: function () {
+      toggle();
+      closeSettingsPanelOnMobile();
+    },
+    isActive: isActive
+  };
 })();
