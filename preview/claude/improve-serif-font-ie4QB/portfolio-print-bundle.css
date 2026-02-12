@@ -359,7 +359,10 @@ table {
   --state-on-light-active: rgba(0, 0, 0, 0.08);
   --state-on-dark-hover: rgba(255, 255, 255, 0.04);
   --state-on-dark-active: rgba(255, 255, 255, 0.08);
+  --state-surface-hover: var(--state-on-light-hover);
+  --state-surface-active: var(--state-on-light-active);
   --state-focus: var(--iris-9);
+  --state-selected: var(--text-accent);
   --text-disabled: var(--gray-7);
   --bg-disabled: var(--gray-3);
   --border-disabled: var(--gray-4);
