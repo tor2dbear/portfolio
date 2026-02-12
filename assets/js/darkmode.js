@@ -474,8 +474,12 @@
       });
     }
 
-    applyCustomDerivedTokens(custom);
-    applyCustomImageTreatment(custom);
+    // Only apply derived/runtime policy tokens for v2 payloads.
+    // v1 payloads are token snapshots and must be preserved as-is.
+    if (custom.version >= 2) {
+      applyCustomDerivedTokens(custom);
+      applyCustomImageTreatment(custom);
+    }
     const previewValues = getCustomPreviewValues(custom);
     document.documentElement.style.setProperty('--palette-custom-accent', previewValues.primary);
     document.documentElement.style.setProperty('--palette-custom-bg', previewValues.surface);
