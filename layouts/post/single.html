@@ -2,19 +2,16 @@
 
 
 <div class="content post use-subgrid">
-  <h1 class="type-headline-1 mt-0 mb-0 reveal">{{ .Title }}</h1>
-  <div class="reveal">{{ partial "date.html" . }}</div>
-  <h2 class="type-lead reveal">{{ .Description }}</h2>
-  <div class="reveal">{{ partial "post_tags.html" . }}</div>
+  <h1 class="type-headline-1 reveal place-article">{{ .Title }}</h1>
+  <div class="reveal place-article">{{ partial "date.html" . }}</div>
+  <div class="reveal post-tags-wrap place-article">{{ partial "post_tags.html" . }}</div>
+  {{ if .Description }}
+  <h2 class="type-preamble reveal place-article">{{ .Description }}</h2>
+  {{ end }}
  
-  <div class="post-content prose">
+  <div class="post-content prose reveal place-article">
     {{ .Content }}
   </div>
-
-  <div class="reveal">
-    {{ partial "prev_next_post.html" . }}
-  </div>
-  
 
 </div>
 

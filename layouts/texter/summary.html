@@ -1,4 +1,4 @@
-<article class="article-card">
+<article class="article-card" data-tags="{{ delimit .Params.tags "," | lower }}">
   <header>
     <h2 class="article-card__title type-headline-3">
       <a href="{{ .RelPermalink }}">{{ .Title }}</a>
@@ -8,7 +8,7 @@
     <p class="article-card__description type-body">{{ .Description }}</p>
     {{ end }}
 
-    <div class="article-card__meta type-information text-color-lighter">
+    <div class="article-card__meta type-information is-muted">
       {{ partial "date.html" . }}
     </div>
   </header>

@@ -1,7 +1,7 @@
 {{ partial "header.html" . }}
 
 <div class="content list works-list use-subgrid">
-  <div class="post-header mb-8">
+  <div class="post-header">
     <h2 class="type-headline-small">{{ .Title }}</h2>
   </div>
   {{ range where .Data.Pages ".Params.hidden" "!=" true }}

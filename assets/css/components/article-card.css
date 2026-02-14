@@ -38,9 +38,9 @@ article {
 .summary-card:hover .header-image {
   -webkit-filter: contrast(1.2);
   filter: contrast(1.2);
-  transition: -webkit-filter 1s ease;
-  transition: filter 1s ease;
-  transition: filter 1s ease, -webkit-filter 1s ease;
+  transition: -webkit-filter var(--motion-duration-xslow) var(--motion-ease-standard);
+  transition: filter var(--motion-duration-xslow) var(--motion-ease-standard);
+  transition: filter var(--motion-duration-xslow) var(--motion-ease-standard), -webkit-filter var(--motion-duration-xslow) var(--motion-ease-standard);
 }
 
 .related-items__image {

@@ -1,6 +1,6 @@
 +++
 title = "Welcome to My Writing Section"
-date = "2026-01-10"
+date = "2026-01-02"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false

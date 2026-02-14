@@ -187,7 +187,7 @@ Templates filter hidden projects:
 - One function/feature per file
 - Vanilla JavaScript (no frameworks)
 - ES6+ syntax
-- Example: `focus-mode.js`, `darkmode.js`, `header-hide.js`
+- Example: `focus-mode.js`, `darkmode.js`, `header-hide.js`, `tabs.js`
 
 ### File Naming
 - Kebab-case: `focus-mode.js`
@@ -403,6 +403,8 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/components/theme-dropdown.css` - Theme dropdown
 - `assets/css/components/language-dropdown.css` - Language dropdown
 - `assets/css/components/settings-dropdown.css` - Combined settings dropdown (xs only)
+- `assets/css/components/accordion.css` - Accordion component
+- `assets/css/components/tabs.css` - Tabs component
 - `assets/css/pages/home.css` - Homepage styles
 - `assets/css/pages/ui-library.css` - UI library page styles
 - `assets/css/pages/palette-generator.css` - Internal palette generator page styles
@@ -531,14 +533,15 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - `.place-full` — col 1–12 (full content width)
 - `.place-wide` — col 1–10 (images, figures)
 - `.place-prose` — col 1–8 (running text, replaces max-width: 70ch)
+- `.place-article` — text article flow (xl: col 3–10, lg: col 2–11, md: col 1–12, sm: full width)
 - `.place-narrow` — col 2–9 (pull-quotes, callouts)
-- `.place-inset` — col 3–10 (deeply indented)
 - `.place-aside` — col 9–12 (sidebar, metadata)
 - `.place-aside-left` — col 1–4 (left sidebar)
 - `.place-bleed` — full-start / full-end (break out of content area)
 
 **Responsive tiers** (cascade with fallback):
 - `--col` — Desktop (default)
+- `--col-lg` — Large (≤79.9375em), falls back to `--col`
 - `--col-md` — Tablet (≤63.9375em), falls back to `--col`
 - `--col-sm` — Mobile (≤47.9375em), falls back to full width
 

@@ -16,10 +16,10 @@ body {
 /* Darkmode transition. */
 body.darkmodeTransition,
 body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .brand__mark, .brand__mark path, .brand__mark line, button, .brand, .brand__hyphen) {
-  transition: stroke 1s cubic-bezier(0.075, 0.82, 0.165, 1),
-    border-color 1s cubic-bezier(0.075, 0.82, 0.165, 1),
-    color 1s cubic-bezier(0.075, 0.82, 0.165, 1),
-    background-color 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: stroke var(--motion-duration-xslow) var(--motion-ease-theme),
+    border-color var(--motion-duration-xslow) var(--motion-ease-theme),
+    color var(--motion-duration-xslow) var(--motion-ease-theme),
+    background-color var(--motion-duration-xslow) var(--motion-ease-theme);
 }
 
 /* || ========== Main section ------------------------------------- */
@@ -44,15 +44,14 @@ body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .brand__mark, .brand_
 }
 
 .content {
-  line-height: 1.6em;
-  padding-top: 5rem;
+  padding-top: var(--spacing-80);
   grid-column: content-start / content-end;
   grid-auto-rows: -webkit-max-content;
   grid-auto-rows: max-content;
 }
 
 .startpage-heading {
-  padding-top: 5rem;
+  padding-top: var(--spacing-80);
 }
 
 .startpage-heading h1 {
@@ -114,9 +113,6 @@ footer {
     row-gap: var(--spacing-24);
   }
 
-  .content.post > * {
-    --col: col-start 1 / span 4;
-  }
 }
 
 footer {
@@ -132,15 +128,40 @@ footer>* {
 
 /* Post children use --col for art-directed placement.
    Default: 10 cols. Override with .place-* or style="--col: …" */
-.content.post > * {
-  grid-column: var(--col, col-start 1 / span 10);
-  grid-row: var(--row, auto);
-}
+/* Placement is handled by grid utilities (.place-* / --col*) */
 
 .content.post > figure.headerimg,
 #main .content.post > figure:first-of-type,
 .content.post > .post-nav {
   --col: col-start 1 / span 12;
+}
+
+.works-post__description {
+  margin-top: var(--spacing-16);
+  margin-bottom: var(--spacing-16);
+}
+
+.works-post__meta,
+.works-post__tags {
+  margin-bottom: var(--spacing-16);
+}
+
+.legal-page__title,
+.default-single__description {
+  margin-bottom: var(--spacing-16);
+}
+
+.legal-page__description {
+  margin-bottom: var(--spacing-32);
+}
+
+.contact-page__title,
+.page-404__title {
+  margin-bottom: var(--spacing-24);
+}
+
+.page-404__lead {
+  margin-bottom: var(--spacing-32);
 }
 
 
@@ -192,9 +213,9 @@ video {
   line-height: 0;
   -webkit-filter: contrast(1);
   filter: contrast(1);
-  transition: -webkit-filter 0.5s ease;
-  transition: filter 0.5s ease;
-  transition: filter 0.5s ease, -webkit-filter 0.5s ease;
+  transition: -webkit-filter var(--motion-duration-slower) var(--motion-ease-standard);
+  transition: filter var(--motion-duration-slower) var(--motion-ease-standard);
+  transition: filter var(--motion-duration-slower) var(--motion-ease-standard), -webkit-filter var(--motion-duration-slower) var(--motion-ease-standard);
 }
 
 .header-image img {
@@ -223,13 +244,6 @@ picture>img {
 /* Remove empty p-tags */
 p:empty {
   display: none;
-}
-
-/* lg: <= 79.9375em — expand default post placement to full content width */
-@media (max-width: 79.9375em) {
-  .content.post > * {
-    --col: col-start 1 / span 12;
-  }
 }
 
 .content.post {
@@ -337,8 +351,8 @@ p:empty {
   }
 }
 
-/* sm: <= 40em */
-@media (max-width: 40em) {
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
   .content.post>.project-info {
     grid-template-columns: minmax(0, 1fr);
     grid-column-gap: 1.5rem;

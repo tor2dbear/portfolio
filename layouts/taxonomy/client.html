@@ -55,7 +55,7 @@
       <h2 class="type-preamble application-page__preamble">
         {{ .Params.preamble }}
       </h2>
-      <div class="type-information text-color-lighter application-page__meta">
+      <div class="type-information is-muted application-page__meta">
         {{ partial "date.html" . }}
       </div>
       <p class="type-body">{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>

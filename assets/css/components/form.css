@@ -29,7 +29,7 @@ textarea,
   background-color: var(--component-form-bg);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 textarea {
@@ -49,7 +49,7 @@ textarea:focus,
 .input:focus {
   outline: none;
   border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px var(--state-focus);
+  box-shadow: var(--ring-focus);
 }
 
 /* Hover State */
@@ -98,7 +98,7 @@ textarea.error,
 input.error:focus,
 textarea.error:focus,
 .input.error:focus {
-  box-shadow: 0 0 0 3px var(--status-error-bg);
+  box-shadow: var(--ring-error);
 }
 
 /* ==========================================================================
@@ -129,7 +129,7 @@ textarea.error:focus,
   border: 2px solid var(--border-default);
   border-radius: 50%;
   background-color: var(--bg-page);
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
 
@@ -140,7 +140,7 @@ textarea.error:focus,
   border-radius: 50%;
   background-color: var(--brand-primary);
   transform: scale(0);
-  transition: transform 0.15s ease;
+  transition: transform var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 /* Checked State */
@@ -155,7 +155,7 @@ textarea.error:focus,
 /* Focus State */
 .radio input[type="radio"]:focus + .radio__visual {
   outline: none;
-  box-shadow: 0 0 0 3px var(--state-focus);
+  box-shadow: var(--ring-focus);
 }
 
 /* Hover State */
@@ -211,7 +211,7 @@ textarea.error:focus,
   border: 2px solid var(--border-default);
   border-radius: var(--radius-xs);
   background-color: var(--bg-page);
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
 
@@ -224,7 +224,7 @@ textarea.error:focus,
   background-repeat: no-repeat;
   background-position: center;
   transform: scale(0);
-  transition: transform 0.15s ease;
+  transition: transform var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 /* Checked State */
@@ -240,7 +240,7 @@ textarea.error:focus,
 /* Focus State */
 .checkbox input[type="checkbox"]:focus + .checkbox__visual {
   outline: none;
-  box-shadow: 0 0 0 3px var(--state-focus);
+  box-shadow: var(--ring-focus);
 }
 
 /* Hover State */
@@ -290,7 +290,7 @@ select,
   border-radius: var(--radius-8);
   cursor: pointer;
   appearance: none;
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 /* Focus State */
@@ -298,7 +298,7 @@ select:focus,
 .select:focus {
   outline: none;
   border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px var(--state-focus);
+  box-shadow: var(--ring-focus);
 }
 
 /* Hover State */
@@ -362,6 +362,7 @@ select:disabled,
 
 .radio-group--inline,
 .checkbox-group--inline {
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: var(--spacing-16);

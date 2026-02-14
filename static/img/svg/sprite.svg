@@ -77,6 +77,17 @@
     <path d="M7.499 12.001a4.5 4.5 0 1 0 9 0 4.5 4.5 0 1 0 -9 0Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
   </symbol>
 
+  <!-- Accordion Plus Icon -->
+  <symbol id="icon-plus" viewBox="0 0 24 24">
+    <path d="m0.75 12 22.5 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+    <path d="m12 0.75 0 22.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+  </symbol>
+
+  <!-- Accordion Minus Icon -->
+  <symbol id="icon-minus" viewBox="0 0 24 24">
+    <path d="m0.75 12.038 22.5 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+  </symbol>
+
   <!-- Mode Micro Icon -->
   <symbol id="icon-mode-micro" viewBox="0 0 10 10">
     <path d="M5 7.5c1.38071 0 2.5 -1.11929 2.5 -2.5S6.38071 2.5 5 2.5 2.5 3.61929 2.5 5 3.61929 7.5 5 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>

@@ -170,6 +170,8 @@
   {{ $components_grid_overlay := resources.Get "css/components/grid-overlay.css" }}
   {{ $components_toast := resources.Get "css/components/toast.css" }}
   {{ $components_chord_hud := resources.Get "css/components/chord-hud.css" }}
+  {{ $components_accordion := resources.Get "css/components/accordion.css" }}
+  {{ $components_tabs := resources.Get "css/components/tabs.css" }}
 
   <!-- CSS pages (NEW - redesign) -->
   {{ $pages_home := resources.Get "css/pages/home.css" }}
@@ -320,14 +322,14 @@
       min-width: 0;
       position: relative;
       white-space: nowrap;
-      transition: opacity 0.5s ease;
+      transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
     }
     .role-swapper__item {
       position: absolute;
       left: 0;
       top: 0;
       opacity: 0;
-      transition: opacity 0.5s ease;
+      transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
     }
     .role-swapper__item.is-active {
       position: relative;
@@ -342,14 +344,14 @@
     /* Reveal animation - immediate variant for hero */
     .reveal {
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 600ms ease-out, transform 600ms ease-out;
+      transform: translateY(var(--motion-distance-md));
+      transition: opacity var(--motion-duration-reveal) var(--motion-ease-decelerate), transform var(--motion-duration-reveal) var(--motion-ease-decelerate);
       will-change: opacity, transform;
     }
     .reveal--immediate {
       --reveal-delay: 0ms;
-      --reveal-duration: 400ms;
-      transition: opacity 400ms ease-out, transform 400ms ease-out;
+      --reveal-duration: var(--motion-duration-reveal-immediate);
+      transition: opacity var(--motion-duration-reveal-immediate) var(--motion-ease-decelerate), transform var(--motion-duration-reveal-immediate) var(--motion-ease-decelerate);
     }
     .reveal.is-revealed {
       opacity: 1;
@@ -415,6 +417,8 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_grid_overlay.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_toast.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_chord_hud.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_accordion.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $components_tabs.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $pages_palette_generator.RelPermalink }}" />
@@ -429,7 +433,7 @@
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
-    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $pages_home $pages_ui_library $pages_palette_generator }}
+    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $components_accordion $components_tabs $pages_home $pages_ui_library $pages_palette_generator }}
     {{ with $pages_contact }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -501,6 +505,8 @@
   {{ $js16 := resources.Get "js/grid-overlay.js" }}
   {{ $js17 := resources.Get "js/keyboard-chords.js" }}
   {{ $js18 := resources.Get "js/palette-generator.js" }}
+  {{ $js19 := resources.Get "js/writing-tag-filter.js" }}
+  {{ $js20 := resources.Get "js/tabs.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -525,9 +531,11 @@
     <script src="{{ $js16.RelPermalink }}" defer></script>
     <script src="{{ $js17.RelPermalink }}" defer></script>
     <script src="{{ $js18.RelPermalink }}" defer></script>
+    <script src="{{ $js19.RelPermalink }}" defer></script>
+    <script src="{{ $js20.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 $js19 $js20 }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
   {{ end }}

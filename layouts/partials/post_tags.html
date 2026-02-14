@@ -1,27 +1,33 @@
 <div class="tag-list">
-
   {{ if isset .Params "tags" }}
-  {{ $count := len .Params.tags }}
-  {{ $section := .Section }}
-  {{ if gt $count 0 }}
-  <ul class="tag-list__items">
-    {{ range $k, $v := .Params.tags }}
-      <li class="tag-list__item">
-        {{- $tagPage := false -}}
-        {{- $tagSlug := . | urlize -}}
-        {{- with index site.Taxonomies.tags $tagSlug -}}
-          {{- $tagPage = .Page -}}
-        {{- end -}}
-        {{- if $tagPage -}}
-          <a class="tag-list__link tag" href="{{ $tagPage.RelPermalink }}">{{ replace . "ui-ux" "ui/ux" }}</a>
-        {{- else -}}
-          <span class="tag-list__link tag">{{ replace . "ui-ux" "ui/ux" }}</span>
-        {{- end -}}
-        {{ if lt $k (sub $count 1) }} {{ end }}
-      </li>
+    {{ $count := len .Params.tags }}
+    {{ $page := . }}
+    {{ $section := $page.Section }}
+    {{ $isWritingSection := or (eq $section "writing") (eq $section "texter") (eq $section "post") }}
+    {{ if gt $count 0 }}
+      <ul class="tag-list__items">
+        {{ range $k, $v := .Params.tags }}
+          <li class="tag-list__item">
+            {{- $tagLabel := replace . "ui-ux" "ui/ux" -}}
+            {{- $tagSlug := . | urlize -}}
+            {{- if $isWritingSection -}}
+              {{- $writingTagURL := printf "/%s/?tag=%s" $section $tagSlug | relLangURL -}}
+              <a class="tag-list__link tag" href="{{ $writingTagURL }}">{{ $tagLabel }}</a>
+            {{- else -}}
+              {{- $tagPage := false -}}
+              {{- with index site.Taxonomies.tags $tagSlug -}}
+                {{- $tagPage = .Page -}}
+              {{- end -}}
+              {{- if $tagPage -}}
+                <a class="tag-list__link tag" href="{{ $tagPage.RelPermalink }}">{{ $tagLabel }}</a>
+              {{- else -}}
+                <span class="tag-list__link tag">{{ $tagLabel }}</span>
+              {{- end -}}
+            {{- end -}}
+            {{ if lt $k (sub $count 1) }} {{ end }}
+          </li>
+        {{ end }}
+      </ul>
     {{ end }}
-  </ul>
   {{ end }}
-  {{ end }}
-
 </div>

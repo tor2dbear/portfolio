@@ -16,7 +16,7 @@
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-8);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
   min-width: var(--size-40);
   min-height: var(--size-40);
   color: var(--text-default);
@@ -64,7 +64,7 @@
   opacity: 0;
   visibility: hidden;
   transform: translateY(calc(var(--spacing-8) * -1));
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), transform var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
   text-align: left;
 }
 
@@ -125,7 +125,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background var(--motion-duration-base) var(--motion-ease-standard);
   text-align: left;
   font-size: var(--text-sm);
   color: var(--text-default);
@@ -178,7 +178,7 @@
 
 .theme-option--palette.active .palette-preview {
   border-color: var(--border-strong);
-  box-shadow: 0 0 0 1px var(--bg-page), 0 0 0 3px var(--state-selected);
+  box-shadow: var(--ring-selected-emphasis);
 }
 
 .palette-label {
@@ -365,7 +365,7 @@
   z-index: 999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 /* xs: <= 29.9375em */

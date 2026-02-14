@@ -28,4 +28,4 @@ I use strong, unique passwords and two‑factor authentication for service accou
 Please note that no method of transmission over the internet is 100% secure. I take reasonable steps to protect your data, but I cannot guarantee absolute security.
 
 ## Questions or deletion requests
-If you have any concerns or want your data deleted, email me at hej@tor-bjorn.com.
+If you have any concerns or want your data deleted, email me at hi@tor-bjorn.com.

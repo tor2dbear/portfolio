@@ -7,7 +7,7 @@
 
   <section id="works" class="home-section works-section">
     <div class="content startpage use-subgrid">
-      <div class="post-header mb-8 place-full">
+      <div class="post-header place-full">
         <h2 class="type-headline-small">{{ i18n "Featured" }}</h2>
       </div>
       {{ range $index, $page := first 6 (where (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) }}

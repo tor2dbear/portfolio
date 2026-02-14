@@ -16,8 +16,8 @@
  * - --text-default
  * - --bg-page
  * - --border-default
- * - --state-on-brand-hover
- * - --state-on-light-hover
+ * - --state-brand-hover
+ * - --state-page-hover
  */
 
 /* ==========================================================================
@@ -55,20 +55,20 @@ button,
 
   /* Interaction */
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
   user-select: none;
 }
 
 button:hover,
 .button:hover {
-  background-image: linear-gradient(var(--state-on-light-hover),
-      var(--state-on-light-hover));
+  background-image: linear-gradient(var(--state-brand-hover),
+      var(--state-brand-hover));
 }
 
 button:active,
 .button:active {
-  background-image: linear-gradient(var(--state-on-light-active),
-      var(--state-on-light-active));
+  background-image: linear-gradient(var(--state-brand-active),
+      var(--state-brand-active));
 }
 
 button:focus-visible,
@@ -96,13 +96,13 @@ button:disabled,
 }
 
 .button--primary:hover {
-  background-image: linear-gradient(var(--state-on-dark-hover),
-      var(--state-on-dark-hover));
+  background-image: linear-gradient(var(--state-brand-hover),
+      var(--state-brand-hover));
 }
 
 .button--primary:active {
-  background-image: linear-gradient(var(--state-on-dark-active),
-      var(--state-on-dark-active));
+  background-image: linear-gradient(var(--state-brand-active),
+      var(--state-brand-active));
 }
 
 .button--primary:disabled {
@@ -123,8 +123,8 @@ button:disabled,
 }
 
 .button--secondary:active {
-  background-image: linear-gradient(var(--state-on-light-active),
-      var(--state-on-light-active));
+  background-image: linear-gradient(var(--state-surface-active),
+      var(--state-surface-active));
 }
 
 .button--secondary:disabled {
@@ -146,8 +146,8 @@ button:disabled,
 }
 
 .button--tertiary:active {
-  background-image: linear-gradient(var(--state-on-light-active),
-      var(--state-on-light-active));
+  background-image: linear-gradient(var(--state-surface-active),
+      var(--state-surface-active));
 }
 
 .button--tertiary:disabled {
@@ -162,7 +162,7 @@ button:disabled,
 button.button--icon,
 .button--icon {
   position: relative;
-  transition: padding 0.3s ease;
+  transition: padding var(--motion-duration-slow) var(--motion-ease-standard);
 }
 
 button.button--icon:after,
@@ -177,7 +177,7 @@ button.button--icon:after,
   -webkit-mask-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzExM184MzkpIj4KPHBhdGggZD0iTTE1Ljk5MTMgNy45OTk4M0MxNS45ODQ2IDcuNTM5ODMgMTUuNzkxMyA3LjA5OTgzIDE1LjQ0NDYgNi43OTk4M0w3Ljk4NjY1IDAuMjM5ODM1VjAuMjMzMTY4QzcuNTczMzEgLTAuMTA2ODMyIDYuOTY2NjUgLTAuMDQ2ODMyIDYuNjMzMzEgMC4zNjY1MDFDNi4zMTMzMSAwLjc1MzE2OCA2LjM0NjY1IDEuMzI2NSA2LjcxMzMxIDEuNjY2NUwxMi40NjY2IDYuNzMzMTdDMTIuNTMzMyA2Ljc5MzE3IDEyLjU0IDYuODkzMTcgMTIuNDggNi45NjY1QzEyLjQ0NjYgNi45OTk4MyAxMi40IDcuMDE5ODMgMTIuMzUzMyA3LjAxOTgzSDAuOTM5OThDMC40MDY2NDcgNy4wMTk4MyAtMC4wMjAwMTk1IDcuNDQ2NSAtMC4wMjAwMTk1IDcuOTc5ODRDLTAuMDIwMDE5NSA4LjUwNjUgMC40MDY2NDcgOC45Mzk4MyAwLjkzOTk4IDguOTM5ODNIMTIuMzQ3M1Y4LjkzOTE3QzEyLjQzNCA4LjkzOTE3IDEyLjUwNzMgOS4wMTI1IDEyLjUwNzMgOS4xMDU4NEMxMi41MDA2IDkuMTUyNSAxMi40ODA2IDkuMTkyNSAxMi40NDczIDkuMjI1ODNMNi42ODczMSAxNC4yOTI1QzYuMjczOTggMTQuNjE5MiA2LjIwNzMxIDE1LjIyNTggNi41NDA2NSAxNS42MzkyQzYuODY3MzEgMTYuMDQ1OCA3LjQ3Mzk4IDE2LjExMjUgNy44ODczMSAxNS43NzkyQzcuOTA3MzEgMTUuNzU5MiA3LjkyNzMxIDE1LjczOTIgNy45NDczMSAxNS43MjU4TDE1LjQwMDYgOS4xNjU4M0MxNS43NDA2IDguODU5MTcgMTUuOTQwNiA4LjQxOTE3IDE1Ljk0MDYgNy45NjU4NEwxNS45OTEzIDcuOTk5ODNaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzExM184MzkiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==);
   mask-size: contain;
   -webkit-mask-size: contain;
-  transition: transform 0.3s ease;
+  transition: transform var(--motion-duration-slow) var(--motion-ease-standard);
 }
 
 button.button--icon:hover,

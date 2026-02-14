@@ -1,22 +1,24 @@
 {{ partial "header.html" . }}
 
 <div class="content list use-subgrid">
-  <div class="post-header mb-8">
+  <div class="post-header place-article">
     <h1 class="type-headline-small">{{ .Title }}</h1>
     {{ if .Description }}
-    <p class="type-body-large text-color-lighter mt-4">{{ .Description }}</p>
     {{ end }}
   </div>
 
   {{ $pages := where .Data.Pages ".Params.draft" "!=" true }}
   {{ $pages := where $pages ".Params.hidden" "!=" true }}
+  {{ $pages := sort $pages "Date" "desc" }}
 
   {{ if gt (len $pages) 0 }}
     {{ range $pages }}
-      {{ .Render "summary" }}
+      <div class="place-article">
+        {{ .Render "summary" }}
+      </div>
     {{ end }}
   {{ else }}
-    <p class="text-color-lighter">{{ i18n "no_posts_yet" }}</p>
+    <p class="post-header__empty">{{ i18n "no_posts_yet" }}</p>
   {{ end }}
 </div>
 

@@ -88,7 +88,7 @@
   min-width: 0;
   position: relative;
   white-space: nowrap;
-  transition: opacity 0.5s ease;
+  transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
 }
 
 .role-swapper__item {
@@ -96,7 +96,7 @@
   left: 0;
   top: 0;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
 }
 
 .role-swapper__item.is-active {
@@ -135,8 +135,8 @@
   font-size: var(--text-xl);
 }
 
-/* <= 43.125em */
-@media (max-width: 43.125em) {
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
   .works-section .summary-card__title {
     font-size: var(--text-xl);
   }

@@ -55,6 +55,13 @@
   };
 
   document.addEventListener("DOMContentLoaded", function () {
+    const postContentChildren = document.querySelectorAll(".post-content > *");
+    postContentChildren.forEach((child) => {
+      if (!child.classList.contains("reveal")) {
+        child.classList.add("reveal");
+      }
+    });
+
     const applicationCvBlocks = document.querySelectorAll(
       ".application-page .about-cv.reveal"
     );
@@ -65,17 +72,6 @@
         });
       });
     }
-
-    const contentBlocks = document.querySelectorAll(".post-content");
-    const postContentChildren = new Set();
-    contentBlocks.forEach((block) => {
-      Array.from(block.children).forEach((child) => {
-        if (!child.classList.contains("reveal")) {
-          child.classList.add("reveal");
-        }
-        postContentChildren.add(child);
-      });
-    });
 
     const elements = Array.from(document.querySelectorAll(REVEAL_SELECTOR));
     if (!elements.length) {
@@ -135,16 +131,17 @@
       window.matchMedia("(max-width: 43.125em)").matches;
     const inViewElements = elements.filter(isInViewport);
     let staggerIndex = 0;
-    let postContentIndex = 0;
+    const postStaggerIndexByContainer = new WeakMap();
 
     inViewElements.forEach((element) => {
       if (!prefersNoStagger && !hasCustomDelay(element)) {
-        const isPostContentChild = postContentChildren.has(element);
-        if (isPostContentChild) {
-          const delay = Math.min(postContentIndex * 60, 360);
-          element.style.setProperty("--reveal-delay", `${delay}ms`);
+        const postContainer = element.closest(".post-content");
+        if (postContainer) {
+          const currentPostIndex = postStaggerIndexByContainer.get(postContainer) || 0;
+          const postDelay = Math.min(currentPostIndex * 60, 320);
+          element.style.setProperty("--reveal-delay", `${postDelay}ms`);
           if (isStaggerEligible(element)) {
-            postContentIndex += 1;
+            postStaggerIndexByContainer.set(postContainer, currentPostIndex + 1);
           }
         } else {
           const delay = Math.min(staggerIndex * 80, 320);

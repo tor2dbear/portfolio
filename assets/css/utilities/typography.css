@@ -158,24 +158,9 @@ body {
   line-height: var(--line-height-normal);
 }
 
-/* ==========================================================================
-   TEXT COLOR UTILITIES
-   ========================================================================== */
-
-#layout .text-color-default {
-  color: var(--text-default);
-}
-
-#layout .text-color-lighter {
+#layout .is-muted,
+.is-muted {
   color: var(--text-muted);
-}
-
-#layout .text-color-accent {
-  color: var(--text-accent);
-}
-
-#layout .text-color-neg {
-  color: var(--bg-page);
 }
 
 /* ==========================================================================
@@ -281,7 +266,7 @@ h1,
 .type-headline-1 {
   font-size: calc(clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl)) * var(--type-scale-display));
   letter-spacing: var(--headline-tracking);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Type: Headline 2 */
@@ -291,28 +276,28 @@ h2,
       calc(1.75rem + 0.625vw),
       var(--text-10xl));
   letter-spacing: var(--headline-tracking);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Type: Headline 3 */
 h3,
 .type-headline-3 {
   font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Type: Headline 4 */
 h4,
 .type-headline-4 {
   font-size: clamp(var(--text-xl), calc(1.167rem + 0.417vw), var(--text-3xl));
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Type: Headline 5 */
 h5,
 .type-headline-5 {
   font-size: clamp(var(--text-xl), 1.05rem + 0.3vw, var(--text-2xl));
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Type: Headline Small */
@@ -325,7 +310,7 @@ h5,
   color: var(--text-default);
   letter-spacing: var(--tracking-wider);
   text-align: left;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Type: Preamble (Ingress) */
@@ -336,7 +321,7 @@ h5,
   font-weight: var(--serif-weight-regular);
   font-family: var(--font-body);
   letter-spacing: var(--tracking-wide);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Type: Body */
@@ -346,7 +331,6 @@ h5,
   color: var(--text-default);
   font-family: var(--font-body);
   letter-spacing: var(--tracking-normal);
-  max-width: var(--measure-prose);
   text-wrap-style: pretty;
 }
 
@@ -357,7 +341,6 @@ h5,
   color: var(--text-default);
   font-family: var(--font-body);
   letter-spacing: var(--tracking-normal);
-  max-width: var(--measure-prose);
   text-wrap-style: pretty;
 }
 
@@ -367,7 +350,6 @@ h5,
   line-height: var(--line-height-normal);
   color: var(--text-default);
   font-family: var(--font-body);
-  max-width: var(--measure-prose);
   text-wrap-style: pretty;
 }
 
@@ -396,6 +378,11 @@ code {
   white-space: nowrap;
   overflow: auto;
   grid-column: 1/-1;
+  margin-bottom: var(--spacing-8);
+}
+
+.post-header__empty {
+  color: var(--text-muted);
 }
 
 figcaption {
@@ -519,8 +506,53 @@ figcaption {
   margin-bottom: var(--spacing-8);
 }
 
-.content:is(.post, .page) .prose p {
+.content.post .prose p {
+  margin-bottom: var(--spacing-16);
+  hyphens: auto;
+}
+
+/* Article intro rhythm */
+.content.post > .type-headline-1 {
+  margin-bottom: var(--spacing-12);
+}
+
+.content.post > .post-date {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-2);
+}
+
+.content.post > .post-tags-wrap {
+  margin-top: var(--spacing-16);
   margin-bottom: var(--spacing-24);
+}
+
+.content.post > .type-preamble {
+  margin-bottom: var(--spacing-24);
+}
+
+/* Article prose hierarchy */
+.content.post .prose h2 {
+  font-size: clamp(var(--text-4xl), calc(1.2rem + 0.75vw), var(--text-6xl));
+  line-height: var(--line-height-tight);
+  margin-top: var(--spacing-32);
+  margin-bottom: var(--spacing-16);
+}
+
+.content.post .prose h3 {
+  font-size: clamp(var(--text-2xl), calc(1rem + 0.55vw), var(--text-4xl));
+  line-height: var(--line-height-tight);
+  margin-top: var(--spacing-24);
+  margin-bottom: var(--spacing-12);
+}
+
+.content.post .prose :is(ul, ol) {
+  margin-top: 0;
+  margin-bottom: var(--spacing-16);
+}
+
+.content.post .post-content.prose > :first-child {
+  margin-top: 0;
 }
 
 /* ==========================================================================
@@ -530,7 +562,7 @@ figcaption {
 a {
   color: var(--text-default);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all var(--motion-duration-slow) var(--motion-ease-standard);
 }
 
 body a:hover,

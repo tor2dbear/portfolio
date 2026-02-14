@@ -1,66 +1,106 @@
 /**
  * UI Library Tabs
- * Handles tab switching and accordion behavior for the UI library page
+ * Handles UI-library specific behavior (ordering, token hydration, demos).
  */
 
 (function () {
-  const tabsContainer = document.querySelector('[data-js="ui-library-tabs"]');
+  const tabsContainer = document.querySelector('[data-ui-library-tabs]');
 
   if (!tabsContainer) {
     return;
   }
 
-  const tabButtons = tabsContainer.querySelectorAll('.tab-button');
   const tabPanels = tabsContainer.querySelectorAll('.tab-panel');
 
   /**
-   * Switch to a specific tab
-   * @param {string} tabName - The data-tab value to switch to
+   * Sort direct child details elements by stable data-sort key.
+   * @param {Element|null} container
    */
-  function switchTab(tabName) {
-    // Update buttons
-    tabButtons.forEach((button) => {
-      const isActive = button.dataset.tab === tabName;
-      button.classList.toggle('is-active', isActive);
-      button.setAttribute('aria-selected', isActive ? 'true' : 'false');
-    });
-
-    // Update panels
-    tabPanels.forEach((panel) => {
-      const isActive = panel.dataset.panel === tabName;
-      panel.classList.toggle('is-active', isActive);
-    });
-
-    // Optional: Save to localStorage
-    try {
-      localStorage.setItem('ui-library-active-tab', tabName);
-    } catch (e) {
-      // Silent fail if localStorage is not available
+  function sortDetailsByKey(container) {
+    if (!container) {
+      return;
     }
+
+    const detailsList = Array.from(container.children).filter((child) => child.matches('details'));
+    if (detailsList.length < 2) {
+      return;
+    }
+
+    detailsList
+      .sort((a, b) => {
+        const keyA = (a.dataset.sort || '').toLowerCase();
+        const keyB = (b.dataset.sort || '').toLowerCase();
+        return keyA.localeCompare(keyB, 'en');
+      })
+      .forEach((details) => {
+        container.appendChild(details);
+      });
   }
 
   /**
-   * Restore previously active tab from localStorage
+   * Apply deterministic accordion ordering for UI Library.
    */
-  function restoreActiveTab() {
-    try {
-      const savedTab = localStorage.getItem('ui-library-active-tab');
-      if (savedTab) {
-        switchTab(savedTab);
-      }
-    } catch (e) {
-      // Silent fail if localStorage is not available
-    }
+  function sortUiLibraryAccordions() {
+    tabPanels.forEach((panel) => sortDetailsByKey(panel));
+
+    // Tokens tab: nested accordions for scales and semantic groups.
+    tabsContainer.querySelectorAll('#panel-tokens .token-section').forEach((section) => {
+      sortDetailsByKey(section);
+    });
   }
 
-  // Add click handlers to tab buttons
-  tabButtons.forEach((button) => {
-    button.addEventListener('click', (e) => {
-      const tabName = button.dataset.tab;
-      switchTab(tabName);
+  // Keep section order deterministic across languages using English sort keys.
+  sortUiLibraryAccordions();
+
+  // Toggle demo controls used in UI Library examples.
+  const toggleDemos = tabsContainer.querySelectorAll('[data-js="ui-library-toggle-demo"]');
+  toggleDemos.forEach((toggleButton) => {
+    toggleButton.addEventListener('click', () => {
+      const isPressed = toggleButton.getAttribute('aria-pressed') === 'true';
+      toggleButton.setAttribute('aria-pressed', isPressed ? 'false' : 'true');
     });
   });
 
-  // Restore active tab on page load
-  restoreActiveTab();
+  /**
+   * Fill token value placeholders from computed custom properties.
+   */
+  function hydrateTokenValues() {
+    const rootStyles = window.getComputedStyle(document.documentElement);
+    const valueNodes = tabsContainer.querySelectorAll('[data-token-value]');
+    valueNodes.forEach((node) => {
+      const tokenName = node.getAttribute('data-token-value');
+      if (!tokenName) {
+        return;
+      }
+
+      const value = rootStyles.getPropertyValue(tokenName).trim();
+      if (!value) {
+        return;
+      }
+
+      node.textContent = value;
+    });
+  }
+
+  /**
+   * Restart all motion demos under the current tab container.
+   */
+  function replayMotionDemos() {
+    const animatedNodes = tabsContainer.querySelectorAll('.motion-demo-dot, .motion-distance-chip');
+    animatedNodes.forEach((node) => {
+      node.classList.add('is-restarting');
+      // Force a reflow so animation restarts reliably.
+      void node.offsetWidth;
+      node.classList.remove('is-restarting');
+    });
+  }
+
+  const motionReplayButtons = tabsContainer.querySelectorAll('[data-js="motion-replay"]');
+  motionReplayButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      replayMotionDemos();
+    });
+  });
+
+  hydrateTokenValues();
 })();

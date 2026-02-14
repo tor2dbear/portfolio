@@ -3,7 +3,18 @@
   grid-column: content-start / content-end;
 }
 
+.palette-generator__title {
+  margin-bottom: var(--spacing-8);
+}
+
+.palette-generator__description {
+  margin-bottom: var(--spacing-24);
+}
+
 .palette-generator__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
   padding: var(--spacing-16);
@@ -40,14 +51,17 @@
   width: 100%;
   font: inherit;
   color: var(--text-default);
-  background: var(--component-form-bg);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  padding: var(--spacing-8) var(--spacing-12);
+}
+
+.palette-generator select {
+  background-color: var(--component-form-bg);
 }
 
 .palette-generator__export {
   background: var(--bg-page);
+  padding: var(--spacing-8) var(--spacing-12);
 }
 
 .palette-generator__actions {
@@ -65,6 +79,7 @@
 
 .palette-generator__hint {
   color: var(--text-muted);
+  margin-bottom: 0;
 }
 
 .palette-generator__code {

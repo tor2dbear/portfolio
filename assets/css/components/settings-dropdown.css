@@ -16,7 +16,7 @@
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-8);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
   min-width: var(--size-40);
   min-height: var(--size-40);
   color: var(--text-default);
@@ -62,7 +62,7 @@
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), transform var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .settings-panel:not([hidden]) {
@@ -94,7 +94,7 @@
   z-index: 999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .settings-overlay:not([hidden]) {

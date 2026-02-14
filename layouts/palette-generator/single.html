@@ -7,8 +7,8 @@
   data-palette-custom-label="{{ i18n "palette_custom" }}"
 >
   <div class="palette-generator__header place-wide">
-    <h1 class="type-headline-1 mt-0 mb-8">{{ .Title }}</h1>
-    <p class="type-body-large mb-24">{{ .Description }}</p>
+    <h1 class="type-headline-1 palette-generator__title">{{ .Title }}</h1>
+    <p class="type-body-large palette-generator__description">{{ .Description }}</p>
   </div>
 
   <section class="palette-generator__panel place-wide" aria-label="Palette generator">
@@ -73,7 +73,7 @@
     <textarea id="palette-export" class="palette-generator__export" data-js="palette-export" rows="10" readonly></textarea>
     <pre class="palette-generator__code"><code data-js="palette-export-code"></code></pre>
 
-    <p class="palette-generator__hint type-body-small mb-0">
+    <p class="palette-generator__hint type-body-small">
       {{ if eq .Language.Lang "sv" }}Ändringar appliceras live. Spara palette för att behålla den som Custom palette.{{ else }}Changes apply live. Save palette to persist as Custom palette.{{ end }}
     </p>
   </section>
