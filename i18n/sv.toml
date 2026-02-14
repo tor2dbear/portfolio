@@ -316,8 +316,14 @@ other = "Mesa"
 [palette_pantone]
 other = "PANTONE 11-4201"
 
+[palette_coty]
+other = "Årets färg"
+
 [palette_custom]
 other = "Custom palette"
+
+[coty_year]
+other = "År"
 
 [toast_palette_saved]
 other = "Palett sparad"

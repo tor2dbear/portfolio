@@ -391,7 +391,7 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/tokens/components.css` - Component exceptions
 - `assets/css/tokens/legacy.css` - Legacy aliases (deprecated)
 - `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
-- `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `forest`, `mesa`, `pantone`)
+- `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `forest`, `mesa`, `pantone`, `coty`)
 - `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
 - `assets/css/utilities/typography.css` - Typography utilities
 - `assets/css/utilities/layout.css` - Layout utilities
@@ -443,6 +443,7 @@ The project now uses a role-based palette model with a baseline recipe + per-pal
 - `assets/js/palette-generator.js` applies role/policy output to semantic CSS vars live in browser.
 - Theme menu palette selection updates both page theme and generator preset.
 - A saved custom palette is persisted in `localStorage` and exposed as `custom` in the palette menu.
+- Color of the Year year-selection is persisted in `localStorage` as `theme-coty-year`.
 
 **Current role intent**:
 - `text`: readable typography/contrast
@@ -571,7 +572,8 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 ### Theming Dimensions (Current)
 - HTML data attributes drive theming:
   - `data-mode="light|dark"`
-  - `data-palette="standard|pantone"`
+  - `data-palette="standard|forest|mesa|pantone|coty|custom"`
+  - `data-coty-year="YYYY"` (active Color of the Year scale)
 - Add new dimensions by creating `assets/css/dimensions/<dimension>/*.css` and wiring in `layouts/partials/head.html`.
 - When adding a new palette, also add its preview tokens in `assets/css/dimensions/palette/previews.css` so the theme dropdown can show palette dots in both modes.
 

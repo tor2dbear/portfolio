@@ -1,0 +1,148 @@
+[meta]
+name = "pantone-coty"
+default_year = 2026
+
+[[colors]]
+year = 2000
+name = "Cerulean Blue"
+hex = "#98b4d4"
+
+[[colors]]
+year = 2001
+name = "Fuscha Rose"
+hex = "#c3447a"
+
+[[colors]]
+year = 2002
+name = "True Red"
+hex = "#bc243c"
+
+[[colors]]
+year = 2003
+name = "Aqua Sky"
+hex = "#7fcdcd"
+
+[[colors]]
+year = 2004
+name = "Tigerlily"
+hex = "#e15d44"
+
+[[colors]]
+year = 2005
+name = "Blue Turquoise"
+hex = "#55b4b0"
+
+[[colors]]
+year = 2006
+name = "Sand Dollar"
+hex = "#dfcfbe"
+
+[[colors]]
+year = 2007
+name = "Chili Pepper"
+hex = "#9b2335"
+
+[[colors]]
+year = 2008
+name = "Blue Izis"
+hex = "#5b5ea6"
+
+[[colors]]
+year = 2009
+name = "Mimosa"
+hex = "#efc050"
+
+[[colors]]
+year = 2010
+name = "Turquoise"
+hex = "#45B8AC"
+
+[[colors]]
+year = 2011
+name = "Honeysuckle"
+hex = "#d65076"
+
+[[colors]]
+year = 2012
+name = "Tangerine Tango"
+hex = "#dd4124"
+
+[[colors]]
+year = 2013
+name = "Emerald"
+hex = "#009b77"
+
+[[colors]]
+year = 2014
+name = "Radiant Orchid"
+hex = "#ad5e99"
+
+[[colors]]
+year = 2015
+name = "Marsala"
+hex = "#964f4c"
+
+[[colors]]
+year = 2016
+name = "Rose Quartz"
+hex = "#f7caca"
+
+[[colors]]
+year = 2016
+name = "Serenity"
+hex = "#93a9d1"
+
+[[colors]]
+year = 2017
+name = "Greenery"
+hex = "#88b04b"
+
+[[colors]]
+year = 2018
+name = "Ultra Violet"
+hex = "#5f4b8b"
+
+[[colors]]
+year = 2019
+name = "Living Coral"
+hex = "#ff6f61"
+
+[[colors]]
+year = 2020
+name = "Classic Blue"
+hex = "#0f4c81"
+
+[[colors]]
+year = 2021
+name = "Ultimate Gray"
+hex = "#939597"
+
+[[colors]]
+year = 2021
+name = "Illuminating"
+hex = "#f5df4d"
+
+[[colors]]
+year = 2022
+name = "Very Peri"
+hex = "#6667AB"
+
+[[colors]]
+year = 2023
+name = "Viva Magenta"
+hex = "#BE3455"
+
+[[colors]]
+year = 2024
+name = "Peach Fuzz"
+hex = "#FEBD99"
+
+[[colors]]
+year = 2025
+name = "Mocha Mousse"
+hex = "#A57865"
+
+[[colors]]
+year = 2026
+name = "Cloud Dancer"
+hex = "#F0EFEB"

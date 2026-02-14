@@ -1,0 +1,20 @@
+# Theme spec: Color of the Year
+
+[meta]
+name = "coty"
+
+[roles]
+text = "coty"
+surface = "coty"
+primary = "coty"
+secondary = "coty"
+
+[policies]
+tone_mode = "mono"
+surface_profile = "deep"
+form_policy = "surface-derived"
+image_treatment = "none"
+
+[overrides]
+
+[component_overrides]

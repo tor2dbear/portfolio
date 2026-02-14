@@ -14,9 +14,11 @@
   let themeIcon;
   let modeOptions;
   let paletteOptions;
+  let cotyYearSelects;
   let typographyOptions;
   let spriteBase = '';
   const CUSTOM_PALETTE_KEY = 'theme-custom-palette';
+  const COTY_YEAR_KEY = 'theme-coty-year';
   let appliedCustomTokenNames = [];
 
   function getUseHref(use) {
@@ -238,6 +240,10 @@
     updateThemeIcon(mode);
     updateThemeColorMeta();
     updateFooterModeLabel(mode);
+    const cotyActions = window.CotyScaleActions || null;
+    if (cotyActions && typeof cotyActions.applyForMode === 'function') {
+      cotyActions.applyForMode(document.documentElement.getAttribute('data-mode') || mode);
+    }
 
     // Recompute mode-sensitive runtime tokens for custom palettes
     if ((document.documentElement.getAttribute('data-palette') || 'standard') === 'custom') {
@@ -283,6 +289,7 @@
     var el = document.querySelector('[data-js="footer-palette"]');
     var category = el ? el.getAttribute('data-category') : '';
     var label = el ? (el.getAttribute('data-label-' + palette) || palette) : palette;
+    label = formatPaletteLabel(label, palette);
     var icon = el ? el.getAttribute('data-toast-icon') : '';
     if (window.Toast) window.Toast.show(category, label, { icon: icon });
   }
@@ -299,6 +306,27 @@
     }
     document.documentElement.setAttribute('data-palette', palette);
     updateFooterPaletteLabel(palette);
+  }
+
+  function getCotyActions() {
+    return window.CotyScaleActions || null;
+  }
+
+  function getCurrentCotyYear() {
+    const actions = getCotyActions();
+    if (actions && typeof actions.getCurrentYear === 'function') {
+      return actions.getCurrentYear();
+    }
+    const attr = Number(document.documentElement.getAttribute('data-coty-year'));
+    if (attr) return attr;
+    const stored = Number(localStorage.getItem(COTY_YEAR_KEY));
+    return stored || 2026;
+  }
+
+  function formatPaletteLabel(baseLabel, palette) {
+    if (palette !== 'coty') return baseLabel;
+    const year = getCurrentCotyYear();
+    return baseLabel + ' (' + year + ')';
   }
 
   function updatePaletteUI(currentPalette) {
@@ -636,8 +664,8 @@
   function updateFooterPaletteLabel(palette) {
     const paletteLabel = document.querySelector('[data-js="footer-palette"]');
     if (!paletteLabel) return;
-    const label = paletteLabel.getAttribute(`data-label-${palette}`) || palette;
-    paletteLabel.textContent = label;
+    const baseLabel = paletteLabel.getAttribute(`data-label-${palette}`) || palette;
+    paletteLabel.textContent = formatPaletteLabel(baseLabel, palette);
   }
 
   function updateFooterTypographyLabel(typography) {
@@ -658,6 +686,80 @@
     }
   });
 
+  function syncCotyYearUI(year) {
+    if (!cotyYearSelects) return;
+    cotyYearSelects.forEach(select => {
+      select.value = String(year);
+    });
+  }
+
+  function setCotyYear(year, options) {
+    const opts = options || {};
+    const actions = getCotyActions();
+    let entry = null;
+
+    if (actions && typeof actions.setYear === 'function') {
+      entry = actions.setYear(year);
+    } else {
+      const numeric = Number(year) || 2026;
+      document.documentElement.setAttribute('data-coty-year', String(numeric));
+      entry = { year: numeric };
+    }
+
+    if (!entry || !entry.year) return;
+
+    try {
+      localStorage.setItem(COTY_YEAR_KEY, String(entry.year));
+    } catch (_err) {
+      // Ignore storage failures.
+    }
+
+    syncCotyYearUI(entry.year);
+    const currentPalette = document.documentElement.getAttribute('data-palette') || 'standard';
+    if (currentPalette !== 'pantone') {
+      localStorage.setItem('theme-palette', 'pantone');
+      applyPalette('pantone');
+      updatePaletteUI('pantone');
+      window.dispatchEvent(new CustomEvent('theme:palette-changed', {
+        detail: { palette: 'pantone' }
+      }));
+    } else {
+      updateFooterPaletteLabel(currentPalette);
+    }
+
+    if (!opts.silent) {
+      window.dispatchEvent(new CustomEvent('theme:coty-year-changed', {
+        detail: { year: entry.year, name: entry.name || '' }
+      }));
+    }
+  }
+
+  function initCotyYearControls() {
+    const actions = getCotyActions();
+    if (!cotyYearSelects || !cotyYearSelects.length || !actions || typeof actions.getEntries !== 'function') {
+      return;
+    }
+
+    const entries = actions.getEntries();
+    if (!entries || !entries.length) return;
+
+    cotyYearSelects.forEach(select => {
+      select.innerHTML = '';
+      entries.forEach(entry => {
+        const option = document.createElement('option');
+        option.value = String(entry.year);
+        option.textContent = String(entry.year) + ' \u2014 ' + entry.name;
+        select.appendChild(option);
+      });
+      select.addEventListener('change', function() {
+        setCotyYear(this.value);
+      });
+    });
+
+    const initialYear = Number(localStorage.getItem(COTY_YEAR_KEY)) || actions.getCurrentYear();
+    setCotyYear(initialYear, { silent: true });
+  }
+
   // ==========================================================================
   // INITIALIZATION
   // ==========================================================================
@@ -670,19 +772,25 @@
     themeIcon = document.querySelector('[data-js="theme-icon"]');
     modeOptions = document.querySelectorAll('[data-js="mode-option"]');
     paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
+    cotyYearSelects = document.querySelectorAll('[data-js="coty-year-theme"]');
     typographyOptions = document.querySelectorAll('[data-js="typography-option"]');
 
     // Load stored preferences or use defaults
     const storedMode = localStorage.getItem('theme-mode') || 'system';
     const storedPalette = localStorage.getItem('theme-palette') || 'standard';
     const storedTypography = localStorage.getItem('theme-typography') || 'editorial';
-    const initialPalette = (storedPalette === 'custom' && !hasCustomPalette()) ? 'standard' : storedPalette;
+    const normalizedStoredPalette = storedPalette === 'coty' ? 'pantone' : storedPalette;
+    const initialPalette = (normalizedStoredPalette === 'custom' && !hasCustomPalette()) ? 'standard' : normalizedStoredPalette;
     if (initialPalette !== storedPalette) {
       localStorage.setItem('theme-palette', initialPalette);
     }
 
     // Apply stored preferences
     applyMode(storedMode);
+    if (window.CotyScaleActions && typeof window.CotyScaleActions.init === 'function') {
+      window.CotyScaleActions.init();
+    }
+    initCotyYearControls();
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
@@ -721,6 +829,8 @@
         });
         return values;
       },
+      setCotyYear: setCotyYear,
+      getCotyYear: getCurrentCotyYear,
       refreshCustomPalette: refreshCustomPaletteState
     };
 

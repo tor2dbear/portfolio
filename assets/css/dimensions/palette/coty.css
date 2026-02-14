@@ -1,16 +1,14 @@
 /* ============================================================================
-   PALETTE: Pantone
+   PALETTE: Color of the Year
 
-   Cloud Dancer inspired palette with grayscale images and screen blend mode.
+   Uses runtime-generated COTY scale tokens (--coty-1 .. --coty-12).
    ============================================================================ */
 
-:root[data-palette="pantone"] {
-  /* Image effects */
-  --image-grayscale: 100%;
-  --image-blend-mode: screen;
-  --image-background: var(--coty-12);
+:root[data-palette="coty"] {
+  --image-grayscale: 0%;
+  --image-blend-mode: normal;
+  --image-background: transparent;
 
-  /* Accent roles (single-family) */
   --accent-primary: var(--coty-9);
   --accent-primary-strong: var(--coty-11);
   --accent-secondary: var(--coty-4);
@@ -35,15 +33,4 @@
 
   --component-form-bg: var(--coty-3);
   --component-form-placeholder: var(--text-muted);
-
-  --component-newsletter-bg: var(--coty-12);
-  --component-newsletter-text: var(--coty-2);
-  --component-newsletter-illustration-bg: var(--coty-3);
-  --component-newsletter-button-bg: var(--coty-4);
-  --component-newsletter-button-text: var(--coty-11);
-}
-
-/* Dark mode + Pantone overrides */
-:root[data-mode="dark"][data-palette="pantone"] {
-  --image-background: var(--coty-7);
 }
