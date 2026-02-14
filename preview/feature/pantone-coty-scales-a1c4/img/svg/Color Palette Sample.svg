@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Color-Palette-Sample--Streamline-Ultimate">
+  <desc>
+    Color Palette Sample Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M7.5 0.75H3c-0.82843 0 -1.5 0.67157 -1.5 1.5v19.5c0 0.8284 0.67157 1.5 1.5 1.5h4.5c0.82843 0 1.5 -0.6716 1.5 -1.5V2.25c0 -0.82843 -0.67157 -1.5 -1.5 -1.5Z" stroke-width="1.5"></path>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m11.76 0.859985 4.16 1.720005c0.1868 0.07545 0.3565 0.18751 0.4993 0.32958 0.1428 0.14206 0.2557 0.31126 0.3321 0.49763 0.0765 0.18636 0.1148 0.38613 0.1128 0.58755 -0.0019 0.20141 -0.0442 0.40039 -0.1242 0.58524L9 21.75" stroke-width="1.5"></path>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m19.08 5.78998 3 3.33c0.1327 0.14572 0.2354 0.31617 0.3022 0.50161 0.0669 0.18544 0.0965 0.38221 0.0872 0.57911 -0.0093 0.1969 -0.0573 0.39 -0.1413 0.5683 -0.0839 0.1784 -0.2022 0.3384 -0.3481 0.471L8.82001 22.45" stroke-width="1.5"></path>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M1.5 7.25H9" stroke-width="1.5"></path>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M1.5 13.75H9" stroke-width="1.5"></path>
+  <path stroke="currentColor" d="M5.18356 20.255c-0.2071 0 -0.375 -0.1679 -0.375 -0.375s0.1679 -0.375 0.375 -0.375" stroke-width="1.5"></path>
+  <path stroke="currentColor" d="M5.18356 20.255c0.20711 0 0.375 -0.1679 0.375 -0.375s-0.16789 -0.375 -0.375 -0.375" stroke-width="1.5"></path>
+</svg>
