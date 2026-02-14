@@ -67,15 +67,15 @@ html[data-grid-overlay] .grid-overlay {
    Only animates when data-grid-animate is set (explicit toggle only). */
 html[data-grid-animate][data-grid-overlay]:not([data-grid-overlay="closing"]) .grid-overlay__col {
   transform-origin: top;
-  animation: grid-col-in 0.2s ease-out both;
-  animation-delay: calc(var(--i, 0) * 25ms);
+  animation: grid-col-in var(--motion-duration-base) var(--motion-ease-decelerate) both;
+  animation-delay: calc(var(--i, 0) * var(--motion-stagger-step));
 }
 
 /* Out: columns collapse right→left, sliding up */
 html[data-grid-animate][data-grid-overlay="closing"] .grid-overlay__col {
   transform-origin: top;
-  animation: grid-col-out 0.2s ease-in both;
-  animation-delay: calc((13 - var(--i, 0)) * 25ms);
+  animation: grid-col-out var(--motion-duration-base) var(--motion-ease-accelerate) both;
+  animation-delay: calc((13 - var(--i, 0)) * var(--motion-stagger-step));
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -66,17 +66,6 @@
       });
     }
 
-    const contentBlocks = document.querySelectorAll(".post-content");
-    const postContentChildren = new Set();
-    contentBlocks.forEach((block) => {
-      Array.from(block.children).forEach((child) => {
-        if (!child.classList.contains("reveal")) {
-          child.classList.add("reveal");
-        }
-        postContentChildren.add(child);
-      });
-    });
-
     const elements = Array.from(document.querySelectorAll(REVEAL_SELECTOR));
     if (!elements.length) {
       return;
@@ -135,23 +124,13 @@
       window.matchMedia("(max-width: 43.125em)").matches;
     const inViewElements = elements.filter(isInViewport);
     let staggerIndex = 0;
-    let postContentIndex = 0;
 
     inViewElements.forEach((element) => {
       if (!prefersNoStagger && !hasCustomDelay(element)) {
-        const isPostContentChild = postContentChildren.has(element);
-        if (isPostContentChild) {
-          const delay = Math.min(postContentIndex * 60, 360);
-          element.style.setProperty("--reveal-delay", `${delay}ms`);
-          if (isStaggerEligible(element)) {
-            postContentIndex += 1;
-          }
-        } else {
-          const delay = Math.min(staggerIndex * 80, 320);
-          element.style.setProperty("--reveal-delay", `${delay}ms`);
-          if (isStaggerEligible(element)) {
-            staggerIndex += 1;
-          }
+        const delay = Math.min(staggerIndex * 80, 320);
+        element.style.setProperty("--reveal-delay", `${delay}ms`);
+        if (isStaggerEligible(element)) {
+          staggerIndex += 1;
         }
       }
       // Immediate reveal elements skip image waiting for faster LCP

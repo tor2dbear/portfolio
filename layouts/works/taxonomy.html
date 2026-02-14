@@ -1,7 +1,7 @@
 {{ partial "header.html" . }}
 
 <div class="content list tag-page use-subgrid">
-  <div class="taxonomy-header taxonomy-header--tag mb-8 place-full">
+  <div class="taxonomy-header taxonomy-header--tag place-full">
     <h1 class="type-headline-small">{{ .Title }}</h1>
   </div>
   {{ $pages := where .Data.Pages ".Params.hidden" "!=" true }}

@@ -18,7 +18,7 @@
 }
 
 .download-card > * {
-  transition: color 0.3s ease;
+  transition: color var(--motion-duration-slow) var(--motion-ease-standard);
 }
 
 .download-card:hover {
@@ -27,12 +27,12 @@
 
 .download-card:hover > div {
   color: var(--text-link-hover);
-  transition: color 0.3s ease;
+  transition: color var(--motion-duration-slow) var(--motion-ease-standard);
 }
 
 .download-card:hover > .download-card__item {
   color: var(--text-link-hover);
-  transition: color 0.3s ease;
+  transition: color var(--motion-duration-slow) var(--motion-ease-standard);
 }
 
 /* ==========================================================================
@@ -83,7 +83,7 @@ p.download-card__item {
   font-size: var(--text-sm);
   color: var(--text-default);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .print-button:hover {

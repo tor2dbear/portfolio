@@ -1,4 +1,8 @@
 <div class="contact-info reveal">
+  {{- $email := "hej@tor-bjorn.com" -}}
+  {{- if eq .Page.Language.Lang "en" -}}
+    {{- $email = "hi@tor-bjorn.com" -}}
+  {{- end -}}
   <div class="contact-info__icon curl-icon">
     <svg width="24" height="25" class="icon">
       <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-curl"></use>
@@ -6,5 +10,5 @@
   </div>
   <h2 class="contact-info__title type-headline-4">Torbjörn Hedberg</h2>
   <p class="contact-info__text type-body">Gökevägen 14 <br />422 43 Hisings Backa</p>
-  <p class="contact-info__text type-body">hej@tor-bjorn.com <br />+46 (0) 702 - 56 20 90</p>
+  <p class="contact-info__text type-body">{{ $email }} <br />+46 (0) 702 - 56 20 90</p>
 </div>

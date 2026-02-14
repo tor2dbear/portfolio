@@ -18,7 +18,7 @@
   background-color: var(--bg-page);
   align-items: center;
   box-sizing: border-box;
-  transition: border-color 0.5s ease;
+  transition: border-color var(--motion-duration-slower) var(--motion-ease-standard);
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-color: var(--bg-page);
@@ -82,7 +82,7 @@ html[data-grid-overlay] .top-menu {
   box-sizing: border-box;
   font-weight: var(--sans-weight-bold);
   font-size: var(--text-sm);
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background var(--motion-duration-base) var(--motion-ease-standard), color var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .top-menu__label--icon {
@@ -101,7 +101,7 @@ html[data-grid-overlay] .top-menu {
 
 .top-menu__item--contact .top-menu__link--button:hover,
 .top-menu__item--contact .top-menu__link--button:focus-visible {
-  background: color-mix(in srgb, var(--component-nav-cta-bg) 85%, var(--bg-page));
+  background-image: linear-gradient(var(--state-brand-hover), var(--state-brand-hover));
 }
 
 /* ==========================================================================
@@ -116,7 +116,7 @@ html[data-grid-overlay] .top-menu {
   color: var(--text-default);
   text-decoration: none;
   font-size: var(--text-sm);
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background var(--motion-duration-base) var(--motion-ease-standard), color var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .top-menu__item--nav .top-menu__link:hover,
@@ -230,11 +230,7 @@ html[data-grid-overlay] .top-menu {
 /* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
   .top-menu {
-    transition: transform 0.5s ease;
-  }
-
-  .top-menu__item--nav {
-    display: none;
+    transition: transform var(--motion-duration-slower) var(--motion-ease-standard);
   }
 
   .top-menu__nav {
@@ -249,6 +245,10 @@ html[data-grid-overlay] .top-menu {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
+  .top-menu__item--nav {
+    display: none;
+  }
+
   :root {
     --size-header-height-neg: -4.5rem;
   }

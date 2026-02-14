@@ -39,17 +39,67 @@
   --border-radius-sm: var(--radius-4);
 
   /* === STATE (OVERLAYS) === */
-  --state-on-light-hover: rgba(0, 0, 0, 0.04);
-  --state-on-light-active: rgba(0, 0, 0, 0.08);
-  --state-on-dark-hover: rgba(255, 255, 255, 0.04);
-  --state-on-dark-active: rgba(255, 255, 255, 0.08);
-  --state-surface-hover: var(--state-on-light-hover);
-  --state-surface-active: var(--state-on-light-active);
+  /* Global intensity knobs (normal). Can be overridden per document:
+     html[data-state-intensity="soft|strong"] */
+  --state-mix-page-hover: 6%;
+  --state-mix-page-active: 12%;
+  --state-mix-surface-hover: 8%;
+  --state-mix-surface-active: 16%;
+  --state-mix-brand-hover: 10%;
+  --state-mix-brand-active: 18%;
+  --state-mix-tag-hover: 10%;
+  --state-mix-tag-active: 18%;
+
+  /* Legacy aliases kept for backwards compatibility. */
+  --state-on-light-hover: color-mix(in oklch, var(--text-default) var(--state-mix-page-hover), transparent);
+  --state-on-light-active: color-mix(in oklch, var(--text-default) var(--state-mix-page-active), transparent);
+  --state-on-dark-hover: color-mix(in oklch, var(--text-inverse) var(--state-mix-brand-hover), transparent);
+  --state-on-dark-active: color-mix(in oklch, var(--text-inverse) var(--state-mix-brand-active), transparent);
+
+  /* Semantic per-surface overlays. */
+  --state-page-hover: var(--state-on-light-hover);
+  --state-page-active: var(--state-on-light-active);
+  --state-surface-hover: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-surface-hover), transparent);
+  --state-surface-active: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-surface-active), transparent);
+  --state-brand-hover: var(--state-on-dark-hover);
+  --state-brand-active: var(--state-on-dark-active);
+  --state-tag-hover: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-tag-hover), transparent);
+  --state-tag-active: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-tag-active), transparent);
   --state-focus: var(--iris-9);
   --state-selected: var(--text-accent);
   --text-disabled: var(--gray-7);
   --bg-disabled: var(--gray-3);
   --border-disabled: var(--gray-4);
+  --ring-focus: 0 0 0 3px var(--state-focus);
+  --ring-error: 0 0 0 3px var(--status-error-bg);
+  --ring-selected: 0 0 0 3px var(--state-selected);
+  --ring-selected-offset: 0 0 0 1px var(--bg-page);
+  --ring-selected-emphasis: var(--ring-selected-offset), var(--ring-selected);
+  --state-layer-duration: var(--motion-duration-base);
+  --state-layer-ease: var(--motion-ease-standard);
+
+  /* === MOTION === */
+  --motion-duration-fast: 150ms;
+  --motion-duration-base: 200ms;
+  --motion-duration-slow: 300ms;
+  --motion-duration-slower: 500ms;
+  --motion-duration-xslow: 1000ms;
+  --motion-duration-enter: 320ms;
+  --motion-duration-exit: 240ms;
+  --motion-duration-reveal: 600ms;
+  --motion-duration-reveal-immediate: 400ms;
+  --motion-stagger-step: 25ms;
+  --motion-delay-reveal-step: 220ms;
+
+  --motion-ease-standard: ease;
+  --motion-ease-decelerate: ease-out;
+  --motion-ease-accelerate: ease-in;
+  --motion-ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-ease-theme: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  --motion-distance-sm: 8px;
+  --motion-distance-md: 16px;
 
   /* === ACCENT ROLES === */
   --accent-primary: var(--iris-9);
@@ -110,4 +160,30 @@
   /* === SHADOWS === */
   --shadow-01: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  --shadow-02: rgba(0, 0, 0, 0.12) 0px 8px 20px -6px,
+    rgba(0, 0, 0, 0.08) 0px 2px 6px -2px;
+  --shadow-03: rgba(0, 0, 0, 0.16) 0px 1px 2px 0px,
+    rgba(0, 0, 0, 0.08) 0px 1px 1px 0px;
+}
+
+:root[data-state-intensity="soft"] {
+  --state-mix-page-hover: 4%;
+  --state-mix-page-active: 8%;
+  --state-mix-surface-hover: 6%;
+  --state-mix-surface-active: 12%;
+  --state-mix-brand-hover: 8%;
+  --state-mix-brand-active: 14%;
+  --state-mix-tag-hover: 8%;
+  --state-mix-tag-active: 14%;
+}
+
+:root[data-state-intensity="strong"] {
+  --state-mix-page-hover: 8%;
+  --state-mix-page-active: 16%;
+  --state-mix-surface-hover: 10%;
+  --state-mix-surface-active: 20%;
+  --state-mix-brand-hover: 12%;
+  --state-mix-brand-active: 22%;
+  --state-mix-tag-hover: 12%;
+  --state-mix-tag-active: 22%;
 }

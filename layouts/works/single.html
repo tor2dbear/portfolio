@@ -53,10 +53,10 @@
       <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
   </nav>
-  <h1 class="type-headline-1 mt-0 mb-0 reveal">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
-  <h2 class="type-preamble mb-16 mt-16 reveal">{{ .Description }}</h2>
-  <div class="type-information text-color-lighter mt-0 mb-16 reveal"> {{ partial "date.html" . }}</div>
-  <div class="mt-0 mb-16 reveal"> {{ partial "post_tags.html" . }}</div>
+  <h1 class="type-headline-1 works-post__title reveal">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
+  <h2 class="type-preamble works-post__description reveal">{{ .Description }}</h2>
+  <div class="type-information is-muted works-post__meta reveal"> {{ partial "date.html" . }}</div>
+  <div class="works-post__tags reveal"> {{ partial "post_tags.html" . }}</div>
  
   {{ if .Truncated }}
     <div class="post-content prose">

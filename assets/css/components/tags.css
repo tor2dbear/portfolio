@@ -12,7 +12,7 @@
   border-radius: 0.25rem;
   background-color: var(--bg-tag);
   letter-spacing: var(--tracking-wider);
-  transition: all 0.3s ease;
+  transition: all var(--motion-duration-slow) var(--motion-ease-standard);
   white-space: nowrap;
   font-family: var(--font-ui);
   font-size: var(--text-xs);

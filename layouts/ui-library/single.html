@@ -9,13 +9,13 @@
  <div class="ui-library__tabs" data-js="tabs" data-ui-library-tabs data-tabs-storage-key="ui-library-active-tab">
  <!-- Tab Navigation -->
  <nav class="tabs-nav" role="tablist">
- <button id="tab-tokens" class="tab-button is-active" data-tab="tokens" role="tab" aria-selected="true" aria-controls="panel-tokens">
+ <button type="button" id="tab-tokens" class="tab-button is-active" data-tab="tokens" role="tab" aria-selected="true" aria-controls="panel-tokens">
  {{ if eq .Language.Lang "sv" }}Tokens{{ else }}Tokens{{ end }}
  </button>
- <button id="tab-grid" class="tab-button" data-tab="grid" role="tab" aria-selected="false" aria-controls="panel-grid">
+ <button type="button" id="tab-grid" class="tab-button" data-tab="grid" role="tab" aria-selected="false" aria-controls="panel-grid">
  {{ if eq .Language.Lang "sv" }}Grid{{ else }}Grid{{ end }}
  </button>
- <button id="tab-components" class="tab-button" data-tab="components" role="tab" aria-selected="false" aria-controls="panel-components">
+ <button type="button" id="tab-components" class="tab-button" data-tab="components" role="tab" aria-selected="false" aria-controls="panel-components">
  {{ if eq .Language.Lang "sv" }}Komponenter{{ else }}Components{{ end }}
  </button>
  </nav>
@@ -1698,8 +1698,8 @@
  <div class="component-example-group" style="flex-direction: column; align-items: stretch;">
  <div data-js="tabs" data-tabs-storage-key="ui-library-tabs-demo">
  <nav class="tabs-nav" role="tablist">
- <button id="tab-demo-overview" class="tab-button is-active" data-tab="overview" role="tab" aria-selected="true" aria-controls="panel-demo-overview">{{ if eq .Language.Lang "sv" }}Översikt{{ else }}Overview{{ end }}</button>
- <button id="tab-demo-details" class="tab-button" data-tab="details" role="tab" aria-selected="false" aria-controls="panel-demo-details">{{ if eq .Language.Lang "sv" }}Detaljer{{ else }}Details{{ end }}</button>
+ <button type="button" id="tab-demo-overview" class="tab-button is-active" data-tab="overview" role="tab" aria-selected="true" aria-controls="panel-demo-overview">{{ if eq .Language.Lang "sv" }}Översikt{{ else }}Overview{{ end }}</button>
+ <button type="button" id="tab-demo-details" class="tab-button" data-tab="details" role="tab" aria-selected="false" aria-controls="panel-demo-details">{{ if eq .Language.Lang "sv" }}Detaljer{{ else }}Details{{ end }}</button>
  </nav>
  <div class="tabs-content">
  <div id="panel-demo-overview" class="tab-panel is-active" data-panel="overview" role="tabpanel" aria-labelledby="tab-demo-overview">

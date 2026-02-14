@@ -64,6 +64,7 @@
 
    Responsive overrides:
      --col       Desktop (default)
+     --col-lg    Large (≤79.9375em), falls back to --col
      --col-md    Tablet (≤63.9375em), falls back to --col
      --col-sm    Mobile (≤47.9375em), falls back to full width
    ========================================================================== */
@@ -72,13 +73,28 @@
 .use-subgrid > .place-full,
 .use-subgrid > .place-wide,
 .use-subgrid > .place-prose,
+.use-subgrid > .place-article,
 .use-subgrid > .place-narrow,
-.use-subgrid > .place-inset,
 .use-subgrid > .place-aside,
 .use-subgrid > .place-aside-left,
 .use-subgrid > .place-bleed {
   grid-column: var(--col);
   grid-row: var(--row, auto);
+}
+
+/* lg: large override, falls back to --col if --col-lg is not set */
+@media (max-width: 79.9375em) {
+  .use-subgrid > [style*="--col"],
+  .use-subgrid > .place-full,
+  .use-subgrid > .place-wide,
+  .use-subgrid > .place-prose,
+  .use-subgrid > .place-article,
+  .use-subgrid > .place-narrow,
+  .use-subgrid > .place-aside,
+  .use-subgrid > .place-aside-left,
+  .use-subgrid > .place-bleed {
+    grid-column: var(--col-lg, var(--col));
+  }
 }
 
 /* md: tablet override, falls back to --col if --col-md is not set */
@@ -87,12 +103,12 @@
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
   .use-subgrid > .place-prose,
+  .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
-  .use-subgrid > .place-inset,
   .use-subgrid > .place-aside,
   .use-subgrid > .place-aside-left,
   .use-subgrid > .place-bleed {
-    grid-column: var(--col-md, var(--col));
+    grid-column: var(--col-md, var(--col-lg, var(--col)));
   }
 }
 
@@ -102,8 +118,8 @@
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
   .use-subgrid > .place-prose,
+  .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
-  .use-subgrid > .place-inset,
   .use-subgrid > .place-aside,
   .use-subgrid > .place-aside-left,
   .use-subgrid > .place-bleed {
@@ -116,8 +132,8 @@
 .place-full       { --col: col-start 1  / span 12; }
 .place-wide       { --col: col-start 1  / span 10; }
 .place-prose      { --col: col-start 1  / span 8;  }
+.place-article    { --col: col-start 3  / span 8;  --col-lg: col-start 2 / span 10; --col-md: col-start 1 / span 12; }
 .place-narrow     { --col: col-start 2  / span 8;  }
-.place-inset      { --col: col-start 3  / span 8;  }
 .place-aside      { --col: col-start 9  / span 4;  }
 .place-aside-left { --col: col-start 1  / span 4;  }
 .place-bleed      { --col: full-start / full-end;   }

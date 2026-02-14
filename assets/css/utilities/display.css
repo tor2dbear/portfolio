@@ -56,24 +56,24 @@
 
 .reveal {
   opacity: 0;
-  transform: translateY(var(--reveal-distance, 16px));
+  transform: translateY(var(--reveal-distance, var(--motion-distance-md)));
   transition:
-    opacity var(--reveal-duration, 600ms) ease-out var(--reveal-delay, 0ms),
-    transform var(--reveal-duration, 600ms) ease-out var(--reveal-delay, 0ms);
+    opacity var(--reveal-duration, var(--motion-duration-reveal)) var(--motion-ease-decelerate) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, var(--motion-duration-reveal)) var(--motion-ease-decelerate) var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
 
 .reveal--delay {
-  --reveal-delay: 220ms;
+  --reveal-delay: var(--motion-delay-reveal-step);
 }
 
 .reveal--delay-2 {
-  --reveal-delay: 440ms;
+  --reveal-delay: calc(var(--motion-delay-reveal-step) * 2);
 }
 
 .reveal--immediate {
   --reveal-delay: 0ms;
-  --reveal-duration: 400ms;
+  --reveal-duration: var(--motion-duration-reveal-immediate);
 }
 
 .reveal.is-revealed {
@@ -89,8 +89,8 @@
   }
 }
 
-/* <= 43.125em (690px) */
-@media (max-width: 43.125em) {
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
   .reveal--delay {
     --reveal-delay: 0ms;
   }

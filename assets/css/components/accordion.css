@@ -1,0 +1,194 @@
+/* Accordion component */
+
+.accordion {
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: var(--bg-page);
+  border-top: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.accordion__trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  padding: var(--spacing-16) 0;
+  background-image: none;
+  cursor: pointer;
+  list-style: none;
+  transition: background-image var(--state-layer-duration) var(--state-layer-ease);
+}
+
+.accordion__trigger::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--spacing-4));
+  right: calc(-1 * var(--spacing-4));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--state-layer-duration) var(--state-layer-ease);
+}
+
+.accordion__trigger::after {
+  content: "";
+  margin-left: auto;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20plus.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+.accordion[open] > .accordion__trigger::after {
+  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20minus.svg");
+}
+
+.accordion__trigger:hover {
+  background-image: none;
+}
+
+.accordion__trigger:hover::before {
+  opacity: 1;
+  background-image: linear-gradient(var(--state-page-hover), var(--state-page-hover));
+}
+
+.accordion__trigger:active {
+  background-image: none;
+}
+
+.accordion__trigger:active::before {
+  opacity: 1;
+  background-image: linear-gradient(var(--state-page-active), var(--state-page-active));
+}
+
+.accordion__trigger::-webkit-details-marker {
+  display: none;
+}
+
+.accordion__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  line-height: var(--line-height-tight);
+  font-weight: var(--sans-weight-bold);
+  letter-spacing: var(--headline-tracking);
+}
+
+.accordion__content {
+  padding: 0 0 var(--spacing-24);
+  margin-top: var(--spacing-16);
+}
+
+.accordion__content .type-subheading {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  line-height: var(--line-height-tight);
+  font-weight: var(--sans-weight-bold);
+  letter-spacing: var(--headline-tracking);
+}
+
+.accordion-nested {
+  border: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+  overflow: visible;
+  background: var(--bg-page);
+  border-top: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.accordion-nested__trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  padding: var(--spacing-16) 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  line-height: var(--line-height-tight);
+  font-weight: var(--sans-weight-regular);
+  letter-spacing: var(--headline-tracking);
+  background-image: none;
+  cursor: pointer;
+  list-style: none;
+  transition: background-image var(--state-layer-duration) var(--state-layer-ease);
+}
+
+.accordion-nested__trigger::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--spacing-4));
+  right: calc(-1 * var(--spacing-4));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--state-layer-duration) var(--state-layer-ease);
+}
+
+.accordion-nested__trigger .type-body-large {
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+}
+
+.accordion-nested__trigger > * {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+
+.accordion-nested__trigger::after {
+  content: "";
+  margin-left: auto;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20plus.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+.accordion-nested[open] > .accordion-nested__trigger::after {
+  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20minus.svg");
+}
+
+.accordion-nested__trigger:hover {
+  background-image: none;
+}
+
+.accordion-nested__trigger:hover::before {
+  opacity: 1;
+  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
+}
+
+.accordion-nested__trigger:active {
+  background-image: none;
+}
+
+.accordion-nested__trigger:active::before {
+  opacity: 1;
+  background-image: linear-gradient(var(--state-surface-active), var(--state-surface-active));
+}
+
+.accordion-nested__trigger::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-nested__content {
+  padding: 0;
+  margin-top: var(--spacing-16);
+  margin-bottom: var(--spacing-16);
+}
