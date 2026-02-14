@@ -7,10 +7,11 @@ function initWritingTagFilter() {
   }
 
   const path = window.location.pathname;
+  const normalizedPath = path.endsWith('/') ? path : `${path}/`;
   const isWritingList =
-    path === '/writing/' ||
-    path === '/sv/texter/' ||
-    path === '/post/';
+    /(?:^|\/)writing\/$/.test(normalizedPath) ||
+    /(?:^|\/)sv\/texter\/$/.test(normalizedPath) ||
+    /(?:^|\/)post\/$/.test(normalizedPath);
 
   if (!isWritingList) {
     return;
