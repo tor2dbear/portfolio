@@ -323,13 +323,13 @@ select:disabled,
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
+  gap: var(--spacing-4);
   margin-bottom: var(--spacing-16);
 }
 
 .form-label {
-  font-size: var(--text-base);
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: 400;
   color: var(--text-default);
   line-height: var(--line-height-normal);
 }

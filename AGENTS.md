@@ -371,12 +371,15 @@ attach_letter: "/path/to/letter.pdf"
 ### Gallery Shortcode
 Wrap Markdown images in a layout-aware grid:
 ```markdown
-{{< gallery layout="1+1" >}}
+{{< gallery layout="1+1" place="wide" >}}
 ![Alt](image-1.webp)
 ![Alt](image-2.webp)
 {{< /gallery >}}
 ```
 Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
+- `layout` controls internal gallery structure.
+- `place` controls AD/grid placement (`full`, `wide`, `prose`, `article`, `narrow`, `aside`, `aside-left`, `bleed`).
+- If `place` is omitted, default is `full` for `layout="full"` and `wide` for other layouts.
 
 ### Tag Links
 - Tag URLs are section-scoped (`/works/tags/`, `/writing/tags/`, `/texter/tags/`).

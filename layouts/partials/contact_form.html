@@ -19,31 +19,40 @@
       /></label>
     </p>
 
-    <label>{{ i18n "contact_name" }}</label>
-    <input
-      type="text"
-      placeholder="{{ i18n "contact_name_placeholder" }}"
-      class="contact-form__input form-input"
-      name="name"
-      required
-    />
+    <div class="form-group">
+      <label class="form-label" for="contact-name">{{ i18n "contact_name" }}</label>
+      <input
+        id="contact-name"
+        type="text"
+        placeholder="{{ i18n "contact_name_placeholder" }}"
+        class="contact-form__input form-input"
+        name="name"
+        required
+      />
+    </div>
 
-    <label>{{ i18n "Email_Address" }}</label>
-    <input
-      type="email"
-      placeholder="{{ i18n "contact_mail_placeholder" }}"
-      class="contact-form__input form-input"
-      name="email"
-      required
-    />
+    <div class="form-group">
+      <label class="form-label" for="contact-email">{{ i18n "Email_Address" }}</label>
+      <input
+        id="contact-email"
+        type="email"
+        placeholder="{{ i18n "contact_mail_placeholder" }}"
+        class="contact-form__input form-input"
+        name="email"
+        required
+      />
+    </div>
 
-    <label>{{ i18n "contact_message" }}</label>
-    <textarea
-      rows="5"
-      placeholder="{{ i18n "contact_message_placeholder" }}"
-      class="contact-form__textarea form-input"
-      name="message"
-    ></textarea>
+    <div class="form-group">
+      <label class="form-label" for="contact-message">{{ i18n "contact_message" }}</label>
+      <textarea
+        id="contact-message"
+        rows="5"
+        placeholder="{{ i18n "contact_message_placeholder" }}"
+        class="contact-form__textarea form-input"
+        name="message"
+      ></textarea>
+    </div>
 
     <button type="submit" class="contact-form__submit button">
       {{ i18n "contact_submit" }}

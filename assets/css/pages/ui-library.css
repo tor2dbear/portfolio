@@ -641,6 +641,26 @@
   align-items: center;
 }
 
+.gallery-demo-tile {
+  display: grid;
+  place-items: center;
+  min-height: 7rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-8);
+  background: linear-gradient(
+    140deg,
+    var(--bg-surface) 0%,
+    var(--bg-surface-subtle) 100%
+  );
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+}
+
+.gallery-demo-tile--lg {
+  min-height: 10rem;
+}
+
 .icon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
