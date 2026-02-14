@@ -324,7 +324,7 @@
   }
 
   function formatPaletteLabel(baseLabel, palette) {
-    if (palette !== 'coty') return baseLabel;
+    if (palette !== 'pantone') return baseLabel;
     const year = getCurrentCotyYear();
     return baseLabel + ' (' + year + ')';
   }

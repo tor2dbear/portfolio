@@ -213,14 +213,6 @@
   flex: var(--palette-pantone-seg3);
 }
 
-.palette-preview--coty .palette-preview-segment:first-child {
-  background: var(--palette-coty-accent);
-}
-
-.palette-preview--coty .palette-preview-segment:last-child {
-  background: var(--palette-coty-bg);
-}
-
 .palette-preview--forest .palette-preview-segment:first-child {
   background: var(--palette-forest-accent);
 }
