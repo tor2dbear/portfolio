@@ -1,5 +1,9 @@
 <!-- GitHub Pages Preview Test: 2026-02-04 v3 -->
 </main>
+{{- $contactEmail := "hej@tor-bjorn.com" -}}
+{{- if eq .Language.Lang "en" -}}
+  {{- $contactEmail = "hi@tor-bjorn.com" -}}
+{{- end -}}
 <footer class="footer page-grid" data-focus-ignore="true">
   <div class="footer-container">
     <div class="footer-grid footer-grid--primary use-subgrid">
@@ -48,7 +52,7 @@
       <address class="footer-column footer-contact">
         <h3 class="footer-heading">{{ i18n "footer_contact" }}</h3>
         <ul class="footer-menu">
-          <li><a href="mailto:hej@tor-bjorn.com">hej@tor-bjorn.com</a></li>
+          <li><a href="mailto:{{ $contactEmail }}">{{ $contactEmail }}</a></li>
           <li><a href="tel:+46702562090">+46 (0) 702 - 56 20 90</a></li>
           <li>
             <a href="https://www.linkedin.com/in/tbhedberg/" target="_blank" rel="noopener noreferrer">
