@@ -128,12 +128,64 @@ footer>* {
 
 /* Post children use --col for art-directed placement.
    Default: 10 cols. Override with .place-* or style="--col: …" */
-/* Placement is handled by grid utilities (.place-* / --col*) */
+.content.post > :not([style*="--col"]):not(.place-full):not(.place-wide):not(.place-prose):not(.place-article):not(.place-narrow):not(.place-aside):not(.place-aside-left):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+  --col: col-start 1 / span 10;
+  grid-column: var(--col);
+  grid-row: var(--row, auto);
+}
 
-.content.post > figure.headerimg,
+/* lg: <= 79.9375em */
+@media (max-width: 79.9375em) {
+  .content.post > :not([style*="--col"]):not(.place-full):not(.place-wide):not(.place-prose):not(.place-article):not(.place-narrow):not(.place-aside):not(.place-aside-left):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+    --col: col-start 1 / span 12;
+  }
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .content.post > :not([style*="--col"]):not(.place-full):not(.place-wide):not(.place-prose):not(.place-article):not(.place-narrow):not(.place-aside):not(.place-aside-left):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+    --col: col-start 1 / span 4;
+  }
+}
+
+.content.post > figure.header-img,
 #main .content.post > figure:first-of-type,
 .content.post > .post-nav {
   --col: col-start 1 / span 12;
+}
+
+/* Works AD mapping:
+   wide lane (10 cols) for headline/media/project info,
+   prose lane is handled via .place-prose in template. */
+.content.post.works-post > figure.header-img,
+#main .content.post.works-post > figure:first-of-type,
+.content.post.works-post > figure.reveal:first-of-type,
+.content.post.works-post > .post-nav,
+.content.post.works-post > .project-info {
+  --col: col-start 1 / span 10;
+  grid-column: var(--col);
+}
+
+/* md: <= 63.9375em */
+@media (max-width: 63.9375em) {
+  .content.post.works-post > figure.header-img,
+  #main .content.post.works-post > figure:first-of-type,
+  .content.post.works-post > figure.reveal:first-of-type,
+  .content.post.works-post > .post-nav,
+  .content.post.works-post > .project-info {
+    --col: col-start 1 / span 12;
+  }
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .content.post.works-post > figure.header-img,
+  #main .content.post.works-post > figure:first-of-type,
+  .content.post.works-post > figure.reveal:first-of-type,
+  .content.post.works-post > .post-nav,
+  .content.post.works-post > .project-info {
+    --col: col-start 1 / span 4;
+  }
 }
 
 .works-post__description {
@@ -144,6 +196,47 @@ footer>* {
 .works-post__meta,
 .works-post__tags {
   margin-bottom: var(--spacing-16);
+}
+
+/* Works content AD mapping: keep prose text narrow but allow full-width media blocks */
+.content.post.works-post > .post-content.place-prose {
+  display: contents;
+}
+
+.content.post.works-post > .post-content.place-prose > :not(.gallery):not(figure):not(.project-info):not(.post-nav) {
+  --col: col-start 1 / span 8;
+  grid-column: var(--col);
+}
+
+.content.post.works-post > .post-content.place-prose > figure,
+.content.post.works-post > .post-content.place-prose > .gallery.place-wide {
+  --col: col-start 1 / span 10;
+  grid-column: var(--col);
+}
+
+.content.post.works-post > .post-content.place-prose > .gallery.place-full {
+  --col: col-start 1 / span 12;
+  grid-column: var(--col);
+}
+
+/* md: <= 63.9375em */
+@media (max-width: 63.9375em) {
+  .content.post.works-post > .post-content.place-prose > :not(.gallery):not(figure):not(.project-info):not(.post-nav),
+  .content.post.works-post > .post-content.place-prose > figure,
+  .content.post.works-post > .post-content.place-prose > .gallery.place-wide,
+  .content.post.works-post > .post-content.place-prose > .gallery.place-full {
+    --col: col-start 1 / span 12;
+  }
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .content.post.works-post > .post-content.place-prose > :not(.gallery):not(figure):not(.project-info):not(.post-nav),
+  .content.post.works-post > .post-content.place-prose > figure,
+  .content.post.works-post > .post-content.place-prose > .gallery.place-wide,
+  .content.post.works-post > .post-content.place-prose > .gallery.place-full {
+    --col: col-start 1 / span 4;
+  }
 }
 
 .legal-page__title,

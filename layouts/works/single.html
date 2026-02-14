@@ -1,6 +1,6 @@
 {{ partial "header.html" . }}
 
-<div class="content post use-subgrid">
+<div class="content post works-post use-subgrid">
   <nav class="application-breadcrumb show-on-client">
     <ul>
       <li class="application-breadcrumb__item">
@@ -9,6 +9,7 @@
             <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
           </svg>
           <span>Start</span>
+          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
@@ -35,6 +36,7 @@
             <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
           </svg>
           <span>Start</span>
+          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
@@ -53,23 +55,43 @@
       <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
   </nav>
-  <h1 class="type-headline-1 works-post__title reveal">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
-  <h2 class="type-preamble works-post__description reveal">{{ .Description }}</h2>
-  <div class="type-information is-muted works-post__meta reveal"> {{ partial "date.html" . }}</div>
-  <div class="works-post__tags reveal"> {{ partial "post_tags.html" . }}</div>
+  <h1 class="type-headline-1 works-post__title reveal place-wide">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
+  <h2 class="type-preamble works-post__description reveal place-prose">{{ .Description }}</h2>
+  <div class="type-information is-muted works-post__meta reveal place-prose"> {{ partial "date.html" . }}</div>
+  <div class="works-post__tags reveal place-prose"> {{ partial "post_tags.html" . }}</div>
  
   {{ if .Truncated }}
-    <div class="post-content prose">
-      {{ .Summary | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    {{ $summary := .Summary | replaceRE "<p>\\s*</p>" "" }}
+    {{ $heroMatch := findRE "(?s)<figure[\\s\\S]*?</figure>" $summary 1 }}
+    {{ $hero := "" }}
+    {{ if gt (len $heroMatch) 0 }}
+      {{ $hero = index $heroMatch 0 }}
+      {{ $summary = replace $summary $hero "" 1 }}
+      {{ $hero = replaceRE "<figure class=\"" "<figure class=\"place-wide " $hero }}
+      {{ $hero | safeHTML }}
+    {{ end }}
+
+    <div class="post-content prose place-prose">
+      {{ $summary | safeHTML }}
     </div>
     {{ partial "project-info.html" . }}
     {{ $rest := replace .Content .Summary "" }}
-    <div class="post-content prose">
+    <div class="post-content prose place-prose">
       {{ $rest | replaceRE "<p>\\s*</p>" "" | safeHTML }}
     </div>
   {{ else }}
-    <div class="post-content prose">
-      {{ .Content | replaceRE "<p>\\s*</p>" "" | safeHTML }}
+    {{ $content := .Content | replaceRE "<p>\\s*</p>" "" }}
+    {{ $heroMatch := findRE "(?s)<figure[\\s\\S]*?</figure>" $content 1 }}
+    {{ $hero := "" }}
+    {{ if gt (len $heroMatch) 0 }}
+      {{ $hero = index $heroMatch 0 }}
+      {{ $content = replace $content $hero "" 1 }}
+      {{ $hero = replaceRE "<figure class=\"" "<figure class=\"place-wide " $hero }}
+      {{ $hero | safeHTML }}
+    {{ end }}
+
+    <div class="post-content prose place-prose">
+      {{ $content | safeHTML }}
     </div>
     {{ partial "project-info.html" . }}
   {{ end }}
@@ -82,6 +104,7 @@
             <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
           </svg>
           <span>Start</span>
+          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
@@ -108,6 +131,7 @@
             <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
           </svg>
           <span>Start</span>
+          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">

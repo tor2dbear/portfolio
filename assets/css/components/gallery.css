@@ -34,9 +34,23 @@
   --reveal-delay: 120ms;
 }
 
+.gallery.grid-cols-2 {
+  column-gap: var(--spacing-24);
+  row-gap: var(--post-media-gap, var(--spacing-24));
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .gallery.grid-cols-2 {
+    column-gap: var(--spacing-16);
+    row-gap: var(--post-media-gap, var(--spacing-16));
+  }
+}
+
 .gallery picture,
 .gallery img {
   display: block;
+  width: 100%;
   max-width: 100%;
   height: auto;
 }

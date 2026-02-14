@@ -1,8 +1,25 @@
 {{ $layout := .Get "layout" | default "full" }}
 {{ $layoutClass := replace $layout "+" "-" }}
 {{ $isGridTwo := or (eq $layout "1+1") (eq $layout "2x2") }}
+{{ $place := .Get "place" | default "" | lower }}
+{{ $allowedPlace := slice "full" "wide" "prose" "article" "narrow" "aside" "aside-left" "bleed" }}
+{{ if eq $place "" }}
+  {{ if eq $layout "full" }}
+    {{ $place = "full" }}
+  {{ else }}
+    {{ $place = "wide" }}
+  {{ end }}
+{{ end }}
+{{ if not (in $allowedPlace $place) }}
+  {{ if eq $layout "full" }}
+    {{ $place = "full" }}
+  {{ else }}
+    {{ $place = "wide" }}
+  {{ end }}
+{{ end }}
+{{ $placementClass := printf "place-%s" $place }}
 {{ $content := .Inner | strings.TrimSpace }}
 
-<div class="gallery gallery--{{ $layoutClass }} use-subgrid{{ if $isGridTwo }} grid-cols-2{{ end }}">
+<div class="gallery gallery--{{ $layoutClass }} use-subgrid {{ $placementClass }}{{ if $isGridTwo }} grid-cols-2{{ end }}">
   {{ .Page.RenderString (dict "display" "block") $content }}
 </div>
