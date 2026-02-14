@@ -122,7 +122,12 @@ article {
    Related Items Grid Layout
    ========================================================================== */
 
-.content.post .related-items__item {
+.content.post > .related-items__title {
+  --col: col-start 1 / span 12;
+  grid-column: var(--col);
+}
+
+.content.post > .related-items__item {
   --col: auto / span 4;
   grid-column: var(--col);
 }
@@ -143,7 +148,7 @@ article {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  .content.post .related-items__item:nth-of-type(n + 1) {
-    --col: auto / span 4;
+  .content.post > .related-items__item:nth-of-type(n + 1) {
+    --col: col-start 1 / span 4;
   }
 }

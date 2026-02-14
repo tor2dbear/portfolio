@@ -277,6 +277,10 @@ git branch -d <branch-name>
 git fetch --prune
 ```
 
+### Pull Request Description Preference
+- Default format: **English Markdown**.
+- Always provide a ready-to-paste GitHub PR body (`## Summary`, `## Changes`, `## Testing`) when finishing a PR-related task, even if the user does not explicitly ask for it.
+
 ### Safety Guardrails
 - **Never** run two agents in the same repo folder at the same time.
 
@@ -371,12 +375,15 @@ attach_letter: "/path/to/letter.pdf"
 ### Gallery Shortcode
 Wrap Markdown images in a layout-aware grid:
 ```markdown
-{{< gallery layout="1+1" >}}
+{{< gallery layout="1+1" place="wide" >}}
 ![Alt](image-1.webp)
 ![Alt](image-2.webp)
 {{< /gallery >}}
 ```
 Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
+- `layout` controls internal gallery structure.
+- `place` controls AD/grid placement (`full`, `wide`, `prose`, `article`, `narrow`, `aside`, `aside-left`, `bleed`).
+- If `place` is omitted, default is `full` for `layout="full"` and `wide` for other layouts.
 
 ### Tag Links
 - Tag URLs are section-scoped (`/works/tags/`, `/writing/tags/`, `/texter/tags/`).
