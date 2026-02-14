@@ -44,6 +44,10 @@
         <option value="pantone-blend">{{ if eq .Language.Lang "sv" }}Pantone blend{{ else }}Pantone blend{{ end }}</option>
       </select>
     </div>
+    <div class="palette-generator__row">
+      <label for="palette-coty-year" class="palette-generator__label">{{ i18n "coty_year" }}</label>
+      <select id="palette-coty-year" data-js="coty-year"></select>
+    </div>
     <div class="palette-generator__grid" data-js="roles-grid">
       <div class="palette-generator__row">
         <label for="role-text" class="palette-generator__label">Text</label>

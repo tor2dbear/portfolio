@@ -19,7 +19,7 @@
       return;
     }
 
-    const familyOptions = ['gray', 'iris', 'green', 'amber', 'cloud', 'teal', 'blue', 'purple', 'orange', 'red'];
+    const familyOptions = ['gray', 'iris', 'green', 'amber', 'cloud', 'coty', 'teal', 'blue', 'purple', 'orange', 'red'];
     const roleSelects = {
       text: root.querySelector('select[data-role="text"]'),
       surface: root.querySelector('select[data-role="surface"]'),
@@ -34,6 +34,7 @@
       form_policy: root.querySelector('[data-js="policy-form-policy"]'),
       image_treatment: root.querySelector('[data-js="policy-image-treatment"]')
     };
+    const cotyYearSelect = root.querySelector('[data-js="coty-year"]');
     const resetButton = root.querySelector('[data-js="palette-reset"]');
     const saveButton = root.querySelector('[data-js="palette-save"]');
     const copyButton = root.querySelector('[data-js="palette-copy"]');
@@ -180,6 +181,35 @@
       if (!isDuo) {
         roleSelects.secondary.value = roleSelects.primary.value;
       }
+    }
+
+    function initCotyYearControl() {
+      if (!cotyYearSelect) return;
+      const actions = window.CotyScaleActions;
+      if (!actions || typeof actions.getEntries !== 'function') {
+        cotyYearSelect.disabled = true;
+        return;
+      }
+
+      const entries = actions.getEntries();
+      cotyYearSelect.innerHTML = '';
+      entries.forEach(entry => {
+        const option = document.createElement('option');
+        option.value = String(entry.year);
+        option.textContent = String(entry.year) + ' \u2014 ' + entry.name;
+        cotyYearSelect.appendChild(option);
+      });
+
+      cotyYearSelect.value = String(actions.getCurrentYear());
+      cotyYearSelect.addEventListener('change', () => {
+        const year = Number(cotyYearSelect.value);
+        if (window.ThemeActions && typeof window.ThemeActions.setCotyYear === 'function') {
+          window.ThemeActions.setCotyYear(year);
+        } else if (typeof actions.setYear === 'function') {
+          actions.setYear(year);
+        }
+        applyFromRoles(currentRoles(), presetSelect.value, currentPolicies(presetSelect.value));
+      });
     }
 
     function applyFromRoles(roles, presetName, policyOverrides) {
@@ -558,6 +588,8 @@
       });
     });
 
+    initCotyYearControl();
+
     const presetNames = Object.keys(presets).sort();
     presetSelect.innerHTML = '';
     presetNames.forEach(name => {
@@ -683,6 +715,12 @@
     });
 
     window.addEventListener('theme:mode-changed', () => {
+      applyFromRoles(currentRoles(), presetSelect.value, currentPolicies(presetSelect.value));
+    });
+
+    window.addEventListener('theme:coty-year-changed', evt => {
+      const year = evt && evt.detail ? Number(evt.detail.year) : 0;
+      if (cotyYearSelect && year) cotyYearSelect.value = String(year);
       applyFromRoles(currentRoles(), presetSelect.value, currentPolicies(presetSelect.value));
     });
   }

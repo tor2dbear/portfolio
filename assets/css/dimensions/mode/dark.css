@@ -139,6 +139,20 @@
   --cloud-11: hsl(42, 70%, 77.3%);
   --cloud-12: hsl(42, 60%, 94.9%);
 
+  /* Color of the Year (runtime-overridden; Cloud fallback) */
+  --coty-1: var(--cloud-1);
+  --coty-2: var(--cloud-2);
+  --coty-3: var(--cloud-3);
+  --coty-4: var(--cloud-4);
+  --coty-5: var(--cloud-5);
+  --coty-6: var(--cloud-6);
+  --coty-7: var(--cloud-7);
+  --coty-8: var(--cloud-8);
+  --coty-9: var(--cloud-9);
+  --coty-10: var(--cloud-10);
+  --coty-11: var(--cloud-11);
+  --coty-12: var(--cloud-12);
+
   /* Teal Dark Scale (Radix Teal) */
   --teal-1: hsl(168, 48%, 6.5%);
   --teal-2: hsl(169, 77.8%, 7.1%);

@@ -466,6 +466,8 @@
       // Set palette (standard/pantone)
       var storedPalette = localStorage.getItem("theme-palette") || "standard";
       document.documentElement.setAttribute("data-palette", storedPalette);
+      var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
+      document.documentElement.setAttribute("data-coty-year", storedCotyYear);
 
       // Set typography
       var storedTypography = localStorage.getItem("theme-typography") || "editorial";
@@ -491,6 +493,7 @@
   {{ $js3 := resources.Get "js/header-hide.js" }}
   {{ $js_toast := resources.Get "js/toast.js" }}
   {{ $js_theme_derive := resources.Get "js/theme-derive.js" | default (resources.FromString "js/theme-derive-fallback.js" "(function(){window.ThemeDerive=window.ThemeDerive||{};})();") }}
+  {{ $js_coty_scale := resources.Get "js/coty-scale.js" }}
   {{ $js4 := resources.Get "js/darkmode.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
@@ -517,6 +520,7 @@
     <script src="{{ $js3.RelPermalink }}" defer></script>
     <script src="{{ $js_toast.RelPermalink }}" defer></script>
     <script src="{{ $js_theme_derive.RelPermalink }}" defer></script>
+    <script src="{{ $js_coty_scale.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
@@ -535,10 +539,12 @@
     <script src="{{ $js20.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 $js19 $js20 }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_coty_scale $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 $js19 $js20 }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
   {{ end }}
+
+  <script type="application/json" data-js="coty-data-json">{{ index .Site.Data "pantone-coty" | jsonify | safeHTML }}</script>
 
     {{ partial "schema.html" . }}
 
