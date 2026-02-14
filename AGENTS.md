@@ -277,6 +277,10 @@ git branch -d <branch-name>
 git fetch --prune
 ```
 
+### Pull Request Description Preference
+- Default format: **English Markdown**.
+- Always provide a ready-to-paste GitHub PR body (`## Summary`, `## Changes`, `## Testing`) when finishing a PR-related task, even if the user does not explicitly ask for it.
+
 ### Safety Guardrails
 - **Never** run two agents in the same repo folder at the same time.
 
