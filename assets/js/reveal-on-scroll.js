@@ -55,6 +55,13 @@
   };
 
   document.addEventListener("DOMContentLoaded", function () {
+    const postContentChildren = document.querySelectorAll(".post-content > *");
+    postContentChildren.forEach((child) => {
+      if (!child.classList.contains("reveal")) {
+        child.classList.add("reveal");
+      }
+    });
+
     const applicationCvBlocks = document.querySelectorAll(
       ".application-page .about-cv.reveal"
     );
@@ -124,13 +131,24 @@
       window.matchMedia("(max-width: 43.125em)").matches;
     const inViewElements = elements.filter(isInViewport);
     let staggerIndex = 0;
+    const postStaggerIndexByContainer = new WeakMap();
 
     inViewElements.forEach((element) => {
       if (!prefersNoStagger && !hasCustomDelay(element)) {
-        const delay = Math.min(staggerIndex * 80, 320);
-        element.style.setProperty("--reveal-delay", `${delay}ms`);
-        if (isStaggerEligible(element)) {
-          staggerIndex += 1;
+        const postContainer = element.closest(".post-content");
+        if (postContainer) {
+          const currentPostIndex = postStaggerIndexByContainer.get(postContainer) || 0;
+          const postDelay = Math.min(currentPostIndex * 60, 320);
+          element.style.setProperty("--reveal-delay", `${postDelay}ms`);
+          if (isStaggerEligible(element)) {
+            postStaggerIndexByContainer.set(postContainer, currentPostIndex + 1);
+          }
+        } else {
+          const delay = Math.min(staggerIndex * 80, 320);
+          element.style.setProperty("--reveal-delay", `${delay}ms`);
+          if (isStaggerEligible(element)) {
+            staggerIndex += 1;
+          }
         }
       }
       // Immediate reveal elements skip image waiting for faster LCP
