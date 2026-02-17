@@ -13,8 +13,8 @@
  * Tokens used:
  * - --brand-primary
  * - --brand-on-primary
- * - --text-default
- * - --bg-page
+ * - --bg-inverse
+ * - --text-inverse
  * - --border-default
  * - --state-brand-hover
  * - --state-page-hover
@@ -47,8 +47,8 @@ button,
   padding: var(--spacing-12) var(--spacing-24);
 
   /* Base styling */
-  background-color: var(--text-default);
-  color: var(--bg-page);
+  background-color: var(--bg-inverse);
+  color: var(--text-inverse);
   border-radius: var(--radius-8);
   font-weight: var(--sans-weight-medium);
   text-decoration: none;
@@ -126,7 +126,10 @@ button:disabled,
 }
 
 .button--secondary:hover {
-  background-color: var(--bg-surface);
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
   border-color: var(--border-strong);
 }
 
@@ -151,14 +154,17 @@ button:disabled,
 }
 
 .button--tertiary:hover {
-  background-color: var(--bg-surface);
+  background-image: linear-gradient(
+    var(--state-page-hover),
+    var(--state-page-hover)
+  );
   color: var(--text-link-hover);
 }
 
 .button--tertiary:active {
   background-image: linear-gradient(
-    var(--state-surface-active),
-    var(--state-surface-active)
+    var(--state-page-active),
+    var(--state-page-active)
   );
 }
 
