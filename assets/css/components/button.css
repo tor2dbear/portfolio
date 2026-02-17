@@ -50,7 +50,7 @@ button,
   background-color: var(--text-default);
   color: var(--bg-page);
   border-radius: var(--radius-8);
-  font-weight: 500;
+  font-weight: var(--sans-weight-medium);
   text-decoration: none;
 
   /* Interaction */
@@ -61,14 +61,18 @@ button,
 
 button:hover,
 .button:hover {
-  background-image: linear-gradient(var(--state-brand-hover),
-      var(--state-brand-hover));
+  background-image: linear-gradient(
+    var(--state-brand-hover),
+    var(--state-brand-hover)
+  );
 }
 
 button:active,
 .button:active {
-  background-image: linear-gradient(var(--state-brand-active),
-      var(--state-brand-active));
+  background-image: linear-gradient(
+    var(--state-brand-active),
+    var(--state-brand-active)
+  );
 }
 
 button:focus-visible,
@@ -96,13 +100,17 @@ button:disabled,
 }
 
 .button--primary:hover {
-  background-image: linear-gradient(var(--state-brand-hover),
-      var(--state-brand-hover));
+  background-image: linear-gradient(
+    var(--state-brand-hover),
+    var(--state-brand-hover)
+  );
 }
 
 .button--primary:active {
-  background-image: linear-gradient(var(--state-brand-active),
-      var(--state-brand-active));
+  background-image: linear-gradient(
+    var(--state-brand-active),
+    var(--state-brand-active)
+  );
 }
 
 .button--primary:disabled {
@@ -123,8 +131,10 @@ button:disabled,
 }
 
 .button--secondary:active {
-  background-image: linear-gradient(var(--state-surface-active),
-      var(--state-surface-active));
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
 }
 
 .button--secondary:disabled {
@@ -146,8 +156,10 @@ button:disabled,
 }
 
 .button--tertiary:active {
-  background-image: linear-gradient(var(--state-surface-active),
-      var(--state-surface-active));
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
 }
 
 .button--tertiary:disabled {

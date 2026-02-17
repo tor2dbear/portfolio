@@ -413,7 +413,7 @@ select:disabled,
   width: 100%;
   font-size: var(--text-lg);
   font-family: var(--font-ui);
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
 }
 
 .contact-form__message {
