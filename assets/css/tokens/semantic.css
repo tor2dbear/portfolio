@@ -10,9 +10,12 @@
 :root {
   /* === TEXT === */
   --text-default: var(--gray-12);
-  --text-muted: color-mix(in oklch, var(--gray-11) 60%, var(--surface-ink-strong));
+  --text-muted: color-mix(
+    in oklch,
+    var(--gray-11) 60%,
+    var(--surface-ink-strong)
+  );
   --text-inverse: var(--white);
-  --text-nav: var(--brand-on-primary);
   --text-link: var(--iris-11);
   --text-link-hover: var(--iris-12);
   --text-accent: var(--accent-primary-strong);
@@ -24,7 +27,6 @@
   --bg-elevated: var(--gray-1);
   --bg-inverse: var(--gray-12);
   --bg-surface-subtle: var(--bg-elevated);
-  --bg-nav: var(--brand-primary);
   --bg-tag: var(--iris-3);
   --bg-tag-hover: var(--iris-4);
   --bg-section-headline: var(--accent-primary);
@@ -34,9 +36,6 @@
   --border-subtle: var(--gray-4);
   --border-default: var(--gray-6);
   --border-strong: var(--gray-8);
-  --border-hover: var(--border-strong);
-  --outline-neutral: rgba(0, 0, 0, 0.08);
-  --border-radius-sm: var(--radius-4);
 
   /* === STATE (OVERLAYS) === */
   /* Global intensity knobs (normal). Can be overridden per document:
@@ -50,21 +49,37 @@
   --state-mix-tag-hover: 10%;
   --state-mix-tag-active: 18%;
 
-  /* Legacy aliases kept for backwards compatibility. */
-  --state-on-light-hover: color-mix(in oklch, var(--text-default) var(--state-mix-page-hover), transparent);
-  --state-on-light-active: color-mix(in oklch, var(--text-default) var(--state-mix-page-active), transparent);
-  --state-on-dark-hover: color-mix(in oklch, var(--text-inverse) var(--state-mix-brand-hover), transparent);
-  --state-on-dark-active: color-mix(in oklch, var(--text-inverse) var(--state-mix-brand-active), transparent);
-
   /* Semantic per-surface overlays. */
-  --state-page-hover: var(--state-on-light-hover);
-  --state-page-active: var(--state-on-light-active);
-  --state-surface-hover: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-surface-hover), transparent);
-  --state-surface-active: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-surface-active), transparent);
-  --state-brand-hover: var(--state-on-dark-hover);
-  --state-brand-active: var(--state-on-dark-active);
-  --state-tag-hover: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-tag-hover), transparent);
-  --state-tag-active: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-tag-active), transparent);
+  --state-page-hover: color-mix(
+    in oklch,
+    var(--text-default) var(--state-mix-page-hover),
+    transparent
+  );
+  --state-page-active: color-mix(
+    in oklch,
+    var(--text-default) var(--state-mix-page-active),
+    transparent
+  );
+  --state-surface-hover: color-mix(
+    in oklch,
+    var(--surface-ink-strong) var(--state-mix-surface-hover),
+    transparent
+  );
+  --state-surface-active: color-mix(
+    in oklch,
+    var(--surface-ink-strong) var(--state-mix-surface-active),
+    transparent
+  );
+  --state-brand-hover: color-mix(
+    in oklch,
+    var(--text-inverse) var(--state-mix-brand-hover),
+    transparent
+  );
+  --state-brand-active: color-mix(
+    in oklch,
+    var(--text-inverse) var(--state-mix-brand-active),
+    transparent
+  );
   --state-focus: var(--iris-9);
   --state-selected: var(--text-accent);
   --text-disabled: var(--gray-7);
@@ -123,34 +138,30 @@
   --status-error-bg: var(--red-8);
   --status-error-border: var(--red-9);
   --status-error-text: var(--red-11);
-  --status-error-icon: var(--status-error-text);
 
   --status-success-bg: var(--green-2);
   --status-success-border: var(--green-8);
   --status-success-text: var(--green-11);
-  --status-success-icon: var(--status-success-text);
 
   --status-warning-bg: var(--amber-2);
   --status-warning-border: var(--amber-8);
   --status-warning-text: var(--amber-11);
-  --status-warning-icon: var(--status-warning-text);
 
   --status-info-bg: var(--blue-2);
   --status-info-border: var(--blue-8);
   --status-info-text: var(--blue-11);
-  --status-info-icon: var(--status-info-text);
 
   /* === TYPOGRAPHY (semantic) === */
-  --font-display:        var(--font-serif);
-  --font-heading:        var(--font-sans);
-  --font-body:           var(--font-serif);
-  --font-ui:             var(--font-sans);
-  --display-weight:      400;
-  --heading-weight:      var(--sans-weight-bold);
-  --heading-tracking:    var(--tracking-normal);
-  --headline-tracking:   var(--tracking-normal);
-  --type-scale-display:  1;
-  --display-tracking:    -0.035em;
+  --font-display: var(--font-serif);
+  --font-heading: var(--font-sans);
+  --font-body: var(--font-serif);
+  --font-ui: var(--font-sans);
+  --display-weight: 400;
+  --heading-weight: var(--sans-weight-bold);
+  --heading-tracking: var(--tracking-normal);
+  --headline-tracking: var(--tracking-normal);
+  --type-scale-display: 1;
+  --display-tracking: -0.035em;
 
   /* === IMAGE === */
   --image-background: var(--iris-12);

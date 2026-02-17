@@ -8,11 +8,11 @@
   /* Image effects */
   --image-grayscale: 100%;
   --image-blend-mode: screen;
-  --image-background: var(--coty-12);
+  --image-background: var(--coty-9);
 
   /* Accent roles (single-family) */
-  --accent-primary: var(--coty-9);
-  --accent-primary-strong: var(--coty-11);
+  --accent-primary: var(--coty-role-primary, var(--coty-9));
+  --accent-primary-strong: var(--coty-role-primary-strong, var(--coty-11));
   --accent-secondary: var(--coty-4);
   --accent-secondary-strong: var(--coty-8);
 
@@ -22,18 +22,16 @@
   --text-default: var(--coty-12);
   --text-tag: var(--coty-11);
   --surface-ink-strong: var(--coty-11);
-  --text-nav: var(--coty-12);
   --text-link-hover: var(--coty-11);
 
-  --bg-page: var(--coty-2);
-  --bg-tag: var(--coty-4);
+  --bg-page: var(--coty-role-surface, var(--coty-2));
+  --bg-tag: var(--coty-role-surface-strong, var(--coty-4));
   --bg-tag-hover: var(--coty-5);
-  --bg-surface: var(--coty-4);
-  --bg-nav: var(--coty-5);
+  --bg-surface: var(--coty-role-surface-strong, var(--coty-4));
 
   --border-subtle: var(--coty-5);
 
-  --component-form-bg: var(--coty-3);
+  --component-form-bg: var(--coty-role-surface, var(--coty-3));
   --component-form-placeholder: var(--text-muted);
 
   --component-newsletter-bg: var(--coty-12);
@@ -45,5 +43,5 @@
 
 /* Dark mode + Pantone overrides */
 :root[data-mode="dark"][data-palette="pantone"] {
-  --image-background: var(--coty-7);
+  --image-background: var(--coty-5);
 }

@@ -26,7 +26,9 @@
   width: 2rem;
   height: 2rem;
   border-radius: 999px;
-  transition: background-color var(--motion-duration-base) var(--motion-ease-standard), color var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .pagination__link:hover {
@@ -34,7 +36,7 @@
 }
 
 .pagination__link:focus-visible {
-  outline: 2px solid var(--outline-neutral);
+  outline: 2px solid var(--border-subtle);
   outline-offset: 2px;
 }
 

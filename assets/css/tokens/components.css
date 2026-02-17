@@ -12,7 +12,6 @@
      ========================================================================== */
 
   --component-form-bg: var(--gray-2);
-  --component-form-border: transparent;
   --component-form-placeholder: var(--text-muted);
 
   --component-newsletter-bg: var(--iris-12);
@@ -25,7 +24,7 @@
      LAYOUT TOKENS - Max-width constraints
      ========================================================================== */
 
-  --content-max-width: 1280px;        /* Main content width */
-  --content-max-width-narrow: 800px;  /* Text-heavy pages (about, contact) */
-  --content-max-width-wide: 1600px;   /* Galleries and portfolios */
+  --content-max-width: 1280px; /* Main content width */
+  --content-max-width-narrow: 800px; /* Text-heavy pages (about, contact) */
+  --content-max-width-wide: 1600px; /* Galleries and portfolios */
 }

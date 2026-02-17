@@ -22,14 +22,12 @@
   --text-default: var(--green-12);
   --text-tag: var(--green-11);
   --surface-ink-strong: var(--green-11);
-  --text-nav: var(--green-12);
   --text-link-hover: var(--green-11);
 
   --bg-page: var(--green-2);
   --bg-tag: var(--green-4);
   --bg-tag-hover: var(--green-5);
   --bg-surface: var(--green-4);
-  --bg-nav: var(--green-5);
 
   --border-subtle: var(--green-5);
 

@@ -23,7 +23,6 @@
   --text-default: var(--amber-12);
   --text-tag: var(--amber-11);
   --surface-ink-strong: var(--amber-11);
-  --text-nav: var(--amber-12);
   --text-link-hover: var(--accent-primary-strong);
 
   /* Amber surfaces */
@@ -31,7 +30,6 @@
   --bg-tag: var(--amber-4);
   --bg-tag-hover: var(--amber-5);
   --bg-surface: var(--amber-4);
-  --bg-nav: var(--amber-5);
 
   --border-subtle: var(--amber-5);
 
