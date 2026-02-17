@@ -79,7 +79,7 @@
 
 .toc__item a.is-active {
   color: var(--text-default);
-  font-weight: var(--sans-weight-medium);
+  font-weight: var(--sans-weight-bold);
 }
 
 .toc__item a.is-active::before {

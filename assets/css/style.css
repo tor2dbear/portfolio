@@ -66,7 +66,7 @@ body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .brand__mark, .brand_
 .startpage-heading__cta {
   font-size: var(--text-lg);
   font-family: var(--font-ui);
-  font-weight: var(--sans-weight-medium);
+  font-weight: var(--sans-weight-bold);
   line-height: var(--line-height-normal);
 }
 

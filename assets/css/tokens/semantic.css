@@ -67,9 +67,6 @@
   --state-tag-active: color-mix(in oklch, var(--surface-ink-strong) var(--state-mix-tag-active), transparent);
   --state-focus: var(--iris-9);
   --state-selected: var(--text-accent);
-  --text-disabled: var(--gray-7);
-  --bg-disabled: var(--gray-3);
-  --border-disabled: var(--gray-4);
   --ring-focus: 0 0 0 3px var(--state-focus);
   --ring-error: 0 0 0 3px var(--status-error-bg);
   --ring-selected: 0 0 0 3px var(--state-selected);

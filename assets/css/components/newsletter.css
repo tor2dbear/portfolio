@@ -78,7 +78,7 @@
   color: var(--component-newsletter-button-text);
   font-size: var(--text-lg);
   font-family: var(--font-ui);
-  font-weight: var(--sans-weight-medium);
+  font-weight: var(--sans-weight-bold);
   padding: 0.5rem 1rem;
   -webkit-appearance: none;
   border-radius: 0;
