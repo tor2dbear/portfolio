@@ -167,6 +167,8 @@
 
   /* Dark mode specific overrides */
   --bg-page: var(--gray-1);
+  --component-toast-bg: color-mix(in srgb, var(--gray-1) 52%, transparent);
+  --component-toast-border: color-mix(in srgb, var(--white) 8%, transparent);
   --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.1) 0px 4px 6px -2px;
   --shadow-02: rgba(0, 0, 0, 0.45) 0px 8px 20px -6px,

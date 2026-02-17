@@ -30,6 +30,8 @@
   --bg-surface: var(--green-4);
 
   --border-subtle: var(--green-5);
+  --border-default: var(--green-7);
+  --border-strong: var(--green-8);
 
   --component-form-bg: var(--green-3);
   --component-form-placeholder: var(--text-muted);

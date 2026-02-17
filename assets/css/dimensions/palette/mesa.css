@@ -32,6 +32,8 @@
   --bg-surface: var(--amber-4);
 
   --border-subtle: var(--amber-5);
+  --border-default: var(--amber-7);
+  --border-strong: var(--amber-8);
 
   --component-form-bg: var(--amber-3);
   --component-form-placeholder: var(--text-muted);

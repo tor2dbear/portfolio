@@ -30,6 +30,8 @@
   --bg-surface: var(--coty-role-surface-strong, var(--coty-4));
 
   --border-subtle: var(--coty-5);
+  --border-default: var(--coty-7);
+  --border-strong: var(--coty-8);
 
   --component-form-bg: var(--coty-role-surface, var(--coty-3));
   --component-form-placeholder: var(--text-muted);

@@ -19,6 +19,12 @@
   --component-newsletter-illustration-bg: var(--iris-3);
   --component-newsletter-button-bg: var(--iris-4);
   --component-newsletter-button-text: var(--iris-11);
+  --component-toast-bg: color-mix(in srgb, var(--bg-page) 52%, transparent);
+  --component-toast-border: color-mix(
+    in srgb,
+    var(--text-default) 6%,
+    transparent
+  );
 
   /* ==========================================================================
      LAYOUT TOKENS - Max-width constraints
