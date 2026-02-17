@@ -1,5 +1,6 @@
 {{ partial "header.html" . }}
 
+
 <div
   class="content palette-generator use-subgrid"
   data-js="palette-generator-root"
@@ -8,77 +9,619 @@
 >
   <div class="palette-generator__header place-wide">
     <h1 class="type-headline-1 palette-generator__title">{{ .Title }}</h1>
-    <p class="type-body-large palette-generator__description">{{ .Description }}</p>
+    <p class="type-body-large palette-generator__description">
+      {{ .Description }}
+    </p>
   </div>
 
-  <section class="palette-generator__panel place-wide" aria-label="Palette generator">
-    <div class="palette-generator__row">
-      <label for="palette-preset" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Preset{{ else }}Preset{{ end }}</label>
-      <select id="palette-preset" data-js="palette-preset"></select>
+  <section
+    class="palette-generator__panel place-wide"
+    aria-label="Palette generator"
+  >
+    <div
+      class="tabs-nav palette-generator__tabs"
+      data-js="palette-generator-tabs"
+      role="tablist"
+      aria-label="{{ if eq .Language.Lang "sv" }}
+        Temaläge
+      {{ else }}
+        Theme mode
+      {{ end }}"
+    >
+      <button
+        type="button"
+        class="tab-button is-active"
+        role="tab"
+        aria-selected="true"
+        aria-controls="palette-tab-panel"
+        data-tab="palette"
+      >
+        Palette
+      </button>
+      <button
+        type="button"
+        class="tab-button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="pantone-tab-panel"
+        data-tab="pantone"
+      >
+        Pantone Lab
+      </button>
     </div>
-    <div class="palette-generator__row">
-      <label for="tone-mode" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Tone mode{{ else }}Tone mode{{ end }}</label>
-      <select id="tone-mode" data-js="tone-mode">
-        <option value="mono">{{ if eq .Language.Lang "sv" }}Monotone{{ else }}Monotone{{ end }}</option>
-        <option value="duo">{{ if eq .Language.Lang "sv" }}Duotone{{ else }}Duotone{{ end }}</option>
-      </select>
-    </div>
-    <div class="palette-generator__row">
-      <label for="policy-surface-profile" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Surface profile{{ else }}Surface profile{{ end }}</label>
-      <select id="policy-surface-profile" data-js="policy-surface-profile">
-        <option value="standard">{{ if eq .Language.Lang "sv" }}Standard{{ else }}Standard{{ end }}</option>
-        <option value="deep">{{ if eq .Language.Lang "sv" }}Deep{{ else }}Deep{{ end }}</option>
-      </select>
-    </div>
-    <div class="palette-generator__row">
-      <label for="policy-form-policy" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Form policy{{ else }}Form policy{{ end }}</label>
-      <select id="policy-form-policy" data-js="policy-form-policy">
-        <option value="neutral">{{ if eq .Language.Lang "sv" }}Neutral{{ else }}Neutral{{ end }}</option>
-        <option value="surface-derived">{{ if eq .Language.Lang "sv" }}Surface-derived{{ else }}Surface-derived{{ end }}</option>
-      </select>
-    </div>
-    <div class="palette-generator__row">
-      <label for="policy-image-treatment" class="palette-generator__label">{{ if eq .Language.Lang "sv" }}Image treatment{{ else }}Image treatment{{ end }}</label>
-      <select id="policy-image-treatment" data-js="policy-image-treatment">
-        <option value="none">{{ if eq .Language.Lang "sv" }}None{{ else }}None{{ end }}</option>
-        <option value="pantone-blend">{{ if eq .Language.Lang "sv" }}Pantone blend{{ else }}Pantone blend{{ end }}</option>
-      </select>
-    </div>
-    <div class="palette-generator__row">
-      <label for="palette-coty-year" class="palette-generator__label">{{ i18n "coty_year" }}</label>
-      <select id="palette-coty-year" data-js="coty-year"></select>
-    </div>
-    <div class="palette-generator__grid" data-js="roles-grid">
+
+    <section
+      id="palette-tab-panel"
+      class="tab-panel is-active"
+      data-panel="palette"
+      role="tabpanel"
+    >
       <div class="palette-generator__row">
-        <label for="role-text" class="palette-generator__label">Text</label>
-        <select id="role-text" data-role="text"></select>
+        <label for="palette-preset" class="palette-generator__label"
+          >{{ if eq .Language.Lang "sv" }}
+            Preset
+          {{ else }}
+            Preset
+          {{ end }}</label
+        >
+        <select id="palette-preset" data-js="palette-preset"></select>
       </div>
       <div class="palette-generator__row">
-        <label for="role-surface" class="palette-generator__label">Surface</label>
-        <select id="role-surface" data-role="surface"></select>
+        <label class="palette-generator__label"
+          >{{ if eq .Language.Lang "sv" }}
+            Duotone
+          {{ else }}
+            Duotone
+          {{ end }}</label
+        >
+        <button
+          type="button"
+          class="button button--secondary palette-generator__toggle"
+          data-js="tone-mode-toggle"
+          aria-pressed="false"
+        >
+          {{ if eq .Language.Lang "sv" }}
+            Av
+          {{ else }}
+            Off
+          {{ end }}
+        </button>
       </div>
       <div class="palette-generator__row">
-        <label for="role-primary" class="palette-generator__label">Primary</label>
-        <select id="role-primary" data-role="primary"></select>
+        <label class="palette-generator__label"
+          >{{ if eq .Language.Lang "sv" }}
+            Surface profile
+          {{ else }}
+            Surface profile
+          {{ end }}</label
+        >
+        <div
+          class="radio-group--inline"
+          role="radiogroup"
+          aria-label="{{ if eq .Language.Lang "sv" }}
+            Surface profile
+          {{ else }}
+            Surface profile
+          {{ end }}"
+        >
+          <label class="radio">
+            <input
+              type="radio"
+              name="surface-profile"
+              value="standard"
+              data-js="policy-surface-profile"
+              checked
+            />
+            <span class="radio__visual"></span>
+            <span class="radio__label"
+              >{{ if eq .Language.Lang "sv" }}
+                Standard
+              {{ else }}
+                Standard
+              {{ end }}</span
+            >
+          </label>
+          <label class="radio">
+            <input
+              type="radio"
+              name="surface-profile"
+              value="deep"
+              data-js="policy-surface-profile"
+            />
+            <span class="radio__visual"></span>
+            <span class="radio__label"
+              >{{ if eq .Language.Lang "sv" }}
+                Deep
+              {{ else }}
+                Deep
+              {{ end }}</span
+            >
+          </label>
+        </div>
       </div>
       <div class="palette-generator__row">
-        <label for="role-secondary" class="palette-generator__label">Secondary</label>
-        <select id="role-secondary" data-role="secondary"></select>
+        <label class="palette-generator__label"
+          >{{ if eq .Language.Lang "sv" }}
+            Surface-derived
+          {{ else }}
+            Surface-derived
+          {{ end }}</label
+        >
+        <button
+          type="button"
+          class="button button--secondary palette-generator__toggle"
+          data-js="surface-derived-toggle"
+          aria-pressed="false"
+        >
+          {{ if eq .Language.Lang "sv" }}
+            Av
+          {{ else }}
+            Off
+          {{ end }}
+        </button>
       </div>
-    </div>
+      <div class="palette-generator__grid" data-js="roles-grid">
+        <div class="palette-generator__row">
+          <label for="role-text" class="palette-generator__label">Text</label>
+          <select id="role-text" data-role="text"></select>
+        </div>
+        <div class="palette-generator__row">
+          <label for="role-surface" class="palette-generator__label"
+            >Surface</label
+          >
+          <select id="role-surface" data-role="surface"></select>
+        </div>
+        <div class="palette-generator__row">
+          <label for="role-primary" class="palette-generator__label"
+            >Primary</label
+          >
+          <select id="role-primary" data-role="primary"></select>
+        </div>
+        <div class="palette-generator__row">
+          <label for="role-secondary" class="palette-generator__label"
+            >Secondary</label
+          >
+          <select id="role-secondary" data-role="secondary"></select>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="pantone-tab-panel"
+      class="tab-panel"
+      data-panel="pantone"
+      role="tabpanel"
+    >
+      <div class="palette-generator__row">
+        <label for="palette-coty-year" class="palette-generator__label"
+          >{{ i18n "coty_year" }}</label
+        >
+        <select id="palette-coty-year" data-js="coty-year"></select>
+        <div
+          class="palette-generator__actions palette-generator__actions--coty"
+        >
+          <button
+            class="button button--secondary"
+            type="button"
+            data-js="coty-year-prev"
+          >
+            {{ if eq .Language.Lang "sv" }}
+              Föregående
+            {{ else }}
+              Previous
+            {{ end }}
+          </button>
+          <button
+            class="button button--secondary"
+            type="button"
+            data-js="coty-year-next"
+          >
+            {{ if eq .Language.Lang "sv" }}
+              Nästa
+            {{ else }}
+              Next
+            {{ end }}
+          </button>
+        </div>
+      </div>
+      <div class="palette-generator__coty" data-js="coty-controls">
+        <details class="accordion-nested palette-generator__coty-advanced">
+          <summary class="accordion-nested__trigger">
+            <h4 class="palette-generator__coty-group-title type-body-large">
+              {{ if eq .Language.Lang "sv" }}
+                Avancerat
+              {{ else }}
+                Advanced
+              {{ end }}
+            </h4>
+          </summary>
+          <div class="accordion-nested__content palette-generator__grid">
+            <div class="palette-generator__row">
+              <label for="coty-role-mode" class="palette-generator__label"
+                >{{ if eq .Language.Lang "sv" }}
+                  COTY rolläge
+                {{ else }}
+                  COTY role mode
+                {{ end }}</label
+              >
+              <select id="coty-role-mode" data-js="coty-role-mode">
+                <option value="auto">
+                  {{ if eq .Language.Lang "sv" }}
+                    Auto
+                  {{ else }}
+                    Auto
+                  {{ end }}
+                </option>
+                <option value="primary">
+                  {{ if eq .Language.Lang "sv" }}
+                    Primary
+                  {{ else }}
+                    Primary
+                  {{ end }}
+                </option>
+                <option value="surface">
+                  {{ if eq .Language.Lang "sv" }}
+                    Surface
+                  {{ else }}
+                    Surface
+                  {{ end }}
+                </option>
+              </select>
+            </div>
+            <div class="palette-generator__row">
+              <label for="coty-anchor-step" class="palette-generator__label"
+                >{{ if eq .Language.Lang "sv" }}
+                  COTY ankarsteg
+                {{ else }}
+                  COTY anchor step
+                {{ end }}</label
+              >
+              <select id="coty-anchor-step" data-js="coty-anchor-step"></select>
+            </div>
+          </div>
+        </details>
+        <p
+          class="palette-generator__hint palette-generator__hint--coty-source"
+          data-js="coty-source-step"
+        >
+          {{ if eq .Language.Lang "sv" }}
+            Source: --coty-?
+          {{ else }}
+            Source: --coty-?
+          {{ end }}
+        </p>
+        <p
+          class="palette-generator__hint palette-generator__hint--coty-tone"
+          data-js="coty-tone-mode"
+        >
+          {{ if eq .Language.Lang "sv" }}
+            Läge: mono
+          {{ else }}
+            Mode: mono
+          {{ end }}
+        </p>
+        <div
+          class="palette-generator__actions palette-generator__actions--coty"
+        >
+          <button
+            class="button button--secondary"
+            type="button"
+            data-js="coty-reset-year"
+          >
+            {{ if eq .Language.Lang "sv" }}
+              Återställ år
+            {{ else }}
+              Reset year
+            {{ end }}
+          </button>
+          <button
+            class="button button--secondary"
+            type="button"
+            data-js="coty-reset-all"
+          >
+            {{ if eq .Language.Lang "sv" }}
+              Återställ alla utkast
+            {{ else }}
+              Reset all drafts
+            {{ end }}
+          </button>
+        </div>
+
+        <details class="accordion-nested palette-generator__coty-diff" open>
+          <summary class="accordion-nested__trigger">
+            <h4 class="palette-generator__coty-group-title type-body-large">
+              {{ if eq .Language.Lang "sv" }}
+                Diff mot bas
+              {{ else }}
+                Diff against base
+              {{ end }}
+            </h4>
+          </summary>
+          <div
+            class="accordion-nested__content palette-generator__diff"
+            data-js="coty-diff"
+          ></div>
+        </details>
+
+        <details class="accordion-nested palette-generator__coty-contrast" open>
+          <summary class="accordion-nested__trigger">
+            <h4 class="palette-generator__coty-group-title type-body-large">
+              {{ if eq .Language.Lang "sv" }}
+                Kontrastkontroller
+              {{ else }}
+                Contrast checks
+              {{ end }}
+            </h4>
+          </summary>
+          <div
+            class="accordion-nested__content palette-generator__grid palette-generator__grid--coty-contrast"
+            data-js="coty-contrast-checks"
+          ></div>
+        </details>
+
+        <details class="accordion-nested palette-generator__coty-usage" open>
+          <summary class="accordion-nested__trigger">
+            <h4 class="palette-generator__coty-group-title type-body-large">
+              {{ if eq .Language.Lang "sv" }}
+                Token usage (where-used)
+              {{ else }}
+                Token usage (where-used)
+              {{ end }}
+            </h4>
+          </summary>
+          <div
+            class="accordion-nested__content palette-generator__usage"
+            data-js="coty-token-usage"
+          >
+            <div class="palette-generator__row">
+              <label
+                for="coty-token-usage-select"
+                class="palette-generator__label"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Token
+                {{ else }}
+                  Token
+                {{ end }}
+              </label>
+              <select
+                id="coty-token-usage-select"
+                data-js="coty-token-usage-select"
+              ></select>
+            </div>
+            <div
+              class="palette-generator__usage-list"
+              data-js="coty-token-usage-list"
+            ></div>
+          </div>
+        </details>
+
+        <details
+          class="accordion-nested palette-generator__coty-control-color"
+          open
+        >
+          <summary class="accordion-nested__trigger">
+            <h4 class="palette-generator__coty-group-title type-body-large">
+              {{ if eq .Language.Lang "sv" }}
+                Control color (QA)
+              {{ else }}
+                Control color (QA)
+              {{ end }}
+            </h4>
+          </summary>
+          <div
+            class="accordion-nested__content palette-generator__grid palette-generator__grid--coty-control-color"
+          >
+            <div class="palette-generator__row">
+              <label
+                for="coty-control-color-value"
+                class="palette-generator__label"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Färg
+                {{ else }}
+                  Color
+                {{ end }}
+              </label>
+              <input
+                id="coty-control-color-value"
+                type="color"
+                value="#ff4d4d"
+                data-js="coty-control-color-value"
+              />
+            </div>
+            <div class="palette-generator__row">
+              <label
+                for="coty-control-color-scope"
+                class="palette-generator__label"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Scope
+                {{ else }}
+                  Scope
+                {{ end }}
+              </label>
+              <select
+                id="coty-control-color-scope"
+                data-js="coty-control-color-scope"
+              >
+                <option value="primary">
+                  {{ if eq .Language.Lang "sv" }}
+                    Primary tokens
+                  {{ else }}
+                    Primary tokens
+                  {{ end }}
+                </option>
+                <option value="surface">
+                  {{ if eq .Language.Lang "sv" }}
+                    Surface tokens
+                  {{ else }}
+                    Surface tokens
+                  {{ end }}
+                </option>
+                <option value="text">
+                  {{ if eq .Language.Lang "sv" }}
+                    Text tokens
+                  {{ else }}
+                    Text tokens
+                  {{ end }}
+                </option>
+                <option value="token">
+                  {{ if eq .Language.Lang "sv" }}
+                    Vald token
+                  {{ else }}
+                    Selected token
+                  {{ end }}
+                </option>
+              </select>
+            </div>
+            <div
+              class="palette-generator__row"
+              data-js="coty-control-color-token-row"
+              hidden
+            >
+              <label
+                for="coty-control-color-token"
+                class="palette-generator__label"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Token
+                {{ else }}
+                  Token
+                {{ end }}
+              </label>
+              <select
+                id="coty-control-color-token"
+                data-js="coty-control-color-token"
+              ></select>
+            </div>
+            <div
+              class="palette-generator__actions palette-generator__actions--coty"
+            >
+              <button
+                class="button button--secondary"
+                type="button"
+                data-js="coty-control-color-toggle"
+                aria-pressed="false"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Aktivera
+                {{ else }}
+                  Enable
+                {{ end }}
+              </button>
+              <button
+                class="button button--secondary"
+                type="button"
+                data-js="coty-control-color-reset"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Inaktivera
+                {{ else }}
+                  Disable
+                {{ end }}
+              </button>
+            </div>
+            <p
+              class="palette-generator__hint palette-generator__hint--coty-control-color-count"
+              data-js="coty-control-color-count"
+            >
+              {{ if eq .Language.Lang "sv" }}
+                Påverkade tokens: 0
+              {{ else }}
+                Affected tokens: 0
+              {{ end }}
+            </p>
+          </div>
+        </details>
+
+        <div
+          class="palette-generator__coty-groups"
+          data-js="coty-override-groups"
+        ></div>
+      </div>
+    </section>
 
     <div class="palette-generator__actions">
-      <button class="button button--secondary" type="button" data-js="palette-reset">{{ if eq .Language.Lang "sv" }}Återställ{{ else }}Reset{{ end }}</button>
-      <button class="button" type="button" data-js="palette-save">{{ if eq .Language.Lang "sv" }}Spara palette{{ else }}Save palette{{ end }}</button>
-      <button class="button button--primary" type="button" data-js="palette-copy">{{ if eq .Language.Lang "sv" }}Kopiera spec{{ else }}Copy spec{{ end }}</button>
+      <button
+        class="button button--secondary"
+        type="button"
+        data-js="palette-reset"
+      >
+        {{ if eq .Language.Lang "sv" }}
+          Återställ
+        {{ else }}
+          Reset
+        {{ end }}
+      </button>
+      <button class="button" type="button" data-js="palette-save">
+        {{ if eq .Language.Lang "sv" }}
+          Spara palette
+        {{ else }}
+          Save palette
+        {{ end }}
+      </button>
+      <button class="button" type="button" data-js="coty-apply-draft" hidden>
+        {{ if eq .Language.Lang "sv" }}
+          Applicera Pantone-utkast
+        {{ else }}
+          Apply Pantone draft
+        {{ end }}
+      </button>
+      <button
+        class="button button--primary"
+        type="button"
+        data-js="palette-copy"
+      >
+        {{ if eq .Language.Lang "sv" }}
+          Kopiera spec
+        {{ else }}
+          Copy spec
+        {{ end }}
+      </button>
     </div>
 
-    <label class="palette-generator__label palette-generator__label--block">{{ if eq .Language.Lang "sv" }}Export (TOML){{ else }}Export (TOML){{ end }}</label>
-    <textarea id="palette-export" class="palette-generator__export" data-js="palette-export" rows="10" readonly></textarea>
-    <pre class="palette-generator__code"><code data-js="palette-export-code"></code></pre>
+    <label class="palette-generator__label palette-generator__label--block"
+      >{{ if eq .Language.Lang "sv" }}
+        Export (TOML)
+      {{ else }}
+        Export (TOML)
+      {{ end }}</label
+    >
+    <textarea
+      id="palette-export"
+      class="palette-generator__export"
+      data-js="palette-export"
+      rows="10"
+      readonly
+    ></textarea>
+    <pre
+      class="palette-generator__code"
+    ><code data-js="palette-export-code"></code></pre>
 
-    <p class="palette-generator__hint type-body-small">
-      {{ if eq .Language.Lang "sv" }}Ändringar appliceras live. Spara palette för att behålla den som Custom palette.{{ else }}Changes apply live. Save palette to persist as Custom palette.{{ end }}
+    <p
+      class="palette-generator__hint type-body-small"
+      data-js="palette-generator-footer-hint"
+      data-hint-palette="{{ if eq .Language.Lang "sv" }}
+        Ändringar appliceras live. Spara palette för att behålla den som Custom
+        palette.
+      {{ else }}
+        Changes apply live. Save palette to persist as Custom palette.
+      {{ end }}"
+      data-hint-pantone="{{ if eq .Language.Lang "sv" }}
+        Pantone-utkast appliceras live för valt år och mode. Kopiera exporten
+        för att spara patchen.
+      {{ else }}
+        Pantone drafts apply live for the selected year and mode. Copy the
+        export to persist the patch.
+      {{ end }}"
+    >
+      {{ if eq .Language.Lang "sv" }}
+        Ändringar appliceras live. Spara palette för att behålla den som Custom
+        palette.
+      {{ else }}
+        Changes apply live. Save palette to persist as Custom palette.
+      {{ end }}
     </p>
   </section>
 

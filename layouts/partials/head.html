@@ -510,6 +510,7 @@
   {{ $js18 := resources.Get "js/palette-generator.js" }}
   {{ $js19 := resources.Get "js/writing-tag-filter.js" }}
   {{ $js20 := resources.Get "js/tabs.js" }}
+  {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -537,9 +538,10 @@
     <script src="{{ $js18.RelPermalink }}" defer></script>
     <script src="{{ $js19.RelPermalink }}" defer></script>
     <script src="{{ $js20.RelPermalink }}" defer></script>
+    <script src="{{ $js21.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_coty_scale $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 $js19 $js20 }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_coty_scale $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 $js19 $js20 $js21 }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
   {{ end }}

@@ -26,6 +26,8 @@ hex = "#7fcdcd"
 year = 2004
 name = "Tigerlily"
 hex = "#e15d44"
+role_mode = "primary"
+anchor_step = 7
 
 [[colors]]
 year = 2005
@@ -36,6 +38,8 @@ hex = "#55b4b0"
 year = 2006
 name = "Sand Dollar"
 hex = "#dfcfbe"
+role_mode = "surface"
+anchor_step = 4
 
 [[colors]]
 year = 2007
@@ -51,6 +55,8 @@ hex = "#5b5ea6"
 year = 2009
 name = "Mimosa"
 hex = "#efc050"
+role_mode = "surface"
+anchor_step = 5
 
 [[colors]]
 year = 2010
@@ -86,6 +92,8 @@ hex = "#964f4c"
 year = 2016
 name = "Rose Quartz"
 hex = "#f7caca"
+role_mode = "surface"
+anchor_step = 4
 
 [[colors]]
 year = 2016
@@ -116,11 +124,14 @@ hex = "#0f4c81"
 year = 2021
 name = "Ultimate Gray"
 hex = "#939597"
+role_mode = "surface"
+anchor_step = 7
 
 [[colors]]
 year = 2021
 name = "Illuminating"
 hex = "#f5df4d"
+anchor_step = 3
 
 [[colors]]
 year = 2022
@@ -136,6 +147,8 @@ hex = "#BE3455"
 year = 2024
 name = "Peach Fuzz"
 hex = "#FEBD99"
+role_mode = "surface"
+anchor_step = 4
 
 [[colors]]
 year = 2025
@@ -146,3 +159,5 @@ hex = "#A57865"
 year = 2026
 name = "Cloud Dancer"
 hex = "#F0EFEB"
+role_mode = "surface"
+anchor_step = 2
