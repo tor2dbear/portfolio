@@ -2,7 +2,7 @@
 
 **Baserad på:** COLOR_TOKEN_REVIEW.md + konversationsbeslut 2026-02-16/17
 **Scope:** Semantiska tokens, komponent-CSS, palette-filer, mode-filer
-**Utanför scope:** Palette-generator (JS), prisma-primitiver
+**Utanför scope:** Palette-generator (JS), primitiver
 
 ---
 
@@ -35,10 +35,72 @@ Dessa saker har redan åtgärdats eller visar sig vara annorlunda än reviewen a
 | 10 | `--primary-hover`? | Nej — state-overlays täcker det |
 | 11 | `--border-hover`? | Ta bort — ersätt med `--border-strong` |
 | 12 | `--outline-neutral`? | Ta bort — ersätt med `--border-subtle` |
-| 13 | Border-förenkling? | 3 tokens: subtle, default, strong |
+| 13 | Border-förenkling? | 3 tokens: subtle, default, strong — egen kategori |
 | 14 | Toast glassmorphism? | Tokenisera via component-tokens |
 | 15 | `--sans-weight-medium`? | Lägg till som 500, mappa om befintliga `--sans-weight-bold`-referenser |
-| 16 | Palette-generator border-steg? | Out of scope |
+| 16 | Palette-generator border-steg? | Out of scope (se separat sektion nedan) |
+| 17 | Borders — gray-låsta? | Nej — ska deriveras från surface-familj, inte fast gray |
+| 18 | `--surface-ink-strong` — roll? | Behåll under surface (surface-familjens mörka representant) |
+| 19 | `--component-nav-cta-*`? | Behåll som component-tokens (duo-mode kräver det) |
+| 20 | `--on-secondary`? | Ny token behövs (text på secondary-ytor) |
+| 21 | Fas 6 — status-klasser? | Ny fil `utilities/status-messages.css` |
+| 22 | Fas 7 — uppdelning? | Två separata commits: 7a (surface-rename) sedan 7b (primary/secondary-merge) |
+
+---
+
+## Målbild: Token-kategorier
+
+```
+SURFACE (ytor — deriveras från surface-familj)
+├── --surface-page
+├── --surface-default
+├── --surface-subtle
+├── --surface-elevated
+├── --surface-inverse
+├── --surface-tag
+├── --surface-tag-hover
+├── --surface-headline
+└── --surface-ink-strong
+
+TEXT (textfärger — deriveras från text-familj + blandningar)
+├── --text-default
+├── --text-muted              (gray-11 × surface-ink blandning)
+├── --text-inverse
+├── --text-link               (pekar på primary-familj)
+├── --text-link-hover
+├── --text-accent
+└── --text-tag                (pekar på surface-familj)
+
+PRIMARY (accentfärg — deriveras från primary-familj)
+├── --primary
+├── --primary-strong
+└── --on-primary
+
+SECONDARY (sekundär accent — deriveras från secondary-familj)
+├── --secondary
+├── --secondary-strong
+└── --on-secondary            ← NY
+
+BORDER (egen kategori — ska deriveras från surface-familj)
+├── --border-subtle
+├── --border-default
+└── --border-strong
+
+STATE (overlays — beräknade, inte en "färgroll")
+├── --state-page-hover/active
+├── --state-surface-hover/active
+├── --state-primary-hover/active   (← brand-hover/active)
+├── --state-focus
+└── --state-selected
+
+STATUS (fasta funktionsfärger — oberoende av palette)
+├── error   (bg/border/text)
+├── success (bg/border/text)
+├── warning (bg/border/text)
+└── info    (bg/border/text)
+```
+
+7 kategorier: 5 palette-beroende (surface, text, primary, secondary, border) + 2 fristående (state, status).
 
 ---
 
@@ -174,16 +236,10 @@ background-color: var(--bg-inverse);
 color: var(--text-inverse);
 ```
 
-**Nav CTA** (semantic.css rad 114-115):
-```css
-/* Nuvarande */
---component-nav-cta-bg: var(--text-default);
---component-nav-cta-text: var(--bg-page);
-
-/* Nytt */
---component-nav-cta-bg: var(--bg-inverse);
---component-nav-cta-text: var(--text-inverse);
-```
+> **OBS:** `--component-nav-cta-bg/text` behålls som de är. Default-läget pekar på
+> `text.default`/`surface.page` (= inverse), men duo-mode pekar om till `primary.base`/`primary.on`.
+> Att byta till `--bg-inverse`/`--text-inverse` här vore fel — det bryter duo-teman.
+> Component-token-lagret är rätt abstraktion för nav CTA.
 
 **Secondary hover** (button.css rad 118-121):
 ```css
@@ -208,7 +264,7 @@ background-image: linear-gradient(var(--state-page-hover), var(--state-page-hove
 
 **Problem:** Identisk status-meddelande-styling duplicerad i 3 filer.
 
-Skapa gemensamma utility-klasser i en lämplig plats (t.ex. `utilities/status-messages.css` eller liknande):
+Skapa ny fil `utilities/status-messages.css`:
 ```css
 .message--success {
   background-color: var(--status-success-bg);
@@ -231,9 +287,10 @@ Uppdatera HTML-templates att använda dessa klasser istället.
 
 ### Fas 7: Byt namnkonvention (breaking change — stor fas)
 
-> **OBS:** Denna fas påverkar ~20+ komponentfiler, alla palette-filer, JS-filer (theme-derive.js, palette-generator.js), och eventuellt Hugo-templates. Bör göras som en separat commit/PR eller brytas ned ytterligare.
+> **Rekommendation:** Gör 7a och 7b som separata commits.
+> 7a är mekanisk find-replace. 7b kräver mer eftertanke kring JS-derivation.
 
-#### 7a: `--bg-*` → `--surface-*`
+#### 7a: `--bg-*` → `--surface-*` (separat commit)
 
 | Nuvarande | Nytt |
 |-----------|------|
@@ -246,7 +303,7 @@ Uppdatera HTML-templates att använda dessa klasser istället.
 | `--bg-tag-hover` | `--surface-tag-hover` |
 | `--bg-section-headline` | `--surface-headline` |
 
-#### 7b: Slå ihop `--brand-*` + `--accent-*` → `--primary` / `--secondary`
+#### 7b: Slå ihop `--brand-*` + `--accent-*` → `--primary` / `--secondary` (separat commit)
 
 | Nuvarande | Nytt |
 |-----------|------|
@@ -257,8 +314,9 @@ Uppdatera HTML-templates att använda dessa klasser istället.
 | `--brand-on-container` | Ta bort (oanvänd) |
 | `--accent-secondary` | `--secondary` |
 | `--accent-secondary-strong` | `--secondary-strong` |
+| (saknas) | `--on-secondary` ← NY |
 
-#### 7c: State-tokens uppdatering
+#### 7c: State-tokens uppdatering (del av 7b-commit)
 
 | Nuvarande | Nytt |
 |-----------|------|
@@ -302,15 +360,36 @@ Uppdatera HTML-templates att använda dessa klasser istället.
 | 4 | Medel | Minimal (toast/tabs ska se likadana ut, footer border marginellt annorlunda) | 1 |
 | 5 | Medel | Ingen (samma visuella värden, korrekt semantik) | 1 |
 | 6 | Låg | Ingen (DRY-refactor) | 1 |
-| 7 | **Hög** | Ingen (ren rename), men stort antal filer | 1-2 |
+| 7a | Medel | Ingen (ren rename) | 1 |
+| 7b | **Hög** | Ingen (ren rename), men kräver JS-ändringar | 1 |
 
-**Rekommendation:** Fas 1-6 kan implementeras sekventiellt i en session. Fas 7 bör diskuteras och eventuellt brytas ned i delfaser (7a separat från 7b etc.).
+**Rekommendation:** Fas 1-6 kan implementeras sekventiellt i en session. Fas 7a sedan 7b som separata steg med verifiering emellan.
 
 ---
 
-## Öppna frågor
+## Utanför scope — men kopplat
 
-1. **Fas 6 — var ska shared status-klasser bo?** Ny fil `utilities/status-messages.css` eller i befintlig utility-fil?
-2. **Fas 7 — allt i ett eller delfaser?** `--bg-*` → `--surface-*` kan göras oberoende av brand/accent-ihopslagningen.
-3. **`--surface-ink-strong`** — Behålla under surface-gruppen eller byta till `--primary-ink`? (Den pekar på iris-11 och används för state-overlays.)
-4. **`--component-nav-cta-*`** — Behövs dessa som separata component-tokens, eller ska nav CTA bara använda `--surface-inverse` / `--text-inverse` direkt? (Samma värden idag.)
+### Border-tokens i palette-filer och palette-generator
+
+**Beslut:** Borders ska inte vara gray-låsta. De ska deriveras från surface-familjen.
+
+**Nuläge:** Enbart `--border-subtle` override:as i palette-filer (mesa → amber-5, forest → green-5, pantone → cloud-5). `--border-default` och `--border-strong` förblir gray-6/gray-8 oavsett palette.
+
+**Behövs:**
+1. **Manuella overrides i palette-filer** — Lägg till `--border-default` och `--border-strong` i mesa.css, forest.css, pantone.css med surface-familjens steg 6 och 8:
+
+   | Palette | `--border-default` | `--border-strong` |
+   |---------|--------------------|--------------------|
+   | mesa | `var(--amber-6)` | `var(--amber-8)` |
+   | forest | `var(--green-6)` | `var(--green-8)` |
+   | pantone | `var(--cloud-6)` | `var(--cloud-8)` |
+
+2. **Palette-generator** — Utöka `derivePaletteTokens()` i theme-derive.js med steg för `--border-default` (surface-familj steg 6) och `--border-strong` (surface-familj steg 8).
+
+**Varför separat:** Punkt 1 kan göras snabbt som en del av denna puck om önskvärt. Punkt 2 kräver ändringar i palette-generatorn (JS) som är markerad out of scope.
+
+---
+
+## Alla frågor besvarade
+
+Inga öppna frågor kvarstår. Alla beslut dokumenterade ovan.
