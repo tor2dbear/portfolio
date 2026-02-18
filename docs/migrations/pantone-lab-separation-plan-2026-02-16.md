@@ -36,6 +36,12 @@ In scope (PR A):
 2. Kortsiktiga manuella border-overrides i palette-filer (`--border-default`, `--border-strong`) for `forest`, `mesa`, `pantone`.
 3. Verifiering: lint/test + visuell kontroll av kritiska UI-block (buttons/forms/tabs/toast/nav-cta/taggar).
 
+Status (current branch):
+
+1. Fas 1-5 ar genomforda i kodbasen for denna branch.
+2. Manuella border-overrides ar pa plats i `forest`, `mesa`, `pantone`.
+3. Lint/test ar grona efter senaste andringar.
+
 Out of scope (flyttas till nasta PR):
 
 1. Fas 6 (status-konsolidering till shared utility-fil).
