@@ -251,8 +251,8 @@
 }
 
 .spacing-example__token {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--sans-weight-bold);
   justify-self: end;
 }
 
@@ -665,14 +665,14 @@
 }
 
 .meta-item dt {
-  font-weight: 600;
-  font-size: 0.875rem;
+  font-weight: var(--sans-weight-bold);
+  font-size: var(--text-sm);
   color: var(--text-muted);
 }
 
 .meta-item dd {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 .meta-item code {

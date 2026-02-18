@@ -127,7 +127,7 @@ body {
 }
 
 .font-semibold {
-  font-weight: 600;
+  font-weight: var(--sans-weight-bold);
 }
 
 .font-bold {
