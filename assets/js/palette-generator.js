@@ -1698,6 +1698,7 @@
       updateCotyContrastChecks();
       updateCotyTokenUsagePanel();
       updateCotySourceStepLabel();
+      updateCotyOverrideOptionLabels();
     }
 
     function tokenVar(token) {
@@ -2004,6 +2005,45 @@
         } else {
           group.setAttribute("hidden", "");
         }
+      });
+    }
+
+    function updateCotyOverrideOptionLabels() {
+      const sourceStep = getComputedStyle(document.documentElement)
+        .getPropertyValue("--coty-source-step")
+        .trim();
+      const secondarySourceStep = getComputedStyle(document.documentElement)
+        .getPropertyValue("--coty-secondary-source-step")
+        .trim();
+      const isSwedish = document.documentElement.lang === "sv";
+      const sourceSuffix = isSwedish ? " (source)" : " (source)";
+      const secondarySourceSuffix = isSwedish
+        ? " (sekundär source)"
+        : " (secondary source)";
+
+      Object.keys(cotyOverrideSelects).forEach((key) => {
+        const select = cotyOverrideSelects[key];
+        if (!select) {
+          return;
+        }
+        Array.from(select.options).forEach((option) => {
+          const value = option.value || "";
+          if (!value) {
+            option.textContent = "auto";
+            return;
+          }
+          let label = value;
+          if (sourceStep && value === "--coty-" + sourceStep) {
+            label += sourceSuffix;
+          }
+          if (
+            secondarySourceStep &&
+            value === "--coty-secondary-" + secondarySourceStep
+          ) {
+            label += secondarySourceSuffix;
+          }
+          option.textContent = label;
+        });
       });
     }
 
@@ -3016,6 +3056,7 @@
       }
       applyControlColorOverrides();
       updateCotySourceStepLabel();
+      updateCotyOverrideOptionLabels();
     }
 
     function hydrateFromCustomPalette() {

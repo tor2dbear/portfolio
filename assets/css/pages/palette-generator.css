@@ -97,7 +97,7 @@
 }
 
 .palette-generator .accordion-nested__trigger {
-  font-weight: var(--sans-weight-medium);
+  font-weight: var(--sans-weight-regular);
 }
 
 .palette-generator .accordion-nested__content {
