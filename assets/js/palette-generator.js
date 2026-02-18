@@ -88,7 +88,6 @@
     const cotySourceStepLabel = root.querySelector(
       '[data-js="coty-source-step"]'
     );
-    const cotyToneModeLabel = root.querySelector('[data-js="coty-tone-mode"]');
     const cotyResetYearButton = root.querySelector(
       '[data-js="coty-reset-year"]'
     );
@@ -691,6 +690,22 @@
         cotyApplyDraftButton.hidden = !inPantoneLab;
         cotyApplyDraftButton.style.display = inPantoneLab ? "" : "none";
         cotyApplyDraftButton.setAttribute(
+          "aria-hidden",
+          inPantoneLab ? "false" : "true"
+        );
+      }
+      if (cotyResetYearButton) {
+        cotyResetYearButton.hidden = !inPantoneLab;
+        cotyResetYearButton.style.display = inPantoneLab ? "" : "none";
+        cotyResetYearButton.setAttribute(
+          "aria-hidden",
+          inPantoneLab ? "false" : "true"
+        );
+      }
+      if (cotyResetAllButton) {
+        cotyResetAllButton.hidden = !inPantoneLab;
+        cotyResetAllButton.style.display = inPantoneLab ? "" : "none";
+        cotyResetAllButton.setAttribute(
           "aria-hidden",
           inPantoneLab ? "false" : "true"
         );
@@ -1683,7 +1698,6 @@
       updateCotyContrastChecks();
       updateCotyTokenUsagePanel();
       updateCotySourceStepLabel();
-      updateCotyToneModeLabel();
     }
 
     function tokenVar(token) {
@@ -2292,30 +2306,28 @@
       const secondaryStep = getComputedStyle(document.documentElement)
         .getPropertyValue("--coty-secondary-source-step")
         .trim();
+      const anchorStep = cotyAnchorStepSelect
+        ? (cotyAnchorStepSelect.value || "").trim()
+        : "";
       if (!sourceStep) {
         cotySourceStepLabel.textContent = isSwedish
           ? "Source: --coty-?"
           : "Source: --coty-?";
         return;
       }
-      cotySourceStepLabel.textContent = isSwedish
-        ? "Source i skalan: --coty-" +
-          sourceStep +
-          (secondaryStep ? " · duo: --coty-secondary-" + secondaryStep : "")
-        : "Source in scale: --coty-" +
-          sourceStep +
-          (secondaryStep ? " · duo: --coty-secondary-" + secondaryStep : "");
-    }
-
-    function updateCotyToneModeLabel() {
-      if (!cotyToneModeLabel) {
-        return;
-      }
-      const isSwedish = document.documentElement.lang === "sv";
-      const toneMode = isCotyEntryDuo(currentCotyYear()) ? "duo" : "mono";
-      cotyToneModeLabel.textContent = isSwedish
-        ? "Läge: " + toneMode
-        : "Mode: " + toneMode;
+      const prefix = isSwedish
+        ? "Source i skalan: --coty-"
+        : "Source in scale: --coty-";
+      const duoPart = secondaryStep
+        ? " · duo: --coty-secondary-" + secondaryStep
+        : "";
+      const anchorPart = anchorStep
+        ? isSwedish
+          ? " · manuell anchor: --coty-" + anchorStep
+          : " · manual anchor: --coty-" + anchorStep
+        : "";
+      cotySourceStepLabel.textContent =
+        prefix + sourceStep + duoPart + anchorPart;
     }
 
     function buildCotyOverrideToml() {
@@ -3004,7 +3016,6 @@
       }
       applyControlColorOverrides();
       updateCotySourceStepLabel();
-      updateCotyToneModeLabel();
     }
 
     function hydrateFromCustomPalette() {

@@ -192,42 +192,84 @@
       data-panel="pantone"
       role="tabpanel"
     >
-      <div class="palette-generator__row">
-        <label for="palette-coty-year" class="palette-generator__label"
-          >{{ i18n "coty_year" }}</label
-        >
-        <select id="palette-coty-year" data-js="coty-year"></select>
-        <div
-          class="palette-generator__actions palette-generator__actions--coty"
-        >
-          <button
-            class="button button--secondary"
-            type="button"
-            data-js="coty-year-prev"
-          >
-            {{ if eq .Language.Lang "sv" }}
-              Föregående
-            {{ else }}
-              Previous
-            {{ end }}
-          </button>
-          <button
-            class="button button--secondary"
-            type="button"
-            data-js="coty-year-next"
-          >
-            {{ if eq .Language.Lang "sv" }}
-              Nästa
-            {{ else }}
-              Next
-            {{ end }}
-          </button>
-        </div>
-      </div>
       <div class="palette-generator__coty" data-js="coty-controls">
-        <details class="accordion-nested palette-generator__coty-advanced">
-          <summary class="accordion-nested__trigger">
-            <h4 class="palette-generator__coty-group-title type-body-large">
+        <details class="accordion palette-generator__coty-year" open>
+          <summary class="accordion__trigger">
+            <h4 class="accordion__title">
+              {{ if eq .Language.Lang "sv" }}
+                År
+              {{ else }}
+                Year
+              {{ end }}
+            </h4>
+          </summary>
+          <div class="accordion__content">
+            <div class="palette-generator__row">
+              <label for="palette-coty-year" class="palette-generator__label"
+                >{{ i18n "coty_year" }}</label
+              >
+              <select id="palette-coty-year" data-js="coty-year"></select>
+              <div
+                class="palette-generator__actions palette-generator__actions--coty"
+              >
+                <button
+                  class="button button--secondary"
+                  type="button"
+                  data-js="coty-year-prev"
+                >
+                  {{ if eq .Language.Lang "sv" }}
+                    Föregående
+                  {{ else }}
+                    Previous
+                  {{ end }}
+                </button>
+                <button
+                  class="button button--secondary"
+                  type="button"
+                  data-js="coty-year-next"
+                >
+                  {{ if eq .Language.Lang "sv" }}
+                    Nästa
+                  {{ else }}
+                    Next
+                  {{ end }}
+                </button>
+              </div>
+            </div>
+            <p
+              class="palette-generator__hint palette-generator__hint--coty-source"
+              data-js="coty-source-step"
+            >
+              {{ if eq .Language.Lang "sv" }}
+                Source: --coty-?
+              {{ else }}
+                Source: --coty-?
+              {{ end }}
+            </p>
+          </div>
+        </details>
+
+        <details class="accordion palette-generator__coty-roles" open>
+          <summary class="accordion__trigger">
+            <h4 class="accordion__title">
+              {{ if eq .Language.Lang "sv" }}
+                Tokenroller
+              {{ else }}
+                Token roles
+              {{ end }}
+            </h4>
+          </summary>
+          <div class="accordion__content">
+            <div
+              class="palette-generator__coty-groups"
+              data-js="coty-override-groups"
+            ></div>
+          </div>
+        </details>
+
+        <details class="accordion palette-generator__coty-advanced">
+          <summary class="accordion__trigger">
+            <h4 class="accordion__title">
               {{ if eq .Language.Lang "sv" }}
                 Avancerat
               {{ else }}
@@ -235,7 +277,7 @@
               {{ end }}
             </h4>
           </summary>
-          <div class="accordion-nested__content palette-generator__grid">
+          <div class="accordion__content palette-generator__grid">
             <div class="palette-generator__row">
               <label for="coty-role-mode" class="palette-generator__label"
                 >{{ if eq .Language.Lang "sv" }}
@@ -280,272 +322,240 @@
             </div>
           </div>
         </details>
-        <p
-          class="palette-generator__hint palette-generator__hint--coty-source"
-          data-js="coty-source-step"
-        >
-          {{ if eq .Language.Lang "sv" }}
-            Source: --coty-?
-          {{ else }}
-            Source: --coty-?
-          {{ end }}
-        </p>
-        <p
-          class="palette-generator__hint palette-generator__hint--coty-tone"
-          data-js="coty-tone-mode"
-        >
-          {{ if eq .Language.Lang "sv" }}
-            Läge: mono
-          {{ else }}
-            Mode: mono
-          {{ end }}
-        </p>
-        <div
-          class="palette-generator__actions palette-generator__actions--coty"
-        >
-          <button
-            class="button button--secondary"
-            type="button"
-            data-js="coty-reset-year"
-          >
-            {{ if eq .Language.Lang "sv" }}
-              Återställ år
-            {{ else }}
-              Reset year
-            {{ end }}
-          </button>
-          <button
-            class="button button--secondary"
-            type="button"
-            data-js="coty-reset-all"
-          >
-            {{ if eq .Language.Lang "sv" }}
-              Återställ alla utkast
-            {{ else }}
-              Reset all drafts
-            {{ end }}
-          </button>
-        </div>
 
-        <details class="accordion-nested palette-generator__coty-diff" open>
-          <summary class="accordion-nested__trigger">
-            <h4 class="palette-generator__coty-group-title type-body-large">
+        <details class="accordion palette-generator__coty-qa" open>
+          <summary class="accordion__trigger">
+            <h4 class="accordion__title">
               {{ if eq .Language.Lang "sv" }}
-                Diff mot bas
+                QA
               {{ else }}
-                Diff against base
+                QA
               {{ end }}
             </h4>
           </summary>
-          <div
-            class="accordion-nested__content palette-generator__diff"
-            data-js="coty-diff"
-          ></div>
-        </details>
+          <div class="accordion__content">
+            <details
+              class="accordion-nested palette-generator__coty-contrast"
+              open
+            >
+              <summary class="accordion-nested__trigger">
+                <h4 class="palette-generator__coty-group-title type-body-large">
+                  {{ if eq .Language.Lang "sv" }}
+                    Kontrastkontroller
+                  {{ else }}
+                    Contrast checks
+                  {{ end }}
+                </h4>
+              </summary>
+              <div
+                class="accordion-nested__content palette-generator__grid palette-generator__grid--coty-contrast"
+                data-js="coty-contrast-checks"
+              ></div>
+            </details>
 
-        <details class="accordion-nested palette-generator__coty-contrast" open>
-          <summary class="accordion-nested__trigger">
-            <h4 class="palette-generator__coty-group-title type-body-large">
-              {{ if eq .Language.Lang "sv" }}
-                Kontrastkontroller
-              {{ else }}
-                Contrast checks
-              {{ end }}
-            </h4>
-          </summary>
-          <div
-            class="accordion-nested__content palette-generator__grid palette-generator__grid--coty-contrast"
-            data-js="coty-contrast-checks"
-          ></div>
-        </details>
+            <details class="accordion-nested palette-generator__coty-diff" open>
+              <summary class="accordion-nested__trigger">
+                <h4 class="palette-generator__coty-group-title type-body-large">
+                  {{ if eq .Language.Lang "sv" }}
+                    Diff mot bas
+                  {{ else }}
+                    Diff against base
+                  {{ end }}
+                </h4>
+              </summary>
+              <div
+                class="accordion-nested__content palette-generator__diff"
+                data-js="coty-diff"
+              ></div>
+            </details>
 
-        <details class="accordion-nested palette-generator__coty-usage" open>
-          <summary class="accordion-nested__trigger">
-            <h4 class="palette-generator__coty-group-title type-body-large">
-              {{ if eq .Language.Lang "sv" }}
-                Token usage (where-used)
-              {{ else }}
-                Token usage (where-used)
-              {{ end }}
-            </h4>
-          </summary>
-          <div
-            class="accordion-nested__content palette-generator__usage"
-            data-js="coty-token-usage"
-          >
-            <div class="palette-generator__row">
-              <label
-                for="coty-token-usage-select"
-                class="palette-generator__label"
+            <details
+              class="accordion-nested palette-generator__coty-usage"
+              open
+            >
+              <summary class="accordion-nested__trigger">
+                <h4 class="palette-generator__coty-group-title type-body-large">
+                  {{ if eq .Language.Lang "sv" }}
+                    Token usage (where-used)
+                  {{ else }}
+                    Token usage (where-used)
+                  {{ end }}
+                </h4>
+              </summary>
+              <div
+                class="accordion-nested__content palette-generator__usage"
+                data-js="coty-token-usage"
               >
-                {{ if eq .Language.Lang "sv" }}
-                  Token
-                {{ else }}
-                  Token
-                {{ end }}
-              </label>
-              <select
-                id="coty-token-usage-select"
-                data-js="coty-token-usage-select"
-              ></select>
-            </div>
-            <div
-              class="palette-generator__usage-list"
-              data-js="coty-token-usage-list"
-            ></div>
+                <div class="palette-generator__row">
+                  <label
+                    for="coty-token-usage-select"
+                    class="palette-generator__label"
+                  >
+                    {{ if eq .Language.Lang "sv" }}
+                      Token
+                    {{ else }}
+                      Token
+                    {{ end }}
+                  </label>
+                  <select
+                    id="coty-token-usage-select"
+                    data-js="coty-token-usage-select"
+                  ></select>
+                </div>
+                <div
+                  class="palette-generator__usage-list"
+                  data-js="coty-token-usage-list"
+                ></div>
+              </div>
+            </details>
+
+            <details
+              class="accordion-nested palette-generator__coty-control-color"
+              open
+            >
+              <summary class="accordion-nested__trigger">
+                <h4 class="palette-generator__coty-group-title type-body-large">
+                  {{ if eq .Language.Lang "sv" }}
+                    Control color (QA)
+                  {{ else }}
+                    Control color (QA)
+                  {{ end }}
+                </h4>
+              </summary>
+              <div
+                class="accordion-nested__content palette-generator__grid palette-generator__grid--coty-control-color"
+              >
+                <div class="palette-generator__row">
+                  <label
+                    for="coty-control-color-value"
+                    class="palette-generator__label"
+                  >
+                    {{ if eq .Language.Lang "sv" }}
+                      Färg
+                    {{ else }}
+                      Color
+                    {{ end }}
+                  </label>
+                  <input
+                    id="coty-control-color-value"
+                    type="color"
+                    value="#ff4d4d"
+                    data-js="coty-control-color-value"
+                  />
+                </div>
+                <div class="palette-generator__row">
+                  <label
+                    for="coty-control-color-scope"
+                    class="palette-generator__label"
+                  >
+                    {{ if eq .Language.Lang "sv" }}
+                      Scope
+                    {{ else }}
+                      Scope
+                    {{ end }}
+                  </label>
+                  <select
+                    id="coty-control-color-scope"
+                    data-js="coty-control-color-scope"
+                  >
+                    <option value="primary">
+                      {{ if eq .Language.Lang "sv" }}
+                        Primary tokens
+                      {{ else }}
+                        Primary tokens
+                      {{ end }}
+                    </option>
+                    <option value="surface">
+                      {{ if eq .Language.Lang "sv" }}
+                        Surface tokens
+                      {{ else }}
+                        Surface tokens
+                      {{ end }}
+                    </option>
+                    <option value="border">
+                      {{ if eq .Language.Lang "sv" }}
+                        Border tokens
+                      {{ else }}
+                        Border tokens
+                      {{ end }}
+                    </option>
+                    <option value="text">
+                      {{ if eq .Language.Lang "sv" }}
+                        Text tokens
+                      {{ else }}
+                        Text tokens
+                      {{ end }}
+                    </option>
+                    <option value="token">
+                      {{ if eq .Language.Lang "sv" }}
+                        Vald token
+                      {{ else }}
+                        Selected token
+                      {{ end }}
+                    </option>
+                  </select>
+                </div>
+                <div
+                  class="palette-generator__row"
+                  data-js="coty-control-color-token-row"
+                  hidden
+                >
+                  <label
+                    for="coty-control-color-token"
+                    class="palette-generator__label"
+                  >
+                    {{ if eq .Language.Lang "sv" }}
+                      Token
+                    {{ else }}
+                      Token
+                    {{ end }}
+                  </label>
+                  <select
+                    id="coty-control-color-token"
+                    data-js="coty-control-color-token"
+                  ></select>
+                </div>
+                <div
+                  class="palette-generator__actions palette-generator__actions--coty"
+                >
+                  <button
+                    class="button button--secondary"
+                    type="button"
+                    data-js="coty-control-color-toggle"
+                    aria-pressed="false"
+                  >
+                    {{ if eq .Language.Lang "sv" }}
+                      Aktivera
+                    {{ else }}
+                      Enable
+                    {{ end }}
+                  </button>
+                  <button
+                    class="button button--secondary"
+                    type="button"
+                    data-js="coty-control-color-reset"
+                  >
+                    {{ if eq .Language.Lang "sv" }}
+                      Inaktivera
+                    {{ else }}
+                      Disable
+                    {{ end }}
+                  </button>
+                </div>
+                <p
+                  class="palette-generator__hint palette-generator__hint--coty-control-color-count"
+                  data-js="coty-control-color-count"
+                >
+                  {{ if eq .Language.Lang "sv" }}
+                    Påverkade tokens: 0
+                  {{ else }}
+                    Affected tokens: 0
+                  {{ end }}
+                </p>
+              </div>
+            </details>
           </div>
         </details>
-
-        <details
-          class="accordion-nested palette-generator__coty-control-color"
-          open
-        >
-          <summary class="accordion-nested__trigger">
-            <h4 class="palette-generator__coty-group-title type-body-large">
-              {{ if eq .Language.Lang "sv" }}
-                Control color (QA)
-              {{ else }}
-                Control color (QA)
-              {{ end }}
-            </h4>
-          </summary>
-          <div
-            class="accordion-nested__content palette-generator__grid palette-generator__grid--coty-control-color"
-          >
-            <div class="palette-generator__row">
-              <label
-                for="coty-control-color-value"
-                class="palette-generator__label"
-              >
-                {{ if eq .Language.Lang "sv" }}
-                  Färg
-                {{ else }}
-                  Color
-                {{ end }}
-              </label>
-              <input
-                id="coty-control-color-value"
-                type="color"
-                value="#ff4d4d"
-                data-js="coty-control-color-value"
-              />
-            </div>
-            <div class="palette-generator__row">
-              <label
-                for="coty-control-color-scope"
-                class="palette-generator__label"
-              >
-                {{ if eq .Language.Lang "sv" }}
-                  Scope
-                {{ else }}
-                  Scope
-                {{ end }}
-              </label>
-              <select
-                id="coty-control-color-scope"
-                data-js="coty-control-color-scope"
-              >
-                <option value="primary">
-                  {{ if eq .Language.Lang "sv" }}
-                    Primary tokens
-                  {{ else }}
-                    Primary tokens
-                  {{ end }}
-                </option>
-                <option value="surface">
-                  {{ if eq .Language.Lang "sv" }}
-                    Surface tokens
-                  {{ else }}
-                    Surface tokens
-                  {{ end }}
-                </option>
-                <option value="border">
-                  {{ if eq .Language.Lang "sv" }}
-                    Border tokens
-                  {{ else }}
-                    Border tokens
-                  {{ end }}
-                </option>
-                <option value="text">
-                  {{ if eq .Language.Lang "sv" }}
-                    Text tokens
-                  {{ else }}
-                    Text tokens
-                  {{ end }}
-                </option>
-                <option value="token">
-                  {{ if eq .Language.Lang "sv" }}
-                    Vald token
-                  {{ else }}
-                    Selected token
-                  {{ end }}
-                </option>
-              </select>
-            </div>
-            <div
-              class="palette-generator__row"
-              data-js="coty-control-color-token-row"
-              hidden
-            >
-              <label
-                for="coty-control-color-token"
-                class="palette-generator__label"
-              >
-                {{ if eq .Language.Lang "sv" }}
-                  Token
-                {{ else }}
-                  Token
-                {{ end }}
-              </label>
-              <select
-                id="coty-control-color-token"
-                data-js="coty-control-color-token"
-              ></select>
-            </div>
-            <div
-              class="palette-generator__actions palette-generator__actions--coty"
-            >
-              <button
-                class="button button--secondary"
-                type="button"
-                data-js="coty-control-color-toggle"
-                aria-pressed="false"
-              >
-                {{ if eq .Language.Lang "sv" }}
-                  Aktivera
-                {{ else }}
-                  Enable
-                {{ end }}
-              </button>
-              <button
-                class="button button--secondary"
-                type="button"
-                data-js="coty-control-color-reset"
-              >
-                {{ if eq .Language.Lang "sv" }}
-                  Inaktivera
-                {{ else }}
-                  Disable
-                {{ end }}
-              </button>
-            </div>
-            <p
-              class="palette-generator__hint palette-generator__hint--coty-control-color-count"
-              data-js="coty-control-color-count"
-            >
-              {{ if eq .Language.Lang "sv" }}
-                Påverkade tokens: 0
-              {{ else }}
-                Affected tokens: 0
-              {{ end }}
-            </p>
-          </div>
-        </details>
-
-        <div
-          class="palette-generator__coty-groups"
-          data-js="coty-override-groups"
-        ></div>
       </div>
     </section>
 
@@ -566,6 +576,30 @@
           Spara palette
         {{ else }}
           Save palette
+        {{ end }}
+      </button>
+      <button
+        class="button button--secondary"
+        type="button"
+        data-js="coty-reset-year"
+        hidden
+      >
+        {{ if eq .Language.Lang "sv" }}
+          Återställ år
+        {{ else }}
+          Reset year
+        {{ end }}
+      </button>
+      <button
+        class="button button--secondary"
+        type="button"
+        data-js="coty-reset-all"
+        hidden
+      >
+        {{ if eq .Language.Lang "sv" }}
+          Återställ alla utkast
+        {{ else }}
+          Reset all drafts
         {{ end }}
       </button>
       <button class="button" type="button" data-js="coty-apply-draft" hidden>
