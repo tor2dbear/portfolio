@@ -10,14 +10,21 @@
   --image-blend-mode: screen;
   --image-background: var(--coty-9);
 
-  /* Accent roles (single-family) */
-  --accent-primary: var(--coty-role-primary, var(--coty-9));
-  --accent-primary-strong: var(--coty-role-primary-strong, var(--coty-11));
-  --accent-secondary: var(--coty-4);
-  --accent-secondary-strong: var(--coty-8);
+  /* Primary/secondary roles (single-family) */
+  --primary: var(--coty-role-primary, var(--coty-9));
+  --primary-strong: var(--coty-role-primary-strong, var(--coty-11));
+  --on-primary: var(--coty-role-on-primary, var(--coty-1));
+  --secondary: var(--coty-4);
+  --secondary-strong: var(--coty-8);
 
-  --text-accent: var(--accent-primary-strong);
-  --brand-primary: var(--accent-primary);
+  /* Legacy aliases */
+  --accent-primary: var(--primary);
+  --accent-primary-strong: var(--primary-strong);
+  --accent-secondary: var(--secondary);
+  --accent-secondary-strong: var(--secondary-strong);
+  --brand-primary: var(--primary);
+
+  --text-accent: var(--primary-strong);
 
   --text-default: var(--coty-12);
   --text-tag: var(--coty-11);

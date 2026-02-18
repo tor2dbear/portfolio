@@ -517,6 +517,8 @@
       preview.primary ||
       preview.accent ||
       (derivedPreview && derivedPreview.primary) ||
+      derived["--primary-strong"] ||
+      tokens["--primary-strong"] ||
       derived["--accent-primary-strong"] ||
       tokens["--accent-primary-strong"] ||
       "var(--gray-11)";
@@ -530,6 +532,8 @@
     var secondary =
       preview.secondary ||
       (derivedPreview && derivedPreview.secondary) ||
+      derived["--secondary-strong"] ||
+      tokens["--secondary-strong"] ||
       derived["--accent-secondary-strong"] ||
       tokens["--accent-secondary-strong"] ||
       primary;
