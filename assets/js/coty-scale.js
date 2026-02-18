@@ -929,6 +929,11 @@
         overrides.brand_on_primary ||
         overrides["brand-on-primary"]
     );
+    var hasAccentPrimaryOverride = Boolean(
+      overrides["--accent-primary"] ||
+        overrides.accent_primary ||
+        overrides["accent-primary"]
+    );
     var hasTextAccentOverride = Boolean(
       overrides["--text-accent"] ||
         overrides.text_accent ||
@@ -978,9 +983,7 @@
 
     // Keep legacy aliases in sync so existing components react in real-time.
     if (
-      (overrides.accent_primary ||
-        overrides["accent-primary"] ||
-        overrides["--accent-primary"]) &&
+      hasAccentPrimaryOverride &&
       !hasBrandPrimaryOverride &&
       !hasPrimaryOverride
     ) {
@@ -1008,6 +1011,13 @@
         "var(--primary)"
       );
       APPLIED_MANUAL_OVERRIDES.push("--brand-primary");
+    }
+    if (hasPrimaryOverride && !hasAccentPrimaryOverride) {
+      document.documentElement.style.setProperty(
+        "--accent-primary",
+        "var(--primary)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--accent-primary");
     }
     if (hasOnPrimaryOverride && !hasBrandOnPrimaryOverride) {
       document.documentElement.style.setProperty(
