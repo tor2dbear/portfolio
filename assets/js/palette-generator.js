@@ -1285,7 +1285,7 @@
           (isSwedish ? "Visa usage för " : "Show usage for ") + change.token
         );
         token.addEventListener("click", () => {
-          setSelectedUsageToken(change.token);
+          setSelectedUsageToken(change.token, { focus: true });
           updateCotyTokenUsagePanel();
         });
         token.addEventListener("keydown", (evt) => {
@@ -1293,7 +1293,7 @@
             return;
           }
           evt.preventDefault();
-          setSelectedUsageToken(change.token);
+          setSelectedUsageToken(change.token, { focus: true });
           updateCotyTokenUsagePanel();
         });
 
@@ -1329,7 +1329,9 @@
         return;
       }
       const tokens = uniqueTokenList(
-        COTY_OVERRIDE_FIELDS.map((field) => field.token)
+        COTY_OVERRIDE_FIELDS.map((field) => field.token).concat(
+          Object.keys(COTY_TOKEN_USAGE_INDEX)
+        )
       );
       const current = cotyTokenUsageSelect.value;
       cotyTokenUsageSelect.innerHTML = "";
@@ -1346,7 +1348,21 @@
       }
     }
 
-    function setSelectedUsageToken(token) {
+    function focusTokenUsagePanel() {
+      if (!cotyTokenUsageRoot) {
+        return;
+      }
+      const details = cotyTokenUsageRoot.closest("details");
+      if (details) {
+        details.open = true;
+      }
+      cotyTokenUsageRoot.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+
+    function setSelectedUsageToken(token, options) {
       if (!cotyTokenUsageSelect || !token) {
         return;
       }
@@ -1357,6 +1373,10 @@
         return;
       }
       cotyTokenUsageSelect.value = token;
+      const opts = options || {};
+      if (opts.focus) {
+        focusTokenUsagePanel();
+      }
     }
 
     function updateCotyTokenUsagePanel() {
