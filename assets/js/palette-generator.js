@@ -206,8 +206,6 @@
           { key: "bg_tag", token: "--bg-tag" },
           { key: "bg_tag_hover", token: "--bg-tag-hover" },
           { key: "bg_nav", token: "--bg-nav" },
-          { key: "border_subtle", token: "--border-subtle" },
-          { key: "border_strong", token: "--border-strong" },
           { key: "component_form_bg", token: "--component-form-bg" },
           {
             key: "component_form_placeholder",
@@ -226,6 +224,15 @@
             key: "component_newsletter_illustration_bg",
             token: "--component-newsletter-illustration-bg",
           },
+        ],
+      },
+      {
+        id: "border",
+        label: "Border",
+        fields: [
+          { key: "border_subtle", token: "--border-subtle" },
+          { key: "border_default", token: "--border-default" },
+          { key: "border_strong", token: "--border-strong" },
         ],
       },
       {
@@ -414,6 +421,18 @@
           file: "assets/css/tokens/semantic.css",
           selector: ":root",
           note: "Default low-contrast borders.",
+        },
+      ],
+      "--border-default": [
+        {
+          file: "assets/css/components/form.css",
+          selector: ".form-input, .form-textarea, .form-select",
+          note: "Default control and field borders.",
+        },
+        {
+          file: "assets/css/components/theme-dropdown.css",
+          selector: ".theme-dropdown and select controls",
+          note: "Default panel/control separators.",
         },
       ],
       "--border-strong": [
@@ -713,6 +732,9 @@
       const secondaryGroup = COTY_OVERRIDE_GROUPS.find(
         (group) => group.id === "secondary"
       );
+      const borderGroup = COTY_OVERRIDE_GROUPS.find(
+        (group) => group.id === "border"
+      );
 
       const textTokens = textGroup
         ? textGroup.fields.map((field) => field.token)
@@ -726,10 +748,14 @@
       const secondaryTokens = secondaryGroup
         ? secondaryGroup.fields.map((field) => field.token)
         : [];
+      const borderTokens = borderGroup
+        ? borderGroup.fields.map((field) => field.token)
+        : [];
 
       return {
         text: uniqueTokenList(textTokens),
         surface: uniqueTokenList(surfaceTokens),
+        border: uniqueTokenList(borderTokens),
         primary: uniqueTokenList(primaryTokens.concat(secondaryTokens)),
       };
     }
@@ -1488,6 +1514,9 @@
       }
       if (cotyControlColorState.scope === "surface") {
         return groups.surface;
+      }
+      if (cotyControlColorState.scope === "border") {
+        return groups.border;
       }
       if (cotyControlColorState.scope === "token") {
         return cotyControlColorState.token ? [cotyControlColorState.token] : [];

@@ -21,6 +21,9 @@
     "--coty-role-primary-strong",
     "--coty-role-surface",
     "--coty-role-surface-strong",
+    "--coty-role-border-subtle",
+    "--coty-role-border-default",
+    "--coty-role-border-strong",
     "--coty-role-on-primary",
     "--coty-source-step",
     "--coty-secondary-source-step",
@@ -1140,6 +1143,30 @@
     document.documentElement.style.setProperty(
       "--coty-role-surface-strong",
       roles.surfaceStrong
+    );
+    document.documentElement.style.setProperty(
+      "--coty-role-border-subtle",
+      scale["--coty-5"] || roles.surfaceStrong
+    );
+    document.documentElement.style.setProperty(
+      "--coty-role-border-default",
+      scale["--coty-6"] || roles.surfaceStrong
+    );
+    document.documentElement.style.setProperty(
+      "--coty-role-border-strong",
+      scale["--coty-8"] || roles.primaryStrong
+    );
+    document.documentElement.style.setProperty(
+      "--border-subtle",
+      "var(--coty-role-border-subtle)"
+    );
+    document.documentElement.style.setProperty(
+      "--border-default",
+      "var(--coty-role-border-default)"
+    );
+    document.documentElement.style.setProperty(
+      "--border-strong",
+      "var(--coty-role-border-strong)"
     );
     document.documentElement.style.setProperty(
       "--coty-source-step",
