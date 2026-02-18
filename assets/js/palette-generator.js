@@ -190,7 +190,6 @@
           { key: "text_link", token: "--text-link" },
           { key: "text_link_hover", token: "--text-link-hover" },
           { key: "text_inverse", token: "--text-inverse" },
-          { key: "text_nav", token: "--text-nav" },
           { key: "text_tag", token: "--text-tag" },
           { key: "text_accent", token: "--text-accent" },
           { key: "surface_ink_strong", token: "--surface-ink-strong" },
@@ -204,7 +203,6 @@
           { key: "bg_surface", token: "--bg-surface" },
           { key: "bg_tag", token: "--bg-tag" },
           { key: "bg_tag_hover", token: "--bg-tag-hover" },
-          { key: "bg_nav", token: "--bg-nav" },
           { key: "component_form_bg", token: "--component-form-bg" },
           {
             key: "component_form_placeholder",
@@ -322,18 +320,6 @@
           note: "Inverse text on strong surfaces.",
         },
       ],
-      "--text-nav": [
-        {
-          file: "assets/css/components/navigation.css",
-          selector: ".menu-link",
-          note: "Navigation text in menu/header.",
-        },
-        {
-          file: "assets/css/dimensions/palette/pantone.css",
-          selector: ":root[data-palette='pantone']",
-          note: "Pantone fallback mapping for nav text.",
-        },
-      ],
       "--text-tag": [
         {
           file: "assets/css/components/tags.css",
@@ -401,18 +387,6 @@
           file: "assets/css/components/tags.css",
           selector: ".tag-link:hover",
           note: "Tag hover/active background.",
-        },
-      ],
-      "--bg-nav": [
-        {
-          file: "assets/css/components/navigation.css",
-          selector: "#menu / nav wrappers",
-          note: "Navigation surface background.",
-        },
-        {
-          file: "assets/css/dimensions/palette/pantone.css",
-          selector: ":root[data-palette='pantone']",
-          note: "Pantone fallback nav background.",
         },
       ],
       "--border-subtle": [
@@ -2654,7 +2628,6 @@
             effectiveRoles.surface,
             surfaceSteps.tag_hover_step
           ),
-          nav: "",
           border_subtle: "",
         },
         primary: {
@@ -2692,9 +2665,6 @@
             11
         ) +
         ")";
-      ctx.surface.nav = surfaceSteps.nav_source
-        ? resolveSource(surfaceSteps.nav_source, ctx)
-        : scaleVar(effectiveRoles.surface, surfaceSteps.nav_step);
       ctx.surface.border_subtle = surfaceSteps.border_subtle_source
         ? resolveSource(surfaceSteps.border_subtle_source, ctx)
         : scaleVar(effectiveRoles.surface, surfaceSteps.border_subtle_step);
@@ -2726,7 +2696,6 @@
         ctx.surface.surface = scaleVar(effectiveRoles.surface, 4);
         ctx.surface.tag = scaleVar(effectiveRoles.surface, 4);
         ctx.surface.tag_hover = scaleVar(effectiveRoles.surface, 5);
-        ctx.surface.nav = scaleVar(effectiveRoles.surface, 5);
         ctx.surface.border_subtle = scaleVar(effectiveRoles.surface, 5);
       }
 
@@ -2771,13 +2740,11 @@
       setDerivedToken("--text-link", ctx.text.link);
       setDerivedToken("--text-link-hover", ctx.text.link_hover);
       setDerivedToken("--text-inverse", ctx.text.inverse);
-      setDerivedToken("--text-nav", ctx.text.default);
 
       setDerivedToken("--bg-page", ctx.surface.page);
       setDerivedToken("--bg-surface", ctx.surface.surface);
       setDerivedToken("--bg-tag", ctx.surface.tag);
       setDerivedToken("--bg-tag-hover", ctx.surface.tag_hover);
-      setDerivedToken("--bg-nav", ctx.surface.nav);
       setDerivedToken("--border-subtle", ctx.surface.border_subtle);
 
       setDerivedToken(
