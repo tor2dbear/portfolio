@@ -2497,6 +2497,38 @@
         });
       }
 
+      window.addEventListener("keydown", (evt) => {
+        if (currentActiveSource() !== "pantone") {
+          return;
+        }
+        const target = evt.target;
+        const tagName = target && target.tagName ? target.tagName : "";
+        const isEditable =
+          (target &&
+            target.getAttribute &&
+            target.getAttribute("contenteditable") === "true") ||
+          tagName === "INPUT" ||
+          tagName === "TEXTAREA" ||
+          tagName === "SELECT";
+        if (isEditable || !evt.altKey) {
+          return;
+        }
+        if (evt.key === "ArrowLeft") {
+          evt.preventDefault();
+          shiftYear(-1);
+          return;
+        }
+        if (evt.key === "ArrowRight") {
+          evt.preventDefault();
+          shiftYear(1);
+          return;
+        }
+        if (evt.key.toLowerCase() === "r" && cotyYearRandomButton) {
+          evt.preventDefault();
+          cotyYearRandomButton.click();
+        }
+      });
+
       const onCotyControlChange = () => {
         const year = currentCotyYear();
         if (!year) {
