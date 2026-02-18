@@ -94,6 +94,9 @@
     const cotyResetAllButton = root.querySelector('[data-js="coty-reset-all"]');
     const cotyYearPrevButton = root.querySelector('[data-js="coty-year-prev"]');
     const cotyYearNextButton = root.querySelector('[data-js="coty-year-next"]');
+    const cotyYearRandomButton = root.querySelector(
+      '[data-js="coty-year-random"]'
+    );
     const cotyControlColorValueInput = root.querySelector(
       '[data-js="coty-control-color-value"]'
     );
@@ -2472,6 +2475,26 @@
       }
       if (cotyYearNextButton) {
         cotyYearNextButton.addEventListener("click", () => shiftYear(1));
+      }
+      if (cotyYearRandomButton) {
+        cotyYearRandomButton.addEventListener("click", () => {
+          if (!cotyYearSelect) {
+            return;
+          }
+          const optionValues = Array.from(cotyYearSelect.options).map(
+            (option) => option.value
+          );
+          if (optionValues.length <= 1) {
+            return;
+          }
+          const currentValue = cotyYearSelect.value;
+          const candidates = optionValues.filter(
+            (value) => value !== currentValue
+          );
+          const randomIndex = Math.floor(Math.random() * candidates.length);
+          cotyYearSelect.value = candidates[randomIndex];
+          applyCurrentYearSelection();
+        });
       }
 
       const onCotyControlChange = () => {
