@@ -988,24 +988,42 @@
           foreground: "--text-default",
           background: "--bg-page",
           threshold: 4.5,
+          requirement: "text",
         },
         {
           label: "--bg-surface / --text-default",
           foreground: "--text-default",
           background: "--bg-surface",
           threshold: 4.5,
+          requirement: "text",
         },
         {
           label: "--brand-primary / --brand-on-primary",
           foreground: "--brand-on-primary",
           background: "--brand-primary",
           threshold: 4.5,
+          requirement: "text",
         },
         {
           label: "--component-nav-cta-bg / --component-nav-cta-text",
           foreground: "--component-nav-cta-text",
           background: "--component-nav-cta-bg",
           threshold: 4.5,
+          requirement: "text",
+        },
+        {
+          label: "--bg-surface / --border-default",
+          foreground: "--border-default",
+          background: "--bg-surface",
+          threshold: 3,
+          requirement: "non-text",
+        },
+        {
+          label: "--bg-page / --border-strong",
+          foreground: "--border-strong",
+          background: "--bg-page",
+          threshold: 3,
+          requirement: "non-text",
         },
       ];
       const rootStyles = getComputedStyle(document.documentElement);
@@ -1033,13 +1051,15 @@
         const status = document.createElement("div");
         status.className = "palette-generator__contrast-status";
         status.setAttribute("data-pass", pass ? "true" : "false");
-        status.textContent = pass
-          ? isSwedish
-            ? "AA normal text: Pass"
-            : "AA normal text: Pass"
-          : isSwedish
-          ? "AA normal text: Fail"
-          : "AA normal text: Fail";
+        const requirementLabel =
+          pair.requirement === "non-text"
+            ? isSwedish
+              ? "AA UI/non-text (3:1)"
+              : "AA UI/non-text (3:1)"
+            : isSwedish
+            ? "AA normal text (4.5:1)"
+            : "AA normal text (4.5:1)";
+        status.textContent = requirementLabel + ": " + (pass ? "Pass" : "Fail");
 
         item.appendChild(pairLabel);
         item.appendChild(ratioLabel);
