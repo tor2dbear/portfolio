@@ -4,7 +4,6 @@
   border: 0;
   border-radius: 0;
   overflow: visible;
-  background: var(--bg-page);
   border-top: 1px solid var(--border-default);
   border-bottom: 1px solid var(--border-default);
 }
@@ -19,7 +18,8 @@
   background-image: none;
   cursor: pointer;
   list-style: none;
-  transition: background-image var(--state-layer-duration) var(--state-layer-ease);
+  transition: background-image var(--state-layer-duration)
+    var(--state-layer-ease);
 }
 
 .accordion__trigger::before {
@@ -56,7 +56,10 @@
 
 .accordion__trigger:hover::before {
   opacity: 1;
-  background-image: linear-gradient(var(--state-page-hover), var(--state-page-hover));
+  background-image: linear-gradient(
+    var(--state-page-hover),
+    var(--state-page-hover)
+  );
 }
 
 .accordion__trigger:active {
@@ -65,7 +68,10 @@
 
 .accordion__trigger:active::before {
   opacity: 1;
-  background-image: linear-gradient(var(--state-page-active), var(--state-page-active));
+  background-image: linear-gradient(
+    var(--state-page-active),
+    var(--state-page-active)
+  );
 }
 
 .accordion__trigger::-webkit-details-marker {
@@ -77,7 +83,7 @@
   font-family: var(--font-heading);
   font-size: var(--text-xl);
   line-height: var(--line-height-tight);
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
   letter-spacing: var(--headline-tracking);
 }
 
@@ -90,7 +96,7 @@
   font-family: var(--font-heading);
   font-size: var(--text-lg);
   line-height: var(--line-height-tight);
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
   letter-spacing: var(--headline-tracking);
 }
 
@@ -99,7 +105,6 @@
   border-radius: 0;
   margin-bottom: 0;
   overflow: visible;
-  background: var(--bg-page);
   border-top: 1px solid var(--border-default);
   border-bottom: 1px solid var(--border-default);
 }
@@ -119,7 +124,8 @@
   background-image: none;
   cursor: pointer;
   list-style: none;
-  transition: background-image var(--state-layer-duration) var(--state-layer-ease);
+  transition: background-image var(--state-layer-duration)
+    var(--state-layer-ease);
 }
 
 .accordion-nested__trigger::before {
@@ -171,7 +177,10 @@
 
 .accordion-nested__trigger:hover::before {
   opacity: 1;
-  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
 }
 
 .accordion-nested__trigger:active {
@@ -180,7 +189,10 @@
 
 .accordion-nested__trigger:active::before {
   opacity: 1;
-  background-image: linear-gradient(var(--state-surface-active), var(--state-surface-active));
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
 }
 
 .accordion-nested__trigger::-webkit-details-marker {
