@@ -28,7 +28,6 @@ tag_step = 3
 tag_hover_step = 4
 tag_text_step = 11
 surface_ink_strong_step = 11
-nav_source = "brand-primary"
 border_subtle_source = "gray-4"
 
 [roles.primary]

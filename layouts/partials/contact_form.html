@@ -20,7 +20,9 @@
     </p>
 
     <div class="form-group">
-      <label class="form-label" for="contact-name">{{ i18n "contact_name" }}</label>
+      <label class="form-label" for="contact-name"
+        >{{ i18n "contact_name" }}</label
+      >
       <input
         id="contact-name"
         type="text"
@@ -32,7 +34,9 @@
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="contact-email">{{ i18n "Email_Address" }}</label>
+      <label class="form-label" for="contact-email"
+        >{{ i18n "Email_Address" }}</label
+      >
       <input
         id="contact-email"
         type="email"
@@ -44,7 +48,9 @@
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="contact-message">{{ i18n "contact_message" }}</label>
+      <label class="form-label" for="contact-message"
+        >{{ i18n "contact_message" }}</label
+      >
       <textarea
         id="contact-message"
         rows="5"
@@ -60,14 +66,14 @@
 
     <p
       id="contact-success"
-      class="contact-form__message contact-form__message--success type-information message"
+      class="contact-form__message contact-form__message--success type-information message message--success"
       style="display: none;"
     >
       {{ i18n "contact_submitted" }}
     </p>
     <p
       id="contact-error"
-      class="contact-form__message contact-form__message--error type-information message"
+      class="contact-form__message contact-form__message--error type-information message message--error"
       style="display: none;"
     >
       {{ i18n "contact_error" }}

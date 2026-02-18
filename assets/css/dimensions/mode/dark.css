@@ -109,7 +109,6 @@
   --orange-11: hsl(24, 100%, 62.2%);
   --orange-12: hsl(24, 97%, 93.2%);
 
-
   /* Amber Dark Scale (Radix Amber) */
   --amber-1: hsl(36, 100%, 6.1%);
   --amber-2: hsl(35, 100%, 7.6%);
@@ -124,7 +123,6 @@
   --amber-11: hsl(39, 90%, 49.8%);
   --amber-12: hsl(39, 97%, 93.2%);
 
-
   /* Cloud Dancer Dark Scale (Pantone 11-4201 TCX inspired) */
   --cloud-1: hsl(42, 12%, 9.6%);
   --cloud-2: hsl(42, 14%, 11%);
@@ -138,6 +136,20 @@
   --cloud-10: hsl(42, 36%, 56.1%);
   --cloud-11: hsl(42, 70%, 77.3%);
   --cloud-12: hsl(42, 60%, 94.9%);
+
+  /* Color of the Year (runtime-overridden; Cloud fallback) */
+  --coty-1: var(--cloud-1);
+  --coty-2: var(--cloud-2);
+  --coty-3: var(--cloud-3);
+  --coty-4: var(--cloud-4);
+  --coty-5: var(--cloud-5);
+  --coty-6: var(--cloud-6);
+  --coty-7: var(--cloud-7);
+  --coty-8: var(--cloud-8);
+  --coty-9: var(--cloud-9);
+  --coty-10: var(--cloud-10);
+  --coty-11: var(--cloud-11);
+  --coty-12: var(--cloud-12);
 
   /* Teal Dark Scale (Radix Teal) */
   --teal-1: hsl(168, 48%, 6.5%);
@@ -155,9 +167,13 @@
 
   /* Dark mode specific overrides */
   --bg-page: var(--gray-1);
-  --outline-neutral: rgba(255, 255, 255, 0.16);
-  --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -2px;
-  --shadow-02: rgba(0, 0, 0, 0.45) 0px 8px 20px -6px, rgba(0, 0, 0, 0.28) 0px 2px 6px -2px;
-  --shadow-03: rgba(0, 0, 0, 0.55) 0px 1px 2px 0px, rgba(0, 0, 0, 0.35) 0px 1px 1px 0px;
+  --component-toast-bg: color-mix(in srgb, var(--gray-1) 52%, transparent);
+  --component-toast-border: color-mix(in srgb, var(--white) 8%, transparent);
+  --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.1) 0px 4px 6px -2px;
+  --shadow-02: rgba(0, 0, 0, 0.45) 0px 8px 20px -6px,
+    rgba(0, 0, 0, 0.28) 0px 2px 6px -2px;
+  --shadow-03: rgba(0, 0, 0, 0.55) 0px 1px 2px 0px,
+    rgba(0, 0, 0, 0.35) 0px 1px 1px 0px;
   /* --secondary-container: var(--gray-3); */
 }
