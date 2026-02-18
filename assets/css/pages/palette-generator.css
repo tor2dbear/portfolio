@@ -50,6 +50,10 @@
   gap: 0;
 }
 
+.palette-generator__coty-year-block {
+  padding-bottom: var(--spacing-12);
+}
+
 .palette-generator__grid--coty-overrides {
   margin-bottom: 0;
 }

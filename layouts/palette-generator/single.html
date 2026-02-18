@@ -193,61 +193,50 @@
       role="tabpanel"
     >
       <div class="palette-generator__coty" data-js="coty-controls">
-        <details class="accordion palette-generator__coty-year" open>
-          <summary class="accordion__trigger">
-            <h4 class="accordion__title">
-              {{ if eq .Language.Lang "sv" }}
-                År
-              {{ else }}
-                Year
-              {{ end }}
-            </h4>
-          </summary>
-          <div class="accordion__content">
-            <div class="palette-generator__row">
-              <label for="palette-coty-year" class="palette-generator__label"
-                >{{ i18n "coty_year" }}</label
-              >
-              <select id="palette-coty-year" data-js="coty-year"></select>
-              <div
-                class="palette-generator__actions palette-generator__actions--coty"
-              >
-                <button
-                  class="button button--secondary"
-                  type="button"
-                  data-js="coty-year-prev"
-                >
-                  {{ if eq .Language.Lang "sv" }}
-                    Föregående
-                  {{ else }}
-                    Previous
-                  {{ end }}
-                </button>
-                <button
-                  class="button button--secondary"
-                  type="button"
-                  data-js="coty-year-next"
-                >
-                  {{ if eq .Language.Lang "sv" }}
-                    Nästa
-                  {{ else }}
-                    Next
-                  {{ end }}
-                </button>
-              </div>
-            </div>
-            <p
-              class="palette-generator__hint palette-generator__hint--coty-source"
-              data-js="coty-source-step"
+        <div class="palette-generator__coty-year-block">
+          <div class="palette-generator__row">
+            <label for="palette-coty-year" class="palette-generator__label"
+              >{{ i18n "coty_year" }}</label
             >
-              {{ if eq .Language.Lang "sv" }}
-                Source: --coty-?
-              {{ else }}
-                Source: --coty-?
-              {{ end }}
-            </p>
+            <select id="palette-coty-year" data-js="coty-year"></select>
+            <div
+              class="palette-generator__actions palette-generator__actions--coty"
+            >
+              <button
+                class="button button--secondary"
+                type="button"
+                data-js="coty-year-prev"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Föregående
+                {{ else }}
+                  Previous
+                {{ end }}
+              </button>
+              <button
+                class="button button--secondary"
+                type="button"
+                data-js="coty-year-next"
+              >
+                {{ if eq .Language.Lang "sv" }}
+                  Nästa
+                {{ else }}
+                  Next
+                {{ end }}
+              </button>
+            </div>
           </div>
-        </details>
+          <p
+            class="palette-generator__hint palette-generator__hint--coty-source"
+            data-js="coty-source-step"
+          >
+            {{ if eq .Language.Lang "sv" }}
+              Source: --coty-?
+            {{ else }}
+              Source: --coty-?
+            {{ end }}
+          </p>
+        </div>
 
         <details class="accordion palette-generator__coty-roles" open>
           <summary class="accordion__trigger">
