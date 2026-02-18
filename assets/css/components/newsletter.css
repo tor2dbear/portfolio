@@ -122,7 +122,7 @@ div#mce-responses {
   font-size: var(--text-sm);
   line-height: var(--line-height-normal);
   padding: var(--spacing-8) var(--spacing-12);
-  border-radius: var(--border-radius-sm, 4px);
+  border-radius: var(--radius-4);
   margin-top: var(--spacing-8);
 }
 

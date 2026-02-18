@@ -21,21 +21,23 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman",
     Times, serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "Courier New", Menlo, Monaco,
-    Consolas, "Liberation Mono", monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "Courier New",
+    Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
   /* TypeKit originals (kept for A/B comparison — swap back if needed) */
-  --font-sans-typekit: neue-haas-grotesk-text, ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif-typekit: freight-text-pro, ui-serif, Georgia, Cambria, "Times New Roman",
-    Times, serif;
+  --font-sans-typekit: neue-haas-grotesk-text, ui-sans-serif, system-ui,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  --font-serif-typekit: freight-text-pro, ui-serif, Georgia, Cambria,
+    "Times New Roman", Times, serif;
 
   /* ==========================================================================
     TYPOGRAPHY: Font Weights
     ========================================================================== */
 
   --sans-weight-regular: 400;
-  --sans-weight-bold: 500;
+  --sans-weight-medium: 500;
+  --sans-weight-bold: 600;
   --serif-weight-regular: 400;
 
   /* ==========================================================================
