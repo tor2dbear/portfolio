@@ -11,10 +11,12 @@
   max-width: var(--content-max-width);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: [full-start] var(--size-page-margins) [content-start] repeat(
+  grid-template-columns:
+    [full-start] var(--size-page-margins) [content-start] repeat(
       12,
       [col-start] 1fr
-    ) [content-end] var(--size-page-margins) [full-end];
+    )
+    [content-end] var(--size-page-margins) [full-end];
   column-gap: var(--spacing-24);
 }
 
@@ -129,18 +131,6 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
   margin-top: 0;
 }
 
-.footer-newsletter__responses .mc-response--success {
-  background-color: var(--status-success-bg, hsl(142 76% 94%));
-  color: var(--status-success-text, hsl(142 71% 29%));
-  border: 1px solid var(--status-success-border, hsl(142 76% 80%));
-}
-
-.footer-newsletter__responses .mc-response--error {
-  background-color: var(--status-error-bg, hsl(0 76% 94%));
-  color: var(--status-error-text, hsl(0 84% 30%));
-  border: 1px solid var(--status-error-border, hsl(0 76% 80%));
-}
-
 .footer-meta {
   margin-top: var(--spacing-32);
   row-gap: var(--spacing-12);
@@ -209,10 +199,12 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
   }
 
   .footer-container {
-    grid-template-columns: [full-start] var(--size-page-margins) [content-start] repeat(
+    grid-template-columns:
+      [full-start] var(--size-page-margins) [content-start] repeat(
         4,
         [col-start] 1fr
-      ) [content-end] var(--size-page-margins) [full-end];
+      )
+      [content-end] var(--size-page-margins) [full-end];
     column-gap: var(--spacing-16);
   }
 
