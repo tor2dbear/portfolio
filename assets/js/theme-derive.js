@@ -86,12 +86,21 @@
 
     var tokens = {};
 
-    tokens["--accent-primary"] = ctx.primary.base;
-    tokens["--accent-primary-strong"] = ctx.primary.strong;
-    tokens["--accent-secondary"] = ctx.secondary.base;
-    tokens["--accent-secondary-strong"] = ctx.secondary.strong;
+    tokens["--primary"] = ctx.primary.base;
+    tokens["--primary-strong"] = ctx.primary.strong;
+    tokens["--on-primary"] = ctx.primary.on;
+    tokens["--secondary"] = ctx.secondary.base;
+    tokens["--secondary-strong"] = ctx.secondary.strong;
+    tokens["--on-secondary"] = ctx.text.default;
 
-    tokens["--brand-primary"] = ctx.primary.base;
+    // Keep legacy aliases synchronized during migration.
+    tokens["--accent-primary"] = tokens["--primary"];
+    tokens["--accent-primary-strong"] = tokens["--primary-strong"];
+    tokens["--accent-secondary"] = tokens["--secondary"];
+    tokens["--accent-secondary-strong"] = tokens["--secondary-strong"];
+    tokens["--brand-primary"] = tokens["--primary"];
+    tokens["--brand-on-primary"] = tokens["--on-primary"];
+
     tokens["--text-accent"] = ctx.text.accent;
 
     tokens["--text-default"] = ctx.text.default;
@@ -199,14 +208,10 @@
     var toneMode = policies.tone_mode || "mono";
     var derived = derivePaletteTokens(input || {});
     var primary =
-      derived["--accent-primary-strong"] ||
-      derived["--accent-primary"] ||
-      "var(--gray-11)";
+      derived["--primary-strong"] || derived["--primary"] || "var(--gray-11)";
     var surface = derived["--bg-page"] || "var(--gray-2)";
     var secondary =
-      derived["--accent-secondary-strong"] ||
-      derived["--accent-secondary"] ||
-      primary;
+      derived["--secondary-strong"] || derived["--secondary"] || primary;
 
     return {
       primary: primary,

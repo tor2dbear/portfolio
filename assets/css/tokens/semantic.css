@@ -18,7 +18,7 @@
   --text-inverse: var(--white);
   --text-link: var(--iris-11);
   --text-link-hover: var(--iris-12);
-  --text-accent: var(--accent-primary-strong);
+  --text-accent: var(--primary-strong);
   --text-tag: var(--iris-11);
 
   /* === BACKGROUND / SURFACE === */
@@ -29,7 +29,7 @@
   --bg-surface-subtle: var(--bg-elevated);
   --bg-tag: var(--iris-3);
   --bg-tag-hover: var(--iris-4);
-  --bg-section-headline: var(--accent-primary);
+  --bg-section-headline: var(--primary);
   --surface-ink-strong: var(--iris-11);
 
   /* === BORDER / OUTLINE === */
@@ -116,22 +116,28 @@
   --motion-distance-sm: 8px;
   --motion-distance-md: 16px;
 
-  /* === ACCENT ROLES === */
-  --accent-primary: var(--iris-9);
-  --accent-primary-strong: var(--iris-11);
-  --accent-secondary: var(--iris-4);
-  --accent-secondary-strong: var(--iris-8);
+  /* === PRIMARY / SECONDARY ROLES (canonical) === */
+  --primary: var(--iris-9);
+  --primary-strong: var(--iris-11);
+  --on-primary: var(--white);
+  --secondary: var(--iris-4);
+  --secondary-strong: var(--iris-8);
+  --on-secondary: var(--gray-12);
 
-  /* === BRAND === */
-  --brand-primary: var(--accent-primary);
-  --brand-on-primary: var(--white);
+  /* === LEGACY ALIASES (compat) === */
+  --accent-primary: var(--primary);
+  --accent-primary-strong: var(--primary-strong);
+  --accent-secondary: var(--secondary);
+  --accent-secondary-strong: var(--secondary-strong);
+  --brand-primary: var(--primary);
+  --brand-on-primary: var(--on-primary);
   --brand-container: var(--iris-3);
   --brand-on-container: var(--iris-11);
 
   /* === COMPONENT ROLES === */
   --component-nav-cta-bg: var(--text-default);
   --component-nav-cta-text: var(--bg-page);
-  --component-toc-active-indicator: var(--brand-primary);
+  --component-toc-active-indicator: var(--primary);
   --component-section-headline-bg: var(--bg-section-headline);
 
   /* === STATUS === */

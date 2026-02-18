@@ -3,6 +3,8 @@
 
   var STORAGE_KEY = "theme-coty-year";
   var DUO_OVERRIDE_TOKENS = [
+    "--secondary",
+    "--secondary-strong",
     "--accent-secondary",
     "--accent-secondary-strong",
     "--component-toc-active-indicator",
@@ -27,7 +29,16 @@
     "--coty-role-on-primary",
     "--coty-source-step",
     "--coty-secondary-source-step",
+    "--primary",
+    "--primary-strong",
+    "--on-primary",
+    "--on-secondary",
     "--brand-on-primary",
+    "--brand-primary",
+    "--accent-primary",
+    "--accent-primary-strong",
+    "--secondary",
+    "--secondary-strong",
     "--image-grayscale",
     "--image-blend-mode",
     "--image-background",
@@ -895,15 +906,46 @@
         ? normalizeOverrides(entry && entry.overrides_dark)
         : normalizeOverrides(entry && entry.overrides_light);
     var overrides = Object.assign({}, baseOverrides, modeOverrides);
+    var hasPrimaryOverride = Boolean(
+      overrides["--primary"] || overrides.primary
+    );
+    var hasOnPrimaryOverride = Boolean(
+      overrides["--on-primary"] ||
+        overrides.on_primary ||
+        overrides["on-primary"]
+    );
     var hasBrandPrimaryOverride = Boolean(
       overrides["--brand-primary"] ||
         overrides.brand_primary ||
         overrides["brand-primary"]
     );
+    var hasBrandOnPrimaryOverride = Boolean(
+      overrides["--brand-on-primary"] ||
+        overrides.brand_on_primary ||
+        overrides["brand-on-primary"]
+    );
     var hasTextAccentOverride = Boolean(
       overrides["--text-accent"] ||
         overrides.text_accent ||
         overrides["text-accent"]
+    );
+    var hasSecondaryOverride = Boolean(
+      overrides["--secondary"] || overrides.secondary
+    );
+    var hasSecondaryStrongOverride = Boolean(
+      overrides["--secondary-strong"] ||
+        overrides.secondary_strong ||
+        overrides["secondary-strong"]
+    );
+    var hasAccentSecondaryOverride = Boolean(
+      overrides["--accent-secondary"] ||
+        overrides.accent_secondary ||
+        overrides["accent-secondary"]
+    );
+    var hasAccentSecondaryStrongOverride = Boolean(
+      overrides["--accent-secondary-strong"] ||
+        overrides.accent_secondary_strong ||
+        overrides["accent-secondary-strong"]
     );
 
     Object.keys(overrides).forEach(function (key) {
@@ -929,13 +971,47 @@
       (overrides.accent_primary ||
         overrides["accent-primary"] ||
         overrides["--accent-primary"]) &&
-      !hasBrandPrimaryOverride
+      !hasBrandPrimaryOverride &&
+      !hasPrimaryOverride
     ) {
       document.documentElement.style.setProperty(
-        "--brand-primary",
+        "--primary",
         "var(--accent-primary)"
       );
+      APPLIED_MANUAL_OVERRIDES.push("--primary");
+      document.documentElement.style.setProperty(
+        "--brand-primary",
+        "var(--primary)"
+      );
       APPLIED_MANUAL_OVERRIDES.push("--brand-primary");
+    }
+    if (hasBrandPrimaryOverride && !hasPrimaryOverride) {
+      document.documentElement.style.setProperty(
+        "--primary",
+        "var(--brand-primary)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--primary");
+    }
+    if (hasPrimaryOverride && !hasBrandPrimaryOverride) {
+      document.documentElement.style.setProperty(
+        "--brand-primary",
+        "var(--primary)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--brand-primary");
+    }
+    if (hasOnPrimaryOverride && !hasBrandOnPrimaryOverride) {
+      document.documentElement.style.setProperty(
+        "--brand-on-primary",
+        "var(--on-primary)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--brand-on-primary");
+    }
+    if (hasBrandOnPrimaryOverride && !hasOnPrimaryOverride) {
+      document.documentElement.style.setProperty(
+        "--on-primary",
+        "var(--brand-on-primary)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--on-primary");
     }
     if (
       (overrides.accent_primary_strong ||
@@ -948,6 +1024,34 @@
         "var(--accent-primary-strong)"
       );
       APPLIED_MANUAL_OVERRIDES.push("--text-accent");
+    }
+    if (hasAccentSecondaryOverride && !hasSecondaryOverride) {
+      document.documentElement.style.setProperty(
+        "--secondary",
+        "var(--accent-secondary)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--secondary");
+    }
+    if (hasSecondaryOverride && !hasAccentSecondaryOverride) {
+      document.documentElement.style.setProperty(
+        "--accent-secondary",
+        "var(--secondary)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--accent-secondary");
+    }
+    if (hasAccentSecondaryStrongOverride && !hasSecondaryStrongOverride) {
+      document.documentElement.style.setProperty(
+        "--secondary-strong",
+        "var(--accent-secondary-strong)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--secondary-strong");
+    }
+    if (hasSecondaryStrongOverride && !hasAccentSecondaryStrongOverride) {
+      document.documentElement.style.setProperty(
+        "--accent-secondary-strong",
+        "var(--secondary-strong)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--accent-secondary-strong");
     }
   }
 
@@ -1136,6 +1240,23 @@
       "--coty-role-primary-strong",
       roles.primaryStrong
     );
+    document.documentElement.style.setProperty("--primary", roles.primary);
+    document.documentElement.style.setProperty(
+      "--primary-strong",
+      roles.primaryStrong
+    );
+    document.documentElement.style.setProperty(
+      "--accent-primary",
+      "var(--primary)"
+    );
+    document.documentElement.style.setProperty(
+      "--accent-primary-strong",
+      "var(--primary-strong)"
+    );
+    document.documentElement.style.setProperty(
+      "--brand-primary",
+      "var(--primary)"
+    );
     document.documentElement.style.setProperty(
       "--coty-role-surface",
       roles.surface
@@ -1189,6 +1310,10 @@
       "var(" + onPrimaryToken + ")"
     );
     document.documentElement.style.setProperty(
+      "--on-primary",
+      "var(" + onPrimaryToken + ")"
+    );
+    document.documentElement.style.setProperty(
       "--brand-on-primary",
       "var(" + onPrimaryToken + ")"
     );
@@ -1234,12 +1359,24 @@
 
     if (secondaryScale) {
       document.documentElement.style.setProperty(
-        "--accent-secondary",
+        "--secondary",
         secondaryScale["--coty-secondary-4"]
       );
       document.documentElement.style.setProperty(
-        "--accent-secondary-strong",
+        "--secondary-strong",
         secondaryScale["--coty-secondary-8"]
+      );
+      document.documentElement.style.setProperty(
+        "--on-secondary",
+        "var(--coty-12)"
+      );
+      document.documentElement.style.setProperty(
+        "--accent-secondary",
+        "var(--secondary)"
+      );
+      document.documentElement.style.setProperty(
+        "--accent-secondary-strong",
+        "var(--secondary-strong)"
       );
       document.documentElement.style.setProperty(
         "--component-toc-active-indicator",
@@ -1250,6 +1387,7 @@
         secondaryScale["--coty-secondary-8"]
       );
     } else {
+      document.documentElement.style.removeProperty("--on-secondary");
       clearDuoOverrides();
     }
 

@@ -239,10 +239,21 @@
         id: "primary",
         label: "Primary",
         fields: [
-          { key: "accent_primary", token: "--accent-primary" },
-          { key: "accent_primary_strong", token: "--accent-primary-strong" },
-          { key: "brand_primary", token: "--brand-primary" },
-          { key: "brand_on_primary", token: "--brand-on-primary" },
+          {
+            key: "primary",
+            token: "--primary",
+            legacyKeys: ["accent_primary", "brand_primary"],
+          },
+          {
+            key: "primary_strong",
+            token: "--primary-strong",
+            legacyKeys: ["accent_primary_strong"],
+          },
+          {
+            key: "on_primary",
+            token: "--on-primary",
+            legacyKeys: ["brand_on_primary"],
+          },
           { key: "component_nav_cta_bg", token: "--component-nav-cta-bg" },
           { key: "component_nav_cta_text", token: "--component-nav-cta-text" },
           { key: "state_focus", token: "--state-focus" },
@@ -253,10 +264,15 @@
         id: "secondary",
         label: "Secondary",
         fields: [
-          { key: "accent_secondary", token: "--accent-secondary" },
           {
-            key: "accent_secondary_strong",
-            token: "--accent-secondary-strong",
+            key: "secondary",
+            token: "--secondary",
+            legacyKeys: ["accent_secondary"],
+          },
+          {
+            key: "secondary_strong",
+            token: "--secondary-strong",
+            legacyKeys: ["accent_secondary_strong"],
           },
           {
             key: "component_toc_active_indicator",
@@ -470,33 +486,21 @@
           note: "Newsletter illustration block bg.",
         },
       ],
-      "--accent-primary": [
+      "--primary": [
         {
           file: "assets/css/tokens/semantic.css",
           selector: ":root",
           note: "Primary accent base used by roles and components.",
         },
       ],
-      "--accent-primary-strong": [
+      "--primary-strong": [
         {
           file: "assets/css/components/button.css",
           selector: ".button interactions",
           note: "Primary accent strong/hover states.",
         },
       ],
-      "--brand-primary": [
-        {
-          file: "assets/css/components/button.css",
-          selector: ".button--primary",
-          note: "Primary CTA/background token.",
-        },
-        {
-          file: "assets/css/components/theme-dropdown.css",
-          selector: "interactive focus and active accents",
-          note: "Menu and controls accent rendering.",
-        },
-      ],
-      "--brand-on-primary": [
+      "--on-primary": [
         {
           file: "assets/css/components/button.css",
           selector: ".button--primary",
@@ -506,6 +510,41 @@
           file: "assets/js/coty-scale.js",
           selector: "runtime selection",
           note: "Set from COTY scale steps, not fixed white/black.",
+        },
+      ],
+      "--secondary": [
+        {
+          file: "assets/css/tokens/semantic.css",
+          selector: ":root",
+          note: "Secondary accent role.",
+        },
+      ],
+      "--secondary-strong": [
+        {
+          file: "assets/css/tokens/semantic.css",
+          selector: ":root",
+          note: "Secondary accent strong variant.",
+        },
+      ],
+      "--brand-primary": [
+        {
+          file: "assets/css/components/button.css",
+          selector: ".button--primary",
+          note: "Legacy alias of --primary (migration compatibility).",
+        },
+      ],
+      "--state-focus": [
+        {
+          file: "assets/css/utilities/typography.css",
+          selector: ":focus-visible outlines",
+          note: "Focus ring and emphasis states.",
+        },
+      ],
+      "--state-selected": [
+        {
+          file: "assets/css/pages/palette-generator.css",
+          selector: ".palette-generator__contrast-status[data-pass='true']",
+          note: "Pass-state indicator color.",
         },
       ],
       "--component-nav-cta-bg": [
@@ -532,34 +571,6 @@
           note: "Mapped from role/policy at runtime.",
         },
       ],
-      "--state-focus": [
-        {
-          file: "assets/css/utilities/typography.css",
-          selector: ":focus-visible outlines",
-          note: "Focus ring and emphasis states.",
-        },
-      ],
-      "--state-selected": [
-        {
-          file: "assets/css/pages/palette-generator.css",
-          selector: ".palette-generator__contrast-status[data-pass='true']",
-          note: "Pass-state indicator color.",
-        },
-      ],
-      "--accent-secondary": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Secondary accent role.",
-        },
-      ],
-      "--accent-secondary-strong": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Secondary accent strong variant.",
-        },
-      ],
       "--component-toc-active-indicator": [
         {
           file: "assets/css/components/table-of-contents.css",
@@ -580,7 +591,7 @@
       enabled: false,
       color: "#ff4d4d",
       scope: "primary",
-      token: "--accent-primary",
+      token: "--primary",
     };
     let syncingFromThemeEvent = false;
     let activeTab = "palette";
@@ -1003,9 +1014,9 @@
           requirement: "text",
         },
         {
-          label: "--brand-primary / --brand-on-primary",
-          foreground: "--brand-on-primary",
-          background: "--brand-primary",
+          label: "--primary / --on-primary",
+          foreground: "--on-primary",
+          background: "--primary",
           threshold: 4.5,
           requirement: "text",
         },
@@ -2047,7 +2058,11 @@
         : baseOverrides;
       const darkOverrides = darkOverridesRaw;
       const getOverride = (source, field) => {
-        const keys = [field.key, field.key.replace(/_/g, "-"), field.token];
+        const keys = [
+          field.key,
+          field.key.replace(/_/g, "-"),
+          field.token,
+        ].concat(field.legacyKeys || []);
         for (let i = 0; i < keys.length; i += 1) {
           const key = keys[i];
           if (typeof source[key] !== "undefined") {
@@ -2764,12 +2779,20 @@
         setToken(name, getDerivedToken(name) || fallbackValue);
       };
 
+      setDerivedToken("--primary", ctx.primary.base);
+      setDerivedToken("--primary-strong", ctx.primary.strong);
+      setDerivedToken("--on-primary", ctx.primary.on);
+      setDerivedToken("--secondary", ctx.secondary.base);
+      setDerivedToken("--secondary-strong", ctx.secondary.strong);
+      setDerivedToken("--on-secondary", ctx.text.default);
+
+      // Keep legacy aliases synchronized during migration.
       setDerivedToken("--accent-primary", ctx.primary.base);
       setDerivedToken("--accent-primary-strong", ctx.primary.strong);
       setDerivedToken("--accent-secondary", ctx.secondary.base);
       setDerivedToken("--accent-secondary-strong", ctx.secondary.strong);
-
       setDerivedToken("--brand-primary", ctx.primary.base);
+      setDerivedToken("--brand-on-primary", ctx.primary.on);
       setDerivedToken(
         "--text-accent",
         resolveSource(textSteps.accent_source, ctx)
@@ -3290,8 +3313,8 @@
           preview: {
             primary:
               (derivedPreview && derivedPreview.primary) ||
-              derived["--accent-primary-strong"] ||
-              derived["--accent-primary"] ||
+              derived["--primary-strong"] ||
+              derived["--primary"] ||
               "",
             surface:
               (derivedPreview && derivedPreview.surface) ||
@@ -3299,8 +3322,8 @@
               "",
             secondary:
               (derivedPreview && derivedPreview.secondary) ||
-              derived["--accent-secondary-strong"] ||
-              derived["--accent-secondary"] ||
+              derived["--secondary-strong"] ||
+              derived["--secondary"] ||
               "",
             tone_mode:
               (derivedPreview && derivedPreview.toneMode) ||
