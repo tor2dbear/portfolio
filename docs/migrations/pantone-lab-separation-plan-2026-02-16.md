@@ -461,6 +461,25 @@ Titel-forslag: `refactor/color-token-consistency-followup`
 5. Border role decision + implementation spike (eller beslut att avsta, med dokumentation).
 6. Manuella border-overrides i palette-filer om derive-implementation skjuts.
 
+### Stacked Follow-up Scope: Border Role in Pantone Lab
+
+Detta ar den explicita planen for "border som egen roll" kopplat till generatorn.
+
+1. Introducera `border` som separat roll i Pantone Lab (utover surface/text/primary/secondary).
+2. Ge `border` egen tokenmappning i UI (minst `--border-subtle`, `--border-default`, `--border-strong`).
+3. Koppla derive fallback till scale-steg (standardforslag):
+
+- subtle -> step 5
+- default -> step 6
+- strong -> step 8
+
+4. Behall manuella overrides per ar + mode i draft/export (light och dark var for sig).
+5. Visa border-rollens val i diff/where-used-panelerna for snabb QA.
+6. Avgransning:
+
+- inga stora naming-migrationer i samma PR
+- ingen full repo-wide token cleanup i samma PR
+
 ### Definition of Done for current PR
 
 1. Pantone Lab kan anvandas for year-by-year tuning utan att bryta ordinarie palette-flode.
