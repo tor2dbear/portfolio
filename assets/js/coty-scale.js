@@ -909,6 +909,11 @@
     var hasPrimaryOverride = Boolean(
       overrides["--primary"] || overrides.primary
     );
+    var hasPrimaryStrongOverride = Boolean(
+      overrides["--primary-strong"] ||
+        overrides.primary_strong ||
+        overrides["primary-strong"]
+    );
     var hasOnPrimaryOverride = Boolean(
       overrides["--on-primary"] ||
         overrides.on_primary ||
@@ -946,6 +951,11 @@
       overrides["--accent-secondary-strong"] ||
         overrides.accent_secondary_strong ||
         overrides["accent-secondary-strong"]
+    );
+    var hasAccentPrimaryStrongOverride = Boolean(
+      overrides["--accent-primary-strong"] ||
+        overrides.accent_primary_strong ||
+        overrides["accent-primary-strong"]
     );
 
     Object.keys(overrides).forEach(function (key) {
@@ -1013,15 +1023,29 @@
       );
       APPLIED_MANUAL_OVERRIDES.push("--on-primary");
     }
+    if (hasPrimaryStrongOverride && !hasAccentPrimaryStrongOverride) {
+      document.documentElement.style.setProperty(
+        "--accent-primary-strong",
+        "var(--primary-strong)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--accent-primary-strong");
+    }
+    if (hasAccentPrimaryStrongOverride && !hasPrimaryStrongOverride) {
+      document.documentElement.style.setProperty(
+        "--primary-strong",
+        "var(--accent-primary-strong)"
+      );
+      APPLIED_MANUAL_OVERRIDES.push("--primary-strong");
+    }
     if (
-      (overrides.accent_primary_strong ||
-        overrides["accent-primary-strong"] ||
-        overrides["--accent-primary-strong"]) &&
+      (hasPrimaryStrongOverride || hasAccentPrimaryStrongOverride) &&
       !hasTextAccentOverride
     ) {
       document.documentElement.style.setProperty(
         "--text-accent",
-        "var(--accent-primary-strong)"
+        hasPrimaryStrongOverride
+          ? "var(--primary-strong)"
+          : "var(--accent-primary-strong)"
       );
       APPLIED_MANUAL_OVERRIDES.push("--text-accent");
     }
