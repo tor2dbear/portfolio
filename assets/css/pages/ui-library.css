@@ -125,11 +125,11 @@
   font-size: var(--text-xs);
   font-weight: var(--sans-weight-medium);
   color: var(--text-inverse);
-  background-color: var(--brand-primary);
+  background-color: var(--primary);
 }
 
 .color-swatch--primary .color-swatch__visual {
-  outline: 2px solid var(--brand-primary);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -244,7 +244,7 @@
 }
 
 .spacing-example__visual {
-  background-color: var(--brand-primary);
+  background-color: var(--primary);
   border-radius: 4px;
   flex-shrink: 0;
   min-width: 2px;
@@ -286,7 +286,7 @@
   width: min(var(--token-size, 0px), 100%);
   min-width: 2px;
   border-radius: var(--radius-2);
-  background-color: var(--brand-primary);
+  background-color: var(--primary);
 }
 
 .size-token-list {
@@ -449,7 +449,7 @@
   width: var(--size-12);
   height: var(--size-12);
   border-radius: 50%;
-  background-color: var(--brand-primary);
+  background-color: var(--primary);
   animation-name: ui-library-motion-slide;
   animation-duration: var(--motion-demo-duration, var(--motion-duration-base));
   animation-timing-function: var(
@@ -473,7 +473,7 @@
   width: var(--size-24);
   height: var(--size-8);
   border-radius: var(--radius-pill);
-  background-color: var(--brand-primary);
+  background-color: var(--primary);
   animation-name: ui-library-motion-rise;
   animation-duration: var(--motion-duration-reveal);
   animation-timing-function: var(--motion-ease-decelerate);
@@ -565,7 +565,7 @@
 
 .grid-demo__item {
   padding: var(--spacing-16);
-  background-color: var(--brand-primary);
+  background-color: var(--primary);
   color: white;
   border-radius: 4px;
   text-align: center;
@@ -598,7 +598,7 @@
 .code-example summary {
   cursor: pointer;
   font-size: 0.875rem;
-  color: var(--brand-primary);
+  color: var(--primary);
   padding: var(--spacing-8);
   border-radius: 4px;
 }

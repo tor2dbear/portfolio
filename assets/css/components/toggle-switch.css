@@ -44,7 +44,7 @@
 
 /* On state */
 .toggle-switch[aria-pressed="true"] .toggle-switch__track {
-  background: var(--brand-primary, var(--accent-primary));
+  background: var(--primary);
 }
 
 .toggle-switch[aria-pressed="true"] .toggle-switch__thumb {
@@ -85,6 +85,6 @@
 
 /* Focus ring */
 .toggle-switch:focus-visible .toggle-switch__track {
-  outline: 2px solid var(--brand-primary, var(--accent-primary));
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }

@@ -479,7 +479,7 @@ figcaption {
 .section-headline {
   padding: 0.25rem 0.75rem;
   background-color: var(--component-section-headline-bg);
-  color: var(--brand-on-primary);
+  color: var(--on-primary);
   display: inline-block;
 }
 

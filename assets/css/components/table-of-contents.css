@@ -87,6 +87,6 @@
 }
 
 .toc__item a:focus {
-  outline: 2px solid var(--brand-primary);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }

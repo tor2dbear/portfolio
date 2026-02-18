@@ -11,8 +11,8 @@
  * - .button--icon (with arrow icon)
  *
  * Tokens used:
- * - --brand-primary
- * - --brand-on-primary
+ * - --primary
+ * - --on-primary
  * - --bg-inverse
  * - --text-inverse
  * - --border-default
@@ -95,8 +95,8 @@ button:disabled,
 
 /* Primary Button (Brand) */
 .button--primary {
-  background-color: var(--brand-primary);
-  color: var(--brand-on-primary);
+  background-color: var(--primary);
+  color: var(--on-primary);
 }
 
 .button--primary:hover {
