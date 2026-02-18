@@ -669,6 +669,19 @@
       }
       const isSwedish = document.documentElement.lang === "sv";
       const inPantoneLab = currentActiveSource() === "pantone";
+      if (resetButton) {
+        resetButton.disabled = inPantoneLab;
+        resetButton.setAttribute(
+          "aria-disabled",
+          inPantoneLab ? "true" : "false"
+        );
+        resetButton.hidden = inPantoneLab;
+        resetButton.style.display = inPantoneLab ? "none" : "";
+        resetButton.setAttribute(
+          "aria-hidden",
+          inPantoneLab ? "true" : "false"
+        );
+      }
       saveButton.disabled = inPantoneLab;
       saveButton.setAttribute("aria-disabled", inPantoneLab ? "true" : "false");
       saveButton.hidden = inPantoneLab;
