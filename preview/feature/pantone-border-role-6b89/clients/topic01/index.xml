@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Wed, 18 Feb 2026 21:53:12 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/clients/topic01/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>In the City</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
+      <description>&lt;figure class=&#34;reveal&#34;&gt;
+        &lt;picture&gt;
+          &lt;source
+            media=&#34;(max-width: 393px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_a1d87a4fe955e974.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_8276fd43708a5d1f.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 393px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 430px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_8276fd43708a5d1f.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_1603ffe3a5a50783.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 430px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 768px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_1603ffe3a5a50783.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_88e871088020b168.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 768px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 1400px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_88e871088020b168.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_5ccc652e20fd36b4.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 1400px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(min-width: 1401px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_5ccc652e20fd36b4.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_5ccc652e20fd36b4.webp 2x
+            &#34;
+            sizes=&#34;100vw&#34;
+          /&gt;
+          &lt;img
+            alt=&#34;Header example&#34;
+            title=&#34;Header example&#34;
+            src=&#34;https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/works/in-the-city/in-the-city-0002-2_hu_1f0b549e286f46f7.jpg&#34;
+            height=&#34;2347&#34;
+            width=&#34;1920&#34;
+            class=&#34;img-fluid&#34;
+            loading=&#34;lazy&#34;
+          /&gt;
+        &lt;/picture&gt;
+      &lt;/figure&gt;&lt;h3&gt;About&lt;/h3&gt;
+&lt;p&gt;The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.&lt;br&gt;
+The magazine was printed on a uncoated paper using two Pantone colors and black.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

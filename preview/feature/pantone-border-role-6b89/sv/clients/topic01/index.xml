@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/</link>
+    <description>Hej! Jag är en multidisciplinär designer. I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt organisationer från idé till färdig produkt genom att kombinera design, affärsvärde och teknik.</description>
+    <language>sv</language>
+    <lastBuildDate>Wed, 18 Feb 2026 21:53:36 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/sv/clients/topic01/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Göteborgsaffisch</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
+      <description>&lt;figure class=&#34;reveal&#34;&gt;
+        &lt;picture&gt;
+          &lt;source
+            media=&#34;(max-width: 393px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_d539bfe587c2e4b7.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_887b9f6f3b1793d1.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 393px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 430px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_887b9f6f3b1793d1.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_6d7515a4faab834.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 430px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 768px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_6d7515a4faab834.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_388870167d417cbd.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 768px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 1400px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_388870167d417cbd.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_20b251866bb4b1f4.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 1400px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(min-width: 1401px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_20b251866bb4b1f4.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_20b251866bb4b1f4.webp 2x
+            &#34;
+            sizes=&#34;100vw&#34;
+          /&gt;
+          &lt;img
+            alt=&#34;Header example&#34;
+            title=&#34;Header example&#34;
+            src=&#34;https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/g%C3%B6teborgsaffisch/gbg_poster08_hu_e95df174c1163d0f.jpg&#34;
+            height=&#34;1280&#34;
+            width=&#34;1920&#34;
+            class=&#34;img-fluid&#34;
+            loading=&#34;lazy&#34;
+          /&gt;
+        &lt;/picture&gt;
+      &lt;/figure&gt;&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>In the City</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/</guid>
+      <pubDate>Thu, 24 Feb 2022 00:00:00 &#43;0000</pubDate>
+      <description>&lt;figure class=&#34;reveal&#34;&gt;
+        &lt;picture&gt;
+          &lt;source
+            media=&#34;(max-width: 393px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_a1d87a4fe955e974.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_8276fd43708a5d1f.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 393px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 430px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_8276fd43708a5d1f.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_1603ffe3a5a50783.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 430px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 768px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_1603ffe3a5a50783.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_88e871088020b168.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 768px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(max-width: 1400px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_88e871088020b168.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_5ccc652e20fd36b4.webp 2x
+            &#34;
+            sizes=&#34;(max-width: 1400px) 100vw&#34;
+          /&gt;
+          &lt;source
+            media=&#34;(min-width: 1401px)&#34;
+            srcset=&#34;
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_5ccc652e20fd36b4.webp 1x,
+              /portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_5ccc652e20fd36b4.webp 2x
+            &#34;
+            sizes=&#34;100vw&#34;
+          /&gt;
+          &lt;img
+            alt=&#34;Header example&#34;
+            title=&#34;Header example&#34;
+            src=&#34;https://tor2dbear.github.io/portfolio/preview/feature/pantone-border-role-6b89/sv/arbeten/in-the-city/in-the-city-0002-2_hu_1f0b549e286f46f7.jpg&#34;
+            height=&#34;2347&#34;
+            width=&#34;1920&#34;
+            class=&#34;img-fluid&#34;
+            loading=&#34;lazy&#34;
+          /&gt;
+        &lt;/picture&gt;
+      &lt;/figure&gt;&lt;p&gt;sdafas&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
