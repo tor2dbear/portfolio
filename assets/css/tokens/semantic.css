@@ -26,7 +26,7 @@
   --bg-surface: var(--iris-2);
   --bg-elevated: var(--gray-1);
   --bg-inverse: var(--gray-12);
-  --bg-surface-subtle: var(--bg-elevated);
+  --bg-surface-subtle: var(--surface-elevated);
   --bg-tag: var(--iris-3);
   --bg-tag-hover: var(--iris-4);
   --bg-section-headline: var(--primary);
@@ -98,7 +98,7 @@
   --ring-focus: 0 0 0 3px var(--state-focus);
   --ring-error: 0 0 0 3px var(--status-error-bg);
   --ring-selected: 0 0 0 3px var(--state-selected);
-  --ring-selected-offset: 0 0 0 1px var(--bg-page);
+  --ring-selected-offset: 0 0 0 1px var(--surface-page);
   --ring-selected-emphasis: var(--ring-selected-offset), var(--ring-selected);
   --state-layer-duration: var(--motion-duration-base);
   --state-layer-ease: var(--motion-ease-standard);
@@ -131,7 +131,7 @@
   --primary-strong: var(--iris-11);
   --on-primary: var(--white);
   --action: var(--text-default);
-  --on-action: var(--bg-page);
+  --on-action: var(--surface-page);
   --secondary: var(--iris-4);
   --secondary-strong: var(--iris-8);
   --on-secondary: var(--gray-12);
@@ -150,7 +150,7 @@
   --component-nav-cta-bg: var(--primary);
   --component-nav-cta-text: var(--on-primary);
   --component-toc-active-indicator: var(--primary);
-  --component-section-headline-bg: var(--bg-section-headline);
+  --component-section-headline-bg: var(--surface-headline);
 
   /* === STATUS === */
   --status-error-bg: var(--red-8);

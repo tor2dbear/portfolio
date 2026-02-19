@@ -9,7 +9,7 @@
    ========================================================================== */
 
 .tooltip {
-  --tooltip-bg: var(--bg-inverse);
+  --tooltip-bg: var(--surface-inverse);
 
   position: relative;
   display: inline-block;

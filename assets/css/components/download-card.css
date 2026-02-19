@@ -13,7 +13,7 @@
   align-items: center;
   gap: var(--spacing-12);
   padding: 1rem 1.5rem;
-  background-color: var(--bg-surface);
+  background-color: var(--surface-default);
   background-image: none;
 }
 
@@ -22,7 +22,10 @@
 }
 
 .download-card:hover {
-  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
 }
 
 .download-card:hover > div {
@@ -76,7 +79,7 @@ p.download-card__item {
   gap: var(--spacing-12);
   width: 100%;
   padding: 1rem 1.5rem;
-  background-color: var(--bg-surface);
+  background-color: var(--surface-default);
   border: 1px solid var(--border-default);
   cursor: pointer;
   font-family: inherit;
@@ -87,7 +90,10 @@ p.download-card__item {
 }
 
 .print-button:hover {
-  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
   color: var(--text-link-hover);
 }
 

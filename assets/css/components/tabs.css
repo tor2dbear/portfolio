@@ -7,7 +7,7 @@
   padding: var(--spacing-4);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  background: var(--bg-surface);
+  background: var(--surface-default);
   overflow-x: auto;
 }
 

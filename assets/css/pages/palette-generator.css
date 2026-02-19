@@ -18,7 +18,7 @@
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
   padding: var(--spacing-16);
-  background: var(--bg-surface);
+  background: var(--surface-default);
 }
 
 .palette-generator__tabs {
@@ -138,7 +138,7 @@
   border-radius: var(--radius-pill);
   font-size: var(--text-sm);
   color: var(--text-muted);
-  background: var(--bg-page);
+  background: var(--surface-page);
 }
 
 .palette-generator__diff-list {
@@ -154,7 +154,7 @@
   padding: var(--spacing-8);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  background: var(--bg-surface);
+  background: var(--surface-default);
 }
 
 .palette-generator__diff-token {
@@ -187,7 +187,7 @@
   padding: var(--spacing-8);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  background: var(--bg-surface);
+  background: var(--surface-default);
 }
 
 .palette-generator__contrast-pair {
@@ -229,7 +229,7 @@
   padding: var(--spacing-8);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  background: var(--bg-surface);
+  background: var(--surface-default);
 }
 
 .palette-generator__usage-file {
@@ -280,7 +280,7 @@
 }
 
 .palette-generator__export {
-  background: var(--bg-page);
+  background: var(--surface-page);
   padding: var(--spacing-8) var(--spacing-12);
 }
 
@@ -311,7 +311,7 @@
   padding: var(--spacing-8) var(--spacing-12);
   border: 1px dashed var(--border-default);
   border-radius: var(--radius-8);
-  background: var(--bg-surface);
+  background: var(--surface-default);
 }
 
 .palette-generator__hint--coty-control-color-count {
@@ -321,7 +321,7 @@
 .palette-generator__code {
   margin: 0 0 var(--spacing-12);
   padding: var(--spacing-12);
-  background: var(--bg-page);
+  background: var(--surface-page);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
   overflow: auto;

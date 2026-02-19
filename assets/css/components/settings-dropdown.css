@@ -53,7 +53,7 @@
   right: var(--spacing-8);
   top: auto;
   min-width: unset;
-  background: var(--bg-surface);
+  background: var(--surface-default);
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-12) var(--spacing-12) 0 0;
   padding: var(--spacing-32) var(--spacing-12) var(--spacing-24);
@@ -62,7 +62,9 @@
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), transform var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
+    transform var(--motion-duration-base) var(--motion-ease-standard),
+    visibility var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .settings-panel:not([hidden]) {
@@ -72,7 +74,7 @@
 }
 
 .settings-panel::before {
-  content: '';
+  content: "";
   position: absolute;
   top: var(--spacing-8);
   left: 50%;
@@ -90,11 +92,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: color-mix(in srgb, var(--bg-inverse) 50%, transparent);
+  background: color-mix(in srgb, var(--surface-inverse) 50%, transparent);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
+    visibility var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .settings-overlay:not([hidden]) {

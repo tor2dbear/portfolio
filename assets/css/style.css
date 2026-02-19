@@ -1,5 +1,5 @@
 body {
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   color: var(--text-default);
 }
 
@@ -87,10 +87,12 @@ footer {
   opacity: 1;
   display: grid;
   width: 100%;
-  grid-template-columns: [full-start] var(--size-page-margins) [content-start] repeat(
+  grid-template-columns:
+    [full-start] var(--size-page-margins) [content-start] repeat(
       12,
       [col-start] 1fr
-    ) [content-end] var(--size-page-margins) [full-end];
+    )
+    [content-end] var(--size-page-margins) [full-end];
   column-gap: var(--spacing-24);
 }
 
@@ -104,10 +106,12 @@ footer {
   max-width: var(--content-max-width);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: [full-start] var(--size-page-margins) [content-start] repeat(
+  grid-template-columns:
+    [full-start] var(--size-page-margins) [content-start] repeat(
       12,
       [col-start] 1fr
-    ) [content-end] var(--size-page-margins) [full-end];
+    )
+    [content-end] var(--size-page-margins) [full-end];
   column-gap: var(--spacing-24);
   row-gap: var(--spacing-32);
   width: 100%;
@@ -118,10 +122,12 @@ footer {
   .top-menu,
   #main,
   footer {
-    grid-template-columns: [full-start] var(--size-page-margins) [content-start] repeat(
+    grid-template-columns:
+      [full-start] var(--size-page-margins) [content-start] repeat(
         4,
         [col-start] 1fr
-      ) [content-end] var(--size-page-margins) [full-end];
+      )
+      [content-end] var(--size-page-margins) [full-end];
     column-gap: var(--spacing-16);
   }
 
@@ -394,7 +400,7 @@ p:empty {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 2rem 2rem;
   margin-bottom: var(--spacing-32);
-  background-color: var(--bg-surface);
+  background-color: var(--surface-default);
   --col: col-start 1 / span 12;
   grid-column: var(--col);
   grid-column-gap: 3rem;
