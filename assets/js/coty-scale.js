@@ -1280,18 +1280,6 @@
       roles.primaryStrong
     );
     document.documentElement.style.setProperty(
-      "--accent-primary",
-      "var(--primary)"
-    );
-    document.documentElement.style.setProperty(
-      "--accent-primary-strong",
-      "var(--primary-strong)"
-    );
-    document.documentElement.style.setProperty(
-      "--brand-primary",
-      "var(--primary)"
-    );
-    document.documentElement.style.setProperty(
       "--coty-role-surface",
       roles.surface
     );
@@ -1347,10 +1335,6 @@
       "--on-primary",
       "var(" + onPrimaryToken + ")"
     );
-    document.documentElement.style.setProperty(
-      "--brand-on-primary",
-      "var(" + onPrimaryToken + ")"
-    );
 
     var secondaryAnchor = resolveSecondaryAnchorStep(entry, resolvedMode);
     if (secondaryAnchor) {
@@ -1403,14 +1387,6 @@
       document.documentElement.style.setProperty(
         "--on-secondary",
         "var(--coty-12)"
-      );
-      document.documentElement.style.setProperty(
-        "--accent-secondary",
-        "var(--secondary)"
-      );
-      document.documentElement.style.setProperty(
-        "--accent-secondary-strong",
-        "var(--secondary-strong)"
       );
       document.documentElement.style.setProperty(
         "--component-toc-active-indicator",
