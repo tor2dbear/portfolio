@@ -26,7 +26,28 @@ Notis:
 
 1. `COTY role mode` och `COTY anchor step` behalls i denna fas, men vidare beteendeforandringar pa dessa ar uttryckligen pausade tills senare PR.
 
-## Next Scope: PR A (Token consistency follow-up)
+## Execution Status (2026-02-19)
+
+Statuset nedan speglar vad som nu ar genomfort i den stackade leveransen.
+
+Klara steg:
+
+1. Baseline-flodet for Pantone Lab ar stabilt (tabs, year-flow, draft persistens, diff/contrast/where-used/control-color).
+2. PR A (token consistency follow-up) ar genomford.
+3. PR B (status-konsolidering) ar genomford:
+   - `assets/css/utilities/status-messages.css` finns och laddas i `layouts/partials/head.html`.
+4. Naming migration ar paborjad och delvis genomford:
+   - canonical `primary/secondary` ar nu primara i runtimefloden.
+   - `on-secondary` ar tillagt i generatorflode och token-roller.
+   - UI-library ar uppdaterad for canonical primary/secondary-visning.
+
+Kvar till nasta steg:
+
+1. Slutstada naming migration (7a/7b/7c) dar legacy alias fortfarande behovs for kompatibilitet.
+2. Border-roll som egen full roll i Pantone Lab (se backlog nedan).
+3. Optional niceties (random year, shortcuts, batch review) i separat framtida PR.
+
+## Historical Scope: PR A (Token consistency follow-up)
 
 PR A bygger vidare pa baseline ovan och fokuserar pa token-konsistens som behovs for Pantone QA-kvalitet.
 

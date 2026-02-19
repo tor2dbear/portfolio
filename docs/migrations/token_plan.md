@@ -52,6 +52,17 @@ Dessa saker har redan åtgärdats eller visar sig vara annorlunda än reviewen a
 
 Detta arbete delas i flera PR:er for att minska regressionsrisk och gora QA/review hanterbar.
 
+### Status 2026-02-19
+
+1. PR A ar genomford (fas 1-5 + border-overrides + verifiering).
+2. PR B ar genomford (fas 6):
+   - `assets/css/utilities/status-messages.css` finns och ar inkopplad.
+3. PR C (naming migration) ar paborjad:
+   - canonical `--primary/--secondary` ar etablerade i runtime och derivation.
+   - `--on-secondary` ar inford i generatorflode och override-UI.
+   - state-tokener ar canonicaliserade (`state-primary-*`) med legacy alias kvar.
+4. Legacy alias finns fortfarande avsiktligt for bakatkompatibilitet och ska stadas i senare steg nar referenser ar helt migrerade.
+
 ### PR A (nasta steg): `refactor/color-token-consistency-followup`
 
 Fokus: token-konsistens som direkt stoder Pantone Lab QA och den nyligen stabiliserade baseline.
@@ -101,6 +112,11 @@ Fokus: Fas 7a + 7b + 7c.
 2. `--brand/*accent` -> `--primary/--secondary` + `--on-secondary`
 3. State-token rename (`brand` -> `primary`)
 4. Uppdatering i CSS, JS (`theme-derive.js`, `palette-generator.js`) och UI-library dokumentation
+
+Nuvarande delstatus for PR C:
+
+1. Delvis klar: canonical runtime + UI docs + `on-secondary`.
+2. Kvar: slutlig repo-wide cleanup av legacy alias och sista referenser enligt migreringstabellerna.
 
 ### Why this split
 
