@@ -499,7 +499,7 @@ Detta spår adresserar komplexiteten mellan default-knapp, nav-CTA och mono/duo-
 
 2. Policy for auto-mappning:
 
-- mono: `--action: var(--surface-ink-strong)`, `--on-action: var(--bg-page)`
+- mono: `--action: var(--text-default)`, `--on-action: var(--bg-page)`
 - duo: `--action: var(--primary)`, `--on-action: var(--on-primary)`
 
 3. Komponentkoppling:
@@ -509,7 +509,7 @@ Detta spår adresserar komplexiteten mellan default-knapp, nav-CTA och mono/duo-
 
 4. Legacy/compat:
 
-- `--component-nav-cta-bg/text` mappas till `--action/--on-action` (inte tvärtom)
+- `--component-nav-cta-bg/text` mappas alltid till `--primary/--on-primary`
 
 5. Generator + docs:
 

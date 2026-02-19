@@ -334,10 +334,10 @@ background-color: var(--bg-inverse);
 color: var(--text-inverse);
 ```
 
-> **OBS:** `--component-nav-cta-bg/text` behålls som de är. Default-läget pekar på
-> `text.default`/`surface.page` (= inverse), men duo-mode pekar om till `primary.base`/`primary.on`.
-> Att byta till `--bg-inverse`/`--text-inverse` här vore fel — det bryter duo-teman.
-> Component-token-lagret är rätt abstraktion för nav CTA.
+> **OBS:** `--component-nav-cta-bg/text` behålls som component-tokens men mappas
+> nu alltid till `primary.base`/`primary.on` (både mono och duo).
+> Bas-knappen (`.button`) använder `--action/--on-action`, medan nav-CTA följer
+> primary för konsekvent visual behavior i headern.
 
 **Secondary hover** (button.css rad 118-121):
 
