@@ -30,6 +30,14 @@
   --bg-tag: var(--iris-3);
   --bg-tag-hover: var(--iris-4);
   --bg-section-headline: var(--primary);
+  --surface-page: var(--bg-page);
+  --surface-default: var(--bg-surface);
+  --surface-elevated: var(--bg-elevated);
+  --surface-inverse: var(--bg-inverse);
+  --surface-subtle: var(--bg-surface-subtle);
+  --surface-tag: var(--bg-tag);
+  --surface-tag-hover: var(--bg-tag-hover);
+  --surface-headline: var(--bg-section-headline);
   --surface-ink-strong: var(--iris-11);
 
   /* === BORDER / OUTLINE === */
