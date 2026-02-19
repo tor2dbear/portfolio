@@ -63,5 +63,5 @@ button_text_step = 11
 button_text_role = "primary"
 
 [roles.component.nav_cta]
-bg_source = "text.default"
-text_source = "surface.page"
+bg_source = "primary.base"
+text_source = "primary.on"

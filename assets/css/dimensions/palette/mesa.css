@@ -51,9 +51,6 @@
   --component-newsletter-button-bg: var(--secondary);
   --component-newsletter-button-text: var(--on-secondary);
 
-  /* Mesa-specific CTA treatment in top nav */
-  --component-nav-cta-bg: var(--primary);
-  --component-nav-cta-text: var(--on-primary);
   --component-toc-active-indicator: var(--secondary-strong);
   --component-section-headline-bg: var(--secondary-strong);
 }

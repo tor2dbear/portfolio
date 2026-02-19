@@ -525,22 +525,12 @@
           selector: ".button",
           note: "Default button background.",
         },
-        {
-          file: "assets/css/components/navigation.css",
-          selector: ".menu__cta (via component mapping)",
-          note: "Header CTA background follows action role.",
-        },
       ],
       "--on-action": [
         {
           file: "assets/css/components/button.css",
           selector: ".button",
           note: "Default button text/icon color.",
-        },
-        {
-          file: "assets/css/components/navigation.css",
-          selector: ".menu__cta (via component mapping)",
-          note: "Header CTA text follows action role.",
         },
       ],
       "--secondary": [
@@ -587,7 +577,7 @@
         {
           file: "assets/js/theme-derive.js",
           selector: "derived token mapping",
-          note: "Mapped from role/policy at runtime.",
+          note: "Mapped from primary role at runtime.",
         },
       ],
       "--component-nav-cta-text": [
@@ -599,7 +589,7 @@
         {
           file: "assets/js/theme-derive.js",
           selector: "derived token mapping",
-          note: "Mapped from role/policy at runtime.",
+          note: "Mapped from primary role at runtime.",
         },
       ],
       "--component-toc-active-indicator": [
@@ -2924,9 +2914,9 @@
       }
 
       const navCtaBgSource =
-        componentOverrides.nav_cta_bg_source || "action.base";
+        componentOverrides.nav_cta_bg_source || "primary.base";
       const navCtaTextSource =
-        componentOverrides.nav_cta_text_source || "action.on";
+        componentOverrides.nav_cta_text_source || "primary.on";
       setDerivedToken(
         "--component-nav-cta-bg",
         resolveSource(navCtaBgSource, ctx)

@@ -1366,11 +1366,11 @@
     }
     document.documentElement.style.setProperty(
       "--component-nav-cta-bg",
-      "var(--action)"
+      "var(--primary)"
     );
     document.documentElement.style.setProperty(
       "--component-nav-cta-text",
-      "var(--on-action)"
+      "var(--on-primary)"
     );
 
     var secondaryAnchor = resolveSecondaryAnchorStep(entry, resolvedMode);

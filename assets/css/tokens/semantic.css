@@ -139,8 +139,8 @@
   --brand-on-container: var(--iris-11);
 
   /* === COMPONENT ROLES === */
-  --component-nav-cta-bg: var(--action);
-  --component-nav-cta-text: var(--on-action);
+  --component-nav-cta-bg: var(--primary);
+  --component-nav-cta-text: var(--on-primary);
   --component-toc-active-indicator: var(--primary);
   --component-section-headline-bg: var(--bg-section-headline);
 

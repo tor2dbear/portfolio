@@ -147,9 +147,9 @@
     tokens["--component-section-headline-bg"] =
       toneMode === "duo" ? ctx.secondary.strong : ctx.primary.base;
 
-    var navCtaBgSource = componentOverrides.nav_cta_bg_source || "action.base";
+    var navCtaBgSource = componentOverrides.nav_cta_bg_source || "primary.base";
     var navCtaTextSource =
-      componentOverrides.nav_cta_text_source || "action.on";
+      componentOverrides.nav_cta_text_source || "primary.on";
     tokens["--component-nav-cta-bg"] = resolveSource(navCtaBgSource, ctx);
     tokens["--component-nav-cta-text"] = resolveSource(navCtaTextSource, ctx);
 
