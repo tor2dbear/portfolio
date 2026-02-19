@@ -70,16 +70,18 @@
     var(--surface-ink-strong) var(--state-mix-surface-active),
     transparent
   );
-  --state-brand-hover: color-mix(
+  --state-primary-hover: color-mix(
     in oklch,
     var(--text-inverse) var(--state-mix-brand-hover),
     transparent
   );
-  --state-brand-active: color-mix(
+  --state-primary-active: color-mix(
     in oklch,
     var(--text-inverse) var(--state-mix-brand-active),
     transparent
   );
+  --state-brand-hover: var(--state-primary-hover);
+  --state-brand-active: var(--state-primary-active);
   --state-focus: var(--iris-9);
   --state-selected: var(--text-accent);
   --text-disabled: var(--gray-7);

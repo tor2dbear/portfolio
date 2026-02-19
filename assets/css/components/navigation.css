@@ -103,8 +103,8 @@ html[data-grid-overlay] .top-menu {
 .top-menu__item--contact .top-menu__link--button:hover,
 .top-menu__item--contact .top-menu__link--button:focus-visible {
   background-image: linear-gradient(
-    var(--state-brand-hover),
-    var(--state-brand-hover)
+    var(--state-primary-hover),
+    var(--state-primary-hover)
   );
 }
 
@@ -278,10 +278,12 @@ html[data-grid-overlay] .top-menu {
   .top-menu,
   #main,
   footer {
-    grid-template-columns: [full-start] var(--size-page-margins) [content-start] repeat(
+    grid-template-columns:
+      [full-start] var(--size-page-margins) [content-start] repeat(
         4,
         [col-start] 1fr
-      ) [content-end] var(--size-page-margins) [full-end];
+      )
+      [content-end] var(--size-page-margins) [full-end];
     column-gap: var(--spacing-16);
   }
 

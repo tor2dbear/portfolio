@@ -16,7 +16,7 @@
  * - --bg-inverse
  * - --text-inverse
  * - --border-default
- * - --state-brand-hover
+ * - --state-primary-hover
  * - --state-page-hover
  */
 
@@ -62,16 +62,16 @@ button,
 button:hover,
 .button:hover {
   background-image: linear-gradient(
-    var(--state-brand-hover),
-    var(--state-brand-hover)
+    var(--state-primary-hover),
+    var(--state-primary-hover)
   );
 }
 
 button:active,
 .button:active {
   background-image: linear-gradient(
-    var(--state-brand-active),
-    var(--state-brand-active)
+    var(--state-primary-active),
+    var(--state-primary-active)
   );
 }
 
@@ -101,15 +101,15 @@ button:disabled,
 
 .button--primary:hover {
   background-image: linear-gradient(
-    var(--state-brand-hover),
-    var(--state-brand-hover)
+    var(--state-primary-hover),
+    var(--state-primary-hover)
   );
 }
 
 .button--primary:active {
   background-image: linear-gradient(
-    var(--state-brand-active),
-    var(--state-brand-active)
+    var(--state-primary-active),
+    var(--state-primary-active)
   );
 }
 
