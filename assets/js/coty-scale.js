@@ -892,6 +892,19 @@
     return value;
   }
 
+  function getOverrideValue(overrides, keys) {
+    if (!overrides || !Array.isArray(keys)) {
+      return undefined;
+    }
+    for (var i = 0; i < keys.length; i += 1) {
+      var key = keys[i];
+      if (Object.prototype.hasOwnProperty.call(overrides, key)) {
+        return overrides[key];
+      }
+    }
+    return undefined;
+  }
+
   function applyManualOverrides(entry) {
     clearManualOverrides();
     var currentMode =
@@ -960,6 +973,20 @@
         overrides.accent_primary_strong ||
         overrides["accent-primary-strong"]
     );
+    var brandPrimaryOverrideValue = normalizeOverrideValue(
+      getOverrideValue(overrides, [
+        "--brand-primary",
+        "brand_primary",
+        "brand-primary",
+      ])
+    );
+    var brandOnPrimaryOverrideValue = normalizeOverrideValue(
+      getOverrideValue(overrides, [
+        "--brand-on-primary",
+        "brand_on_primary",
+        "brand-on-primary",
+      ])
+    );
 
     Object.keys(overrides).forEach(function (key) {
       var tokenName = normalizeOverrideTokenName(key);
@@ -994,7 +1021,7 @@
     if (hasBrandPrimaryOverride && !hasPrimaryOverride) {
       document.documentElement.style.setProperty(
         "--primary",
-        "var(--brand-primary)"
+        brandPrimaryOverrideValue || "var(--primary)"
       );
       APPLIED_MANUAL_OVERRIDES.push("--primary");
     }
@@ -1008,7 +1035,7 @@
     if (hasBrandOnPrimaryOverride && !hasOnPrimaryOverride) {
       document.documentElement.style.setProperty(
         "--on-primary",
-        "var(--brand-on-primary)"
+        brandOnPrimaryOverrideValue || "var(--on-primary)"
       );
       APPLIED_MANUAL_OVERRIDES.push("--on-primary");
     }
