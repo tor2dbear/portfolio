@@ -15,14 +15,14 @@
   height: var(--size-header-height);
   width: 100%;
   margin: 0px;
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   align-items: center;
   box-sizing: border-box;
   transition: border-color var(--motion-duration-slower)
     var(--motion-ease-standard);
   border-bottom-style: solid;
   border-bottom-width: 1px;
-  border-color: var(--bg-page);
+  border-color: var(--surface-page);
   display: grid;
   grid-area: header;
 }
@@ -130,7 +130,7 @@ html[data-grid-overlay] .top-menu {
 }
 
 .top-menu__item--nav .top-menu__link.active {
-  background: var(--bg-surface);
+  background: var(--surface-default);
 }
 
 #layout.clientpage .top-menu__item--nav[data-menu-id="works"],

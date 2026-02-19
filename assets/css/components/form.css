@@ -75,7 +75,7 @@ input[type="search"]:disabled,
 input[type="number"]:disabled,
 textarea:disabled,
 .input:disabled {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;
@@ -128,7 +128,7 @@ textarea.error:focus,
   height: 20px;
   border: 2px solid var(--border-default);
   border-radius: 50%;
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   transition: all var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
@@ -165,7 +165,7 @@ textarea.error:focus,
 
 /* Disabled State */
 .radio input[type="radio"]:disabled + .radio__visual {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   border-color: var(--border-subtle);
   cursor: not-allowed;
   opacity: 0.6;
@@ -210,7 +210,7 @@ textarea.error:focus,
   height: 20px;
   border: 2px solid var(--border-default);
   border-radius: var(--radius-4);
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   transition: all var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
@@ -250,7 +250,7 @@ textarea.error:focus,
 
 /* Disabled State */
 .checkbox input[type="checkbox"]:disabled + .checkbox__visual {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   border-color: var(--border-subtle);
   cursor: not-allowed;
   opacity: 0.6;
@@ -282,7 +282,7 @@ select,
   font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--spacing-12) center;
@@ -311,7 +311,7 @@ select:hover:not(:focus):not(:disabled),
 /* Disabled State */
 select:disabled,
 .select:disabled {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;

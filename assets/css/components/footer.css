@@ -98,7 +98,7 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
   padding: var(--spacing-12) var(--spacing-16);
   border-radius: var(--radius-8);
   border: 1px solid var(--border-strong);
-  background: var(--bg-page);
+  background: var(--surface-page);
   color: var(--text-default);
 }
 
