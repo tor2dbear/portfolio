@@ -16,6 +16,7 @@
   --on-primary: var(--teal-1);
   --secondary: var(--amber-4);
   --secondary-strong: var(--amber-8);
+  --on-secondary: var(--amber-12);
 
   /* Legacy aliases */
   --accent-primary: var(--primary);
@@ -48,7 +49,7 @@
   --component-newsletter-text: var(--amber-2);
   --component-newsletter-illustration-bg: var(--amber-4);
   --component-newsletter-button-bg: var(--secondary);
-  --component-newsletter-button-text: var(--primary-strong);
+  --component-newsletter-button-text: var(--on-secondary);
 
   /* Mesa-specific CTA treatment in top nav */
   --component-nav-cta-bg: var(--primary);

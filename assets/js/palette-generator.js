@@ -275,6 +275,10 @@
             legacyKeys: ["accent_secondary_strong"],
           },
           {
+            key: "on_secondary",
+            token: "--on-secondary",
+          },
+          {
             key: "component_toc_active_indicator",
             token: "--component-toc-active-indicator",
           },
@@ -524,6 +528,13 @@
           file: "assets/css/tokens/semantic.css",
           selector: ":root",
           note: "Secondary accent strong variant.",
+        },
+      ],
+      "--on-secondary": [
+        {
+          file: "assets/css/tokens/semantic.css",
+          selector: ":root",
+          note: "Text/icon color on secondary backgrounds.",
         },
       ],
       "--state-focus": [

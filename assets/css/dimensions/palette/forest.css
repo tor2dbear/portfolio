@@ -16,6 +16,7 @@
   --on-primary: var(--green-1);
   --secondary: var(--green-4);
   --secondary-strong: var(--green-8);
+  --on-secondary: var(--green-12);
 
   /* Legacy aliases */
   --accent-primary: var(--primary);

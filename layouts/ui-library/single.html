@@ -1075,10 +1075,12 @@
                   <div class="color-swatch">
                     <div
                       class="color-swatch__visual"
-                      style="background-color: var(--text-accent);"
+                      style="background-color: var(--primary-strong);"
                     ></div>
                     <div class="color-swatch__meta">
-                      <code>--text-accent</code>
+                      <code>--primary-strong</code><br /><code
+                        >--text-accent (alias)</code
+                      >
                     </div>
                   </div>
                 </div>
@@ -1200,14 +1202,14 @@
                 </div>
               </details>
 
-              <!-- Primary Tokens -->
+              <!-- Primary & Secondary Tokens -->
               <details class="accordion-nested" data-sort="brand">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
                     >{{ if eq .Language.Lang "sv" }}
-                      Primary
+                      Primary &amp; Secondary
                     {{ else }}
-                      Primary
+                      Primary &amp; Secondary
                     {{ end }}</span
                   >
                 </summary>
@@ -1228,6 +1230,33 @@
                     ></div>
                     <div class="color-swatch__meta">
                       <code>--on-primary</code>
+                    </div>
+                  </div>
+                  <div class="color-swatch">
+                    <div
+                      class="color-swatch__visual"
+                      style="background-color: var(--secondary);"
+                    ></div>
+                    <div class="color-swatch__meta">
+                      <code>--secondary</code>
+                    </div>
+                  </div>
+                  <div class="color-swatch">
+                    <div
+                      class="color-swatch__visual"
+                      style="background-color: var(--secondary-strong);"
+                    ></div>
+                    <div class="color-swatch__meta">
+                      <code>--secondary-strong</code>
+                    </div>
+                  </div>
+                  <div class="color-swatch">
+                    <div
+                      class="color-swatch__visual"
+                      style="background-color: var(--on-secondary);"
+                    ></div>
+                    <div class="color-swatch__meta">
+                      <code>--on-secondary</code>
                     </div>
                   </div>
                   <div class="color-swatch">
