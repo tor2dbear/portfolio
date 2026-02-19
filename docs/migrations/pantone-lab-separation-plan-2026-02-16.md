@@ -294,7 +294,7 @@ Skapa en explicit matris med:
 Minimalt maste foljande vara med:
 
 1. Text: `--text-default`, `--text-muted`, `--text-link`, `--text-link-hover`, `--text-nav`, `--text-tag`, `--text-inverse`, `--text-accent`.
-2. Surface: `--bg-page`, `--bg-surface`, `--bg-tag`, `--bg-tag-hover`, `--bg-nav`, `--border-subtle`, `--border-strong`, `--component-form-bg`, `--component-form-placeholder`, `--image-background`.
+2. Surface: `--surface-page`, `--surface-default`, `--surface-tag`, `--surface-tag-hover`, `--bg-nav`, `--border-subtle`, `--border-strong`, `--component-form-bg`, `--component-form-placeholder`, `--image-background`.
 3. Primary/CTA: `--primary`, `--primary-strong`, `--on-primary`, `--component-nav-cta-bg`, `--component-nav-cta-text`.
 4. Secondary/State: `--secondary`, `--secondary-strong`, `--state-focus`, `--state-selected`, `--component-toc-active-indicator`, `--component-section-headline-bg`.
 
@@ -499,7 +499,7 @@ Detta spår adresserar komplexiteten mellan default-knapp, nav-CTA och mono/duo-
 
 2. Policy for auto-mappning:
 
-- mono: `--action: var(--text-default)`, `--on-action: var(--bg-page)`
+- mono: `--action: var(--text-default)`, `--on-action: var(--surface-page)`
 - duo: `--action: var(--primary)`, `--on-action: var(--on-primary)`
 
 3. Komponentkoppling:
