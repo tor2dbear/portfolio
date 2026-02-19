@@ -2779,13 +2779,6 @@
       setDerivedToken("--secondary-strong", ctx.secondary.strong);
       setDerivedToken("--on-secondary", ctx.text.default);
 
-      // Keep legacy aliases synchronized during migration.
-      setDerivedToken("--accent-primary", ctx.primary.base);
-      setDerivedToken("--accent-primary-strong", ctx.primary.strong);
-      setDerivedToken("--accent-secondary", ctx.secondary.base);
-      setDerivedToken("--accent-secondary-strong", ctx.secondary.strong);
-      setDerivedToken("--brand-primary", ctx.primary.base);
-      setDerivedToken("--brand-on-primary", ctx.primary.on);
       setDerivedToken(
         "--text-accent",
         resolveSource(textSteps.accent_source, ctx)
