@@ -15,7 +15,7 @@
     var(--gray-11) 60%,
     var(--surface-ink-strong)
   );
-  --text-inverse: var(--white);
+  --text-inverse: var(--gray-1);
   --text-link: var(--iris-11);
   --text-link-hover: var(--iris-12);
   --text-accent: var(--primary-strong);

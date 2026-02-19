@@ -46,7 +46,7 @@
     var ctx = {
       text: {
         default: scaleVar(effectiveRoles.text, 12),
-        inverse: tokenVar("white"),
+        inverse: tokenVar("gray-1"),
         link: "",
         link_hover: "",
         accent: "",

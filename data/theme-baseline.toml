@@ -15,7 +15,7 @@ description = "Baseline role recipe for palette generation"
 
 [roles.text]
 default_step = 12
-inverse_token = "white"
+inverse_token = "gray-1"
 link_source = "primary.strong"
 link_hover_source = "primary.hover"
 accent_source = "primary.strong"
