@@ -1202,18 +1202,36 @@
                 </div>
               </details>
 
-              <!-- Primary & Secondary Tokens -->
+              <!-- Primary, Secondary & Action Tokens -->
               <details class="accordion-nested" data-sort="primary-secondary">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
                     >{{ if eq .Language.Lang "sv" }}
-                      Primary &amp; Secondary
+                      Primary, Secondary &amp; Action
                     {{ else }}
-                      Primary &amp; Secondary
+                      Primary, Secondary &amp; Action
                     {{ end }}</span
                   >
                 </summary>
                 <div class="accordion-nested__content color-grid">
+                  <div class="color-swatch">
+                    <div
+                      class="color-swatch__visual"
+                      style="background-color: var(--action);"
+                    ></div>
+                    <div class="color-swatch__meta">
+                      <code>--action</code>
+                    </div>
+                  </div>
+                  <div class="color-swatch">
+                    <div
+                      class="color-swatch__visual"
+                      style="background-color: var(--on-action);"
+                    ></div>
+                    <div class="color-swatch__meta">
+                      <code>--on-action</code>
+                    </div>
+                  </div>
                   <div class="color-swatch">
                     <div
                       class="color-swatch__visual"
@@ -4377,6 +4395,7 @@
                   <div class="meta-item">
                     <dt>Tokens:</dt>
                     <dd>
+                      <code>--action</code>, <code>--on-action</code>,
                       <code>--primary</code>, <code>--on-primary</code>,
                       <code>--text-default</code>,
                       <code>--border-default</code>,

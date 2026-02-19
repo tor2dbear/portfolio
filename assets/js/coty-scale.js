@@ -35,6 +35,10 @@
     "--primary",
     "--primary-strong",
     "--on-primary",
+    "--action",
+    "--on-action",
+    "--component-nav-cta-bg",
+    "--component-nav-cta-text",
     "--on-secondary",
     "--accent-primary",
     "--accent-primary-strong",
@@ -1343,6 +1347,27 @@
     document.documentElement.style.setProperty(
       "--on-primary",
       "var(" + onPrimaryToken + ")"
+    );
+    if (secondaryScale) {
+      document.documentElement.style.setProperty("--action", roles.primary);
+      document.documentElement.style.setProperty(
+        "--on-action",
+        "var(" + onPrimaryToken + ")"
+      );
+    } else {
+      document.documentElement.style.setProperty(
+        "--action",
+        roles.surfaceStrong
+      );
+      document.documentElement.style.setProperty("--on-action", roles.surface);
+    }
+    document.documentElement.style.setProperty(
+      "--component-nav-cta-bg",
+      "var(--action)"
+    );
+    document.documentElement.style.setProperty(
+      "--component-nav-cta-text",
+      "var(--on-action)"
     );
 
     var secondaryAnchor = resolveSecondaryAnchorStep(entry, resolvedMode);

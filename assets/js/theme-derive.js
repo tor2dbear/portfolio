@@ -75,6 +75,10 @@
         base: scaleVar(effectiveRoles.secondary, 4),
         strong: scaleVar(effectiveRoles.secondary, 8),
       },
+      action: {
+        base: "",
+        on: "",
+      },
     };
 
     ctx.text.link = ctx.primary.strong;
@@ -82,6 +86,13 @@
     ctx.text.accent = ctx.primary.strong;
     ctx.surface.border_subtle = tokenVar("gray-4");
     ctx.border.subtle = ctx.surface.border_subtle;
+    ctx.action.base = ctx.surface.ink_strong;
+    ctx.action.on = ctx.surface.page;
+
+    if (toneMode === "duo") {
+      ctx.action.base = ctx.primary.base;
+      ctx.action.on = ctx.primary.on;
+    }
 
     if (surfaceProfile === "deep") {
       ctx.surface.page = scaleVar(effectiveRoles.surface, 2);
@@ -97,6 +108,8 @@
     tokens["--primary"] = ctx.primary.base;
     tokens["--primary-strong"] = ctx.primary.strong;
     tokens["--on-primary"] = ctx.primary.on;
+    tokens["--action"] = ctx.action.base;
+    tokens["--on-action"] = ctx.action.on;
     tokens["--secondary"] = ctx.secondary.base;
     tokens["--secondary-strong"] = ctx.secondary.strong;
     tokens["--on-secondary"] = ctx.text.default;
@@ -134,13 +147,9 @@
     tokens["--component-section-headline-bg"] =
       toneMode === "duo" ? ctx.secondary.strong : ctx.primary.base;
 
-    var navCtaBgSource = componentOverrides.nav_cta_bg_source || "text.default";
+    var navCtaBgSource = componentOverrides.nav_cta_bg_source || "action.base";
     var navCtaTextSource =
-      componentOverrides.nav_cta_text_source || "surface.page";
-    if (toneMode === "duo") {
-      navCtaBgSource = "primary.base";
-      navCtaTextSource = "primary.on";
-    }
+      componentOverrides.nav_cta_text_source || "action.on";
     tokens["--component-nav-cta-bg"] = resolveSource(navCtaBgSource, ctx);
     tokens["--component-nav-cta-text"] = resolveSource(navCtaTextSource, ctx);
 
@@ -177,6 +186,8 @@
       "--surface-ink-strong": all["--surface-ink-strong"],
       "--text-tag": all["--text-tag"],
       "--text-muted": all["--text-muted"],
+      "--action": all["--action"],
+      "--on-action": all["--on-action"],
       "--component-toc-active-indicator":
         all["--component-toc-active-indicator"],
       "--component-section-headline-bg": all["--component-section-headline-bg"],

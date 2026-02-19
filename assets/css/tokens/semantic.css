@@ -122,6 +122,8 @@
   --primary: var(--iris-9);
   --primary-strong: var(--iris-11);
   --on-primary: var(--white);
+  --action: var(--surface-ink-strong);
+  --on-action: var(--bg-page);
   --secondary: var(--iris-4);
   --secondary-strong: var(--iris-8);
   --on-secondary: var(--gray-12);
@@ -137,8 +139,8 @@
   --brand-on-container: var(--iris-11);
 
   /* === COMPONENT ROLES === */
-  --component-nav-cta-bg: var(--text-default);
-  --component-nav-cta-text: var(--bg-page);
+  --component-nav-cta-bg: var(--action);
+  --component-nav-cta-text: var(--on-action);
   --component-toc-active-indicator: var(--primary);
   --component-section-headline-bg: var(--bg-section-headline);
 

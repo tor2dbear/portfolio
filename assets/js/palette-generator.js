@@ -255,6 +255,8 @@
             token: "--on-primary",
             legacyKeys: ["brand_on_primary"],
           },
+          { key: "action", token: "--action" },
+          { key: "on_action", token: "--on-action" },
           { key: "component_nav_cta_bg", token: "--component-nav-cta-bg" },
           { key: "component_nav_cta_text", token: "--component-nav-cta-text" },
           { key: "state_focus", token: "--state-focus" },
@@ -340,8 +342,8 @@
       "--text-inverse": [
         {
           file: "assets/css/components/button.css",
-          selector: ".button--primary",
-          note: "Inverse text on strong surfaces.",
+          selector: "inverse content",
+          note: "Text/icons on inverted surfaces and overlays.",
         },
       ],
       "--text-tag": [
@@ -515,6 +517,30 @@
           file: "assets/js/coty-scale.js",
           selector: "runtime selection",
           note: "Set from COTY scale steps, not fixed white/black.",
+        },
+      ],
+      "--action": [
+        {
+          file: "assets/css/components/button.css",
+          selector: ".button",
+          note: "Default button background.",
+        },
+        {
+          file: "assets/css/components/navigation.css",
+          selector: ".menu__cta (via component mapping)",
+          note: "Header CTA background follows action role.",
+        },
+      ],
+      "--on-action": [
+        {
+          file: "assets/css/components/button.css",
+          selector: ".button",
+          note: "Default button text/icon color.",
+        },
+        {
+          file: "assets/css/components/navigation.css",
+          selector: ".menu__cta (via component mapping)",
+          note: "Header CTA text follows action role.",
         },
       ],
       "--secondary": [
@@ -1022,6 +1048,13 @@
           label: "--primary / --on-primary",
           foreground: "--on-primary",
           background: "--primary",
+          threshold: 4.5,
+          requirement: "text",
+        },
+        {
+          label: "--action / --on-action",
+          foreground: "--on-action",
+          background: "--action",
           threshold: 4.5,
           requirement: "text",
         },
@@ -2713,6 +2746,10 @@
           default: "",
           strong: "",
         },
+        action: {
+          base: "",
+          on: "",
+        },
         primary: {
           base: scaleVar(effectiveRoles.primary, primarySteps.base_step),
           strong: scaleVar(effectiveRoles.primary, primarySteps.strong_step),
@@ -2760,6 +2797,15 @@
       ctx.border.strong = borderSteps.strong_source
         ? resolveSource(borderSteps.strong_source, ctx)
         : scaleVar(effectiveRoles.border, borderSteps.strong_step || 8);
+      ctx.action.base = scaleVar(
+        effectiveRoles.surface,
+        surfaceSteps.surface_ink_strong_step || surfaceSteps.tag_text_step || 11
+      );
+      ctx.action.on = ctx.surface.page;
+      if (toneMode === "duo") {
+        ctx.action.base = ctx.primary.base;
+        ctx.action.on = ctx.primary.on;
+      }
 
       const surfaceProfile = policyValue(
         policies,
@@ -2804,6 +2850,8 @@
       setDerivedToken("--primary", ctx.primary.base);
       setDerivedToken("--primary-strong", ctx.primary.strong);
       setDerivedToken("--on-primary", ctx.primary.on);
+      setDerivedToken("--action", ctx.action.base);
+      setDerivedToken("--on-action", ctx.action.on);
       setDerivedToken("--secondary", ctx.secondary.base);
       setDerivedToken("--secondary-strong", ctx.secondary.strong);
       setDerivedToken("--on-secondary", ctx.text.default);
@@ -2878,11 +2926,10 @@
         setToken("--image-background", "transparent");
       }
 
-      let navCtaBgSource = baseline.roles.component.nav_cta.bg_source;
-      let navCtaTextSource = baseline.roles.component.nav_cta.text_source;
-      navCtaBgSource = componentOverrides.nav_cta_bg_source || navCtaBgSource;
-      navCtaTextSource =
-        componentOverrides.nav_cta_text_source || navCtaTextSource;
+      const navCtaBgSource =
+        componentOverrides.nav_cta_bg_source || "action.base";
+      const navCtaTextSource =
+        componentOverrides.nav_cta_text_source || "action.on";
       setDerivedToken(
         "--component-nav-cta-bg",
         resolveSource(navCtaBgSource, ctx)

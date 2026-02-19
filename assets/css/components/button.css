@@ -13,8 +13,8 @@
  * Tokens used:
  * - --primary
  * - --on-primary
- * - --bg-inverse
- * - --text-inverse
+ * - --action
+ * - --on-action
  * - --border-default
  * - --state-primary-hover
  * - --state-page-hover
@@ -47,8 +47,8 @@ button,
   padding: var(--spacing-12) var(--spacing-24);
 
   /* Base styling */
-  background-color: var(--bg-inverse);
-  color: var(--text-inverse);
+  background-color: var(--action);
+  color: var(--on-action);
   border-radius: var(--radius-8);
   font-weight: var(--sans-weight-medium);
   text-decoration: none;
