@@ -238,7 +238,8 @@
     var derived = derivePaletteTokens(input || {});
     var primary =
       derived["--primary-strong"] || derived["--primary"] || "var(--gray-11)";
-    var surface = derived["--bg-page"] || "var(--gray-2)";
+    var surface =
+      derived["--surface-page"] || derived["--bg-page"] || "var(--gray-2)";
     var secondary =
       derived["--secondary-strong"] || derived["--secondary"] || primary;
 

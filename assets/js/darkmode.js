@@ -526,6 +526,8 @@
       preview.surface ||
       preview.bg ||
       (derivedPreview && derivedPreview.surface) ||
+      derived["--surface-page"] ||
+      tokens["--surface-page"] ||
       derived["--bg-page"] ||
       tokens["--bg-page"] ||
       "var(--gray-2)";
