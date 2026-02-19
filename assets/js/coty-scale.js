@@ -1357,9 +1357,12 @@
     } else {
       document.documentElement.style.setProperty(
         "--action",
-        roles.surfaceStrong
+        "var(--text-default)"
       );
-      document.documentElement.style.setProperty("--on-action", roles.surface);
+      document.documentElement.style.setProperty(
+        "--on-action",
+        "var(--bg-page)"
+      );
     }
     document.documentElement.style.setProperty(
       "--component-nav-cta-bg",

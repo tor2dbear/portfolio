@@ -86,7 +86,7 @@
     ctx.text.accent = ctx.primary.strong;
     ctx.surface.border_subtle = tokenVar("gray-4");
     ctx.border.subtle = ctx.surface.border_subtle;
-    ctx.action.base = ctx.surface.ink_strong;
+    ctx.action.base = ctx.text.default;
     ctx.action.on = ctx.surface.page;
 
     if (toneMode === "duo") {

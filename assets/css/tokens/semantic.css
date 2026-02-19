@@ -122,7 +122,7 @@
   --primary: var(--iris-9);
   --primary-strong: var(--iris-11);
   --on-primary: var(--white);
-  --action: var(--surface-ink-strong);
+  --action: var(--text-default);
   --on-action: var(--bg-page);
   --secondary: var(--iris-4);
   --secondary-strong: var(--iris-8);

@@ -2797,10 +2797,7 @@
       ctx.border.strong = borderSteps.strong_source
         ? resolveSource(borderSteps.strong_source, ctx)
         : scaleVar(effectiveRoles.border, borderSteps.strong_step || 8);
-      ctx.action.base = scaleVar(
-        effectiveRoles.surface,
-        surfaceSteps.surface_ink_strong_step || surfaceSteps.tag_text_step || 11
-      );
+      ctx.action.base = ctx.text.default;
       ctx.action.on = ctx.surface.page;
       if (toneMode === "duo") {
         ctx.action.base = ctx.primary.base;
