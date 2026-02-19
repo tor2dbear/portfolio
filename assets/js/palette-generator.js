@@ -494,14 +494,14 @@
         {
           file: "assets/css/tokens/semantic.css",
           selector: ":root",
-          note: "Primary accent base used by roles and components.",
+          note: "Primary role base used by roles and components.",
         },
       ],
       "--primary-strong": [
         {
           file: "assets/css/components/button.css",
           selector: ".button interactions",
-          note: "Primary accent strong/hover states.",
+          note: "Primary role strong/hover states.",
         },
       ],
       "--on-primary": [
@@ -520,14 +520,14 @@
         {
           file: "assets/css/tokens/semantic.css",
           selector: ":root",
-          note: "Secondary accent role.",
+          note: "Secondary role base.",
         },
       ],
       "--secondary-strong": [
         {
           file: "assets/css/tokens/semantic.css",
           selector: ":root",
-          note: "Secondary accent strong variant.",
+          note: "Secondary role strong variant.",
         },
       ],
       "--on-secondary": [

@@ -1203,7 +1203,7 @@
               </details>
 
               <!-- Primary & Secondary Tokens -->
-              <details class="accordion-nested" data-sort="brand">
+              <details class="accordion-nested" data-sort="primary-secondary">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
                     >{{ if eq .Language.Lang "sv" }}
@@ -1265,7 +1265,7 @@
                       style="background-color: var(--brand-container);"
                     ></div>
                     <div class="color-swatch__meta">
-                      <code>--brand-container</code>
+                      <code>--brand-container (legacy)</code>
                     </div>
                   </div>
                   <div class="color-swatch">
@@ -1274,7 +1274,7 @@
                       style="background-color: var(--brand-on-container);"
                     ></div>
                     <div class="color-swatch__meta">
-                      <code>--brand-on-container</code>
+                      <code>--brand-on-container (legacy)</code>
                     </div>
                   </div>
                 </div>
@@ -4413,9 +4413,9 @@
 
                 <h5 class="type-headline-small">
                   {{ if eq .Language.Lang "sv" }}
-                    Primary Button (Brand)
+                    Primary Button
                   {{ else }}
-                    Primary Button (Brand)
+                    Primary Button
                   {{ end }}
                 </h5>
                 <div class="component-example-group">
