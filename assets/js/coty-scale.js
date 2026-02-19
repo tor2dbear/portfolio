@@ -1361,7 +1361,7 @@
       );
       document.documentElement.style.setProperty(
         "--on-action",
-        "var(--bg-page)"
+        "var(--surface-page)"
       );
     }
     document.documentElement.style.setProperty(
