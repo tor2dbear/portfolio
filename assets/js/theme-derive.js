@@ -36,6 +36,7 @@
     var effectiveRoles = {
       text: roles.text || "gray",
       surface: roles.surface || "gray",
+      border: roles.border || roles.surface || "gray",
       primary: roles.primary || "gray",
       secondary:
         toneMode === "duo"
@@ -59,6 +60,11 @@
         border_subtle: "",
         ink_strong: scaleVar(effectiveRoles.surface, 11),
       },
+      border: {
+        subtle: "",
+        default: scaleVar(effectiveRoles.border, 6),
+        strong: scaleVar(effectiveRoles.border, 8),
+      },
       primary: {
         base: scaleVar(effectiveRoles.primary, 9),
         strong: scaleVar(effectiveRoles.primary, 11),
@@ -75,6 +81,7 @@
     ctx.text.link_hover = ctx.primary.hover;
     ctx.text.accent = ctx.primary.strong;
     ctx.surface.border_subtle = tokenVar("gray-4");
+    ctx.border.subtle = ctx.surface.border_subtle;
 
     if (surfaceProfile === "deep") {
       ctx.surface.page = scaleVar(effectiveRoles.surface, 2);
@@ -82,6 +89,7 @@
       ctx.surface.tag = scaleVar(effectiveRoles.surface, 4);
       ctx.surface.tag_hover = scaleVar(effectiveRoles.surface, 5);
       ctx.surface.border_subtle = scaleVar(effectiveRoles.surface, 5);
+      ctx.border.subtle = ctx.surface.border_subtle;
     }
 
     var tokens = {};
@@ -114,7 +122,9 @@
     tokens["--bg-surface"] = ctx.surface.surface;
     tokens["--bg-tag"] = ctx.surface.tag;
     tokens["--bg-tag-hover"] = ctx.surface.tag_hover;
-    tokens["--border-subtle"] = ctx.surface.border_subtle;
+    tokens["--border-subtle"] = ctx.border.subtle;
+    tokens["--border-default"] = ctx.border.default;
+    tokens["--border-strong"] = ctx.border.strong;
 
     tokens["--state-focus"] = ctx.primary.base;
     tokens["--state-selected"] = ctx.text.accent;

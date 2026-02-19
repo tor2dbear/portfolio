@@ -57,6 +57,7 @@
     const roleSelects = {
       text: root.querySelector('select[data-role="text"]'),
       surface: root.querySelector('select[data-role="surface"]'),
+      border: root.querySelector('select[data-role="border"]'),
       primary: root.querySelector('select[data-role="primary"]'),
       secondary: root.querySelector('select[data-role="secondary"]'),
     };
@@ -1747,6 +1748,7 @@
       return {
         text: roleSelects.text.value,
         surface: roleSelects.surface.value,
+        border: roleSelects.border.value,
         primary: roleSelects.primary.value,
         secondary: roleSelects.secondary.value,
       };
@@ -2667,6 +2669,7 @@
     function applyFromRoles(roles, presetName, policyOverrides) {
       const textSteps = baseline.roles.text;
       const surfaceSteps = baseline.roles.surface;
+      const borderSteps = baseline.roles.border || {};
       const primarySteps = baseline.roles.primary;
       const secondarySteps = baseline.roles.secondary;
       const preset = presets[presetName] || {};
@@ -2678,6 +2681,7 @@
       const effectiveRoles = {
         text: roles.text,
         surface: roles.surface,
+        border: roles.border || roles.surface,
         primary: roles.primary,
         secondary: toneMode === "duo" ? roles.secondary : roles.primary,
       };
@@ -2703,6 +2707,11 @@
             surfaceSteps.tag_hover_step
           ),
           border_subtle: "",
+        },
+        border: {
+          subtle: "",
+          default: "",
+          strong: "",
         },
         primary: {
           base: scaleVar(effectiveRoles.primary, primarySteps.base_step),
@@ -2742,6 +2751,15 @@
       ctx.surface.border_subtle = surfaceSteps.border_subtle_source
         ? resolveSource(surfaceSteps.border_subtle_source, ctx)
         : scaleVar(effectiveRoles.surface, surfaceSteps.border_subtle_step);
+      ctx.border.subtle = borderSteps.subtle_source
+        ? resolveSource(borderSteps.subtle_source, ctx)
+        : scaleVar(effectiveRoles.border, borderSteps.subtle_step || 4);
+      ctx.border.default = borderSteps.default_source
+        ? resolveSource(borderSteps.default_source, ctx)
+        : scaleVar(effectiveRoles.border, borderSteps.default_step || 6);
+      ctx.border.strong = borderSteps.strong_source
+        ? resolveSource(borderSteps.strong_source, ctx)
+        : scaleVar(effectiveRoles.border, borderSteps.strong_step || 8);
 
       const surfaceProfile = policyValue(
         policies,
@@ -2820,7 +2838,9 @@
       setDerivedToken("--bg-surface", ctx.surface.surface);
       setDerivedToken("--bg-tag", ctx.surface.tag);
       setDerivedToken("--bg-tag-hover", ctx.surface.tag_hover);
-      setDerivedToken("--border-subtle", ctx.surface.border_subtle);
+      setDerivedToken("--border-subtle", ctx.border.subtle);
+      setDerivedToken("--border-default", ctx.border.default);
+      setDerivedToken("--border-strong", ctx.border.strong);
 
       setDerivedToken(
         "--state-focus",
@@ -3008,6 +3028,7 @@
         "[roles]",
         'text = "' + roles.text + '"',
         'surface = "' + roles.surface + '"',
+        'border = "' + (roles.border || roles.surface) + '"',
         'primary = "' + roles.primary + '"',
         'secondary = "' +
           (currentToneMode() === "duo" ? roles.secondary : roles.primary) +
@@ -3087,7 +3108,13 @@
         if (!el) {
           return;
         }
-        el.value = preset.roles[role] || el.value;
+        if (preset.roles[role]) {
+          el.value = preset.roles[role];
+          return;
+        }
+        if (role === "border") {
+          el.value = preset.roles.surface || el.value;
+        }
       });
       syncSecondaryAvailability();
       if (name === "pantone") {
@@ -3134,6 +3161,10 @@
         }
         if (roles[role]) {
           el.value = roles[role];
+          return;
+        }
+        if (role === "border" && roles.surface) {
+          el.value = roles.surface;
         }
       });
 

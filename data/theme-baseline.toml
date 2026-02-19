@@ -30,6 +30,11 @@ tag_text_step = 11
 surface_ink_strong_step = 11
 border_subtle_source = "gray-4"
 
+[roles.border]
+subtle_source = "surface.border_subtle"
+default_step = 6
+strong_step = 8
+
 [roles.primary]
 base_step = 9
 strong_step = 11

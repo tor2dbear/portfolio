@@ -6,6 +6,7 @@ name = "mesa"
 [roles]
 text = "amber"
 surface = "amber"
+border = "amber"
 primary = "teal"
 secondary = "amber"
 

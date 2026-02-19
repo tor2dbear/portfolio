@@ -488,6 +488,67 @@ Titel-forslag: `refactor/color-token-consistency-followup`
 5. Border role decision + implementation spike (eller beslut att avsta, med dokumentation).
 6. Manuella border-overrides i palette-filer om derive-implementation skjuts.
 
+### Stacked Follow-up Scope: Action Role for Default Button
+
+Detta spår adresserar komplexiteten mellan default-knapp, nav-CTA och mono/duo-beteende.
+
+1. Introducera nya semantiska tokens:
+
+- `--action`
+- `--on-action`
+
+2. Policy for auto-mappning:
+
+- mono: `--action: var(--surface-ink-strong)`, `--on-action: var(--bg-page)`
+- duo: `--action: var(--primary)`, `--on-action: var(--on-primary)`
+
+3. Komponentkoppling:
+
+- Bas-knappen (`.button` / default) använder `--action` + `--on-action`
+- `primary` och `secondary/outline` lämnas oförändrade
+
+4. Legacy/compat:
+
+- `--component-nav-cta-bg/text` mappas till `--action/--on-action` (inte tvärtom)
+
+5. Generator + docs:
+
+- Lägg till action-kontroller i Palette Generator
+- Lägg till action i Pantone override-flow (light/dark per year)
+- Uppdatera UI-library token- och button-dokumentation
+
+6. Avgränsning:
+
+- Ingen `--action-strong` i första iterationen
+- Hover/active fortsätter använda befintliga state overlays
+
+### Stacked Follow-up Scope: Surface Ink Review
+
+`--surface-ink-strong` behålls tills vidare men ska utvärderas explicit innan större naming/cleanup.
+
+1. Verifiera faktisk usage och ansvar:
+
+- text-muted-derivering
+- state-surface overlays
+- eventuella knapp/CTA-kopplingar via action-policy
+
+2. Beslutspunkt:
+
+- behåll som surface-ankare
+- eller ersätt med tydligare token (utan att bryta befintliga kontrastmönster)
+
+3. Dokumentationskrav:
+
+- lägg in token i UI-library Color semantics med kort intent-text
+- uppdatera migration-notering om beslut och konsekvens
+
+### Rekommenderad ordning (nästa steg)
+
+1. Border role-spåret klart (pågående stackad PR).
+2. Action role-spåret för default-knappen.
+3. Surface-ink-review (kort utredning + beslut + docs).
+4. Därefter större naming-migration 7a/7b/7c.
+
 ### Stacked Follow-up Scope: Border Role in Pantone Lab
 
 Detta ar den explicita planen for "border som egen roll" kopplat till generatorn.

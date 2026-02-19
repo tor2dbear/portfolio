@@ -32,3 +32,7 @@
 
   --bg-page: var(--iris-1);
 }
+
+:root[data-mode="dark"][data-palette="standard"] {
+  --on-primary: var(--iris-12);
+}

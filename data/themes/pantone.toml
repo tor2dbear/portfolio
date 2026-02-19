@@ -6,6 +6,7 @@ name = "pantone"
 [roles]
 text = "coty"
 surface = "coty"
+border = "coty"
 primary = "coty"
 secondary = "coty"
 
