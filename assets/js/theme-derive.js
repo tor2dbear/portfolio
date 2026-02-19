@@ -98,8 +98,6 @@
     tokens["--accent-primary-strong"] = tokens["--primary-strong"];
     tokens["--accent-secondary"] = tokens["--secondary"];
     tokens["--accent-secondary-strong"] = tokens["--secondary-strong"];
-    tokens["--brand-primary"] = tokens["--primary"];
-    tokens["--brand-on-primary"] = tokens["--on-primary"];
 
     tokens["--text-accent"] = ctx.text.accent;
 
