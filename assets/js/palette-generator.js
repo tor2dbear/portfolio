@@ -526,13 +526,6 @@
           note: "Secondary accent strong variant.",
         },
       ],
-      "--brand-primary": [
-        {
-          file: "assets/css/components/button.css",
-          selector: ".button--primary",
-          note: "Legacy alias of --primary (migration compatibility).",
-        },
-      ],
       "--state-focus": [
         {
           file: "assets/css/utilities/typography.css",

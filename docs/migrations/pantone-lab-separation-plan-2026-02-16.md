@@ -274,8 +274,8 @@ Minimalt maste foljande vara med:
 
 1. Text: `--text-default`, `--text-muted`, `--text-link`, `--text-link-hover`, `--text-nav`, `--text-tag`, `--text-inverse`, `--text-accent`.
 2. Surface: `--bg-page`, `--bg-surface`, `--bg-tag`, `--bg-tag-hover`, `--bg-nav`, `--border-subtle`, `--border-strong`, `--component-form-bg`, `--component-form-placeholder`, `--image-background`.
-3. Primary/CTA: `--accent-primary`, `--accent-primary-strong`, `--brand-primary`, `--brand-on-primary`, `--component-nav-cta-bg`, `--component-nav-cta-text`.
-4. Secondary/State: `--accent-secondary`, `--accent-secondary-strong`, `--state-focus`, `--state-selected`, `--component-toc-active-indicator`, `--component-section-headline-bg`.
+3. Primary/CTA: `--primary`, `--primary-strong`, `--on-primary`, `--component-nav-cta-bg`, `--component-nav-cta-text`.
+4. Secondary/State: `--secondary`, `--secondary-strong`, `--state-focus`, `--state-selected`, `--component-toc-active-indicator`, `--component-section-headline-bg`.
 
 ## COTY Scale Strategy
 
@@ -389,7 +389,7 @@ Fokus: allt som blockerar tillforlitlig Pantone QA i generatorn.
 
 3. Pantone override-coverage for saknade nyckelroller:
 
-- `--brand-on-primary`
+- `--on-primary`
 - `--image-background`
 - `--border-strong`
 
