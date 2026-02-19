@@ -203,10 +203,10 @@
         id: "surface",
         label: "Surface",
         fields: [
-          { key: "bg_page", token: "--bg-page" },
-          { key: "bg_surface", token: "--bg-surface" },
-          { key: "bg_tag", token: "--bg-tag" },
-          { key: "bg_tag_hover", token: "--bg-tag-hover" },
+          { key: "surface_page", token: "--surface-page" },
+          { key: "surface_default", token: "--surface-default" },
+          { key: "surface_tag", token: "--surface-tag" },
+          { key: "surface_tag_hover", token: "--surface-tag-hover" },
           { key: "component_form_bg", token: "--component-form-bg" },
           {
             key: "component_form_placeholder",
@@ -367,7 +367,7 @@
           note: "Strong ink basis for derived muted text.",
         },
       ],
-      "--bg-page": [
+      "--surface-page": [
         {
           file: "assets/css/style.css",
           selector: "body",
@@ -384,7 +384,7 @@
           note: "Generator preview surfaces.",
         },
       ],
-      "--bg-surface": [
+      "--surface-default": [
         {
           file: "assets/css/pages/palette-generator.css",
           selector: ".palette-generator__panel",
@@ -401,14 +401,14 @@
           note: "Content cards and utility surfaces.",
         },
       ],
-      "--bg-tag": [
+      "--surface-tag": [
         {
           file: "assets/css/components/tags.css",
           selector: ".tag-link",
           note: "Tag background color.",
         },
       ],
-      "--bg-tag-hover": [
+      "--surface-tag-hover": [
         {
           file: "assets/css/components/tags.css",
           selector: ".tag-link:hover",
@@ -1021,16 +1021,16 @@
       const isSwedish = document.documentElement.lang === "sv";
       const pairs = [
         {
-          label: "--bg-page / --text-default",
+          label: "--surface-page / --text-default",
           foreground: "--text-default",
-          background: "--bg-page",
+          background: "--surface-page",
           threshold: 4.5,
           requirement: "text",
         },
         {
-          label: "--bg-surface / --text-default",
+          label: "--surface-default / --text-default",
           foreground: "--text-default",
-          background: "--bg-surface",
+          background: "--surface-default",
           threshold: 4.5,
           requirement: "text",
         },
@@ -1056,16 +1056,16 @@
           requirement: "text",
         },
         {
-          label: "--bg-surface / --border-default",
+          label: "--surface-default / --border-default",
           foreground: "--border-default",
-          background: "--bg-surface",
+          background: "--surface-default",
           threshold: 3,
           requirement: "non-text",
         },
         {
-          label: "--bg-page / --border-strong",
+          label: "--surface-page / --border-strong",
           foreground: "--border-strong",
-          background: "--bg-page",
+          background: "--surface-page",
           threshold: 3,
           requirement: "non-text",
         },
@@ -2869,6 +2869,11 @@
       setDerivedToken("--text-link-hover", ctx.text.link_hover);
       setDerivedToken("--text-inverse", ctx.text.inverse);
 
+      setDerivedToken("--surface-page", ctx.surface.page);
+      setDerivedToken("--surface-default", ctx.surface.surface);
+      setDerivedToken("--surface-tag", ctx.surface.tag);
+      setDerivedToken("--surface-tag-hover", ctx.surface.tag_hover);
+      // Keep legacy aliases synchronized during migration.
       setDerivedToken("--bg-page", ctx.surface.page);
       setDerivedToken("--bg-surface", ctx.surface.surface);
       setDerivedToken("--bg-tag", ctx.surface.tag);
@@ -3380,6 +3385,7 @@
               "",
             surface:
               (derivedPreview && derivedPreview.surface) ||
+              derived["--surface-page"] ||
               derived["--bg-page"] ||
               "",
             secondary:
