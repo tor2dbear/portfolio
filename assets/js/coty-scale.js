@@ -33,8 +33,6 @@
     "--primary-strong",
     "--on-primary",
     "--on-secondary",
-    "--brand-on-primary",
-    "--brand-primary",
     "--accent-primary",
     "--accent-primary-strong",
     "--secondary",
@@ -992,11 +990,6 @@
         "var(--accent-primary)"
       );
       APPLIED_MANUAL_OVERRIDES.push("--primary");
-      document.documentElement.style.setProperty(
-        "--brand-primary",
-        "var(--primary)"
-      );
-      APPLIED_MANUAL_OVERRIDES.push("--brand-primary");
     }
     if (hasBrandPrimaryOverride && !hasPrimaryOverride) {
       document.documentElement.style.setProperty(
@@ -1005,26 +998,12 @@
       );
       APPLIED_MANUAL_OVERRIDES.push("--primary");
     }
-    if (hasPrimaryOverride && !hasBrandPrimaryOverride) {
-      document.documentElement.style.setProperty(
-        "--brand-primary",
-        "var(--primary)"
-      );
-      APPLIED_MANUAL_OVERRIDES.push("--brand-primary");
-    }
     if (hasPrimaryOverride && !hasAccentPrimaryOverride) {
       document.documentElement.style.setProperty(
         "--accent-primary",
         "var(--primary)"
       );
       APPLIED_MANUAL_OVERRIDES.push("--accent-primary");
-    }
-    if (hasOnPrimaryOverride && !hasBrandOnPrimaryOverride) {
-      document.documentElement.style.setProperty(
-        "--brand-on-primary",
-        "var(--on-primary)"
-      );
-      APPLIED_MANUAL_OVERRIDES.push("--brand-on-primary");
     }
     if (hasBrandOnPrimaryOverride && !hasOnPrimaryOverride) {
       document.documentElement.style.setProperty(
