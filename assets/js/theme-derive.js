@@ -131,10 +131,16 @@
     tokens["--text-link-hover"] = ctx.text.link_hover;
     tokens["--text-inverse"] = ctx.text.inverse;
 
-    tokens["--bg-page"] = ctx.surface.page;
-    tokens["--bg-surface"] = ctx.surface.surface;
-    tokens["--bg-tag"] = ctx.surface.tag;
-    tokens["--bg-tag-hover"] = ctx.surface.tag_hover;
+    tokens["--surface-page"] = ctx.surface.page;
+    tokens["--surface-default"] = ctx.surface.surface;
+    tokens["--surface-tag"] = ctx.surface.tag;
+    tokens["--surface-tag-hover"] = ctx.surface.tag_hover;
+
+    // Keep legacy aliases synchronized during migration.
+    tokens["--bg-page"] = tokens["--surface-page"];
+    tokens["--bg-surface"] = tokens["--surface-default"];
+    tokens["--bg-tag"] = tokens["--surface-tag"];
+    tokens["--bg-tag-hover"] = tokens["--surface-tag-hover"];
     tokens["--border-subtle"] = ctx.border.subtle;
     tokens["--border-default"] = ctx.border.default;
     tokens["--border-strong"] = ctx.border.strong;
@@ -184,6 +190,10 @@
     var all = derivePaletteTokens(input);
     return {
       "--surface-ink-strong": all["--surface-ink-strong"],
+      "--surface-page": all["--surface-page"],
+      "--surface-default": all["--surface-default"],
+      "--surface-tag": all["--surface-tag"],
+      "--surface-tag-hover": all["--surface-tag-hover"],
       "--text-tag": all["--text-tag"],
       "--text-muted": all["--text-muted"],
       "--action": all["--action"],
