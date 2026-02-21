@@ -67,8 +67,18 @@ async function loadJson(filePath) {
   return JSON.parse(raw);
 }
 
-function getPolicyCategory(policy, key) {
-  return policy?.policy?.blockers?.lighthouse?.categories?.[key] ?? null;
+function getPolicyCategory(policy, key, route = null) {
+  const globalCategory = policy?.policy?.blockers?.lighthouse?.categories?.[key] ?? null;
+  if (!route) return globalCategory;
+
+  const normalizedRoute = normalizeRoute(route);
+  const routeOverrides = policy?.policy?.blockers?.lighthouse?.routeOverrides ?? {};
+  const routePolicy =
+    routeOverrides?.[normalizedRoute] ??
+    routeOverrides?.[route] ??
+    null;
+  const routeCategory = routePolicy?.categories?.[key] ?? null;
+  return routeCategory ?? globalCategory;
 }
 
 function scoreToPoints(score) {
@@ -208,7 +218,7 @@ function computeBlockers({ policy, lighthouseRuns, axeRuns }) {
   if (lighthouseRuns) {
     for (const run of lighthouseRuns) {
       for (const [categoryKey, score] of Object.entries(run.categories)) {
-        const categoryPolicy = getPolicyCategory(policy, categoryKey);
+        const categoryPolicy = getPolicyCategory(policy, categoryKey, run.route);
         const minScore = asInt(categoryPolicy?.minScore, null);
         if (minScore == null || score == null) continue;
         if (score < minScore) {
