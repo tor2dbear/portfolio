@@ -6,6 +6,7 @@ name = "standard"
 [roles]
 text = "gray"
 surface = "iris"
+border = "iris"
 primary = "iris"
 secondary = "iris"
 

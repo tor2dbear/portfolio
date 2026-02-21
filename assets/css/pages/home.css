@@ -77,7 +77,10 @@
 .hero-title {
   /* Width controlled by grid placement (use .place-prose or --col on the element) */
   line-height: 1.4;
-  font-size: calc(clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl)) * var(--type-scale-display));
+  font-size: calc(
+    clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl)) *
+      var(--type-scale-display)
+  );
   letter-spacing: var(--display-tracking);
 }
 
@@ -105,7 +108,7 @@
 }
 
 .hero-emphasis {
-  background: var(--bg-tag);
+  background: var(--surface-tag);
   padding: 0 var(--spacing-4);
   border-radius: var(--spacing-4);
   font-weight: inherit;
@@ -240,7 +243,6 @@
   .hero-section {
     padding: var(--spacing-64) 0;
   }
-
 }
 
 /* xs: <= 29.9375em */

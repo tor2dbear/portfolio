@@ -46,7 +46,7 @@
   font-family: var(--font-ui);
   font-size: var(--text-base);
   color: var(--text-muted);
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
 }
 
 .application-page__sidebar .toc__item {
@@ -87,6 +87,6 @@
 }
 
 .toc__item a:focus {
-  outline: 2px solid var(--brand-primary);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }

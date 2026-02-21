@@ -7,7 +7,7 @@
   padding: var(--spacing-4);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  background: var(--bg-surface);
+  background: var(--surface-default);
   overflow-x: auto;
 }
 
@@ -18,26 +18,35 @@
   border: 1px solid transparent;
   border-radius: var(--radius-8);
   color: var(--text-muted);
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--sans-weight-bold);
   cursor: pointer;
-  transition: background-color var(--motion-duration-base) var(--motion-ease-standard), border-color var(--motion-duration-base) var(--motion-ease-standard), color var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard);
   white-space: nowrap;
 }
 
 .tab-button:hover {
   color: var(--text-default);
-  background-image: linear-gradient(var(--state-surface-hover), var(--state-surface-hover));
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
 }
 
 .tab-button:active {
-  background-image: linear-gradient(var(--state-surface-active), var(--state-surface-active));
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
 }
 
 .tab-button.is-active {
   border-color: var(--border-default);
-  background-color: var(--brand-primary);
-  color: var(--brand-on-primary);
+  background-color: var(--primary);
+  color: var(--on-primary);
   box-shadow: var(--shadow-01);
 }
 

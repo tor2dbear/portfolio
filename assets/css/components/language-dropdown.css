@@ -36,7 +36,7 @@
   top: calc(100% + var(--spacing-8));
   right: 0;
   min-width: var(--spacing-160);
-  background: var(--bg-page);
+  background: var(--surface-page);
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-12);
   box-shadow: var(--shadow-01);
@@ -45,7 +45,9 @@
   opacity: 0;
   visibility: hidden;
   transform: translateY(calc(var(--spacing-8) * -1));
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), transform var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
+    transform var(--motion-duration-base) var(--motion-ease-standard),
+    visibility var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .language-panel:not([hidden]) {
@@ -87,7 +89,7 @@
 }
 
 .language-option--current {
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
 }
 
 .language-option .radio__label {
@@ -111,7 +113,7 @@
 }
 
 .language-option input[type="radio"]:checked ~ .radio__label {
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
 }
 
 .language-option--current {
@@ -149,7 +151,7 @@
     right: var(--spacing-8);
     top: auto;
     min-width: unset;
-    background: var(--bg-surface);
+    background: var(--surface-default);
     border-radius: var(--spacing-12) var(--spacing-12) 0 0;
     padding: var(--spacing-16) var(--spacing-12) var(--spacing-24);
     transform: translateY(calc(100% + var(--spacing-16)));
@@ -161,7 +163,7 @@
   }
 
   .language-panel::before {
-    content: '';
+    content: "";
     position: absolute;
     top: var(--spacing-8);
     left: 50%;
@@ -181,11 +183,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: color-mix(in srgb, var(--bg-inverse) 50%, transparent);
+  background: color-mix(in srgb, var(--surface-inverse) 50%, transparent);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard), visibility var(--motion-duration-base) var(--motion-ease-standard);
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
+    visibility var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 /* xs: <= 29.9375em */

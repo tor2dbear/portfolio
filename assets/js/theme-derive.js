@@ -1,21 +1,25 @@
 (function () {
-  'use strict';
+  "use strict";
 
   function tokenVar(token) {
-    return 'var(--' + token + ')';
+    return "var(--" + token + ")";
   }
 
   function scaleVar(family, step) {
-    return tokenVar(family + '-' + step);
+    return tokenVar(family + "-" + step);
   }
 
   function resolveSource(source, ctx) {
-    if (!source) return '';
-    if (source.indexOf('.') > -1) {
-      var parts = source.split('.');
+    if (!source) {
+      return "";
+    }
+    if (source.indexOf(".") > -1) {
+      var parts = source.split(".");
       var role = parts[0];
       var key = parts[1];
-      if (ctx[role] && ctx[role][key]) return ctx[role][key];
+      if (ctx[role] && ctx[role][key]) {
+        return ctx[role][key];
+      }
     }
     return tokenVar(source);
   }
@@ -25,112 +29,159 @@
     var policies = (input && input.policies) || {};
     var componentOverrides = (input && input.component_overrides) || {};
 
-    var toneMode = policies.tone_mode || 'mono';
-    var surfaceProfile = policies.surface_profile || 'standard';
-    var formPolicy = policies.form_policy || 'neutral';
+    var toneMode = policies.tone_mode || "mono";
+    var surfaceProfile = policies.surface_profile || "standard";
+    var formPolicy = policies.form_policy || "neutral";
 
     var effectiveRoles = {
-      text: roles.text || 'gray',
-      surface: roles.surface || 'gray',
-      primary: roles.primary || 'gray',
-      secondary: toneMode === 'duo' ? (roles.secondary || roles.primary || 'gray') : (roles.primary || 'gray')
+      text: roles.text || "gray",
+      surface: roles.surface || "gray",
+      border: roles.border || roles.surface || "gray",
+      primary: roles.primary || "gray",
+      secondary:
+        toneMode === "duo"
+          ? roles.secondary || roles.primary || "gray"
+          : roles.primary || "gray",
     };
 
     var ctx = {
       text: {
         default: scaleVar(effectiveRoles.text, 12),
-        inverse: tokenVar('white'),
-        link: '',
-        link_hover: '',
-        accent: ''
+        inverse: tokenVar("gray-1"),
+        link: "",
+        link_hover: "",
+        accent: "",
       },
       surface: {
         page: scaleVar(effectiveRoles.surface, 1),
         surface: scaleVar(effectiveRoles.surface, 2),
         tag: scaleVar(effectiveRoles.surface, 3),
         tag_hover: scaleVar(effectiveRoles.surface, 4),
-        nav: '',
-        border_subtle: '',
-        ink_strong: scaleVar(effectiveRoles.surface, 11)
+        border_subtle: "",
+        ink_strong: scaleVar(effectiveRoles.surface, 11),
+      },
+      border: {
+        subtle: "",
+        default: scaleVar(effectiveRoles.border, 6),
+        strong: scaleVar(effectiveRoles.border, 8),
       },
       primary: {
         base: scaleVar(effectiveRoles.primary, 9),
         strong: scaleVar(effectiveRoles.primary, 11),
         hover: scaleVar(effectiveRoles.primary, 12),
-        on: tokenVar('white')
+        on: tokenVar("white"),
       },
       secondary: {
         base: scaleVar(effectiveRoles.secondary, 4),
-        strong: scaleVar(effectiveRoles.secondary, 8)
-      }
+        strong: scaleVar(effectiveRoles.secondary, 8),
+      },
+      action: {
+        base: "",
+        on: "",
+      },
     };
 
     ctx.text.link = ctx.primary.strong;
     ctx.text.link_hover = ctx.primary.hover;
     ctx.text.accent = ctx.primary.strong;
-    ctx.surface.nav = ctx.primary.base;
-    ctx.surface.border_subtle = tokenVar('gray-4');
+    ctx.surface.border_subtle = tokenVar("gray-4");
+    ctx.border.subtle = ctx.surface.border_subtle;
+    ctx.action.base = ctx.text.default;
+    ctx.action.on = ctx.surface.page;
 
-    if (surfaceProfile === 'deep') {
+    if (toneMode === "duo") {
+      ctx.action.base = ctx.primary.base;
+      ctx.action.on = ctx.primary.on;
+    }
+
+    if (surfaceProfile === "deep") {
       ctx.surface.page = scaleVar(effectiveRoles.surface, 2);
       ctx.surface.surface = scaleVar(effectiveRoles.surface, 4);
       ctx.surface.tag = scaleVar(effectiveRoles.surface, 4);
       ctx.surface.tag_hover = scaleVar(effectiveRoles.surface, 5);
-      ctx.surface.nav = scaleVar(effectiveRoles.surface, 5);
       ctx.surface.border_subtle = scaleVar(effectiveRoles.surface, 5);
+      ctx.border.subtle = ctx.surface.border_subtle;
     }
 
     var tokens = {};
 
-    tokens['--accent-primary'] = ctx.primary.base;
-    tokens['--accent-primary-strong'] = ctx.primary.strong;
-    tokens['--accent-secondary'] = ctx.secondary.base;
-    tokens['--accent-secondary-strong'] = ctx.secondary.strong;
+    tokens["--primary"] = ctx.primary.base;
+    tokens["--primary-strong"] = ctx.primary.strong;
+    tokens["--on-primary"] = ctx.primary.on;
+    tokens["--action"] = ctx.action.base;
+    tokens["--on-action"] = ctx.action.on;
+    tokens["--secondary"] = ctx.secondary.base;
+    tokens["--secondary-strong"] = ctx.secondary.strong;
+    tokens["--on-secondary"] = ctx.text.default;
 
-    tokens['--brand-primary'] = ctx.primary.base;
-    tokens['--text-accent'] = ctx.text.accent;
+    // Keep legacy aliases synchronized during migration.
+    tokens["--accent-primary"] = tokens["--primary"];
+    tokens["--accent-primary-strong"] = tokens["--primary-strong"];
+    tokens["--accent-secondary"] = tokens["--secondary"];
+    tokens["--accent-secondary-strong"] = tokens["--secondary-strong"];
 
-    tokens['--text-default'] = ctx.text.default;
-    tokens['--text-tag'] = ctx.surface.ink_strong;
-    tokens['--surface-ink-strong'] = ctx.surface.ink_strong;
-    tokens['--text-muted'] = 'color-mix(in oklch, var(--gray-11) 60%, var(--surface-ink-strong))';
-    tokens['--text-link'] = ctx.text.link;
-    tokens['--text-link-hover'] = ctx.text.link_hover;
-    tokens['--text-inverse'] = ctx.text.inverse;
-    tokens['--text-nav'] = ctx.text.default;
+    tokens["--text-accent"] = ctx.text.accent;
 
-    tokens['--bg-page'] = ctx.surface.page;
-    tokens['--bg-surface'] = ctx.surface.surface;
-    tokens['--bg-tag'] = ctx.surface.tag;
-    tokens['--bg-tag-hover'] = ctx.surface.tag_hover;
-    tokens['--bg-nav'] = ctx.surface.nav;
-    tokens['--border-subtle'] = ctx.surface.border_subtle;
+    tokens["--text-default"] = ctx.text.default;
+    tokens["--text-tag"] = ctx.surface.ink_strong;
+    tokens["--surface-ink-strong"] = ctx.surface.ink_strong;
+    tokens["--text-muted"] =
+      "color-mix(in oklch, var(--gray-11) 60%, var(--surface-ink-strong))";
+    tokens["--text-link"] = ctx.text.link;
+    tokens["--text-link-hover"] = ctx.text.link_hover;
+    tokens["--text-inverse"] = ctx.text.inverse;
 
-    tokens['--state-focus'] = ctx.primary.base;
-    tokens['--state-selected'] = ctx.text.accent;
+    tokens["--surface-page"] = ctx.surface.page;
+    tokens["--surface-default"] = ctx.surface.surface;
+    tokens["--surface-tag"] = ctx.surface.tag;
+    tokens["--surface-tag-hover"] = ctx.surface.tag_hover;
 
-    tokens['--component-toc-active-indicator'] = toneMode === 'duo' ? ctx.secondary.strong : ctx.primary.base;
-    tokens['--component-section-headline-bg'] = toneMode === 'duo' ? ctx.secondary.strong : ctx.primary.base;
+    // Keep legacy aliases synchronized during migration.
+    tokens["--bg-page"] = tokens["--surface-page"];
+    tokens["--bg-surface"] = tokens["--surface-default"];
+    tokens["--bg-tag"] = tokens["--surface-tag"];
+    tokens["--bg-tag-hover"] = tokens["--surface-tag-hover"];
+    tokens["--border-subtle"] = ctx.border.subtle;
+    tokens["--border-default"] = ctx.border.default;
+    tokens["--border-strong"] = ctx.border.strong;
 
-    var navCtaBgSource = componentOverrides.nav_cta_bg_source || 'text.default';
-    var navCtaTextSource = componentOverrides.nav_cta_text_source || 'surface.page';
-    if (toneMode === 'duo') {
-      navCtaBgSource = 'primary.base';
-      navCtaTextSource = 'primary.on';
-    }
-    tokens['--component-nav-cta-bg'] = resolveSource(navCtaBgSource, ctx);
-    tokens['--component-nav-cta-text'] = resolveSource(navCtaTextSource, ctx);
+    tokens["--state-focus"] = ctx.primary.base;
+    tokens["--state-selected"] = ctx.text.accent;
 
-    tokens['--component-form-bg'] =
-      formPolicy === 'surface-derived' ? scaleVar(effectiveRoles.surface, 3) : tokenVar('gray-2');
-    tokens['--component-form-placeholder'] =
-      formPolicy === 'surface-derived' ? tokens['--text-muted'] : tokenVar('gray-10');
+    tokens["--component-toc-active-indicator"] =
+      toneMode === "duo" ? ctx.secondary.strong : ctx.primary.base;
+    tokens["--component-section-headline-bg"] =
+      toneMode === "duo" ? ctx.secondary.strong : ctx.primary.base;
 
-    tokens['--component-newsletter-bg'] = scaleVar(effectiveRoles.surface, 12);
-    tokens['--component-newsletter-text'] = scaleVar(effectiveRoles.surface, 2);
-    tokens['--component-newsletter-illustration-bg'] = scaleVar(effectiveRoles.surface, 3);
-    tokens['--component-newsletter-button-bg'] = scaleVar(effectiveRoles.surface, 4);
-    tokens['--component-newsletter-button-text'] = scaleVar(effectiveRoles.primary, 11);
+    var navCtaBgSource = componentOverrides.nav_cta_bg_source || "primary.base";
+    var navCtaTextSource =
+      componentOverrides.nav_cta_text_source || "primary.on";
+    tokens["--component-nav-cta-bg"] = resolveSource(navCtaBgSource, ctx);
+    tokens["--component-nav-cta-text"] = resolveSource(navCtaTextSource, ctx);
+
+    tokens["--component-form-bg"] =
+      formPolicy === "surface-derived"
+        ? scaleVar(effectiveRoles.surface, 3)
+        : tokenVar("gray-2");
+    tokens["--component-form-placeholder"] =
+      formPolicy === "surface-derived"
+        ? tokens["--text-muted"]
+        : tokenVar("gray-10");
+
+    tokens["--component-newsletter-bg"] = scaleVar(effectiveRoles.surface, 12);
+    tokens["--component-newsletter-text"] = scaleVar(effectiveRoles.surface, 2);
+    tokens["--component-newsletter-illustration-bg"] = scaleVar(
+      effectiveRoles.surface,
+      3
+    );
+    tokens["--component-newsletter-button-bg"] = scaleVar(
+      effectiveRoles.surface,
+      4
+    );
+    tokens["--component-newsletter-button-text"] = scaleVar(
+      effectiveRoles.primary,
+      11
+    );
 
     return tokens;
   }
@@ -138,60 +189,71 @@
   function deriveRuntimeTokens(input) {
     var all = derivePaletteTokens(input);
     return {
-      '--surface-ink-strong': all['--surface-ink-strong'],
-      '--text-tag': all['--text-tag'],
-      '--text-muted': all['--text-muted'],
-      '--component-toc-active-indicator': all['--component-toc-active-indicator'],
-      '--component-section-headline-bg': all['--component-section-headline-bg'],
-      '--component-nav-cta-bg': all['--component-nav-cta-bg'],
-      '--component-nav-cta-text': all['--component-nav-cta-text'],
-      '--component-form-placeholder': all['--component-form-placeholder']
+      "--surface-ink-strong": all["--surface-ink-strong"],
+      "--surface-page": all["--surface-page"],
+      "--surface-default": all["--surface-default"],
+      "--surface-tag": all["--surface-tag"],
+      "--surface-tag-hover": all["--surface-tag-hover"],
+      "--text-tag": all["--text-tag"],
+      "--text-muted": all["--text-muted"],
+      "--action": all["--action"],
+      "--on-action": all["--on-action"],
+      "--component-toc-active-indicator":
+        all["--component-toc-active-indicator"],
+      "--component-section-headline-bg": all["--component-section-headline-bg"],
+      "--component-nav-cta-bg": all["--component-nav-cta-bg"],
+      "--component-nav-cta-text": all["--component-nav-cta-text"],
+      "--component-form-placeholder": all["--component-form-placeholder"],
     };
   }
 
   function deriveImageTokens(input) {
     var roles = (input && input.roles) || {};
     var policies = (input && input.policies) || {};
-    var mode = (input && input.mode) || 'light';
-    var treatment = policies.image_treatment || 'none';
-    var surfaceFamily = roles.surface || 'gray';
-    var isDark = mode === 'dark';
+    var mode = (input && input.mode) || "light";
+    var treatment = policies.image_treatment || "none";
+    var surfaceFamily = roles.surface || "gray";
+    var isDark = mode === "dark";
 
-    if (treatment === 'pantone-blend') {
+    if (treatment === "pantone-blend") {
       return {
-        '--image-grayscale': '100%',
-        '--image-blend-mode': 'screen',
-        '--image-background': 'var(--' + surfaceFamily + '-' + (isDark ? '7' : '12') + ')'
+        "--image-grayscale": "100%",
+        "--image-blend-mode": "screen",
+        "--image-background":
+          "var(--" + surfaceFamily + "-" + (isDark ? "7" : "12") + ")",
       };
     }
 
     return {
-      '--image-grayscale': '0%',
-      '--image-blend-mode': 'normal',
-      '--image-background': 'transparent'
+      "--image-grayscale": "0%",
+      "--image-blend-mode": "normal",
+      "--image-background": "transparent",
     };
   }
 
   function derivePreview(input) {
     var roles = (input && input.roles) || {};
     var policies = (input && input.policies) || {};
-    var toneMode = policies.tone_mode || 'mono';
+    var toneMode = policies.tone_mode || "mono";
     var derived = derivePaletteTokens(input || {});
-    var primary = derived['--accent-primary-strong'] || derived['--accent-primary'] || 'var(--gray-11)';
-    var surface = derived['--bg-page'] || 'var(--gray-2)';
-    var secondary = derived['--accent-secondary-strong'] || derived['--accent-secondary'] || primary;
+    var primary =
+      derived["--primary-strong"] || derived["--primary"] || "var(--gray-11)";
+    var surface =
+      derived["--surface-page"] || derived["--bg-page"] || "var(--gray-2)";
+    var secondary =
+      derived["--secondary-strong"] || derived["--secondary"] || primary;
 
     return {
       primary: primary,
       surface: surface,
       secondary: secondary,
       toneMode: toneMode,
-      seg1: '1',
-      seg2: '1',
-      seg3: toneMode === 'duo' ? '1' : '0',
+      seg1: "1",
+      seg2: "1",
+      seg3: toneMode === "duo" ? "1" : "0",
       // Keep raw source roles/policies for potential debugging/inspection.
       roles: roles,
-      policies: policies
+      policies: policies,
     };
   }
 
@@ -199,6 +261,6 @@
     derivePaletteTokens: derivePaletteTokens,
     deriveRuntimeTokens: deriveRuntimeTokens,
     deriveImageTokens: deriveImageTokens,
-    derivePreview: derivePreview
+    derivePreview: derivePreview,
   };
 })();

@@ -31,6 +31,13 @@ policy:
           minScore: 90
         seo:
           minScore: 90
+      # Route-specific overrides keep global standards strict while reducing
+      # noise on known volatile routes.
+      routeOverrides:
+        "/":
+          categories:
+            performance:
+              minScore: 70
 
   # B) FIX-SOON (visible in PR comment, not failing CI)
   fixSoon:

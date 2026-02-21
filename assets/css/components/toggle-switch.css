@@ -36,7 +36,7 @@
   left: 2px;
   width: 16px;
   height: 16px;
-  background: var(--bg-page);
+  background: var(--surface-page);
   border-radius: 50%;
   transition: transform var(--motion-duration-base) var(--motion-ease-standard);
   box-shadow: var(--shadow-03);
@@ -44,7 +44,7 @@
 
 /* On state */
 .toggle-switch[aria-pressed="true"] .toggle-switch__track {
-  background: var(--brand-primary, var(--text-accent));
+  background: var(--primary);
 }
 
 .toggle-switch[aria-pressed="true"] .toggle-switch__thumb {
@@ -78,13 +78,13 @@
   padding: 0 var(--spacing-4);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-2);
-  background: var(--bg-elevated);
+  background: var(--surface-elevated);
   color: var(--text-muted);
   line-height: 1;
 }
 
 /* Focus ring */
 .toggle-switch:focus-visible .toggle-switch__track {
-  outline: 2px solid var(--brand-primary, var(--text-accent));
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }

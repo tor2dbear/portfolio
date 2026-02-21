@@ -48,7 +48,7 @@ input[type="number"]:focus,
 textarea:focus,
 .input:focus {
   outline: none;
-  border-color: var(--brand-primary);
+  border-color: var(--primary);
   box-shadow: var(--ring-focus);
 }
 
@@ -62,7 +62,7 @@ input[type="search"]:hover:not(:focus):not(:disabled),
 input[type="number"]:hover:not(:focus):not(:disabled),
 textarea:hover:not(:focus):not(:disabled),
 .input:hover:not(:focus):not(:disabled) {
-  border-color: var(--border-hover);
+  border-color: var(--border-strong);
 }
 
 /* Disabled State */
@@ -75,7 +75,7 @@ input[type="search"]:disabled,
 input[type="number"]:disabled,
 textarea:disabled,
 .input:disabled {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;
@@ -128,24 +128,24 @@ textarea.error:focus,
   height: 20px;
   border: 2px solid var(--border-default);
   border-radius: 50%;
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   transition: all var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
 
 .radio__visual::after {
-  content: '';
+  content: "";
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: var(--brand-primary);
+  background-color: var(--primary);
   transform: scale(0);
   transition: transform var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 /* Checked State */
 .radio input[type="radio"]:checked + .radio__visual {
-  border-color: var(--brand-primary);
+  border-color: var(--primary);
 }
 
 .radio input[type="radio"]:checked + .radio__visual::after {
@@ -160,12 +160,12 @@ textarea.error:focus,
 
 /* Hover State */
 .radio:hover input[type="radio"]:not(:disabled) + .radio__visual {
-  border-color: var(--border-hover);
+  border-color: var(--border-strong);
 }
 
 /* Disabled State */
 .radio input[type="radio"]:disabled + .radio__visual {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   border-color: var(--border-subtle);
   cursor: not-allowed;
   opacity: 0.6;
@@ -209,14 +209,14 @@ textarea.error:focus,
   width: 20px;
   height: 20px;
   border: 2px solid var(--border-default);
-  border-radius: var(--radius-xs);
-  background-color: var(--bg-page);
+  border-radius: var(--radius-4);
+  background-color: var(--surface-page);
   transition: all var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
 
 .checkbox__visual::after {
-  content: '';
+  content: "";
   width: 12px;
   height: 12px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
@@ -229,8 +229,8 @@ textarea.error:focus,
 
 /* Checked State */
 .checkbox input[type="checkbox"]:checked + .checkbox__visual {
-  background-color: var(--brand-primary);
-  border-color: var(--brand-primary);
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .checkbox input[type="checkbox"]:checked + .checkbox__visual::after {
@@ -245,12 +245,12 @@ textarea.error:focus,
 
 /* Hover State */
 .checkbox:hover input[type="checkbox"]:not(:disabled) + .checkbox__visual {
-  border-color: var(--border-hover);
+  border-color: var(--border-strong);
 }
 
 /* Disabled State */
 .checkbox input[type="checkbox"]:disabled + .checkbox__visual {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   border-color: var(--border-subtle);
   cursor: not-allowed;
   opacity: 0.6;
@@ -276,12 +276,13 @@ select,
 .select {
   display: block;
   width: 100%;
-  padding: var(--spacing-12) var(--spacing-40) var(--spacing-12) var(--spacing-16);
+  padding: var(--spacing-12) var(--spacing-40) var(--spacing-12)
+    var(--spacing-16);
   font-family: inherit;
   font-size: var(--text-base);
   line-height: var(--line-height-normal);
   color: var(--text-default);
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--spacing-12) center;
@@ -297,20 +298,20 @@ select,
 select:focus,
 .select:focus {
   outline: none;
-  border-color: var(--brand-primary);
+  border-color: var(--primary);
   box-shadow: var(--ring-focus);
 }
 
 /* Hover State */
 select:hover:not(:focus):not(:disabled),
 .select:hover:not(:focus):not(:disabled) {
-  border-color: var(--border-hover);
+  border-color: var(--border-strong);
 }
 
 /* Disabled State */
 select:disabled,
 .select:disabled {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--surface-subtle);
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;
@@ -335,21 +336,21 @@ select:disabled,
 }
 
 .form-label--required::after {
-  content: '*';
+  content: "*";
   color: var(--status-error-border);
   margin-left: var(--spacing-4);
 }
 
 .form-help {
-  font-size: var(--font-size-sm);
+  font-size: var(--text-sm);
   color: var(--text-muted);
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-wide);
 }
 
 .form-error {
-  font-size: var(--font-size-sm);
+  font-size: var(--text-sm);
   color: var(--status-error-border);
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-wide);
 }
 
 /* Radio/Checkbox Groups */
@@ -412,7 +413,7 @@ select:disabled,
   width: 100%;
   font-size: var(--text-lg);
   font-family: var(--font-ui);
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
 }
 
 .contact-form__message {
@@ -433,14 +434,10 @@ form .message {
 
 /* Error message */
 form .contact-form__message--error.message {
-  background-color: var(--status-error-bg);
-  color: var(--status-error-text, hsl(0 84% 30%));
-  border: 1px solid var(--status-error-border);
+  color: var(--status-error-text);
 }
 
 /* Success message */
 form .contact-form__message--success.message {
-  background-color: var(--status-success-bg, hsl(142 76% 94%));
-  color: var(--status-success-text, hsl(142 71% 29%));
-  border: 1px solid var(--status-success-border, hsl(142 76% 80%));
+  color: var(--status-success-text);
 }
