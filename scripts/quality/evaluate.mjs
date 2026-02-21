@@ -100,6 +100,55 @@ function pickTopOpportunities(lhr, maxItems = 5) {
   return items.slice(0, maxItems);
 }
 
+function medianInt(values) {
+  const nums = (values ?? []).filter((v) => Number.isFinite(v)).sort((a, b) => a - b);
+  if (nums.length === 0) return null;
+  const mid = Math.floor(nums.length / 2);
+  if (nums.length % 2 === 1) return nums[mid];
+  return Math.round((nums[mid - 1] + nums[mid]) / 2);
+}
+
+function aggregateLighthouseRuns(lighthouseRuns) {
+  if (!Array.isArray(lighthouseRuns)) return null;
+  const byRoute = new Map();
+
+  for (const run of lighthouseRuns) {
+    const route = run?.route ?? "unknown";
+    if (!byRoute.has(route)) byRoute.set(route, []);
+    byRoute.get(route).push(run);
+  }
+
+  const aggregated = [];
+  for (const [route, runs] of byRoute.entries()) {
+    const performance = medianInt(runs.map((r) => r?.categories?.performance));
+    const accessibility = medianInt(runs.map((r) => r?.categories?.accessibility));
+    const bestPractices = medianInt(runs.map((r) => r?.categories?.bestPractices));
+    const seo = medianInt(runs.map((r) => r?.categories?.seo));
+    const opportunities = [];
+    for (const run of runs) {
+      opportunities.push(...(run?.opportunities ?? []));
+    }
+    opportunities.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0));
+
+    aggregated.push({
+      route,
+      finalUrl: runs[0]?.finalUrl ?? null,
+      requestedUrl: runs[0]?.requestedUrl ?? null,
+      sampleCount: runs.length,
+      categories: {
+        performance,
+        accessibility,
+        bestPractices,
+        seo,
+      },
+      opportunities: opportunities.slice(0, 5),
+    });
+  }
+
+  aggregated.sort((a, b) => a.route.localeCompare(b.route));
+  return aggregated;
+}
+
 async function parseLighthouse(lighthouseDir) {
   const files = await listFilesRecursive(lighthouseDir);
   const lhrFiles = files.filter((f) => path.basename(f).startsWith("lhr-") && f.endsWith(".json"));
@@ -321,13 +370,16 @@ async function main() {
   const policy = await loadPolicy(policyPath);
 
   let lighthouseRuns = null;
+  let lighthouseRunsAggregated = null;
   let axeRuns = null;
 
   if (lighthouseDir) {
     try {
       lighthouseRuns = await parseLighthouse(lighthouseDir);
+      lighthouseRunsAggregated = aggregateLighthouseRuns(lighthouseRuns);
     } catch (err) {
       lighthouseRuns = null;
+      lighthouseRunsAggregated = null;
       // eslint-disable-next-line no-console
       console.error(`Failed to parse Lighthouse results: ${err?.message ?? err}`);
     }
@@ -343,18 +395,30 @@ async function main() {
     }
   }
 
-  const blockers = computeBlockers({ policy, lighthouseRuns, axeRuns });
+  const blockers = computeBlockers({
+    policy,
+    lighthouseRuns: lighthouseRunsAggregated ?? lighthouseRuns,
+    axeRuns,
+  });
   const runUrl =
     process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
       ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
       : null;
 
-  const markdown = formatMarkdown({ policy, mode, lighthouseRuns, axeRuns, blockers, runUrl });
+  const markdown = formatMarkdown({
+    policy,
+    mode,
+    lighthouseRuns: lighthouseRunsAggregated ?? lighthouseRuns,
+    axeRuns,
+    blockers,
+    runUrl,
+  });
   const summary = {
     generatedAt: new Date().toISOString(),
     mode,
     blockers,
-    lighthouse: lighthouseRuns,
+    lighthouse: lighthouseRunsAggregated ?? lighthouseRuns,
+    lighthouseRaw: lighthouseRuns,
     axe: axeRuns
       ? {
           runs: axeRuns.map((r) => ({ route: r.route, url: r.url, violations: r.violations })),
