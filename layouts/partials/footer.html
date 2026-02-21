@@ -10,16 +10,16 @@
       <nav class="footer-column" aria-label="{{ i18n "footer_navigation" }}">
         <h3 class="footer-heading">{{ i18n "footer_navigation" }}</h3>
         <ul class="footer-menu">
-          <li><a href="{{ "/" | relLangURL }}">{{ i18n "home" }}</a></li>
+          <li><a href="{{ .Site.Home.Permalink }}">{{ i18n "home" }}</a></li>
           {{ with .Site.GetPage "/about" }}
-            <li><a href="{{ .RelPermalink }}">{{ i18n "about_me" }}</a></li>
+            <li><a href="{{ .Permalink }}">{{ i18n "about_me" }}</a></li>
           {{ end }}
           {{ with .Site.GetPage "/contact" }}
-            <li><a href="{{ .RelPermalink }}">{{ i18n "contact_me" }}</a></li>
+            <li><a href="{{ .Permalink }}">{{ i18n "contact_me" }}</a></li>
           {{ end }}
-          <li><a href="{{ printf "/%s/" (i18n "writing_url") | relLangURL }}">{{ i18n "writing" }}</a></li>
-          <li><a href="{{ "/ui-library/" | relLangURL }}">{{ i18n "ui_library" }}</a></li>
-          <li><a href="{{ "/palette-generator/" | relLangURL }}">{{ i18n "palette_generator" }}</a></li>
+          <li><a href="{{ printf "%s/" (strings.Trim (i18n "writing_url") "/") | absLangURL }}">{{ i18n "writing" }}</a></li>
+          <li><a href="{{ "ui-library/" | absLangURL }}">{{ i18n "ui_library" }}</a></li>
+          <li><a href="{{ "palette-generator/" | absLangURL }}">{{ i18n "palette_generator" }}</a></li>
         </ul>
       </nav>
 
@@ -31,9 +31,9 @@
         {{- end -}}
         <ul class="footer-menu footer-menu--tags">
           {{- with $.Site.GetPage (printf "/works/tags") -}}
-            <li><a href="{{ .RelPermalink }}">{{ i18n "all_works" }}</a></li>
+            <li><a href="{{ .Permalink }}">{{ i18n "all_works" }}</a></li>
           {{- else -}}
-            <li><a href="{{ printf "/%s/tags/" $worksSlug | relLangURL }}">{{ i18n "all_works" }}</a></li>
+            <li><a href="{{ printf "%s/tags/" $worksSlug | absLangURL }}">{{ i18n "all_works" }}</a></li>
           {{- end -}}
           {{- $portfolioTags := slice "Digital Product" "Brand & Identity" "Editorial" "Print" "Experimental" -}}
           {{- if eq .Language.Lang "sv" -}}
@@ -41,7 +41,7 @@
           {{- end -}}
           {{- range $portfolioTags -}}
             <li>
-              <a class="footer-tag-link" href="{{ printf "/%s/tags/%s/" $worksSlug (urlize .) | relLangURL }}">
+              <a class="footer-tag-link" href="{{ printf "%s/tags/%s/" $worksSlug (urlize .) | absLangURL }}">
                 {{ . }}
               </a>
             </li>
@@ -153,13 +153,13 @@
           <span data-js="footer-grid">{{ i18n "toast_grid_title" }} {{ i18n "toast_grid_off" }}</span>
         </li>
         <li class="footer-meta__item">
-          <a href="{{ "/index.xml" | relLangURL }}">{{ i18n "footer_rss" }}</a>
+          <a href="{{ "index.xml" | absLangURL }}">{{ i18n "footer_rss" }}</a>
         </li>
         <li class="footer-meta__item">
-          <a href="{{ printf "/%s/" (i18n "privacy_url") | relLangURL }}">{{ i18n "footer_privacy" }}</a>
+          <a href="{{ printf "%s/" (strings.Trim (i18n "privacy_url") "/") | absLangURL }}">{{ i18n "footer_privacy" }}</a>
         </li>
         <li class="footer-meta__item">
-          <a href="{{ printf "/%s/" (i18n "license_url") | relLangURL }}">{{ i18n "footer_license" }}</a>
+          <a href="{{ printf "%s/" (strings.Trim (i18n "license_url") "/") | absLangURL }}">{{ i18n "footer_license" }}</a>
         </li>
       </ul>
     </div>
