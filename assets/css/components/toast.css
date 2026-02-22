@@ -27,8 +27,8 @@
   white-space: nowrap;
 
   color: var(--text-default);
-  background: rgba(255, 255, 255, 0.52);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--component-toast-bg);
+  border: 1px solid var(--component-toast-border);
   box-shadow: var(--shadow-02);
   -webkit-backdrop-filter: blur(6px) saturate(80%);
   backdrop-filter: blur(6px) saturate(80%);
@@ -71,7 +71,7 @@
 /* Title line (category) */
 .toast__title {
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--sans-weight-bold);
   line-height: 1.3;
 }
 
@@ -81,12 +81,6 @@
   font-weight: 400;
   line-height: 1.3;
   color: var(--text-default);
-}
-
-/* Dark mode */
-[data-mode="dark"] .toast {
-  background: rgba(24, 24, 27, 0.52);
-  border-color: rgba(255, 255, 255, 0.08);
 }
 
 /* ============================================================================
@@ -121,13 +115,15 @@
 .toast--visible {
   opacity: 1;
   pointer-events: auto;
-  animation: toast-in var(--motion-duration-enter) var(--motion-ease-emphasized) forwards;
+  animation: toast-in var(--motion-duration-enter) var(--motion-ease-emphasized)
+    forwards;
 }
 
 /* Hiding state */
 .toast--hiding {
   pointer-events: none;
-  animation: toast-out var(--motion-duration-exit) var(--motion-ease-exit) forwards;
+  animation: toast-out var(--motion-duration-exit) var(--motion-ease-exit)
+    forwards;
 }
 
 /* Respect reduced motion */

@@ -12,7 +12,6 @@
      ========================================================================== */
 
   --component-form-bg: var(--gray-2);
-  --component-form-border: transparent;
   --component-form-placeholder: var(--text-muted);
 
   --component-newsletter-bg: var(--iris-12);
@@ -20,12 +19,22 @@
   --component-newsletter-illustration-bg: var(--iris-3);
   --component-newsletter-button-bg: var(--iris-4);
   --component-newsletter-button-text: var(--iris-11);
+  --component-toast-bg: color-mix(
+    in srgb,
+    var(--surface-page) 52%,
+    transparent
+  );
+  --component-toast-border: color-mix(
+    in srgb,
+    var(--text-default) 6%,
+    transparent
+  );
 
   /* ==========================================================================
      LAYOUT TOKENS - Max-width constraints
      ========================================================================== */
 
-  --content-max-width: 1280px;        /* Main content width */
-  --content-max-width-narrow: 800px;  /* Text-heavy pages (about, contact) */
-  --content-max-width-wide: 1600px;   /* Galleries and portfolios */
+  --content-max-width: 1280px; /* Main content width */
+  --content-max-width-narrow: 800px; /* Text-heavy pages (about, contact) */
+  --content-max-width-wide: 1600px; /* Galleries and portfolios */
 }

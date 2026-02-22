@@ -8,42 +8,49 @@
   /* Image effects */
   --image-grayscale: 100%;
   --image-blend-mode: screen;
-  --image-background: var(--cloud-12);
+  --image-background: var(--coty-9);
 
-  /* Accent roles (single-family) */
-  --accent-primary: var(--cloud-9);
-  --accent-primary-strong: var(--cloud-11);
-  --accent-secondary: var(--cloud-4);
-  --accent-secondary-strong: var(--cloud-8);
+  /* Primary/secondary roles (single-family) */
+  --primary: var(--coty-role-primary, var(--coty-9));
+  --primary-strong: var(--coty-role-primary-strong, var(--coty-11));
+  --on-primary: var(--coty-role-on-primary, var(--coty-1));
+  --secondary: var(--coty-4);
+  --secondary-strong: var(--coty-8);
+  --on-secondary: var(--coty-12);
 
-  --text-accent: var(--accent-primary-strong);
-  --brand-primary: var(--accent-primary);
+  /* Legacy aliases */
+  --accent-primary: var(--primary);
+  --accent-primary-strong: var(--primary-strong);
+  --accent-secondary: var(--secondary);
+  --accent-secondary-strong: var(--secondary-strong);
 
-  --text-default: var(--cloud-12);
-  --text-tag: var(--cloud-11);
-  --surface-ink-strong: var(--cloud-11);
-  --text-nav: var(--cloud-12);
-  --text-link-hover: var(--cloud-11);
+  --text-accent: var(--primary-strong);
 
-  --bg-page: var(--cloud-2);
-  --bg-tag: var(--cloud-4);
-  --bg-tag-hover: var(--cloud-5);
-  --bg-surface: var(--cloud-4);
-  --bg-nav: var(--cloud-5);
+  --text-default: var(--coty-12);
+  --text-tag: var(--coty-11);
+  --surface-ink-strong: var(--coty-11);
+  --text-link-hover: var(--coty-11);
 
-  --border-subtle: var(--cloud-5);
+  --bg-page: var(--coty-role-surface, var(--coty-2));
+  --bg-tag: var(--coty-role-surface-strong, var(--coty-4));
+  --bg-tag-hover: var(--coty-5);
+  --bg-surface: var(--coty-role-surface-strong, var(--coty-4));
 
-  --component-form-bg: var(--cloud-3);
+  --border-subtle: var(--coty-5);
+  --border-default: var(--coty-6);
+  --border-strong: var(--coty-8);
+
+  --component-form-bg: var(--coty-role-surface, var(--coty-3));
   --component-form-placeholder: var(--text-muted);
 
-  --component-newsletter-bg: var(--cloud-12);
-  --component-newsletter-text: var(--cloud-2);
-  --component-newsletter-illustration-bg: var(--cloud-3);
-  --component-newsletter-button-bg: var(--cloud-4);
-  --component-newsletter-button-text: var(--cloud-11);
+  --component-newsletter-bg: var(--coty-12);
+  --component-newsletter-text: var(--coty-2);
+  --component-newsletter-illustration-bg: var(--coty-3);
+  --component-newsletter-button-bg: var(--coty-4);
+  --component-newsletter-button-text: var(--coty-11);
 }
 
 /* Dark mode + Pantone overrides */
 :root[data-mode="dark"][data-palette="pantone"] {
-  --image-background: var(--cloud-7);
+  --image-background: var(--coty-5);
 }

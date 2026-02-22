@@ -14,7 +14,7 @@
   padding: var(--spacing-8) var(--spacing-12);
   border-radius: var(--radius-8);
   border: 1px solid var(--border-default);
-  background: color-mix(in srgb, var(--bg-page) 92%, transparent);
+  background: color-mix(in srgb, var(--surface-page) 92%, transparent);
   color: var(--text-default);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-normal);

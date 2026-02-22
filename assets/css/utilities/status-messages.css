@@ -1,0 +1,15 @@
+/* Shared status message surfaces */
+
+.message--success,
+.mc-response--success {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+  border: 1px solid var(--status-success-border);
+}
+
+.message--error,
+.mc-response--error {
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text);
+  border: 1px solid var(--status-error-border);
+}

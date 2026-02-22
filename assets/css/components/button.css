@@ -11,12 +11,12 @@
  * - .button--icon (with arrow icon)
  *
  * Tokens used:
- * - --brand-primary
- * - --brand-on-primary
- * - --text-default
- * - --bg-page
+ * - --primary
+ * - --on-primary
+ * - --action
+ * - --on-action
  * - --border-default
- * - --state-brand-hover
+ * - --state-primary-hover
  * - --state-page-hover
  */
 
@@ -47,10 +47,10 @@ button,
   padding: var(--spacing-12) var(--spacing-24);
 
   /* Base styling */
-  background-color: var(--text-default);
-  color: var(--bg-page);
+  background-color: var(--action);
+  color: var(--on-action);
   border-radius: var(--radius-8);
-  font-weight: 500;
+  font-weight: var(--sans-weight-medium);
   text-decoration: none;
 
   /* Interaction */
@@ -61,14 +61,18 @@ button,
 
 button:hover,
 .button:hover {
-  background-image: linear-gradient(var(--state-brand-hover),
-      var(--state-brand-hover));
+  background-image: linear-gradient(
+    var(--state-primary-hover),
+    var(--state-primary-hover)
+  );
 }
 
 button:active,
 .button:active {
-  background-image: linear-gradient(var(--state-brand-active),
-      var(--state-brand-active));
+  background-image: linear-gradient(
+    var(--state-primary-active),
+    var(--state-primary-active)
+  );
 }
 
 button:focus-visible,
@@ -91,18 +95,22 @@ button:disabled,
 
 /* Primary Button (Brand) */
 .button--primary {
-  background-color: var(--brand-primary);
-  color: var(--brand-on-primary);
+  background-color: var(--primary);
+  color: var(--on-primary);
 }
 
 .button--primary:hover {
-  background-image: linear-gradient(var(--state-brand-hover),
-      var(--state-brand-hover));
+  background-image: linear-gradient(
+    var(--state-primary-hover),
+    var(--state-primary-hover)
+  );
 }
 
 .button--primary:active {
-  background-image: linear-gradient(var(--state-brand-active),
-      var(--state-brand-active));
+  background-image: linear-gradient(
+    var(--state-primary-active),
+    var(--state-primary-active)
+  );
 }
 
 .button--primary:disabled {
@@ -118,13 +126,18 @@ button:disabled,
 }
 
 .button--secondary:hover {
-  background-color: var(--bg-surface);
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
   border-color: var(--border-strong);
 }
 
 .button--secondary:active {
-  background-image: linear-gradient(var(--state-surface-active),
-      var(--state-surface-active));
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
 }
 
 .button--secondary:disabled {
@@ -141,13 +154,18 @@ button:disabled,
 }
 
 .button--tertiary:hover {
-  background-color: var(--bg-surface);
+  background-image: linear-gradient(
+    var(--state-page-hover),
+    var(--state-page-hover)
+  );
   color: var(--text-link-hover);
 }
 
 .button--tertiary:active {
-  background-image: linear-gradient(var(--state-surface-active),
-      var(--state-surface-active));
+  background-image: linear-gradient(
+    var(--state-page-active),
+    var(--state-page-active)
+  );
 }
 
 .button--tertiary:disabled {

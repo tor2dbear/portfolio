@@ -10,7 +10,7 @@
 .tag {
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-  background-color: var(--bg-tag);
+  background-color: var(--surface-tag);
   letter-spacing: var(--tracking-wider);
   transition: all var(--motion-duration-slow) var(--motion-ease-standard);
   white-space: nowrap;
@@ -23,7 +23,7 @@
 
 .tag:hover {
   text-decoration: none;
-  background-color: var(--bg-tag-hover);
+  background-color: var(--surface-tag-hover);
 }
 
 .tag:visited,

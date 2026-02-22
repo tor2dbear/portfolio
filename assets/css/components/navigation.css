@@ -15,18 +15,19 @@
   height: var(--size-header-height);
   width: 100%;
   margin: 0px;
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   align-items: center;
   box-sizing: border-box;
-  transition: border-color var(--motion-duration-slower) var(--motion-ease-standard);
+  transition: border-color var(--motion-duration-slower)
+    var(--motion-ease-standard);
   border-bottom-style: solid;
   border-bottom-width: 1px;
-  border-color: var(--bg-page);
+  border-color: var(--surface-page);
   display: grid;
   grid-area: header;
 }
 
-.top-menu>div {
+.top-menu > div {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -63,7 +64,6 @@ html[data-grid-overlay] .top-menu {
   display: none;
 }
 
-
 /* ==========================================================================
    Contact Button (in Navigation)
    ========================================================================== */
@@ -80,9 +80,10 @@ html[data-grid-overlay] .top-menu {
   border: 0;
   border-radius: var(--spacing-8);
   box-sizing: border-box;
-  font-weight: var(--sans-weight-bold);
+  font-weight: var(--sans-weight-medium);
   font-size: var(--text-sm);
-  transition: background var(--motion-duration-base) var(--motion-ease-standard), color var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .top-menu__label--icon {
@@ -101,7 +102,10 @@ html[data-grid-overlay] .top-menu {
 
 .top-menu__item--contact .top-menu__link--button:hover,
 .top-menu__item--contact .top-menu__link--button:focus-visible {
-  background-image: linear-gradient(var(--state-brand-hover), var(--state-brand-hover));
+  background-image: linear-gradient(
+    var(--state-primary-hover),
+    var(--state-primary-hover)
+  );
 }
 
 /* ==========================================================================
@@ -116,7 +120,8 @@ html[data-grid-overlay] .top-menu {
   color: var(--text-default);
   text-decoration: none;
   font-size: var(--text-sm);
-  transition: background var(--motion-duration-base) var(--motion-ease-standard), color var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .top-menu__item--nav .top-menu__link:hover,
@@ -125,7 +130,7 @@ html[data-grid-overlay] .top-menu {
 }
 
 .top-menu__item--nav .top-menu__link.active {
-  background: var(--bg-surface);
+  background: var(--surface-default);
 }
 
 #layout.clientpage .top-menu__item--nav[data-menu-id="works"],
@@ -230,7 +235,8 @@ html[data-grid-overlay] .top-menu {
 /* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
   .top-menu {
-    transition: transform var(--motion-duration-slower) var(--motion-ease-standard);
+    transition: transform var(--motion-duration-slower)
+      var(--motion-ease-standard);
   }
 
   .top-menu__nav {
@@ -273,7 +279,11 @@ html[data-grid-overlay] .top-menu {
   #main,
   footer {
     grid-template-columns:
-      [full-start] var(--size-page-margins) [content-start] repeat(4, [col-start] 1fr) [content-end] var(--size-page-margins) [full-end];
+      [full-start] var(--size-page-margins) [content-start] repeat(
+        4,
+        [col-start] 1fr
+      )
+      [content-end] var(--size-page-margins) [full-end];
     column-gap: var(--spacing-16);
   }
 
@@ -284,7 +294,6 @@ html[data-grid-overlay] .top-menu {
 
 /* xs: <= 29.9375em */
 @media (max-width: 29.9375em) {
-
   .top-menu__item--theme,
   .top-menu__item--language {
     display: none;

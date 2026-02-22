@@ -6,6 +6,7 @@ name = "mesa"
 [roles]
 text = "amber"
 surface = "amber"
+border = "amber"
 primary = "teal"
 secondary = "amber"
 
@@ -19,5 +20,4 @@ image_treatment = "none"
 # None
 
 [component_overrides]
-nav_cta_bg_source = "primary.base"
-nav_cta_text_source = "primary.on"
+# None

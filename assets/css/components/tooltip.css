@@ -9,6 +9,8 @@
    ========================================================================== */
 
 .tooltip {
+  --tooltip-bg: var(--surface-inverse);
+
   position: relative;
   display: inline-block;
   cursor: pointer;
@@ -17,8 +19,8 @@
 .tooltip .tooltiptext {
   visibility: hidden;
   width: 120px;
-  background-color: black;
-  color: #fff;
+  background-color: var(--tooltip-bg);
+  color: var(--text-inverse);
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
@@ -44,14 +46,14 @@
 }
 
 .tooltip[data-position="top"] .tooltiptext::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: black transparent transparent transparent;
+  border-color: var(--tooltip-bg) transparent transparent transparent;
 }
 
 .tooltip[data-position="top-start"] .tooltiptext {
@@ -61,14 +63,14 @@
 }
 
 .tooltip[data-position="top-start"] .tooltiptext::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 10%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: black transparent transparent transparent;
+  border-color: var(--tooltip-bg) transparent transparent transparent;
 }
 
 .tooltip[data-position="top-end"] .tooltiptext {
@@ -78,14 +80,14 @@
 }
 
 .tooltip[data-position="top-end"] .tooltiptext::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   right: 10%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: black transparent transparent transparent;
+  border-color: var(--tooltip-bg) transparent transparent transparent;
 }
 
 /* ==========================================================================
@@ -100,14 +102,14 @@
 }
 
 .tooltip[data-position="bottom"] .tooltiptext::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 100%;
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent transparent black transparent;
+  border-color: transparent transparent var(--tooltip-bg) transparent;
   top: auto;
 }
 
@@ -118,14 +120,14 @@
 }
 
 .tooltip[data-position="bottom-start"] .tooltiptext::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 100%;
   left: 10%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent transparent black transparent;
+  border-color: transparent transparent var(--tooltip-bg) transparent;
 }
 
 .tooltip[data-position="bottom-end"] .tooltiptext {
@@ -135,12 +137,12 @@
 }
 
 .tooltip[data-position="bottom-end"] .tooltiptext::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 100%;
   right: 10%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent transparent black transparent;
+  border-color: transparent transparent var(--tooltip-bg) transparent;
 }

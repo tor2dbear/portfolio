@@ -4,10 +4,11 @@
 name = "pantone"
 
 [roles]
-text = "cloud"
-surface = "cloud"
-primary = "cloud"
-secondary = "cloud"
+text = "coty"
+surface = "coty"
+border = "coty"
+primary = "coty"
+secondary = "coty"
 
 [policies]
 tone_mode = "mono"

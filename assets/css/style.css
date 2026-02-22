@@ -1,5 +1,5 @@
 body {
-  background-color: var(--bg-page);
+  background-color: var(--surface-page);
   color: var(--text-default);
 }
 
@@ -15,7 +15,18 @@ body {
 
 /* Darkmode transition. */
 body.darkmodeTransition,
-body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .brand__mark, .brand__mark path, .brand__mark line, button, .brand, .brand__hyphen) {
+body.darkmodeTransition
+  :is(
+    #main,
+    .top-menu,
+    path.hyphen,
+    .brand__mark,
+    .brand__mark path,
+    .brand__mark line,
+    button,
+    .brand,
+    .brand__hyphen
+  ) {
   transition: stroke var(--motion-duration-xslow) var(--motion-ease-theme),
     border-color var(--motion-duration-xslow) var(--motion-ease-theme),
     color var(--motion-duration-xslow) var(--motion-ease-theme),
@@ -38,7 +49,7 @@ body.darkmodeTransition :is(#main, .top-menu, path.hyphen, .brand__mark, .brand_
 
 /* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
-  #main>.breakout {
+  #main > .breakout {
     grid-column: full-start / full-end;
   }
 }
@@ -77,7 +88,11 @@ footer {
   display: grid;
   width: 100%;
   grid-template-columns:
-    [full-start] var(--size-page-margins) [content-start] repeat(12, [col-start] 1fr) [content-end] var(--size-page-margins) [full-end];
+    [full-start] var(--size-page-margins) [content-start] repeat(
+      12,
+      [col-start] 1fr
+    )
+    [content-end] var(--size-page-margins) [full-end];
   column-gap: var(--spacing-24);
 }
 
@@ -92,7 +107,11 @@ footer {
   margin: 0 auto;
   display: grid;
   grid-template-columns:
-    [full-start] var(--size-page-margins) [content-start] repeat(12, [col-start] 1fr) [content-end] var(--size-page-margins) [full-end];
+    [full-start] var(--size-page-margins) [content-start] repeat(
+      12,
+      [col-start] 1fr
+    )
+    [content-end] var(--size-page-margins) [full-end];
   column-gap: var(--spacing-24);
   row-gap: var(--spacing-32);
   width: 100%;
@@ -100,19 +119,21 @@ footer {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-
   .top-menu,
   #main,
   footer {
     grid-template-columns:
-      [full-start] var(--size-page-margins) [content-start] repeat(4, [col-start] 1fr) [content-end] var(--size-page-margins) [full-end];
+      [full-start] var(--size-page-margins) [content-start] repeat(
+        4,
+        [col-start] 1fr
+      )
+      [content-end] var(--size-page-margins) [full-end];
     column-gap: var(--spacing-16);
   }
 
   #main {
     row-gap: var(--spacing-24);
   }
-
 }
 
 footer {
@@ -120,15 +141,20 @@ footer {
   padding: var(--spacing-32) 0;
 }
 
-.top-menu>*,
-#main>*,
-footer>* {
+.top-menu > *,
+#main > *,
+footer > * {
   grid-column: content-start / content-end;
 }
 
 /* Post children use --col for art-directed placement.
    Default: 10 cols. Override with .place-* or style="--col: …" */
-.content.post > :not([style*="--col"]):not(.place-full):not(.place-wide):not(.place-prose):not(.place-article):not(.place-narrow):not(.place-aside):not(.place-aside-left):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+.content.post
+  > :not([style*="--col"]):not(.place-full):not(.place-wide):not(
+    .place-prose
+  ):not(.place-article):not(.place-narrow):not(.place-aside):not(
+    .place-aside-left
+  ):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
   --col: col-start 1 / span 10;
   grid-column: var(--col);
   grid-row: var(--row, auto);
@@ -136,14 +162,24 @@ footer>* {
 
 /* lg: <= 79.9375em */
 @media (max-width: 79.9375em) {
-  .content.post > :not([style*="--col"]):not(.place-full):not(.place-wide):not(.place-prose):not(.place-article):not(.place-narrow):not(.place-aside):not(.place-aside-left):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+  .content.post
+    > :not([style*="--col"]):not(.place-full):not(.place-wide):not(
+      .place-prose
+    ):not(.place-article):not(.place-narrow):not(.place-aside):not(
+      .place-aside-left
+    ):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
     --col: col-start 1 / span 12;
   }
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  .content.post > :not([style*="--col"]):not(.place-full):not(.place-wide):not(.place-prose):not(.place-article):not(.place-narrow):not(.place-aside):not(.place-aside-left):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+  .content.post
+    > :not([style*="--col"]):not(.place-full):not(.place-wide):not(
+      .place-prose
+    ):not(.place-article):not(.place-narrow):not(.place-aside):not(
+      .place-aside-left
+    ):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
     --col: col-start 1 / span 4;
   }
 }
@@ -203,7 +239,9 @@ footer>* {
   display: contents;
 }
 
-.content.post.works-post > .post-content.place-prose > :not(.gallery):not(figure):not(.project-info):not(.post-nav) {
+.content.post.works-post
+  > .post-content.place-prose
+  > :not(.gallery):not(figure):not(.project-info):not(.post-nav) {
   --col: col-start 1 / span 8;
   grid-column: var(--col);
 }
@@ -221,7 +259,9 @@ footer>* {
 
 /* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
-  .content.post.works-post > .post-content.place-prose > :not(.gallery):not(figure):not(.project-info):not(.post-nav),
+  .content.post.works-post
+    > .post-content.place-prose
+    > :not(.gallery):not(figure):not(.project-info):not(.post-nav),
   .content.post.works-post > .post-content.place-prose > figure,
   .content.post.works-post > .post-content.place-prose > .gallery.place-wide,
   .content.post.works-post > .post-content.place-prose > .gallery.place-full {
@@ -231,7 +271,9 @@ footer>* {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  .content.post.works-post > .post-content.place-prose > :not(.gallery):not(figure):not(.project-info):not(.post-nav),
+  .content.post.works-post
+    > .post-content.place-prose
+    > :not(.gallery):not(figure):not(.project-info):not(.post-nav),
   .content.post.works-post > .post-content.place-prose > figure,
   .content.post.works-post > .post-content.place-prose > .gallery.place-wide,
   .content.post.works-post > .post-content.place-prose > .gallery.place-full {
@@ -256,7 +298,6 @@ footer>* {
 .page-404__lead {
   margin-bottom: var(--spacing-32);
 }
-
 
 /* || ========== Images ------------------------------------- */
 
@@ -285,7 +326,7 @@ picture::after,
   display: block;
   width: 100%;
   height: 100%;
-  background-color: var(--image-background);
+  background: var(--image-background) 0 0 / 100% 100% no-repeat;
   top: 0;
   z-index: 1;
   pointer-events: none;
@@ -306,16 +347,18 @@ video {
   line-height: 0;
   -webkit-filter: contrast(1);
   filter: contrast(1);
-  transition: -webkit-filter var(--motion-duration-slower) var(--motion-ease-standard);
+  transition: -webkit-filter var(--motion-duration-slower)
+    var(--motion-ease-standard);
   transition: filter var(--motion-duration-slower) var(--motion-ease-standard);
-  transition: filter var(--motion-duration-slower) var(--motion-ease-standard), -webkit-filter var(--motion-duration-slower) var(--motion-ease-standard);
+  transition: filter var(--motion-duration-slower) var(--motion-ease-standard),
+    -webkit-filter var(--motion-duration-slower) var(--motion-ease-standard);
 }
 
 .header-image img {
   width: 100%;
 }
 
-picture>img {
+picture > img {
   display: block;
 }
 
@@ -324,7 +367,7 @@ picture>img {
 }
 
 /* remove <br> introduced by render-image */
-.post figure+br {
+.post figure + br {
   display: none;
 }
 
@@ -352,22 +395,22 @@ p:empty {
 }
 
 /* Project info block */
-.content.post>.project-info {
+.content.post > .project-info {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 2rem 2rem;
   margin-bottom: var(--spacing-32);
-  background-color: var(--bg-surface);
+  background-color: var(--surface-default);
   --col: col-start 1 / span 12;
   grid-column: var(--col);
   grid-column-gap: 3rem;
 }
 
-.content.post>.project-info.project-info--cols-2 {
+.content.post > .project-info.project-info--cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.content.post>.project-info.project-info--cols-1 {
+.content.post > .project-info.project-info--cols-1 {
   grid-template-columns: minmax(0, 1fr);
 }
 
@@ -434,19 +477,19 @@ p:empty {
 
 /* lg: <= 63.9375em */
 @media (max-width: 63.9375em) {
-  .content.post>.project-info {
+  .content.post > .project-info {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-column-gap: 2rem;
   }
 
-  .content.post>.project-info.project-info--cols-1 {
+  .content.post > .project-info.project-info--cols-1 {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  .content.post>.project-info {
+  .content.post > .project-info {
     grid-template-columns: minmax(0, 1fr);
     grid-column-gap: 1.5rem;
   }
@@ -508,7 +551,7 @@ p:empty {
   display: block;
 }
 
- .about-cv__columns {
+.about-cv__columns {
   column-count: 3;
   column-gap: var(--spacing-32);
   column-fill: balance;
@@ -559,12 +602,12 @@ p:empty {
   }
 }
 
-.content.about>figure {
+.content.about > figure {
   grid-column: col-start 7 / span 6;
   display: none;
 }
 
-.content.about>figure img {
+.content.about > figure img {
   -webkit-filter: grayscale(1);
   filter: grayscale(1);
 }

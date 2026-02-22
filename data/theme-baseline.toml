@@ -15,7 +15,7 @@ description = "Baseline role recipe for palette generation"
 
 [roles.text]
 default_step = 12
-inverse_token = "white"
+inverse_token = "gray-1"
 link_source = "primary.strong"
 link_hover_source = "primary.hover"
 accent_source = "primary.strong"
@@ -28,8 +28,12 @@ tag_step = 3
 tag_hover_step = 4
 tag_text_step = 11
 surface_ink_strong_step = 11
-nav_source = "brand-primary"
 border_subtle_source = "gray-4"
+
+[roles.border]
+subtle_source = "surface.border_subtle"
+default_step = 6
+strong_step = 8
 
 [roles.primary]
 base_step = 9
@@ -59,5 +63,5 @@ button_text_step = 11
 button_text_role = "primary"
 
 [roles.component.nav_cta]
-bg_source = "text.default"
-text_source = "surface.page"
+bg_source = "primary.base"
+text_source = "primary.on"
