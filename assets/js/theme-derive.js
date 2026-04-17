@@ -133,14 +133,9 @@
 
     tokens["--surface-page"] = ctx.surface.page;
     tokens["--surface-default"] = ctx.surface.surface;
-    tokens["--surface-tag"] = ctx.surface.tag;
+    tokens["--surface-accent"] = ctx.surface.tag;
+    tokens["--surface-tag"] = tokens["--surface-accent"];
     tokens["--surface-tag-hover"] = ctx.surface.tag_hover;
-
-    // Keep legacy aliases synchronized during migration.
-    tokens["--bg-page"] = tokens["--surface-page"];
-    tokens["--bg-surface"] = tokens["--surface-default"];
-    tokens["--bg-tag"] = tokens["--surface-tag"];
-    tokens["--bg-tag-hover"] = tokens["--surface-tag-hover"];
     tokens["--border-subtle"] = ctx.border.subtle;
     tokens["--border-default"] = ctx.border.default;
     tokens["--border-strong"] = ctx.border.strong;
@@ -213,19 +208,34 @@
     var mode = (input && input.mode) || "light";
     var treatment = policies.image_treatment || "none";
     var surfaceFamily = roles.surface || "gray";
-    var isDark = mode === "dark";
 
     if (treatment === "pantone-blend") {
+      var shadowStep = mode === "dark" ? 11 : 3;
+      var highlightStep = mode === "dark" ? 3 : 11;
+      var shadowColor = "var(--" + surfaceFamily + "-" + shadowStep + ")";
+      var highlightColor = "var(--" + surfaceFamily + "-" + highlightStep + ")";
       return {
         "--image-grayscale": "100%",
+        "--image-shadow-blend-mode": "multiply",
+        "--image-highlight-blend-mode": "screen",
+        "--image-shadow-background": shadowColor,
+        "--image-highlight-background": highlightColor,
+        "--image-shadow-opacity": mode === "dark" ? "0.9" : "0.78",
+        "--image-highlight-opacity": mode === "dark" ? "0.72" : "0.68",
+        // Backward compatibility for places still inspecting legacy image tokens.
         "--image-blend-mode": "screen",
-        "--image-background":
-          "var(--" + surfaceFamily + "-" + (isDark ? "7" : "12") + ")",
+        "--image-background": highlightColor,
       };
     }
 
     return {
       "--image-grayscale": "0%",
+      "--image-shadow-blend-mode": "normal",
+      "--image-highlight-blend-mode": "normal",
+      "--image-shadow-background": "transparent",
+      "--image-highlight-background": "transparent",
+      "--image-shadow-opacity": "1",
+      "--image-highlight-opacity": "1",
       "--image-blend-mode": "normal",
       "--image-background": "transparent",
     };
@@ -238,8 +248,7 @@
     var derived = derivePaletteTokens(input || {});
     var primary =
       derived["--primary-strong"] || derived["--primary"] || "var(--gray-11)";
-    var surface =
-      derived["--surface-page"] || derived["--bg-page"] || "var(--gray-2)";
+    var surface = derived["--surface-page"] || "var(--gray-2)";
     var secondary =
       derived["--secondary-strong"] || derived["--secondary"] || primary;
 

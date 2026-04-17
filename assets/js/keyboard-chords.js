@@ -4,7 +4,7 @@
  * G
  * T + L/D/S
  * L + E/S
- * P + 1-5
+ * P (toggle Pantone)
  * F + 1-4
  */
 (function() {
@@ -79,7 +79,6 @@
 
     if (prefix === 'T') render('Theme +', ['L', 'D', 'S']);
     if (prefix === 'L') render('Language +', ['E', 'S']);
-    if (prefix === 'P') render('Palette +', ['1', '2', '3', '4', '5']);
     if (prefix === 'F') render('Typography +', ['1', '2', '3', '4']);
     hud.removeAttribute('hidden');
   }
@@ -117,16 +116,6 @@
     return window.LanguageActions || null;
   }
 
-  function setPaletteByIndex(index) {
-    var actions = getThemeActions();
-    if (!actions || typeof actions.setPalette !== 'function' || typeof actions.getPaletteOrder !== 'function') {
-      return;
-    }
-    var order = actions.getPaletteOrder();
-    var value = order[index];
-    if (value) actions.setPalette(value);
-  }
-
   function setTypographyByIndex(index) {
     var actions = getThemeActions();
     if (!actions || typeof actions.setTypography !== 'function' || typeof actions.getTypographyOrder !== 'function') {
@@ -147,7 +136,14 @@
       }
       return true;
     }
-    if (key === 'T' || key === 'L' || key === 'P' || key === 'F') {
+    if (key === 'P') {
+      var actions = getThemeActions();
+      if (actions && typeof actions.togglePantone === 'function') {
+        actions.togglePantone();
+      }
+      return true;
+    }
+    if (key === 'T' || key === 'L' || key === 'F') {
       armChord(key);
       return true;
     }
@@ -169,12 +165,6 @@
     if (prefixKey === 'L' && language && typeof language.setLanguage === 'function') {
       if (key === 'E') language.setLanguage('en');
       if (key === 'S') language.setLanguage('sv');
-      clearChord();
-      return true;
-    }
-
-    if (prefixKey === 'P') {
-      if (key >= '1' && key <= '5') setPaletteByIndex(Number(key) - 1);
       clearChord();
       return true;
     }

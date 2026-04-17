@@ -108,7 +108,7 @@
 }
 
 .hero-emphasis {
-  background: var(--surface-tag);
+  background: var(--surface-accent);
   padding: 0 var(--spacing-4);
   border-radius: var(--spacing-4);
   font-weight: inherit;

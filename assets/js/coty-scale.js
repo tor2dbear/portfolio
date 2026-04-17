@@ -45,6 +45,12 @@
     "--secondary",
     "--secondary-strong",
     "--image-grayscale",
+    "--image-shadow-blend-mode",
+    "--image-highlight-blend-mode",
+    "--image-shadow-background",
+    "--image-highlight-background",
+    "--image-shadow-opacity",
+    "--image-highlight-opacity",
     "--image-blend-mode",
     "--image-background",
     "--accent-secondary",
@@ -52,6 +58,8 @@
     "--component-toc-active-indicator",
     "--component-section-headline-bg",
   ];
+  var TRITONE_FILTER_ID = "pantone-tritone";
+  var TRITONE_SVG_ID = "pantone-tritone-defs";
 
   function isPantoneActive() {
     return (
@@ -344,6 +352,205 @@
       return resolveColorValue(token.fallback, level + 1);
     }
     return "";
+  }
+
+  function getScaleStepToken(prefix, step) {
+    return "--" + prefix + "-" + String(clamp(Number(step) || 1, 1, 12));
+  }
+
+  function getScaleColor(scaleMap, prefix, step) {
+    if (!scaleMap) {
+      return "";
+    }
+    return scaleMap[getScaleStepToken(prefix, step)] || "";
+  }
+
+  function extractStepFromVarToken(value, prefix) {
+    var regex = new RegExp("--" + prefix + "-(\\d+)");
+    var match = String(value || "").match(regex);
+    if (!match) {
+      return 0;
+    }
+    var step = Number(match[1]);
+    if (!step || step < 1 || step > 12) {
+      return 0;
+    }
+    return step;
+  }
+
+  function rgbDistance(a, b) {
+    if (!a || !b) {
+      return Infinity;
+    }
+    var dr = a.r - b.r;
+    var dg = a.g - b.g;
+    var db = a.b - b.b;
+    return dr * dr + dg * dg + db * db;
+  }
+
+  function findNearestScaleStep(scaleMap, prefix, targetColorValue) {
+    var targetHex = colorToHex(targetColorValue);
+    var targetRgb = hexToRgb(targetHex);
+    if (!targetRgb) {
+      return 0;
+    }
+    var bestStep = 0;
+    var bestDistance = Infinity;
+    for (var step = 1; step <= 12; step += 1) {
+      var candidate = getScaleColor(scaleMap, prefix, step);
+      var candidateHex = colorToHex(candidate);
+      var candidateRgb = hexToRgb(candidateHex);
+      var distance = rgbDistance(targetRgb, candidateRgb);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestStep = step;
+      }
+    }
+    return bestStep;
+  }
+
+  function colorValueToRgbUnit(value) {
+    var hex = colorToHex(value);
+    if (!hex) {
+      return null;
+    }
+    return hexToRgbUnit(hex);
+  }
+
+  function colorValueLuminance(value) {
+    var hex = colorToHex(value);
+    if (!hex) {
+      return 0;
+    }
+    return relativeLuminance(hex);
+  }
+
+  function ensureTritoneFilterNodes() {
+    var existing = document.getElementById(TRITONE_SVG_ID);
+    if (!existing) {
+      var host = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      host.setAttribute("id", TRITONE_SVG_ID);
+      host.setAttribute("aria-hidden", "true");
+      host.style.position = "absolute";
+      host.style.width = "0";
+      host.style.height = "0";
+
+      var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+      var filter = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "filter"
+      );
+      filter.setAttribute("id", TRITONE_FILTER_ID);
+      filter.setAttribute("color-interpolation-filters", "sRGB");
+
+      var matrix = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "feColorMatrix"
+      );
+      matrix.setAttribute("type", "saturate");
+      matrix.setAttribute("values", "0");
+      matrix.setAttribute("result", "gray");
+
+      var transfer = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "feComponentTransfer"
+      );
+      transfer.setAttribute("in", "gray");
+
+      var funcR = document.createElementNS("http://www.w3.org/2000/svg", "feFuncR");
+      funcR.setAttribute("type", "table");
+      funcR.setAttribute("tableValues", "0 0 0");
+      funcR.setAttribute("id", TRITONE_FILTER_ID + "-r");
+
+      var funcG = document.createElementNS("http://www.w3.org/2000/svg", "feFuncG");
+      funcG.setAttribute("type", "table");
+      funcG.setAttribute("tableValues", "0 0 0");
+      funcG.setAttribute("id", TRITONE_FILTER_ID + "-g");
+
+      var funcB = document.createElementNS("http://www.w3.org/2000/svg", "feFuncB");
+      funcB.setAttribute("type", "table");
+      funcB.setAttribute("tableValues", "0 0 0");
+      funcB.setAttribute("id", TRITONE_FILTER_ID + "-b");
+
+      transfer.appendChild(funcR);
+      transfer.appendChild(funcG);
+      transfer.appendChild(funcB);
+      filter.appendChild(matrix);
+      filter.appendChild(transfer);
+      defs.appendChild(filter);
+      host.appendChild(defs);
+      document.body.appendChild(host);
+    }
+    return {
+      r: document.getElementById(TRITONE_FILTER_ID + "-r"),
+      g: document.getElementById(TRITONE_FILTER_ID + "-g"),
+      b: document.getElementById(TRITONE_FILTER_ID + "-b"),
+    };
+  }
+
+  function setTritoneTableValues(nodes, shadow, mid, highlight) {
+    if (!nodes || !nodes.r || !nodes.g || !nodes.b) {
+      return;
+    }
+    var shadowRgb = colorValueToRgbUnit(shadow);
+    var midRgb = colorValueToRgbUnit(mid);
+    var highlightRgb = colorValueToRgbUnit(highlight);
+    if (!shadowRgb || !midRgb || !highlightRgb) {
+      return;
+    }
+    nodes.r.setAttribute(
+      "tableValues",
+      round3(shadowRgb.r) + " " + round3(midRgb.r) + " " + round3(highlightRgb.r)
+    );
+    nodes.g.setAttribute(
+      "tableValues",
+      round3(shadowRgb.g) + " " + round3(midRgb.g) + " " + round3(highlightRgb.g)
+    );
+    nodes.b.setAttribute(
+      "tableValues",
+      round3(shadowRgb.b) + " " + round3(midRgb.b) + " " + round3(highlightRgb.b)
+    );
+  }
+
+  function applyPantoneTritone(scale, secondaryScale, roles) {
+    if (!scale || !roles) {
+      document.documentElement.removeAttribute("data-image-tone");
+      return;
+    }
+
+    var nodes = ensureTritoneFilterNodes();
+    if (!nodes || !nodes.r || !nodes.g || !nodes.b) {
+      document.documentElement.removeAttribute("data-image-tone");
+      return;
+    }
+
+    var primarySource = resolveColorValue(roles.primary);
+    var primaryStep =
+      extractStepFromVarToken(roles.primary, "coty") ||
+      findNearestScaleStep(scale, "coty", primarySource) ||
+      DEFAULT_ANCHOR_STEP;
+
+    var candidateA = clamp(primaryStep + 2, 1, 12);
+    var candidateB = clamp(primaryStep - 6, 1, 12);
+    var colorA = getScaleColor(scale, "coty", candidateA);
+    var colorB = getScaleColor(scale, "coty", candidateB);
+    var luminanceA = colorValueLuminance(colorA);
+    var luminanceB = colorValueLuminance(colorB);
+
+    var shadowColor = luminanceA <= luminanceB ? colorA : colorB;
+    var highlightStep = luminanceA <= luminanceB ? candidateB : candidateA;
+    var highlightColor = luminanceA <= luminanceB ? colorB : colorA;
+    var midColor = primarySource || getScaleColor(scale, "coty", primaryStep);
+
+    if (secondaryScale) {
+      var duoHighlight =
+        getScaleColor(secondaryScale, "coty-secondary", highlightStep) ||
+        highlightColor;
+      highlightColor = duoHighlight;
+    }
+
+    setTritoneTableValues(nodes, shadowColor, midColor, highlightColor);
+    document.documentElement.setAttribute("data-image-tone", "tritone");
   }
 
   function parseData() {
@@ -783,6 +990,7 @@
     PANTONE_RUNTIME_TOKEN_NAMES.forEach(function (name) {
       document.documentElement.style.removeProperty(name);
     });
+    document.documentElement.removeAttribute("data-image-tone");
   }
 
   function applyPreviewTokens(scale, secondaryScale) {
@@ -1005,7 +1213,13 @@
       if (
         tokenName === "--image-background" ||
         tokenName === "--image-blend-mode" ||
-        tokenName === "--image-grayscale"
+        tokenName === "--image-grayscale" ||
+        tokenName === "--image-shadow-background" ||
+        tokenName === "--image-highlight-background" ||
+        tokenName === "--image-shadow-blend-mode" ||
+        tokenName === "--image-highlight-blend-mode" ||
+        tokenName === "--image-shadow-opacity" ||
+        tokenName === "--image-highlight-opacity"
       ) {
         return;
       }
@@ -1386,31 +1600,62 @@
     }
 
     // Pantone image treatment is runtime-driven:
-    // - light mode: step 9
-    // - dark mode: step 5
-    // - mono years: single-scale background
-    // - duo years: gradient between primary and secondary at the same step
+    // - mono years: dark+light tones from the same scale (11 + 3)
+    // - duo years: dark tones from primary and highlights from secondary (11 + 3)
     document.documentElement.style.setProperty("--image-grayscale", "100%");
+    document.documentElement.style.setProperty(
+      "--image-shadow-blend-mode",
+      "multiply"
+    );
+    document.documentElement.style.setProperty(
+      "--image-highlight-blend-mode",
+      "screen"
+    );
+    document.documentElement.style.setProperty(
+      "--image-shadow-opacity",
+      resolvedMode === "dark" ? "0.9" : "0.78"
+    );
+    document.documentElement.style.setProperty(
+      "--image-highlight-opacity",
+      resolvedMode === "dark" ? "0.72" : "0.68"
+    );
     document.documentElement.style.setProperty("--image-blend-mode", "screen");
-    var imageStep = resolvedMode === "dark" ? 5 : 9;
+    var shadowStep = resolvedMode === "dark" ? 11 : 3;
+    var highlightStep = resolvedMode === "dark" ? 3 : 11;
     if (secondaryScale) {
-      var primarySourceToken = "var(--coty-" + String(imageStep) + ")";
-      var secondarySourceToken =
-        "var(--coty-secondary-" + String(imageStep) + ")";
+      var shadowSourceToken = "var(--coty-" + String(shadowStep) + ")";
+      var highlightSourceToken =
+        "var(--coty-secondary-" + String(highlightStep) + ")";
+      document.documentElement.style.setProperty(
+        "--image-shadow-background",
+        shadowSourceToken
+      );
+      document.documentElement.style.setProperty(
+        "--image-highlight-background",
+        highlightSourceToken
+      );
       document.documentElement.style.setProperty(
         "--image-background",
-        "linear-gradient(135deg, " +
-          primarySourceToken +
-          ", " +
-          secondarySourceToken +
-          ")"
+        highlightSourceToken
       );
     } else {
+      var monoShadowToken = "var(--coty-" + String(shadowStep) + ")";
+      var monoHighlightToken = "var(--coty-" + String(highlightStep) + ")";
+      document.documentElement.style.setProperty(
+        "--image-shadow-background",
+        monoShadowToken
+      );
+      document.documentElement.style.setProperty(
+        "--image-highlight-background",
+        monoHighlightToken
+      );
       document.documentElement.style.setProperty(
         "--image-background",
-        "var(--coty-" + String(imageStep) + ")"
+        monoHighlightToken
       );
     }
+
+    applyPantoneTritone(scale, secondaryScale, roles);
 
     if (secondaryScale) {
       document.documentElement.style.setProperty(

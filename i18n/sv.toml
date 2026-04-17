@@ -322,6 +322,39 @@ other = "Custom palette"
 [coty_year]
 other = "År"
 
+[toast_blend_title]
+other = "Blend"
+
+[toast_grain_title]
+other = "Grain"
+
+[toast_motion_title]
+other = "Minska rörelse"
+
+[toast_effect_on]
+other = "På"
+
+[toast_effect_off]
+other = "Av"
+
+[coty_play]
+other = "Starta Pantone"
+
+[coty_stop]
+other = "Stoppa Pantone"
+
+[coty_previous]
+other = "Föregående Pantone Color of the Year"
+
+[coty_next]
+other = "Nästa Pantone Color of the Year"
+
+[coty_loop]
+other = "Växla Pantone-loop"
+
+[coty_shuffle]
+other = "Växla Pantone-shuffle"
+
 [toast_palette_saved]
 other = "Palett sparad"
 

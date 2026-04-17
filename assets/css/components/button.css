@@ -55,7 +55,9 @@ button,
 
   /* Interaction */
   cursor: pointer;
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: all
+    var(--theme-transition-duration, var(--motion-duration-base))
+    var(--motion-ease-standard);
   user-select: none;
 }
 
@@ -83,7 +85,7 @@ button:focus-visible,
 
 button:disabled,
 .button:disabled {
-  background-color: var(--bg-disabled);
+  background-color: var(--surface-disabled);
   color: var(--text-disabled);
   cursor: not-allowed;
   opacity: 0.6;
@@ -114,7 +116,7 @@ button:disabled,
 }
 
 .button--primary:disabled {
-  background-color: var(--bg-disabled);
+  background-color: var(--surface-disabled);
   color: var(--text-disabled);
 }
 

@@ -169,6 +169,53 @@
 <span hidden data-toast-category="typography" data-toast-label="{{ i18n "typography" }}"></span>
 <span hidden data-toast-category="language" data-toast-label="{{ i18n "footer_language_label" }}" data-toast-icon="icon-language-micro"></span>
 
+<div
+  class="coty-transport"
+  data-js="coty-transport"
+  hidden
+>
+  <div
+    class="coty-player coty-player--transport"
+    data-js="coty-player"
+  >
+    <div class="coty-player__controls">
+      <button class="coty-player__button coty-player__button--icon coty-player__button--mini" type="button" data-js="coty-loop" aria-label="{{ i18n "coty_loop" }}">
+        <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
+          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-loop"></use>
+        </svg>
+      </button>
+      <button class="coty-player__button coty-player__button--icon" type="button" data-js="coty-prev" aria-label="{{ i18n "coty_previous" }}">
+        <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
+          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-previous"></use>
+        </svg>
+      </button>
+      <button
+        class="coty-player__button coty-player__button--icon coty-player__button--primary"
+        type="button"
+        data-js="coty-play-toggle"
+        aria-label="{{ i18n "coty_play" }}"
+        data-label-play="{{ i18n "coty_play" }}"
+        data-label-stop="{{ i18n "coty_stop" }}"
+      >
+        <svg class="theme-option-icon" width="24" height="24" aria-hidden="true" data-js="coty-play-icon">
+          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-play"></use>
+        </svg>
+      </button>
+      <button class="coty-player__button coty-player__button--icon" type="button" data-js="coty-next" aria-label="{{ i18n "coty_next" }}">
+        <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
+          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-next"></use>
+        </svg>
+      </button>
+      <button class="coty-player__button coty-player__button--icon coty-player__button--mini" type="button" data-js="coty-shuffle" aria-label="{{ i18n "coty_shuffle" }}">
+        <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
+          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-shuffle"></use>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <select id="footer-coty-year" class="theme-year-select theme-year-select--hidden" data-js="coty-year-theme"></select>
+</div>
+
 <!-- Grid overlay (toggled via theme panel or chord key G) -->
 <div class="grid-overlay" aria-hidden="true">
   <div class="grid-overlay__col"></div>
@@ -186,4 +233,6 @@
   <div class="grid-overlay__col"></div>
   <div class="grid-overlay__col"></div>
 </div>
+
+<div class="grain-overlay" aria-hidden="true"></div>
 </div>

@@ -105,6 +105,23 @@ year = 2017
 name = "Greenery"
 hex = "#88b04b"
 
+[colors.overrides_light]
+text_muted = "--coty-10"
+border_subtle = "--coty-9"
+border_default = "--coty-10"
+border_strong = "--coty-9"
+primary = "--coty-9"
+on_action = "--coty-3"
+
+[colors.overrides_dark]
+surface_page = "--coty-3"
+surface_default = "--coty-4"
+border_subtle = "--coty-6"
+border_default = "--coty-7"
+border_strong = "--coty-8"
+primary = "--coty-9"
+component_form_bg = "--coty-3"
+
 [[colors]]
 year = 2018
 name = "Ultra Violet"

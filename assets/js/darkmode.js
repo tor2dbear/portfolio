@@ -15,10 +15,30 @@
   let modeOptions;
   let paletteOptions;
   let cotyYearSelects;
+  let cotyTransportNodes;
+  let cotyPlayToggles;
+  let cotyPlayIcons;
+  let cotyPrevButtons;
+  let cotyNextButtons;
+  let cotyLoopButtons;
+  let cotyShuffleButtons;
   let typographyOptions;
+  let effectBlendButtons;
+  let effectGrainButtons;
+  let effectMotionButtons;
   const CUSTOM_PALETTE_KEY = "theme-custom-palette";
   const COTY_YEAR_KEY = "theme-coty-year";
+  const COTY_LOOP_KEY = "theme-coty-loop";
+  const COTY_SHUFFLE_KEY = "theme-coty-shuffle";
+  const EFFECT_BLEND_KEY = "theme-effect-blend";
+  const EFFECT_GRAIN_KEY = "theme-effect-grain";
+  const EFFECT_MOTION_KEY = "theme-effect-reduced-motion";
+  const LAST_NON_PANTONE_PALETTE_KEY = "theme-last-non-pantone-palette";
+  const COTY_LOOP_INTERVAL_MS = 30000;
   let appliedCustomTokenNames = [];
+  let cotyLoopTimer = null;
+  let cotyLoopEnabled = false;
+  let cotyShuffleEnabled = false;
 
   function isGridActive() {
     const value = document.documentElement.getAttribute("data-grid-overlay");
@@ -190,26 +210,6 @@
     }
   }
 
-  function closeSettingsPanel() {
-    const settingsPanel = document.querySelector('[data-js="settings-panel"]');
-    const settingsToggle = document.querySelector(
-      '[data-js="settings-toggle"]'
-    );
-    const settingsOverlay = document.querySelector(
-      '[data-js="settings-overlay"]'
-    );
-
-    if (settingsPanel && !settingsPanel.hasAttribute("hidden")) {
-      settingsPanel.setAttribute("hidden", "");
-      if (settingsOverlay) {
-        settingsOverlay.setAttribute("hidden", "");
-      }
-      if (settingsToggle) {
-        settingsToggle.setAttribute("aria-expanded", "false");
-      }
-    }
-  }
-
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
@@ -218,8 +218,6 @@
     localStorage.setItem("theme-mode", mode);
     applyMode(mode);
     updateModeUI(mode);
-    closePanel();
-    closeSettingsPanel();
 
     var el = document.querySelector('[data-js="footer-mode"]');
     var category = el ? el.getAttribute("data-category") : "";
@@ -301,6 +299,9 @@
     if (palette === "custom" && !hasCustomPalette()) {
       return;
     }
+    if (palette !== "pantone") {
+      localStorage.setItem(LAST_NON_PANTONE_PALETTE_KEY, palette);
+    }
     localStorage.setItem("theme-palette", palette);
     applyPalette(palette);
     updatePaletteUI(palette);
@@ -309,15 +310,16 @@
         detail: { palette: palette },
       })
     );
-    closePanel();
-    closeSettingsPanel();
-
     var el = document.querySelector('[data-js="footer-palette"]');
     var category = el ? el.getAttribute("data-category") : "";
     var label = el
       ? el.getAttribute("data-label-" + palette) || palette
       : palette;
-    label = formatPaletteLabel(label, palette);
+    if (palette === "pantone") {
+      label = formatCotyTrackText(getCotyEntryByYear(getCurrentCotyYear()));
+    } else {
+      label = formatPaletteLabel(label, palette);
+    }
     var icon = el ? el.getAttribute("data-toast-icon") : "";
     if (window.Toast) {
       window.Toast.show(category, label, { icon: icon });
@@ -350,6 +352,7 @@
     }
 
     updateFooterPaletteLabel(palette);
+    syncCotyPlayerUI();
   }
 
   function getCotyActions() {
@@ -369,6 +372,14 @@
     }
     const stored = Number(localStorage.getItem(COTY_YEAR_KEY));
     return stored || 2026;
+  }
+
+  function getCotyEntryByYear(year) {
+    const actions = getCotyActions();
+    if (actions && typeof actions.getEntry === "function") {
+      return actions.getEntry(Number(year) || getCurrentCotyYear());
+    }
+    return null;
   }
 
   function formatPaletteLabel(baseLabel, palette) {
@@ -712,8 +723,6 @@
       )
         .then(function () {
           applyTypography(typography);
-          closePanel();
-          closeSettingsPanel();
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
@@ -721,16 +730,12 @@
         .catch(function () {
           // Font loading failed; apply anyway (CSS fallback stack kicks in)
           applyTypography(typography);
-          closePanel();
-          closeSettingsPanel();
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         });
     } else {
       applyTypography(typography);
-      closePanel();
-      closeSettingsPanel();
       if (window.Toast) {
         window.Toast.show(typoCategoryLabel, typoLabel);
       }
@@ -819,6 +824,250 @@
     typographyLabel.textContent = label;
   }
 
+  function readBooleanPreference(key, defaultValue) {
+    const raw = localStorage.getItem(key);
+    if (raw === null) {
+      return defaultValue;
+    }
+    return raw === "1";
+  }
+
+  function syncEffectButtons(nodes, enabled) {
+    if (!nodes) {
+      return;
+    }
+    nodes.forEach((button) => {
+      button.setAttribute("aria-pressed", enabled ? "true" : "false");
+    });
+  }
+
+  function showEffectToast(buttons, enabled, fallbackTitle) {
+    if (!window.Toast) {
+      return;
+    }
+    const button = buttons && buttons.length ? buttons[0] : null;
+    const title =
+      (button && button.getAttribute("data-toast-title")) || fallbackTitle;
+    const onLabel = (button && button.getAttribute("data-toast-on")) || "On";
+    const offLabel = (button && button.getAttribute("data-toast-off")) || "Off";
+    const icon = (button && button.getAttribute("data-toast-icon")) || "";
+    window.Toast.show(title, enabled ? onLabel : offLabel, { icon: icon });
+  }
+
+  function setBlendEnabled(enabled, options) {
+    const opts = options || {};
+    const value = Boolean(enabled);
+    document.documentElement.setAttribute(
+      "data-effect-blend",
+      value ? "on" : "off"
+    );
+    localStorage.setItem(EFFECT_BLEND_KEY, value ? "1" : "0");
+    syncEffectButtons(effectBlendButtons, value);
+    if (!opts.silent) {
+      showEffectToast(effectBlendButtons, value, "Blend");
+    }
+  }
+
+  function setGrainEnabled(enabled, options) {
+    const opts = options || {};
+    const value = Boolean(enabled);
+    document.documentElement.setAttribute(
+      "data-effect-grain",
+      value ? "on" : "off"
+    );
+    localStorage.setItem(EFFECT_GRAIN_KEY, value ? "1" : "0");
+    syncEffectButtons(effectGrainButtons, value);
+    if (!opts.silent) {
+      showEffectToast(effectGrainButtons, value, "Grain");
+    }
+  }
+
+  function setReducedMotionEnabled(enabled, options) {
+    const opts = options || {};
+    const value = Boolean(enabled);
+    document.documentElement.setAttribute(
+      "data-effect-reduced-motion",
+      value ? "on" : "off"
+    );
+    localStorage.setItem(EFFECT_MOTION_KEY, value ? "1" : "0");
+    syncEffectButtons(effectMotionButtons, value);
+    if (!opts.silent) {
+      showEffectToast(effectMotionButtons, value, "Reduce motion");
+    }
+  }
+
+  function formatCotyTrackText(entry) {
+    if (!entry || !entry.year) {
+      return "";
+    }
+    return String(entry.year) + " \u2014 " + String(entry.name || "");
+  }
+
+  function isPantoneActive() {
+    return (
+      (document.documentElement.getAttribute("data-palette") || "standard") ===
+      "pantone"
+    );
+  }
+
+  function syncCotyPlayButtons() {
+    const playing = isPantoneActive();
+    if (cotyTransportNodes) {
+      cotyTransportNodes.forEach((node) => {
+        if (playing) {
+          node.removeAttribute("hidden");
+        } else {
+          node.setAttribute("hidden", "");
+        }
+      });
+    }
+    if (cotyPlayToggles) {
+      cotyPlayToggles.forEach((button) => {
+        const playLabel = button.getAttribute("data-label-play") || "Play";
+        const stopLabel = button.getAttribute("data-label-stop") || "Stop";
+        button.setAttribute("aria-label", playing ? stopLabel : playLabel);
+        button.setAttribute("aria-pressed", playing ? "true" : "false");
+        button.setAttribute("data-playing", playing ? "true" : "false");
+      });
+    }
+    if (cotyPlayIcons) {
+      cotyPlayIcons.forEach((icon) => {
+        icon.innerHTML = `<use href="/img/svg/sprite.svg?v=20260222a#${
+          playing ? "icon-player-stop" : "icon-player-play"
+        }"></use>`;
+      });
+    }
+  }
+
+  function stopCotyLoopTimer() {
+    if (cotyLoopTimer) {
+      window.clearInterval(cotyLoopTimer);
+      cotyLoopTimer = null;
+    }
+  }
+
+  function getNextCotyYear(step) {
+    const actions = getCotyActions();
+    if (!actions || typeof actions.getEntries !== "function") {
+      return getCurrentCotyYear();
+    }
+    const entries = actions.getEntries();
+    if (!entries || !entries.length) {
+      return getCurrentCotyYear();
+    }
+    const currentYear = getCurrentCotyYear();
+    const currentIndex = Math.max(
+      0,
+      entries.findIndex((entry) => Number(entry.year) === Number(currentYear))
+    );
+
+    if (cotyShuffleEnabled) {
+      if (entries.length === 1) {
+        return Number(entries[0].year);
+      }
+      let randomIndex = currentIndex;
+      while (randomIndex === currentIndex) {
+        randomIndex = Math.floor(Math.random() * entries.length);
+      }
+      return Number(entries[randomIndex].year);
+    }
+
+    const nextIndex = (currentIndex + step + entries.length) % entries.length;
+    return Number(entries[nextIndex].year);
+  }
+
+  function advanceCotyYear(step, options) {
+    const nextYear = getNextCotyYear(step);
+    setCotyYear(nextYear, options || {});
+  }
+
+  function startCotyLoopTimer() {
+    stopCotyLoopTimer();
+    cotyLoopTimer = window.setInterval(function () {
+      advanceCotyYear(1, { activatePantone: true });
+    }, COTY_LOOP_INTERVAL_MS);
+  }
+
+  function syncCotyLoopTimer() {
+    if (cotyLoopEnabled && isPantoneActive()) {
+      startCotyLoopTimer();
+    } else {
+      stopCotyLoopTimer();
+    }
+  }
+
+  function setCotyLoopEnabled(enabled) {
+    cotyLoopEnabled = Boolean(enabled);
+    localStorage.setItem(COTY_LOOP_KEY, cotyLoopEnabled ? "1" : "0");
+    if (cotyLoopButtons) {
+      cotyLoopButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", cotyLoopEnabled ? "true" : "false");
+      });
+    }
+    syncCotyLoopTimer();
+  }
+
+  function setCotyShuffleEnabled(enabled) {
+    cotyShuffleEnabled = Boolean(enabled);
+    localStorage.setItem(COTY_SHUFFLE_KEY, cotyShuffleEnabled ? "1" : "0");
+    if (cotyShuffleButtons) {
+      cotyShuffleButtons.forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          cotyShuffleEnabled ? "true" : "false"
+        );
+      });
+    }
+  }
+
+  function playPantone() {
+    setPalette("pantone");
+    syncCotyLoopTimer();
+  }
+
+  function stopPantone() {
+    const fallback =
+      localStorage.getItem(LAST_NON_PANTONE_PALETTE_KEY) || "standard";
+    setPalette(fallback === "pantone" ? "standard" : fallback);
+    syncCotyLoopTimer();
+  }
+
+  function togglePantonePlayback() {
+    if (isPantoneActive()) {
+      stopPantone();
+      return;
+    }
+    playPantone();
+  }
+
+  function syncCotyPlayerUI() {
+    syncCotyPlayButtons();
+    if (cotyLoopButtons) {
+      cotyLoopButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", cotyLoopEnabled ? "true" : "false");
+      });
+    }
+    if (cotyShuffleButtons) {
+      cotyShuffleButtons.forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          cotyShuffleEnabled ? "true" : "false"
+        );
+      });
+    }
+    syncCotyLoopTimer();
+  }
+
+  function showCotyYearToast(entry) {
+    if (!entry || !window.Toast) {
+      return;
+    }
+    const el = document.querySelector('[data-js="footer-palette"]');
+    const category = el ? el.getAttribute("data-category") : "";
+    const icon = el ? el.getAttribute("data-toast-icon") : "";
+    window.Toast.show(category, formatCotyTrackText(entry), { icon: icon });
+  }
+
   // ==========================================================================
   // SYSTEM PREFERENCE LISTENER
   // ==========================================================================
@@ -892,6 +1141,7 @@
     }
 
     if (!opts.silent) {
+      showCotyYearToast(entry);
       window.dispatchEvent(
         new window.CustomEvent("theme:coty-year-changed", {
           detail: { year: entry.year, name: entry.name || "" },
@@ -938,6 +1188,70 @@
     });
   }
 
+  function initCotyPlayerControls() {
+    cotyLoopEnabled = localStorage.getItem(COTY_LOOP_KEY) === "1";
+    cotyShuffleEnabled = localStorage.getItem(COTY_SHUFFLE_KEY) === "1";
+
+    if (cotyPrevButtons) {
+      cotyPrevButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          advanceCotyYear(-1, {
+            activatePantone: false,
+          });
+        });
+      });
+    }
+
+    if (cotyNextButtons) {
+      cotyNextButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          advanceCotyYear(1, {
+            activatePantone: false,
+          });
+        });
+      });
+    }
+
+    if (cotyPlayToggles) {
+      cotyPlayToggles.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          togglePantonePlayback();
+        });
+      });
+    }
+
+    if (cotyLoopButtons) {
+      cotyLoopButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          setCotyLoopEnabled(!cotyLoopEnabled);
+        });
+      });
+    }
+
+    if (cotyShuffleButtons) {
+      cotyShuffleButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          setCotyShuffleEnabled(!cotyShuffleEnabled);
+        });
+      });
+    }
+
+    if (cotyTransportNodes) {
+      cotyTransportNodes.forEach((node) => {
+        node.addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+      });
+    }
+
+    syncCotyPlayerUI();
+  }
+
   // ==========================================================================
   // INITIALIZATION
   // ==========================================================================
@@ -951,8 +1265,24 @@
     modeOptions = document.querySelectorAll('[data-js="mode-option"]');
     paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
     cotyYearSelects = document.querySelectorAll('[data-js="coty-year-theme"]');
+    cotyTransportNodes = document.querySelectorAll('[data-js="coty-transport"]');
+    cotyPlayToggles = document.querySelectorAll('[data-js="coty-play-toggle"]');
+    cotyPlayIcons = document.querySelectorAll('[data-js="coty-play-icon"]');
+    cotyPrevButtons = document.querySelectorAll('[data-js="coty-prev"]');
+    cotyNextButtons = document.querySelectorAll('[data-js="coty-next"]');
+    cotyLoopButtons = document.querySelectorAll('[data-js="coty-loop"]');
+    cotyShuffleButtons = document.querySelectorAll('[data-js="coty-shuffle"]');
     typographyOptions = document.querySelectorAll(
       '[data-js="typography-option"]'
+    );
+    effectBlendButtons = document.querySelectorAll(
+      '[data-js="effect-blend-toggle"]'
+    );
+    effectGrainButtons = document.querySelectorAll(
+      '[data-js="effect-grain-toggle"]'
+    );
+    effectMotionButtons = document.querySelectorAll(
+      '[data-js="effect-motion-toggle"]'
     );
 
     // Load stored preferences or use defaults
@@ -979,19 +1309,31 @@
       window.CotyScaleActions.init();
     }
     initCotyYearControls();
+    initCotyPlayerControls();
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
+    setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
+      silent: true,
+    });
+    setGrainEnabled(readBooleanPreference(EFFECT_GRAIN_KEY, false), {
+      silent: true,
+    });
+    setReducedMotionEnabled(readBooleanPreference(EFFECT_MOTION_KEY, false), {
+      silent: true,
+    });
 
     // Update UI to reflect current settings
     updateModeUI(storedMode);
     updatePaletteUI(initialPalette);
     updateTypographyUI(storedTypography);
+    syncCotyPlayerUI();
 
     window.ThemeActions = {
       setMode: setMode,
       setPalette: setPalette,
       setTypography: setTypography,
+      togglePantone: togglePantonePlayback,
       getPaletteOrder: function () {
         const seen = new Set();
         const values = [];
@@ -1021,6 +1363,8 @@
       },
       setCotyYear: setCotyYear,
       getCotyYear: getCurrentCotyYear,
+      setCotyLoopEnabled: setCotyLoopEnabled,
+      setCotyShuffleEnabled: setCotyShuffleEnabled,
       refreshCustomPalette: refreshCustomPaletteState,
     };
 
@@ -1141,6 +1485,37 @@
         setTypography(typography);
       });
     });
+
+    if (effectBlendButtons) {
+      effectBlendButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          setBlendEnabled(
+            document.documentElement.getAttribute("data-effect-blend") !== "on"
+          );
+        });
+      });
+    }
+
+    if (effectGrainButtons) {
+      effectGrainButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          setGrainEnabled(
+            document.documentElement.getAttribute("data-effect-grain") !== "on"
+          );
+        });
+      });
+    }
+
+    if (effectMotionButtons) {
+      effectMotionButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          setReducedMotionEnabled(
+            document.documentElement.getAttribute("data-effect-reduced-motion") !==
+              "on"
+          );
+        });
+      });
+    }
   });
 
   // Global function for backwards compatibility (if needed elsewhere)

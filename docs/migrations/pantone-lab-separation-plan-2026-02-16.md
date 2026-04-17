@@ -12,6 +12,60 @@ Detta dokument beskriver hur vi separerar "vanlig palette generator" från ett d
 4. Ge robust persistens for granskning over hela sajten.
 5. Minska otydlighet kring `role_mode` och `anchor_step`.
 
+## Plan Update (2026-04-15): Pantone as Effect + Bottom Transport
+
+Denna uppdatering flyttar Pantone från "palette-val" i meny-UI till en effect-modell.
+
+### New UX Model
+
+1. Palette i meny visas inte som lista av flera teman.
+2. Standard ar implicit bas-theme nar Pantone inte ar aktivt.
+3. Pantone aktiveras/avaktiveras via Effects.
+4. Pantone media-kontroller (loop/prev/play-stop/next/shuffle + track text) flyttas till en bottom overlay som visas endast nar Pantone ar aktivt.
+5. Sektionen `Grid` byts till `Effects`.
+
+### Effect Set (target)
+
+1. Grid on/off.
+2. Pantone on/off.
+3. Image blend on/off (globalt, inte exklusivt Pantone).
+4. Grain on/off.
+5. Reduce motion on/off.
+
+Notis:
+
+1. Effects-ikoner kan levereras som placeholders forst, med stegvis koppling av funktion.
+
+### Runtime and State Model
+
+1. `standard` ar fallback nar Pantone stoppas.
+2. Pantone ar en aktiv effect-state i UI, men kan tills vidare fortsatta anvanda `data-palette="pantone"` internt for kompatibilitet.
+3. Bottom overlay ar driven av samma COTY-year state som idag (`theme-coty-year`).
+4. Effect-state sparas separat i localStorage (per effect key) och synkas mellan theme panel och settings panel.
+
+### Phased Delivery
+
+1. Phase 1: UI structure
+   - Ta bort/dolj palette-listan i panelerna.
+   - Byt `Grid` -> `Effects`.
+   - Visa Pantone transport i bottom overlay (bakom feature flag om behov).
+2. Phase 2: Pantone effect wiring
+   - Koppla Pantone on/off till play/stop och fallback till `standard`.
+   - Sakerstall toast/footer labels och keyboard behavior.
+3. Phase 3: Effects foundation
+   - Introducera effect manager for grid/blend/grain/reduced-motion.
+   - Koppla grid forst, sedan blend, grain, motion.
+4. Phase 4: Cleanup
+   - Rensa overbliven palette-UI logik och legacy shortcuts som inte langre ar relevanta.
+
+### DoD for this model
+
+1. Pantone kan aktiveras/stoppas utan palette-dropdown.
+2. Stop gar alltid tillbaka till `standard`.
+3. Bottom transport visas endast nar Pantone ar aktivt.
+4. Effects-sektionen ersatter Grid-sektionen och ar synkad i bade theme/settings panel.
+5. Ingen regressions i mode/typography, toasts eller keyboard chords.
+
 ## Current Baseline Status (Done before PR A)
 
 Detta ar den stabila baseline vi utgar ifran innan token-utokningen:

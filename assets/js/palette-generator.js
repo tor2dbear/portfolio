@@ -205,26 +205,16 @@
         fields: [
           { key: "surface_page", token: "--surface-page" },
           { key: "surface_default", token: "--surface-default" },
-          { key: "surface_tag", token: "--surface-tag" },
-          { key: "surface_tag_hover", token: "--surface-tag-hover" },
-          { key: "component_form_bg", token: "--component-form-bg" },
+          { key: "surface_elevated", token: "--surface-elevated" },
+          { key: "surface_subtle", token: "--surface-subtle" },
+          { key: "surface_disabled", token: "--surface-disabled" },
+          { key: "surface_inverse", token: "--surface-inverse" },
           {
-            key: "component_form_placeholder",
-            token: "--component-form-placeholder",
+            key: "surface_accent",
+            token: "--surface-accent",
+            legacyKeys: ["surface_tag"],
           },
           { key: "image_background", token: "--image-background" },
-          {
-            key: "component_newsletter_bg",
-            token: "--component-newsletter-bg",
-          },
-          {
-            key: "component_newsletter_text",
-            token: "--component-newsletter-text",
-          },
-          {
-            key: "component_newsletter_illustration_bg",
-            token: "--component-newsletter-illustration-bg",
-          },
         ],
       },
       {
@@ -257,8 +247,6 @@
           },
           { key: "action", token: "--action" },
           { key: "on_action", token: "--on-action" },
-          { key: "component_nav_cta_bg", token: "--component-nav-cta-bg" },
-          { key: "component_nav_cta_text", token: "--component-nav-cta-text" },
           { key: "state_focus", token: "--state-focus" },
           { key: "state_selected", token: "--state-selected" },
         ],
@@ -281,13 +269,38 @@
             key: "on_secondary",
             token: "--on-secondary",
           },
+        ],
+      },
+      {
+        id: "components",
+        label: "Components",
+        fields: [
+          { key: "component_form_bg", token: "--component-form-bg" },
+          {
+            key: "component_form_placeholder",
+            token: "--component-form-placeholder",
+            hiddenInUi: true,
+          },
+          {
+            key: "component_nav_cta_bg",
+            token: "--component-nav-cta-bg",
+            hiddenInUi: true,
+          },
+          {
+            key: "component_nav_cta_text",
+            token: "--component-nav-cta-text",
+            hiddenInUi: true,
+          },
           {
             key: "component_toc_active_indicator",
             token: "--component-toc-active-indicator",
+            hiddenInUi: true,
           },
           {
             key: "component_section_headline_bg",
             token: "--component-section-headline-bg",
+            legacyKeys: ["surface_headline"],
+            hiddenInUi: true,
           },
         ],
       },
@@ -463,13 +476,13 @@
       "--image-background": [
         {
           file: "assets/css/style.css",
-          selector: "picture::after, .video-wrapper::after",
-          note: "Image treatment overlay background.",
+          selector: "picture::before/::after, .video-wrapper::before/::after",
+          note: "Image treatment duotone overlay background.",
         },
         {
           file: "assets/js/coty-scale.js",
           selector: "runtime token assignment",
-          note: "Pantone mode and duo-gradient defaults.",
+          note: "Pantone mode and duotone defaults.",
         },
       ],
       "--component-newsletter-bg": [
@@ -1702,6 +1715,7 @@
         // Clear previously applied Palette Builder tokens so they don't override Pantone.
         clearTokens();
         applyCotyDraftForSelectedYear();
+        updateExport(currentRoles(), currentPolicies(currentPresetName()));
       } else {
         applyFromRoles(
           currentRoles(),
@@ -1919,6 +1933,10 @@
       cotyOverrideGroupsRoot.innerHTML = "";
 
       COTY_OVERRIDE_GROUPS.forEach((group) => {
+        const visibleFields = group.fields.filter((field) => !field.hiddenInUi);
+        if (!visibleFields.length) {
+          return;
+        }
         const section = document.createElement("details");
         section.className = "accordion-nested palette-generator__coty-group";
         section.setAttribute("data-group-id", group.id);
@@ -1938,7 +1956,7 @@
         grid.className =
           "accordion-nested__content palette-generator__grid palette-generator__grid--coty-overrides";
 
-        group.fields.forEach((field) => {
+        visibleFields.forEach((field) => {
           const row = document.createElement("div");
           row.className = "palette-generator__row";
 
@@ -2222,17 +2240,28 @@
       const allowed = new Set(
         cotyOverrideOptionsForYear(Number(year) || currentCotyYear())
       );
+      const getOverrideValue = (source, field) => {
+        const keys = [field.key].concat(field.legacyKeys || []);
+        for (let i = 0; i < keys.length; i += 1) {
+          const candidate = keys[i];
+          const value = normalizeCotyOverrideValue(source && source[candidate]);
+          if (value) {
+            return value;
+          }
+        }
+        return "";
+      };
       const sanitizeOverrideBucket = (source) => {
         const out = {};
-        Object.keys(cotyOverrideSelects).forEach((key) => {
-          const value = normalizeCotyOverrideValue(source && source[key]);
+        COTY_OVERRIDE_FIELDS.forEach((field) => {
+          const value = getOverrideValue(source, field);
           if (!value) {
             return;
           }
           if (!allowed.has(value)) {
             return;
           }
-          out[key] = value;
+          out[field.key] = value;
         });
         return out;
       };
@@ -2848,7 +2877,6 @@
         resolveSource(textSteps.accent_source, ctx)
       );
       setDerivedToken("--component-toc-active-indicator", ctx.primary.base);
-      setDerivedToken("--component-section-headline-bg", ctx.primary.base);
 
       setDerivedToken("--text-default", ctx.text.default);
       setDerivedToken(
@@ -2871,13 +2899,27 @@
 
       setDerivedToken("--surface-page", ctx.surface.page);
       setDerivedToken("--surface-default", ctx.surface.surface);
-      setDerivedToken("--surface-tag", ctx.surface.tag);
+      const surfaceElevatedValue =
+        getDerivedToken("--surface-elevated") ||
+        "color-mix(in srgb, var(--surface-page) 88%, white)";
+      const surfaceSubtleValue =
+        getDerivedToken("--surface-subtle") || surfaceElevatedValue;
+      const surfaceDisabledValue =
+        getDerivedToken("--surface-disabled") || surfaceSubtleValue;
+      const surfaceInverseValue =
+        getDerivedToken("--surface-inverse") || ctx.text.default;
+      const componentSectionHeadlineBgValue =
+        getDerivedToken("--component-section-headline-bg") || ctx.primary.base;
+      setToken("--surface-elevated", surfaceElevatedValue);
+      setToken("--surface-subtle", surfaceSubtleValue);
+      setToken("--surface-disabled", surfaceDisabledValue);
+      setToken("--surface-inverse", surfaceInverseValue);
+      setToken("--component-section-headline-bg", componentSectionHeadlineBgValue);
+      setToken("--surface-headline", componentSectionHeadlineBgValue);
+      const surfaceAccentValue = getDerivedToken("--surface-accent") || ctx.surface.tag;
+      setToken("--surface-accent", surfaceAccentValue);
+      setToken("--surface-tag", surfaceAccentValue);
       setDerivedToken("--surface-tag-hover", ctx.surface.tag_hover);
-      // Keep legacy aliases synchronized during migration.
-      setDerivedToken("--bg-page", ctx.surface.page);
-      setDerivedToken("--bg-surface", ctx.surface.surface);
-      setDerivedToken("--bg-tag", ctx.surface.tag);
-      setDerivedToken("--bg-tag-hover", ctx.surface.tag_hover);
       setDerivedToken("--border-subtle", ctx.border.subtle);
       setDerivedToken("--border-default", ctx.border.default);
       setDerivedToken("--border-strong", ctx.border.strong);
@@ -2905,15 +2947,26 @@
           setToken(name, imageTokens[name])
         );
       } else if (imageTreatment === "pantone-blend") {
+        const isDarkMode = document.documentElement.getAttribute("data-mode") === "dark";
+        const shadowStep = isDarkMode ? 11 : 3;
+        const highlightStep = isDarkMode ? 3 : 11;
         setToken("--image-grayscale", "100%");
+        setToken("--image-shadow-blend-mode", "multiply");
+        setToken("--image-highlight-blend-mode", "screen");
+        setToken("--image-shadow-background", scaleVar(effectiveRoles.surface, shadowStep));
+        setToken("--image-shadow-opacity", isDarkMode ? "0.9" : "0.78");
+        setToken("--image-highlight-opacity", isDarkMode ? "0.72" : "0.68");
         setToken("--image-blend-mode", "screen");
-        if (document.documentElement.getAttribute("data-mode") === "dark") {
-          setToken("--image-background", scaleVar(effectiveRoles.surface, 7));
-        } else {
-          setToken("--image-background", scaleVar(effectiveRoles.surface, 12));
-        }
+        setToken("--image-highlight-background", scaleVar(effectiveRoles.surface, highlightStep));
+        setToken("--image-background", scaleVar(effectiveRoles.surface, highlightStep));
       } else {
         setToken("--image-grayscale", "0%");
+        setToken("--image-shadow-blend-mode", "normal");
+        setToken("--image-highlight-blend-mode", "normal");
+        setToken("--image-shadow-background", "transparent");
+        setToken("--image-highlight-background", "transparent");
+        setToken("--image-shadow-opacity", "1");
+        setToken("--image-highlight-opacity", "1");
         setToken("--image-blend-mode", "normal");
         setToken("--image-background", "transparent");
       }
@@ -3386,7 +3439,6 @@
             surface:
               (derivedPreview && derivedPreview.surface) ||
               derived["--surface-page"] ||
-              derived["--bg-page"] ||
               "",
             secondary:
               (derivedPreview && derivedPreview.secondary) ||

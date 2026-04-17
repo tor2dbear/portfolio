@@ -75,7 +75,7 @@ input[type="search"]:disabled,
 input[type="number"]:disabled,
 textarea:disabled,
 .input:disabled {
-  background-color: var(--surface-subtle);
+  background-color: var(--surface-disabled);
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;
@@ -165,7 +165,7 @@ textarea.error:focus,
 
 /* Disabled State */
 .radio input[type="radio"]:disabled + .radio__visual {
-  background-color: var(--surface-subtle);
+  background-color: var(--surface-disabled);
   border-color: var(--border-subtle);
   cursor: not-allowed;
   opacity: 0.6;
@@ -250,7 +250,7 @@ textarea.error:focus,
 
 /* Disabled State */
 .checkbox input[type="checkbox"]:disabled + .checkbox__visual {
-  background-color: var(--surface-subtle);
+  background-color: var(--surface-disabled);
   border-color: var(--border-subtle);
   cursor: not-allowed;
   opacity: 0.6;
@@ -311,7 +311,7 @@ select:hover:not(:focus):not(:disabled),
 /* Disabled State */
 select:disabled,
 .select:disabled {
-  background-color: var(--surface-subtle);
+  background-color: var(--surface-disabled);
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;
