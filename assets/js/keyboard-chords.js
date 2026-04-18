@@ -123,9 +123,7 @@
     if (!actions || typeof actions.setTypography !== 'function' || typeof actions.getTypographyOrder !== 'function') {
       return;
     }
-    var order = actions.getTypographyOrder().filter(function(item) {
-      return item !== 'system';
-    });
+    var order = actions.getTypographyOrder();
     var value = order[index];
     if (value) {actions.setTypography(value);}
   }

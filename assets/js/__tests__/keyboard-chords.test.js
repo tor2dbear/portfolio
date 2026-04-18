@@ -65,6 +65,15 @@ describe("keyboard chords", () => {
     );
   });
 
+  test("typography chord reaches system", () => {
+    loadModule();
+
+    pressKey("t");
+    pressKey("s");
+
+    expect(window.ThemeActions.setTypography).toHaveBeenCalledWith("system");
+  });
+
   test("effects chord uses semantic letters", () => {
     loadModule();
 
