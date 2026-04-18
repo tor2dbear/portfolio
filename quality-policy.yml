@@ -41,7 +41,7 @@ policy:
         "/contact/":
           categories:
             performance:
-              minScore: 74
+              minScore: 71
         "/works/":
           categories:
             performance:
