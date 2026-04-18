@@ -38,6 +38,14 @@ policy:
           categories:
             performance:
               minScore: 70
+        "/contact/":
+          categories:
+            performance:
+              minScore: 74
+        "/works/":
+          categories:
+            performance:
+              minScore: 73
 
   # B) FIX-SOON (visible in PR comment, not failing CI)
   fixSoon:
