@@ -174,46 +174,56 @@
   data-js="coty-transport"
   hidden
 >
+  <button
+    class="coty-transport__trigger"
+    type="button"
+    data-js="coty-transport-trigger"
+    aria-label="{{ i18n "coty_show_controls" }}"
+  >
+    <span
+      class="coty-transport__trigger-icon"
+      aria-hidden="true"
+    ></span>
+  </button>
   <div
     class="coty-player coty-player--transport"
     data-js="coty-player"
   >
     <div class="coty-player__controls">
-      <button class="coty-player__button coty-player__button--icon coty-player__button--mini" type="button" data-js="coty-loop" aria-label="{{ i18n "coty_loop" }}">
+      <button class="coty-player__button coty-player__button--icon" type="button" data-js="coty-stop" aria-label="{{ i18n "coty_stop" }}">
         <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-loop"></use>
+          <use href="{{ "/img/svg/sprite.svg?v=20260417a" | relURL }}#icon-player-stop"></use>
         </svg>
       </button>
       <button class="coty-player__button coty-player__button--icon" type="button" data-js="coty-prev" aria-label="{{ i18n "coty_previous" }}">
         <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-previous"></use>
+          <use href="{{ "/img/svg/sprite.svg?v=20260417a" | relURL }}#icon-player-previous"></use>
         </svg>
       </button>
       <button
         class="coty-player__button coty-player__button--icon coty-player__button--primary"
         type="button"
-        data-js="coty-play-toggle"
+        data-js="coty-transport-toggle"
         aria-label="{{ i18n "coty_play" }}"
         data-label-play="{{ i18n "coty_play" }}"
-        data-label-stop="{{ i18n "coty_stop" }}"
+        data-label-pause="{{ i18n "coty_pause" }}"
       >
         <svg class="theme-option-icon" width="24" height="24" aria-hidden="true" data-js="coty-play-icon">
-          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-play"></use>
+          <use href="{{ "/img/svg/sprite.svg?v=20260417a" | relURL }}#icon-player-play"></use>
         </svg>
       </button>
       <button class="coty-player__button coty-player__button--icon" type="button" data-js="coty-next" aria-label="{{ i18n "coty_next" }}">
         <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-next"></use>
+          <use href="{{ "/img/svg/sprite.svg?v=20260417a" | relURL }}#icon-player-next"></use>
         </svg>
       </button>
       <button class="coty-player__button coty-player__button--icon coty-player__button--mini" type="button" data-js="coty-shuffle" aria-label="{{ i18n "coty_shuffle" }}">
         <svg class="theme-option-icon" width="20" height="20" aria-hidden="true">
-          <use href="{{ "/img/svg/sprite.svg?v=20260222a" | relURL }}#icon-player-shuffle"></use>
+          <use href="{{ "/img/svg/sprite.svg?v=20260417a" | relURL }}#icon-player-shuffle"></use>
         </svg>
       </button>
     </div>
   </div>
-  <select id="footer-coty-year" class="theme-year-select theme-year-select--hidden" data-js="coty-year-theme"></select>
 </div>
 
 <!-- Grid overlay (toggled via theme panel or chord key G) -->

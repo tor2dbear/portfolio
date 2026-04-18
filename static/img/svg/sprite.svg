@@ -204,6 +204,10 @@
     </g>
   </symbol>
 
+  <symbol id="icon-arrow-up-streamline" viewBox="0 0 24 24">
+    <path d="M0.75 17.189 11.47 6.47a0.749 0.749 0 0 1 1.06 0l10.72 10.719" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+  </symbol>
+
   <!-- Home Icon (16px) -->
   <symbol id="icon-home" viewBox="0 0 24 24">
     <path d="M3.753 13.944v8.25h6v-6a1.5 1.5 0 0 1 1.5 -1.5h1.5a1.5 1.5 0 0 1 1.5 1.5v6h6v-8.25" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
@@ -262,6 +266,11 @@
   <!-- Pantone Player Icons -->
   <symbol id="icon-player-play" viewBox="0 0 24 24">
     <path d="M23.14 10.61 2.25 0.16A1.56 1.56 0 0 0 0 1.56v20.88a1.56 1.56 0 0 0 2.25 1.4l20.89 -10.45a1.55 1.55 0 0 0 0 -2.78Z" fill="currentColor" stroke-width="1"></path>
+  </symbol>
+
+  <symbol id="icon-player-pause" viewBox="0 0 24 24">
+    <path d="M4 2h5v20H4z" fill="currentColor" stroke-width="1"></path>
+    <path d="M15 2h5v20h-5z" fill="currentColor" stroke-width="1"></path>
   </symbol>
 
   <symbol id="icon-player-stop" viewBox="0 0 24 24">

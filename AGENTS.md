@@ -584,6 +584,28 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - Add new dimensions by creating `assets/css/dimensions/<dimension>/*.css` and wiring in `layouts/partials/head.html`.
 - When adding a new palette, also add its preview tokens in `assets/css/dimensions/palette/previews.css` so the theme dropdown can show palette dots in both modes.
 
+### Pantone Player & Transport
+- Pantone uses a separate state model from the transport UI:
+  - Pantone state: `inactive | paused | playing`
+  - Transport UI state: `expanded | collapsed`
+- Do not treat “Pantone active” as equivalent to “playing”. `paused` keeps Pantone active and visually applied without autoplay.
+- Theme/settings `Pantone` buttons (`data-js="coty-mode-toggle"`) toggle Pantone mode on/off. Activating Pantone enters `paused` by default.
+- Footer transport controls handle playback (`play/pause/stop/prev/next/shuffle`) and should not be used as the source of truth for Pantone activation.
+- Transport UI state is persisted in `localStorage` under `theme-pantone-transport-ui`.
+- `<html>` attributes `data-theme-panel-open` and `data-settings-panel-open` are part of the transport presentation logic. The transport hides while bottom sheets are open and resumes after they close.
+- The collapsed trigger must remain keyboard- and touch-accessible. The visually hidden transport body should not capture pointer events while collapsed.
+
+### Keyboard Chords
+- Keyboard chords are implemented in `assets/js/keyboard-chords.js` and rendered from `data-shortcut` hints in the UI.
+- Current chord map:
+  - `G` → toggle grid
+  - `P` → toggle Pantone mode
+  - `M + L/D/S` → mode (`light`, `dark`, `system`)
+  - `T + E/R/X/T/S` → typography (`editorial`, `refined`, `expressive`, `technical`, `system`)
+  - `E + P/G/B/N/M` → effects (`pantone`, `grid`, `blend`, `noise`, `motion`)
+  - `L + E/S` → language (`en`, `sv`)
+- If the order or naming of mode/typography/effect options changes, update both the chord logic and the visible `data-shortcut` hints in the theme/settings panels.
+
 ### Theme Baseline Data (WIP)
 - Baseline role recipe lives in `data/theme-baseline.toml`.
 - Per-theme role mappings live in `data/themes/*.toml` (`standard`, `forest`, `mesa`, `pantone`).

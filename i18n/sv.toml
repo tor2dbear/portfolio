@@ -326,7 +326,7 @@ other = "År"
 other = "Blend"
 
 [toast_grain_title]
-other = "Grain"
+other = "Noise"
 
 [toast_motion_title]
 other = "Minska rörelse"
@@ -337,8 +337,17 @@ other = "På"
 [toast_effect_off]
 other = "Av"
 
+[coty_activate]
+other = "Aktivera Pantone"
+
+[coty_deactivate]
+other = "Avaktivera Pantone"
+
 [coty_play]
 other = "Starta Pantone"
+
+[coty_pause]
+other = "Pausa Pantone"
 
 [coty_stop]
 other = "Stoppa Pantone"
@@ -348,9 +357,6 @@ other = "Föregående Pantone Color of the Year"
 
 [coty_next]
 other = "Nästa Pantone Color of the Year"
-
-[coty_loop]
-other = "Växla Pantone-loop"
 
 [coty_shuffle]
 other = "Växla Pantone-shuffle"

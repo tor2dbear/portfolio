@@ -198,9 +198,9 @@
 
 .theme-effect-button {
   border: 1px solid var(--border-subtle);
-  background: var(--surface-page);
+  background: transparent;
   color: var(--text-default);
-  border-radius: var(--radius-8);
+  border-radius: var(--radius-4);
   width: var(--theme-control-size);
   height: var(--theme-control-size);
   box-sizing: border-box;
@@ -216,13 +216,27 @@
 }
 
 .theme-effect-button:hover {
-  background: var(--state-surface-hover);
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
   border-color: var(--border-default);
+}
+
+.theme-effect-button:active {
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
 }
 
 .theme-effect-button[aria-pressed="true"] {
   border-color: var(--primary);
   color: var(--primary);
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--primary) 10%, transparent),
+    color-mix(in srgb, var(--primary) 10%, transparent)
+  );
 }
 
 /* Palette specific styles */
@@ -323,6 +337,10 @@
 
 .coty-transport {
   position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   left: 50%;
   right: auto;
   transform: translateX(-50%);
@@ -332,16 +350,178 @@
   z-index: 990;
   padding: var(--spacing-8);
   border: 1px solid var(--component-toast-border);
-  border-radius: var(--radius-12);
+  border-radius: var(--radius-pill);
   background: var(--component-toast-bg);
   box-shadow: var(--shadow-01);
   -webkit-backdrop-filter: blur(6px) saturate(80%);
   backdrop-filter: blur(6px) saturate(80%);
+  transform-origin: center bottom;
+  transition:
+    opacity var(--motion-duration-enter) var(--motion-ease-emphasized),
+    transform var(--motion-duration-enter) var(--motion-ease-emphasized),
+    background-color var(--motion-duration-exit) var(--motion-ease-standard),
+    border-color var(--motion-duration-exit) var(--motion-ease-standard),
+    border-radius var(--motion-duration-exit) var(--motion-ease-standard),
+    padding var(--motion-duration-exit) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-exit) var(--motion-ease-standard),
+    -webkit-backdrop-filter var(--motion-duration-exit)
+      var(--motion-ease-standard),
+    backdrop-filter var(--motion-duration-exit) var(--motion-ease-standard);
+}
+
+.coty-transport[hidden] {
+  display: none !important;
+}
+
+.coty-transport__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  height: var(--size-48);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-default);
+  cursor: pointer;
+  opacity: 0;
+  overflow: hidden;
+  transform: scale(0.72);
+  transition:
+    width var(--motion-duration-base) var(--motion-ease-emphasized),
+    padding var(--motion-duration-base) var(--motion-ease-standard),
+    opacity var(--motion-duration-base) var(--motion-ease-standard),
+    transform var(--motion-duration-base) var(--motion-ease-emphasized),
+    background-image var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.coty-transport__trigger:hover {
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
+}
+
+.coty-transport__trigger:active {
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
+}
+
+.coty-transport__trigger-icon {
+  display: block;
+  width: var(--size-64);
+  height: var(--size-24);
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask: url("/img/svg/arrow-up.svg") center / contain no-repeat;
+  mask: url("/img/svg/arrow-up.svg") center / contain no-repeat;
+  opacity: 0;
+  transform: translateY(var(--spacing-4));
+  transition:
+    opacity var(--motion-duration-base) var(--motion-ease-standard),
+    transform var(--motion-duration-base) var(--motion-ease-emphasized);
+}
+
+.coty-transport[data-ui-state="collapsed"] {
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-default);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  bottom: var(--spacing-4);
+  transform: translateX(-50%) translateY(0) scale(0.97);
+}
+
+.coty-transport[data-ui-state="collapsed"] .coty-transport__trigger {
+  width: var(--size-64);
+  padding: 0;
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 90ms;
+  color: inherit;
+}
+
+.coty-transport[data-ui-state="collapsed"] .coty-transport__trigger-icon {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 120ms;
+}
+
+.coty-transport[data-ui-state="collapsed"] .coty-player--transport {
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.78);
+  transition-duration: var(--motion-duration-exit);
+  transition-timing-function: var(--motion-ease-emphasized);
+}
+
+.coty-transport[data-ui-state="expanded"] {
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.coty-transport[data-ui-state="expanded"] .coty-transport__trigger {
+  width: 0;
+  padding: 0;
+  opacity: 0;
+  transform: scale(0.72);
+  transition-delay: 0ms;
+}
+
+.coty-transport[data-ui-state="expanded"] .coty-transport__trigger-icon {
+  opacity: 0;
+  transform: translateY(var(--spacing-4));
+  transition-delay: 0ms;
+}
+
+@media (max-width: 29.9375em) {
+  html[data-theme-panel-open="true"] .coty-transport,
+  html[data-settings-panel-open="true"] .coty-transport {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(calc(var(--spacing-8) * 2));
+  }
 }
 
 .coty-player--transport {
   flex: 0 0 auto;
   gap: var(--spacing-8);
+  max-width: 24rem;
+  overflow: hidden;
+  transition:
+    max-width var(--motion-duration-exit) var(--motion-ease-emphasized),
+    opacity var(--motion-duration-base) var(--motion-ease-standard),
+    transform var(--motion-duration-exit) var(--motion-ease-emphasized);
+}
+
+.coty-transport[data-ui-state="expanded"] .coty-player--transport {
+  max-width: 24rem;
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coty-transport,
+  .coty-transport__trigger,
+  .coty-player--transport {
+    transition:
+      width var(--motion-duration-fast) linear,
+      max-width var(--motion-duration-fast) linear,
+      opacity var(--motion-duration-fast) linear,
+      visibility var(--motion-duration-fast) linear;
+  }
+
+  .coty-transport[data-ui-state="collapsed"],
+  .coty-transport[data-ui-state="expanded"] {
+    transform: translateX(-50%);
+  }
 }
 
 .palette-label {

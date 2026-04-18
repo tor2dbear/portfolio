@@ -326,7 +326,7 @@ other = "Year"
 other = "Blend"
 
 [toast_grain_title]
-other = "Grain"
+other = "Noise"
 
 [toast_motion_title]
 other = "Reduce motion"
@@ -337,8 +337,17 @@ other = "On"
 [toast_effect_off]
 other = "Off"
 
+[coty_activate]
+other = "Activate Pantone"
+
+[coty_deactivate]
+other = "Deactivate Pantone"
+
 [coty_play]
 other = "Play Pantone"
+
+[coty_pause]
+other = "Pause Pantone"
 
 [coty_stop]
 other = "Stop Pantone"
@@ -348,9 +357,6 @@ other = "Previous Pantone Color of the Year"
 
 [coty_next]
 other = "Next Pantone Color of the Year"
-
-[coty_loop]
-other = "Toggle Pantone loop"
 
 [coty_shuffle]
 other = "Toggle Pantone shuffle"

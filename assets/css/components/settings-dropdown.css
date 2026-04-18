@@ -47,6 +47,7 @@
 }
 
 .settings-panel {
+  --theme-control-size: var(--size-40);
   position: fixed;
   bottom: var(--spacing-8);
   left: var(--spacing-8);

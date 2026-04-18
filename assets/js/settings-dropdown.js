@@ -11,21 +11,30 @@
     const panel = document.querySelector('[data-js="settings-panel"]');
     const overlay = document.querySelector('[data-js="settings-overlay"]');
 
-    if (!toggle || !panel) return;
+    if (!toggle || !panel) {return;}
+
+    function setSettingsPanelOpenState(isOpen) {
+      if (isOpen) {
+        document.documentElement.setAttribute('data-settings-panel-open', 'true');
+        return;
+      }
+      document.documentElement.removeAttribute('data-settings-panel-open');
+      window.dispatchEvent(new window.CustomEvent('theme:sheet-closed'));
+    }
 
     function isGridActive() {
       return document.documentElement.hasAttribute('data-grid-overlay');
     }
 
     function ensurePortalOrigin(el) {
-      if (!el || el.__portalPlaceholder) return;
+      if (!el || el.__portalPlaceholder) {return;}
       const placeholder = document.createComment('settings-portal-anchor');
       el.parentNode.insertBefore(placeholder, el);
       el.__portalPlaceholder = placeholder;
     }
 
     function restorePortal(el) {
-      if (!el || !el.classList.contains('dropdown-panel--portal')) return;
+      if (!el || !el.classList.contains('dropdown-panel--portal')) {return;}
       const placeholder = el.__portalPlaceholder;
       if (placeholder && placeholder.parentNode) {
         placeholder.parentNode.insertBefore(el, placeholder);
@@ -41,7 +50,7 @@
     }
 
     function mountPortal(el) {
-      if (!el) return;
+      if (!el) {return;}
       ensurePortalOrigin(el);
       if (el.parentNode !== document.body) {
         document.body.appendChild(el);
@@ -53,11 +62,11 @@
       const open = panel && !panel.hasAttribute('hidden');
       if (open && isGridActive()) {
         mountPortal(panel);
-        if (overlay) mountPortal(overlay);
+        if (overlay) {mountPortal(overlay);}
         return;
       }
       restorePortal(panel);
-      if (overlay) restorePortal(overlay);
+      if (overlay) {restorePortal(overlay);}
     }
 
     function closeThemePanel() {
@@ -67,8 +76,9 @@
 
       if (themePanel && !themePanel.hasAttribute('hidden')) {
         themePanel.setAttribute('hidden', '');
-        if (themeOverlay) themeOverlay.setAttribute('hidden', '');
-        if (themeToggle) themeToggle.setAttribute('aria-expanded', 'false');
+        if (themeOverlay) {themeOverlay.setAttribute('hidden', '');}
+        if (themeToggle) {themeToggle.setAttribute('aria-expanded', 'false');}
+        document.documentElement.removeAttribute('data-theme-panel-open');
       }
     }
 
@@ -79,13 +89,13 @@
 
       if (languagePanel && !languagePanel.hasAttribute('hidden')) {
         languagePanel.setAttribute('hidden', '');
-        if (languageOverlay) languageOverlay.setAttribute('hidden', '');
-        if (languageToggle) languageToggle.setAttribute('aria-expanded', 'false');
+        if (languageOverlay) {languageOverlay.setAttribute('hidden', '');}
+        if (languageToggle) {languageToggle.setAttribute('aria-expanded', 'false');}
       }
     }
 
     function resetPanelStyles() {
-      if (!panel) return;
+      if (!panel) {return;}
       panel.style.transform = '';
       panel.style.transition = '';
       if (overlay) {
@@ -97,8 +107,9 @@
     function closePanel() {
       if (panel && !panel.hasAttribute('hidden')) {
         panel.setAttribute('hidden', '');
-        if (overlay) overlay.setAttribute('hidden', '');
+        if (overlay) {overlay.setAttribute('hidden', '');}
         toggle.setAttribute('aria-expanded', 'false');
+        setSettingsPanelOpenState(false);
         resetPanelStyles();
         syncSettingsPortal();
       }
@@ -112,8 +123,9 @@
         closeThemePanel();
         closeLanguagePanel();
         panel.removeAttribute('hidden');
-        if (overlay) overlay.removeAttribute('hidden');
+        if (overlay) {overlay.removeAttribute('hidden');}
         toggle.setAttribute('aria-expanded', 'true');
+        setSettingsPanelOpenState(true);
         resetPanelStyles();
         syncSettingsPortal();
       } else {
@@ -183,7 +195,7 @@
         }
       });
 
-      panel.addEventListener('touchend', function(e) {
+      panel.addEventListener('touchend', function(_e) {
         const deltaY = touchCurrentY - touchStartY;
 
         panel.style.transition = 'transform 0.3s ease-in-out';
