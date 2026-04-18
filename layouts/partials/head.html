@@ -55,6 +55,11 @@
   {{ else }}
     {{ $pageTitle = printf "%s · %s" .Title .Site.Params.title }}
   {{ end }}
+  {{ $isHomePage := .IsHome }}
+  {{ $isUiLibraryPage := eq .Type "ui-library" }}
+  {{ $isPaletteGeneratorPage := eq .Type "palette-generator" }}
+  {{ $isContactPage := eq .Type "contact" }}
+  {{ $isWritingListPage := and .IsSection (or (eq .Section "writing") (eq .Section "texter")) }}
 
   <title>{{ $pageTitle }}</title>
 
@@ -306,68 +311,70 @@
     }
   </style>
 
-  <!-- Critical CSS - Above the fold -->
-  <style>
-    /* Hero Section - Critical for LCP */
-    .hero-section { padding: var(--spacing-96) 0; }
-    .hero-title {
-      max-width: var(--content-max-width-narrow);
-      line-height: 1.4;
-      font-size: calc(var(--text-4xl) * var(--type-scale-display));
-      letter-spacing: var(--display-tracking);
-    }
-    .role-swapper {
-      color: var(--text-accent);
-      font-weight: inherit;
-      display: inline-block;
-      min-width: 0;
-      position: relative;
-      white-space: nowrap;
-      transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
-    }
-    .role-swapper__item {
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-      transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
-    }
-    .role-swapper__item.is-active {
-      position: relative;
-      opacity: 1;
-    }
-    .hero-emphasis {
-      background: var(--surface-accent);
-      padding: 0 var(--spacing-4);
-      border-radius: var(--spacing-4);
-      font-weight: inherit;
-    }
-    /* Reveal animation - immediate variant for hero */
-    .reveal {
-      opacity: 0;
-      transform: translateY(var(--motion-distance-md));
-      transition: opacity var(--motion-duration-reveal) var(--motion-ease-decelerate), transform var(--motion-duration-reveal) var(--motion-ease-decelerate);
-      will-change: opacity, transform;
-    }
-    .reveal--immediate {
-      --reveal-delay: 0ms;
-      --reveal-duration: var(--motion-duration-reveal-immediate);
-      transition: opacity var(--motion-duration-reveal-immediate) var(--motion-ease-decelerate), transform var(--motion-duration-reveal-immediate) var(--motion-ease-decelerate);
-    }
-    .reveal.is-revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    @media (max-width: 47.9375em) {
-      .hero-section { padding: var(--spacing-64) 0; }
-      .hero-title { font-size: calc(var(--text-3xl) * var(--type-scale-display)); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .role-swapper { transition: none; }
-      .role-swapper__item { transition: none; }
-      .reveal { opacity: 1; transform: none; transition: none; }
-    }
-  </style>
+  {{ if $isHomePage }}
+    <!-- Critical CSS - Above the fold -->
+    <style>
+      /* Hero Section - Critical for LCP */
+      .hero-section { padding: var(--spacing-96) 0; }
+      .hero-title {
+        max-width: var(--content-max-width-narrow);
+        line-height: 1.4;
+        font-size: calc(var(--text-4xl) * var(--type-scale-display));
+        letter-spacing: var(--display-tracking);
+      }
+      .role-swapper {
+        color: var(--text-accent);
+        font-weight: inherit;
+        display: inline-block;
+        min-width: 0;
+        position: relative;
+        white-space: nowrap;
+        transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
+      }
+      .role-swapper__item {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
+      }
+      .role-swapper__item.is-active {
+        position: relative;
+        opacity: 1;
+      }
+      .hero-emphasis {
+        background: var(--surface-accent);
+        padding: 0 var(--spacing-4);
+        border-radius: var(--spacing-4);
+        font-weight: inherit;
+      }
+      /* Reveal animation - immediate variant for hero */
+      .reveal {
+        opacity: 0;
+        transform: translateY(var(--motion-distance-md));
+        transition: opacity var(--motion-duration-reveal) var(--motion-ease-decelerate), transform var(--motion-duration-reveal) var(--motion-ease-decelerate);
+        will-change: opacity, transform;
+      }
+      .reveal--immediate {
+        --reveal-delay: 0ms;
+        --reveal-duration: var(--motion-duration-reveal-immediate);
+        transition: opacity var(--motion-duration-reveal-immediate) var(--motion-ease-decelerate), transform var(--motion-duration-reveal-immediate) var(--motion-ease-decelerate);
+      }
+      .reveal.is-revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (max-width: 47.9375em) {
+        .hero-section { padding: var(--spacing-64) 0; }
+        .hero-title { font-size: calc(var(--text-3xl) * var(--type-scale-display)); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .role-swapper { transition: none; }
+        .role-swapper__item { transition: none; }
+        .reveal { opacity: 1; transform: none; transition: none; }
+      }
+    </style>
+  {{ end }}
 
   {{ $isDevBuild := or hugo.IsServer (eq hugo.Environment "development") }}
   <!-- CSS loading -->
@@ -421,11 +428,19 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_chord_hud.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_accordion.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_tabs.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $pages_palette_generator.RelPermalink }}" />
+    {{ if $isHomePage }}
+      <link rel="stylesheet" type="text/css" href="{{ $pages_home.RelPermalink }}" />
+    {{ end }}
+    {{ if $isUiLibraryPage }}
+      <link rel="stylesheet" type="text/css" href="{{ $pages_ui_library.RelPermalink }}" />
+    {{ end }}
+    {{ if $isPaletteGeneratorPage }}
+      <link rel="stylesheet" type="text/css" href="{{ $pages_palette_generator.RelPermalink }}" />
+    {{ end }}
     {{ with $pages_contact }}
-      <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
+      {{ if $isContactPage }}
+        <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
+      {{ end }}
     {{ end }}
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
@@ -435,9 +450,41 @@
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
-    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $components_accordion $components_tabs $pages_home $pages_ui_library $pages_palette_generator }}
+    {{ $css = $css | append $components_toggle_switch $components_grid_overlay $components_toast $components_chord_hud $components_accordion $components_tabs }}
+    {{ $pageCss := slice }}
+    {{ if $isHomePage }}
+      {{ $pageCss = $pageCss | append $pages_home }}
+    {{ end }}
+    {{ if $isUiLibraryPage }}
+      {{ $pageCss = $pageCss | append $pages_ui_library }}
+    {{ end }}
+    {{ if $isPaletteGeneratorPage }}
+      {{ $pageCss = $pageCss | append $pages_palette_generator }}
+    {{ end }}
     {{ with $pages_contact }}
-      {{ $css = $css | append . }}
+      {{ if $isContactPage }}
+        {{ $pageCss = $pageCss | append . }}
+      {{ end }}
+    {{ end }}
+    {{ with $pageCss }}
+      {{ $pageCssTarget := "css-page.css" }}
+      {{ if $isHomePage }}
+        {{ $pageCssTarget = "css-page-home.css" }}
+      {{ else if $isUiLibraryPage }}
+        {{ $pageCssTarget = "css-page-ui-library.css" }}
+      {{ else if $isPaletteGeneratorPage }}
+        {{ $pageCssTarget = "css-page-palette-generator.css" }}
+      {{ else if $isContactPage }}
+        {{ $pageCssTarget = "css-page-contact.css" }}
+      {{ end }}
+      {{ $pageCssBundle := . | resources.Concat $pageCssTarget | minify | fingerprint }}
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="{{ $pageCssBundle.RelPermalink }}"
+        integrity="{{ $pageCssBundle.Data.Integrity }}"
+        media="all"
+      />
     {{ end }}
     {{ $css = $css | append $style $print }}
     {{ $css = $css | resources.Concat "css.css" | minify | fingerprint }}
@@ -528,8 +575,12 @@
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
     <script src="{{ $js8.RelPermalink }}" defer></script>
-    <script src="{{ $js9.RelPermalink }}" defer></script>
-    <script src="{{ $js10.RelPermalink }}" defer></script>
+    {{ if $isHomePage }}
+      <script src="{{ $js9.RelPermalink }}" defer></script>
+    {{ end }}
+    {{ if $isUiLibraryPage }}
+      <script src="{{ $js10.RelPermalink }}" defer></script>
+    {{ end }}
     <script src="{{ $js11.RelPermalink }}" defer></script>
     <script src="{{ $js12.RelPermalink }}" defer></script>
     <script src="{{ $js13.RelPermalink }}" defer></script>
@@ -537,15 +588,48 @@
     <script src="{{ $js15.RelPermalink }}" defer></script>
     <script src="{{ $js16.RelPermalink }}" defer></script>
     <script src="{{ $js17.RelPermalink }}" defer></script>
-    <script src="{{ $js18.RelPermalink }}" defer></script>
-    <script src="{{ $js19.RelPermalink }}" defer></script>
+    {{ if $isPaletteGeneratorPage }}
+      <script src="{{ $js18.RelPermalink }}" defer></script>
+    {{ end }}
+    {{ if $isWritingListPage }}
+      <script src="{{ $js19.RelPermalink }}" defer></script>
+    {{ end }}
     <script src="{{ $js20.RelPermalink }}" defer></script>
-    <script src="{{ $js21.RelPermalink }}" defer></script>
+    {{ if $isUiLibraryPage }}
+      <script src="{{ $js21.RelPermalink }}" defer></script>
+    {{ end }}
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_coty_scale $js4 $js5 $js6 $js8 $js9 $js10 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js18 $js19 $js20 $js21 }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_coty_scale $js4 $js5 $js6 $js8 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js20 }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
+    {{ $pageJs := slice }}
+    {{ if $isHomePage }}
+      {{ $pageJs = $pageJs | append $js9 }}
+    {{ end }}
+    {{ if $isUiLibraryPage }}
+      {{ $pageJs = $pageJs | append $js10 $js21 }}
+    {{ end }}
+    {{ if $isPaletteGeneratorPage }}
+      {{ $pageJs = $pageJs | append $js18 }}
+    {{ end }}
+    {{ if $isWritingListPage }}
+      {{ $pageJs = $pageJs | append $js19 }}
+    {{ end }}
+    {{ with $pageJs }}
+      {{ $pageJsTarget := "js-page.js" }}
+      {{ if $isHomePage }}
+        {{ $pageJsTarget = "js-page-home.js" }}
+      {{ else if $isUiLibraryPage }}
+        {{ $pageJsTarget = "js-page-ui-library.js" }}
+      {{ else if $isPaletteGeneratorPage }}
+        {{ $pageJsTarget = "js-page-palette-generator.js" }}
+      {{ else if $isWritingListPage }}
+        {{ $pageJsTarget = "js-page-writing.js" }}
+      {{ end }}
+      {{ $pageJsBundle := . | resources.Concat $pageJsTarget | minify | fingerprint }}
+      <script src="{{ $pageJsBundle.RelPermalink }}" defer></script>
+    {{ end }}
   {{ end }}
 
   <script type="application/json" data-js="coty-data-json">{{ index .Site.Data "pantone-coty" | jsonify | safeHTML }}</script>
