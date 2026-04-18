@@ -31,10 +31,9 @@
   --surface-ink-strong: var(--green-11);
   --text-link-hover: var(--green-11);
 
-  --bg-page: var(--green-2);
-  --bg-tag: var(--green-4);
-  --bg-tag-hover: var(--green-5);
-  --bg-surface: var(--green-4);
+  --surface-page: var(--green-2);
+  --surface-accent: var(--green-4);
+  --surface-default: var(--green-4);
 
   --border-subtle: var(--green-5);
   --border-default: var(--green-7);

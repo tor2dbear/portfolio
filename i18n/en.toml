@@ -322,6 +322,45 @@ other = "Custom palette"
 [coty_year]
 other = "Year"
 
+[toast_blend_title]
+other = "Blend"
+
+[toast_grain_title]
+other = "Noise"
+
+[toast_motion_title]
+other = "Reduce motion"
+
+[toast_effect_on]
+other = "On"
+
+[toast_effect_off]
+other = "Off"
+
+[coty_activate]
+other = "Activate Pantone"
+
+[coty_deactivate]
+other = "Deactivate Pantone"
+
+[coty_play]
+other = "Play Pantone"
+
+[coty_pause]
+other = "Pause Pantone"
+
+[coty_stop]
+other = "Stop Pantone"
+
+[coty_previous]
+other = "Previous Pantone Color of the Year"
+
+[coty_next]
+other = "Next Pantone Color of the Year"
+
+[coty_shuffle]
+other = "Toggle Pantone shuffle"
+
 [toast_palette_saved]
 other = "Palette saved"
 

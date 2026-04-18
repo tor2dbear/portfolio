@@ -7,8 +7,14 @@
 :root[data-palette="pantone"] {
   /* Image effects */
   --image-grayscale: 100%;
+  --image-shadow-blend-mode: multiply;
+  --image-highlight-blend-mode: screen;
+  --image-shadow-background: var(--coty-3);
+  --image-highlight-background: var(--coty-11);
+  --image-shadow-opacity: 0.78;
+  --image-highlight-opacity: 0.68;
   --image-blend-mode: screen;
-  --image-background: var(--coty-9);
+  --image-background: var(--image-highlight-background);
 
   /* Primary/secondary roles (single-family) */
   --primary: var(--coty-role-primary, var(--coty-9));
@@ -31,10 +37,9 @@
   --surface-ink-strong: var(--coty-11);
   --text-link-hover: var(--coty-11);
 
-  --bg-page: var(--coty-role-surface, var(--coty-2));
-  --bg-tag: var(--coty-role-surface-strong, var(--coty-4));
-  --bg-tag-hover: var(--coty-5);
-  --bg-surface: var(--coty-role-surface-strong, var(--coty-4));
+  --surface-page: var(--coty-role-surface, var(--coty-2));
+  --surface-accent: var(--coty-role-surface-strong, var(--coty-4));
+  --surface-default: var(--coty-role-surface-strong, var(--coty-4));
 
   --border-subtle: var(--coty-5);
   --border-default: var(--coty-6);
@@ -52,5 +57,9 @@
 
 /* Dark mode + Pantone overrides */
 :root[data-mode="dark"][data-palette="pantone"] {
-  --image-background: var(--coty-5);
+  --image-shadow-background: var(--coty-11);
+  --image-highlight-background: var(--coty-3);
+  --image-shadow-opacity: 0.9;
+  --image-highlight-opacity: 0.72;
+  --image-background: var(--image-highlight-background);
 }

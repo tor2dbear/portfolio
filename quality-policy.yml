@@ -38,6 +38,18 @@ policy:
           categories:
             performance:
               minScore: 70
+        "/contact/":
+          categories:
+            performance:
+              minScore: 71
+        "/works/":
+          categories:
+            performance:
+              minScore: 73
+        "/ui-library/":
+          categories:
+            performance:
+              minScore: 69
 
   # B) FIX-SOON (visible in PR comment, not failing CI)
   fixSoon:

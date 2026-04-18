@@ -22,22 +22,15 @@
   --text-tag: var(--iris-11);
 
   /* === BACKGROUND / SURFACE === */
-  --bg-page: var(--white);
-  --bg-surface: var(--iris-2);
-  --bg-elevated: var(--gray-1);
-  --bg-inverse: var(--gray-12);
-  --bg-surface-subtle: var(--surface-elevated);
-  --bg-tag: var(--iris-3);
-  --bg-tag-hover: var(--iris-4);
-  --bg-section-headline: var(--primary);
-  --surface-page: var(--bg-page);
-  --surface-default: var(--bg-surface);
-  --surface-elevated: var(--bg-elevated);
-  --surface-inverse: var(--bg-inverse);
-  --surface-subtle: var(--bg-surface-subtle);
-  --surface-tag: var(--bg-tag);
-  --surface-tag-hover: var(--bg-tag-hover);
-  --surface-headline: var(--bg-section-headline);
+  --surface-page: var(--white);
+  --surface-default: var(--iris-2);
+  --surface-elevated: color-mix(in srgb, var(--surface-page) 92%, white);
+  --surface-inverse: var(--gray-12);
+  --surface-subtle: var(--surface-elevated);
+  --surface-accent: var(--iris-3);
+  --surface-tag: var(--surface-accent); /* deprecated compat */
+  --surface-tag-hover: var(--surface-tag); /* deprecated compat */
+  --surface-headline: var(--component-section-headline-bg); /* deprecated compat */
   --surface-ink-strong: var(--iris-11);
 
   /* === BORDER / OUTLINE === */
@@ -78,6 +71,16 @@
     var(--surface-ink-strong) var(--state-mix-surface-active),
     transparent
   );
+  --state-tag-hover: color-mix(
+    in oklch,
+    var(--surface-ink-strong) var(--state-mix-tag-hover),
+    transparent
+  );
+  --state-tag-active: color-mix(
+    in oklch,
+    var(--surface-ink-strong) var(--state-mix-tag-active),
+    transparent
+  );
   --state-primary-hover: color-mix(
     in oklch,
     var(--text-inverse) var(--state-mix-brand-hover),
@@ -93,7 +96,7 @@
   --state-focus: var(--iris-9);
   --state-selected: var(--text-accent);
   --text-disabled: var(--gray-7);
-  --bg-disabled: var(--gray-3);
+  --surface-disabled: var(--gray-3);
   --border-disabled: var(--gray-4);
   --ring-focus: 0 0 0 3px var(--state-focus);
   --ring-error: 0 0 0 3px var(--status-error-bg);
@@ -150,7 +153,7 @@
   --component-nav-cta-bg: var(--primary);
   --component-nav-cta-text: var(--on-primary);
   --component-toc-active-indicator: var(--primary);
-  --component-section-headline-bg: var(--surface-headline);
+  --component-section-headline-bg: var(--primary);
 
   /* === STATUS === */
   --status-error-bg: var(--red-8);
@@ -183,8 +186,14 @@
 
   /* === IMAGE === */
   --image-background: var(--iris-12);
+  --image-shadow-background: transparent;
+  --image-highlight-background: var(--image-background);
+  --image-shadow-opacity: 1;
+  --image-highlight-opacity: 1;
   --image-grayscale: 0%;
   --image-blend-mode: normal;
+  --image-shadow-blend-mode: normal;
+  --image-highlight-blend-mode: var(--image-blend-mode);
 
   /* === SHADOWS === */
   --shadow-01: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,

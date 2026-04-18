@@ -166,7 +166,8 @@
   --teal-12: hsl(166, 73%, 93.1%);
 
   /* Dark mode specific overrides */
-  --bg-page: var(--gray-1);
+  --surface-page: var(--gray-1);
+  --surface-elevated: color-mix(in srgb, var(--surface-page) 88%, white);
   --component-toast-bg: color-mix(in srgb, var(--gray-1) 52%, transparent);
   --component-toast-border: color-mix(in srgb, var(--white) 8%, transparent);
   --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px,

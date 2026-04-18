@@ -33,10 +33,9 @@
   --text-link-hover: var(--primary-strong);
 
   /* Amber surfaces */
-  --bg-page: var(--amber-2);
-  --bg-tag: var(--amber-4);
-  --bg-tag-hover: var(--amber-5);
-  --bg-surface: var(--amber-4);
+  --surface-page: var(--amber-2);
+  --surface-accent: var(--amber-4);
+  --surface-default: var(--amber-4);
 
   --border-subtle: var(--amber-5);
   --border-default: var(--amber-7);

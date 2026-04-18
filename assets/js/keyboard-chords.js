@@ -2,10 +2,11 @@
  * Keyboard Chords
  * Chord model with 900ms timeout:
  * G
- * T + L/D/S
+ * M + L/D/S
  * L + E/S
- * P + 1-5
- * F + 1-4
+ * P (toggle Pantone)
+ * T + E/R/X/T/S
+ * E + P/G/B/N/M
  */
 (function() {
   'use strict';
@@ -18,13 +19,13 @@
   function renderShortcutChips() {
     var targets = document.querySelectorAll('[data-shortcut]');
     targets.forEach(function(el) {
-      if (el.getAttribute('data-shortcut-rendered') === 'true') return;
+      if (el.getAttribute('data-shortcut-rendered') === 'true') {return;}
 
       var label = (el.getAttribute('data-shortcut') || '').trim();
-      if (!label) return;
+      if (!label) {return;}
 
       var tokens = label.split(/\s+/).filter(Boolean);
-      if (tokens.length === 0) return;
+      if (tokens.length === 0) {return;}
 
       el.textContent = '';
       tokens.forEach(function(token) {
@@ -38,14 +39,14 @@
   }
 
   function isTypingTarget(target) {
-    if (!target) return false;
+    if (!target) {return false;}
     var tag = target.tagName ? target.tagName.toLowerCase() : '';
-    if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') {return true;}
     return Boolean(target.isContentEditable);
   }
 
   function ensureHud() {
-    if (hudEl) return hudEl;
+    if (hudEl) {return hudEl;}
     hudEl = document.createElement('div');
     hudEl.className = 'chord-hud';
     hudEl.setAttribute('role', 'status');
@@ -77,15 +78,15 @@
       hud.appendChild(keysEl);
     }
 
-    if (prefix === 'T') render('Theme +', ['L', 'D', 'S']);
-    if (prefix === 'L') render('Language +', ['E', 'S']);
-    if (prefix === 'P') render('Palette +', ['1', '2', '3', '4', '5']);
-    if (prefix === 'F') render('Typography +', ['1', '2', '3', '4']);
+    if (prefix === 'M') {render('Mode +', ['L', 'D', 'S']);}
+    if (prefix === 'L') {render('Language +', ['E', 'S']);}
+    if (prefix === 'T') {render('Typography +', ['E', 'R', 'X', 'T', 'S']);}
+    if (prefix === 'E') {render('Effects +', ['P', 'G', 'B', 'N', 'M']);}
     hud.removeAttribute('hidden');
   }
 
   function hideHud() {
-    if (!hudEl) return;
+    if (!hudEl) {return;}
     hudEl.setAttribute('hidden', '');
   }
 
@@ -101,7 +102,7 @@
   function armChord(prefix) {
     prefixKey = prefix;
     showHud(prefix);
-    if (timeoutId) window.clearTimeout(timeoutId);
+    if (timeoutId) {window.clearTimeout(timeoutId);}
     timeoutId = window.setTimeout(clearChord, CHORD_TIMEOUT_MS);
   }
 
@@ -117,26 +118,50 @@
     return window.LanguageActions || null;
   }
 
-  function setPaletteByIndex(index) {
-    var actions = getThemeActions();
-    if (!actions || typeof actions.setPalette !== 'function' || typeof actions.getPaletteOrder !== 'function') {
-      return;
-    }
-    var order = actions.getPaletteOrder();
-    var value = order[index];
-    if (value) actions.setPalette(value);
-  }
-
   function setTypographyByIndex(index) {
     var actions = getThemeActions();
     if (!actions || typeof actions.setTypography !== 'function' || typeof actions.getTypographyOrder !== 'function') {
       return;
     }
-    var order = actions.getTypographyOrder().filter(function(item) {
-      return item !== 'system';
-    });
+    var order = actions.getTypographyOrder();
     var value = order[index];
-    if (value) actions.setTypography(value);
+    if (value) {actions.setTypography(value);}
+  }
+
+  function toggleEffectByKey(key) {
+    var actions = getThemeActions();
+    var grid = getGridActions();
+
+    if (key === 'P' && actions && typeof actions.togglePantone === 'function') {
+      actions.togglePantone();
+      return true;
+    }
+
+    if (key === 'G' && grid && typeof grid.toggle === 'function') {
+      grid.toggle();
+      return true;
+    }
+
+    if (key === 'B' && actions && typeof actions.toggleBlend === 'function') {
+      actions.toggleBlend();
+      return true;
+    }
+
+    if (key === 'N' && actions && typeof actions.toggleGrain === 'function') {
+      actions.toggleGrain();
+      return true;
+    }
+
+    if (
+      key === 'M' &&
+      actions &&
+      typeof actions.toggleReducedMotion === 'function'
+    ) {
+      actions.toggleReducedMotion();
+      return true;
+    }
+
+    return false;
   }
 
   function handlePrimaryKey(key) {
@@ -147,7 +172,14 @@
       }
       return true;
     }
-    if (key === 'T' || key === 'L' || key === 'P' || key === 'F') {
+    if (key === 'P') {
+      var actions = getThemeActions();
+      if (actions && typeof actions.togglePantone === 'function') {
+        actions.togglePantone();
+      }
+      return true;
+    }
+    if (key === 'M' || key === 'L' || key === 'T' || key === 'E') {
       armChord(key);
       return true;
     }
@@ -158,29 +190,33 @@
     var theme = getThemeActions();
     var language = getLanguageActions();
 
-    if (prefixKey === 'T' && theme && typeof theme.setMode === 'function') {
-      if (key === 'L') theme.setMode('light');
-      if (key === 'D') theme.setMode('dark');
-      if (key === 'S') theme.setMode('system');
+    if (prefixKey === 'M' && theme && typeof theme.setMode === 'function') {
+      if (key === 'L') {theme.setMode('light');}
+      if (key === 'D') {theme.setMode('dark');}
+      if (key === 'S') {theme.setMode('system');}
       clearChord();
       return true;
     }
 
     if (prefixKey === 'L' && language && typeof language.setLanguage === 'function') {
-      if (key === 'E') language.setLanguage('en');
-      if (key === 'S') language.setLanguage('sv');
+      if (key === 'E') {language.setLanguage('en');}
+      if (key === 'S') {language.setLanguage('sv');}
       clearChord();
       return true;
     }
 
-    if (prefixKey === 'P') {
-      if (key >= '1' && key <= '5') setPaletteByIndex(Number(key) - 1);
+    if (prefixKey === 'T') {
+      if (key === 'E') {setTypographyByIndex(0);}
+      if (key === 'R') {setTypographyByIndex(1);}
+      if (key === 'X') {setTypographyByIndex(2);}
+      if (key === 'T') {setTypographyByIndex(3);}
+      if (key === 'S') {setTypographyByIndex(4);}
       clearChord();
       return true;
     }
 
-    if (prefixKey === 'F') {
-      if (key >= '1' && key <= '4') setTypographyByIndex(Number(key) - 1);
+    if (prefixKey === 'E') {
+      toggleEffectByKey(key);
       clearChord();
       return true;
     }
@@ -190,15 +226,15 @@
   }
 
   function toChordKey(e) {
-    if (!e || !e.key) return '';
-    if (e.key.length !== 1) return '';
+    if (!e || !e.key) {return '';}
+    if (e.key.length !== 1) {return '';}
     return e.key.toUpperCase();
   }
 
   function handleKeydown(e) {
-    if (e.defaultPrevented) return;
-    if (e.repeat) return;
-    if (isTypingTarget(e.target)) return;
+    if (e.defaultPrevented) {return;}
+    if (e.repeat) {return;}
+    if (isTypingTarget(e.target)) {return;}
 
     if (e.key === 'Escape') {
       if (prefixKey) {
@@ -208,17 +244,17 @@
       return;
     }
 
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) {return;}
 
     var key = toChordKey(e);
-    if (!key) return;
+    if (!key) {return;}
 
     if (!prefixKey) {
-      if (handlePrimaryKey(key)) e.preventDefault();
+      if (handlePrimaryKey(key)) {e.preventDefault();}
       return;
     }
 
-    if (handleChordKey(key)) e.preventDefault();
+    if (handleChordKey(key)) {e.preventDefault();}
   }
 
   function init() {

@@ -15,10 +15,75 @@
   let modeOptions;
   let paletteOptions;
   let cotyYearSelects;
+  let cotyTransportNodes;
+  let cotyTransportTriggers;
+  let cotyModeToggles;
+  let cotyTransportPlayToggles;
+  let cotyPlayIcons;
+  let cotyPrevButtons;
+  let cotyNextButtons;
+  let cotyStopButtons;
+  let cotyShuffleButtons;
   let typographyOptions;
+  let effectBlendButtons;
+  let effectGrainButtons;
+  let effectMotionButtons;
   const CUSTOM_PALETTE_KEY = "theme-custom-palette";
   const COTY_YEAR_KEY = "theme-coty-year";
+  const COTY_STATE_KEY = "theme-pantone-state";
+  const COTY_SHUFFLE_KEY = "theme-coty-shuffle";
+  const EFFECT_BLEND_KEY = "theme-effect-blend";
+  const EFFECT_GRAIN_KEY = "theme-effect-grain";
+  const EFFECT_MOTION_KEY = "theme-effect-reduced-motion";
+  const LAST_NON_PANTONE_PALETTE_KEY = "theme-last-non-pantone-palette";
+  const COTY_TRANSPORT_UI_KEY = "theme-pantone-transport-ui";
+  const COTY_LOOP_INTERVAL_MS = 30000;
+  const COTY_TRANSPORT_AUTO_COLLAPSE_MS = 4000;
+  const COTY_TRANSPORT_HOVER_ENTER_DELAY_MS = 120;
+  const COTY_TRANSPORT_HOVER_EXIT_DELAY_MS =
+    COTY_TRANSPORT_AUTO_COLLAPSE_MS;
+  const COTY_TRANSPORT_REOPEN_GUARD_MS = 220;
   let appliedCustomTokenNames = [];
+  let cotyLoopTimer = null;
+  let cotyTransportCollapseTimer = null;
+  let cotyTransportHoverEnterTimer = null;
+  let cotyShuffleEnabled = false;
+  let cotyTransportUiState = "expanded";
+  let cotyTransportInteractedWhileHovered = false;
+  let cotyTransportHasUserEngaged = false;
+  let cotyTransportLastCollapsedAt = 0;
+  let playerSpriteUrl = "";
+
+  function getUseHref(use) {
+    return (
+      use.getAttribute("href") ||
+      use.getAttribute("xlink:href") ||
+      (use.href && use.href.baseVal) ||
+      use.getAttributeNS("http://www.w3.org/1999/xlink", "href") ||
+      ""
+    );
+  }
+
+  function getPlayerSpriteUrl() {
+    if (playerSpriteUrl) {
+      return playerSpriteUrl;
+    }
+
+    const uses = document.querySelectorAll('svg use');
+    for (let i = 0; i < uses.length; i += 1) {
+      const href = getUseHref(uses[i]);
+      if (href && href.indexOf("sprite.svg") !== -1) {
+        playerSpriteUrl = href.split("#")[0];
+        break;
+      }
+    }
+
+    if (!playerSpriteUrl) {
+      playerSpriteUrl = "/img/svg/sprite.svg?v=20260417a";
+    }
+
+    return playerSpriteUrl;
+  }
 
   function isGridActive() {
     const value = document.documentElement.getAttribute("data-grid-overlay");
@@ -115,6 +180,15 @@
     restorePanelPortal(themePanel);
   }
 
+  function setThemePanelOpenState(isOpen) {
+    if (isOpen) {
+      document.documentElement.setAttribute("data-theme-panel-open", "true");
+      return;
+    }
+    document.documentElement.removeAttribute("data-theme-panel-open");
+    window.dispatchEvent(new window.CustomEvent("theme:sheet-closed"));
+  }
+
   function restoreExternalPanelPortal(panel) {
     if (!panel) {
       return;
@@ -156,6 +230,7 @@
         themeOverlay.removeAttribute("hidden");
       }
       themeToggle.setAttribute("aria-expanded", "true");
+      setThemePanelOpenState(true);
       syncThemePanelPortal();
     } else {
       closePanel();
@@ -169,6 +244,7 @@
         themeOverlay.setAttribute("hidden", "");
       }
       themeToggle.setAttribute("aria-expanded", "false");
+      setThemePanelOpenState(false);
       syncThemePanelPortal();
     }
   }
@@ -190,26 +266,6 @@
     }
   }
 
-  function closeSettingsPanel() {
-    const settingsPanel = document.querySelector('[data-js="settings-panel"]');
-    const settingsToggle = document.querySelector(
-      '[data-js="settings-toggle"]'
-    );
-    const settingsOverlay = document.querySelector(
-      '[data-js="settings-overlay"]'
-    );
-
-    if (settingsPanel && !settingsPanel.hasAttribute("hidden")) {
-      settingsPanel.setAttribute("hidden", "");
-      if (settingsOverlay) {
-        settingsOverlay.setAttribute("hidden", "");
-      }
-      if (settingsToggle) {
-        settingsToggle.setAttribute("aria-expanded", "false");
-      }
-    }
-  }
-
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
@@ -218,8 +274,6 @@
     localStorage.setItem("theme-mode", mode);
     applyMode(mode);
     updateModeUI(mode);
-    closePanel();
-    closeSettingsPanel();
 
     var el = document.querySelector('[data-js="footer-mode"]');
     var category = el ? el.getAttribute("data-category") : "";
@@ -298,29 +352,13 @@
   // ==========================================================================
 
   function setPalette(palette) {
-    if (palette === "custom" && !hasCustomPalette()) {
+    if (!commitPaletteSelection(palette)) {
       return;
     }
-    localStorage.setItem("theme-palette", palette);
-    applyPalette(palette);
-    updatePaletteUI(palette);
-    window.dispatchEvent(
-      new window.CustomEvent("theme:palette-changed", {
-        detail: { palette: palette },
-      })
-    );
-    closePanel();
-    closeSettingsPanel();
-
-    var el = document.querySelector('[data-js="footer-palette"]');
-    var category = el ? el.getAttribute("data-category") : "";
-    var label = el
-      ? el.getAttribute("data-label-" + palette) || palette
-      : palette;
-    label = formatPaletteLabel(label, palette);
-    var icon = el ? el.getAttribute("data-toast-icon") : "";
-    if (window.Toast) {
-      window.Toast.show(category, label, { icon: icon });
+    if (palette === "pantone") {
+      setPantoneState("paused", { syncPalette: false });
+    } else {
+      setPantoneState("inactive", { syncPalette: false });
     }
   }
 
@@ -350,6 +388,7 @@
     }
 
     updateFooterPaletteLabel(palette);
+    syncCotyPlayerUI();
   }
 
   function getCotyActions() {
@@ -369,6 +408,14 @@
     }
     const stored = Number(localStorage.getItem(COTY_YEAR_KEY));
     return stored || 2026;
+  }
+
+  function getCotyEntryByYear(year) {
+    const actions = getCotyActions();
+    if (actions && typeof actions.getEntry === "function") {
+      return actions.getEntry(Number(year) || getCurrentCotyYear());
+    }
+    return null;
   }
 
   function formatPaletteLabel(baseLabel, palette) {
@@ -712,8 +759,6 @@
       )
         .then(function () {
           applyTypography(typography);
-          closePanel();
-          closeSettingsPanel();
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
@@ -721,16 +766,12 @@
         .catch(function () {
           // Font loading failed; apply anyway (CSS fallback stack kicks in)
           applyTypography(typography);
-          closePanel();
-          closeSettingsPanel();
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         });
     } else {
       applyTypography(typography);
-      closePanel();
-      closeSettingsPanel();
       if (window.Toast) {
         window.Toast.show(typoCategoryLabel, typoLabel);
       }
@@ -819,6 +860,506 @@
     typographyLabel.textContent = label;
   }
 
+  function readBooleanPreference(key, defaultValue) {
+    const raw = localStorage.getItem(key);
+    if (raw === null) {
+      return defaultValue;
+    }
+    return raw === "1";
+  }
+
+  function syncEffectButtons(nodes, enabled) {
+    if (!nodes) {
+      return;
+    }
+    nodes.forEach((button) => {
+      button.setAttribute("aria-pressed", enabled ? "true" : "false");
+    });
+  }
+
+  function showEffectToast(buttons, enabled, fallbackTitle) {
+    if (!window.Toast) {
+      return;
+    }
+    const button = buttons && buttons.length ? buttons[0] : null;
+    const title =
+      (button && button.getAttribute("data-toast-title")) || fallbackTitle;
+    const onLabel = (button && button.getAttribute("data-toast-on")) || "On";
+    const offLabel = (button && button.getAttribute("data-toast-off")) || "Off";
+    const icon = (button && button.getAttribute("data-toast-icon")) || "";
+    window.Toast.show(title, enabled ? onLabel : offLabel, { icon: icon });
+  }
+
+  function setBlendEnabled(enabled, options) {
+    const opts = options || {};
+    const value = Boolean(enabled);
+    document.documentElement.setAttribute(
+      "data-effect-blend",
+      value ? "on" : "off"
+    );
+    localStorage.setItem(EFFECT_BLEND_KEY, value ? "1" : "0");
+    syncEffectButtons(effectBlendButtons, value);
+    if (!opts.silent) {
+      showEffectToast(effectBlendButtons, value, "Blend");
+    }
+  }
+
+  function setGrainEnabled(enabled, options) {
+    const opts = options || {};
+    const value = Boolean(enabled);
+    document.documentElement.setAttribute(
+      "data-effect-grain",
+      value ? "on" : "off"
+    );
+    localStorage.setItem(EFFECT_GRAIN_KEY, value ? "1" : "0");
+    syncEffectButtons(effectGrainButtons, value);
+    if (!opts.silent) {
+      showEffectToast(effectGrainButtons, value, "Grain");
+    }
+  }
+
+  function setReducedMotionEnabled(enabled, options) {
+    const opts = options || {};
+    const value = Boolean(enabled);
+    document.documentElement.setAttribute(
+      "data-effect-reduced-motion",
+      value ? "on" : "off"
+    );
+    localStorage.setItem(EFFECT_MOTION_KEY, value ? "1" : "0");
+    syncEffectButtons(effectMotionButtons, value);
+    if (!opts.silent) {
+      showEffectToast(effectMotionButtons, value, "Reduce motion");
+    }
+  }
+
+  function formatCotyTrackText(entry) {
+    if (!entry || !entry.year) {
+      return "";
+    }
+    return String(entry.year) + " \u2014 " + String(entry.name || "");
+  }
+
+  function isPantonePaletteSelected() {
+    return (
+      (document.documentElement.getAttribute("data-palette") || "standard") ===
+      "pantone"
+    );
+  }
+
+  function normalizePantoneState(state) {
+    if (state === "playing" || state === "paused") {
+      return state;
+    }
+    return "inactive";
+  }
+
+  function getPantoneState() {
+    const attr = document.documentElement.getAttribute("data-pantone-state");
+    if (attr) {
+      return normalizePantoneState(attr);
+    }
+    return normalizePantoneState(localStorage.getItem(COTY_STATE_KEY));
+  }
+
+  function isPantoneModeActive() {
+    return getPantoneState() !== "inactive";
+  }
+
+  function isPantonePlaying() {
+    return getPantoneState() === "playing";
+  }
+
+  function isAnyBottomSheetOpen() {
+    return (
+      document.documentElement.getAttribute("data-theme-panel-open") ===
+        "true" ||
+      document.documentElement.getAttribute("data-settings-panel-open") ===
+        "true"
+    );
+  }
+
+  function stopCotyTransportCollapseTimer() {
+    if (cotyTransportCollapseTimer) {
+      window.clearTimeout(cotyTransportCollapseTimer);
+      cotyTransportCollapseTimer = null;
+    }
+  }
+
+  function stopCotyTransportHoverEnterTimer() {
+    if (cotyTransportHoverEnterTimer) {
+      window.clearTimeout(cotyTransportHoverEnterTimer);
+      cotyTransportHoverEnterTimer = null;
+    }
+  }
+
+  function setCotyTransportUiState(state) {
+    cotyTransportUiState = state === "collapsed" ? "collapsed" : "expanded";
+    localStorage.setItem(COTY_TRANSPORT_UI_KEY, cotyTransportUiState);
+    if (!cotyTransportNodes) {
+      return;
+    }
+    cotyTransportNodes.forEach((node) => {
+      node.setAttribute("data-ui-state", cotyTransportUiState);
+    });
+  }
+
+  function collapseCotyTransport() {
+    if (!isPantoneModeActive() || isAnyBottomSheetOpen()) {
+      return;
+    }
+    stopCotyTransportCollapseTimer();
+    stopCotyTransportHoverEnterTimer();
+    cotyTransportInteractedWhileHovered = false;
+    cotyTransportLastCollapsedAt = Date.now();
+    setCotyTransportUiState("collapsed");
+  }
+
+  function scheduleCotyTransportCollapse() {
+    stopCotyTransportCollapseTimer();
+    if (!isPantoneModeActive() || isAnyBottomSheetOpen()) {
+      return;
+    }
+    cotyTransportCollapseTimer = window.setTimeout(function () {
+      collapseCotyTransport();
+    }, COTY_TRANSPORT_AUTO_COLLAPSE_MS);
+  }
+
+  function expandCotyTransport(options) {
+    stopCotyTransportCollapseTimer();
+    stopCotyTransportHoverEnterTimer();
+    if (!isPantoneModeActive()) {
+      return;
+    }
+    setCotyTransportUiState("expanded");
+    const opts = options || {};
+    if (opts.autoCollapse !== false) {
+      scheduleCotyTransportCollapse();
+    }
+  }
+
+  function resetCotyTransportActivity() {
+    cotyTransportHasUserEngaged = true;
+    cotyTransportInteractedWhileHovered = true;
+    expandCotyTransport({ autoCollapse: true });
+  }
+
+  function resumeCotyTransportAutoCollapse() {
+    if (
+      !isPantoneModeActive() ||
+      isAnyBottomSheetOpen() ||
+      cotyTransportUiState !== "expanded"
+    ) {
+      return;
+    }
+    scheduleCotyTransportCollapse();
+  }
+
+  function syncCotyModeButtons() {
+    const active = isPantoneModeActive();
+    if (!cotyModeToggles) {
+      return;
+    }
+    cotyModeToggles.forEach((button) => {
+      const activateLabel =
+        button.getAttribute("data-label-activate") || "Activate Pantone";
+      const deactivateLabel =
+        button.getAttribute("data-label-deactivate") || "Deactivate Pantone";
+      button.setAttribute("aria-label", active ? deactivateLabel : activateLabel);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+      button.setAttribute("data-active", active ? "true" : "false");
+    });
+  }
+
+  function syncCotyTransportVisibility() {
+    const active = isPantoneModeActive();
+    if (cotyTransportNodes) {
+      cotyTransportNodes.forEach((node) => {
+        if (active) {
+          node.removeAttribute("hidden");
+        } else {
+          node.setAttribute("hidden", "");
+        }
+      });
+    }
+    if (!active) {
+      stopCotyTransportCollapseTimer();
+      stopCotyTransportHoverEnterTimer();
+      cotyTransportHasUserEngaged = false;
+      setCotyTransportUiState("expanded");
+    }
+  }
+
+  function syncCotyTransportPlayButtons() {
+    const playing = isPantonePlaying();
+    if (cotyTransportPlayToggles) {
+      cotyTransportPlayToggles.forEach((button) => {
+        const playLabel = button.getAttribute("data-label-play") || "Play";
+        const pauseLabel = button.getAttribute("data-label-pause") || "Pause";
+        button.setAttribute("aria-label", playing ? pauseLabel : playLabel);
+        button.setAttribute("aria-pressed", playing ? "true" : "false");
+        button.setAttribute("data-playing", playing ? "true" : "false");
+      });
+    }
+    if (cotyPlayIcons) {
+      const spriteUrl = getPlayerSpriteUrl();
+      cotyPlayIcons.forEach((icon) => {
+        icon.innerHTML = `<use href="${spriteUrl}#${
+          playing ? "icon-player-pause" : "icon-player-play"
+        }"></use>`;
+      });
+    }
+  }
+
+  function stopCotyLoopTimer() {
+    if (cotyLoopTimer) {
+      window.clearInterval(cotyLoopTimer);
+      cotyLoopTimer = null;
+    }
+  }
+
+  function getNextCotyYear(step) {
+    const actions = getCotyActions();
+    if (!actions || typeof actions.getEntries !== "function") {
+      return getCurrentCotyYear();
+    }
+    const entries = actions.getEntries();
+    if (!entries || !entries.length) {
+      return getCurrentCotyYear();
+    }
+    const currentYear = getCurrentCotyYear();
+    const currentIndex = Math.max(
+      0,
+      entries.findIndex((entry) => Number(entry.year) === Number(currentYear))
+    );
+
+    if (cotyShuffleEnabled) {
+      if (entries.length === 1) {
+        return Number(entries[0].year);
+      }
+      let randomIndex = currentIndex;
+      while (randomIndex === currentIndex) {
+        randomIndex = Math.floor(Math.random() * entries.length);
+      }
+      return Number(entries[randomIndex].year);
+    }
+
+    const nextIndex = (currentIndex + step + entries.length) % entries.length;
+    return Number(entries[nextIndex].year);
+  }
+
+  function advanceCotyYear(step, options) {
+    const nextYear = getNextCotyYear(step);
+    setCotyYear(nextYear, options || {});
+  }
+
+  function getLatestCotyYear() {
+    const actions = getCotyActions();
+    if (!actions || typeof actions.getEntries !== "function") {
+      return getCurrentCotyYear();
+    }
+    const entries = actions.getEntries();
+    if (!entries || !entries.length) {
+      return getCurrentCotyYear();
+    }
+    return entries.reduce(function (latest, entry) {
+      const year = Number(entry.year) || 0;
+      return year > latest ? year : latest;
+    }, 0);
+  }
+
+  function startCotyLoopTimer() {
+    stopCotyLoopTimer();
+    cotyLoopTimer = window.setInterval(function () {
+      advanceCotyYear(1, { activatePantone: true });
+    }, COTY_LOOP_INTERVAL_MS);
+  }
+
+  function syncCotyPlaybackTimer() {
+    if (isPantonePlaying()) {
+      startCotyLoopTimer();
+    } else {
+      stopCotyLoopTimer();
+    }
+  }
+
+  function setCotyShuffleEnabled(enabled) {
+    cotyShuffleEnabled = Boolean(enabled);
+    localStorage.setItem(COTY_SHUFFLE_KEY, cotyShuffleEnabled ? "1" : "0");
+    if (cotyShuffleButtons) {
+      cotyShuffleButtons.forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          cotyShuffleEnabled ? "true" : "false"
+        );
+      });
+    }
+  }
+
+  function dispatchPaletteChanged(palette) {
+    window.dispatchEvent(
+      new window.CustomEvent("theme:palette-changed", {
+        detail: { palette: palette },
+      })
+    );
+  }
+
+  function showPaletteToast(palette) {
+    var el = document.querySelector('[data-js="footer-palette"]');
+    var category = el ? el.getAttribute("data-category") : "";
+    var label = el
+      ? el.getAttribute("data-label-" + palette) || palette
+      : palette;
+    if (palette === "pantone") {
+      label = formatCotyTrackText(getCotyEntryByYear(getCurrentCotyYear()));
+    } else {
+      label = formatPaletteLabel(label, palette);
+    }
+    var icon = el ? el.getAttribute("data-toast-icon") : "";
+    if (window.Toast) {
+      window.Toast.show(category, label, { icon: icon });
+    }
+  }
+
+  function commitPaletteSelection(palette, options) {
+    const opts = options || {};
+    if (palette === "custom" && !hasCustomPalette()) {
+      return false;
+    }
+    if (palette !== "pantone") {
+      localStorage.setItem(LAST_NON_PANTONE_PALETTE_KEY, palette);
+    }
+    localStorage.setItem("theme-palette", palette);
+    applyPalette(palette);
+    updatePaletteUI(palette);
+    if (opts.dispatch !== false) {
+      dispatchPaletteChanged(palette);
+    }
+    if (opts.toast !== false) {
+      showPaletteToast(palette);
+    }
+    return true;
+  }
+
+  function setPantoneState(state, options) {
+    const nextState = normalizePantoneState(state);
+    const previousState = getPantoneState();
+    const opts = options || {};
+
+    document.documentElement.setAttribute("data-pantone-state", nextState);
+    localStorage.setItem(COTY_STATE_KEY, nextState);
+
+    if (nextState === "inactive") {
+      if (opts.syncPalette !== false && isPantonePaletteSelected()) {
+        const fallback =
+          localStorage.getItem(LAST_NON_PANTONE_PALETTE_KEY) || "standard";
+        commitPaletteSelection(fallback === "pantone" ? "standard" : fallback, {
+          toast: false,
+        });
+      }
+      syncCotyPlaybackTimer();
+      syncCotyPlayerUI();
+      return;
+    }
+
+    if (previousState === "inactive") {
+      cotyTransportHasUserEngaged = false;
+    }
+
+    if (previousState === "inactive" && opts.resetYear !== false) {
+      setCotyYear(getLatestCotyYear(), {
+        silent: true,
+        activatePantone: false,
+      });
+    }
+
+    if (opts.syncPalette !== false && !isPantonePaletteSelected()) {
+      commitPaletteSelection("pantone", { toast: false });
+    } else {
+      updateFooterPaletteLabel("pantone");
+    }
+
+    syncCotyPlaybackTimer();
+    syncCotyPlayerUI();
+    expandCotyTransport({ autoCollapse: true });
+  }
+
+  function activatePantone(options) {
+    const opts = options || {};
+    setPantoneState(opts.playing ? "playing" : "paused", {
+      syncPalette: true,
+      resetYear: opts.resetYear !== false,
+    });
+  }
+
+  function playPantone() {
+    activatePantone({
+      playing: true,
+      resetYear: !isPantoneModeActive(),
+    });
+  }
+
+  function pausePantone() {
+    if (!isPantoneModeActive()) {
+      activatePantone({ playing: false, resetYear: true });
+      return;
+    }
+    setPantoneState("paused", {
+      syncPalette: true,
+      resetYear: false,
+    });
+  }
+
+  function stopPantone() {
+    setPantoneState("inactive", { syncPalette: true });
+  }
+
+  function togglePantoneMode() {
+    if (isPantoneModeActive()) {
+      stopPantone();
+      return;
+    }
+    activatePantone({ playing: false, resetYear: true });
+  }
+
+  function togglePantonePlayback() {
+    if (!isPantoneModeActive()) {
+      playPantone();
+      return;
+    }
+    if (isPantonePlaying()) {
+      pausePantone();
+      return;
+    }
+    playPantone();
+  }
+
+  function syncCotyPlayerUI() {
+    syncCotyModeButtons();
+    syncCotyTransportVisibility();
+    syncCotyTransportPlayButtons();
+    if (cotyShuffleButtons) {
+      cotyShuffleButtons.forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          cotyShuffleEnabled ? "true" : "false"
+        );
+      });
+    }
+    if (isPantoneModeActive() && cotyTransportUiState === "collapsed") {
+      setCotyTransportUiState("collapsed");
+    }
+  }
+
+  function showCotyYearToast(entry) {
+    if (!entry || !window.Toast) {
+      return;
+    }
+    const el = document.querySelector('[data-js="footer-palette"]');
+    const category = el ? el.getAttribute("data-category") : "";
+    const icon = el ? el.getAttribute("data-toast-icon") : "";
+    window.Toast.show(category, formatCotyTrackText(entry), { icon: icon });
+  }
+
   // ==========================================================================
   // SYSTEM PREFERENCE LISTENER
   // ==========================================================================
@@ -892,6 +1433,7 @@
     }
 
     if (!opts.silent) {
+      showCotyYearToast(entry);
       window.dispatchEvent(
         new window.CustomEvent("theme:coty-year-changed", {
           detail: { year: entry.year, name: entry.name || "" },
@@ -938,6 +1480,144 @@
     });
   }
 
+  function initCotyPlayerControls() {
+    cotyShuffleEnabled = localStorage.getItem(COTY_SHUFFLE_KEY) === "1";
+
+    if (cotyPrevButtons) {
+      cotyPrevButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          resetCotyTransportActivity();
+          advanceCotyYear(-1, {
+            activatePantone: false,
+          });
+        });
+      });
+    }
+
+    if (cotyNextButtons) {
+      cotyNextButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          resetCotyTransportActivity();
+          advanceCotyYear(1, {
+            activatePantone: false,
+          });
+        });
+      });
+    }
+
+    if (cotyModeToggles) {
+      cotyModeToggles.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          togglePantoneMode();
+        });
+      });
+    }
+
+    if (cotyTransportPlayToggles) {
+      cotyTransportPlayToggles.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          resetCotyTransportActivity();
+          togglePantonePlayback();
+        });
+      });
+    }
+
+    if (cotyShuffleButtons) {
+      cotyShuffleButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          resetCotyTransportActivity();
+          setCotyShuffleEnabled(!cotyShuffleEnabled);
+        });
+      });
+    }
+
+    if (cotyStopButtons) {
+      cotyStopButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          resetCotyTransportActivity();
+          stopPantone();
+        });
+      });
+    }
+
+    if (cotyTransportTriggers) {
+      cotyTransportTriggers.forEach((button) => {
+        function openTransport(autoCollapse) {
+          stopCotyTransportHoverEnterTimer();
+          cotyTransportHasUserEngaged = true;
+          expandCotyTransport({ autoCollapse: autoCollapse !== false });
+        }
+
+        button.addEventListener("mouseenter", function () {
+          if (
+            cotyTransportUiState !== "collapsed" ||
+            !isPantoneModeActive() ||
+            Date.now() - cotyTransportLastCollapsedAt <
+              COTY_TRANSPORT_REOPEN_GUARD_MS
+          ) {
+            return;
+          }
+          stopCotyTransportHoverEnterTimer();
+          cotyTransportHoverEnterTimer = window.setTimeout(function () {
+            openTransport(false);
+          }, COTY_TRANSPORT_HOVER_ENTER_DELAY_MS);
+        });
+        button.addEventListener("mouseleave", stopCotyTransportHoverEnterTimer);
+        button.addEventListener("focus", function () {
+          openTransport(false);
+        });
+        button.addEventListener("pointerup", function (event) {
+          if (event.pointerType === "mouse") {
+            return;
+          }
+          event.stopPropagation();
+          openTransport(true);
+        });
+        button.addEventListener("touchend", function (event) {
+          event.stopPropagation();
+          openTransport(true);
+        });
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          openTransport(true);
+        });
+      });
+    }
+
+    if (cotyTransportNodes) {
+      cotyTransportNodes.forEach((node) => {
+        node.addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+        node.addEventListener("mouseenter", function () {
+          cotyTransportInteractedWhileHovered = false;
+          if (cotyTransportHasUserEngaged) {
+            expandCotyTransport({ autoCollapse: false });
+          }
+        });
+        node.addEventListener("mouseleave", function () {
+          stopCotyTransportHoverEnterTimer();
+          if (cotyTransportInteractedWhileHovered) {
+            stopCotyTransportCollapseTimer();
+            cotyTransportCollapseTimer = window.setTimeout(function () {
+              collapseCotyTransport();
+            }, COTY_TRANSPORT_HOVER_EXIT_DELAY_MS);
+            return;
+          }
+          collapseCotyTransport();
+        });
+      });
+    }
+
+    syncCotyPlayerUI();
+  }
+
   // ==========================================================================
   // INITIALIZATION
   // ==========================================================================
@@ -951,8 +1631,30 @@
     modeOptions = document.querySelectorAll('[data-js="mode-option"]');
     paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
     cotyYearSelects = document.querySelectorAll('[data-js="coty-year-theme"]');
+    cotyTransportNodes = document.querySelectorAll('[data-js="coty-transport"]');
+    cotyTransportTriggers = document.querySelectorAll(
+      '[data-js="coty-transport-trigger"]'
+    );
+    cotyModeToggles = document.querySelectorAll('[data-js="coty-mode-toggle"]');
+    cotyTransportPlayToggles = document.querySelectorAll(
+      '[data-js="coty-transport-toggle"]'
+    );
+    cotyPlayIcons = document.querySelectorAll('[data-js="coty-play-icon"]');
+    cotyPrevButtons = document.querySelectorAll('[data-js="coty-prev"]');
+    cotyNextButtons = document.querySelectorAll('[data-js="coty-next"]');
+    cotyStopButtons = document.querySelectorAll('[data-js="coty-stop"]');
+    cotyShuffleButtons = document.querySelectorAll('[data-js="coty-shuffle"]');
     typographyOptions = document.querySelectorAll(
       '[data-js="typography-option"]'
+    );
+    effectBlendButtons = document.querySelectorAll(
+      '[data-js="effect-blend-toggle"]'
+    );
+    effectGrainButtons = document.querySelectorAll(
+      '[data-js="effect-grain-toggle"]'
+    );
+    effectMotionButtons = document.querySelectorAll(
+      '[data-js="effect-motion-toggle"]'
     );
 
     // Load stored preferences or use defaults
@@ -962,13 +1664,32 @@
       localStorage.getItem("theme-typography") || "editorial";
     const normalizedStoredPalette =
       storedPalette === "coty" ? "pantone" : storedPalette;
-    const initialPalette =
+    const storedCotyTransportUiState =
+      localStorage.getItem(COTY_TRANSPORT_UI_KEY) === "collapsed"
+        ? "collapsed"
+        : "expanded";
+    let initialPalette =
       normalizedStoredPalette === "custom" && !hasCustomPalette()
         ? "standard"
         : normalizedStoredPalette;
+    let initialPantoneState = normalizePantoneState(
+      localStorage.getItem(COTY_STATE_KEY)
+    );
+    if (initialPalette === "pantone" && initialPantoneState === "inactive") {
+      initialPantoneState = "paused";
+    }
+    if (initialPalette !== "pantone" && initialPantoneState !== "inactive") {
+      initialPalette = "pantone";
+      localStorage.setItem("theme-palette", initialPalette);
+    }
     if (initialPalette !== storedPalette) {
       localStorage.setItem("theme-palette", initialPalette);
     }
+    document.documentElement.setAttribute(
+      "data-pantone-state",
+      initialPantoneState
+    );
+    localStorage.setItem(COTY_STATE_KEY, initialPantoneState);
 
     // Apply stored preferences
     applyMode(storedMode);
@@ -979,19 +1700,61 @@
       window.CotyScaleActions.init();
     }
     initCotyYearControls();
+    initCotyPlayerControls();
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
+    setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
+      silent: true,
+    });
+    setGrainEnabled(readBooleanPreference(EFFECT_GRAIN_KEY, false), {
+      silent: true,
+    });
+    setReducedMotionEnabled(readBooleanPreference(EFFECT_MOTION_KEY, false), {
+      silent: true,
+    });
 
     // Update UI to reflect current settings
     updateModeUI(storedMode);
     updatePaletteUI(initialPalette);
     updateTypographyUI(storedTypography);
+    syncCotyPlaybackTimer();
+    setCotyTransportUiState(
+      initialPantoneState !== "inactive" ? storedCotyTransportUiState : "expanded"
+    );
+    syncCotyPlayerUI();
+    if (initialPantoneState !== "inactive") {
+      if (storedCotyTransportUiState === "collapsed") {
+        collapseCotyTransport();
+      } else {
+        expandCotyTransport({ autoCollapse: true });
+      }
+    }
 
     window.ThemeActions = {
       setMode: setMode,
       setPalette: setPalette,
       setTypography: setTypography,
+      togglePantone: togglePantoneMode,
+      toggleBlend: function () {
+        setBlendEnabled(
+          document.documentElement.getAttribute("data-effect-blend") !== "on"
+        );
+      },
+      toggleGrain: function () {
+        setGrainEnabled(
+          document.documentElement.getAttribute("data-effect-grain") !== "on"
+        );
+      },
+      toggleReducedMotion: function () {
+        setReducedMotionEnabled(
+          document.documentElement.getAttribute("data-effect-reduced-motion") !==
+            "on"
+        );
+      },
+      playPantone: playPantone,
+      pausePantone: pausePantone,
+      stopPantone: stopPantone,
       getPaletteOrder: function () {
         const seen = new Set();
         const values = [];
@@ -1021,6 +1784,7 @@
       },
       setCotyYear: setCotyYear,
       getCotyYear: getCurrentCotyYear,
+      setCotyShuffleEnabled: setCotyShuffleEnabled,
       refreshCustomPalette: refreshCustomPaletteState,
     };
 
@@ -1028,6 +1792,7 @@
       "theme:custom-palette-updated",
       refreshCustomPaletteState
     );
+    window.addEventListener("theme:sheet-closed", resumeCotyTransportAutoCollapse);
 
     // Setup event listeners
     if (themeToggle && themePanel) {
@@ -1141,6 +1906,37 @@
         setTypography(typography);
       });
     });
+
+    if (effectBlendButtons) {
+      effectBlendButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          setBlendEnabled(
+            document.documentElement.getAttribute("data-effect-blend") !== "on"
+          );
+        });
+      });
+    }
+
+    if (effectGrainButtons) {
+      effectGrainButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          setGrainEnabled(
+            document.documentElement.getAttribute("data-effect-grain") !== "on"
+          );
+        });
+      });
+    }
+
+    if (effectMotionButtons) {
+      effectMotionButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          setReducedMotionEnabled(
+            document.documentElement.getAttribute("data-effect-reduced-motion") !==
+              "on"
+          );
+        });
+      });
+    }
   });
 
   // Global function for backwards compatibility (if needed elsewhere)

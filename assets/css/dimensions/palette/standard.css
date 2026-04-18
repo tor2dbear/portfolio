@@ -30,7 +30,7 @@
   --surface-ink-strong: var(--iris-11);
   --component-form-placeholder: var(--gray-10);
 
-  --bg-page: var(--iris-1);
+  --surface-page: var(--iris-1);
 }
 
 :root[data-mode="dark"][data-palette="standard"] {

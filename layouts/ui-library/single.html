@@ -1079,25 +1079,35 @@
                     ></div>
                     <div class="color-swatch__meta">
                       <code>--primary-strong</code><br /><code
-                        >--text-accent (alias)</code
+                        >--text-accent (deprecated alias)</code
                       >
                     </div>
                   </div>
                 </div>
               </details>
 
-              <!-- Background Tokens -->
-              <details class="accordion-nested" data-sort="background">
+              <!-- Surface Tokens -->
+              <details class="accordion-nested" data-sort="surface">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
                     >{{ if eq .Language.Lang "sv" }}
-                      Bakgrund
+                      Ytor
                     {{ else }}
-                      Background
+                      Surface
                     {{ end }}</span
                   >
                 </summary>
-                <div class="accordion-nested__content color-grid">
+                <div class="accordion-nested__content">
+                  <p class="type-body-small">
+                    {{ if eq .Language.Lang "sv" }}
+                      <code>--surface-*</code> ar canonical. <code>--bg-*</code>
+                      finns kvar som compatibility aliases under migreringen.
+                    {{ else }}
+                      <code>--surface-*</code> is canonical. <code>--bg-*</code>
+                      remains as compatibility aliases during migration.
+                    {{ end }}
+                  </p>
+                  <div class="color-grid">
                   <div class="color-swatch">
                     <div
                       class="color-swatch__visual"
@@ -1137,29 +1147,30 @@
                   <div class="color-swatch">
                     <div
                       class="color-swatch__visual"
-                      style="background-color: var(--surface-tag);"
+                      style="background-color: var(--surface-subtle);"
                     ></div>
                     <div class="color-swatch__meta">
-                      <code>--surface-tag</code>
+                      <code>--surface-subtle</code>
                     </div>
                   </div>
                   <div class="color-swatch">
                     <div
                       class="color-swatch__visual"
-                      style="background-color: var(--surface-tag-hover);"
+                      style="background-color: var(--surface-disabled);"
                     ></div>
                     <div class="color-swatch__meta">
-                      <code>--surface-tag-hover</code>
+                      <code>--surface-disabled</code>
                     </div>
                   </div>
                   <div class="color-swatch">
                     <div
                       class="color-swatch__visual"
-                      style="background-color: var(--surface-headline);"
+                      style="background-color: var(--surface-accent);"
                     ></div>
                     <div class="color-swatch__meta">
-                      <code>--surface-headline</code>
+                      <code>--surface-accent</code>
                     </div>
+                  </div>
                   </div>
                 </div>
               </details>
@@ -1175,7 +1186,21 @@
                     {{ end }}</span
                   >
                 </summary>
-                <div class="accordion-nested__content color-grid">
+                <div class="accordion-nested__content">
+                  <p class="type-body-small">
+                    {{ if eq .Language.Lang "sv" }}
+                      <code>--primary*</code>, <code>--secondary*</code> och
+                      <code>--on-*</code> ar canonical. <code>--accent-*</code>
+                      och <code>--brand-*</code> finns kvar som compatibility
+                      aliases under migreringen.
+                    {{ else }}
+                      <code>--primary*</code>, <code>--secondary*</code>, and
+                      <code>--on-*</code> are canonical. <code>--accent-*</code>
+                      and <code>--brand-*</code> remain as compatibility aliases
+                      during migration.
+                    {{ end }}
+                  </p>
+                  <div class="color-grid">
                   <div class="color-swatch">
                     <div
                       class="color-swatch__visual"
@@ -1203,6 +1228,7 @@
                       <code>--border-strong</code>
                     </div>
                   </div>
+                </div>
                 </div>
               </details>
 
@@ -1299,7 +1325,7 @@
                       <code>--brand-on-container (legacy)</code>
                     </div>
                   </div>
-                </div>
+                  </div>
               </details>
 
               <!-- State Tokens -->
@@ -5336,8 +5362,7 @@
                   <div class="meta-item">
                     <dt>Tokens:</dt>
                     <dd>
-                      <code>--surface-tag</code>,
-                      <code>--surface-tag-hover</code>,
+                      <code>--surface-accent</code>,
                       <code>--text-muted</code>, <code>--spacing-8</code>
                     </dd>
                   </div>

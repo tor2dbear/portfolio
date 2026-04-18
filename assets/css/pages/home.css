@@ -75,7 +75,8 @@
 }
 
 .hero-title {
-  /* Width controlled by grid placement (use .place-prose or --col on the element) */
+  /* Hero sits outside .use-subgrid on the home page, so it needs its own measure. */
+  max-width: var(--content-max-width-narrow);
   line-height: 1.4;
   font-size: calc(
     clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl)) *
@@ -108,7 +109,7 @@
 }
 
 .hero-emphasis {
-  background: var(--surface-tag);
+  background: var(--surface-accent);
   padding: 0 var(--spacing-4);
   border-radius: var(--spacing-4);
   font-weight: inherit;

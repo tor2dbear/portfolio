@@ -23,6 +23,10 @@ html[data-grid-overlay] .grid-overlay {
   display: grid;
 }
 
+html[data-grid-overlay="closing"] .grid-overlay {
+  z-index: 50;
+}
+
 .grid-overlay__col {
   grid-row: 1;
   background: var(--grid-overlay-color, hsla(330, 80%, 60%, 0.08));
