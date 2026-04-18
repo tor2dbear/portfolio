@@ -43,7 +43,6 @@
   const COTY_TRANSPORT_HOVER_EXIT_DELAY_MS =
     COTY_TRANSPORT_AUTO_COLLAPSE_MS;
   const COTY_TRANSPORT_REOPEN_GUARD_MS = 220;
-  const PLAYER_SPRITE_URL = "/img/svg/sprite.svg?v=20260417a";
   let appliedCustomTokenNames = [];
   let cotyLoopTimer = null;
   let cotyTransportCollapseTimer = null;
@@ -53,6 +52,38 @@
   let cotyTransportInteractedWhileHovered = false;
   let cotyTransportHasUserEngaged = false;
   let cotyTransportLastCollapsedAt = 0;
+  let playerSpriteUrl = "";
+
+  function getUseHref(use) {
+    return (
+      use.getAttribute("href") ||
+      use.getAttribute("xlink:href") ||
+      (use.href && use.href.baseVal) ||
+      use.getAttributeNS("http://www.w3.org/1999/xlink", "href") ||
+      ""
+    );
+  }
+
+  function getPlayerSpriteUrl() {
+    if (playerSpriteUrl) {
+      return playerSpriteUrl;
+    }
+
+    const uses = document.querySelectorAll('svg use');
+    for (let i = 0; i < uses.length; i += 1) {
+      const href = getUseHref(uses[i]);
+      if (href && href.indexOf("sprite.svg") !== -1) {
+        playerSpriteUrl = href.split("#")[0];
+        break;
+      }
+    }
+
+    if (!playerSpriteUrl) {
+      playerSpriteUrl = "/img/svg/sprite.svg?v=20260417a";
+    }
+
+    return playerSpriteUrl;
+  }
 
   function isGridActive() {
     const value = document.documentElement.getAttribute("data-grid-overlay");
@@ -1070,8 +1101,9 @@
       });
     }
     if (cotyPlayIcons) {
+      const spriteUrl = getPlayerSpriteUrl();
       cotyPlayIcons.forEach((icon) => {
-        icon.innerHTML = `<use href="${PLAYER_SPRITE_URL}#${
+        icon.innerHTML = `<use href="${spriteUrl}#${
           playing ? "icon-player-pause" : "icon-player-play"
         }"></use>`;
       });

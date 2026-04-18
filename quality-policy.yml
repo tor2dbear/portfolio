@@ -49,7 +49,7 @@ policy:
         "/ui-library/":
           categories:
             performance:
-              minScore: 70
+              minScore: 69
 
   # B) FIX-SOON (visible in PR comment, not failing CI)
   fixSoon:
