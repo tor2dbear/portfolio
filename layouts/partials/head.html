@@ -319,7 +319,10 @@
       .hero-title {
         max-width: var(--content-max-width-narrow);
         line-height: 1.4;
-        font-size: calc(var(--text-4xl) * var(--type-scale-display));
+        font-size: calc(
+          clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl)) *
+            var(--type-scale-display)
+        );
         letter-spacing: var(--display-tracking);
       }
       .role-swapper {
@@ -366,7 +369,6 @@
       }
       @media (max-width: 47.9375em) {
         .hero-section { padding: var(--spacing-64) 0; }
-        .hero-title { font-size: calc(var(--text-3xl) * var(--type-scale-display)); }
       }
       @media (prefers-reduced-motion: reduce) {
         .role-swapper { transition: none; }
