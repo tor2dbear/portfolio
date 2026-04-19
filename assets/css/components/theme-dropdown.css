@@ -341,9 +341,9 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  left: 50%;
-  right: auto;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   bottom: var(--spacing-12);
   width: max-content;
   max-width: calc(100vw - var(--spacing-16));
@@ -434,7 +434,7 @@
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   bottom: var(--spacing-4);
-  transform: translateX(-50%) translateY(0) scale(0.97);
+  transform: scale(0.97);
 }
 
 .coty-transport[data-ui-state="collapsed"] .coty-transport__trigger {
@@ -462,7 +462,7 @@
 }
 
 .coty-transport[data-ui-state="expanded"] {
-  transform: translateX(-50%) translateY(0) scale(1);
+  transform: scale(1);
 }
 
 .coty-transport[data-ui-state="expanded"] .coty-transport__trigger {
@@ -485,7 +485,7 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateX(-50%) translateY(calc(var(--spacing-8) * 2));
+    transform: translateY(calc(var(--spacing-8) * 2));
   }
 }
 
@@ -520,7 +520,7 @@
 
   .coty-transport[data-ui-state="collapsed"],
   .coty-transport[data-ui-state="expanded"] {
-    transform: translateX(-50%);
+    transform: none;
   }
 }
 
