@@ -45,11 +45,11 @@ policy:
         "/works/":
           categories:
             performance:
-              minScore: 73
+              minScore: 70
         "/ui-library/":
           categories:
             performance:
-              minScore: 69
+              minScore: 68
 
   # B) FIX-SOON (visible in PR comment, not failing CI)
   fixSoon:

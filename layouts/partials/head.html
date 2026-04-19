@@ -468,6 +468,7 @@
         {{ $pageCss = $pageCss | append . }}
       {{ end }}
     {{ end }}
+    {{ $pageCssBundleRef := false }}
     {{ with $pageCss }}
       {{ $pageCssTarget := "css-page.css" }}
       {{ if $isHomePage }}
@@ -479,14 +480,7 @@
       {{ else if $isContactPage }}
         {{ $pageCssTarget = "css-page-contact.css" }}
       {{ end }}
-      {{ $pageCssBundle := . | resources.Concat $pageCssTarget | minify | fingerprint }}
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="{{ $pageCssBundle.RelPermalink }}"
-        integrity="{{ $pageCssBundle.Data.Integrity }}"
-        media="all"
-      />
+      {{ $pageCssBundleRef = . | resources.Concat $pageCssTarget | minify | fingerprint }}
     {{ end }}
     {{ $css = $css | append $style $print }}
     {{ $css = $css | resources.Concat "css.css" | minify | fingerprint }}
@@ -497,6 +491,15 @@
       integrity="{{ $css.Data.Integrity }}"
       media="all"
     />
+    {{ with $pageCssBundleRef }}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ .RelPermalink }}"
+      integrity="{{ .Data.Integrity }}"
+      media="all"
+    />
+    {{ end }}
   {{ end }}
 
 
