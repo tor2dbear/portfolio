@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "comment": "Accepted per-route Lighthouse baselines. Update after intentional score changes. Used by scripts/quality/evaluate.mjs together with maxRegression in quality-policy.yml.",
+  "routes": {
+    "/": {
+      "performance": 73,
+      "accessibility": 97,
+      "bestPractices": 96,
+      "seo": 100
+    },
+    "/contact/": {
+      "performance": 74,
+      "accessibility": 97,
+      "bestPractices": 96,
+      "seo": 100
+    },
+    "/works/": {
+      "performance": 73,
+      "accessibility": 97,
+      "bestPractices": 96,
+      "seo": 100
+    },
+    "/ui-library/": {
+      "performance": 71,
+      "accessibility": 97,
+      "bestPractices": 96,
+      "seo": 100
+    }
+  }
+}

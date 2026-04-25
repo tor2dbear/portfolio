@@ -51,6 +51,15 @@ async function loadPolicy(policyPath) {
   return parsed;
 }
 
+async function loadBaseline(baselinePath) {
+  try {
+    const raw = await fs.readFile(baselinePath, "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
 async function listFilesRecursive(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const files = [];
@@ -207,29 +216,50 @@ function countAxeByImpact(axeRuns) {
   return counts;
 }
 
-function computeBlockers({ policy, lighthouseRuns, axeRuns }) {
+function computeBlockers({ policy, lighthouseRuns, axeRuns, baseline }) {
   const blockers = [];
 
   // Missing tool outputs are blockers to avoid false-green PRs.
   if (!lighthouseRuns) blockers.push({ type: "tool", tool: "lighthouse", message: "Missing Lighthouse results" });
   if (!axeRuns) blockers.push({ type: "tool", tool: "axe", message: "Missing axe results" });
 
-  // Lighthouse category minimums
+  // Lighthouse category checks: absolute floor + regression from baseline
   if (lighthouseRuns) {
     for (const run of lighthouseRuns) {
+      const normalizedRoute = normalizeRoute(run.route);
       for (const [categoryKey, score] of Object.entries(run.categories)) {
         const categoryPolicy = getPolicyCategory(policy, categoryKey, run.route);
         const minScore = asInt(categoryPolicy?.minScore, null);
-        if (minScore == null || score == null) continue;
-        if (score < minScore) {
+        const maxRegression = asInt(categoryPolicy?.maxRegression, null);
+        const baselineScore = asInt(baseline?.routes?.[normalizedRoute]?.[categoryKey], null);
+
+        if (minScore != null && score != null && score < minScore) {
           blockers.push({
             type: "lighthouse",
+            reason: "floor",
             route: run.route,
             category: categoryKey,
             score,
             minScore,
-            message: `${categoryKey} score ${score} < minScore ${minScore} on ${run.route}`,
+            message: `${categoryKey} score ${score} below floor ${minScore} on ${run.route}`,
           });
+        }
+
+        if (maxRegression != null && baselineScore != null && score != null) {
+          const regression = baselineScore - score;
+          if (regression > maxRegression) {
+            blockers.push({
+              type: "lighthouse",
+              reason: "regression",
+              route: run.route,
+              category: categoryKey,
+              score,
+              baseline: baselineScore,
+              maxRegression,
+              regression,
+              message: `${categoryKey} score ${score} regressed ${regression} pts from baseline ${baselineScore} (max ${maxRegression}) on ${run.route}`,
+            });
+          }
         }
       }
     }
@@ -277,7 +307,13 @@ function formatMarkdown({ policy, mode, lighthouseRuns, axeRuns, blockers, runUr
     const top = blockers.slice(0, 10);
     for (const b of top) {
       if (b.type === "lighthouse") {
-        lines.push(`- Lighthouse \`${b.category}\` on \`${b.route}\`: **${b.score}** (min ${b.minScore})`);
+        if (b.reason === "regression") {
+          lines.push(
+            `- Lighthouse \`${b.category}\` on \`${b.route}\`: **${b.score}** (regression: −${b.regression} pts from baseline ${b.baseline}, max allowed ${b.maxRegression})`
+          );
+        } else {
+          lines.push(`- Lighthouse \`${b.category}\` on \`${b.route}\`: **${b.score}** (below floor ${b.minScore})`);
+        }
       } else if (b.type === "axe") {
         lines.push(`- axe **${b.impact}** \`${b.ruleId}\` on \`${b.route}\``);
       } else {
@@ -371,6 +407,7 @@ function formatMarkdown({ policy, mode, lighthouseRuns, axeRuns, blockers, runUr
 async function main() {
   const args = parseArgs(process.argv);
   const policyPath = String(args.get("policy") ?? "quality-policy.yml");
+  const baselinePath = String(args.get("baseline") ?? "quality-baseline.json");
   const mode = String(args.get("mode") ?? "full");
   const lighthouseDir = args.get("lighthouseDir") ? String(args.get("lighthouseDir")) : null;
   const axeFile = args.get("axeFile") ? String(args.get("axeFile")) : null;
@@ -378,6 +415,7 @@ async function main() {
   const writeStepSummary = Boolean(args.get("stepSummary") ?? false);
 
   const policy = await loadPolicy(policyPath);
+  const baseline = await loadBaseline(baselinePath);
 
   let lighthouseRuns = null;
   let lighthouseRunsAggregated = null;
@@ -409,6 +447,7 @@ async function main() {
     policy,
     lighthouseRuns: lighthouseRunsAggregated ?? lighthouseRuns,
     axeRuns,
+    baseline,
   });
   const runUrl =
     process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
