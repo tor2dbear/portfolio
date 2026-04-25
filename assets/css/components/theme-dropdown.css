@@ -412,12 +412,14 @@
 
 .coty-transport__trigger-icon {
   display: block;
-  width: var(--size-64);
-  height: var(--size-24);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
   flex-shrink: 0;
   background-color: currentColor;
-  -webkit-mask: url("/img/svg/arrow-up.svg") center / contain no-repeat;
-  mask: url("/img/svg/arrow-up.svg") center / contain no-repeat;
+  box-shadow:
+    -8px 0 0 currentColor,
+    8px 0 0 currentColor;
   opacity: 0;
   transform: translateY(var(--spacing-4));
   transition:
@@ -426,19 +428,13 @@
 }
 
 .coty-transport[data-ui-state="collapsed"] {
-  padding: 0;
-  background: transparent;
-  border-color: transparent;
+  padding: var(--spacing-8);
   color: var(--text-default);
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  bottom: var(--spacing-4);
   transform: scale(0.97);
 }
 
 .coty-transport[data-ui-state="collapsed"] .coty-transport__trigger {
-  width: var(--size-64);
+  width: var(--size-48);
   padding: 0;
   opacity: 1;
   transform: scale(1);
