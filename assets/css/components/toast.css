@@ -137,3 +137,11 @@
     opacity: 0;
   }
 }
+
+/* Progressive enhancement: SVG refraction on Chromium */
+@supports (backdrop-filter: url(#x)) {
+  .toast {
+    -webkit-backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
+    backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
+  }
+}

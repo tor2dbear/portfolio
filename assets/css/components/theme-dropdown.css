@@ -410,6 +410,15 @@
   );
 }
 
+.coty-transport__trigger:focus-visible {
+  outline: none;
+}
+
+.coty-transport:has(.coty-transport__trigger:focus-visible) {
+  outline: 2px solid var(--state-focus);
+  outline-offset: 3px;
+}
+
 .coty-transport__trigger-icon {
   display: block;
   width: 4px;
@@ -428,7 +437,7 @@
 }
 
 .coty-transport[data-ui-state="collapsed"] {
-  padding: var(--spacing-4) var(--spacing-8);
+  padding: 0;
   color: var(--text-default);
   transform: scale(0.97);
 }
@@ -518,6 +527,14 @@
   .coty-transport[data-ui-state="collapsed"],
   .coty-transport[data-ui-state="expanded"] {
     transform: none;
+  }
+}
+
+/* Progressive enhancement: SVG refraction on Chromium */
+@supports (backdrop-filter: url(#x)) {
+  .coty-transport {
+    -webkit-backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
+    backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
   }
 }
 
