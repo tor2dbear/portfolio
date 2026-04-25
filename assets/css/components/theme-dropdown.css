@@ -434,7 +434,7 @@
 }
 
 .coty-transport[data-ui-state="collapsed"] .coty-transport__trigger {
-  width: 10rem;
+  width: var(--size-48);
   height: 20px;
   padding: 0;
   opacity: 1;
