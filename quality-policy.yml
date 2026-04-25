@@ -20,36 +20,19 @@ policy:
       - serious
 
     lighthouse:
-      # Fail if category score is below minScore (0-100).
-      # (Regression rules vs baseline can be added later.)
+      # Fail if category score is below minScore (absolute floor) or regresses
+      # more than maxRegression points from the per-route baseline in
+      # quality-baseline.json.
       categories:
         performance:
-          minScore: 75
+          minScore: 65
+          maxRegression: 5
         accessibility:
           minScore: 90
         bestPractices:
           minScore: 90
         seo:
           minScore: 90
-      # Route-specific overrides keep global standards strict while reducing
-      # noise on known volatile routes.
-      routeOverrides:
-        "/":
-          categories:
-            performance:
-              minScore: 70
-        "/contact/":
-          categories:
-            performance:
-              minScore: 71
-        "/works/":
-          categories:
-            performance:
-              minScore: 70
-        "/ui-library/":
-          categories:
-            performance:
-              minScore: 68
 
   # B) FIX-SOON (visible in PR comment, not failing CI)
   fixSoon:
