@@ -2,10 +2,7 @@
 
 .grid-overlay {
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: var(--scrollbar-width, 0px);
+  inset: 0;
   z-index: 900;
   pointer-events: none;
   display: none;

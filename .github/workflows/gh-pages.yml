@@ -107,7 +107,7 @@ jobs:
               '',
               `---`,
               `<sub>Built from ${context.sha.substring(0, 7)}</sub>`,
-            ].join('\\n');
+            ].join('\n');
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
