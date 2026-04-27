@@ -86,7 +86,11 @@ p.download-card__item {
   font-size: var(--text-sm);
   color: var(--text-default);
   text-decoration: none;
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 .print-button:hover {

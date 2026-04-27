@@ -22,7 +22,7 @@
     var(--motion-ease-standard);
   border-bottom-style: solid;
   border-bottom-width: 1px;
-  border-color: var(--surface-page);
+  border-color: transparent;
   display: grid;
   grid-area: header;
 }

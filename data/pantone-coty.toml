@@ -6,21 +6,99 @@ default_year = 2026
 year = 2000
 name = "Cerulean Blue"
 hex = "#98b4d4"
+role_mode = "surface"
+source_step_dark = 10
+
+[colors.scale_dark]
+"1" = "#00040C"
+"2" = "#000613"
+"3" = "#020E1D"
+"4" = "#0C1C2C"
+"5" = "#1E2E40"
+"6" = "#334457"
+"7" = "#4C5E72"
+"8" = "#687B90"
+"9" = "#879AB0"
+"10" = "#98B4D4"
+"11" = "#D4D8DC"
+"12" = "#F2F5FA"
+
+[colors.overrides_light]
+text_default = "--coty-10"
+text_muted = "--coty-10"
+border_subtle = "--coty-5"
+border_default = "--coty-5"
+border_strong = "--coty-4"
+on_primary = "--coty-1"
+action = "--coty-11"
+on_action = "--coty-1"
 
 [[colors]]
 year = 2001
 name = "Fuscha Rose"
 hex = "#c3447a"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#120005"
+"2" = "#190008"
+"3" = "#270011"
+"4" = "#3E001E"
+"5" = "#561230"
+"6" = "#6E2C46"
+"7" = "#884A60"
+"8" = "#C3447A"
+"9" = "#BC8E9E"
+"10" = "#D4B1BE"
+"11" = "#E9D2DA"
+"12" = "#FEF1F6"
 
 [[colors]]
 year = 2002
 name = "True Red"
 hex = "#bc243c"
+source_step_dark = 7
+
+[colors.scale_dark]
+"1" = "#220003"
+"2" = "#2A0004"
+"3" = "#3A0008"
+"4" = "#530010"
+"5" = "#6A1720"
+"6" = "#7F3438"
+"7" = "#BC243C"
+"8" = "#AB7677"
+"9" = "#C2989A"
+"10" = "#D9BCBD"
+"11" = "#ECD8D9"
+"12" = "#FEF2F2"
 
 [[colors]]
 year = 2003
 name = "Aqua Sky"
 hex = "#7fcdcd"
+role_mode = "surface"
+source_step_dark = 10
+
+[colors.scale_dark]
+"1" = "#000C0C"
+"2" = "#001111"
+"3" = "#001B1B"
+"4" = "#002A2A"
+"5" = "#033E3E"
+"6" = "#215555"
+"7" = "#3C6F6E"
+"8" = "#598C8C"
+"9" = "#77ABAB"
+"10" = "#7FCDCD"
+"11" = "#D4DDDD"
+"12" = "#EFF7F7"
+
+[colors.overrides_light]
+text_muted = "--coty-9"
+border_subtle = "--coty-6"
+border_default = "--coty-7"
+border_strong = "--coty-8"
 
 [[colors]]
 year = 2004
@@ -28,11 +106,65 @@ name = "Tigerlily"
 hex = "#e15d44"
 role_mode = "primary"
 anchor_step = 7
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#200200"
+"2" = "#270300"
+"3" = "#370600"
+"4" = "#500B00"
+"5" = "#6E1200"
+"6" = "#8D2611"
+"7" = "#AA4431"
+"8" = "#E15D44"
+"9" = "#DD8C7E"
+"10" = "#EFB3A9"
+"11" = "#F9D4CE"
+"12" = "#FFF2F0"
+
+[colors.overrides_light]
+border_subtle = "--coty-8"
+border_default = "--coty-8"
+border_strong = "--coty-9"
+on_primary = "--coty-1"
 
 [[colors]]
 year = 2005
 name = "Blue Turquoise"
 hex = "#55b4b0"
+role_mode = "surface"
+source_step_dark = 9
+
+[colors.scale_dark]
+"1" = "#000F0E"
+"2" = "#001312"
+"3" = "#001D1C"
+"4" = "#002D2B"
+"5" = "#004240"
+"6" = "#045B58"
+"7" = "#277774"
+"8" = "#4B938F"
+"9" = "#55B4B0"
+"10" = "#9ECBC9"
+"11" = "#C7E3E2"
+"12" = "#ECF8F7"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+border_subtle = "--coty-7"
+border_default = "--coty-8"
+border_strong = "--coty-9"
+on_action = "--coty-5"
+
+[colors.overrides_dark]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_page = "--coty-5"
+surface_default = "--coty-4"
+primary = "--coty-8"
+action = "--coty-11"
+on_action = "--coty-6"
+component_form_bg = "--coty-4"
 
 [[colors]]
 year = 2006
@@ -40,16 +172,61 @@ name = "Sand Dollar"
 hex = "#dfcfbe"
 role_mode = "surface"
 anchor_step = 4
+source_step_dark = 10
+
+[colors.scale_dark]
+"1" = "#130C05"
+"2" = "#181007"
+"3" = "#22190E"
+"4" = "#31271B"
+"5" = "#44382B"
+"6" = "#5A4D40"
+"7" = "#746658"
+"8" = "#928375"
+"9" = "#AFA295"
+"10" = "#DFCFBE"
+"11" = "#E5DCD5"
+"12" = "#F7F5F2"
 
 [[colors]]
 year = 2007
 name = "Chili Pepper"
 hex = "#9b2335"
+source_step_dark = 7
+
+[colors.scale_dark]
+"1" = "#0D0001"
+"2" = "#130001"
+"3" = "#210003"
+"4" = "#390009"
+"5" = "#570113"
+"6" = "#761D28"
+"7" = "#9B2335"
+"8" = "#A3676A"
+"9" = "#B88D8F"
+"10" = "#CCB2B3"
+"11" = "#E3D5D6"
+"12" = "#FEF1F2"
 
 [[colors]]
 year = 2008
 name = "Blue Izis"
 hex = "#5b5ea6"
+source_step_dark = 7
+
+[colors.scale_dark]
+"1" = "#080529"
+"2" = "#0B0631"
+"3" = "#120F3F"
+"4" = "#1F1F50"
+"5" = "#313266"
+"6" = "#474A7D"
+"7" = "#5B5EA6"
+"8" = "#7E82AE"
+"9" = "#9CA0C6"
+"10" = "#BCBEDC"
+"11" = "#D9DBEF"
+"12" = "#F3F4FF"
 
 [[colors]]
 year = 2009
@@ -57,36 +234,249 @@ name = "Mimosa"
 hex = "#efc050"
 role_mode = "surface"
 anchor_step = 5
+source_step_dark = 10
+
+[colors.scale_dark]
+"1" = "#130C00"
+"2" = "#181000"
+"3" = "#241900"
+"4" = "#352600"
+"5" = "#4B3701"
+"6" = "#664B00"
+"7" = "#846313"
+"8" = "#A48033"
+"9" = "#C39F59"
+"10" = "#EFC050"
+"11" = "#F1DBB5"
+"12" = "#FAF4EB"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+border_subtle = "--coty-6"
+border_default = "--coty-7"
+border_strong = "--coty-8"
+primary = "--coty-9"
+on_action = "--coty-5"
 
 [[colors]]
 year = 2010
 name = "Turquoise"
 hex = "#45B8AC"
+role_mode = "surface"
+source_step_dark = 9
+
+[colors.scale_dark]
+"1" = "#00100E"
+"2" = "#001411"
+"3" = "#001E1A"
+"4" = "#002F2A"
+"5" = "#00443E"
+"6" = "#155C55"
+"7" = "#34766E"
+"8" = "#57938B"
+"9" = "#45B8AC"
+"10" = "#9ECBC6"
+"11" = "#C6E4E0"
+"12" = "#EDF8F6"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+border_subtle = "--coty-8"
+border_default = "--coty-9"
+border_strong = "--coty-10"
+on_action = "--coty-2"
+
+[colors.overrides_dark]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_page = "--coty-5"
+surface_default = "--coty-4"
+primary = "--coty-8"
+action = "--coty-11"
+on_action = "--coty-6"
+component_form_bg = "--coty-4"
 
 [[colors]]
 year = 2011
 name = "Honeysuckle"
 hex = "#d65076"
+role_mode = "surface"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#210008"
+"2" = "#29000C"
+"3" = "#380013"
+"4" = "#51001F"
+"5" = "#6B112F"
+"6" = "#842C44"
+"7" = "#9F495E"
+"8" = "#D65076"
+"9" = "#D58D9D"
+"10" = "#ECB2BF"
+"11" = "#F8D2DB"
+"12" = "#FFF1F4"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+surface_default = "--coty-6"
+border_subtle = "--coty-8"
+border_default = "--coty-9"
+border_strong = "--coty-10"
+on_action = "--coty-2"
+component_form_bg = "--coty-4"
+
+[colors.overrides_dark]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_page = "--coty-5"
+surface_default = "--coty-4"
+primary = "--coty-8"
+action = "--coty-11"
+on_action = "--coty-6"
+component_form_bg = "--coty-4"
 
 [[colors]]
 year = 2012
 name = "Tangerine Tango"
 hex = "#dd4124"
+role_mode = "surface"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#190200"
+"2" = "#210200"
+"3" = "#2F0400"
+"4" = "#470900"
+"5" = "#651100"
+"6" = "#832C1A"
+"7" = "#9F4B3A"
+"8" = "#DD4124"
+"9" = "#D59184"
+"10" = "#ECB5AB"
+"11" = "#FFD8D2"
+"12" = "#FFEDEA"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+surface_default = "--coty-6"
+border_subtle = "--coty-9"
+border_default = "--coty-10"
+border_strong = "--coty-11"
+on_action = "--coty-2"
+component_form_bg = "--coty-4"
+
+[colors.overrides_dark]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_page = "--coty-5"
+surface_default = "--coty-4"
+primary = "--coty-8"
+action = "--coty-11"
+on_action = "--coty-6"
+component_form_bg = "--coty-4"
 
 [[colors]]
 year = 2013
 name = "Emerald"
 hex = "#009b77"
+role_mode = "surface"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#00100A"
+"2" = "#00140D"
+"3" = "#001F15"
+"4" = "#002F22"
+"5" = "#024433"
+"6" = "#175D49"
+"7" = "#387762"
+"8" = "#009B77"
+"9" = "#7FAF9C"
+"10" = "#A4CBBB"
+"11" = "#C8E4D8"
+"12" = "#E9FAF2"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+surface_default = "--coty-6"
+border_subtle = "--coty-9"
+border_default = "--coty-10"
+border_strong = "--coty-11"
+on_action = "--coty-2"
+component_form_bg = "--coty-4"
+
+[colors.overrides_dark]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_page = "--coty-5"
+surface_default = "--coty-4"
+primary = "--coty-8"
+action = "--coty-11"
+on_action = "--coty-6"
+component_form_bg = "--coty-4"
 
 [[colors]]
 year = 2014
 name = "Radiant Orchid"
 hex = "#ad5e99"
+role_mode = "surface"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#160010"
+"2" = "#1B0015"
+"3" = "#2A0021"
+"4" = "#3E0332"
+"5" = "#541946"
+"6" = "#6B335D"
+"7" = "#845176"
+"8" = "#AD5E99"
+"9" = "#B493AB"
+"10" = "#CDB5C7"
+"11" = "#E4D6E1"
+"12" = "#FAF2F9"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+surface_page = "--coty-8"
+surface_default = "--coty-7"
+border_subtle = "--coty-9"
+border_default = "--coty-10"
+border_strong = "--coty-11"
+action = "--coty-1"
+on_action = "--coty-9"
+component_form_bg = "--coty-6"
+
+[colors.overrides_dark]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_page = "--coty-5"
+surface_default = "--coty-4"
+primary = "--coty-8"
+action = "--coty-11"
+on_action = "--coty-6"
+component_form_bg = "--coty-4"
 
 [[colors]]
 year = 2015
 name = "Marsala"
 hex = "#964f4c"
+source_step_dark = 7
+
+[colors.scale_dark]
+"1" = "#1F0102"
+"2" = "#250102"
+"3" = "#320607"
+"4" = "#421615"
+"5" = "#572A28"
+"6" = "#6D4240"
+"7" = "#964F4C"
+"8" = "#9E7D7B"
+"9" = "#B89B9A"
+"10" = "#D0BBBA"
+"11" = "#E7D8D8"
+"12" = "#FCF3F2"
 
 [[colors]]
 year = 2016
@@ -94,16 +484,32 @@ name = "Rose Quartz"
 hex = "#f7caca"
 role_mode = "surface"
 anchor_step = 4
-
-[[colors]]
-year = 2016
-name = "Serenity"
-hex = "#93a9d1"
+secondary_name = "Serenity"
+secondary_hex = "#93a9d1"
+source_step_light = 4
+source_step_dark = 10
+secondary_source_step_light = 10
+secondary_source_step_dark = 10
 
 [[colors]]
 year = 2017
 name = "Greenery"
 hex = "#88b04b"
+source_step_dark = 9
+
+[colors.scale_dark]
+"1" = "#060D00"
+"2" = "#091200"
+"3" = "#101C00"
+"4" = "#1B2B00"
+"5" = "#2A3E02"
+"6" = "#3F561D"
+"7" = "#5A713A"
+"8" = "#778E5A"
+"9" = "#88B04B"
+"10" = "#B5C7A0"
+"11" = "#D5E2C6"
+"12" = "#F1F8E8"
 
 [colors.overrides_light]
 text_muted = "--coty-10"
@@ -126,16 +532,80 @@ component_form_bg = "--coty-3"
 year = 2018
 name = "Ultra Violet"
 hex = "#5f4b8b"
+source_step_dark = 7
+
+[colors.scale_dark]
+"1" = "#060015"
+"2" = "#09001D"
+"3" = "#120329"
+"4" = "#1F1039"
+"5" = "#30244C"
+"6" = "#473C63"
+"7" = "#5F4B8B"
+"8" = "#7E7793"
+"9" = "#9C96AD"
+"10" = "#BCB8C8"
+"11" = "#DAD7E3"
+"12" = "#F6F3FC"
 
 [[colors]]
 year = 2019
 name = "Living Coral"
 hex = "#ff6f61"
+source_step_dark = 9
+
+[colors.scale_dark]
+"1" = "#210000"
+"2" = "#280000"
+"3" = "#380000"
+"4" = "#510000"
+"5" = "#6D0D08"
+"6" = "#8B2B23"
+"7" = "#A7493F"
+"8" = "#C46A5F"
+"9" = "#FF6F61"
+"10" = "#F4B3AC"
+"11" = "#FFD3CF"
+"12" = "#FFEFEE"
+
+[colors.overrides_light]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_default = "--coty-6"
+border_subtle = "--coty-8"
+border_default = "--coty-9"
+border_strong = "--coty-10"
+on_action = "--coty-3"
+component_form_bg = "--coty-6"
+
+[colors.overrides_dark]
+text_default = "--coty-11"
+text_muted = "--coty-10"
+text_link = "--coty-10"
+text_link_hover = "--coty-12"
+surface_page = "--coty-3"
+surface_default = "--coty-4"
+component_form_bg = "--coty-3"
 
 [[colors]]
 year = 2020
 name = "Classic Blue"
 hex = "#0f4c81"
+source_step_dark = 6
+
+[colors.scale_dark]
+"1" = "#000A18"
+"2" = "#000E1F"
+"3" = "#00172E"
+"4" = "#022442"
+"5" = "#163757"
+"6" = "#104C81"
+"7" = "#4F6984"
+"8" = "#6F869E"
+"9" = "#90A2B6"
+"10" = "#B2BFCE"
+"11" = "#D2DCE8"
+"12" = "#EFF6FF"
 
 [[colors]]
 year = 2021
@@ -143,22 +613,53 @@ name = "Ultimate Gray"
 hex = "#939597"
 role_mode = "surface"
 anchor_step = 7
-
-[[colors]]
-year = 2021
-name = "Illuminating"
-hex = "#f5df4d"
-anchor_step = 3
+secondary_name = "Illuminating"
+secondary_hex = "#f5df4d"
+secondary_anchor_step = 3
+source_step_light = 7
+source_step_dark = 8
+secondary_source_step_light = 3
+secondary_source_step_dark = 10
 
 [[colors]]
 year = 2022
 name = "Very Peri"
 hex = "#6667AB"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#020010"
+"2" = "#030018"
+"3" = "#070128"
+"4" = "#120C3A"
+"5" = "#22204F"
+"6" = "#383866"
+"7" = "#535481"
+"8" = "#6667AB"
+"9" = "#9293B5"
+"10" = "#B4B5CE"
+"11" = "#D5D6E7"
+"12" = "#F5F5FE"
 
 [[colors]]
 year = 2023
 name = "Viva Magenta"
 hex = "#BE3455"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#070001"
+"2" = "#0D0002"
+"3" = "#1B0004"
+"4" = "#31000C"
+"5" = "#51031A"
+"6" = "#6F1A2D"
+"7" = "#8C3A49"
+"8" = "#BE3455"
+"9" = "#C8838E"
+"10" = "#E3ABB4"
+"11" = "#F9D3D9"
+"12" = "#FFEEF1"
 
 [[colors]]
 year = 2024
@@ -166,11 +667,66 @@ name = "Peach Fuzz"
 hex = "#FEBD99"
 role_mode = "surface"
 anchor_step = 4
+source_step_light = 4
+source_step_dark = 10
+
+[colors.scale_dark]
+"1" = "#1A0700"
+"2" = "#210A00"
+"3" = "#2F1100"
+"4" = "#441C01"
+"5" = "#5E2A06"
+"6" = "#793D1A"
+"7" = "#965633"
+"8" = "#B67452"
+"9" = "#D39475"
+"10" = "#FEBD99"
+"11" = "#F9D5C5"
+"12" = "#FBF3F0"
 
 [[colors]]
 year = 2025
 name = "Mocha Mousse"
 hex = "#A57865"
+source_step_dark = 8
+
+[colors.scale_dark]
+"1" = "#190601"
+"2" = "#1F0801"
+"3" = "#2A1105"
+"4" = "#3B1E11"
+"5" = "#4E3023"
+"6" = "#634639"
+"7" = "#7C6053"
+"8" = "#A57865"
+"9" = "#B59C93"
+"10" = "#D0BDB6"
+"11" = "#E6D8D4"
+"12" = "#F7F1F0"
+
+[colors.overrides_light]
+text_muted = "--coty-10"
+surface_page = "--coty-7"
+surface_default = "--coty-7"
+border_subtle = "--coty-9"
+border_default = "--coty-10"
+border_strong = "--coty-11"
+on_action = "--coty-2"
+component_form_bg = "--coty-7"
+
+[colors.overrides_dark]
+text_default = "--coty-10"
+text_muted = "--coty-9"
+surface_page = "--coty-3"
+surface_default = "--coty-3"
+surface_elevated = "--coty-4"
+border_subtle = "--coty-5"
+border_default = "--coty-6"
+border_strong = "--coty-7"
+primary = "--coty-8"
+action = "--coty-1"
+on_action = "--coty-11"
+component_form_bg = "--coty-4"
 
 [[colors]]
 year = 2026
@@ -178,3 +734,18 @@ name = "Cloud Dancer"
 hex = "#F0EFEB"
 role_mode = "surface"
 anchor_step = 2
+source_step_dark = 12
+
+[colors.scale_dark]
+"1" = "#0E0D0B"
+"2" = "#12120F"
+"3" = "#1B1B18"
+"4" = "#2A2926"
+"5" = "#3B3A38"
+"6" = "#50504D"
+"7" = "#6A6966"
+"8" = "#878683"
+"9" = "#A5A4A1"
+"10" = "#C5C4C0"
+"11" = "#DFDEDA"
+"12" = "#F0EFEB"

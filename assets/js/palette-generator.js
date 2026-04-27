@@ -2399,6 +2399,9 @@
       const anchorStep = cotyAnchorStepSelect
         ? (cotyAnchorStepSelect.value || "").trim()
         : "";
+      const hasExplicitSource =
+        document.documentElement.getAttribute("data-coty-source-explicit") ===
+        "true";
       if (!sourceStep) {
         cotySourceStepLabel.textContent = isSwedish
           ? "Source: --coty-?"
@@ -2411,11 +2414,12 @@
       const duoPart = secondaryStep
         ? " · duo: --coty-secondary-" + secondaryStep
         : "";
-      const anchorPart = anchorStep
-        ? isSwedish
-          ? " · manuell anchor: --coty-" + anchorStep
-          : " · manual anchor: --coty-" + anchorStep
-        : "";
+      const anchorPart =
+        !hasExplicitSource && anchorStep
+          ? isSwedish
+            ? " · manuell anchor: --coty-" + anchorStep
+            : " · manual anchor: --coty-" + anchorStep
+          : "";
       cotySourceStepLabel.textContent =
         prefix + sourceStep + duoPart + anchorPart;
     }
@@ -2914,9 +2918,13 @@
       setToken("--surface-subtle", surfaceSubtleValue);
       setToken("--surface-disabled", surfaceDisabledValue);
       setToken("--surface-inverse", surfaceInverseValue);
-      setToken("--component-section-headline-bg", componentSectionHeadlineBgValue);
+      setToken(
+        "--component-section-headline-bg",
+        componentSectionHeadlineBgValue
+      );
       setToken("--surface-headline", componentSectionHeadlineBgValue);
-      const surfaceAccentValue = getDerivedToken("--surface-accent") || ctx.surface.tag;
+      const surfaceAccentValue =
+        getDerivedToken("--surface-accent") || ctx.surface.tag;
       setToken("--surface-accent", surfaceAccentValue);
       setToken("--surface-tag", surfaceAccentValue);
       setDerivedToken("--surface-tag-hover", ctx.surface.tag_hover);
@@ -2947,18 +2955,28 @@
           setToken(name, imageTokens[name])
         );
       } else if (imageTreatment === "pantone-blend") {
-        const isDarkMode = document.documentElement.getAttribute("data-mode") === "dark";
+        const isDarkMode =
+          document.documentElement.getAttribute("data-mode") === "dark";
         const shadowStep = isDarkMode ? 11 : 3;
         const highlightStep = isDarkMode ? 3 : 11;
         setToken("--image-grayscale", "100%");
         setToken("--image-shadow-blend-mode", "multiply");
         setToken("--image-highlight-blend-mode", "screen");
-        setToken("--image-shadow-background", scaleVar(effectiveRoles.surface, shadowStep));
+        setToken(
+          "--image-shadow-background",
+          scaleVar(effectiveRoles.surface, shadowStep)
+        );
         setToken("--image-shadow-opacity", isDarkMode ? "0.9" : "0.78");
         setToken("--image-highlight-opacity", isDarkMode ? "0.72" : "0.68");
         setToken("--image-blend-mode", "screen");
-        setToken("--image-highlight-background", scaleVar(effectiveRoles.surface, highlightStep));
-        setToken("--image-background", scaleVar(effectiveRoles.surface, highlightStep));
+        setToken(
+          "--image-highlight-background",
+          scaleVar(effectiveRoles.surface, highlightStep)
+        );
+        setToken(
+          "--image-background",
+          scaleVar(effectiveRoles.surface, highlightStep)
+        );
       } else {
         setToken("--image-grayscale", "0%");
         setToken("--image-shadow-blend-mode", "normal");

@@ -1,6 +1,7 @@
 /themes
 /public
 /node_modules
+/.npm-cache
 /worktrees
 
 # Test coverage

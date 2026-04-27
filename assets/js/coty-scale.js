@@ -457,17 +457,26 @@
       );
       transfer.setAttribute("in", "gray");
 
-      var funcR = document.createElementNS("http://www.w3.org/2000/svg", "feFuncR");
+      var funcR = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "feFuncR"
+      );
       funcR.setAttribute("type", "table");
       funcR.setAttribute("tableValues", "0 0 0");
       funcR.setAttribute("id", TRITONE_FILTER_ID + "-r");
 
-      var funcG = document.createElementNS("http://www.w3.org/2000/svg", "feFuncG");
+      var funcG = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "feFuncG"
+      );
       funcG.setAttribute("type", "table");
       funcG.setAttribute("tableValues", "0 0 0");
       funcG.setAttribute("id", TRITONE_FILTER_ID + "-g");
 
-      var funcB = document.createElementNS("http://www.w3.org/2000/svg", "feFuncB");
+      var funcB = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "feFuncB"
+      );
       funcB.setAttribute("type", "table");
       funcB.setAttribute("tableValues", "0 0 0");
       funcB.setAttribute("id", TRITONE_FILTER_ID + "-b");
@@ -500,15 +509,27 @@
     }
     nodes.r.setAttribute(
       "tableValues",
-      round3(shadowRgb.r) + " " + round3(midRgb.r) + " " + round3(highlightRgb.r)
+      round3(shadowRgb.r) +
+        " " +
+        round3(midRgb.r) +
+        " " +
+        round3(highlightRgb.r)
     );
     nodes.g.setAttribute(
       "tableValues",
-      round3(shadowRgb.g) + " " + round3(midRgb.g) + " " + round3(highlightRgb.g)
+      round3(shadowRgb.g) +
+        " " +
+        round3(midRgb.g) +
+        " " +
+        round3(highlightRgb.g)
     );
     nodes.b.setAttribute(
       "tableValues",
-      round3(shadowRgb.b) + " " + round3(midRgb.b) + " " + round3(highlightRgb.b)
+      round3(shadowRgb.b) +
+        " " +
+        round3(midRgb.b) +
+        " " +
+        round3(highlightRgb.b)
     );
   }
 
@@ -594,6 +615,28 @@
         hex: hex,
         role_mode: String(item.role_mode || ""),
         anchor_step: Number(item.anchor_step || 0),
+        secondary_name: String(item.secondary_name || ""),
+        secondary_hex: normalizeHex(item.secondary_hex),
+        secondary_role_mode: String(item.secondary_role_mode || ""),
+        secondary_anchor_step: Number(item.secondary_anchor_step || 0),
+        source_step_light: Number(item.source_step_light || 0),
+        source_step_dark: Number(item.source_step_dark || 0),
+        secondary_source_step_light: Number(
+          item.secondary_source_step_light || 0
+        ),
+        secondary_source_step_dark: Number(
+          item.secondary_source_step_dark || 0
+        ),
+        scale_light: normalizeScaleDefinition(item.scale_light, "coty"),
+        scale_dark: normalizeScaleDefinition(item.scale_dark, "coty"),
+        secondary_scale_light: normalizeScaleDefinition(
+          item.secondary_scale_light,
+          "coty-secondary"
+        ),
+        secondary_scale_dark: normalizeScaleDefinition(
+          item.secondary_scale_dark,
+          "coty-secondary"
+        ),
         overrides:
           item.overrides && typeof item.overrides === "object"
             ? item.overrides
@@ -618,7 +661,19 @@
         }
 
         var primary = colors[0];
-        var secondary = colors[1] || null;
+        var secondary =
+          primary.secondary_hex && primary.secondary_name
+            ? {
+                name: primary.secondary_name,
+                hex: primary.secondary_hex,
+                role_mode: primary.secondary_role_mode || "",
+                anchor_step: primary.secondary_anchor_step || 0,
+                source_step_light: primary.secondary_source_step_light || 0,
+                source_step_dark: primary.secondary_source_step_dark || 0,
+                scale_light: primary.secondary_scale_light || null,
+                scale_dark: primary.secondary_scale_dark || null,
+              }
+            : colors[1] || null;
 
         return {
           year: year,
@@ -631,9 +686,23 @@
           secondary_hex: secondary ? secondary.hex : "",
           secondary_role_mode: secondary ? secondary.role_mode || "" : "",
           secondary_anchor_step: secondary ? secondary.anchor_step || 0 : 0,
+          secondary_source_step_light: secondary
+            ? secondary.source_step_light || 0
+            : 0,
+          secondary_source_step_dark: secondary
+            ? secondary.source_step_dark || 0
+            : 0,
+          secondary_scale_light: secondary
+            ? secondary.scale_light || null
+            : null,
+          secondary_scale_dark: secondary ? secondary.scale_dark || null : null,
           tone_mode: secondary ? "duo" : "mono",
           role_mode: primary.role_mode || "",
           anchor_step: primary.anchor_step || 0,
+          source_step_light: primary.source_step_light || 0,
+          source_step_dark: primary.source_step_dark || 0,
+          scale_light: primary.scale_light || null,
+          scale_dark: primary.scale_dark || null,
           overrides: normalizeOverrides(primary.overrides || {}),
           overrides_light: normalizeOverrides(primary.overrides_light || {}),
           overrides_dark: normalizeOverrides(primary.overrides_dark || {}),
@@ -659,6 +728,93 @@
       out[String(key)] = String(value);
     });
     return out;
+  }
+
+  function normalizeScaleValue(raw) {
+    var value = String(raw || "").trim();
+    if (!value) {
+      return "";
+    }
+    if (value.indexOf("#") === 0) {
+      return normalizeHex(value) || "";
+    }
+    if (
+      value.indexOf("oklch(") === 0 ||
+      value.indexOf("rgb(") === 0 ||
+      value.indexOf("hsl(") === 0 ||
+      value.indexOf("var(") === 0
+    ) {
+      return value;
+    }
+    return value;
+  }
+
+  function normalizeScaleDefinition(raw, prefix) {
+    if (!raw || typeof raw !== "object") {
+      return null;
+    }
+    var tokenPrefix = prefix || "coty";
+    var out = {};
+    for (var step = 1; step <= 12; step += 1) {
+      var value = normalizeScaleValue(raw[String(step)]);
+      if (!value) {
+        return null;
+      }
+      out["--" + tokenPrefix + "-" + step] = value;
+    }
+    return out;
+  }
+
+  function getExplicitScaleForMode(entry, mode) {
+    if (!entry) {
+      return null;
+    }
+    if (mode === "dark" && entry.scale_dark) {
+      return entry.scale_dark;
+    }
+    if (mode !== "dark" && entry.scale_light) {
+      return entry.scale_light;
+    }
+    return null;
+  }
+
+  function getSourceStepForMode(entry, mode, fallbackStep) {
+    if (!entry) {
+      return fallbackStep || 0;
+    }
+    var explicit =
+      mode === "dark"
+        ? Number(entry.source_step_dark || 0)
+        : Number(entry.source_step_light || 0);
+    if (explicit >= 1 && explicit <= 12) {
+      return explicit;
+    }
+    return Number(fallbackStep || 0);
+  }
+
+  function hasExplicitSourceStepForMode(entry, mode) {
+    if (!entry) {
+      return false;
+    }
+    var explicit =
+      mode === "dark"
+        ? Number(entry.source_step_dark || 0)
+        : Number(entry.source_step_light || 0);
+    return explicit >= 1 && explicit <= 12;
+  }
+
+  function getSecondarySourceStepForMode(entry, mode, fallbackStep) {
+    if (!entry) {
+      return Number(fallbackStep || 0);
+    }
+    var explicit =
+      mode === "dark"
+        ? Number(entry.secondary_source_step_dark || 0)
+        : Number(entry.secondary_source_step_light || 0);
+    if (explicit >= 1 && explicit <= 12) {
+      return explicit;
+    }
+    return Number(fallbackStep || 0);
   }
 
   function resolveAnchorStep(entry, mode, sourceLightness) {
@@ -811,6 +967,11 @@
   }
 
   function buildScale(entry, mode) {
+    var explicitScale = getExplicitScaleForMode(entry, mode);
+    if (explicitScale) {
+      return explicitScale;
+    }
+
     var rgb = hexToRgb(entry.primary_hex || entry.hex);
     if (!rgb) {
       return null;
@@ -859,6 +1020,13 @@
   function buildSecondaryScale(entry, mode) {
     if (!entry.secondary_hex) {
       return null;
+    }
+    var explicitScale =
+      mode === "dark"
+        ? entry.secondary_scale_dark || null
+        : entry.secondary_scale_light || null;
+    if (explicitScale) {
+      return explicitScale;
     }
     var rgb = hexToRgb(entry.secondary_hex);
     if (!rgb) {
@@ -1540,7 +1708,11 @@
     );
     document.documentElement.style.setProperty(
       "--coty-source-step",
-      String(roles.anchor)
+      String(getSourceStepForMode(entry, resolvedMode, roles.anchor))
+    );
+    document.documentElement.setAttribute(
+      "data-coty-source-explicit",
+      hasExplicitSourceStepForMode(entry, resolvedMode) ? "true" : "false"
     );
 
     // Pantone rule: on-primary must come from COTY scale (never pure black/white).
@@ -1588,10 +1760,15 @@
     );
 
     var secondaryAnchor = resolveSecondaryAnchorStep(entry, resolvedMode);
-    if (secondaryAnchor) {
+    var secondarySourceStep = getSecondarySourceStepForMode(
+      entry,
+      resolvedMode,
+      secondaryAnchor
+    );
+    if (secondarySourceStep) {
       document.documentElement.style.setProperty(
         "--coty-secondary-source-step",
-        String(secondaryAnchor)
+        String(secondarySourceStep)
       );
     } else {
       document.documentElement.style.removeProperty(

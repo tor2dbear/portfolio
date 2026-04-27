@@ -13,7 +13,9 @@
   background-color: var(--surface-accent);
   background-image: linear-gradient(transparent, transparent);
   letter-spacing: var(--tracking-wider);
-  transition: all var(--motion-duration-slow) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-slow)
+      var(--motion-ease-standard),
+    color var(--motion-duration-slow) var(--motion-ease-standard);
   white-space: nowrap;
   font-family: var(--font-ui);
   font-size: var(--text-xs);

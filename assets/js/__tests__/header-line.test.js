@@ -430,4 +430,89 @@ describe("Header Line - Scroll-based Bottom Line", () => {
       expect(header.classList.contains("bottom-line")).toBe(false);
     });
   });
+
+  describe("Navigation handoff", () => {
+    const is_plain_primary_navigation = (event) =>
+      event.button === 0 &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      !event.altKey;
+
+    const should_clear_line_for_link = (link) => {
+      if (!link) {
+        return false;
+      }
+      if (link.hasAttribute("download")) {
+        return false;
+      }
+      if (link.target && link.target !== "_self") {
+        return false;
+      }
+
+      const rawHref = link.getAttribute("href");
+      if (
+        !rawHref ||
+        rawHref.startsWith("#") ||
+        rawHref.startsWith("mailto:") ||
+        rawHref.startsWith("tel:") ||
+        rawHref.startsWith("javascript:")
+      ) {
+        return false;
+      }
+
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin) {
+        return false;
+      }
+      if (
+        url.pathname === window.location.pathname &&
+        url.search === window.location.search &&
+        url.hash
+      ) {
+        return false;
+      }
+      return true;
+    };
+
+    test("should treat plain left click as navigation intent", () => {
+      const event = {
+        button: 0,
+        metaKey: false,
+        ctrlKey: false,
+        shiftKey: false,
+        altKey: false,
+      };
+
+      expect(is_plain_primary_navigation(event)).toBe(true);
+    });
+
+    test("should ignore modified clicks", () => {
+      const event = {
+        button: 0,
+        metaKey: true,
+        ctrlKey: false,
+        shiftKey: false,
+        altKey: false,
+      };
+
+      expect(is_plain_primary_navigation(event)).toBe(false);
+    });
+
+    test("should clear line only for same-origin page navigation", () => {
+      document.body.innerHTML = `
+        <a id="internal" href="/works/test/">Internal</a>
+        <a id="hash" href="#section">Hash</a>
+        <a id="external" href="https://example.com/">External</a>
+      `;
+
+      const internal = document.getElementById("internal");
+      const hash = document.getElementById("hash");
+      const external = document.getElementById("external");
+
+      expect(should_clear_line_for_link(internal)).toBe(true);
+      expect(should_clear_line_for_link(hash)).toBe(false);
+      expect(should_clear_line_for_link(external)).toBe(false);
+    });
+  });
 });

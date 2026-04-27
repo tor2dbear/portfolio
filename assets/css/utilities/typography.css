@@ -572,7 +572,9 @@ figcaption {
 a {
   color: var(--text-default);
   text-decoration: none;
-  transition: all var(--motion-duration-slow) var(--motion-ease-standard);
+  transition: color var(--motion-duration-slow) var(--motion-ease-standard),
+    text-decoration-color var(--motion-duration-slow)
+      var(--motion-ease-standard);
 }
 
 body a:hover,

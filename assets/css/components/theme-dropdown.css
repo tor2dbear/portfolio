@@ -16,7 +16,11 @@
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-8);
   cursor: pointer;
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard);
   min-width: var(--size-40);
   min-height: var(--size-40);
   color: var(--text-default);
@@ -356,16 +360,14 @@
   -webkit-backdrop-filter: blur(12px) saturate(140%);
   backdrop-filter: blur(12px) saturate(140%);
   transform-origin: center bottom;
-  transition:
-    opacity var(--motion-duration-enter) var(--motion-ease-emphasized),
+  transition: opacity var(--motion-duration-enter) var(--motion-ease-emphasized),
     transform var(--motion-duration-enter) var(--motion-ease-emphasized),
     background-color var(--motion-duration-exit) var(--motion-ease-standard),
     border-color var(--motion-duration-exit) var(--motion-ease-standard),
     border-radius var(--motion-duration-exit) var(--motion-ease-standard),
     padding var(--motion-duration-exit) var(--motion-ease-standard),
     box-shadow var(--motion-duration-exit) var(--motion-ease-standard),
-    -webkit-backdrop-filter var(--motion-duration-exit)
-      var(--motion-ease-standard),
+    -webkit-backdrop-filter var(--motion-duration-exit) var(--motion-ease-standard),
     backdrop-filter var(--motion-duration-exit) var(--motion-ease-standard);
 }
 
@@ -388,8 +390,7 @@
   opacity: 0;
   overflow: hidden;
   transform: scale(0.72);
-  transition:
-    width var(--motion-duration-base) var(--motion-ease-emphasized),
+  transition: width var(--motion-duration-base) var(--motion-ease-emphasized),
     padding var(--motion-duration-base) var(--motion-ease-standard),
     opacity var(--motion-duration-base) var(--motion-ease-standard),
     transform var(--motion-duration-base) var(--motion-ease-emphasized),
@@ -431,8 +432,7 @@
     8px 0 0 currentColor;
   opacity: 0;
   transform: translateY(var(--spacing-4));
-  transition:
-    opacity var(--motion-duration-base) var(--motion-ease-standard),
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
     transform var(--motion-duration-base) var(--motion-ease-emphasized);
 }
 
@@ -500,8 +500,8 @@
   gap: var(--spacing-8);
   max-width: 24rem;
   overflow: hidden;
-  transition:
-    max-width var(--motion-duration-exit) var(--motion-ease-emphasized),
+  transition: max-width var(--motion-duration-exit)
+      var(--motion-ease-emphasized),
     opacity var(--motion-duration-base) var(--motion-ease-standard),
     transform var(--motion-duration-exit) var(--motion-ease-emphasized);
 }
@@ -517,8 +517,7 @@
   .coty-transport,
   .coty-transport__trigger,
   .coty-player--transport {
-    transition:
-      width var(--motion-duration-fast) linear,
+    transition: width var(--motion-duration-fast) linear,
       max-width var(--motion-duration-fast) linear,
       opacity var(--motion-duration-fast) linear,
       visibility var(--motion-duration-fast) linear;

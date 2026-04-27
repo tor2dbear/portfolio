@@ -13,24 +13,117 @@ body {
 
 /* || ========== Transitions ------------------------------------- */
 
-/* Darkmode transition. */
+/* Theme-swap transition for theme-driven surfaces, text, borders, and icons. */
 body.darkmodeTransition,
 body.darkmodeTransition
   :is(
+    #layout,
     #main,
+    footer,
     .top-menu,
+    .top-menu__link,
+    .top-menu__link--button,
+    .hero-emphasis,
+    .theme-toggle,
+    .theme-panel,
+    .theme-option,
+    .theme-options--segmented,
+    .theme-effect-button,
+    .language-toggle,
+    .language-panel,
+    .language-option,
+    .settings-toggle,
+    .settings-panel,
+    .button,
+    button,
+    .tag,
+    .project-info,
+    .project-info__title,
+    .project-info__label,
+    .project-info__value,
+    .project-info__text,
+    .project-info__link,
+    .download-card,
+    .print-button,
+    .tabs-nav,
+    .tab-button,
+    input,
+    textarea,
+    select,
+    .input,
+    .radio__visual,
+    .checkbox__visual,
     path.hyphen,
     .brand__mark,
     .brand__mark path,
     .brand__mark line,
-    button,
     .brand,
-    .brand__hyphen
+    .brand__hyphen,
+    svg,
+    svg *,
+    [class*="icon"]
   ) {
-  transition: stroke var(--motion-duration-xslow) var(--motion-ease-theme),
-    border-color var(--motion-duration-xslow) var(--motion-ease-theme),
-    color var(--motion-duration-xslow) var(--motion-ease-theme),
-    background-color var(--motion-duration-xslow) var(--motion-ease-theme);
+  transition: stroke
+      var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    fill var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    border-color var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    color var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    background-color
+      var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    box-shadow var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.darkmodeTransition,
+  body.darkmodeTransition
+    :is(
+      #layout,
+      #main,
+      footer,
+      .top-menu,
+      .top-menu__link,
+      .top-menu__link--button,
+      .theme-toggle,
+      .theme-panel,
+      .theme-option,
+      .theme-options--segmented,
+      .theme-effect-button,
+      .language-toggle,
+      .language-panel,
+      .language-option,
+      .settings-toggle,
+      .settings-panel,
+      .button,
+      button,
+      .tag,
+      .download-card,
+      .print-button,
+      .tabs-nav,
+      .tab-button,
+      input,
+      textarea,
+      select,
+      .input,
+      .radio__visual,
+      .checkbox__visual,
+      path.hyphen,
+      .brand__mark,
+      .brand__mark path,
+      .brand__mark line,
+      .brand,
+      .brand__hyphen,
+      svg,
+      svg *,
+      [class*="icon"]
+    ) {
+    transition: none;
+  }
 }
 
 /* || ========== Main section ------------------------------------- */
@@ -399,7 +492,11 @@ video {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;
   --image-highlight-blend-mode: screen;
-  --image-shadow-background: color-mix(in srgb, var(--primary-strong) 70%, black);
+  --image-shadow-background: color-mix(
+    in srgb,
+    var(--primary-strong) 70%,
+    black
+  );
   --image-highlight-background: color-mix(in srgb, var(--primary) 84%, white);
   --image-shadow-opacity: 0.66;
   --image-highlight-opacity: 0.74;
@@ -543,6 +640,13 @@ p:empty {
   --col: col-start 1 / span 12;
   grid-column: var(--col);
   grid-column-gap: 3rem;
+  transition: background-color
+      var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    border-color var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    color var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme);
 }
 
 .content.post > .project-info.project-info--cols-2 {
@@ -570,6 +674,9 @@ p:empty {
   text-transform: uppercase;
   color: var(--text-accent);
   margin: 0 0 var(--spacing-8);
+  transition: color
+    var(--theme-transition-duration, var(--motion-duration-xslow))
+    var(--motion-ease-theme);
 }
 
 .project-info__label {
@@ -579,6 +686,9 @@ p:empty {
   line-height: var(--line-height-tight);
   color: var(--text-muted);
   margin: 0 0 var(--spacing-4);
+  transition: color
+    var(--theme-transition-duration, var(--motion-duration-xslow))
+    var(--motion-ease-theme);
 }
 
 .project-info__value,
@@ -589,6 +699,9 @@ p:empty {
   line-height: var(--line-height-normal);
   color: var(--text-default);
   margin: 0 0 var(--spacing-12);
+  transition: color
+    var(--theme-transition-duration, var(--motion-duration-xslow))
+    var(--motion-ease-theme);
 }
 
 .project-info__section > .project-info__text:last-child {
@@ -601,6 +714,9 @@ p:empty {
   gap: var(--spacing-4);
   text-decoration: underline;
   text-decoration-style: dotted;
+  transition: color
+    var(--theme-transition-duration, var(--motion-duration-xslow))
+    var(--motion-ease-theme);
 }
 
 .project-info__link .icon {
