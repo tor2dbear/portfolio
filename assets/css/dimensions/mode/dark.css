@@ -168,7 +168,7 @@
   /* Dark mode specific overrides */
   --surface-page: var(--gray-1);
   --surface-elevated: color-mix(in srgb, var(--surface-page) 88%, white);
-  --component-toast-bg: color-mix(in srgb, var(--gray-1) 50%, transparent);
+  --component-toast-bg: color-mix(in srgb, var(--gray-1) 65%, transparent);
   --component-toast-border: color-mix(in srgb, var(--white) 12%, transparent);
   --component-glass-highlight: rgba(255, 255, 255, 0.07);
   --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px,

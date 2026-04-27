@@ -37,6 +37,7 @@
   const EFFECT_MOTION_KEY = "theme-effect-reduced-motion";
   const LAST_NON_PANTONE_PALETTE_KEY = "theme-last-non-pantone-palette";
   const COTY_TRANSPORT_UI_KEY = "theme-pantone-transport-ui";
+  const COTY_SESSION_YEAR_KEY = "theme-coty-year-session";
   const COTY_LOOP_INTERVAL_MS = 30000;
   const COTY_TRANSPORT_AUTO_COLLAPSE_MS = 4000;
   const COTY_TRANSPORT_HOVER_ENTER_DELAY_MS = 120;
@@ -56,6 +57,7 @@
   let cotyTransportHasUserEngaged = false;
   let cotyTransportLastCollapsedAt = 0;
   let playerSpriteUrl = "";
+  let prePantoneBlendEnabled = null;
 
   function getUseHref(use) {
     return (
@@ -1284,10 +1286,22 @@
     const previousState = getPantoneState();
     const opts = options || {};
 
+    // When activating from inactive: remember current blend state and ensure tritone is on
+    if (previousState === "inactive" && nextState !== "inactive") {
+      prePantoneBlendEnabled =
+        document.documentElement.getAttribute("data-effect-blend") === "on";
+      setBlendEnabled(true, { silent: true });
+    }
+
     document.documentElement.setAttribute("data-pantone-state", nextState);
     localStorage.setItem(COTY_STATE_KEY, nextState);
 
     if (nextState === "inactive") {
+      // Restore the blend state that was active before pantone was turned on this session
+      if (prePantoneBlendEnabled !== null) {
+        setBlendEnabled(prePantoneBlendEnabled, { silent: true });
+        prePantoneBlendEnabled = null;
+      }
       if (opts.syncPalette !== false && isPantonePaletteSelected()) {
         const fallback =
           localStorage.getItem(LAST_NON_PANTONE_PALETTE_KEY) || "standard";
@@ -1305,7 +1319,14 @@
     }
 
     if (previousState === "inactive" && opts.resetYear !== false) {
-      setCotyYear(getLatestCotyYear(), {
+      let sessionYear = null;
+      try {
+        const stored = sessionStorage.getItem(COTY_SESSION_YEAR_KEY);
+        sessionYear = stored ? Number(stored) || null : null;
+      } catch {
+        // Ignore storage failures.
+      }
+      setCotyYear(sessionYear || getLatestCotyYear(), {
         silent: true,
         activatePantone: false,
       });
@@ -1455,6 +1476,9 @@
 
     try {
       localStorage.setItem(COTY_YEAR_KEY, String(entry.year));
+      if (opts.fromUser) {
+        sessionStorage.setItem(COTY_SESSION_YEAR_KEY, String(entry.year));
+      }
     } catch {
       // Ignore storage failures.
     }
@@ -1512,6 +1536,7 @@
       select.addEventListener("change", function () {
         setCotyYear(this.value, {
           transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+          fromUser: true,
         });
       });
     });
@@ -1536,6 +1561,7 @@
           advanceCotyYear(-1, {
             activatePantone: false,
             transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+            fromUser: true,
           });
         });
       });
@@ -1549,6 +1575,7 @@
           advanceCotyYear(1, {
             activatePantone: false,
             transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+            fromUser: true,
           });
         });
       });

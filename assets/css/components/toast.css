@@ -138,10 +138,10 @@
   }
 }
 
-/* Progressive enhancement: SVG refraction on Chromium */
+/* Progressive enhancement: SVG refraction on Chromium only.
+   -webkit-backdrop-filter intentionally omitted so Safari keeps the blur() from the base rule. */
 @supports (backdrop-filter: url(#x)) {
   .toast {
-    -webkit-backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
     backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
   }
 }

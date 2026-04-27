@@ -18,7 +18,7 @@
   background-color: var(--surface-page);
   align-items: center;
   box-sizing: border-box;
-  transition: border-color var(--motion-duration-slower)
+  transition: border-color var(--motion-duration-slow)
     var(--motion-ease-standard);
   border-bottom-style: solid;
   border-bottom-width: 1px;
@@ -235,7 +235,7 @@ html[data-grid-overlay] .top-menu {
 /* md: <= 63.9375em */
 @media (max-width: 63.9375em) {
   .top-menu {
-    transition: transform var(--motion-duration-slower)
+    transition: transform var(--motion-duration-slow)
       var(--motion-ease-standard);
   }
 
