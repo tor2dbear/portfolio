@@ -113,6 +113,11 @@
   padding: 0 var(--spacing-4);
   border-radius: var(--spacing-4);
   font-weight: inherit;
+  transition: background-color
+      var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme),
+    color var(--theme-transition-duration, var(--motion-duration-xslow))
+      var(--motion-ease-theme);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -40,11 +40,14 @@
   const COTY_LOOP_INTERVAL_MS = 30000;
   const COTY_TRANSPORT_AUTO_COLLAPSE_MS = 4000;
   const COTY_TRANSPORT_HOVER_ENTER_DELAY_MS = 120;
-  const COTY_TRANSPORT_HOVER_EXIT_DELAY_MS =
-    COTY_TRANSPORT_AUTO_COLLAPSE_MS;
+  const COTY_TRANSPORT_HOVER_EXIT_DELAY_MS = COTY_TRANSPORT_AUTO_COLLAPSE_MS;
   const COTY_TRANSPORT_REOPEN_GUARD_MS = 220;
+  const THEME_SWAP_TRANSITION_DEFAULT_MS = 700;
+  const PANTONE_MANUAL_TRANSITION_MS = 4000;
+  const PANTONE_AUTO_TRANSITION_MS = 1400;
   let appliedCustomTokenNames = [];
   let cotyLoopTimer = null;
+  let themeTransitionTimer = null;
   let cotyTransportCollapseTimer = null;
   let cotyTransportHoverEnterTimer = null;
   let cotyShuffleEnabled = false;
@@ -64,12 +67,39 @@
     );
   }
 
+  function stopThemeTransitionTimer() {
+    if (themeTransitionTimer) {
+      window.clearTimeout(themeTransitionTimer);
+      themeTransitionTimer = null;
+    }
+  }
+
+  function runThemeTransition(durationMs) {
+    if (!document.body) {
+      return;
+    }
+    var duration = Number(durationMs) || THEME_SWAP_TRANSITION_DEFAULT_MS;
+    stopThemeTransitionTimer();
+    document.body.classList.remove("darkmodeTransition");
+    document.body.style.setProperty(
+      "--theme-transition-duration",
+      duration + "ms"
+    );
+    void document.body.offsetWidth;
+    document.body.classList.add("darkmodeTransition");
+    themeTransitionTimer = window.setTimeout(function () {
+      document.body.classList.remove("darkmodeTransition");
+      document.body.style.removeProperty("--theme-transition-duration");
+      themeTransitionTimer = null;
+    }, duration);
+  }
+
   function getPlayerSpriteUrl() {
     if (playerSpriteUrl) {
       return playerSpriteUrl;
     }
 
-    const uses = document.querySelectorAll('svg use');
+    const uses = document.querySelectorAll("svg use");
     for (let i = 0; i < uses.length; i += 1) {
       const href = getUseHref(uses[i]);
       if (href && href.indexOf("sprite.svg") !== -1) {
@@ -272,6 +302,7 @@
 
   function setMode(mode) {
     localStorage.setItem("theme-mode", mode);
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
     applyMode(mode);
     updateModeUI(mode);
 
@@ -352,6 +383,7 @@
   // ==========================================================================
 
   function setPalette(palette) {
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
     if (!commitPaletteSelection(palette)) {
       return;
     }
@@ -1064,7 +1096,10 @@
         button.getAttribute("data-label-activate") || "Activate Pantone";
       const deactivateLabel =
         button.getAttribute("data-label-deactivate") || "Deactivate Pantone";
-      button.setAttribute("aria-label", active ? deactivateLabel : activateLabel);
+      button.setAttribute(
+        "aria-label",
+        active ? deactivateLabel : activateLabel
+      );
       button.setAttribute("aria-pressed", active ? "true" : "false");
       button.setAttribute("data-active", active ? "true" : "false");
     });
@@ -1148,8 +1183,9 @@
   }
 
   function advanceCotyYear(step, options) {
+    const opts = options || {};
     const nextYear = getNextCotyYear(step);
-    setCotyYear(nextYear, options || {});
+    setCotyYear(nextYear, opts);
   }
 
   function getLatestCotyYear() {
@@ -1170,7 +1206,10 @@
   function startCotyLoopTimer() {
     stopCotyLoopTimer();
     cotyLoopTimer = window.setInterval(function () {
-      advanceCotyYear(1, { activatePantone: true });
+      advanceCotyYear(1, {
+        activatePantone: true,
+        transitionDuration: PANTONE_AUTO_TRANSITION_MS,
+      });
     }, COTY_LOOP_INTERVAL_MS);
   }
 
@@ -1387,6 +1426,10 @@
     const actions = getCotyActions();
     let entry = null;
 
+    if (opts.transitionDuration) {
+      runThemeTransition(opts.transitionDuration);
+    }
+
     if (actions && typeof actions.getEntry === "function" && opts.skipApply) {
       const numericYear = Number(year) || actions.getCurrentYear();
       entry = actions.getEntry(numericYear);
@@ -1467,7 +1510,9 @@
         select.appendChild(option);
       });
       select.addEventListener("change", function () {
-        setCotyYear(this.value);
+        setCotyYear(this.value, {
+          transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+        });
       });
     });
 
@@ -1490,6 +1535,7 @@
           resetCotyTransportActivity();
           advanceCotyYear(-1, {
             activatePantone: false,
+            transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
           });
         });
       });
@@ -1502,6 +1548,7 @@
           resetCotyTransportActivity();
           advanceCotyYear(1, {
             activatePantone: false,
+            transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
           });
         });
       });
@@ -1631,7 +1678,9 @@
     modeOptions = document.querySelectorAll('[data-js="mode-option"]');
     paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
     cotyYearSelects = document.querySelectorAll('[data-js="coty-year-theme"]');
-    cotyTransportNodes = document.querySelectorAll('[data-js="coty-transport"]');
+    cotyTransportNodes = document.querySelectorAll(
+      '[data-js="coty-transport"]'
+    );
     cotyTransportTriggers = document.querySelectorAll(
       '[data-js="coty-transport-trigger"]'
     );
@@ -1720,7 +1769,9 @@
     updateTypographyUI(storedTypography);
     syncCotyPlaybackTimer();
     setCotyTransportUiState(
-      initialPantoneState !== "inactive" ? storedCotyTransportUiState : "expanded"
+      initialPantoneState !== "inactive"
+        ? storedCotyTransportUiState
+        : "expanded"
     );
     syncCotyPlayerUI();
     if (initialPantoneState !== "inactive") {
@@ -1748,8 +1799,9 @@
       },
       toggleReducedMotion: function () {
         setReducedMotionEnabled(
-          document.documentElement.getAttribute("data-effect-reduced-motion") !==
-            "on"
+          document.documentElement.getAttribute(
+            "data-effect-reduced-motion"
+          ) !== "on"
         );
       },
       playPantone: playPantone,
@@ -1792,7 +1844,10 @@
       "theme:custom-palette-updated",
       refreshCustomPaletteState
     );
-    window.addEventListener("theme:sheet-closed", resumeCotyTransportAutoCollapse);
+    window.addEventListener(
+      "theme:sheet-closed",
+      resumeCotyTransportAutoCollapse
+    );
 
     // Setup event listeners
     if (themeToggle && themePanel) {
@@ -1931,8 +1986,9 @@
       effectMotionButtons.forEach((button) => {
         button.addEventListener("click", function () {
           setReducedMotionEnabled(
-            document.documentElement.getAttribute("data-effect-reduced-motion") !==
-              "on"
+            document.documentElement.getAttribute(
+              "data-effect-reduced-motion"
+            ) !== "on"
           );
         });
       });

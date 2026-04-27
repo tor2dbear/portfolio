@@ -55,9 +55,15 @@ button,
 
   /* Interaction */
   cursor: pointer;
-  transition: all
-    var(--theme-transition-duration, var(--motion-duration-base))
-    var(--motion-ease-standard);
+  transition: background-color
+      var(--theme-transition-duration, var(--motion-duration-base))
+      var(--motion-ease-standard),
+    border-color var(--theme-transition-duration, var(--motion-duration-base))
+      var(--motion-ease-standard),
+    color var(--theme-transition-duration, var(--motion-duration-base))
+      var(--motion-ease-standard),
+    box-shadow var(--theme-transition-duration, var(--motion-duration-base))
+      var(--motion-ease-standard);
   user-select: none;
 }
 

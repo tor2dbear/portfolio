@@ -29,7 +29,11 @@ textarea,
   background-color: var(--component-form-bg);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-8);
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 textarea {
@@ -129,7 +133,10 @@ textarea.error:focus,
   border: 2px solid var(--border-default);
   border-radius: 50%;
   background-color: var(--surface-page);
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
 
@@ -211,7 +218,10 @@ textarea.error:focus,
   border: 2px solid var(--border-default);
   border-radius: var(--radius-4);
   background-color: var(--surface-page);
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard);
   flex-shrink: 0;
 }
 
@@ -291,7 +301,11 @@ select,
   border-radius: var(--radius-8);
   cursor: pointer;
   appearance: none;
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard);
 }
 
 /* Focus State */

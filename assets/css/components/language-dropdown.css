@@ -15,7 +15,11 @@
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-8);
   cursor: pointer;
-  transition: all var(--motion-duration-base) var(--motion-ease-standard);
+  transition: background-color var(--motion-duration-base)
+      var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard);
   min-width: var(--size-40);
   min-height: var(--size-40);
   color: var(--text-default);
