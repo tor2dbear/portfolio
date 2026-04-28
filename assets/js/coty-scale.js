@@ -551,7 +551,7 @@
       findNearestScaleStep(scale, "coty", primarySource) ||
       DEFAULT_ANCHOR_STEP;
 
-    var candidateA = clamp(primaryStep + 2, 1, 12);
+    var candidateA = clamp(primaryStep + 2, 1, 10);
     var candidateB = clamp(primaryStep - 6, 1, 12);
     var colorA = getScaleColor(scale, "coty", candidateA);
     var colorB = getScaleColor(scale, "coty", candidateB);

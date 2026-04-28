@@ -355,8 +355,10 @@
   padding: var(--spacing-8);
   border: 1px solid var(--component-toast-border);
   border-radius: var(--radius-pill);
-  background: var(--component-toast-bg);
-  box-shadow: inset 0 1px 0 var(--component-glass-highlight), var(--shadow-01);
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
+    var(--component-toast-bg);
+  box-shadow: var(--shadow-01);
   -webkit-backdrop-filter: blur(12px) saturate(140%);
   backdrop-filter: blur(12px) saturate(140%);
   transform-origin: center bottom;
@@ -529,11 +531,42 @@
   }
 }
 
-/* Progressive enhancement: SVG refraction on Chromium */
-@supports (backdrop-filter: url(#x)) {
+/* Directional rim light — bright at top, invisible at sides, subtle at bottom. */
+.coty-transport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    175deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.0) 35%,
+    rgba(255, 255, 255, 0.0) 65%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+/* Progressive enhancement: SVG refraction on Chromium only.
+   -webkit-appearance:-apple-pay-button is a Safari-exclusive value; Chrome never
+   implements Apple Pay button styling, so (not (...)) is true only in Blink.
+   scrollbar-gutter:stable was our previous signal but Safari 17.2 added support,
+   causing Safari to match and receive the SVG filter which breaks the entire chain.
+   -webkit-backdrop-filter intentionally omitted so Safari keeps the blur() base rule. */
+@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
   .coty-transport {
-    -webkit-backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
     backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
+    /* Reduce opacity for Chromium — liquid glass refraction compensates visually. */
+    background:
+      radial-gradient(ellipse at 50% 15%, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
+      color-mix(in srgb, var(--surface-page) 12%, transparent);
   }
 }
 
