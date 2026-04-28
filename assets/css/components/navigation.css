@@ -19,7 +19,8 @@
   align-items: center;
   box-sizing: border-box;
   transition: border-color var(--motion-duration-slow)
-    var(--motion-ease-standard);
+      var(--motion-ease-standard),
+    background-color var(--motion-duration-slow) var(--motion-ease-standard);
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-color: transparent;
@@ -236,7 +237,8 @@ html[data-grid-overlay] .top-menu {
 @media (max-width: 63.9375em) {
   .top-menu {
     transition: transform var(--motion-duration-slow)
-      var(--motion-ease-standard);
+        var(--motion-ease-standard),
+      background-color var(--motion-duration-slow) var(--motion-ease-standard);
   }
 
   .top-menu__nav {
