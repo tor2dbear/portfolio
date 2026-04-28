@@ -530,8 +530,10 @@
 }
 
 /* Progressive enhancement: SVG refraction on Chromium only.
+   scrollbar-gutter:stable excludes Safari 18+ which now parses url() in backdrop-filter
+   but cannot render feDisplacementMap in that context, breaking the whole filter chain.
    -webkit-backdrop-filter intentionally omitted so Safari keeps the blur() from the base rule. */
-@supports (backdrop-filter: url(#x)) {
+@supports (backdrop-filter: url(#x)) and (scrollbar-gutter: stable) {
   .coty-transport {
     backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
   }
