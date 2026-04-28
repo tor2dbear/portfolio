@@ -555,10 +555,12 @@
 }
 
 /* Progressive enhancement: SVG refraction on Chromium only.
-   scrollbar-gutter:stable excludes Safari 18+ which now parses url() in backdrop-filter
-   but cannot render feDisplacementMap in that context, breaking the whole filter chain.
-   -webkit-backdrop-filter intentionally omitted so Safari keeps the blur() from the base rule. */
-@supports (backdrop-filter: url(#x)) and (scrollbar-gutter: stable) {
+   -webkit-appearance:-apple-pay-button is a Safari-exclusive value; Chrome never
+   implements Apple Pay button styling, so (not (...)) is true only in Blink.
+   scrollbar-gutter:stable was our previous signal but Safari 17.2 added support,
+   causing Safari to match and receive the SVG filter which breaks the entire chain.
+   -webkit-backdrop-filter intentionally omitted so Safari keeps the blur() base rule. */
+@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
   .coty-transport {
     backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
     /* Reduce opacity for Chromium — liquid glass refraction compensates visually. */
