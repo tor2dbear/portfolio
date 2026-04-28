@@ -272,6 +272,15 @@
         ],
       },
       {
+        id: "tritone",
+        label: "Tritone",
+        fields: [
+          { key: "tritone_shadow_step", token: "--tritone-shadow-step" },
+          { key: "tritone_mid_step", token: "--tritone-mid-step" },
+          { key: "tritone_highlight_step", token: "--tritone-highlight-step" },
+        ],
+      },
+      {
         id: "components",
         label: "Components",
         fields: [
@@ -2012,20 +2021,25 @@
       const allowed = new Set(optionValues);
       const isDuo = isCotyEntryDuo(year);
 
+      const tritoneStepKeys = new Set(["tritone_shadow_step", "tritone_mid_step", "tritone_highlight_step"]);
       Object.keys(cotyOverrideSelects).forEach((key) => {
         const select = cotyOverrideSelects[key];
         if (!select) {
           return;
         }
+        const values = tritoneStepKeys.has(key)
+          ? COTY_OVERRIDE_OPTION_VALUES_BASE.slice()
+          : optionValues;
+        const valueSet = new Set(values);
         const currentValue = select.value || "";
         select.innerHTML = "";
-        optionValues.forEach((value) => {
+        values.forEach((value) => {
           const opt = document.createElement("option");
           opt.value = value;
           opt.textContent = value || "auto";
           select.appendChild(opt);
         });
-        select.value = allowed.has(currentValue) ? currentValue : "";
+        select.value = valueSet.has(currentValue) ? currentValue : "";
       });
 
       if (!cotyOverrideGroupsRoot) {

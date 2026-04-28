@@ -16,6 +16,7 @@
   var DARK_L = [12, 14, 18, 24, 31, 39, 48, 58, 68, 78, 86, 93];
   var DEFAULT_ANCHOR_STEP = 9;
   var APPLIED_MANUAL_OVERRIDES = [];
+  var _tritoneAnimFrame = null;
   var PANTONE_RUNTIME_TOKEN_NAMES = [
     "--coty-role-mode",
     "--coty-role-anchor-step",
@@ -533,7 +534,74 @@
     );
   }
 
-  function applyPantoneTritone(scale, secondaryScale, roles) {
+  function parseFuncTableValues(node) {
+    if (!node) return null;
+    var parts = (node.getAttribute("tableValues") || "").trim().split(/\s+/);
+    if (parts.length !== 3) return null;
+    var vals = [parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2])];
+    return vals.some(isNaN) ? null : vals;
+  }
+
+  function easeOutTheme(t) {
+    // Matches cubic-bezier(0.075, 0.82, 0.165, 1) closely
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function getThemeTransitionDuration() {
+    if (!document.body || !document.body.classList.contains("darkmodeTransition")) {
+      return 0;
+    }
+    var val = document.body.style.getPropertyValue("--theme-transition-duration") || "";
+    var ms = parseFloat(val);
+    return isNaN(ms) || ms <= 0 ? 0 : ms;
+  }
+
+  function animateTritoneTableValues(nodes, shadow, mid, highlight, durationMs) {
+    if (_tritoneAnimFrame) {
+      cancelAnimationFrame(_tritoneAnimFrame);
+      _tritoneAnimFrame = null;
+    }
+    var toShadow = colorValueToRgbUnit(shadow);
+    var toMid = colorValueToRgbUnit(mid);
+    var toHighlight = colorValueToRgbUnit(highlight);
+    if (!toShadow || !toMid || !toHighlight) {
+      setTritoneTableValues(nodes, shadow, mid, highlight);
+      return;
+    }
+    var fromR = parseFuncTableValues(nodes.r);
+    var fromG = parseFuncTableValues(nodes.g);
+    var fromB = parseFuncTableValues(nodes.b);
+    if (!fromR || !fromG || !fromB) {
+      setTritoneTableValues(nodes, shadow, mid, highlight);
+      return;
+    }
+    var startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var t = Math.min((ts - startTime) / durationMs, 1);
+      var e = easeOutTheme(t);
+      nodes.r.setAttribute("tableValues",
+        round3(fromR[0] + (toShadow.r - fromR[0]) * e) + " " +
+        round3(fromR[1] + (toMid.r - fromR[1]) * e) + " " +
+        round3(fromR[2] + (toHighlight.r - fromR[2]) * e));
+      nodes.g.setAttribute("tableValues",
+        round3(fromG[0] + (toShadow.g - fromG[0]) * e) + " " +
+        round3(fromG[1] + (toMid.g - fromG[1]) * e) + " " +
+        round3(fromG[2] + (toHighlight.g - fromG[2]) * e));
+      nodes.b.setAttribute("tableValues",
+        round3(fromB[0] + (toShadow.b - fromB[0]) * e) + " " +
+        round3(fromB[1] + (toMid.b - fromB[1]) * e) + " " +
+        round3(fromB[2] + (toHighlight.b - fromB[2]) * e));
+      if (t < 1) {
+        _tritoneAnimFrame = requestAnimationFrame(step);
+      } else {
+        _tritoneAnimFrame = null;
+      }
+    }
+    _tritoneAnimFrame = requestAnimationFrame(step);
+  }
+
+  function applyPantoneTritone(scale, secondaryScale, roles, stepOverrides) {
     if (!scale || !roles) {
       document.documentElement.removeAttribute("data-image-tone");
       return;
@@ -570,7 +638,17 @@
       highlightColor = duoHighlight;
     }
 
-    setTritoneTableValues(nodes, shadowColor, midColor, highlightColor);
+    var overrides = stepOverrides || {};
+    if (overrides.shadow) shadowColor = overrides.shadow;
+    if (overrides.mid) midColor = overrides.mid;
+    if (overrides.highlight) highlightColor = overrides.highlight;
+
+    var transitionMs = getThemeTransitionDuration();
+    if (transitionMs > 0) {
+      animateTritoneTableValues(nodes, shadowColor, midColor, highlightColor, transitionMs);
+    } else {
+      setTritoneTableValues(nodes, shadowColor, midColor, highlightColor);
+    }
     document.documentElement.setAttribute("data-image-tone", "tritone");
   }
 
@@ -1832,7 +1910,28 @@
       );
     }
 
-    applyPantoneTritone(scale, secondaryScale, roles);
+    var modeOverridesForTritone =
+      resolvedMode === "dark"
+        ? normalizeOverrides(entry.overrides_dark)
+        : normalizeOverrides(entry.overrides_light);
+    var baseOverridesForTritone = normalizeOverrides(entry.overrides);
+    var allOverridesForTritone = Object.assign(
+      {},
+      baseOverridesForTritone,
+      modeOverridesForTritone
+    );
+    function resolveStepColor(key) {
+      var raw = allOverridesForTritone[key];
+      if (!raw) return null;
+      var step = extractStepFromVarToken(String(raw), "coty");
+      if (!step) return null;
+      return getScaleColor(scale, "coty", step) || null;
+    }
+    applyPantoneTritone(scale, secondaryScale, roles, {
+      shadow: resolveStepColor("tritone_shadow_step"),
+      mid: resolveStepColor("tritone_mid_step"),
+      highlight: resolveStepColor("tritone_highlight_step"),
+    });
 
     if (secondaryScale) {
       document.documentElement.style.setProperty(
