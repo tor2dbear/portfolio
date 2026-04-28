@@ -36,6 +36,7 @@
   const EFFECT_GRAIN_KEY = "theme-effect-grain";
   const EFFECT_MOTION_KEY = "theme-effect-reduced-motion";
   const LAST_NON_PANTONE_PALETTE_KEY = "theme-last-non-pantone-palette";
+  const PRE_PANTONE_BLEND_KEY = "theme-pre-pantone-blend";
   const COTY_TRANSPORT_UI_KEY = "theme-pantone-transport-ui";
   const COTY_SESSION_YEAR_KEY = "theme-coty-year-session";
   const COTY_LOOP_INTERVAL_MS = 30000;
@@ -1290,6 +1291,11 @@
     if (previousState === "inactive" && nextState !== "inactive") {
       prePantoneBlendEnabled =
         document.documentElement.getAttribute("data-effect-blend") === "on";
+      try {
+        localStorage.setItem(PRE_PANTONE_BLEND_KEY, prePantoneBlendEnabled ? "1" : "0");
+      } catch {
+        // Ignore storage failures.
+      }
       setBlendEnabled(true, { silent: true });
     }
 
@@ -1297,10 +1303,27 @@
     localStorage.setItem(COTY_STATE_KEY, nextState);
 
     if (nextState === "inactive") {
-      // Restore the blend state that was active before pantone was turned on this session
-      if (prePantoneBlendEnabled !== null) {
-        setBlendEnabled(prePantoneBlendEnabled, { silent: true });
-        prePantoneBlendEnabled = null;
+      // Restore the blend state that was active before pantone was turned on.
+      // Fall back to localStorage in case the page was reloaded while pantone was active.
+      let blendToRestore = prePantoneBlendEnabled;
+      if (blendToRestore === null) {
+        try {
+          const stored = localStorage.getItem(PRE_PANTONE_BLEND_KEY);
+          if (stored !== null) {
+            blendToRestore = stored === "1";
+          }
+        } catch {
+          // Ignore storage failures.
+        }
+      }
+      try {
+        localStorage.removeItem(PRE_PANTONE_BLEND_KEY);
+      } catch {
+        // Ignore storage failures.
+      }
+      prePantoneBlendEnabled = null;
+      if (blendToRestore !== null) {
+        setBlendEnabled(blendToRestore, { silent: true });
       }
       if (opts.syncPalette !== false && isPantonePaletteSelected()) {
         const fallback =
