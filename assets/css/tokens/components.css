@@ -21,7 +21,7 @@
   --component-newsletter-button-text: var(--iris-11);
   --component-toast-bg: color-mix(
     in srgb,
-    var(--surface-page) 62%,
+    var(--surface-page) 16%,
     transparent
   );
   --component-toast-border: color-mix(
