@@ -169,5 +169,9 @@
 @supports (backdrop-filter: url(#x)) and (scrollbar-gutter: stable) {
   .toast {
     backdrop-filter: url(#liquid-glass) blur(12px) saturate(140%);
+    /* Reduce opacity for Chromium — liquid glass refraction compensates visually. */
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
+      color-mix(in srgb, var(--surface-page) 12%, transparent);
   }
 }
