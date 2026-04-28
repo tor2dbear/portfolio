@@ -170,7 +170,7 @@
   --surface-elevated: color-mix(in srgb, var(--surface-page) 88%, white);
   --component-toast-bg: color-mix(in srgb, var(--gray-1) 18%, transparent);
   --component-toast-border: color-mix(in srgb, var(--white) 12%, transparent);
-  --component-glass-highlight: rgba(255, 255, 255, 0.07);
+  --component-glass-highlight: rgba(255, 255, 255, 0.18);
   --shadow-01: rgba(0, 0, 0, 0.2) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.1) 0px 4px 6px -2px;
   --shadow-02: rgba(0, 0, 0, 0.45) 0px 8px 20px -6px,
