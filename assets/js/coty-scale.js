@@ -1918,7 +1918,8 @@
     var allOverridesForTritone = Object.assign(
       {},
       baseOverridesForTritone,
-      modeOverridesForTritone
+      modeOverridesForTritone,
+      readDraftTritoneSteps(entry.year, resolvedMode)
     );
     function resolveStepColor(key) {
       var raw = allOverridesForTritone[key];
@@ -1962,6 +1963,28 @@
     applyManualOverrides(entry);
 
     return entry;
+  }
+
+  function readDraftTritoneSteps(year, mode) {
+    try {
+      var raw = localStorage.getItem("pantone-lab::" + String(year || ""));
+      if (!raw) return {};
+      var parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") return {};
+      var bucket =
+        mode === "dark"
+          ? parsed.overrides_dark || {}
+          : parsed.overrides_light || {};
+      var out = {};
+      ["tritone_shadow_step", "tritone_mid_step", "tritone_highlight_step"].forEach(
+        function (k) {
+          if (bucket[k]) out[k] = bucket[k];
+        }
+      );
+      return out;
+    } catch {
+      return {};
+    }
   }
 
   function getStoredYear() {
