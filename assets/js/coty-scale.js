@@ -1910,16 +1910,31 @@
       );
     }
 
+    var draftOverrides = readFullDraft(entry.year, resolvedMode);
+    var entryWithDraft = Object.assign({}, entry);
+    if (resolvedMode === "dark") {
+      entryWithDraft.overrides_dark = Object.assign(
+        {},
+        entry.overrides_dark || {},
+        draftOverrides
+      );
+    } else {
+      entryWithDraft.overrides_light = Object.assign(
+        {},
+        entry.overrides_light || {},
+        draftOverrides
+      );
+    }
+
     var modeOverridesForTritone =
       resolvedMode === "dark"
-        ? normalizeOverrides(entry.overrides_dark)
-        : normalizeOverrides(entry.overrides_light);
-    var baseOverridesForTritone = normalizeOverrides(entry.overrides);
+        ? normalizeOverrides(entryWithDraft.overrides_dark)
+        : normalizeOverrides(entryWithDraft.overrides_light);
+    var baseOverridesForTritone = normalizeOverrides(entryWithDraft.overrides);
     var allOverridesForTritone = Object.assign(
       {},
       baseOverridesForTritone,
-      modeOverridesForTritone,
-      readDraftTritoneSteps(entry.year, resolvedMode)
+      modeOverridesForTritone
     );
     function resolveStepColor(key) {
       var raw = allOverridesForTritone[key];
@@ -1960,12 +1975,12 @@
       clearDuoOverrides();
     }
 
-    applyManualOverrides(entry);
+    applyManualOverrides(entryWithDraft);
 
     return entry;
   }
 
-  function readDraftTritoneSteps(year, mode) {
+  function readFullDraft(year, mode) {
     try {
       var raw = localStorage.getItem("pantone-lab::" + String(year || ""));
       if (!raw) return {};
@@ -1976,11 +1991,9 @@
           ? parsed.overrides_dark || {}
           : parsed.overrides_light || {};
       var out = {};
-      ["tritone_shadow_step", "tritone_mid_step", "tritone_highlight_step"].forEach(
-        function (k) {
-          if (bucket[k]) out[k] = bucket[k];
-        }
-      );
+      Object.keys(bucket).forEach(function (k) {
+        if (bucket[k]) out[k] = bucket[k];
+      });
       return out;
     } catch {
       return {};
