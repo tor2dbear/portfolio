@@ -57,6 +57,20 @@
       role="tabpanel"
     >
       <div class="palette-generator__row">
+        <label class="palette-generator__label">{{ i18n "mode" }}</label>
+        <div class="theme-options theme-options--segmented" role="group" aria-label="{{ i18n "mode" }}">
+          <button class="theme-option" data-mode="light" data-js="mode-option" aria-label="{{ i18n "light_mode" }}">
+            <span>{{ i18n "light_mode" }}</span>
+          </button>
+          <button class="theme-option" data-mode="dark" data-js="mode-option" aria-label="{{ i18n "dark_mode" }}">
+            <span>{{ i18n "dark_mode" }}</span>
+          </button>
+          <button class="theme-option" data-mode="system" data-js="mode-option" aria-label="{{ i18n "system_mode" }}">
+            <span>{{ i18n "system_mode" }}</span>
+          </button>
+        </div>
+      </div>
+      <div class="palette-generator__row">
         <label for="palette-preset" class="palette-generator__label"
           >{{ if eq .Language.Lang "sv" }}
             Preset
@@ -199,6 +213,20 @@
       role="tabpanel"
     >
       <div class="palette-generator__coty" data-js="coty-controls">
+        <div class="palette-generator__row">
+          <label class="palette-generator__label">{{ i18n "mode" }}</label>
+          <div class="theme-options theme-options--segmented" role="group" aria-label="{{ i18n "mode" }}">
+            <button class="theme-option" data-mode="light" data-js="mode-option" aria-label="{{ i18n "light_mode" }}">
+              <span>{{ i18n "light_mode" }}</span>
+            </button>
+            <button class="theme-option" data-mode="dark" data-js="mode-option" aria-label="{{ i18n "dark_mode" }}">
+              <span>{{ i18n "dark_mode" }}</span>
+            </button>
+            <button class="theme-option" data-mode="system" data-js="mode-option" aria-label="{{ i18n "system_mode" }}">
+              <span>{{ i18n "system_mode" }}</span>
+            </button>
+          </div>
+        </div>
         <div class="palette-generator__coty-year-block">
           <div class="palette-generator__row">
             <label for="palette-coty-year" class="palette-generator__label"
