@@ -100,7 +100,14 @@
 Palette
 </button>
 <button type=button class=tab-button role=tab aria-selected=false aria-controls=pantone-tab-panel data-tab=pantone>
-Pantone Lab</button></div><section id=palette-tab-panel class="tab-panel is-active" data-panel=palette role=tabpanel><div class=palette-generator__row><label for=palette-preset class=palette-generator__label>Preset
+Pantone Lab</button></div><section id=palette-tab-panel class="tab-panel is-active" data-panel=palette role=tabpanel><div class=palette-generator__row><label class=palette-generator__label>Läge</label><div class="theme-options theme-options--segmented" role=group aria-label=Läge><button class=theme-option data-mode=light data-js=mode-option aria-label=Ljust>
+<span>Ljust</span>
+</button>
+<button class=theme-option data-mode=dark data-js=mode-option aria-label=Mörkt>
+<span>Mörkt</span>
+</button>
+<button class=theme-option data-mode=system data-js=mode-option aria-label=System>
+<span>System</span></button></div></div><div class=palette-generator__row><label for=palette-preset class=palette-generator__label>Preset
 </label><select id=palette-preset data-js=palette-preset></select></div><div class=palette-generator__row><label class=palette-generator__label>Duotone
 </label><button type=button class="button button--secondary palette-generator__toggle" data-js=tone-mode-toggle aria-pressed=false>
 Av</button></div><div class=palette-generator__row><label class=palette-generator__label>Surface profile</label><div class=radio-group--inline role=radiogroup aria-label="
@@ -117,7 +124,14 @@ Av</button></div><div class=palette-generator__grid data-js=roles-grid><div clas
 <select id=role-surface data-role=surface></select></div><div class=palette-generator__row><label for=role-border class=palette-generator__label>Border</label>
 <select id=role-border data-role=border></select></div><div class=palette-generator__row><label for=role-primary class=palette-generator__label>Primary</label>
 <select id=role-primary data-role=primary></select></div><div class=palette-generator__row><label for=role-secondary class=palette-generator__label>Secondary</label>
-<select id=role-secondary data-role=secondary></select></div></div></section><section id=pantone-tab-panel class=tab-panel data-panel=pantone role=tabpanel><div class=palette-generator__coty data-js=coty-controls><div class=palette-generator__coty-year-block><div class=palette-generator__row><label for=palette-coty-year class=palette-generator__label>År</label>
+<select id=role-secondary data-role=secondary></select></div></div></section><section id=pantone-tab-panel class=tab-panel data-panel=pantone role=tabpanel><div class=palette-generator__coty data-js=coty-controls><div class=palette-generator__row><label class=palette-generator__label>Läge</label><div class="theme-options theme-options--segmented" role=group aria-label=Läge><button class=theme-option data-mode=light data-js=mode-option aria-label=Ljust>
+<span>Ljust</span>
+</button>
+<button class=theme-option data-mode=dark data-js=mode-option aria-label=Mörkt>
+<span>Mörkt</span>
+</button>
+<button class=theme-option data-mode=system data-js=mode-option aria-label=System>
+<span>System</span></button></div></div><div class=palette-generator__coty-year-block><div class=palette-generator__row><label for=palette-coty-year class=palette-generator__label>År</label>
 <select id=palette-coty-year data-js=coty-year></select><div class="palette-generator__actions palette-generator__actions--coty"><button class="button button--secondary" type=button data-js=coty-year-prev>
 Föregående
 </button>
