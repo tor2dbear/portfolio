@@ -5004,7 +5004,7 @@
                         Select country
                       {{ end }}</label
                     >
-                    <select id="select-1">
+                    <div class="select-wrap"><select id="select-1">
                       <option value="">
                         {{ if eq .Language.Lang "sv" }}
                           -- Välj ett alternativ --
@@ -5040,7 +5040,7 @@
                           Finland
                         {{ end }}
                       </option>
-                    </select>
+                    </select></div>
                   </div>
                   <div class="form-group">
                     <label class="form-label" for="select-disabled"
@@ -5050,7 +5050,7 @@
                         Disabled select
                       {{ end }}</label
                     >
-                    <select id="select-disabled" disabled>
+                    <div class="select-wrap"><select id="select-disabled" disabled>
                       <option>
                         {{ if eq .Language.Lang "sv" }}
                           Kan inte ändras
@@ -5058,7 +5058,7 @@
                           Cannot be changed
                         {{ end }}
                       </option>
-                    </select>
+                    </select></div>
                   </div>
                 </div>
 
