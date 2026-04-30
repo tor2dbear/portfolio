@@ -1980,8 +1980,12 @@
           select.id = id;
           select.setAttribute("data-js", "coty-override-" + field.key);
 
+          const wrap = document.createElement("div");
+          wrap.className = "select-wrap";
+          wrap.appendChild(select);
+
           row.appendChild(label);
-          row.appendChild(select);
+          row.appendChild(wrap);
           grid.appendChild(row);
 
           cotyOverrideSelects[field.key] = select;

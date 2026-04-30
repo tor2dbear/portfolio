@@ -78,7 +78,7 @@
             Preset
           {{ end }}</label
         >
-        <select id="palette-preset" data-js="palette-preset"></select>
+        <div class="select-wrap"><select id="palette-preset" data-js="palette-preset"></select></div>
       </div>
       <div class="palette-generator__row">
         <label class="palette-generator__label"
@@ -177,31 +177,31 @@
       <div class="palette-generator__grid" data-js="roles-grid">
         <div class="palette-generator__row">
           <label for="role-text" class="palette-generator__label">Text</label>
-          <select id="role-text" data-role="text"></select>
+          <div class="select-wrap"><select id="role-text" data-role="text"></select></div>
         </div>
         <div class="palette-generator__row">
           <label for="role-surface" class="palette-generator__label"
             >Surface</label
           >
-          <select id="role-surface" data-role="surface"></select>
+          <div class="select-wrap"><select id="role-surface" data-role="surface"></select></div>
         </div>
         <div class="palette-generator__row">
           <label for="role-border" class="palette-generator__label"
             >Border</label
           >
-          <select id="role-border" data-role="border"></select>
+          <div class="select-wrap"><select id="role-border" data-role="border"></select></div>
         </div>
         <div class="palette-generator__row">
           <label for="role-primary" class="palette-generator__label"
             >Primary</label
           >
-          <select id="role-primary" data-role="primary"></select>
+          <div class="select-wrap"><select id="role-primary" data-role="primary"></select></div>
         </div>
         <div class="palette-generator__row">
           <label for="role-secondary" class="palette-generator__label"
             >Secondary</label
           >
-          <select id="role-secondary" data-role="secondary"></select>
+          <div class="select-wrap"><select id="role-secondary" data-role="secondary"></select></div>
         </div>
       </div>
     </section>
@@ -232,7 +232,7 @@
             <label for="palette-coty-year" class="palette-generator__label"
               >{{ i18n "coty_year" }}</label
             >
-            <select id="palette-coty-year" data-js="coty-year"></select>
+            <div class="select-wrap"><select id="palette-coty-year" data-js="coty-year"></select></div>
             <div
               class="palette-generator__actions palette-generator__actions--coty"
             >
@@ -320,7 +320,7 @@
                   COTY role mode
                 {{ end }}</label
               >
-              <select id="coty-role-mode" data-js="coty-role-mode">
+              <div class="select-wrap"><select id="coty-role-mode" data-js="coty-role-mode">
                 <option value="auto">
                   {{ if eq .Language.Lang "sv" }}
                     Auto
@@ -342,7 +342,7 @@
                     Surface
                   {{ end }}
                 </option>
-              </select>
+              </select></div>
             </div>
             <div class="palette-generator__row">
               <label for="coty-anchor-step" class="palette-generator__label"
@@ -352,7 +352,7 @@
                   COTY anchor step
                 {{ end }}</label
               >
-              <select id="coty-anchor-step" data-js="coty-anchor-step"></select>
+              <div class="select-wrap"><select id="coty-anchor-step" data-js="coty-anchor-step"></select></div>
             </div>
           </div>
         </details>
@@ -431,10 +431,10 @@
                       Token
                     {{ end }}
                   </label>
-                  <select
+                  <div class="select-wrap"><select
                     id="coty-token-usage-select"
                     data-js="coty-token-usage-select"
-                  ></select>
+                  ></select></div>
                 </div>
                 <div
                   class="palette-generator__usage-list"
@@ -488,7 +488,7 @@
                       Scope
                     {{ end }}
                   </label>
-                  <select
+                  <div class="select-wrap"><select
                     id="coty-control-color-scope"
                     data-js="coty-control-color-scope"
                   >
@@ -527,7 +527,7 @@
                         Selected token
                       {{ end }}
                     </option>
-                  </select>
+                  </select></div>
                 </div>
                 <div
                   class="palette-generator__row"
@@ -544,10 +544,10 @@
                       Token
                     {{ end }}
                   </label>
-                  <select
+                  <div class="select-wrap"><select
                     id="coty-control-color-token"
                     data-js="coty-control-color-token"
-                  ></select>
+                  ></select></div>
                 </div>
                 <div
                   class="palette-generator__actions palette-generator__actions--coty"
