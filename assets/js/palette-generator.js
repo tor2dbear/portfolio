@@ -2028,7 +2028,9 @@
           return;
         }
         const values = tritoneStepKeys.has(key)
-          ? COTY_OVERRIDE_OPTION_VALUES_BASE.slice()
+          ? (isDuo
+              ? COTY_OVERRIDE_OPTION_VALUES_BASE.concat(COTY_OVERRIDE_OPTION_VALUES_SECONDARY)
+              : COTY_OVERRIDE_OPTION_VALUES_BASE.slice())
           : optionValues;
         const valueSet = new Set(values);
         const currentValue = select.value || "";

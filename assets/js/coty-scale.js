@@ -1939,6 +1939,10 @@
     function resolveStepColor(key) {
       var raw = allOverridesForTritone[key];
       if (!raw) return null;
+      var secondaryStep = extractStepFromVarToken(String(raw), "coty-secondary");
+      if (secondaryStep && secondaryScale) {
+        return getScaleColor(secondaryScale, "coty-secondary", secondaryStep) || null;
+      }
       var step = extractStepFromVarToken(String(raw), "coty");
       if (!step) return null;
       return getScaleColor(scale, "coty", step) || null;
