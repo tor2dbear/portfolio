@@ -23,7 +23,7 @@ client:
   url: "https://www.utblick.org/"
   about: ""
 ---
-![Utblick nr.2](header-img-utblick_no2-0002.jpeg "Description of heroimage")
+![](header-img-utblick_no2-0002.jpeg)
 ### Om
 Utblick nr.2 utforskar temat Ansvar och Tillväxt genom typografisk hierarki och organiska illustrationer. Den redaktionella designen balanserar strukturerade textlayouter med handritade botaniska element, vilket skapar rytm genom publikationen samtidigt som läsbarheten bevaras.
 
@@ -32,11 +32,11 @@ Med en begränsad färgpalett—två Pantone-kulörer och svart på obestruket p
 Det här projektet visar hur redaktionella designprinciper—att etablera hierarki, dosera innehåll och guida läsaren—översätts direkt till att designa digitala produkter. Mediet ändras, men det grundläggande förhållningssättet till struktur och användarupplevelse är detsamma.
 <!--more-->
 
-![Example image](utblick_no2-0005.jpeg)
-![Example image](utblick_no2-0006.jpeg)
-![Example image](utblick_no2-0008.jpeg)
-![Example image](utblick_no2-0009.jpeg)
-![Example image](utblick_no2-0010.jpeg)
-![Example image](utblick_no2-0011.jpeg)
-![Example image](utblick_no2-0012.jpeg)
-![Example image](utblick_no2-0013.jpeg)
+![](utblick_no2-0005.jpeg)
+![](utblick_no2-0006.jpeg)
+![](utblick_no2-0008.jpeg)
+![](utblick_no2-0009.jpeg)
+![](utblick_no2-0010.jpeg)
+![](utblick_no2-0011.jpeg)
+![](utblick_no2-0012.jpeg)
+![](utblick_no2-0013.jpeg)

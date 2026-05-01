@@ -20,23 +20,22 @@ client:
   about: "Spekulativt designprojekt. Del av MA‑kurs vid HDK – Akademin för konst och design."
 ---
 
-![Header example](things08.webp)
+![](things08.webp)
 
-### About
+### Om
 
-The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
+Att konversera är förmodligen ingen aktivitet man förväntar sig av föremål, och det bryter mot vissa förutfattade förväntningar. Både i hur föremålen kan förstås, men också i hur uppfattningen av konversationen ska tolkas i denna situation. Vad är de, och vad pratar de om?
 
-#### Role
+#### Roll
 
-Art Direction and Illustration
+Design och tillverkning av artefakter med CNC och trähantverk. Design och produktion av spiralbunden bok.
 
-![Example image](things.jpg "Title here")
-![Example image](things01.jpg "Title here")
-![Example image](things2.jpg "Title here")
-![Example image](things02.jpg "Title here")
-![Example image](things03.jpg "Title here")
-![Example image](things04.jpg "Title here")
-![Example image](things05.jpg "Title here")
-![Example image](things06.jpg "Title here")
-![Example image](things07.jpg "Title here")
+![](things.jpg)
+![](things01.jpg)
+![](things2.jpg)
+![](things02.jpg)
+![](things03.jpg)
+![](things04.jpg)
+![](things05.jpg)
+![](things06.jpg)
+![](things07.jpg)

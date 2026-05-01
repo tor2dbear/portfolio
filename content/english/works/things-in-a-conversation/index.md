@@ -20,7 +20,7 @@ client:
   about: "Speculative design project. Part of MA class at HDK – Academy of Art and Design."
 ---
 
-![Header example](things08.webp)
+![](things08.webp)
 
 ### About
 
@@ -28,14 +28,14 @@ Conversing is probably not an activity that would be expected between any object
 
 #### Role
 
-Design and manufacturing of artifacts with CNC and wood work craft tools. Design and production of sprial book.
+Design and manufacturing of artifacts with CNC and wood work craft tools. Design and production of spiral book.
 
-![Example image](things.jpg "Title here")
-![Example image](things01.jpg "Title here")
-![Example image](things2.jpg "Title here")
-![Example image](things02.jpg "Title here")
-![Example image](things03.jpg "Title here")
-![Example image](things04.jpg "Title here")
-![Example image](things05.jpg "Title here")
-![Example image](things06.jpg "Title here")
-![Example image](things07.jpg "Title here")
+![](things.jpg)
+![](things01.jpg)
+![](things2.jpg)
+![](things02.jpg)
+![](things03.jpg)
+![](things04.jpg)
+![](things05.jpg)
+![](things06.jpg)
+![](things07.jpg)

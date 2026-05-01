@@ -23,8 +23,7 @@ client:
   about: "Kandidatexamen som utforskar digital kultur genom experimentell bokdesign"
 ---
 
-![Header example](cut-up-world11.webp)
-{.myclass}
+![](cut-up-world11.webp)
 
 ### Om
 A Cut up World är ett examensarbete som undersöker hur digitala verktyg formar berättande och identitet. Genom att använda Googles sökförslag som källmaterial tillämpar boken cut-up teknik för att skapa fragmenterade berättelser som speglar vår relation till algoritmiska system.
@@ -33,12 +32,12 @@ Bokdesignen återspeglar denna fragmenterade digitala verklighet genom collage, 
 
 Detta projekt representerar en tidig utforskning av hur design kritiskt kan engagera sig med teknologi snarare än att bara illustrera den—en tråd som löper genom mitt arbete från tryck till digital produktdesign.
 <!--more-->
-![Header example](cut-up-world2.webp)
-![Header example](cut-up-world3.webp)
-![Header example](cutup06.svg)
-![Header example](cut-up-world4.webp)
-![Header example](cutup07svg-02.svg)
-![Header example](cut-up-world9.webp)
-![Header example](cutup05-02.svg)
-![Header example](cut-up-world10.webp)
-![Header example](sjalvportratt.gif)
+![](cut-up-world2.webp)
+![](cut-up-world3.webp)
+![](cutup06.svg)
+![](cut-up-world4.webp)
+![](cutup07svg-02.svg)
+![](cut-up-world9.webp)
+![](cutup05-02.svg)
+![](cut-up-world10.webp)
+![](sjalvportratt.gif)
