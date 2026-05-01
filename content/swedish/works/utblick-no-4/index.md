@@ -21,7 +21,7 @@ client:
   about: ""
 ---
 
-![](utblick_africa-0005.jpg)
+![Framsida av publikationen](utblick_africa-0005.jpg)
 
 ### Om
 Utblick nr.4 "Africa?" utforskar komplexiteten hos en kontinent som ofta reduceras till singulära berättelser. Den redaktionella designen speglar detta tema genom kraftfulla geometriska mönster och varma jordfärger, vilket skapar visuell rytm samtidigt som den strukturerade tydlighet som krävs för politisk journalistik bibehålls.
