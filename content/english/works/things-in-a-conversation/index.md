@@ -24,7 +24,9 @@ client:
 
 ### About
 
-Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
+Conversing is probably not an activity one would expect between objects — it breaks with certain preconceived expectations, both in how the objects might be understood and in how the conversation between them is to be interpreted. What are they? And what are they talking about?
+
+*Things in a Conversation* approaches these questions through fabricated artifacts designed with intentional ambiguity. Aesthetic and functional 'cracks' leave space for the viewer to define the relationship between the objects — making them questions materialized rather than answers resolved. The project draws on the emergence of connected objects and the largely undefined space of what it might mean for things to communicate.
 
 #### Role
 
