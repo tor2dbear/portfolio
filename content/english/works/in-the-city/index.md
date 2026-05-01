@@ -13,7 +13,7 @@ header_image: in-the-city-0002-2.webp
 featured: true
 role: "Art Direction, Illustration"
 details:
-  year: 2022
+  year: 2016
   format: "Magazine"
   scope: "Publication design"
 client:
@@ -26,7 +26,9 @@ client:
 
 ### About
 
-In the City is a self-initiated publication project. Starting from a series of walks through the urban landscape, the magazine expands each observation into a spread — photography, graphic elements and typography woven together to document how a city is experienced at street level.
+*In the City* is a magazine and one of three publications in the MFA thesis project *One Stack. Two Stack. Three Stack.* (HDK, University of Gothenburg, 2016). The magazine documents a limited period and a stroll through Backaplan, Gothenburg — primarily through photography.
+
+The layout plays with the constraints of the magazine page as a surface, placing elements on top of each other to comment on how the city functions as an interface. Where the three-dimensional urban space allows a viewer to move between layers, the printed page collapses them — images printing over images, content escaping from page edges.
 
 #### Role
 

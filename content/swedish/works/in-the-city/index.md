@@ -13,7 +13,7 @@ header_image: in-the-city-0002-2.webp
 featured: true
 role: "Art Direction, Illustration"
 details:
-  year: 2022
+  year: 2016
   format: "Magasin"
   scope: "Redaktionell design"
 client:
@@ -26,7 +26,9 @@ client:
 
 ### Om
 
-In the City är ett självinitierat publikationsprojekt. Med utgångspunkt i promenader genom stadslandskapet expanderar varje uppslag en observation — fotografi, grafiska element och typografi vävs samman för att dokumentera hur en stad upplevs på gatunivå.
+*In the City* är ett magasin och en av tre publikationer i MFA-examensarbetet *One Stack. Two Stack. Three Stack.* (HDK, Göteborgs universitet, 2016). Magasinet dokumenterar en begränsad period och en promenad i Backaplan, Göteborg — i första hand genom fotografi.
+
+Layouten leker med magasinssidans begränsningar som yta och placerar element ovanpå varandra för att kommentera hur staden fungerar som ett gränssnitt. Där det tredimensionella stadsrummet låter betraktaren röra sig mellan lagren, kollapsar den tryckta sidan dem — bilder trycks ovanpå bilder och innehåll flyr ut mot sidränderna.
 
 #### Roll
 
