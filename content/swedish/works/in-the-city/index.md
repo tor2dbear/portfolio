@@ -17,9 +17,9 @@ details:
   format: "Magasin"
   scope: "Redaktionell design"
 client:
-  name: "Self initiated project"
+  name: "Självinitierat projekt"
   url: ""
-  about: "Publication design. A magazine that expands from a stroll through the city."
+  about: "Publikationsdesign. Ett magasin som expanderar från en promenad genom staden."
 ---
 
 ![](in-the-city-0002-2.webp)

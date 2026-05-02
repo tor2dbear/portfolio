@@ -15,7 +15,7 @@ details:
   format: "Bok"
   scope: "Objektdesign, tillverkning"
 client:
-  name: "Self initiated project"
+  name: "Självinitierat projekt"
   url: ""
   about: "Spekulativt designprojekt. Del av MA‑kurs vid HDK – Akademin för konst och design."
 ---

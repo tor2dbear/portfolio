@@ -17,9 +17,9 @@ details:
   format: "Affisch"
   scope: "Illustration, layout"
 client:
-  name: "Self initiated project"
+  name: "Självinitierat projekt"
   url: ""
-  about: "A poster with some of the landmarks and symbols representing the city of Gothenburg."
+  about: "En affisch med några av Göteborgs landmärken och symboler."
 ---
 
 ![](gbg_poster08.webp)
