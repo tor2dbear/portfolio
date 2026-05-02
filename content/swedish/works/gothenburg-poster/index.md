@@ -2,6 +2,7 @@
 author: "Torbjörn Hedberg"
 date: 2017-04-12
 linktitle: gothenburg-poster
+translationKey: gothenburg-poster
 title: Göteborgsaffisch
 slug: arbeten
 weight: 10
