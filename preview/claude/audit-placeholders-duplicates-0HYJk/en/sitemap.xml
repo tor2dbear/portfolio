@@ -28,22 +28,6 @@
                 href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/a-cut-up-world/"
                 />
   </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/gothenburg-poster/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/in-the-city/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/arbeten/in-the-city/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/in-the-city/"
-                />
-  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/utblick-no.4-africa/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -55,6 +39,22 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/utblick-no.4-africa/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/gothenburg-poster/</loc>
+    <lastmod>2017-04-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/in-the-city/</loc>
+    <lastmod>2016-05-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/arbeten/in-the-city/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/in-the-city/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/things-in-a-conversation/</loc>
@@ -336,58 +336,6 @@
                 href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/editorial/"
                 />
   </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/experimental/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/arbeten/tags/experimentellt/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/experimental/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/print/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/arbeten/tags/tryck/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/print/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/clients/topic01/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/clients/topic01/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/clients/topic01/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/topics/topic01/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/topics/topic01/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/topics/topic01/"
-                />
-  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/clients/topic02/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -401,8 +349,34 @@
                 href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/clients/topic02/"
                 />
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/print/</loc>
+    <lastmod>2017-04-12T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/arbeten/tags/tryck/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/print/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/topics/topic01/</loc>
+    <lastmod>2017-04-12T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/topics/topic01/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/topics/topic01/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/topics/topic02/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <lastmod>2017-04-12T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
@@ -415,7 +389,7 @@
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/topics/</loc>
-    <lastmod>2022-02-24T00:00:00+00:00</lastmod>
+    <lastmod>2017-04-12T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="sv-SE"
@@ -425,6 +399,32 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/topics/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/experimental/</loc>
+    <lastmod>2016-05-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/arbeten/tags/experimentellt/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/works/tags/experimental/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/clients/topic01/</loc>
+    <lastmod>2016-05-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/sv/clients/topic01/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/clients/topic01/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/audit-placeholders-duplicates-0HYJk/clients/clients01/</loc>
