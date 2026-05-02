@@ -13,7 +13,7 @@ header_image: in-the-city-0002-2.webp
 featured: true
 role: "Art Direction, Illustration"
 details:
-  year: 2016
+  year: 2022
   format: "Magazine"
   scope: "Publication design"
 client:
