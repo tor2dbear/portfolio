@@ -8,7 +8,7 @@ weight: 10
 tags: ["Tryck"]
 topics: ["topic01", "topic02"]
 clients: ["topic01", "topic02"]
-description: Self initiated project. A poster with some of the landmarks and symbols representing the city of Gothenburg.
+description: Självinitierat projekt. En affisch med några av Göteborgs landmärken och symboler.
 header_image: gbg_poster08.webp
 featured: true
 role: "Grafisk formgivare"

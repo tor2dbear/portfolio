@@ -8,7 +8,7 @@ weight: 10
 tags: ["Experimentellt"]
 topics: ["topic01", "topic02"]
 clients: ["topic01", "topic02"]
-description: Publication design. A magazine that expands from a stroll through the city.
+description: Publikationsdesign. Ett magasin som expanderar från en promenad genom staden.
 header_image: in-the-city-0002-2.webp
 featured: true
 role: "Art Direction, Illustration"
