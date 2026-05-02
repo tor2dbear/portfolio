@@ -1,6 +1,6 @@
 ---
 author: "Torbjörn Hedberg"
-date: 2022-02-24
+date: 2017-04-12
 linktitle: gothenburg-poster
 translationKey: gothenburg-poster
 title: Gothenburg Poster
@@ -14,7 +14,7 @@ header_image: gbg_poster08.webp
 featured: true
 role: "Graphic Designer"
 details:
-  year: 2022
+  year: 2017
   format: "Poster"
   scope: "Illustration, layout"
 client:

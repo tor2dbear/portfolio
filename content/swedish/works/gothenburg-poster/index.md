@@ -1,6 +1,6 @@
 ---
 author: "Torbjörn Hedberg"
-date: 2022-02-24
+date: 2017-04-12
 linktitle: gothenburg-poster
 title: Göteborgsaffisch
 slug: arbeten
@@ -13,7 +13,7 @@ header_image: gbg_poster08.webp
 featured: true
 role: "Grafisk formgivare"
 details:
-  year: 2022
+  year: 2017
   format: "Affisch"
   scope: "Illustration, layout"
 client:

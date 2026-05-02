@@ -1,6 +1,6 @@
 ---
 author: "Torbjörn Hedberg"
-date: 2022-02-24
+date: 2016-05-28
 linktitle: In the City
 title: In the City
 slug: arbeten
@@ -13,7 +13,7 @@ header_image: in-the-city-0002-2.webp
 featured: true
 role: "Art Direction, Illustration"
 details:
-  year: 2022
+  year: 2016
   format: "Magasin"
   scope: "Redaktionell design"
 client:
