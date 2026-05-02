@@ -6,7 +6,7 @@ title: Things in a Conversation
 slug: arbeten
 weight: 10
 tags: ["Experimentellt"]
-description: Conversing is probably not an activity that would be expected between any objects, hence it breaks with certain preconceived expectations. Both in how the objects could be understood, but also in how the perception of the conversation is to be interpreted in this situation. What are they, and what are they talking about?
+description: Ett experimentellt projekt som undersöker vår uppfattning om föremål genom spekulativ design.
 header_image: things08.webp
 featured: true
 role: "Designer"
