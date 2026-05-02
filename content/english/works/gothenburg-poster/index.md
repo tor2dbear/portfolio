@@ -28,3 +28,8 @@ client:
 ### About
 
 A self-initiated poster project depicting the landmarks and symbols of Gothenburg. Combining illustration with graphic design to celebrate the character of the city through its architecture, waterways and cultural references.
+
+{{< gallery layout="1+1" >}}
+![](gbg_poster07.jpg)
+![](gbg_poster03.jpg)
+{{< /gallery >}}
