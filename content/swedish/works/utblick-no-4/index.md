@@ -36,11 +36,9 @@ Detta nummer visar hur redaktionell design kan stödja komplext ämnesinnehåll�
 ![](utblick_africa-0003.jpg)
 {{< /gallery >}}
 
-{{< gallery layout="2x2" >}}
+{{< gallery layout="1+1" >}}
 ![](utblick_africa-0006-1.jpg)
 ![](utblick_africa-0007-1.jpg)
-![](utblick_africa-0008.jpg)
-![](utblick_africa-0013.jpg)
 {{< /gallery >}}
 
 {{< gallery layout="1+1" >}}
@@ -48,10 +46,7 @@ Detta nummer visar hur redaktionell design kan stödja komplext ämnesinnehåll�
 ![](utblick_africa-0016.jpg)
 {{< /gallery >}}
 
-{{< gallery layout="1+1" >}}
-![](utblick_africa-0017.jpg)
 ![](utblick_africa-0018.jpg)
-{{< /gallery >}}
 
 {{< gallery layout="1+1" >}}
 ![](utblick_africa-0020.jpg)

@@ -29,10 +29,6 @@ client:
 
 Ett självinitierat affischprojekt som skildrar Göteborgs landmärken och symboler. Illustration och grafisk form kombineras för att hylla stadens karaktär – arkitekturen, vattenvägarna och kulturella referenserna.
 
-{{< gallery layout="full" >}}
 ![](gbg_poster03.jpg)
-{{< /gallery >}}
 
-{{< gallery layout="full" >}}
 ![](gbg_poster08.jpg)
-{{< /gallery >}}

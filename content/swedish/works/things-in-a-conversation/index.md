@@ -37,7 +37,6 @@ Design och tillverkning av artefakter med CNC och trähantverk. Design och produ
 ![](things2.jpg)
 ![](things02.jpg)
 ![](things03.jpg)
-![](things04.jpg)
 ![](things05.jpg)
 ![](things06.jpg)
 ![](things07.jpg)

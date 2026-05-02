@@ -37,7 +37,6 @@ Design and manufacturing of artifacts with CNC and wood work craft tools. Design
 ![](things2.jpg)
 ![](things02.jpg)
 ![](things03.jpg)
-![](things04.jpg)
 ![](things05.jpg)
 ![](things06.jpg)
 ![](things07.jpg)
