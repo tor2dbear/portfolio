@@ -1,0 +1,144 @@
+/* ============================================================================
+   JAPANESE VERTICAL TYPOGRAPHY (縦組み / tategumi)
+
+   Applied only when html[lang="ja"] is present.
+   Overrides font stacks to use system CJK fonts, then applies
+   writing-mode: vertical-rl to content areas.
+
+   Note on font support: None of the self-hosted fonts (Switzer, Source Serif 4,
+   Playfair Display, Bricolage Grotesque, JetBrains Mono) include CJK glyphs.
+   The overrides below ensure the browser uses high-quality system Japanese
+   fonts instead of falling through to last-resort substitution.
+
+   Serif fallback chain:  Hiragino Mincho (macOS/iOS) →
+                          YuMincho / Yu Mincho (Windows 8+) →
+                          MS Mincho (older Windows) →
+                          Noto Serif JP (Android/Linux)
+
+   Sans fallback chain:   Hiragino Sans (macOS/iOS) →
+                          Yu Gothic / YuGothic (Windows 8+) →
+                          Meiryo (older Windows) →
+                          Noto Sans JP (Android/Linux)
+   ============================================================================ */
+
+/* --------------------------------------------------------------------------
+   1. FONT STACK OVERRIDES
+   -------------------------------------------------------------------------- */
+
+html[lang="ja"] {
+  --font-serif-ja: "Hiragino Mincho ProN", "Hiragino Mincho Pro",
+    "YuMincho", "Yu Mincho", "MS Mincho", "Noto Serif JP", ui-serif,
+    Georgia, serif;
+  --font-sans-ja: "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "YuGothic", "Yu Gothic", "Meiryo", "Noto Sans JP", ui-sans-serif,
+    system-ui, sans-serif;
+
+  /* Replace the primitive tokens so all semantic tokens inherit */
+  --font-serif: var(--font-serif-ja);
+  --font-sans: var(--font-sans-ja);
+}
+
+/* --------------------------------------------------------------------------
+   2. VERTICAL WRITING MODE — content areas only
+   Writing mode flows top → bottom, columns right → left (tategumi).
+   UI chrome (nav, forms, dropdowns, footer) stays horizontal.
+   -------------------------------------------------------------------------- */
+
+html[lang="ja"] #main,
+html[lang="ja"] .hero-section,
+html[lang="ja"] .content,
+html[lang="ja"] .about-main,
+html[lang="ja"] .about-cv {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* Keep UI elements horizontal */
+html[lang="ja"] nav,
+html[lang="ja"] .top-menu,
+html[lang="ja"] footer,
+html[lang="ja"] header,
+html[lang="ja"] button,
+html[lang="ja"] input,
+html[lang="ja"] textarea,
+html[lang="ja"] select,
+html[lang="ja"] label,
+html[lang="ja"] .language-dropdown,
+html[lang="ja"] .language-panel,
+html[lang="ja"] .theme-dropdown,
+html[lang="ja"] .theme-panel,
+html[lang="ja"] .settings-dropdown,
+html[lang="ja"] .settings-panel,
+html[lang="ja"] .toast,
+html[lang="ja"] .chord-hud,
+html[lang="ja"] .breadcrumb,
+html[lang="ja"] .pagination,
+html[lang="ja"] .tag,
+html[lang="ja"] .tags,
+html[lang="ja"] .lightbox,
+html[lang="ja"] .toc,
+html[lang="ja"] .newsletter,
+html[lang="ja"] .contact-form,
+html[lang="ja"] .page-notice,
+html[lang="ja"] code,
+html[lang="ja"] pre {
+  writing-mode: horizontal-tb;
+}
+
+/* --------------------------------------------------------------------------
+   3. LAYOUT ADJUSTMENTS FOR VERTICAL TEXT
+   -------------------------------------------------------------------------- */
+
+/* Hero: give it enough block-size (= height in vertical-rl) to breathe */
+html[lang="ja"] .hero-section {
+  min-block-size: 60vh;
+}
+
+/* Article cards work better inline in vertical flow */
+html[lang="ja"] .article-card,
+html[lang="ja"] .summary-card {
+  writing-mode: horizontal-tb;
+  display: inline-block;
+  max-inline-size: 100%;
+}
+
+/* Project info table stays horizontal */
+html[lang="ja"] .project-info {
+  writing-mode: horizontal-tb;
+}
+
+/* Gallery and figures stay horizontal */
+html[lang="ja"] figure,
+html[lang="ja"] .gallery,
+html[lang="ja"] img,
+html[lang="ja"] video,
+html[lang="ja"] picture {
+  writing-mode: horizontal-tb;
+}
+
+/* Post-nav (prev/next links) horizontal */
+html[lang="ja"] .post-nav {
+  writing-mode: horizontal-tb;
+}
+
+/* Related items */
+html[lang="ja"] .related-items {
+  writing-mode: horizontal-tb;
+}
+
+/* --------------------------------------------------------------------------
+   4. PUNCTUATION & LETTER SPACING FOR TATEGUMI
+   -------------------------------------------------------------------------- */
+
+html[lang="ja"] p,
+html[lang="ja"] li,
+html[lang="ja"] blockquote {
+  text-align: start;
+  /* Tighten letter-spacing slightly — vertical Japanese reads better denser */
+  letter-spacing: 0.05em;
+}
+
+/* Upright digits and latin abbreviations in vertical mode */
+html[lang="ja"] .upright {
+  text-orientation: upright;
+}

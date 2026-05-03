@@ -185,6 +185,8 @@
   {{ $pages_ui_library := resources.Get "css/pages/ui-library.css" }}
   {{ $pages_contact := resources.Get "css/pages/contact.css" }}
   {{ $pages_palette_generator := resources.Get "css/pages/palette-generator.css" }}
+  {{ $pages_japanese := resources.Get "css/pages/japanese.css" }}
+  {{ $isJapanesePage := eq .Language.Lang "ja" }}
 
   <!-- CSS main styles -->
   {{ $style := resources.Get "css/style.css" }}
@@ -446,6 +448,11 @@
         <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
       {{ end }}
     {{ end }}
+    {{ with $pages_japanese }}
+      {{ if $isJapanesePage }}
+        <link rel="stylesheet" type="text/css" href="{{ .RelPermalink }}" />
+      {{ end }}
+    {{ end }}
     <link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
@@ -470,6 +477,11 @@
         {{ $pageCss = $pageCss | append . }}
       {{ end }}
     {{ end }}
+    {{ with $pages_japanese }}
+      {{ if $isJapanesePage }}
+        {{ $pageCss = $pageCss | append . }}
+      {{ end }}
+    {{ end }}
     {{ $pageCssBundleRef := false }}
     {{ with $pageCss }}
       {{ $pageCssTarget := "css-page.css" }}
@@ -481,6 +493,8 @@
         {{ $pageCssTarget = "css-page-palette-generator.css" }}
       {{ else if $isContactPage }}
         {{ $pageCssTarget = "css-page-contact.css" }}
+      {{ else if $isJapanesePage }}
+        {{ $pageCssTarget = "css-page-japanese.css" }}
       {{ end }}
       {{ $pageCssBundleRef = . | resources.Concat $pageCssTarget | minify | fingerprint }}
     {{ end }}

@@ -84,6 +84,12 @@ DefaultContentLanguage = "en"
     languageCode = "sv-SE"
     weight = 2
     contentDir = "content/swedish"
+
+  [languages.ja]
+    languageName = "日本語"
+    languageCode = "ja"
+    weight = 3
+    contentDir = "content/japanese"
     [languages.sv.params]
       title = "Torbjörn Hedberg · Multidisciplinär designer"
       description = "Hej! Jag är en multidisciplinär designer. I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt organisationer från idé till färdig produkt genom att kombinera design, affärsvärde och teknik."
@@ -112,6 +118,35 @@ DefaultContentLanguage = "en"
       weight = 4
       identifier = "contact"
       url = "/sv/kontakt"
+
+    [languages.ja.params]
+      title = "トルビョーン・ヘドベリ · 多分野デザイナー"
+      description = "こんにちは。私は多分野デザイナーです。10年以上にわたり、戦略とクラフトの間を行き来してきました。デザイン、ビジネス価値、テクノロジーを組み合わせ、組織がコンセプトから完成品へ進む手助けをしてきました。"
+    [[languages.ja.menu.start]]
+      name = "ホーム"
+      weight = 1
+      identifier = "home"
+      url = "/"
+    [[languages.ja.menu.all]]
+      name = "全て"
+      weight = 2
+      identifier = "works"
+      url = "/works/"
+    [[languages.ja.menu.top]]
+      name = "作品"
+      weight = 2
+      identifier = "works"
+      url = "/ja/works/tags/"
+    [[languages.ja.menu.top]]
+      name = "私について"
+      weight = 3
+      identifier = "about"
+      url = "/ja/about"
+    [[languages.ja.menu.top]]
+      name = "お問い合わせ"
+      weight = 4
+      identifier = "contact"
+      url = "/ja/contact"
 
 [permalinks]
   works = '/:slug/:title/'

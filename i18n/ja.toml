@@ -1,0 +1,398 @@
+[startpage]
+other = "ヨーテボリを拠点とする多分野デザイナー"
+
+[hero_intro_lead]
+other = "こんにちは、トルビョーンです —"
+
+[hero_intro_middle]
+other = "10年以上にわたり、戦略とクラフトの間を行き来してきました。組織がコンセプトから完成品へと進む手助けをしてきました。組み合わせることで"
+
+[hero_emphasis_design]
+other = "デザイン"
+
+[hero_emphasis_business]
+other = "ビジネス価値"
+
+[hero_emphasis_and]
+other = "そして"
+
+[hero_emphasis_tech]
+other = "テクノロジー"
+
+[contact_header_start]
+other = "ご質問やコラボレーションのご提案があれば、ぜひ"
+
+[contact_header_end]
+other = "お気軽にご連絡ください"
+
+[branding]
+other = "ブランディング"
+
+[get_in_touch]
+other = "お問い合わせ"
+
+[footer_all_rights_reserved]
+other = "全著作権所有"
+
+[newsletter]
+other = "ニュースレター"
+
+[Newsletter]
+other = "ニュースレター"
+
+[newsletter_text]
+other = "サイトに新しいコンテンツが追加されたときのニュースや更新情報のためにニュースレターを購読してください。"
+
+[Email_Address]
+other = "メールアドレス"
+
+[works_url]
+other = "works"
+
+[Works]
+other = "作品"
+
+[Subscribe]
+other = "購読する"
+
+[Settings]
+other = "設定"
+
+[Featured]
+other = "注目"
+
+[is]
+other = "は"
+
+[menu_title]
+other = "メインメニュー"
+
+[menu_home]
+other = "ホーム"
+
+[menu_mobile]
+other = "メニュー"
+
+[pager_next]
+other = "次へ"
+
+[pager_prev]
+other = "前へ"
+
+[taxo_tags]
+other = "タグ"
+
+[last_mod]
+other = "更新日："
+
+[created]
+other = "作成日："
+
+[search_placeholder]
+other = "検索キーワードを入力してください。"
+
+[search_title]
+other = "検索"
+
+[search_loading]
+other = "検索インデックスを読み込み中…"
+
+[string_at]
+other = "にて"
+
+[string_by]
+other = "by"
+
+[string_follow]
+other = "フォローする"
+
+[string_in]
+other = "in"
+
+[string_on]
+other = "on"
+
+[string_recent_content]
+other = "最新コンテンツ"
+
+[string_see_also]
+other = "関連リンク"
+
+[js_required]
+other = "この機能を使用するにはJavascriptを有効にする必要があります。"
+
+[contact_submitted]
+other = "メッセージが送信されました。"
+
+[contact_error]
+other = "メッセージの送信中にエラーが発生しました。"
+
+[contact_name]
+other = "お名前"
+
+[contact_name_placeholder]
+other = "お名前を入力してください"
+
+[contact_mail]
+other = "メールアドレス"
+
+[contact_mail_placeholder]
+other = "メールアドレスを入力してください"
+
+[contact_subject]
+other = "件名"
+
+[contact_subject_placeholder]
+other = "件名を入力してください"
+
+[contact_message]
+other = "メッセージ"
+
+[contact_send_message]
+other = "メッセージを送る"
+
+[contact_message_placeholder]
+other = "メッセージをここに書いてください"
+
+[contact_submit]
+other = "メッセージを送信する"
+
+[contact_honeypot]
+other = "人間であれば空欄のままにしてください"
+
+[lang_select_title]
+other = "言語選択"
+
+[cookieconsent_message]
+other = "このウェブサイトはCookieを使用しています。一部はウェブサイトの機能に必要です。トラッキングと分析Cookieはオプションです。"
+
+[cookieconsent_accept]
+other = "すべて受け入れる"
+
+[cookieconsent_decline]
+other = "必要なものだけ"
+
+[privacy_policy]
+other = "プライバシーポリシー"
+
+[re_captcha]
+other = "このサイトはreCAPTCHAで保護されており、Google"
+
+[terms_of_service]
+other = "利用規約"
+
+[and]
+other = "と"
+
+[apply]
+other = "が適用されます"
+
+[light_mode]
+other = "ライト"
+
+[dark_mode]
+other = "ダーク"
+
+[system_mode]
+other = "システム"
+
+[mode]
+other = "モード"
+
+[palette]
+other = "パレット"
+
+[typography]
+other = "タイポグラフィ"
+
+[navigation]
+other = "ナビゲーション"
+
+[categories]
+other = "カテゴリー"
+
+[connect]
+other = "つながる"
+
+[info]
+other = "情報"
+
+[featured_works]
+other = "注目作品"
+
+[about_me]
+other = "私について"
+
+[contact_me]
+other = "お問い合わせ"
+
+[contact_me_focus]
+other = "お問い合わせ"
+
+[to_client]
+other = "%s へ"
+
+[contact]
+other = "お問い合わせ"
+
+[all_works]
+other = "全作品"
+
+[also_on_homepage]
+other = "このコンテンツはホームページでもご覧いただけます。"
+
+[go_to_homepage]
+other = "ホームページへ"
+
+[home]
+other = "ホーム"
+
+[to_homepage]
+other = "ホームページへ"
+
+[footer_navigation]
+other = "ナビゲーション"
+
+[footer_portfolio]
+other = "ポートフォリオ"
+
+[footer_contact]
+other = "お問い合わせ"
+
+[footer_linkedin]
+other = "LinkedIn"
+
+[footer_newsletter_title]
+other = "ニュースレター"
+
+[footer_newsletter_label]
+other = "メールアドレス"
+
+[footer_newsletter_placeholder]
+other = "メールアドレス"
+
+[footer_newsletter_submit]
+other = "購読する"
+
+[footer_rights_reserved]
+other = "CC BY-NC-SA 4.0"
+
+[footer_rss]
+other = "RSS"
+
+[footer_privacy]
+other = "プライバシー"
+
+[footer_license]
+other = "ライセンス"
+
+[privacy_url]
+other = "privacy"
+
+[license_url]
+other = "license"
+
+[footer_meta_label]
+other = "フッターメタデータ"
+
+[footer_mode_label]
+other = "モード"
+
+[footer_palette_label]
+other = "パレット"
+
+[footer_language_label]
+other = "言語"
+
+[palette_standard]
+other = "標準"
+
+[palette_forest]
+other = "フォレスト"
+
+[palette_mesa]
+other = "メサ"
+
+[palette_pantone]
+other = "PANTONE 11-4201"
+
+[palette_custom]
+other = "カスタムパレット"
+
+[coty_year]
+other = "年"
+
+[toast_blend_title]
+other = "ブレンド"
+
+[toast_grain_title]
+other = "ノイズ"
+
+[toast_motion_title]
+other = "モーション軽減"
+
+[toast_effect_on]
+other = "オン"
+
+[toast_effect_off]
+other = "オフ"
+
+[coty_activate]
+other = "Pantoneを有効化"
+
+[coty_deactivate]
+other = "Pantoneを無効化"
+
+[coty_play]
+other = "Pantoneを再生"
+
+[coty_pause]
+other = "Pantoneを一時停止"
+
+[coty_stop]
+other = "Pantoneを停止"
+
+[coty_previous]
+other = "前のPantone年間カラー"
+
+[coty_next]
+other = "次のPantone年間カラー"
+
+[coty_shuffle]
+other = "Pantoneシャッフルの切り替え"
+
+[toast_palette_saved]
+other = "パレットを保存しました"
+
+[toast_grid_title]
+other = "グリッド"
+
+[toast_grid_on]
+other = "オン"
+
+[toast_grid_off]
+other = "オフ"
+
+[no_posts_yet]
+other = "まだ投稿がありません。近日公開予定です！"
+
+[writing_url]
+other = "writing"
+
+[read_more]
+other = "続きを読む"
+
+[published_on]
+other = "公開日"
+
+[writing]
+other = "記事"
+
+[ui_library]
+other = "UIライブラリ"
+
+[palette_generator]
+other = "パレットジェネレーター"
+
+[all_posts]
+other = "全記事"
