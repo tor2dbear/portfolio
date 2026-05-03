@@ -44,9 +44,6 @@ html[lang="ja"] {
    UI chrome (nav, forms, dropdowns, footer) stays horizontal.
    -------------------------------------------------------------------------- */
 
-html[lang="ja"] #main,
-html[lang="ja"] .hero-section,
-html[lang="ja"] .content,
 html[lang="ja"] .about-main,
 html[lang="ja"] .about-cv {
   writing-mode: vertical-rl;
@@ -88,11 +85,6 @@ html[lang="ja"] pre {
 /* --------------------------------------------------------------------------
    3. LAYOUT ADJUSTMENTS FOR VERTICAL TEXT
    -------------------------------------------------------------------------- */
-
-/* Hero: give it enough block-size (= height in vertical-rl) to breathe */
-html[lang="ja"] .hero-section {
-  min-block-size: 60vh;
-}
 
 /* Article cards work better inline in vertical flow */
 html[lang="ja"] .article-card,
