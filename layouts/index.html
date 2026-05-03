@@ -10,7 +10,15 @@
       <div class="post-header place-full">
         <h2 class="type-headline-small">{{ i18n "Featured" }}</h2>
       </div>
-      {{ range $index, $page := first 6 (where (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) }}
+      {{- $featuredWorks := first 6 (where (where (where .Site.RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) -}}
+      {{- if eq (len $featuredWorks) 0 -}}
+        {{- range $.Site.Sites -}}
+          {{- if and (eq .Language.Lang "en") (eq (len $featuredWorks) 0) -}}
+            {{- $featuredWorks = first 6 (where (where (where .RegularPages "Type" "works") ".Params.featured" "=" true) ".Params.hidden" "!=" true) -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{ range $index, $page := $featuredWorks }}
         {{ $isWide := or (eq $index 0) (eq $index 3) (eq $index 4) }}
         {{ $delayClass := "" }}
         {{ if not (modBool $index 2) }}
