@@ -11,6 +11,11 @@
                 />
     <xhtml:link
                 rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/utblick-no.2/"
+                />
+    <xhtml:link
+                rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/works/utblick-no.2/"
                 />
@@ -24,6 +29,11 @@
                 />
     <xhtml:link
                 rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/a-cut-up-world/"
+                />
+    <xhtml:link
+                rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/works/a-cut-up-world/"
                 />
@@ -34,6 +44,11 @@
                 rel="alternate"
                 hreflang="sv-SE"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/sv/arbeten/utblick-nr.4-africa/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/utblick-no.4-africa/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -63,6 +78,11 @@
                 />
     <xhtml:link
                 rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/in-the-city/"
+                />
+    <xhtml:link
+                rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/works/in-the-city/"
                 />
@@ -73,6 +93,11 @@
                 rel="alternate"
                 hreflang="sv-SE"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/sv/arbeten/things-in-a-conversation/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/things-in-a-conversation/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -89,6 +114,11 @@
                 />
     <xhtml:link
                 rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/lokalguiden-admin-interface-redesign/"
+                />
+    <xhtml:link
+                rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/works/lokalguiden-admin-interface-redesign/"
                 />
@@ -99,6 +129,11 @@
                 rel="alternate"
                 hreflang="sv-SE"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/sv/works/nylokal-varum%C3%A4rkesidentitet/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/nylokal-brand-identity/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -115,6 +150,11 @@
                 />
     <xhtml:link
                 rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/fastighetsgalan-brand-identity-website/"
+                />
+    <xhtml:link
+                rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/works/fastighetsgalan-brand-identity-website/"
                 />
@@ -125,6 +165,11 @@
                 rel="alternate"
                 hreflang="sv-SE"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/sv/works/lokalguidens-varum%C3%A4rkesuppdatering-2020/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/works/lokalguiden-brand-refresh-2020/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -349,6 +394,16 @@
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/brand-identity/tags/brand-identity/</loc>
     <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/ja/brand-identity/tags/brand-identity/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/brand-identity/tags/brand-identity/"
+                />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/japanese-vertical-translation-HtVFw/clients/</loc>
     <lastmod>2022-02-24T00:00:00+00:00</lastmod>
