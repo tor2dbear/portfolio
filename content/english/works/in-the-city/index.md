@@ -1,6 +1,6 @@
 ---
 author: "Torbjörn Hedberg"
-date: 2022-02-24
+date: 2016-05-28
 linktitle: In the City
 title: In the City
 slug: works
@@ -13,7 +13,7 @@ header_image: in-the-city-0002-2.webp
 featured: true
 role: "Art Direction, Illustration"
 details:
-  year: 2022
+  year: 2016
   format: "Magazine"
   scope: "Publication design"
 client:
@@ -22,33 +22,34 @@ client:
   about: "Publication design. A magazine that expands from a stroll through the city."
 ---
 
-![Header example](in-the-city-0002-2.webp)
+![](in-the-city-0002-2.webp)
 
 ### About
 
-The theme for this number of Utblick Magazine was Responsibility and Growth on different levels. Illustrations of plants and greenery was made and used throughout the number.
-The magazine was printed on a uncoated paper using two Pantone colors and black.
+*In the City* is a magazine and one of three publications in the MFA thesis project *One Stack. Two Stack. Three Stack.* (HDK, University of Gothenburg, 2016). The magazine documents a limited period and a stroll through Backaplan, Gothenburg — primarily through photography.
+
+The layout plays with the constraints of the magazine page as a surface, placing elements on top of each other to comment on how the city functions as an interface. Where the three-dimensional urban space allows a viewer to move between layers, the printed page collapses them — images printing over images, content escaping from page edges.
 
 #### Role
 
 Art Direction and Illustration
 
-![Example image](inthecity-0001.jpg "Title here")
-![Example image](inthecity-0002.jpg "Title here")
-![Example image](inthecity-0003.jpg "Title here")
-![Example image](inthecity-0004.jpg "Title here")
-![Example image](inthecity-0005.jpg "Title here")
-![Example image](inthecity-0006.jpg "Title here")
-![Example image](inthecity-0007.jpg "Title here")
-![Example image](inthecity-0008.jpg "Title here")
-![Example image](inthecity-0009.jpg "Title here")
-![Example image](inthecity-0010.jpg "Title here")
-![Example image](inthecity-0011.jpg "Title here")
-![Example image](inthecity-0012.jpg "Title here")
-![Example image](inthecity-0013.jpg "Title here")
-![Example image](inthecity-0014.jpg "Title here")
-![Example image](inthecity-0015.jpg "Title here")
-![Example image](inthecity-0016.jpg "Title here")
-![Example image](inthecity-0017.jpg "Title here")
-![Example image](inthecity-0019.jpg "Title here")
-![Example image](inthecity-0020.jpg "Title here")
+![](inthecity-0001.jpg)
+![](inthecity-0002.jpg)
+![](inthecity-0003.jpg)
+![](inthecity-0004.jpg)
+![](inthecity-0005.jpg)
+![](inthecity-0006.jpg)
+![](inthecity-0007.jpg)
+![](inthecity-0008.jpg)
+![](inthecity-0009.jpg)
+![](inthecity-0010.jpg)
+![](inthecity-0011.jpg)
+![](inthecity-0012.jpg)
+![](inthecity-0013.jpg)
+![](inthecity-0014.jpg)
+![](inthecity-0015.jpg)
+![](inthecity-0016.jpg)
+![](inthecity-0017.jpg)
+![](inthecity-0019.jpg)
+![](inthecity-0020.jpg)

@@ -21,7 +21,7 @@ client:
   about: ""
 ---
 
-![Header example](utblick_africa-0005.jpg "Framsida av publikationen")
+![Framsida av publikationen](utblick_africa-0005.jpg)
 
 ### Om
 Utblick nr.4 "Africa?" utforskar komplexiteten hos en kontinent som ofta reduceras till singulära berättelser. Den redaktionella designen speglar detta tema genom kraftfulla geometriska mönster och varma jordfärger, vilket skapar visuell rytm samtidigt som den strukturerade tydlighet som krävs för politisk journalistik bibehålls.
@@ -32,32 +32,23 @@ Detta nummer visar hur redaktionell design kan stödja komplext ämnesinnehåll�
 <!--more-->
 
 {{< gallery layout="1+1" >}}
-![Example image](utblick_africa-0002.jpg)
-![Example image](utblick_africa-0003.jpg)
-{{< /gallery >}}
-
-{{< gallery layout="2x2" >}}
-![Example image](utblick_africa-0006-1.jpg)
-![Example image](utblick_africa-0007-1.jpg)
-![Example image](utblick_africa-0008.jpg)
-![Example image](utblick_africa-0013.jpg)
+![](utblick_africa-0002.jpg)
+![](utblick_africa-0003.jpg)
 {{< /gallery >}}
 
 {{< gallery layout="1+1" >}}
-![Example image](utblick_africa-0015.jpg)
-![Example image](utblick_africa-0016.jpg)
+![](utblick_africa-0006-1.jpg)
+![](utblick_africa-0007-1.jpg)
 {{< /gallery >}}
 
 {{< gallery layout="1+1" >}}
-![Example image](utblick_africa-0017.jpg)
-![Example image](utblick_africa-0018.jpg)
+![](utblick_africa-0015.jpg)
+![](utblick_africa-0016.jpg)
 {{< /gallery >}}
 
-{{< gallery layout="full" >}}
-![Example image](utblick_africa-0019.jpg)
-{{< /gallery >}}
+![](utblick_africa-0018.jpg)
 
 {{< gallery layout="1+1" >}}
-![Example image](utblick_africa-0020.jpg)
-![Example image](utblick_africa-0021.jpg)
+![](utblick_africa-0020.jpg)
+![](utblick_africa-0021.jpg)
 {{< /gallery >}}

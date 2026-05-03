@@ -24,8 +24,7 @@ client:
   about: "BA thesis exploring digital culture through experimental book design"
 ---
 
-![Header example](cut-up-world11.webp)
-{.myclass}
+![](cut-up-world11.webp)
 
 ### About
 
@@ -36,12 +35,12 @@ The book design reflects this fragmented digital reality through collage, typogr
 This project represents an early exploration of how design can critically engage with technology rather than simply illustrate it—a thread that runs through my work from print to digital product design.
 <!--more-->
 
-![Header example](cut-up-world2.webp)
-![Header example](cut-up-world3.webp)
-![Header example](cutup06.svg)
-![Header example](cut-up-world4.webp)
-![Header example](cutup07svg-02.svg)
-![Header example](cut-up-world9.webp)
-![Header example](cutup05-02.svg)
-![Header example](cut-up-world10.webp)
-![Header example](sjalvportratt.gif)
+![](cut-up-world2.webp)
+![](cut-up-world3.webp)
+![](cutup06.svg)
+![](cut-up-world4.webp)
+![](cutup07svg-02.svg)
+![](cut-up-world9.webp)
+![](cutup05-02.svg)
+![](cut-up-world10.webp)
+![](sjalvportratt.gif)

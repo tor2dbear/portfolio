@@ -76,7 +76,7 @@
     {{ $sizes := "100vw" }}
     {{/* Size-based image breakpoints (performance). No art-direction crops here. */}}
     {{ if .Title }}
-      <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}">
+      <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}" data-lightbox="{{ $xxlarge.RelPermalink }}">
         <picture>
           <source
             media="(max-width: 393px)"
@@ -131,7 +131,7 @@
         <figcaption>{{- .Title -}}</figcaption>
       </figure>
     {{ else }}
-      <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}">
+      <figure class="reveal{{ if in $src "header-img" }} header-img reveal--delay{{ end }}" data-lightbox="{{ $xxlarge.RelPermalink }}">
         <picture>
           <source
             media="(max-width: 393px)"

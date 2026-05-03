@@ -24,7 +24,7 @@ client:
   about: ""
 ---
 
-![Header example](header-img-utblick_no2-0002.jpeg)
+![](header-img-utblick_no2-0002.jpeg)
 
 ### About
 Utblick no.2 explores the theme of Responsibility and Growth through typographic hierarchy and organic illustration. The editorial design balances structured text layouts with hand-drawn botanical elements, creating rhythm through the publication while maintaining readability.
@@ -34,11 +34,11 @@ Working with a limited color palette—two Pantone spot colors and black on unco
 This project demonstrates how editorial design principles—establishing hierarchy, pacing content, and guiding the reader—translate directly to designing digital products. The medium changes, but the fundamental approach to structure and user experience remains the same.
 <!--more-->
 
-![Example image](utblick_no2-0005.jpeg "Title here")
-![Example image](utblick_no2-0006.jpeg)
-![Example image](utblick_no2-0008.jpeg)
-![Example image](utblick_no2-0009.jpeg)
-![Example image](utblick_no2-0010.jpeg)
-![Example image](utblick_no2-0011.jpeg)
-![Example image](utblick_no2-0012.jpeg)
-![Example image](utblick_no2-0013.jpeg)
+![](utblick_no2-0005.jpeg)
+![](utblick_no2-0006.jpeg)
+![](utblick_no2-0008.jpeg)
+![](utblick_no2-0009.jpeg)
+![](utblick_no2-0010.jpeg)
+![](utblick_no2-0011.jpeg)
+![](utblick_no2-0012.jpeg)
+![](utblick_no2-0013.jpeg)
