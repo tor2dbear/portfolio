@@ -852,29 +852,50 @@
   // ==========================================================================
 
   function updateThemeColorMeta() {
-    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-    if (!themeColorMeta) {
+    const themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
+    if (!themeColorMetas.length) {
       return;
     }
 
-    const currentMode = document.documentElement.getAttribute("data-mode");
-    const fallback = currentMode === "dark" ? "#18181b" : "#FFFFFF";
+    const activeMode = document.documentElement.getAttribute("data-mode") || "light";
 
+    themeColorMetas.forEach(function (meta) {
+      const media = meta.getAttribute("media") || "";
+      var modeForTag;
+      if (media.indexOf("prefers-color-scheme: dark") !== -1) {
+        modeForTag = "dark";
+      } else if (media.indexOf("prefers-color-scheme: light") !== -1) {
+        modeForTag = "light";
+      } else {
+        modeForTag = activeMode;
+      }
+      meta.setAttribute("content", resolvePageColor(modeForTag, activeMode));
+    });
+  }
+
+  function resolvePageColor(mode, activeMode) {
+    var fallback = mode === "dark" ? "#18181b" : "#FFFFFF";
     if (!document.body) {
-      themeColorMeta.setAttribute("content", fallback);
-      return;
+      return fallback;
     }
 
-    const temp = document.createElement("div");
+    var needsSwap = activeMode !== mode;
+    if (needsSwap) {
+      document.documentElement.setAttribute("data-mode", mode);
+    }
+
+    var temp = document.createElement("div");
     temp.style.cssText =
       "background-color:var(--surface-page);position:absolute;visibility:hidden;pointer-events:none;";
     document.body.appendChild(temp);
-    const resolved = getComputedStyle(temp).backgroundColor;
+    var resolved = getComputedStyle(temp).backgroundColor;
     document.body.removeChild(temp);
 
-    const color =
-      resolved && resolved !== "rgba(0, 0, 0, 0)" ? resolved : fallback;
-    themeColorMeta.setAttribute("content", color);
+    if (needsSwap) {
+      document.documentElement.setAttribute("data-mode", activeMode);
+    }
+
+    return resolved && resolved !== "rgba(0, 0, 0, 0)" ? resolved : fallback;
   }
 
   function updateFooterModeLabel(mode) {
