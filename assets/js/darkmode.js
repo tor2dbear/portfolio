@@ -50,6 +50,7 @@
   let appliedCustomTokenNames = [];
   let cotyLoopTimer = null;
   let themeTransitionTimer = null;
+  let themeColorAnimFrame = null;
   let cotyTransportCollapseTimer = null;
   let cotyTransportHoverEnterTimer = null;
   let cotyShuffleEnabled = false;
@@ -330,7 +331,7 @@
       document.documentElement.setAttribute("data-mode", mode);
     }
     updateThemeIcon(mode);
-    updateThemeColorMeta();
+    animateThemeColorMeta(THEME_SWAP_TRANSITION_DEFAULT_MS);
     updateFooterModeLabel(mode);
     const cotyActions = window.CotyScaleActions || null;
     if (cotyActions && typeof cotyActions.applyPreviewForMode === "function") {
@@ -424,7 +425,7 @@
 
     updateFooterPaletteLabel(palette);
     syncCotyPlayerUI();
-    updateThemeColorMeta();
+    animateThemeColorMeta(THEME_SWAP_TRANSITION_DEFAULT_MS);
   }
 
   function getCotyActions() {
@@ -896,6 +897,39 @@
     }
 
     return resolved && resolved !== "rgba(0, 0, 0, 0)" ? resolved : fallback;
+  }
+
+  function animateThemeColorMeta(durationMs) {
+    if (themeColorAnimFrame) {
+      cancelAnimationFrame(themeColorAnimFrame);
+      themeColorAnimFrame = null;
+    }
+    var duration = Number(durationMs) || THEME_SWAP_TRANSITION_DEFAULT_MS;
+    var startTime = performance.now();
+    var activeMode =
+      document.documentElement.getAttribute("data-mode") || "light";
+
+    function tick(now) {
+      var color = resolvePageColor(activeMode, activeMode);
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function (
+        meta
+      ) {
+        var media = meta.getAttribute("media") || "";
+        if (
+          media.indexOf("prefers-color-scheme") === -1 ||
+          media.indexOf("prefers-color-scheme: " + activeMode) !== -1
+        ) {
+          meta.setAttribute("content", color);
+        }
+      });
+      if (now - startTime < duration) {
+        themeColorAnimFrame = requestAnimationFrame(tick);
+      } else {
+        themeColorAnimFrame = null;
+        updateThemeColorMeta();
+      }
+    }
+    themeColorAnimFrame = requestAnimationFrame(tick);
   }
 
   function updateFooterModeLabel(mode) {
@@ -1554,7 +1588,7 @@
       );
     } else {
       updateFooterPaletteLabel(currentPalette);
-      updateThemeColorMeta();
+      animateThemeColorMeta(opts.transitionDuration || THEME_SWAP_TRANSITION_DEFAULT_MS);
     }
 
     if (!opts.silent) {
