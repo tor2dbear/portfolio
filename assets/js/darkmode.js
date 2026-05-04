@@ -857,45 +857,24 @@
     if (!themeColorMetas.length) {
       return;
     }
-
-    const activeMode = document.documentElement.getAttribute("data-mode") || "light";
-
+    var color = resolvePageColor();
     themeColorMetas.forEach(function (meta) {
-      const media = meta.getAttribute("media") || "";
-      var modeForTag;
-      if (media.indexOf("prefers-color-scheme: dark") !== -1) {
-        modeForTag = "dark";
-      } else if (media.indexOf("prefers-color-scheme: light") !== -1) {
-        modeForTag = "light";
-      } else {
-        modeForTag = activeMode;
-      }
-      meta.setAttribute("content", resolvePageColor(modeForTag, activeMode));
+      meta.setAttribute("content", color);
     });
   }
 
-  function resolvePageColor(mode, activeMode) {
-    var fallback = mode === "dark" ? "#18181b" : "#FFFFFF";
+  function resolvePageColor() {
+    var activeMode = document.documentElement.getAttribute("data-mode") || "light";
+    var fallback = activeMode === "dark" ? "#18181b" : "#FFFFFF";
     if (!document.body) {
       return fallback;
     }
-
-    var needsSwap = activeMode !== mode;
-    if (needsSwap) {
-      document.documentElement.setAttribute("data-mode", mode);
-    }
-
     var temp = document.createElement("div");
     temp.style.cssText =
       "background-color:var(--surface-page);position:absolute;visibility:hidden;pointer-events:none;";
     document.body.appendChild(temp);
     var resolved = getComputedStyle(temp).backgroundColor;
     document.body.removeChild(temp);
-
-    if (needsSwap) {
-      document.documentElement.setAttribute("data-mode", activeMode);
-    }
-
     return resolved && resolved !== "rgba(0, 0, 0, 0)" ? resolved : fallback;
   }
 
@@ -906,27 +885,16 @@
     }
     var duration = Number(durationMs) || THEME_SWAP_TRANSITION_DEFAULT_MS;
     var startTime = performance.now();
-    var activeMode =
-      document.documentElement.getAttribute("data-mode") || "light";
 
     function tick(now) {
-      var color = resolvePageColor(activeMode, activeMode);
-      document.querySelectorAll('meta[name="theme-color"]').forEach(function (
-        meta
-      ) {
-        var media = meta.getAttribute("media") || "";
-        if (
-          media.indexOf("prefers-color-scheme") === -1 ||
-          media.indexOf("prefers-color-scheme: " + activeMode) !== -1
-        ) {
-          meta.setAttribute("content", color);
-        }
+      var color = resolvePageColor();
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+        meta.setAttribute("content", color);
       });
       if (now - startTime < duration) {
         themeColorAnimFrame = requestAnimationFrame(tick);
       } else {
         themeColorAnimFrame = null;
-        updateThemeColorMeta();
       }
     }
     themeColorAnimFrame = requestAnimationFrame(tick);
