@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2014-06-04
-title: A Cut up World
-subtitle: Book
+title: カット・アップ・ワールド
+subtitle: 本
 slug: works
 weight: 2
 tags: ["Experimental"]

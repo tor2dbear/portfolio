@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2015-05-16
-title: Utblick no.2
-subtitle: Editorial design
+title: Utblick 第2号
+subtitle: エディトリアルデザイン
 slug: works
 weight: 1
 tags: ["Editorial"]

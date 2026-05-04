@@ -1,7 +1,7 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2016-03-15
-title: Things in a Conversation
+title: 会話の中のもの
 slug: works
 weight: 10
 tags: ["Experimental"]

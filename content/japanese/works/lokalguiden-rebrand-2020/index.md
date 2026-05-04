@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2020-06-01
-title: Lokalguiden Brand Refresh 2020
-subtitle: Brand Identity & Digital Redesign
+title: Lokalguiden ブランドリフレッシュ 2020
+subtitle: ブランドアイデンティティ＆デジタルリデザイン
 slug: works
 weight: 15
 tags: ["Brand & Identity"]

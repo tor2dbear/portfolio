@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2021-03-15
-title: Fastighetsgalan Brand Identity & Website
-subtitle: Sub-brand Development
+title: Fastighetsgalan ブランドアイデンティティ＆ウェブサイト
+subtitle: サブブランド開発
 slug: works
 weight: 14
 tags: ["Brand & Identity"]

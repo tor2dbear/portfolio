@@ -1,7 +1,7 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2017-04-12
-title: Gothenburg Poster
+title: ヨーテボリポスター
 slug: works
 weight: 10
 tags: ["Print"]

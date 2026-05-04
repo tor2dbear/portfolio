@@ -1,7 +1,7 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2014-06-04
-title: Videotest
+title: ビデオテスト
 weight: 2
 tags: ["Editorial"]
 description: アルゴリズムが生成した検索サジェストを起点に、デジタルリアリティを探求する映像作品。

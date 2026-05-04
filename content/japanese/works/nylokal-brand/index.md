@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2022-09-01
-title: Nylokal Brand Identity
-subtitle: Sub-brand Development
+title: Nylokal ブランドアイデンティティ
+subtitle: サブブランド開発
 slug: works
 weight: 13
 tags: ["Brand & Identity"]

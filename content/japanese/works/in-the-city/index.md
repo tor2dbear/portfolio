@@ -1,7 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2016-05-28
-title: In the City
+title: イン・ザ・シティ
+subtitle: プロダクトデザイン＆UX
 slug: works
 weight: 10
 tags: ["Experimental"]

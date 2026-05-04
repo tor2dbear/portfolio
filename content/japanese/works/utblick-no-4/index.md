@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2022-02-24
-title: Utblick no.4 "Africa?"
-subtitle: Editorial design
+title: Utblick 第4号「アフリカ？」
+subtitle: エディトリアルデザイン
 slug: works
 weight: 10
 tags: ["Editorial"]

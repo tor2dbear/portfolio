@@ -1,8 +1,8 @@
 ---
 author: "Torbjörn Hedberg"
 date: 2023-05-01
-title: Lokalguiden Admin Interface Redesign
-subtitle: Product Design & UX
+title: Lokalguiden アドミンインターフェース リデザイン
+subtitle: プロダクトデザイン＆UX
 slug: works
 weight: 12
 tags: ["Digital Product"]
