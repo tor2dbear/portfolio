@@ -1554,6 +1554,7 @@
       );
     } else {
       updateFooterPaletteLabel(currentPalette);
+      updateThemeColorMeta();
     }
 
     if (!opts.silent) {
