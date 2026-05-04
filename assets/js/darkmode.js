@@ -424,6 +424,7 @@
 
     updateFooterPaletteLabel(palette);
     syncCotyPlayerUI();
+    updateThemeColorMeta();
   }
 
   function getCotyActions() {
@@ -857,11 +858,23 @@
     }
 
     const currentMode = document.documentElement.getAttribute("data-mode");
-    if (currentMode === "dark") {
-      themeColorMeta.setAttribute("content", "#18181b");
-    } else {
-      themeColorMeta.setAttribute("content", "#FFFFFF");
+    const fallback = currentMode === "dark" ? "#18181b" : "#FFFFFF";
+
+    if (!document.body) {
+      themeColorMeta.setAttribute("content", fallback);
+      return;
     }
+
+    const temp = document.createElement("div");
+    temp.style.cssText =
+      "background-color:var(--surface-page);position:absolute;visibility:hidden;pointer-events:none;";
+    document.body.appendChild(temp);
+    const resolved = getComputedStyle(temp).backgroundColor;
+    document.body.removeChild(temp);
+
+    const color =
+      resolved && resolved !== "rgba(0, 0, 0, 0)" ? resolved : fallback;
+    themeColorMeta.setAttribute("content", color);
   }
 
   function updateFooterModeLabel(mode) {
