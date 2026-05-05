@@ -2078,6 +2078,17 @@
         });
       });
     }
+
+    // Lift the transition suppression injected by the early head script.
+    // Double-rAF ensures the browser has painted once with the correct palette
+    // colors before transitions are allowed to fire.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.documentElement.classList.remove("theme-loading");
+        var s = document.getElementById("theme-no-trans");
+        if (s) s.remove();
+      });
+    });
   });
 
   // Global function for backwards compatibility (if needed elsewhere)

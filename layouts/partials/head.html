@@ -543,6 +543,15 @@
       // Set typography
       var storedTypography = localStorage.getItem("theme-typography") || "editorial";
       document.documentElement.setAttribute("data-typography", storedTypography);
+
+      // Suppress CSS transitions during initial paint so permanent transitions
+      // on elements like .top-menu don't animate from the browser default to the
+      // correct palette color. Lifted after init via double-rAF in darkmode.js.
+      document.documentElement.classList.add("theme-loading");
+      var noTransStyle = document.createElement("style");
+      noTransStyle.id = "theme-no-trans";
+      noTransStyle.textContent = "html.theme-loading,html.theme-loading *{transition:none!important}";
+      document.head.appendChild(noTransStyle);
     })();
   </script>
 
