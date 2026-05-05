@@ -7,6 +7,7 @@ hidden = false
 description = "Varför den här portfolion har en Pantone Color of the Year-spelare, och vad det krävde att bygga den ordentligt"
 tags = ["design", "färg", "portfolio"]
 topics = []
+slug = "texter"
 translationKey = "three-dots-in-the-footer"
 +++
 

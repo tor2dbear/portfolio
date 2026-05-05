@@ -7,6 +7,7 @@ hidden = false
 description = "Introducing a new space for sharing thoughts on design, creativity, and technology"
 tags = ["design", "creativity"]
 topics = []
+slug = "writing"
 translationKey = "welcome-writing"
 +++
 

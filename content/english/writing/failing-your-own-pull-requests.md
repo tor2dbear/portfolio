@@ -7,6 +7,7 @@ hidden = false
 description = "On running a quality gate on a personal portfolio — what blocks a merge, what doesn't, and why bother at all"
 tags = ["ci", "quality", "portfolio"]
 topics = []
+slug = "writing"
 translationKey = "failing-your-own-pull-requests"
 +++
 

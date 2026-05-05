@@ -7,6 +7,7 @@ hidden = false
 description = "Om att köra en kvalitetsgrind på en personlig portfolio — vad som blockerar en merge, vad som inte gör det, och varför alls bry sig"
 tags = ["ci", "kvalitet", "portfolio"]
 topics = []
+slug = "texter"
 translationKey = "failing-your-own-pull-requests"
 +++
 

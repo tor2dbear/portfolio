@@ -7,6 +7,7 @@ hidden = false
 description = "Key principles that guide my approach to design challenges"
 tags = ["design", "ui-ux", "branding"]
 topics = []
+slug = "writing"
 translationKey = "design-thinking-essentials"
 +++
 
