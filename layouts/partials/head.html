@@ -522,6 +522,15 @@
       // Set palette (standard/pantone)
       var storedPalette = localStorage.getItem("theme-palette") || "standard";
       document.documentElement.setAttribute("data-palette", storedPalette);
+
+      // Restore cached theme-color to prevent flash on reload
+      var cachedThemeColor = localStorage.getItem("theme-color-cache");
+      if (cachedThemeColor) {
+        var tcMetas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var i = 0; i < tcMetas.length; i++) {
+          tcMetas[i].setAttribute("content", cachedThemeColor);
+        }
+      }
       var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
       document.documentElement.setAttribute("data-coty-year", storedCotyYear);
 

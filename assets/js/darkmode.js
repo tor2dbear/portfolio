@@ -861,6 +861,9 @@
     themeColorMetas.forEach(function (meta) {
       meta.setAttribute("content", color);
     });
+    try {
+      localStorage.setItem("theme-color-cache", color);
+    } catch (e) {}
   }
 
   function resolvePageColor() {
