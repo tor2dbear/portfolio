@@ -73,20 +73,6 @@ An object in motion.
 
 ---
 
-## Open systems and hidden functions
-
-Reading about the development of the Internet of Things, I became interested in how these ideas extend beyond design practice.
-
-The ambition of IoT is to connect objects—to embed them within networks where their functions are not always fixed, but continuously defined through use. In many cases, their purpose emerges in relation to the user.
-
-At the same time, these systems introduce another dimension: functions that remain hidden. Unknown to the user.
-
-This raises questions. Not only about how we use objects, but about what remains invisible within them.
-
-What would it mean to design artifacts that expose this uncertainty? That materialize not only what is known, but what is not yet understood?
-
----
-
 ## Approaching the not yet
 
 Sociologist Barbara Adam writes about the future as something that can be materialized—a "not yet" that becomes tangible in the present. It is not a distant abstraction, but something that takes form through the ways we act, design, and construct our surroundings.
