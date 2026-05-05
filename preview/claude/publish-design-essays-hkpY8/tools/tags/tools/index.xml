@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 05 May 2026 19:05:23 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/tools/tags/tools/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>I Still Use Figma</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/i-still-use-figma/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/i-still-use-figma/</guid>
+      <pubDate>Fri, 06 Feb 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;For a long time, it was simply where design happened. New ideas started there. Flows were worked out there. Conversations with developers pointed back to it. It became both the place where I explored and the place where things were supposed to be defined.&lt;/p&gt;
+&lt;p&gt;It worked, up to a point. Then it started to create friction.&lt;/p&gt;
+&lt;p&gt;Not because the tool was lacking, but because I was using it for two different kinds of work without really noticing the difference between them.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/</link>
+    <description>Hej! Jag är en multidisciplinär designer. I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt organisationer från idé till färdig produkt genom att kombinera design, affärsvärde och teknik.</description>
+    <language>sv</language>
+    <lastBuildDate>Tue, 05 May 2026 19:05:48 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/portfolio/tags/portfolio/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Att misslyckas sina egna pull requests</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/att-misslyckas-sina-egna-pull-requests/att-misslyckas-sina-egna-pull-requests/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/att-misslyckas-sina-egna-pull-requests/att-misslyckas-sina-egna-pull-requests/</guid>
+      <pubDate>Mon, 04 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;Det finns ett steg i CI-pipelinen för den här portfolion som kontrollerar om sidan är tillräckligt snabb, tillräckligt tillgänglig och tillräckligt välstrukturerad för att få mergas. Om den inte är det misslyckas pull requesten.&lt;/p&gt;
+&lt;p&gt;Det här är en personlig webbplats. Det finns inget team. Ingen granskar koden. Den enda som blockeras av en misslyckad kvalitetsgrind är jag själv.&lt;/p&gt;
+&lt;p&gt;Det tog ett tag att bestämma om det gav någon mening.&lt;/p&gt;
+&lt;h2&gt;Vad systemet faktiskt kontrollerar&lt;/h2&gt;
+&lt;p&gt;Varje pull request kör Lighthouse och axe-core mot en lokal bygge av sidan. Lighthouse mäter prestanda, tillgänglighet, bästa praxis och SEO — poängsatt 0 till 100 per kategori. axe-core söker igenom sidan efter tillgänglighetsproblem och klassificerar dem efter allvarlighetsgrad: kritisk, allvarlig, måttlig, mindre.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Tre punkter i footern</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/tre-punkter-i-footern/tre-punkter-i-footern/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/tre-punkter-i-footern/tre-punkter-i-footern/</guid>
+      <pubDate>Sun, 03 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;Temapanelen på den här sidan har ett Pantone-alternativ. De flesta besökare hittar det förmodligen inte — inte för att det är dolt, utan för att det inte annonserar sig självt. Du öppnar panelen, ser det, aktiverar det eller inte.&lt;/p&gt;
+&lt;p&gt;Gör du det dyker en liten spelare upp i footern. Tre punkter, ihopfälld. Håll muspekaren över dem så expanderar den: play, pause, föregående, nästa, blanda. Tryck play och hela sidan byter långsamt färg — den arbetar sig igenom Pantones Color of the Year-arkiv, alla tjugosju år, från Cerulean Blue år 2000 till Cloud Dancer 2026.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
