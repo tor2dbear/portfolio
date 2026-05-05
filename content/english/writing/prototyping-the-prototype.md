@@ -15,8 +15,6 @@ If I, some time ago, were to answer whether the prototype was important to my de
 
 That answer has changed. Not because my way of working has fundamentally shifted, but because my understanding of what a prototype is has.
 
----
-
 ## This is a prototype
 
 A while back I came across the question of whether it is possible, as a designer, to work solely with prototypes. At the time, I did not fully understand what was at stake, but something about the question stayed with me.
@@ -28,8 +26,6 @@ The idea of keeping something in a state of beta reflects a condition I recogniz
 From this perspective, the notion of a final result begins to dissolve. What we call an outcome is simply a temporary stabilization—a result of specific conditions at a given moment in time. Under different circumstances, it might have taken a completely different form.
 
 In this sense, projects do not end. They transform. One result feeds into the next. A continuous trajectory rather than a closed loop.
-
----
 
 ## The prototype as a question
 
@@ -46,8 +42,6 @@ Working primarily with graphic design, I rarely construct what would traditional
 But they function as such.
 
 They materialize questions.
-
----
 
 ## Cracks, joints, and movement
 
@@ -71,8 +65,6 @@ The crack is not a flaw. It can be understood as a joint: something that allows 
 
 An object in motion.
 
----
-
 ## Approaching the not yet
 
 Sociologist Barbara Adam writes about the future as something that can be materialized—a "not yet" that becomes tangible in the present. It is not a distant abstraction, but something that takes form through the ways we act, design, and construct our surroundings.
@@ -85,8 +77,6 @@ In parallel, design theorist Nigel Cross describes how designers rarely begin wi
 
 Seen through this lens, the prototype is not an answer, but a method of inquiry. A way of thinking through making.
 
----
-
 ## The risk of too much openness
 
 There is, however, a limit.
@@ -98,8 +88,6 @@ This is a line I find myself crossing. The cracks can become holes.
 Through practice, I have begun to understand this balance more precisely—how to position the unfinished, how to define its extent.
 
 Not to eliminate uncertainty, but to give it form.
-
----
 
 ## Toward a material discussion of the future
 
@@ -114,8 +102,6 @@ What roles should they play?
 The prototype does not simply represent the future. It participates in shaping it.
 
 It creates expectations. Suggests trajectories. Opens up possibilities.
-
----
 
 I continue to return to questions that feel disproportionate in scale—questions about meaning, direction, and the role of design.
 
