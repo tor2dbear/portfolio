@@ -530,6 +530,12 @@
         for (var i = 0; i < tcMetas.length; i++) {
           tcMetas[i].setAttribute("content", cachedThemeColor);
         }
+        // For Pantone, --coty-role-surface drives --surface-page which nav uses.
+        // Set it from cache so nav/header don't flash before CotyScale runs.
+        // CotyScale will overwrite this with the proper oklch value on init.
+        if (storedPalette === "pantone") {
+          document.documentElement.style.setProperty("--coty-role-surface", cachedThemeColor);
+        }
       }
       var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
       document.documentElement.setAttribute("data-coty-year", storedCotyYear);
