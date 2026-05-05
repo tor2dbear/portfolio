@@ -7,6 +7,7 @@ hidden = false
 description = "Introducerar ett nytt utrymme för att dela tankar om design, kreativitet och teknik"
 tags = ["design", "kreativitet"]
 topics = []
+slug = "texter"
 translationKey = "welcome-writing"
 +++
 

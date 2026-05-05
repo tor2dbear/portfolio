@@ -7,6 +7,7 @@ hidden = false
 description = "Nyckelprinciper som vägleder mitt sätt att närma mig designutmaningar"
 tags = ["design", "ui-ux", "branding"]
 topics = []
+slug = "texter"
 translationKey = "design-thinking-essentials"
 +++
 

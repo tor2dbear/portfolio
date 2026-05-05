@@ -7,6 +7,7 @@ hidden = false
 description = "Om att köra en kvalitetsgrind på en personlig portfolio — vad som blockerar en merge, vad som inte gör det, och varför alls bry sig"
 tags = ["ci", "kvalitet", "portfolio"]
 topics = []
+slug = "texter"
 translationKey = "failing-your-own-pull-requests"
 +++
 
@@ -26,17 +27,17 @@ Gränsen mellan "blockera" och "bara rapportera" var den intressanta designfråg
 
 ## Vad som faktiskt blockerar en merge
 
-Tre saker misslyckas grinden:
+Tre kategorier av saker misslyckas grinden:
 
 **Tillgänglighetsbrister med kritisk eller allvarlig påverkan.** Inte måttliga. Inte mindre. Tröskeln är kalibrerad mot saker som faktiskt gör innehåll oanvändbart — saknade etiketter, trasig tangentbordsnavigering, bilder utan alt-text i meningsfulla sammanhang. Måttliga brister visas i rapporten under en "åtgärda snart"-etikett. Mindre hamnar i backloggen. Ingen av dem stoppar en merge.
 
 Resonemanget är enkelt nog: allvarliga tillgänglighetsproblem är inte poleringsdetaljer. De är fel. En sida som är visuellt klar men trasig för en skärmläsaranvändare är inte faktiskt klar.
 
-**Prestanda under ett absolut golv.** Gränsen är 65 på Lighthouse 0–100-skala — inte en hög lista. Syftet är att fånga verkliga regressioner, inte att upprätthålla ett ambitiöst mål. Om en pull request lägger till något som drar ner prestanda under 65 är det värt att stanna upp för.
+**Valfri Lighthouse-kategori under sitt golv.** Prestanda måste hålla sig över 65. Tillgänglighet, bästa praxis och SEO måste var och en hålla sig över 90. Det är olika trösklar av en anledning — prestanda är flyktigt och svårare att hålla högt, så golvet är satt lägre. De andra tre kategorierna är lättare att upprätthålla när de väl är stabila, så ribban är högre.
 
-**Prestandaregression på mer än 5 poäng från baslinjen.** Den här är mer subtil. Prestanda har ett eget regressionsspår som tillgänglighet, bästa praxis och SEO inte har. Resonemanget är att prestanda är skör på ett specifikt sätt — den försämras tyst och stegvis. Lägg till ett lite tyngre typsnitt, glöm att lazy-loada en bild, dra in ett lite större beroende, och poängen kryper nedåt utan att någon märker det. Regressionströskeln fångar den driften innan den förvärras.
+**Prestandaregression på mer än 5 poäng från baslinjen.** Den här är mer subtil, och unik för prestanda. Resonemanget är att prestanda försämras tyst och stegvis — lägg till ett lite tyngre typsnitt, glöm att lazy-loada en bild, dra in ett lite större beroende, och poängen kryper nedåt utan att någon märker det. Regressionströskeln fångar den driften innan den förvärras.
 
-Tillgänglighet och SEO har inte samma problem. När de väl är stabila tenderar de att förbli stabila om inte något aktivt går fel — och "något som aktivt går fel" är precis vad det absoluta golvet fångar.
+Tillgänglighet, bästa praxis och SEO har inte samma problem. När de väl är stabila tenderar de att förbli stabila om inte något aktivt går fel — och "något som aktivt går fel" är precis vad det absoluta golvet fångar.
 
 ## När verktygen själva misslyckas
 
