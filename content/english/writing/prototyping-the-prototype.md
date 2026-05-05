@@ -7,6 +7,7 @@ hidden = false
 description = "On what a prototype really is, and why that question changed how I work"
 tags = ["design", "prototyping", "process"]
 topics = []
+slug = "writing"
 translationKey = "prototyping-the-prototype"
 +++
 

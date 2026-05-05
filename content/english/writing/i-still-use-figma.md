@@ -7,6 +7,7 @@ hidden = false
 description = "But not in the way I used to."
 tags = ["design", "tools", "process"]
 topics = []
+slug = "writing"
 translationKey = "i-still-use-figma"
 +++
 
