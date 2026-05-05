@@ -5,7 +5,7 @@
     <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/</link>
     <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 05 May 2026 19:40:35 &#43;0000</lastBuildDate>
+    <lastBuildDate>Tue, 05 May 2026 19:54:54 &#43;0000</lastBuildDate>
     <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/design/" rel="self" type="application/rss+xml" />
     <item>
       <title>Three dots in the footer</title>
@@ -63,6 +63,17 @@
 &lt;p&gt;That answer has changed. Not because my way of working has fundamentally shifted, but because my understanding of what a prototype is has.&lt;/p&gt;
 &lt;h2&gt;This is a prototype&lt;/h2&gt;
 &lt;p&gt;A while back I came across the question of whether it is possible, as a designer, to work solely with prototypes. At the time, I did not fully understand what was at stake, but something about the question stayed with me.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Skeuomorphism as a Transitional Tool</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/skeuomorphism-as-a-transitional-tool/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/skeuomorphism-as-a-transitional-tool/</guid>
+      <pubDate>Mon, 15 Apr 2013 00:00:00 &#43;0000</pubDate>
+      <description>&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;When new technologies appear, they rarely arrive on their own terms.&lt;/p&gt;
+&lt;p&gt;Instead, they borrow the language of what came before.&lt;/p&gt;
+&lt;p&gt;Digital calendars look like paper. Audio apps mimic physical knobs. Early smartphone interfaces resembled leather, glass, and metal. These are all examples of skeuomorphism — a design strategy where new artifacts imitate older ones.&lt;/p&gt;
+&lt;p&gt;Skeuomorphism is often dismissed as decorative or nostalgic. But that view misses something more fundamental:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
