@@ -284,45 +284,6 @@
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/tools/tags/tools/</loc>
     <lastmod>2026-02-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/branding/</loc>
-    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/arbeten/tags/varumarke/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/branding/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/design-thinking-essentials/</loc>
-    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/texter/designt%C3%A4nkande-grunderna/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/design-thinking-essentials/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/ui-ux/</loc>
-    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/arbeten/tags/ui-ux/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/ui-ux/"
-                />
-  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/ui-library/</loc>
     <lastmod>2026-01-07T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -334,22 +295,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/ui-library/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/creativity/tags/creativity/</loc>
-    <lastmod>2026-01-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/welcome-to-my-writing-section/</loc>
-    <lastmod>2026-01-02T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/texter/v%C3%A4lkommen-till-min-textsektion/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/welcome-to-my-writing-section/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/employers/</loc>
@@ -662,6 +607,18 @@
                 href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/brand-identity/"
                 />
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/branding/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/arbeten/tags/varumarke/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/branding/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/categories/</loc>
     <xhtml:link
                 rel="alternate"
@@ -748,6 +705,18 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/thankyou/"
+                />
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/ui-ux/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/sv/arbeten/tags/ui-ux/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/works/tags/ui-ux/"
                 />
   </url>
 </urlset>
