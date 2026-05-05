@@ -266,7 +266,6 @@
       themeToggle.setAttribute("aria-expanded", "true");
       setThemePanelOpenState(true);
       syncThemePanelPortal();
-      updateThemeColorMetaForPanel();
     } else {
       closePanel();
     }
@@ -281,7 +280,6 @@
       themeToggle.setAttribute("aria-expanded", "false");
       setThemePanelOpenState(false);
       syncThemePanelPortal();
-      updateThemeColorMeta();
     }
   }
 
@@ -860,28 +858,6 @@
       return;
     }
     var color = resolvePageColor();
-    themeColorMetas.forEach(function (meta) {
-      meta.setAttribute("content", color);
-    });
-  }
-
-  function updateThemeColorMetaForPanel() {
-    if (!window.matchMedia("(max-width: 29.9375em)").matches) {
-      return;
-    }
-    const themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
-    if (!themeColorMetas.length) {
-      return;
-    }
-    var temp = document.createElement("div");
-    temp.style.cssText =
-      "background:color-mix(in srgb,var(--surface-inverse) 50%,var(--surface-page));position:absolute;visibility:hidden;pointer-events:none;";
-    document.body.appendChild(temp);
-    var color = getComputedStyle(temp).backgroundColor;
-    document.body.removeChild(temp);
-    if (!color || color === "rgba(0, 0, 0, 0)") {
-      color = resolvePageColor();
-    }
     themeColorMetas.forEach(function (meta) {
       meta.setAttribute("content", color);
     });
