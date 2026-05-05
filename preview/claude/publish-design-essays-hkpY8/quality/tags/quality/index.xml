@@ -5,12 +5,12 @@
     <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/</link>
     <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 05 May 2026 19:27:19 &#43;0000</lastBuildDate>
+    <lastBuildDate>Tue, 05 May 2026 19:40:35 &#43;0000</lastBuildDate>
     <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/quality/tags/quality/" rel="self" type="application/rss+xml" />
     <item>
       <title>Failing your own pull requests</title>
-      <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/failing-your-own-pull-requests/failing-your-own-pull-requests/</link>
-      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/failing-your-own-pull-requests/failing-your-own-pull-requests/</guid>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/failing-your-own-pull-requests/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/publish-design-essays-hkpY8/writing/failing-your-own-pull-requests/</guid>
       <pubDate>Mon, 04 May 2026 00:00:00 &#43;0000</pubDate>
       <description>&lt;p&gt;There is a step in the CI pipeline for this portfolio that checks whether the site is fast enough, accessible enough, and well-structured enough to be allowed to merge. If it isn&amp;rsquo;t, the pull request fails.&lt;/p&gt;
 &lt;p&gt;This is a personal website. There is no team. Nobody is reviewing the code. The only person being blocked by a failed quality gate is me.&lt;/p&gt;
