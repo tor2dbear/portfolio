@@ -7,6 +7,7 @@ hidden = false
 description = "Why this portfolio has a Pantone Color of the Year player, and what it took to build it properly"
 tags = ["design", "color", "portfolio"]
 topics = []
+slug = "writing"
 translationKey = "three-dots-in-the-footer"
 +++
 

@@ -7,6 +7,7 @@ hidden = false
 description = "On running a quality gate on a personal portfolio — what blocks a merge, what doesn't, and why bother at all"
 tags = ["ci", "quality", "portfolio"]
 topics = []
+slug = "writing"
 translationKey = "failing-your-own-pull-requests"
 +++
 
@@ -26,17 +27,17 @@ The line between "block" and "just report" was the interesting design question.
 
 ## What actually blocks a merge
 
-Three things will fail the gate:
+Three categories of things will fail the gate:
 
 **Accessibility violations with critical or serious impact.** Not moderate. Not minor. The threshold is calibrated to things that genuinely make content unusable — missing labels, broken keyboard navigation, images with no alt text in meaningful context. Moderate violations appear in the report under a "fix soon" label. Minor ones go to backlog. Neither stops a merge.
 
 The reasoning is simple enough: serious accessibility problems are not polish items. They're errors. A site that's visually finished but broken for a screen reader user isn't actually finished.
 
-**Performance below an absolute floor.** The limit is 65 on Lighthouse's 0–100 scale — not a high bar. The purpose is catching genuine regressions, not maintaining an ambitious target. If a pull request adds something that brings performance below 65, that's worth stopping for.
+**Any Lighthouse category below its floor.** Performance must stay above 65. Accessibility, best practices, and SEO must each stay above 90. These are different thresholds for a reason — performance is volatile and harder to keep high, so the floor is set lower. The other three categories are easier to maintain once they're solid, so the bar is higher.
 
-**Performance regression beyond 5 points from baseline.** This one is subtler. Performance has its own regression tracking that accessibility, best practices, and SEO don't have. The reasoning is that performance is fragile in a specific way — it degrades quietly and incrementally. Add a slightly heavier font, forget to lazy-load an image, pull in a slightly larger dependency, and the score creeps down without anyone noticing. The regression threshold catches that drift before it compounds.
+**Performance regression beyond 5 points from baseline.** This one is subtler, and unique to performance. The reasoning is that performance degrades quietly and incrementally — add a slightly heavier font, forget to lazy-load an image, pull in a slightly larger dependency, and the score creeps down without anyone noticing. The regression threshold catches that drift before it compounds.
 
-Accessibility and SEO don't have the same problem. Once they're solid, they tend to stay solid unless something goes actively wrong — and "something going actively wrong" is exactly what the absolute floor catches.
+Accessibility, best practices, and SEO don't have the same problem. Once they're solid, they tend to stay solid unless something goes actively wrong — and "something going actively wrong" is exactly what the absolute floor catches.
 
 ## When the tools themselves fail
 
