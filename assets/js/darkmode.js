@@ -870,12 +870,18 @@
       return;
     }
     const themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
-    if (!themeColorMetas.length || !themePanel) {
+    if (!themeColorMetas.length) {
       return;
     }
-    var panelBg = getComputedStyle(themePanel).backgroundColor;
-    var color =
-      panelBg && panelBg !== "rgba(0, 0, 0, 0)" ? panelBg : resolvePageColor();
+    var temp = document.createElement("div");
+    temp.style.cssText =
+      "background:color-mix(in srgb,var(--surface-inverse) 50%,var(--surface-page));position:absolute;visibility:hidden;pointer-events:none;";
+    document.body.appendChild(temp);
+    var color = getComputedStyle(temp).backgroundColor;
+    document.body.removeChild(temp);
+    if (!color || color === "rgba(0, 0, 0, 0)") {
+      color = resolvePageColor();
+    }
     themeColorMetas.forEach(function (meta) {
       meta.setAttribute("content", color);
     });
@@ -887,13 +893,8 @@
     if (!document.body) {
       return fallback;
     }
-    var temp = document.createElement("div");
-    temp.style.cssText =
-      "background-color:var(--surface-page);position:absolute;visibility:hidden;pointer-events:none;";
-    document.body.appendChild(temp);
-    var resolved = getComputedStyle(temp).backgroundColor;
-    document.body.removeChild(temp);
-    return resolved && resolved !== "rgba(0, 0, 0, 0)" ? resolved : fallback;
+    var color = getComputedStyle(document.body).backgroundColor;
+    return color && color !== "rgba(0, 0, 0, 0)" ? color : fallback;
   }
 
   function animateThemeColorMeta(durationMs) {
