@@ -522,12 +522,36 @@
       // Set palette (standard/pantone)
       var storedPalette = localStorage.getItem("theme-palette") || "standard";
       document.documentElement.setAttribute("data-palette", storedPalette);
+
+      // Restore cached theme-color to prevent flash on reload
+      var cachedThemeColor = localStorage.getItem("theme-color-cache");
+      if (cachedThemeColor) {
+        var tcMetas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var i = 0; i < tcMetas.length; i++) {
+          tcMetas[i].setAttribute("content", cachedThemeColor);
+        }
+        // For Pantone, --coty-role-surface drives --surface-page which nav uses.
+        // Set it from cache so nav/header don't flash before CotyScale runs.
+        // CotyScale will overwrite this with the proper oklch value on init.
+        if (storedPalette === "pantone") {
+          document.documentElement.style.setProperty("--coty-role-surface", cachedThemeColor);
+        }
+      }
       var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
       document.documentElement.setAttribute("data-coty-year", storedCotyYear);
 
       // Set typography
       var storedTypography = localStorage.getItem("theme-typography") || "editorial";
       document.documentElement.setAttribute("data-typography", storedTypography);
+
+      // Suppress CSS transitions during initial paint so permanent transitions
+      // on elements like .top-menu don't animate from the browser default to the
+      // correct palette color. Lifted after init via double-rAF in darkmode.js.
+      document.documentElement.classList.add("theme-loading");
+      var noTransStyle = document.createElement("style");
+      noTransStyle.id = "theme-no-trans";
+      noTransStyle.textContent = "html.theme-loading,html.theme-loading *{transition:none!important}";
+      document.head.appendChild(noTransStyle);
     })();
   </script>
 

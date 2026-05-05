@@ -50,6 +50,7 @@
   let appliedCustomTokenNames = [];
   let cotyLoopTimer = null;
   let themeTransitionTimer = null;
+  let themeColorAnimFrame = null;
   let cotyTransportCollapseTimer = null;
   let cotyTransportHoverEnterTimer = null;
   let cotyShuffleEnabled = false;
@@ -330,7 +331,7 @@
       document.documentElement.setAttribute("data-mode", mode);
     }
     updateThemeIcon(mode);
-    updateThemeColorMeta();
+    animateThemeColorMeta(THEME_SWAP_TRANSITION_DEFAULT_MS);
     updateFooterModeLabel(mode);
     const cotyActions = window.CotyScaleActions || null;
     if (cotyActions && typeof cotyActions.applyPreviewForMode === "function") {
@@ -424,6 +425,7 @@
 
     updateFooterPaletteLabel(palette);
     syncCotyPlayerUI();
+    animateThemeColorMeta(THEME_SWAP_TRANSITION_DEFAULT_MS);
   }
 
   function getCotyActions() {
@@ -851,17 +853,49 @@
   // ==========================================================================
 
   function updateThemeColorMeta() {
-    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-    if (!themeColorMeta) {
+    const themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
+    if (!themeColorMetas.length) {
       return;
     }
+    var color = resolvePageColor();
+    themeColorMetas.forEach(function (meta) {
+      meta.setAttribute("content", color);
+    });
+    try {
+      localStorage.setItem("theme-color-cache", color);
+    } catch (e) {}
+  }
 
-    const currentMode = document.documentElement.getAttribute("data-mode");
-    if (currentMode === "dark") {
-      themeColorMeta.setAttribute("content", "#18181b");
-    } else {
-      themeColorMeta.setAttribute("content", "#FFFFFF");
+  function resolvePageColor() {
+    var activeMode = document.documentElement.getAttribute("data-mode") || "light";
+    var fallback = activeMode === "dark" ? "#18181b" : "#FFFFFF";
+    if (!document.body) {
+      return fallback;
     }
+    var color = getComputedStyle(document.body).backgroundColor;
+    return color && color !== "rgba(0, 0, 0, 0)" ? color : fallback;
+  }
+
+  function animateThemeColorMeta(durationMs) {
+    if (themeColorAnimFrame) {
+      cancelAnimationFrame(themeColorAnimFrame);
+      themeColorAnimFrame = null;
+    }
+    var duration = Number(durationMs) || THEME_SWAP_TRANSITION_DEFAULT_MS;
+    var startTime = performance.now();
+
+    function tick(now) {
+      var color = resolvePageColor();
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+        meta.setAttribute("content", color);
+      });
+      if (now - startTime < duration) {
+        themeColorAnimFrame = requestAnimationFrame(tick);
+      } else {
+        themeColorAnimFrame = null;
+      }
+    }
+    themeColorAnimFrame = requestAnimationFrame(tick);
   }
 
   function updateFooterModeLabel(mode) {
@@ -1520,6 +1554,7 @@
       );
     } else {
       updateFooterPaletteLabel(currentPalette);
+      animateThemeColorMeta(opts.transitionDuration || THEME_SWAP_TRANSITION_DEFAULT_MS);
     }
 
     if (!opts.silent) {
@@ -2043,6 +2078,17 @@
         });
       });
     }
+
+    // Lift the transition suppression injected by the early head script.
+    // Double-rAF ensures the browser has painted once with the correct palette
+    // colors before transitions are allowed to fire.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.documentElement.classList.remove("theme-loading");
+        var s = document.getElementById("theme-no-trans");
+        if (s) s.remove();
+      });
+    });
   });
 
   // Global function for backwards compatibility (if needed elsewhere)

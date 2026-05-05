@@ -97,12 +97,21 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: color-mix(in srgb, var(--surface-inverse) 50%, transparent);
+  background: color-mix(in srgb, var(--surface-page) 55%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  backdrop-filter: blur(20px) saturate(130%);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
     visibility var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
+  .settings-overlay {
+    backdrop-filter: url(#liquid-glass) blur(20px) saturate(130%);
+    background: color-mix(in srgb, var(--surface-page) 40%, transparent);
+  }
 }
 
 .settings-overlay:not([hidden]) {
