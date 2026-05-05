@@ -4,7 +4,7 @@ date = "2013-04-15"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
-description = "Varför gränssnitt låtsas vara något de inte är"
+description = "Hur nya artefakter lånar från det gamla — och när de slutar"
 tags = ["design", "skeuomorfism", "process"]
 topics = []
 slug = "texter"
@@ -31,10 +31,7 @@ Begreppet skeuomorfism har sitt ursprung i arkeologin, där det användes för a
 
 Det viktiga här är inte dekoration, utan kontinuitet.
 
-Skeuomorfer bär på inbäddad kunskap:
-- hur något ska se ut
-- hur det kan användas
-- vad det betyder kulturellt
+Skeuomorfer bär på inbäddad kunskap — hur något ska se ut, hur det kan användas, vad det betyder kulturellt.
 
 I den meningen fungerar de som materiella metaforer — de överför betydelse från ett sammanhang till ett annat.
 
@@ -46,10 +43,7 @@ Men i takt med att definitionen breddades blev den också mindre precis. Snarare
 
 Ett sätt att förstå skeuomorfism är som en reaktion på förändring.
 
-När ett nytt material eller en ny teknologi introduceras uppstår osäkerhet:
-- Hur ska det användas?
-- Vad kan det jämföras med?
-- Går det att lita på?
+När ett nytt material eller en ny teknologi introduceras uppstår osäkerhet — om hur det ska användas, vad det kan jämföras med, om det går att lita på.
 
 Skeuomorfism erbjuder ett svar genom igenkänning.
 
@@ -63,11 +57,7 @@ Nya material och teknologier utvecklar egna uttryck, anpassade till sina föruts
 
 Laminatgolv är ett tydligt exempel på skeuomorfism i materiell design.
 
-Det imiterar trä — visuellt och ibland strukturellt — samtidigt som det består av helt andra material. Imitationen fyller flera funktioner:
-
-- Det signalerar igenkänning: vi ser det som "golv"
-- Det kommunicerar värde: trä bär kulturell och ekonomisk betydelse
-- Det skapar orientering: vi förstår hur vi ska använda det
+Det imiterar trä — visuellt och ibland strukturellt — samtidigt som det består av helt andra material. Imitationen fyller flera funktioner. Det signalerar igenkänning — vi ser det som golv. Det kommunicerar värde, eftersom trä bär kulturell och ekonomisk betydelse. Och det skapar orientering: vi förstår redan hur vi ska använda det.
 
 Samtidigt är materialet mer tekniskt avancerat och ofta billigare än det det imiterar.
 
@@ -75,7 +65,7 @@ Detta skapar en spänning mellan autenticitet och imitation, mellan materialets 
 
 Med tiden har laminatgolv börjat utvecklas bort från trä. Nya uttryck uppstår som är specifika för materialet och dess produktion.
 
-**Skeuomorfism markerar ofta början på ett materials utveckling — inte dess slutpunkt.**
+Skeuomorfism markerar ofta början på ett materials utveckling — inte dess slutpunkt.
 
 ## Fall 2: iPad-tangentbordet
 
@@ -91,21 +81,13 @@ På fysiska tangentbord finns små markörer på tangenterna F och J som hjälpe
 
 De fyller inte längre någon praktisk funktion. Istället fungerar de som en kvarleva — ett spår av ett tidigare system.
 
-Detta skapar en intressant förskjutning:
-
-- För vissa användare bär de mening eller till och med ironi
-- För andra är de osynliga eller enbart dekorativa
+Detta skapar en intressant förskjutning. För vissa användare bär de mening eller till och med ironi. För andra är de osynliga eller enbart dekorativa.
 
 Här hjälper skeuomorfismen inte längre användaren att förstå något nytt. Den blir istället en kulturell referens — en rest från ett tidigare sätt att interagera.
 
 ## Bortom funktion: skeuomorfism och mening
 
-I båda exemplen gör skeuomorfism mer än att imitera form.
-
-- Den kommunicerar förväntningar
-- Den bär på historia
-- Den hanterar övergångar
-- Den kan skapa tvetydighet
+I båda exemplen gör skeuomorfism mer än att imitera form. Den kommunicerar förväntningar, bär på historia, hanterar övergångar — och kan skapa tvetydighet.
 
 Den är inte alltid optimal.
 

@@ -4,7 +4,7 @@ date = "2013-04-15"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
-description = "Why interfaces pretend to be something they're not"
+description = "How new artifacts borrow from the old — and when they stop"
 tags = ["design", "skeuomorphism", "process"]
 topics = []
 slug = "writing"
@@ -31,10 +31,7 @@ The concept of skeuomorphism originates in archaeology, where it was used to des
 
 What matters here is not decoration, but continuity.
 
-Skeuomorphs carry embedded knowledge:
-- how something should look
-- how it might be used
-- what it means culturally
+Skeuomorphs carry embedded knowledge — how something should look, how it might be used, what it means culturally.
 
 In this sense, they function as material metaphors — transferring meaning from one context to another.
 
@@ -46,10 +43,7 @@ But as the definition broadened, it also became less precise. Rather than a sing
 
 One way to understand skeuomorphism is as a response to change.
 
-When a new material or technology is introduced, it creates uncertainty:
-- How should it be used?
-- What is it comparable to?
-- Can it be trusted?
+When a new material or technology is introduced, it creates uncertainty — about how it should be used, what it can be compared to, whether it can be trusted.
 
 Skeuomorphism provides an answer by offering familiarity.
 
@@ -63,11 +57,7 @@ New materials and technologies tend to develop their own forms, optimized for th
 
 Laminated flooring is a clear example of skeuomorphism in material design.
 
-It imitates wood — visually and sometimes structurally — while being made from entirely different materials. The imitation serves several purposes at once:
-
-- It signals familiarity: we recognize it as "floor"
-- It communicates value: wood carries cultural and economic meaning
-- It provides orientation: we understand how to interact with it
+It imitates wood — visually and sometimes structurally — while being made from entirely different materials. The imitation serves several purposes at once. It signals familiarity — we recognize it as floor. It communicates value, since wood carries cultural and economic meaning. And it provides orientation: we already understand how to interact with it.
 
 At the same time, the material itself is more technologically advanced and often cheaper than the thing it imitates.
 
@@ -75,7 +65,7 @@ This creates a tension between authenticity and imitation, between material prop
 
 Over time, laminated flooring has started to diverge from wood. New patterns and expressions appear that are specific to the material and its production process.
 
-**Skeuomorphism often marks the beginning of a material's evolution — not its final form.**
+Skeuomorphism often marks the beginning of a material's evolution — not its final form.
 
 ## Case 2: The iPad Keyboard
 
@@ -91,21 +81,13 @@ Yet the markers are still visually represented.
 
 They no longer serve a practical purpose. Instead, they operate as a residual signal — a trace of an earlier system.
 
-This creates an interesting shift:
-
-- For experienced users, the markers may carry meaning or even irony
-- For others, they are invisible or purely decorative
+This creates an interesting shift. For experienced users, the markers may carry meaning or even irony. For others, they are invisible or purely decorative.
 
 In this case, skeuomorphism is no longer helping users navigate a new system. Instead, it becomes a kind of cultural artifact — a reference to a past interaction model.
 
 ## Beyond Function: Skeuomorphism and Meaning
 
-Across both examples, skeuomorphism does more than replicate form.
-
-- It communicates expectations
-- It encodes history
-- It negotiates transitions
-- It sometimes introduces ambiguity
+Across both examples, skeuomorphism does more than replicate form. It communicates expectations, encodes history, negotiates transitions — and sometimes introduces ambiguity.
 
 Importantly, it is not always optimal.
 
