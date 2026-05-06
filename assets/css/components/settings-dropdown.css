@@ -100,15 +100,22 @@
   background: color-mix(in srgb, var(--surface-page) 55%, transparent);
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   backdrop-filter: blur(14px) saturate(120%);
-  /* Fade the blur away at the top so the nav/header doesn't bleed into
-     the status-bar boundary. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 20px);
-  mask-image: linear-gradient(to bottom, transparent 0, black 20px);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
     visibility var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.settings-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--surface-page), transparent);
+  pointer-events: none;
 }
 
 @supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
