@@ -820,8 +820,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 80px;
-  background: linear-gradient(to bottom, var(--surface-page), transparent);
+  height: 130px;
+  background: linear-gradient(to bottom, var(--surface-page) 90px, transparent);
   pointer-events: none;
 }
 
