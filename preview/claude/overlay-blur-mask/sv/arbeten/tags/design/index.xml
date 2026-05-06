@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/</link>
+    <description>Hej! Jag är en multidisciplinär designer. I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt organisationer från idé till färdig produkt genom att kombinera design, affärsvärde och teknik.</description>
+    <language>sv</language>
+    <lastBuildDate>Wed, 06 May 2026 16:29:24 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/arbeten/tags/design/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tre punkter i footern</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/tre-punkter-i-footern/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/tre-punkter-i-footern/</guid>
+      <pubDate>Sun, 03 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;Temapanelen på den här sidan har ett Pantone-alternativ. De flesta besökare hittar det förmodligen inte — inte för att det är dolt, utan för att det inte annonserar sig självt. Du öppnar panelen, ser det, aktiverar det eller inte.&lt;/p&gt;
+&lt;p&gt;Gör du det dyker en liten spelare upp i footern. Tre punkter, ihopfälld. Håll muspekaren över dem så expanderar den: play, pause, föregående, nästa, blanda. Tryck play och hela sidan byter långsamt färg — den arbetar sig igenom Pantones Color of the Year-arkiv, alla tjugosju år, från Cerulean Blue år 2000 till Cloud Dancer 2026.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Jag använder fortfarande Figma</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/jag-anv%C3%A4nder-fortfarande-figma/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/jag-anv%C3%A4nder-fortfarande-figma/</guid>
+      <pubDate>Fri, 06 Feb 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;Under lång tid var det helt enkelt där design hände. Nya idéer började där. Flöden arbetades ut där. Samtal med utvecklare pekade tillbaka till det. Det blev både platsen där jag utforskade och platsen där saker skulle definieras.&lt;/p&gt;
+&lt;p&gt;Det fungerade, upp till en punkt. Sedan började det skapa friktion.&lt;/p&gt;
+&lt;p&gt;Inte för att verktyget var bristfälligt, utan för att jag använde det för två olika slags arbete utan att riktigt märka skillnaden mellan dem.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Att prototypa prototypen</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/att-prototypa-prototypen/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/att-prototypa-prototypen/</guid>
+      <pubDate>Thu, 10 Mar 2016 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;Om jag för en tid sedan hade fått frågan om prototypen spelade någon roll i min designpraktik, hade svaret troligtvis blivit: inte särskilt. Kanske inte alls.&lt;/p&gt;
+&lt;p&gt;Det svaret har förändrats. Inte för att mitt sätt att arbeta har förändrats i grunden, utan för att min förståelse av vad en prototyp är har det.&lt;/p&gt;
+&lt;h2&gt;Det här är en prototyp&lt;/h2&gt;
+&lt;p&gt;För ett tag sedan stötte jag på frågan om det är möjligt att som designer arbeta enbart med prototyper. Jag förstod inte riktigt vad som stod på spel då, men något i frågan stannade kvar hos mig.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Skeuomorfism som övergångsverktyg</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/skeuomorfism-som-%C3%B6verg%C3%A5ngsverktyg/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/sv/texter/skeuomorfism-som-%C3%B6verg%C3%A5ngsverktyg/</guid>
+      <pubDate>Mon, 15 Apr 2013 00:00:00 &#43;0000</pubDate>
+      <description>&lt;h2&gt;Introduktion&lt;/h2&gt;
+&lt;p&gt;När nya teknologier uppstår gör de det sällan på egna villkor.&lt;/p&gt;
+&lt;p&gt;Istället lånar de sitt språk från det som redan finns.&lt;/p&gt;
+&lt;p&gt;Digitala kalendrar ser ut som papper. Ljudappar efterliknar fysiska rattar. Tidiga smartphone-gränssnitt påminde om läder, glas och metall. Alla dessa är exempel på skeuomorfism — en designstrategi där nya artefakter imiterar äldre.&lt;/p&gt;
+&lt;p&gt;Skeuomorfism avfärdas ofta som dekorativ eller nostalgisk. Men det missar något mer grundläggande:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Skeuomorfism är inte bara imitation — det är ett verktyg för att navigera teknologiska övergångar.&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

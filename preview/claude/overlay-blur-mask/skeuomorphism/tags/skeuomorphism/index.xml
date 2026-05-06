@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Wed, 06 May 2026 16:28:59 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/skeuomorphism/tags/skeuomorphism/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Skeuomorphism as a Transitional Tool</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/writing/skeuomorphism-as-a-transitional-tool/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/writing/skeuomorphism-as-a-transitional-tool/</guid>
+      <pubDate>Mon, 15 Apr 2013 00:00:00 &#43;0000</pubDate>
+      <description>&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;When new technologies appear, they rarely arrive on their own terms.&lt;/p&gt;
+&lt;p&gt;Instead, they borrow the language of what came before.&lt;/p&gt;
+&lt;p&gt;Digital calendars look like paper. Audio apps mimic physical knobs. Early smartphone interfaces resembled leather, glass, and metal. These are all examples of skeuomorphism — a design strategy where new artifacts imitate older ones.&lt;/p&gt;
+&lt;p&gt;Skeuomorphism is often dismissed as decorative or nostalgic. But that view misses something more fundamental:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Wed, 06 May 2026 16:28:59 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/portfolio/tags/portfolio/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Failing your own pull requests</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/writing/failing-your-own-pull-requests/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/writing/failing-your-own-pull-requests/</guid>
+      <pubDate>Mon, 04 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;There is a step in the CI pipeline for this portfolio that checks whether the site is fast enough, accessible enough, and well-structured enough to be allowed to merge. If it isn&amp;rsquo;t, the pull request fails.&lt;/p&gt;
+&lt;p&gt;This is a personal website. There is no team. Nobody is reviewing the code. The only person being blocked by a failed quality gate is me.&lt;/p&gt;
+&lt;p&gt;It took a while to decide whether this made sense.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Three dots in the footer</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/writing/three-dots-in-the-footer/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/overlay-blur-mask/writing/three-dots-in-the-footer/</guid>
+      <pubDate>Sun, 03 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;The theme panel on this site has a Pantone option. Most visitors probably won&amp;rsquo;t find it — not because it&amp;rsquo;s hidden, but because it doesn&amp;rsquo;t announce itself. You open the panel, you see it, you either activate it or you don&amp;rsquo;t.&lt;/p&gt;
+&lt;p&gt;If you do, a small player appears in the footer. Three dots, collapsed. Hover over them and it expands: play, pause, previous, next, shuffle. Press play and the whole site slowly changes color — working through Pantone&amp;rsquo;s Color of the Year archive, all twenty-seven years of it, from Cerulean Blue in 2000 to Cloud Dancer in 2026.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
