@@ -807,8 +807,8 @@
   background: color-mix(in srgb, var(--surface-page) 55%, transparent);
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   backdrop-filter: blur(14px) saturate(120%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 120px);
-  mask-image: linear-gradient(to bottom, transparent 0, black 120px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 20px);
+  mask-image: linear-gradient(to bottom, transparent 0, black 20px);
   z-index: 999;
   opacity: 0;
   visibility: hidden;

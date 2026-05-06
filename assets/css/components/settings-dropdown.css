@@ -102,8 +102,8 @@
   backdrop-filter: blur(14px) saturate(120%);
   /* Fade the blur away at the top so the nav/header doesn't bleed into
      the status-bar boundary. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 120px);
-  mask-image: linear-gradient(to bottom, transparent 0, black 120px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 20px);
+  mask-image: linear-gradient(to bottom, transparent 0, black 20px);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
