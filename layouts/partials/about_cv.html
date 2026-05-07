@@ -1,7 +1,7 @@
 <div class="about-cv reveal">
 <div class="about-cv__icon curl-icon"></div>
 
-<h3 class="about-cv__title type-headline-3">What I've been up to</h3>
+<h3 class="about-cv__title type-headline-3">{{ if eq .Language.Lang "sv" }}Vad jag har gjort{{ else if eq .Language.Lang "ja" }}これまでの歩み{{ else }}What I've been up to{{ end }}</h3>
 
 <div class="about-cv__columns">
 {{ partial "about_cv_base.html" . }}

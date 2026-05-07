@@ -4,6 +4,10 @@
 {{- range $translations -}}
   {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
 {{- end -}}
+{{- $langHomes := dict -}}
+{{- range $.Site.Home.AllTranslations -}}
+  {{- $langHomes = merge $langHomes (dict .Language.Lang .RelPermalink) -}}
+{{- end -}}
 
 <div class="settings-dropdown">
   <button
@@ -206,6 +210,7 @@
               <span class="radio__label language-name">{{ .LanguageName }}</span>
               {{- if eq .Lang "en" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L E">L E</span>{{- end -}}
               {{- if eq .Lang "sv" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L S">L S</span>{{- end -}}
+              {{- if eq .Lang "ja" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L J">L J</span>{{- end -}}
             </label>
           {{- else if $target -}}
             <label class="language-option radio" lang="{{ .Lang }}" data-language-href="{{ $target.RelPermalink }}">
@@ -221,13 +226,14 @@
               <span class="radio__label language-name">{{ .LanguageName }}</span>
               {{- if eq .Lang "en" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L E">L E</span>{{- end -}}
               {{- if eq .Lang "sv" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L S">L S</span>{{- end -}}
+              {{- if eq .Lang "ja" -}}<span class="toggle-switch__shortcut language-option__shortcut" data-shortcut="L J">L J</span>{{- end -}}
             </label>
           {{- else -}}
             <label
               class="language-option radio language-option--fallback"
               lang="{{ .Lang }}"
               title="{{ i18n "also_on_homepage" }}"
-              data-language-href="{{ "/" | relLangURL . }}"
+              data-language-href="{{ index $langHomes .Lang | default "/" }}"
             >
               <input
                 type="radio"
@@ -235,7 +241,7 @@
                 value="{{ .Lang }}"
                 data-language-code="{{ .Lang }}"
                 data-language-name="{{ .LanguageName }}"
-                data-language-href="{{ "/" | relLangURL . }}"
+                data-language-href="{{ index $langHomes .Lang | default "/" }}"
               >
               <span class="radio__visual" aria-hidden="true"></span>
               <span class="radio__label language-name">{{ .LanguageName }}</span>

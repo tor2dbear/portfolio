@@ -1,8 +1,53 @@
 {{/* Base CV sections - shared between about page and employer/client pages */}}
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Work</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Arbete{{ else if eq .Language.Lang "ja" }}職歴{{ else }}Work{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
+{{ if eq .Language.Lang "ja" }}
+<strong>2025 – 現在</strong><br>
+<strong>プロダクトオーナー＆アートディレクター</strong>, Lokalguiden<br>
+• lokalguiden.seのプロダクトバックログを管理・優先順位付け<br>
+• 2週間スプリント（スクラム）で開発チームをリード<br>
+• ユーザーストーリーと要件定義書の作成<br>
+• データドリブンな意思決定でトラフィック成長と収益を促進<br>
+• デザインシステムとビジュアルアイデンティティの維持管理<br>
+<br>
+<strong>2016 – 2024</strong><br>
+<strong>アートディレクター</strong>, Lokalguiden<br>
+• ブランドアイデンティティ、印刷物、ウェブデザイン<br>
+• Lokalguideのリブランディング（2020年）をリード：新ロゴ、ガイドライン、マガジン、ウェブサイトを含む<br>
+• サブブランド「Fastighetsgalan」「Nylokal」のブランドアイデンティティを構築<br>
+• 管理インターフェースをリデザイン（構造・UI/UX）<br>
+• デジタルプロダクトデザイン、UI/UX、アナリティクスへと役割を拡張<br>
+<br>
+2014 – 2016<br>
+フリーランスデザイナー<br>
+<br>
+2013<br>
+インターンシップ Mecka、ボロース
+{{ else if eq .Language.Lang "sv" }}
+<strong>2025 – Nu</strong><br>
+<strong>Product Owner & Art Director</strong>, Lokalguiden<br>
+• Äger och prioriterar produktbacklog för lokalguiden.se<br>
+• Leder utvecklingsteam i 2-veckorssprint (Scrum)<br>
+• Skriver user stories och kravspecifikationer<br>
+• Driver trafiktillväxt och intäkter genom datadrivna beslut<br>
+• Underhåller designsystem och visuell identitet<br>
+<br>
+<strong>2016 – 2024</strong><br>
+<strong>Art Director</strong>, Lokalguiden<br>
+• Varumärkesidentitet, tryck och webbdesign<br>
+• Ledde rebranding av Lokalguiden (2020) inkl. ny logga, riktlinjer, magasin och webbplats<br>
+• Skapade varumärkesidentiteter för sub-varumärken: Fastighetsgalan och Nylokal<br>
+• Omdesignade admingränssnitt (struktur & UI/UX)<br>
+• Utvecklade rollen mot digital produktdesign, UI/UX och analys<br>
+<br>
+2014 – 2016<br>
+Frilandsdesigner<br>
+<br>
+2013<br>
+Praktik Mecka, Borås
+{{ else }}
 <strong>2025 – Present</strong><br>
 <strong>Product Owner & Art Director</strong>, Lokalguiden<br>
 • Owns and prioritizes product backlog for lokalguiden.se<br>
@@ -24,33 +69,53 @@ Freelance Designer<br>
 <br>
 2013<br>
 Internship Mecka, Borås
+{{ end }}
 </p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Skills & Tools</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Kompetenser & verktyg{{ else if eq .Language.Lang "ja" }}スキル＆ツール{{ else }}Skills & Tools{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
+{{ if eq .Language.Lang "ja" }}
+<strong>プロダクトマネジメント：</strong>バックログ優先順位付け、ユーザーストーリー、スプリント計画、スクラム、ステークホルダー管理、アナリティクス（トラフィック＆コンバージョン）<br>
+<strong>デザイン：</strong>UI/UXデザイン、デザインシステム、ブランドアイデンティティ、ワイヤーフレーム、プロトタイピング<br>
+<strong>ツール：</strong>Figma、Adobeクリエイティブスイート、アナリティクスプラットフォーム、Jira/プロジェクト管理ツール
+{{ else if eq .Language.Lang "sv" }}
+<strong>Produkthantering:</strong> Backlogprioritering, User stories, Sprintplanering, Scrum, Intressenthantering, Analys (trafik & konvertering)<br>
+<strong>Design:</strong> UI/UX-design, Designsystem, Varumärkesidentitet, Wireframing, Prototyping<br>
+<strong>Verktyg:</strong> Figma, Adobe Creative Suite, Analysplattformar, Jira/projekthanteringsverktyg
+{{ else }}
 <strong>Product Management:</strong> Backlog prioritization, User stories, Sprint planning, Scrum, Stakeholder management, Analytics (traffic & conversion)<br>
 <strong>Design:</strong> UI/UX design, Design systems, Brand identity, Wireframing, Prototyping<br>
 <strong>Tools:</strong> Figma, Adobe Creative Suite, Analytics platforms, Jira/project management tools
+{{ end }}
 </p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Selected clients</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Utvalda kunder{{ else if eq .Language.Lang "ja" }}主な顧客{{ else }}Selected clients{{ end }}</h4>
 <p class="about-cv__text type-body-sm">Zentropa Sweden / Göteborgs Stad / Mecka / Forsify / Vårdporten / I-Racket AB</p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Education</h4>
-<p class="about-cv__text type-body-sm">2014 – 2016<br>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Utbildning{{ else if eq .Language.Lang "ja" }}学歴{{ else }}Education{{ end }}</h4>
+<p class="about-cv__text type-body-sm">
+{{ if eq .Language.Lang "ja" }}
+2014 – 2016<br>
+デザイン修士（ファインアーツ）、デザイン・クラフト大学院 HDK<br>
+2014 – 2016<br>
+デザイン学士（ファインアーツ）、デザイン・クラフト大学院 HDK
+{{ else }}
+2014 – 2016<br>
 Master of Fine Arts in Design Acadamy of Design and Crafts, HDK<br>
 2014 – 2016<br>
-Bachelor of Fine Arts in Design Acadamy of Design and Crafts, HDK</p>
+Bachelor of Fine Arts in Design Acadamy of Design and Crafts, HDK
+{{ end }}
+</p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Exhibitions</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Utställningar{{ else if eq .Language.Lang "ja" }}展示{{ else }}Exhibitions{{ end }}</h4>
 <p class="about-cv__text type-body-sm">2015<br>
 Fotobok Gbg 15 (Gothenburg Photobook Festival) – A-venue, Göteborg<br>
 Exhibiting the Exhibition 2.0 – The Space, Göteborg<br>
@@ -65,7 +130,7 @@ Konstnatten – Turbinhusön, Tidaholm</p>
 </div>
 
 <div class="about-cv__section reveal">
-<h4 class="about-cv__heading type-headline-small">Scholarship</h4>
+<h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Stipendier{{ else if eq .Language.Lang "ja" }}奨学金・助成{{ else }}Scholarship{{ end }}</h4>
 <p class="about-cv__text type-body-sm">2016<br>
 Wilhelm & Martina Lundgrens Understödsfond / Theodor och Hanne Mannheimers fonden / Göteborgs Slöjdförenings Projektstipendie / Adlerbertska Premiestiftelsen<br>
 2015<br>

@@ -79,7 +79,7 @@
     }
 
     if (prefix === 'M') {render('Mode +', ['L', 'D', 'S']);}
-    if (prefix === 'L') {render('Language +', ['E', 'S']);}
+    if (prefix === 'L') {render('Language +', ['E', 'S', 'J']);}
     if (prefix === 'T') {render('Typography +', ['E', 'R', 'X', 'T', 'S']);}
     if (prefix === 'E') {render('Effects +', ['P', 'G', 'B', 'N', 'M']);}
     hud.removeAttribute('hidden');
@@ -201,6 +201,7 @@
     if (prefixKey === 'L' && language && typeof language.setLanguage === 'function') {
       if (key === 'E') {language.setLanguage('en');}
       if (key === 'S') {language.setLanguage('sv');}
+      if (key === 'J') {language.setLanguage('ja');}
       clearChord();
       return true;
     }
