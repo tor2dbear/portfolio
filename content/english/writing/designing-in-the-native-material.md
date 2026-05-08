@@ -11,7 +11,9 @@ slug = "writing"
 translationKey = "designing-in-the-native-material"
 +++
 
-*Working draft — May 2026*
+Working draft — May 2026
+
+---
 
 I am writing this from the middle of something I do not yet know how to finish.
 
@@ -21,7 +23,7 @@ That instinct never went away, but for two decades I worked around it. The indus
 
 This is not an essay about whether that infrastructure was wrong. Other writing of mine has tried to make that argument more carefully. This is an essay about what it feels like to be the person inside the shift.
 
- 
+---
 
 Here is what I keep noticing.
 
@@ -31,7 +33,7 @@ The canvas is not, for me, primarily a representation of software. It is a cogni
 
 This is the part that surprises me. I expected, as I moved more of my work into code, that the canvas would feel less and less necessary. The opposite has happened. The more I work in the production codebase, the more I rely on the canvas for a different kind of thinking — the spatial, comparative, peripheral kind. Code is excellent for almost everything except seeing several things at once.
 
- 
+---
 
 It has taken me a while to find the right word for what the canvas actually is.
 
@@ -45,7 +47,7 @@ So the division I trust is not between canvas and code. It is between sketching 
 
 That is the medium becoming honest with itself. A sketch in any medium can be a question. Only the running system can be an answer.
 
- 
+---
 
 At work, I am in the middle of moving the production codebase toward being the single source of truth for our design. The component library I have been maintaining in parallel, with its own Storybook and design studio, is being repositioned — from a thing that mirrors production to a place where I can sketch quickly and cheaply against real components. It is being migrated into the production repo. There is a Storybook inventory to do before I can even begin to address the token drift between what design intends and what the developers have built.
 
@@ -53,7 +55,7 @@ None of this is glamorous. It is largely organisational and infrastructural. But
 
 I find that my role is changing inside this work. I am spending less time producing screens and more time making sure the production codebase is a good design medium — for myself, for the developers I work with, and now also for AI agents that increasingly participate in writing the code. That last part is new, and I do not have a settled view on it yet.
 
- 
+---
 
 There is a version of this story where nothing has really changed.
 
@@ -65,11 +67,9 @@ Software's chain is shorter now, because the artefact and the prototype increasi
 
 The shape of design work in this shorter chain is what I am trying to learn.
 
- 
+---
 
-What I have come to trust, for now, is smaller and more practical than I expected. Sketch to understand. Code to verify. The medium of the sketch matters less than I once thought; the truthfulness of the verification matters more.
-
- 
+*What I have come to trust, for now, is smaller and more practical than I expected. Sketch to understand. Code to verify. The medium of the sketch matters less than I once thought; the truthfulness of the verification matters more.*
 
 And then, almost immediately, the next question.
 
