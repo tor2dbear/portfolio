@@ -5,8 +5,17 @@
     <link>https://tor2dbear.github.io/portfolio/preview/claude/design-essays-WWMAF/</link>
     <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Thu, 07 May 2026 21:46:48 &#43;0000</lastBuildDate>
+    <lastBuildDate>Fri, 08 May 2026 21:07:35 &#43;0000</lastBuildDate>
     <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/design-essays-WWMAF/works/tags/design/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Designing in the Native Material</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/design-essays-WWMAF/writing/designing-in-the-native-material/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-essays-WWMAF/writing/designing-in-the-native-material/</guid>
+      <pubDate>Fri, 08 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;&lt;em&gt;Working draft — May 2026&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;I am writing this from the middle of something I do not yet know how to finish.&lt;/p&gt;
+&lt;p&gt;For most of my working life I have preferred to design directly in the medium the product is actually made from. In the late nineties that meant adjusting CSS in a browser, resizing windows, tweaking values in real time. Even then it felt obvious to me that the web was already its own design environment. The browser was not a preview of the work. It was the work.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Three dots in the footer</title>
       <link>https://tor2dbear.github.io/portfolio/preview/claude/design-essays-WWMAF/writing/three-dots-in-the-footer/</link>
@@ -31,15 +40,6 @@
       <pubDate>Wed, 18 Mar 2026 00:00:00 &#43;0000</pubDate>
       <description>&lt;p&gt;For decades, digital design has relied on a peculiar assumption: that software must first be translated into another medium before it can be understood.&lt;/p&gt;
 &lt;p&gt;Designers sketch interfaces in wireframes, compose layouts in graphics software, arrange screens in collaborative canvases, and only later see these artifacts reconstructed as functioning systems. The mockup becomes a representational layer suspended between imagination and execution—a blueprint for a product that will eventually exist elsewhere, in another material, another logic, another medium.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>I Still Use Figma</title>
-      <link>https://tor2dbear.github.io/portfolio/preview/claude/design-essays-WWMAF/writing/i-still-use-figma/</link>
-      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-essays-WWMAF/writing/i-still-use-figma/</guid>
-      <pubDate>Fri, 06 Feb 2026 00:00:00 &#43;0000</pubDate>
-      <description>&lt;p&gt;For a long time, it was simply where design happened. New ideas started there. Flows were worked out there. Conversations with developers pointed back to it. It became both the place where I explored and the place where things were supposed to be defined.&lt;/p&gt;
-&lt;p&gt;It worked, up to a point. Then it started to create friction.&lt;/p&gt;
-&lt;p&gt;Not because the tool was lacking, but because I was using it for two different kinds of work without really noticing the difference between them.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Prototyping the Prototype</title>
