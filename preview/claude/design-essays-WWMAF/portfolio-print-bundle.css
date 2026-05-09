@@ -1315,7 +1315,8 @@ figcaption {
   line-height: var(--line-height-normal);
   margin-bottom: var(--spacing-24);
   padding: var(--spacing-12) var(--spacing-16);
-  border-left: 2px solid var(--border-default);
+  background-color: var(--surface-subtle);
+  border-radius: 0.375rem;
 }
 
 .lang-notice a {
