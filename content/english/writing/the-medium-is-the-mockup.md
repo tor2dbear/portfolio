@@ -1,6 +1,6 @@
 +++
 title = "The Medium is the Mockup"
-date = "2026-03-18"
+date = "2025-04-10"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
