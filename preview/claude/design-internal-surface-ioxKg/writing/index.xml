@@ -5,14 +5,15 @@
     <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/</link>
     <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Sat, 09 May 2026 20:32:46 &#43;0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 May 2026 20:39:19 &#43;0000</lastBuildDate>
     <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/" rel="self" type="application/rss+xml" />
     <item>
       <title>The Spec Was Never the Point</title>
       <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-spec-was-never-the-point/</link>
       <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-spec-was-never-the-point/</guid>
       <pubDate>Sat, 09 May 2026 00:00:00 &#43;0000</pubDate>
-      <description>&lt;p&gt;The spec has always been an odd thing.&lt;/p&gt;
+      <description>&lt;h2&gt;On a strange artefact, and what happens when it stops being strange&lt;/h2&gt;
+&lt;p&gt;The spec has always been an odd thing.&lt;/p&gt;
 &lt;p&gt;It is not really the product. It is not really documentation. It is not, in any honest sense, a contract — try holding a developer to its literal text and you will quickly discover that everyone involved was assuming a great deal it did not say. It is not a design, though it sometimes carries one. It is not a plan, though it sometimes pretends to be.&lt;/p&gt;</description>
     </item>
     <item>
@@ -62,7 +63,8 @@
       <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-other-surface/</link>
       <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-other-surface/</guid>
       <pubDate>Tue, 25 Nov 2025 00:00:00 &#43;0000</pubDate>
-      <description>&lt;p&gt;Years ago, when I was still spending most of my time laying out magazines, an editor I worked with watched me build a particularly elaborate set of InDesign templates — paragraph styles, table presets, an InCopy setup so the editorial team could write into the layout in parallel — and said, half-joking, that I was going to optimise myself out of a job. He was wrong about the specific. I kept working with him for years. But he was right about something else, something I have only slowly come to understand: that what I was doing was not really about saving time.&lt;/p&gt;</description>
+      <description>&lt;h2&gt;Why product work has two faces, and why we keep designing only one&lt;/h2&gt;
+&lt;p&gt;Years ago, when I was still spending most of my time laying out magazines, an editor I worked with watched me build a particularly elaborate set of InDesign templates — paragraph styles, table presets, an InCopy setup so the editorial team could write into the layout in parallel — and said, half-joking, that I was going to optimise myself out of a job. He was wrong about the specific. I kept working with him for years. But he was right about something else, something I have only slowly come to understand: that what I was doing was not really about saving time.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Prototyping the Prototype</title>
