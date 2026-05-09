@@ -11,8 +11,6 @@ slug = "texter"
 translationKey = "designing-in-the-native-material"
 +++
 
-*Arbetsutkast — maj 2026*
-
 Jag skriver det här mitt inne i något jag ännu inte vet hur jag ska avsluta.
 
 Under större delen av mitt yrkesliv har jag hellre designat direkt i det material som produkten faktiskt är gjord av. På sent nittiotal innebar det att justera CSS i en webbläsare, dra i fönsterstorlekar, ändra värden i realtid. Redan då kändes det självklart för mig att webben i sig var en designmiljö. Webbläsaren var inte en förhandsvisning av arbetet. Den var arbetet.
@@ -21,7 +19,6 @@ Den känslan har aldrig lämnat mig, men i två decennier har jag arbetat runt d
 
 Det här är ingen text om huruvida den infrastrukturen var fel. Annat jag har skrivit har försökt göra det argumentet mer noggrant. Det här är en text om hur det känns att vara personen mitt i förflyttningen.
 
- 
 
 Det är det här jag märker.
 
@@ -31,7 +28,6 @@ Canvasen är, för mig, inte i första hand en representation av mjukvara. Den �
 
 Det är den här delen som överraskar mig. Jag förväntade mig att canvasen skulle kännas allt mindre nödvändig i takt med att mer av mitt arbete flyttade in i kod. Det motsatta har hänt. Ju mer jag arbetar i produktionskodbasen, desto mer förlitar jag mig på canvasen för en annan sorts tänkande — det spatiala, jämförande, perifera. Kod är utmärkt för nästan allt, utom att se flera saker samtidigt.
 
- 
 
 Det har tagit mig en stund att hitta rätt ord för vad canvasen faktiskt är.
 
@@ -45,7 +41,6 @@ Så uppdelningen jag litar på är inte mellan canvas och kod. Den är mellan at
 
 Det är mediet som blir ärligt med sig självt. En skiss i vilket medium som helst kan vara en fråga. Bara det körande systemet kan vara ett svar.
 
- 
 
 På jobbet håller jag på att flytta produktionskodbasen mot att bli den enda källan till sanning för vår design. Komponentbiblioteket jag har underhållit parallellt, med egen Storybook och designstudio, håller på att flyttas — från något som speglar produktionen till en plats där jag kan skissa snabbt och billigt mot riktiga komponenter. Det migreras in i produktionsrepot. Det finns en Storybook-inventering att göra innan jag ens kan börja ta itu med token-driften mellan vad designen avser och vad utvecklarna har byggt.
 
@@ -53,7 +48,6 @@ Inget av det här är glamoröst. Det är till stor del organisatoriskt och infr
 
 Jag märker att min roll förändras inne i det här arbetet. Jag lägger mindre tid på att producera skärmar och mer tid på att se till att produktionskodbasen är ett bra designmedium — för mig själv, för utvecklarna jag arbetar med, och numera också för AI-agenter som i ökande grad deltar i att skriva koden. Den sista delen är ny, och jag har ingen färdig hållning till den ännu.
 
- 
 
 Det finns en version av den här berättelsen där egentligen ingenting har förändrats.
 
@@ -65,11 +59,8 @@ Mjukvarans kedja är kortare nu, eftersom artefakten och prototypen alltmer dela
 
 Formen på designarbetet i den här kortare kedjan är vad jag försöker lära mig.
 
- 
 
-Det jag har börjat lita på, åtminstone tills vidare, är mindre och mer praktiskt än jag väntade mig. Skissa för att förstå. Koda för att veta. Skissens medium spelar mindre roll än jag en gång trodde; verifieringens sanningshalt spelar större.
-
- 
+*Det jag har börjat lita på, åtminstone tills vidare, är mindre och mer praktiskt än jag väntade mig. Skissa för att förstå. Koda för att veta. Skissens medium spelar mindre roll än jag en gång trodde; verifieringens sanningshalt spelar större.*
 
 Och nästan i samma andetag, nästa fråga.
 
