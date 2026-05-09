@@ -5,10 +5,6 @@
   <div class="reveal place-article">{{ partial "date.html" . }}</div>
   <div class="reveal post-tags-wrap place-article">{{ partial "post_tags.html" . }}</div>
 
-  {{ if .Description }}
-  <h2 class="type-preamble reveal place-article">{{ .Description }}</h2>
-  {{ end }}
-
   {{/* Show notice when no Swedish translation exists */}}
   {{ $hasSwedish := false }}
   {{ range .Translations }}
@@ -21,6 +17,10 @@
     {{ i18n "lang_only_english" }}{{ if $svURL }} <a href="{{ $svURL }}">{{ i18n "lang_browse_swedish" }}</a>{{ end }}
   </aside>
   <script>if (location.search.includes('from=sv')) document.currentScript.previousElementSibling.style.display = '';</script>
+  {{ end }}
+
+  {{ if .Description }}
+  <h2 class="type-preamble reveal place-article">{{ .Description }}</h2>
   {{ end }}
 
   <div class="post-content prose reveal place-article">
