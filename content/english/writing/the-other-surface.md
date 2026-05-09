@@ -11,6 +11,8 @@ slug = "writing"
 translationKey = "the-other-surface"
 +++
 
+## Why product work has two faces, and why we keep designing only one
+
 Years ago, when I was still spending most of my time laying out magazines, an editor I worked with watched me build a particularly elaborate set of InDesign templates — paragraph styles, table presets, an InCopy setup so the editorial team could write into the layout in parallel — and said, half-joking, that I was going to optimise myself out of a job. He was wrong about the specific. I kept working with him for years. But he was right about something else, something I have only slowly come to understand: that what I was doing was not really about saving time.
 
 I was designing the surface the editorial team faced when they did their work. The magazine was the thing readers eventually held in their hands. But what I was actually shaping that day, with my templates, was something else. Something that faced inward. Something that had its own users, its own affordances, its own failure modes — and that, like any other designed thing, could be done well or done badly.
@@ -37,7 +39,7 @@ None of this is glamorous. It is largely a question of which fields are required
 
 ## The shift from decisions to defaults
 
-There is a common image of the product owner as a decision-maker. Someone who, day after day, weighs trade-offs, sets priorities, picks the next thing. The image is not wrong, but it is incomplete. The most valuable decisions a product owner makes are not the daily ones. They are the meta-decisions about how the daily ones will get made.
+There is a common image of the product owner as a decision-maker. Someone who, day after day, weighs trade-offs, sets priorities, picks the next thing. The image is not wrong, but it is incomplete. The most valuable decisions a product owner makes are not the daily ones. They are the *meta*-decisions about how the daily ones will get made.
 
 When a sprint has an explicit capacity ceiling, no one needs to decide, in the moment, not to take in more. When every ticket requires a customer link, no one needs to be reminded to think about the customer. When capacity streams are part of the taxonomy, no one needs to compute strategic distribution after the fact. The decision has been made once, in the structure, and it falls out a thousand times in practice.
 
@@ -51,7 +53,7 @@ In product ownership the equivalent observation is that the backlog, taken serio
 
 I should be honest about the failure mode I keep watching for in myself. The optimising instinct, taken too far, becomes its own distraction. There is always one more field that could be added, one more automation that could be wired up, one more view that could surface one more omission. At some point the second surface starts to demand the attention that should be going to the first. The team meets with the customer less because the team meets with the structure more.
 
-This is not hypothetical. I have done it. I suspect anyone with a temperament for this work has done it. The best counter I have found is to keep asking what the structure is for — not what it could do, but what it is currently in service of. A surface that helps the team see clearly is doing its job. A surface that demands maintenance for its own sake is not.
+This is not hypothetical. I have done it. I suspect anyone with a temperament for this work has done it. The best counter I have found is to keep asking what the structure is *for* — not what it could do, but what it is currently in service of. A surface that helps the team see clearly is doing its job. A surface that demands maintenance for its own sake is not.
 
 The other failure mode, more subtle, is to mistake structure for thought. A well-organised backlog can give the impression that the product is well-understood. It is not the same thing. The structure can be excellent and the strategy can still be wrong. The second surface enables good work. It does not produce it.
 

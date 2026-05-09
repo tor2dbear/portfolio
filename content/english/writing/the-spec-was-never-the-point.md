@@ -11,6 +11,8 @@ slug = "writing"
 translationKey = "the-spec-was-never-the-point"
 +++
 
+## On a strange artefact, and what happens when it stops being strange
+
 The spec has always been an odd thing.
 
 It is not really the product. It is not really documentation. It is not, in any honest sense, a contract — try holding a developer to its literal text and you will quickly discover that everyone involved was assuming a great deal it did not say. It is not a design, though it sometimes carries one. It is not a plan, though it sometimes pretends to be.
@@ -25,9 +27,9 @@ It is worth being precise about what specs have done, because the role is shifti
 
 A spec, in the form I have spent most of my career writing, sat at one end of a long human chain. I would describe what we wanted to build. A developer would read it, ask questions, push back on assumptions, surface technical realities I had not anticipated, propose alternatives, and eventually translate the description into code. Somewhere along that chain, much of the actual product thinking happened. Not in the spec, and not in the code, but in the negotiation between them.
 
-The spec, in other words, was not the place where decisions were made. It was the place where decisions were initiated. The latitude that human collaboration absorbed — the questions, the corrections, the small moments of "did you really mean this?" — was where most of the real definition happened.
+The spec, in other words, was not the place where decisions were made. It was the place where decisions were *initiated*. The latitude that human collaboration absorbed — the questions, the corrections, the small moments of "did you really mean this?" — was where most of the real definition happened.
 
-This is why the craft of writing specs has always been a strange one. The best specs I have written were not the most complete. They were the ones that left the right things open in the right way, that gave the developer enough to start without pretending to anticipate what only the work itself would surface. They were good invitations to think, not good instructions to execute.
+This is why the craft of writing specs has always been a strange one. The best specs I have written were not the most complete. They were the ones that left the right things open in the right way, that gave the developer enough to start without pretending to anticipate what only the work itself would surface. They were good *invitations* to think, not good *instructions* to execute.
 
 ## What is changing
 
@@ -45,7 +47,7 @@ This is what I think people are reaching for when they talk about specifications
 
 This is where I think it gets genuinely interesting, and where I am most uncertain.
 
-In the old chain, two kinds of latitude lived in the gap between spec and code. The first was latitude of execution — how the developer chose to implement what was described. The second, and more important, was latitude of intent — what the description actually meant, what trade-offs were acceptable, what the right thing to do was when the description and reality disagreed.
+In the old chain, two kinds of latitude lived in the gap between spec and code. The first was *latitude of execution* — how the developer chose to implement what was described. The second, and more important, was *latitude of intent* — what the description actually meant, what trade-offs were acceptable, what the right thing to do was when the description and reality disagreed.
 
 The first kind of latitude, execution, is the one that is most obviously changing. Models are increasingly capable of taking a structured description and producing code that runs. That is the part everyone notices.
 
@@ -59,11 +61,11 @@ I notice this most clearly in my own work when I write tasks now. I find myself 
 
 If much of the execution is being absorbed by tools, and if some of the intent can be carried by structure, what remains?
 
-I think it is a narrower thing than the role currently is, but a more concentrated one. Less time spent on translation — converting an intention into a description that a developer can act on, then mediating between description and result. More time spent on the things that cannot be specified: which problems are worth solving, which user is actually being served, what counts as good in a situation where many things could count as good. The product owner's value migrates from getting things built to getting the right things built, and knowing which things those are.
+I think it is a narrower thing than the role currently is, but a more concentrated one. Less time spent on translation — converting an intention into a description that a developer can act on, then mediating between description and result. More time spent on the things that cannot be specified: which problems are worth solving, which user is actually being served, what counts as good in a situation where many things could count as good. The product owner's value migrates from *getting things built* to *getting the right things built, and knowing which things those are*.
 
 This is not a new claim. Marty Cagan and others have been arguing for years that product management is fundamentally about discovery, judgement, and outcome rather than about output and ticket-shepherding. What is new, I think, is that the shift is being forced by the medium rather than argued for by the consultants. When the production of artefacts becomes cheap, the work of deciding which artefacts to produce becomes proportionally more visible. There is nowhere else for the role to hide.
 
-There is also, alongside this, a new craft emerging that does not yet have a settled name. Something like writing for systems that read. It draws on technical writing, on editorial work, on a feel for what context an outside reader will need and what they will infer. It is closer, in some ways, to writing a recipe than to writing a memo — a recipe is a kind of writing that has always known its reader is going to act on it directly, and that has developed conventions to suit. I suspect specs are slowly becoming more recipe-like and less memo-like, and that the people who can write that way will find themselves doing more of the consequential work.
+There is also, alongside this, a new craft emerging that does not yet have a settled name. Something like *writing for systems that read*. It draws on technical writing, on editorial work, on a feel for what context an outside reader will need and what they will infer. It is closer, in some ways, to writing a recipe than to writing a memo — a recipe is a kind of writing that has always known its reader is going to act on it directly, and that has developed conventions to suit. I suspect specs are slowly becoming more recipe-like and less memo-like, and that the people who can write that way will find themselves doing more of the consequential work.
 
 ## What I do not know
 
