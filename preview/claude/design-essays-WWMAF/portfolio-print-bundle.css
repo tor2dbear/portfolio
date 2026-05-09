@@ -1055,7 +1055,14 @@ h5,
   font-weight: var(--serif-weight-regular);
   font-family: var(--font-body);
   letter-spacing: var(--tracking-wide);
-  text-wrap: balance;
+  text-wrap: pretty;
+}
+
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .type-preamble {
+    text-wrap: auto;
+  }
 }
 
 /* Type: Body */
