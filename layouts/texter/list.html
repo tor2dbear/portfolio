@@ -50,7 +50,11 @@
             {{ if .Params.tags }}
             <ul class="tag-list__items">
               {{ range .Params.tags }}
-              <li class="tag-list__item"><span class="tag">{{ . }}</span></li>
+              {{ $svTag := index site.Data.tag_translations . | default . }}
+              {{ $tagSlug := $svTag | urlize }}
+              <li class="tag-list__item">
+                <a class="tag-list__link tag" href="{{ printf "/texter/?tag=%s" $tagSlug | relLangURL }}">{{ $svTag }}</a>
+              </li>
               {{ end }}
             </ul>
             {{ end }}
