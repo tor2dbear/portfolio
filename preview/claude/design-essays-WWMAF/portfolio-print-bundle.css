@@ -1183,6 +1183,11 @@ figcaption {
   color: var(--text-default);
 }
 
+.prose em,
+.prose i {
+  font-style: italic;
+}
+
 .prose blockquote {
   font-family: var(--font-body);
   font-size: var(--text-xl);
