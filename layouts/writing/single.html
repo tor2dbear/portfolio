@@ -12,7 +12,7 @@
   {{/* Show notice when no Swedish translation exists */}}
   {{ $hasSwedish := false }}
   {{ range .Translations }}
-    {{ if eq .Language.Lang "sv" }}{{ $hasSwedish = true }}{{ end }}
+    {{ if and (eq .Language.Lang "sv") (not .Params.hidden) }}{{ $hasSwedish = true }}{{ end }}
   {{ end }}
   {{ if not $hasSwedish }}
   {{ $svURL := "" }}

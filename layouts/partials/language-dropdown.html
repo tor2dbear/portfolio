@@ -1,7 +1,8 @@
-{{- $translations := .Translations -}}
 {{- $translationsByLang := dict -}}
-{{- range $translations -}}
-  {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+{{- range .Translations -}}
+  {{- if not .Params.hidden -}}
+    {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+  {{- end -}}
 {{- end -}}
 
 {{- /* Parent (section) translations as fallback when no direct page translation exists */ -}}

@@ -18,7 +18,7 @@
         {{ if and (not .Params.draft) (not .Params.hidden) }}
           {{ $hasSwedish := false }}
           {{ range .Translations }}
-            {{ if eq .Language.Lang "sv" }}{{ $hasSwedish = true }}{{ end }}
+            {{ if and (eq .Language.Lang "sv") (not .Params.hidden) }}{{ $hasSwedish = true }}{{ end }}
           {{ end }}
           {{ if not $hasSwedish }}
             {{ $enOnlyPages = $enOnlyPages | append . }}
