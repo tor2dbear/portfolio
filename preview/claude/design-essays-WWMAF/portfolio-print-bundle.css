@@ -1305,6 +1305,25 @@ figcaption {
 }
 
 /* ==========================================================================
+   LANGUAGE NOTICE
+   ========================================================================== */
+
+.lang-notice {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--spacing-24);
+  padding: var(--spacing-12) var(--spacing-16);
+  border-left: 2px solid var(--border-default);
+}
+
+.lang-notice a {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
    HYPERLINKS
    ========================================================================== */
 
