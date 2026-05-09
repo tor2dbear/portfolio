@@ -5,7 +5,7 @@
     <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/</link>
     <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
     <language>en</language>
-    <lastBuildDate>Sat, 09 May 2026 20:39:19 &#43;0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 May 2026 20:45:33 &#43;0000</lastBuildDate>
     <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/" rel="self" type="application/rss+xml" />
     <item>
       <title>Utblick no.2</title>
@@ -400,14 +400,6 @@
 &lt;p&gt;It took a while to decide whether this made sense.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Three dots in the footer</title>
-      <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/three-dots-in-the-footer/</link>
-      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/three-dots-in-the-footer/</guid>
-      <pubDate>Sun, 03 May 2026 00:00:00 &#43;0000</pubDate>
-      <description>&lt;p&gt;The theme panel on this site has a Pantone option. Most visitors probably won&amp;rsquo;t find it — not because it&amp;rsquo;s hidden, but because it doesn&amp;rsquo;t announce itself. You open the panel, you see it, you either activate it or you don&amp;rsquo;t.&lt;/p&gt;
-&lt;p&gt;If you do, a small player appears in the footer. Three dots, collapsed. Hover over them and it expands: play, pause, previous, next, shuffle. Press play and the whole site slowly changes color — working through Pantone&amp;rsquo;s Color of the Year archive, all twenty-seven years of it, from Cerulean Blue in 2000 to Cloud Dancer in 2026.&lt;/p&gt;</description>
-    </item>
-    <item>
       <title>The Designer as Coordinator</title>
       <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-designer-as-coordinator/</link>
       <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-designer-as-coordinator/</guid>
@@ -417,12 +409,12 @@
 &lt;p&gt;This persistence is often explained as inertia: designers are supposedly reluctant to abandon familiar workflows. But such explanations misunderstand the role these environments actually play. They assume that the primary function of design tools is interface generation.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>The Medium is the Mockup</title>
-      <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-medium-is-the-mockup/</link>
-      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-medium-is-the-mockup/</guid>
-      <pubDate>Wed, 18 Mar 2026 00:00:00 &#43;0000</pubDate>
-      <description>&lt;p&gt;For decades, digital design has relied on a peculiar assumption: that software must first be translated into another medium before it can be understood.&lt;/p&gt;
-&lt;p&gt;Designers sketch interfaces in wireframes, compose layouts in graphics software, arrange screens in collaborative canvases, and only later see these artifacts reconstructed as functioning systems. The mockup becomes a representational layer suspended between imagination and execution—a blueprint for a product that will eventually exist elsewhere, in another material, another logic, another medium.&lt;/p&gt;</description>
+      <title>Three dots in the footer</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/three-dots-in-the-footer/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/three-dots-in-the-footer/</guid>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;The theme panel on this site has a Pantone option. Most visitors probably won&amp;rsquo;t find it — not because it&amp;rsquo;s hidden, but because it doesn&amp;rsquo;t announce itself. You open the panel, you see it, you either activate it or you don&amp;rsquo;t.&lt;/p&gt;
+&lt;p&gt;If you do, a small player appears in the footer. Three dots, collapsed. Hover over them and it expands: play, pause, previous, next, shuffle. Press play and the whole site slowly changes color — working through Pantone&amp;rsquo;s Color of the Year archive, all twenty-seven years of it, from Cerulean Blue in 2000 to Cloud Dancer in 2026.&lt;/p&gt;</description>
     </item>
     <item>
       <title>The Other Surface</title>
@@ -431,6 +423,14 @@
       <pubDate>Tue, 25 Nov 2025 00:00:00 &#43;0000</pubDate>
       <description>&lt;h2&gt;Why product work has two faces, and why we keep designing only one&lt;/h2&gt;
 &lt;p&gt;Years ago, when I was still spending most of my time laying out magazines, an editor I worked with watched me build a particularly elaborate set of InDesign templates — paragraph styles, table presets, an InCopy setup so the editorial team could write into the layout in parallel — and said, half-joking, that I was going to optimise myself out of a job. He was wrong about the specific. I kept working with him for years. But he was right about something else, something I have only slowly come to understand: that what I was doing was not really about saving time.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The Medium is the Mockup</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-medium-is-the-mockup/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/design-internal-surface-ioxKg/writing/the-medium-is-the-mockup/</guid>
+      <pubDate>Thu, 10 Apr 2025 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;For decades, digital design has relied on a peculiar assumption: that software must first be translated into another medium before it can be understood.&lt;/p&gt;
+&lt;p&gt;Designers sketch interfaces in wireframes, compose layouts in graphics software, arrange screens in collaborative canvases, and only later see these artifacts reconstructed as functioning systems. The mockup becomes a representational layer suspended between imagination and execution—a blueprint for a product that will eventually exist elsewhere, in another material, another logic, another medium.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Prototyping the Prototype</title>
