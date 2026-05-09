@@ -9,6 +9,19 @@
   <h2 class="type-preamble reveal place-article">{{ .Description }}</h2>
   {{ end }}
 
+  {{/* Show notice when no Swedish translation exists */}}
+  {{ $hasSwedish := false }}
+  {{ range .Translations }}
+    {{ if eq .Language.Lang "sv" }}{{ $hasSwedish = true }}{{ end }}
+  {{ end }}
+  {{ if not $hasSwedish }}
+  {{ $svURL := "" }}
+  {{ with .Parent }}{{ range .Translations }}{{ if eq .Language.Lang "sv" }}{{ $svURL = .RelPermalink }}{{ end }}{{ end }}{{ end }}
+  <aside class="lang-notice reveal place-article">
+    {{ i18n "lang_only_english" }}{{ if $svURL }} <a href="{{ $svURL }}">{{ i18n "lang_browse_swedish" }}</a>{{ end }}
+  </aside>
+  {{ end }}
+
   <div class="post-content prose reveal place-article">
     {{ .Content }}
   </div>
