@@ -1,6 +1,6 @@
 +++
 title = "The Other Surface"
-date = "2026-05-09"
+date = "2025-11-25"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
