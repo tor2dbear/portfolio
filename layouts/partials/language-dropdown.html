@@ -5,19 +5,11 @@
   {{- end -}}
 {{- end -}}
 
-{{- /* Parent (section) translations as fallback when no direct page translation exists */ -}}
-{{- $parentTranslationsByLang := dict -}}
-{{- with .Parent -}}
-  {{- range .Translations -}}
-    {{- $parentTranslationsByLang = merge $parentTranslationsByLang (dict .Language.Lang .) -}}
-  {{- end -}}
-{{- end -}}
-
-{{- /* Render dropdown only if at least one other language is reachable */ -}}
+{{- /* Render dropdown only if at least one other language has a direct page translation */ -}}
 {{- $hasAny := false -}}
 {{- range site.Languages -}}
   {{- if ne .Lang $.Language.Lang -}}
-    {{- if or (index $translationsByLang .Lang) (index $parentTranslationsByLang .Lang) -}}
+    {{- if index $translationsByLang .Lang -}}
       {{- $hasAny = true -}}
     {{- end -}}
   {{- end -}}
@@ -43,12 +35,9 @@
       {{- range $.Site.Languages -}}
         {{- $isCurrent := eq .Lang $.Language.Lang -}}
         {{- $target := index $translationsByLang .Lang -}}
-        {{- $parentTarget := index $parentTranslationsByLang .Lang -}}
         {{- $href := "" -}}
         {{- if $target -}}
           {{- $href = $target.RelPermalink -}}
-        {{- else if $parentTarget -}}
-          {{- $href = $parentTarget.RelPermalink -}}
         {{- end -}}
         {{- if or $isCurrent $href -}}
           <label
