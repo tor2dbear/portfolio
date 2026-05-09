@@ -38,7 +38,7 @@
           <article class="article-card" data-tags="{{ delimit .Params.tags "," | lower }}">
             <header>
               <h2 class="article-card__title type-headline-3">
-                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                <a href="{{ .RelPermalink }}"><span class="tag tag--lang">English</span> {{ .Title }}</a>
               </h2>
               {{ if .Description }}
               <p class="article-card__description type-body">{{ .Description }}</p>
@@ -47,9 +47,13 @@
                 {{ partial "date.html" . }}
               </div>
             </header>
+            {{ if .Params.tags }}
             <ul class="tag-list__items">
-              <li class="tag-list__item"><span class="tag tag--lang">English</span></li>
+              {{ range .Params.tags }}
+              <li class="tag-list__item"><span class="tag">{{ . }}</span></li>
+              {{ end }}
             </ul>
+            {{ end }}
           </article>
         {{ else }}
           {{ .Render "summary" }}
