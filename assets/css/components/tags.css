@@ -72,4 +72,8 @@
   border: 1px solid var(--border-default);
   color: var(--text-muted);
   vertical-align: middle;
+  margin-left: 0.5em;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  font-size: 0.6em;
 }
