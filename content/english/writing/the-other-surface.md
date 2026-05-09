@@ -7,6 +7,7 @@ hidden = false
 description = "Why product work has two faces, and why we keep designing only one"
 tags = ["product", "process", "design"]
 topics = []
+slug = "writing"
 translationKey = "the-other-surface"
 +++
 
