@@ -17,9 +17,10 @@
   {{ if not $hasSwedish }}
   {{ $svURL := "" }}
   {{ with .Parent }}{{ range .Translations }}{{ if eq .Language.Lang "sv" }}{{ $svURL = .RelPermalink }}{{ end }}{{ end }}{{ end }}
-  <aside class="lang-notice reveal place-article">
+  <aside class="lang-notice reveal place-article" hidden>
     {{ i18n "lang_only_english" }}{{ if $svURL }} <a href="{{ $svURL }}">{{ i18n "lang_browse_swedish" }}</a>{{ end }}
   </aside>
+  <script>if (location.search.includes('from=sv')) document.currentScript.previousElementSibling.removeAttribute('hidden');</script>
   {{ end }}
 
   <div class="post-content prose reveal place-article">
