@@ -331,6 +331,13 @@ h5,
   text-wrap: pretty;
 }
 
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+  .type-preamble {
+    text-wrap: auto;
+  }
+}
+
 /* Type: Body */
 .type-body {
   font-size: var(--text-lg);
@@ -456,6 +463,11 @@ figcaption {
   color: var(--text-default);
 }
 
+.prose em,
+.prose i {
+  font-style: italic;
+}
+
 .prose blockquote {
   font-family: var(--font-body);
   font-size: var(--text-xl);
@@ -563,6 +575,26 @@ figcaption {
 
 .content.post .post-content.prose > :first-child {
   margin-top: 0;
+}
+
+/* ==========================================================================
+   LANGUAGE NOTICE
+   ========================================================================== */
+
+.lang-notice {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--spacing-24);
+  padding: var(--spacing-12) var(--spacing-16);
+  background-color: var(--surface-subtle);
+  border-radius: 0.375rem;
+}
+
+.lang-notice a {
+  color: var(--text-muted);
+  text-decoration: underline;
 }
 
 /* ==========================================================================

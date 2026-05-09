@@ -9,12 +9,59 @@
 
   {{ $pages := where .Data.Pages ".Params.draft" "!=" true }}
   {{ $pages := where $pages ".Params.hidden" "!=" true }}
-  {{ $pages := sort $pages "Date" "desc" }}
 
-  {{ if gt (len $pages) 0 }}
-    {{ range $pages }}
+  {{/* Collect English writing pages that have no Swedish translation */}}
+  {{ $enOnlyPages := slice }}
+  {{ range site.Sites }}
+    {{ if eq .Language.Lang "en" }}
+      {{ range where .RegularPages "Section" "writing" }}
+        {{ if and (not .Params.draft) (not .Params.hidden) }}
+          {{ $hasSwedish := false }}
+          {{ range .Translations }}
+            {{ if and (eq .Language.Lang "sv") (not .Params.hidden) }}{{ $hasSwedish = true }}{{ end }}
+          {{ end }}
+          {{ if not $hasSwedish }}
+            {{ $enOnlyPages = $enOnlyPages | append . }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ $allPages := $pages | append $enOnlyPages }}
+  {{ $allPages := sort $allPages "Date" "desc" }}
+
+  {{ if gt (len $allPages) 0 }}
+    {{ range $allPages }}
       <div class="place-article">
-        {{ .Render "summary" }}
+        {{ if eq .Language.Lang "en" }}
+          <article class="article-card" data-tags="{{ delimit .Params.tags "," | lower }}">
+            <header>
+              <h2 class="article-card__title type-headline-3">
+                <a href="{{ .RelPermalink }}?from=sv">{{ .Title }} <span class="tag tag--lang">English</span></a>
+              </h2>
+              {{ if .Description }}
+              <p class="article-card__description type-body">{{ .Description }}</p>
+              {{ end }}
+              <div class="article-card__meta type-information is-muted">
+                {{ partial "date.html" . }}
+              </div>
+            </header>
+            {{ if .Params.tags }}
+            <ul class="tag-list__items">
+              {{ range .Params.tags }}
+              {{ $svTag := index site.Data.tag_translations . | default . }}
+              {{ $tagSlug := $svTag | urlize }}
+              <li class="tag-list__item">
+                <a class="tag-list__link tag" href="{{ printf "/texter/?tag=%s" $tagSlug | relLangURL }}">{{ $svTag }}</a>
+              </li>
+              {{ end }}
+            </ul>
+            {{ end }}
+          </article>
+        {{ else }}
+          {{ .Render "summary" }}
+        {{ end }}
       </div>
     {{ end }}
   {{ else }}

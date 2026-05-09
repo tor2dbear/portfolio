@@ -66,3 +66,10 @@
 .post-meta__link--tag {
   color: var(--text-tag);
 }
+
+.tag--lang {
+  background-color: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  vertical-align: middle;
+}

@@ -1,9 +1,21 @@
-{{- $translations := .Translations -}}
-{{- if gt (len $translations) 0 -}}
 {{- $translationsByLang := dict -}}
-{{- range $translations -}}
-  {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+{{- range .Translations -}}
+  {{- if not .Params.hidden -}}
+    {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+  {{- end -}}
 {{- end -}}
+
+{{- /* Render dropdown only if at least one other language has a direct page translation */ -}}
+{{- $hasAny := false -}}
+{{- range site.Languages -}}
+  {{- if ne .Lang $.Language.Lang -}}
+    {{- if index $translationsByLang .Lang -}}
+      {{- $hasAny = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $hasAny -}}
 <div class="language-dropdown">
   <button
     class="language-toggle"
@@ -23,11 +35,15 @@
       {{- range $.Site.Languages -}}
         {{- $isCurrent := eq .Lang $.Language.Lang -}}
         {{- $target := index $translationsByLang .Lang -}}
-        {{- if or $isCurrent $target -}}
+        {{- $href := "" -}}
+        {{- if $target -}}
+          {{- $href = $target.RelPermalink -}}
+        {{- end -}}
+        {{- if or $isCurrent $href -}}
           <label
             class="language-option radio{{ if $isCurrent }} language-option--current{{ end }}"
             lang="{{ .Lang }}"
-            {{- if not $isCurrent }} data-language-href="{{ $target.RelPermalink }}"{{ end -}}
+            {{- if not $isCurrent }} data-language-href="{{ $href }}"{{ end -}}
           >
             <input
               type="radio"
@@ -35,7 +51,7 @@
               value="{{ .Lang }}"
               data-language-code="{{ .Lang }}"
               data-language-name="{{ .LanguageName }}"
-              {{- if not $isCurrent }} data-language-href="{{ $target.RelPermalink }}"{{ end -}}
+              {{- if not $isCurrent }} data-language-href="{{ $href }}"{{ end -}}
               {{- if $isCurrent }} checked aria-current="true"{{ end -}}
             >
             <span class="radio__visual" aria-hidden="true"></span>

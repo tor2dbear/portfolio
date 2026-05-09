@@ -396,3 +396,9 @@ other = "Palette Generator"
 
 [all_posts]
 other = "All posts"
+
+[lang_only_english]
+other = "This text has not been translated to Swedish yet."
+
+[lang_browse_swedish]
+other = "Browse writing in Swedish →"
