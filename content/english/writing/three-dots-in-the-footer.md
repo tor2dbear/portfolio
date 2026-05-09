@@ -1,6 +1,6 @@
 +++
 title = "Three dots in the footer"
-date = "2026-05-03"
+date = "2026-03-17"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
