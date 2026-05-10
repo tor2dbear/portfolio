@@ -71,14 +71,10 @@
   background-color: transparent;
   border: 1px solid var(--border-default);
   color: var(--text-muted);
-}
-
-.article-card__header--en {
-  display: flex;
-  align-items: baseline;
-  column-gap: var(--spacing-8);
-}
-
-.article-card__header--en > h2 {
-  min-width: 0;
+  vertical-align: middle;
+  margin-left: 0.5em;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  font-size: var(--text-xs);
+  line-height: 1;
 }

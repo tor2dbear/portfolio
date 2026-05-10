@@ -36,11 +36,10 @@
       <div class="place-article">
         {{ if eq .Language.Lang "en" }}
           <article class="article-card" data-tags="{{ delimit .Params.tags "," | lower }}">
-            <header class="article-card__header--en">
+            <header>
               <h2 class="article-card__title type-headline-3">
-                <a href="{{ .RelPermalink }}?from=sv">{{ .Title }}</a>
+                <a href="{{ .RelPermalink }}?from=sv">{{ .Title }} <span class="tag tag--lang">English</span></a>
               </h2>
-              <span class="tag tag--lang">English</span>
               {{ if .Description }}
               <p class="article-card__description type-body">{{ .Description }}</p>
               {{ end }}
