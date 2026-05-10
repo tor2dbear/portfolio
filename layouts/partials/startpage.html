@@ -1,6 +1,6 @@
-{{ $roles := slice "DesignOps" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
+{{ $roles := slice "Designer" "Art Director" "Produktdesigner" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
 {{ if eq .Site.Language.Lang "en" }}
-  {{ $roles = slice "DesignOps" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
+  {{ $roles = slice "Designer" "Art Director" "Product Designer" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
 {{ end }}
 
 
@@ -12,7 +12,7 @@
       data-js="role-swapper"
       data-roles="{{ $roles | jsonify }}"
       data-start="random"
-      data-suffix="."
+      data-suffix=""
       aria-live="polite"
       aria-atomic="true"
       >
@@ -21,16 +21,17 @@
           class="role-swapper__item{{ if eq $index 0 }} is-active{{ end }}"
           data-role="{{ $role }}"
           aria-hidden="{{ if eq $index 0 }}false{{ else }}true{{ end }}"
-          >{{ $role }}.</span
+          >{{ $role }}</span
         >
       {{ end }}
     </span
     >
-    <br />
+    {{ i18n "hero_intro_location" }}<br />
     {{ i18n "hero_intro_middle" }}
-    <span class="hero-emphasis">{{ i18n "hero_emphasis_design" }}</span>,
-    <span class="hero-emphasis">{{ i18n "hero_emphasis_business" }}</span>
+    <span class="hero-emphasis">{{ i18n "hero_emphasis_editorial" }}</span>,
+    <span class="hero-emphasis">{{ i18n "hero_emphasis_brand" }}</span>
     {{ i18n "hero_emphasis_and" }}
-    <span class="hero-emphasis">{{ i18n "hero_emphasis_tech" }}</span>.
+    <span class="hero-emphasis">{{ i18n "hero_emphasis_digital" }}</span>
+    {{ i18n "hero_intro_suffix" }}
   </h1>
 </div>
