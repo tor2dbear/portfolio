@@ -271,6 +271,9 @@ other = "LinkedIn"
 [footer_newsletter_title]
 other = "Newsletter"
 
+[footer_newsletter_description]
+other = "Occasional notes from my desk — design work, things I'm reading, what I'm building."
+
 [footer_newsletter_label]
 other = "Email address"
 
