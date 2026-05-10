@@ -19,8 +19,11 @@ other = "och"
 [hero_emphasis_digital]
 other = "digitala produkter"
 
+[hero_emphasis_punct]
+other = " —"
+
 [hero_intro_suffix]
-other = "— ibland närmare strategin, ibland närmare hantverket. Baserad i Göteborg."
+other = "ibland närmare strategin, ibland närmare hantverket. Baserad i Göteborg."
 
 [contact_header_start]
 other = "Om du har några frågor eller förslag på hur vi kan sammarbeta, vänligen"

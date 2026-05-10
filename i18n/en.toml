@@ -19,8 +19,11 @@ other = "and"
 [hero_emphasis_digital]
 other = "digital product"
 
+[hero_emphasis_punct]
+other = ","
+
 [hero_intro_suffix]
-other = ", sometimes closer to strategy, sometimes closer to the craft. Based in Gothenburg."
+other = "sometimes closer to strategy, sometimes closer to the craft. Based in Gothenburg."
 
 [contact_header_start]
 other = "If you have any questions or suggestions on how we could work together, please"
