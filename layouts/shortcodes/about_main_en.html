@@ -12,16 +12,16 @@
 
 <div class="about-main__secondary">
   <h3 class="about-main__headline type-headline-3">
-    I also write about design.
+    I also write about design, and try to make sense of how it's changing.
   </h3>
   <p class="about-main__text type-body">
-    Mostly about how it works in practice, and how the work itself is changing as the tools do.
+    Mostly about how it works in practice — tools, process, the craft of it.
   </p>
   {{ if $recentWriting }}
-  <p class="about-main__recent-label type-body">Recent:</p>
+  <h4 class="about-cv__heading type-headline-small">Recent writing</h4>
   <ul class="about-main__writing-list type-body">
     {{ range $recentWriting }}
-    <li class="about-main__writing-item">— <a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    <li class="about-main__writing-item"><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
     {{ end }}
   </ul>
   {{ end }}
