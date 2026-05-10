@@ -1,3 +1,5 @@
+{{ $recentWriting := first 3 (sort (where .Site.RegularPages "Section" "texter") "Date" "desc") }}
+
 <div class="about-main__primary reveal">
   <h3 class="about-main__headline type-headline-3">
     Hej, jag heter Torbjörn och är designer baserad i Göteborg.
@@ -8,7 +10,21 @@
 </div>
 
 <div class="about-main__secondary reveal reveal--delay">
+  <h3 class="about-main__headline type-headline-3">
+    Jag skriver också om design.
+  </h3>
   <p class="about-main__text type-body">
-    Jag skriver också om design — hur den fungerar i praktiken, och hur arbetet självt förändras i takt med verktygen. Hör av dig om något här är intressant.
+    Mestadels om hur den fungerar i praktiken, och hur arbetet självt förändras i takt med verktygen.
+  </p>
+  {{ if $recentWriting }}
+  <p class="about-main__recent-label type-body">Senaste:</p>
+  <ul class="about-main__writing-list type-body">
+    {{ range $recentWriting }}
+    <li class="about-main__writing-item">— <a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
+  <p class="about-main__text type-body">
+    Hör av dig om något här är intressant.
   </p>
 </div>

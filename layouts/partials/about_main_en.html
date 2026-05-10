@@ -1,15 +1,30 @@
+{{ $recentWriting := first 3 (sort (where (where .Site.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
+
 <div class="about-main__primary reveal">
   <h3 class="about-main__headline type-headline-3">
     Hi, I'm Torbjörn, a designer based in Gothenburg.
   </h3>
-
   <p class="about-main__text type-body">
     These days I lead product at Lokalguiden. The job is now backlog, sprints, and coordination more than pixels — but design remains how I think, and most of what's on this site comes out of that habit. It's been a slow shift from designing screens to deciding which screens to design.
   </p>
 </div>
 
 <div class="about-main__secondary reveal reveal--delay">
+  <h3 class="about-main__headline type-headline-3">
+    I also write about design.
+  </h3>
   <p class="about-main__text type-body">
-    I also write about design — how it works in practice, and how the work itself is changing as the tools do. Get in touch if any of this is interesting.
+    Mostly about how it works in practice, and how the work itself is changing as the tools do.
+  </p>
+  {{ if $recentWriting }}
+  <p class="about-main__recent-label type-body">Recent:</p>
+  <ul class="about-main__writing-list type-body">
+    {{ range $recentWriting }}
+    <li class="about-main__writing-item">— <a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
+  <p class="about-main__text type-body">
+    Get in touch if any of this is interesting.
   </p>
 </div>
