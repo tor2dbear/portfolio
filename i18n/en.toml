@@ -2,13 +2,10 @@
 other = "is a multi-disciplinary designer based in Gothenburg, Sweden"
 
 [hero_intro_lead]
-other = "Hi, I’m Torbjörn — a"
-
-[hero_intro_location]
-other = "based in Gothenburg."
+other = "Hi, Torbjörn here — a"
 
 [hero_intro_middle]
-other = "For over a decade I’ve moved between"
+other = "For over a decade I’ve worked across"
 
 [hero_emphasis_editorial]
 other = "editorial"
@@ -23,7 +20,7 @@ other = "and"
 other = "digital product"
 
 [hero_intro_suffix]
-other = "work, sometimes leading strategy, sometimes deep in the craft."
+other = ", sometimes leading strategy, sometimes deep in the craft. Based in Gothenburg."
 
 [contact_header_start]
 other = "If you have any questions or suggestions on how we could work together, please"
