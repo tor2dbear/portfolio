@@ -1,4 +1,4 @@
-{{ $recentWriting := first 3 (sort (where .Page.Site.RegularPages "Section" "texter") "Date" "desc") }}
+{{ $recentWriting := first 3 (sort (where (where .Page.Site.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
 
 <div class="about-content use-subgrid stepped-6-6 place-full">
 <div class="about-main__primary">

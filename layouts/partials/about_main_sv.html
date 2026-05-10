@@ -1,4 +1,4 @@
-{{ $recentWriting := first 3 (sort (where .Site.RegularPages "Section" "texter") "Date" "desc") }}
+{{ $recentWriting := first 3 (sort (where (where .Site.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
 
 <div class="about-main__primary reveal">
   <h3 class="about-main__headline type-headline-3">
