@@ -27,8 +27,6 @@ You could approximate a grid but never truly express one.
 
 CSS Grid changed this in 2017. For the first time, the web had a native layout system — one that did not need to simulate a grid but actually *was* one.
 
----
-
 ## Columns with names
 
 What separates CSS Grid from earlier layout techniques is not merely capability but grammar.
@@ -59,8 +57,6 @@ A print designer recognizes this immediately.
 
 The important shift is not visual but structural. Layout stops being a collection of local adjustments and becomes a shared spatial language.
 
----
-
 ## The missing piece
 
 But CSS Grid solved only half the problem.
@@ -89,8 +85,6 @@ Now a nested component can position its children along the exact same column lin
 
 Grid gave the web structure. Subgrid gives it continuity.
 
----
-
 ## A denser compositional language
 
 The full scope of what this makes possible became clear when I began noticing a different kind of precision emerging in modern web design.
@@ -106,8 +100,6 @@ More columns is not more complexity. More columns is more possibility.
 Twelve columns remains a practical compromise. Divisible by 2, 3, 4, and 6 — halves, thirds, quarters, and sixths all resolving onto shared lines.
 
 The result is not rigidity but compositional freedom with structure.
-
----
 
 ## Art direction as a system
 
@@ -143,8 +135,6 @@ For larger editorial gestures there are placement presets — `.place-article`, 
 Each element shifts two columns to the right while occupying four, producing a staggered progression across the spread.
 
 Swedish typesetters once used the term *tripp-trapp-trull* for similar offset arrangements. The name still fits.
-
----
 
 ## Print as endpoint
 
