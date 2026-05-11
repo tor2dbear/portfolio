@@ -7,7 +7,7 @@ hidden = false
 description = "On CSS subgrid, named lines, and the print logic that finally arrived on the web"
 tags = ["css", "design", "grid", "print"]
 topics = []
-slug = "the-grid-inherited"
+slug = "writing"
 translationKey = "the-grid-inherited"
 +++
 
