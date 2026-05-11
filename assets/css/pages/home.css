@@ -170,6 +170,10 @@
   margin-bottom: 0;
 }
 
+.about-main__writing-list {
+  margin-bottom: var(--spacing-24);
+}
+
 /* Contact Section */
 .contact-section {
   /* Additional specific styles if needed */
