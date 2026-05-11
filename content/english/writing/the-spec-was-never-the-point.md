@@ -1,6 +1,6 @@
 +++
 title = "The Spec Was Never the Point"
-date = "2026-05-09"
+date = "2026-06-18"
 author = "Torbjörn Hedberg"
 draft = false
 hidden = false
