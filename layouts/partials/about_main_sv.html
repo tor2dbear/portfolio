@@ -1,11 +1,12 @@
-{{ $recentWriting := first 3 (sort (where (where .Site.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
+{{ $enSite := index (where .Site.Sites "Language.Lang" "en") 0 }}
+{{ $recentWriting := first 3 (sort (where (where $enSite.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
 
 <div class="about-main__primary reveal">
   <h3 class="about-main__headline type-headline-3">
-    Hej, Torbjörn här. Designer i Göteborg.
+    Hej, Torbjörn här. Designer baserad i Göteborg.
   </h3>
   <p class="about-main__text type-body">
-    Jag leder idag produktarbetet på Lokalguiden. Jobbet består mest av backloggar, sprintar och samordning snarare än design — men jag tänker fortfarande som designer, och det präglar det mesta på den här sidan. Med tiden har arbetet gått från att rita skärmar till att avgöra vilka skärmar som ska ritas.
+    Med tiden har mitt arbete gått från att rita skärmar till att avgöra vilka skärmar som ska ritas. Jag leder idag produktarbetet på Lokalguiden. Jobbet består till största del av backloggar, sprintar och samordning snarare än design — men jag tänker fortfarande som designer, och det präglar det mesta på den här sidan.
   </p>
 </div>
 
