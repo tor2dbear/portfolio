@@ -323,6 +323,56 @@ This triggers a full Netlify deploy preview with all Netlify features (redirects
 
 ## Content Guidelines
 
+### Writing Articles (`/writing/` and `/texter/`)
+
+**Required front matter for every English writing article** (`content/english/writing/*.md`):
+```toml
++++
+title = "Article Title"
+date = "2026-01-01"
+author = "Torbjörn Hedberg"
+draft = false
+hidden = false
+description = "Subtitle / preamble shown below the title"
+tags = ["design", "tools", "process"]
+topics = []
+slug = "writing"
+translationKey = "article-slug-used-as-key"
++++
+```
+
+**Required front matter for every Swedish writing article** (`content/swedish/texter/*.md`):
+```toml
++++
+title = "Artikelns titel"
+date = "2026-01-01"
+author = "Torbjörn Hedberg"
+draft = false
+hidden = false
+description = "Underrubrik / ingress"
+tags = ["design", "verktyg", "process"]
+topics = []
+slug = "texter"
+translationKey = "article-slug-used-as-key"
++++
+```
+
+**Critical rules**:
+- `slug = "writing"` is **required** on all English writing articles — without it Hugo generates a wrong URL (e.g. `/writing/article-slug/article-slug/` instead of `/writing/article-slug/`). Every file in the directory must set this explicitly.
+- `slug = "texter"` is the equivalent requirement for Swedish articles.
+- `translationKey` must match exactly between the EN and SV versions — this is how Hugo and the templates link them as translations of each other.
+
+**Untranslated articles (English-only)**:
+When a Swedish translation is not ready, set `hidden = true` on the Swedish file. Effects:
+- The English article appears on `/sv/texter/` with an "English" badge and topic tags translated via `data/tag_translations.toml`
+- A Swedish lang-notice ("Denna text finns inte på svenska.") is shown when the user arrives from the Swedish list via `?from=sv`
+- The language switcher is hidden on the English article (no misleading fallback link)
+- The Swedish file is preserved in the repo for future editing — change to `hidden = false` when ready to publish
+
+**Tag translations** (`data/tag_translations.toml`): Maps English tag names to Swedish equivalents for display on the Swedish list. Update this file when new English tags are introduced.
+
+---
+
 ### Portfolio Projects (`/works/`)
 Front matter structure:
 ```yaml
@@ -697,6 +747,7 @@ npm run test:coverage       # Generate coverage report
 7. **Git Conventions**: Follow the branch format defined in this document
 8. **Taxonomy System**: Employers/clients use Hugo taxonomies - projects need taxonomy tags to appear on company pages
 9. **Hidden Projects**: Respect `hidden: true` parameter - must be filtered in main portfolio templates
+10. **Writing slug**: Every English writing article needs `slug = "writing"` and every Swedish texter article needs `slug = "texter"` in front matter — Hugo will generate wrong URLs without it
 10. **Request Handling**: Follow the "Request Handling Guidelines" section below - propose plans for analysis requests, implement directly only for clear action requests
 11. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
 
@@ -985,4 +1036,4 @@ if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
 
 ---
 
-Last updated: 2026-02-04
+Last updated: 2026-05-09

@@ -14,7 +14,7 @@
   {{ $svURL := "" }}
   {{ with .Parent }}{{ range .Translations }}{{ if eq .Language.Lang "sv" }}{{ $svURL = .RelPermalink }}{{ end }}{{ end }}{{ end }}
   <aside class="lang-notice place-article" style="display:none">
-    {{ i18n "lang_only_english" }}{{ if $svURL }} <a href="{{ $svURL }}">{{ i18n "lang_browse_swedish" }}</a>{{ end }}
+    Denna text finns inte på svenska.{{ if $svURL }} <a href="{{ $svURL }}">Tillbaka till svenska texter.</a>{{ end }}
   </aside>
   <script>if (location.search.includes('from=sv')) document.currentScript.previousElementSibling.style.display = '';</script>
   {{ end }}
