@@ -2,7 +2,7 @@
 title = "The Grid, Inherited"
 date = "2026-05-11"
 author = "Torbjörn Hedberg"
-draft = true
+draft = false
 hidden = false
 description = "On CSS subgrid, named lines, and the print logic that finally arrived on the web"
 tags = ["css", "design", "grid", "print"]
