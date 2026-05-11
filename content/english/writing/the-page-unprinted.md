@@ -2,7 +2,7 @@
 title = "The Page Unprinted"
 date = "2026-05-11"
 author = "Torbjörn Hedberg"
-draft = true
+draft = false
 hidden = false
 description = "Exploring the possibilities and frustrations of CSS print styling"
 tags = ["css", "print", "web-development"]
