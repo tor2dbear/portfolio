@@ -69,13 +69,18 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/works/tags/"
     [[languages.en.menu.top]]
-      name = "About me"
+      name = "Writing"
       weight = 3
+      identifier = "writing"
+      url = "/writing/"
+    [[languages.en.menu.top]]
+      name = "About me"
+      weight = 4
       identifier = "about"
       url = "/about"
     [[languages.en.menu.top]]
       name = "contact"
-      weight = 4
+      weight = 5
       identifier = "contact"
       url = "/contact"
 
@@ -103,13 +108,18 @@ DefaultContentLanguage = "en"
       identifier = "works"
       url = "/sv/arbeten/tags/"
     [[languages.sv.menu.top]]
-      name = "Om mig"
+      name = "Texter"
       weight = 3
+      identifier = "writing"
+      url = "/sv/texter/"
+    [[languages.sv.menu.top]]
+      name = "Om mig"
+      weight = 4
       identifier = "about"
       url = "/sv/om"
     [[languages.sv.menu.top]]
       name = "kontakt"
-      weight = 4
+      weight = 5
       identifier = "contact"
       url = "/sv/kontakt"
 
