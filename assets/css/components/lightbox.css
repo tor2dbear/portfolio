@@ -63,3 +63,9 @@ html.lightbox-open {
 figure[data-lightbox] {
   cursor: zoom-in;
 }
+
+:root[data-effect-blend="on"] .lightbox__img {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
