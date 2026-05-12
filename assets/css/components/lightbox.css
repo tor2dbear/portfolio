@@ -64,8 +64,14 @@ figure[data-lightbox] {
   cursor: zoom-in;
 }
 
-:root[data-effect-blend="on"] .lightbox__img {
+:root[data-effect-blend="on"]:not([data-image-tone="tritone"]) .lightbox__img {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"] .lightbox__img {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
 }
