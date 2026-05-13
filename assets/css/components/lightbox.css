@@ -18,43 +18,9 @@ html.lightbox-open {
 }
 
 .lightbox__picture {
-  position: relative;
-  display: block;
   max-width: 90vw;
   max-height: 90vh;
   cursor: default;
-}
-
-.lightbox__picture::before,
-.lightbox__picture::after {
-  content: " ";
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  pointer-events: none;
-}
-
-.lightbox__picture::before {
-  z-index: 1;
-  opacity: var(--image-shadow-opacity, 1);
-  background: var(--image-shadow-background, transparent) 0 0 / 100% 100% no-repeat;
-  mix-blend-mode: var(--image-shadow-blend-mode, normal);
-}
-
-.lightbox__picture::after {
-  z-index: 2;
-  opacity: var(--image-highlight-opacity, 1);
-  background: var(--image-highlight-background, var(--image-background)) 0 0 / 100% 100% no-repeat;
-  mix-blend-mode: var(--image-highlight-blend-mode, var(--image-blend-mode));
-}
-
-:root[data-effect-blend="off"] .lightbox__picture::before,
-:root[data-effect-blend="off"] .lightbox__picture::after,
-:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"] .lightbox__picture::before,
-:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"] .lightbox__picture::after {
-  display: none;
 }
 
 .lightbox__img {
