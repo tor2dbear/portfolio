@@ -1875,18 +1875,18 @@ video {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;
   --image-highlight-blend-mode: screen;
-  --image-shadow-background: var(--iris-12);
-  --image-highlight-background: var(--iris-9);
-  --image-shadow-opacity: 0.60;
-  --image-highlight-opacity: 0.72;
+  --image-shadow-background: var(--iris-11);
+  --image-highlight-background: var(--iris-3);
+  --image-shadow-opacity: 0.78;
+  --image-highlight-opacity: 0.68;
   --image-background: var(--image-highlight-background);
 }
 
 :root[data-mode="dark"][data-effect-blend="on"][data-palette="standard"] {
   --image-shadow-background: var(--iris-3);
   --image-highlight-background: var(--iris-11);
-  --image-shadow-opacity: 0.55;
-  --image-highlight-opacity: 0.62;
+  --image-shadow-opacity: 0.70;
+  --image-highlight-opacity: 0.68;
   --image-background: var(--image-highlight-background);
 }
 
