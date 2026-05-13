@@ -517,9 +517,9 @@ video {
 }
 
 :root[data-mode="dark"][data-effect-blend="on"][data-palette="standard"] {
-  --image-shadow-background: var(--iris-3);
+  --image-shadow-background: var(--iris-7);
   --image-highlight-background: var(--iris-11);
-  --image-shadow-opacity: 0.70;
+  --image-shadow-opacity: 0.78;
   --image-highlight-opacity: 0.68;
   --image-background: var(--image-highlight-background);
 }
