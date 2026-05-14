@@ -3,7 +3,7 @@
   {{- if eq .Page.Language.Lang "en" -}}
     {{- $email = "hi@tor-bjorn.com" -}}
   {{- end -}}
-  {{- $showPrivate := not (or .Page.IsHome (eq .Page.Type "about")) -}}
+  {{- $showPrivate := not (or .Page.IsHome (eq .Page.Type "contact")) -}}
   <div class="contact-info__icon curl-icon">
     <svg width="24" height="25" class="icon">
       <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-curl"></use>
