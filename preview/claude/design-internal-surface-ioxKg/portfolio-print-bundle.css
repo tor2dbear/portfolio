@@ -1870,7 +1870,15 @@ video {
   --image-background: var(--image-highlight-background);
 }
 
-/* Standard palette needs a softer blend profile to preserve image detail. */
+/*
+ * Standard palette blend — NOTE on naming:
+ * --image-shadow-background uses multiply (barely affects image when light)
+ * --image-highlight-background uses screen (lifts dark pixels to the iris colour,
+ * creating the visible shadow tint). The variable names are inverted relative
+ * to the visual effect — shadow colour ends up in the highlights and vice versa.
+ * This is intentional; the effect looks correct. Don't "fix" the names without
+ * testing, as it will invert the visual result.
+ */
 :root[data-effect-blend="on"][data-palette="standard"] {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;
@@ -2302,6 +2310,20 @@ p:empty {
 /* NOTE: Newsletter component moved to assets/css/components/newsletter.css */
 
 /* NOTE: Tooltip component moved to assets/css/components/tooltip.css */
+
+/* || ========== About main block ---------------------------------- */
+
+.about-main__text {
+  margin-bottom: var(--spacing-24);
+}
+
+.about-main__text:last-child {
+  margin-bottom: 0;
+}
+
+.about-main__writing-list {
+  margin-bottom: var(--spacing-24);
+}
 
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
