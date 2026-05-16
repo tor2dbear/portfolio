@@ -138,6 +138,9 @@
   {{ $dimensions_palette_mesa := resources.Get "css/dimensions/palette/mesa.css" }}
   {{ $dimensions_palette_pantone := resources.Get "css/dimensions/palette/pantone.css" }}
   {{ $dimensions_palette_previews := resources.Get "css/dimensions/palette/previews.css" }}
+  {{ $cotyData := index .Site.Data "pantone-coty" }}
+  {{ $coty_scales_tmpl := resources.Get "css/dimensions/palette/coty-scales.css.tmpl" }}
+  {{ $coty_scales := $coty_scales_tmpl | resources.ExecuteAsTemplate "css/coty-scales.css" $cotyData }}
 
   <!-- CSS dimensions (typography) -->
   {{ $dimensions_typo_editorial := resources.Get "css/dimensions/typography/editorial.css" }}
@@ -395,6 +398,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_mesa.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_previews.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $coty_scales.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_editorial.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_refined.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_expressive.RelPermalink }}" />
@@ -450,7 +454,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_forest $dimensions_palette_mesa $dimensions_palette_pantone $dimensions_palette_previews $coty_scales $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}

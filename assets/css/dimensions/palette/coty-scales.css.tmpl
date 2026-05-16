@@ -1,0 +1,19 @@
+{{- range .colors -}}
+{{- $year := .year -}}
+{{- if .scale_light }}
+:root[data-palette="pantone"][data-coty-year="{{ $year }}"] {
+{{ range $step, $value := .scale_light -}}  --coty-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- if .secondary_scale_light -}}
+{{ range $step, $value := .secondary_scale_light -}}  --coty-secondary-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- end -}}
+}
+{{ end -}}
+{{- if .scale_dark }}
+:root[data-mode="dark"][data-palette="pantone"][data-coty-year="{{ $year }}"] {
+{{ range $step, $value := .scale_dark -}}  --coty-{{ $step }}: {{ $value }};
+{{ end -}}
+}
+{{ end -}}
+{{- end -}}

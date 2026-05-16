@@ -535,10 +535,18 @@
   }
 
   function parseFuncTableValues(node) {
-    if (!node) return null;
+    if (!node) {
+      return null;
+    }
     var parts = (node.getAttribute("tableValues") || "").trim().split(/\s+/);
-    if (parts.length !== 3) return null;
-    var vals = [parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2])];
+    if (parts.length !== 3) {
+      return null;
+    }
+    var vals = [
+      parseFloat(parts[0]),
+      parseFloat(parts[1]),
+      parseFloat(parts[2]),
+    ];
     return vals.some(isNaN) ? null : vals;
   }
 
@@ -548,15 +556,25 @@
   }
 
   function getThemeTransitionDuration() {
-    if (!document.body || !document.body.classList.contains("darkmodeTransition")) {
+    if (
+      !document.body ||
+      !document.body.classList.contains("darkmodeTransition")
+    ) {
       return 0;
     }
-    var val = document.body.style.getPropertyValue("--theme-transition-duration") || "";
+    var val =
+      document.body.style.getPropertyValue("--theme-transition-duration") || "";
     var ms = parseFloat(val);
     return isNaN(ms) || ms <= 0 ? 0 : ms;
   }
 
-  function animateTritoneTableValues(nodes, shadow, mid, highlight, durationMs) {
+  function animateTritoneTableValues(
+    nodes,
+    shadow,
+    mid,
+    highlight,
+    durationMs
+  ) {
     if (_tritoneAnimFrame) {
       cancelAnimationFrame(_tritoneAnimFrame);
       _tritoneAnimFrame = null;
@@ -577,21 +595,35 @@
     }
     var startTime = null;
     function step(ts) {
-      if (!startTime) startTime = ts;
+      if (!startTime) {
+        startTime = ts;
+      }
       var t = Math.min((ts - startTime) / durationMs, 1);
       var e = easeOutTheme(t);
-      nodes.r.setAttribute("tableValues",
-        round3(fromR[0] + (toShadow.r - fromR[0]) * e) + " " +
-        round3(fromR[1] + (toMid.r - fromR[1]) * e) + " " +
-        round3(fromR[2] + (toHighlight.r - fromR[2]) * e));
-      nodes.g.setAttribute("tableValues",
-        round3(fromG[0] + (toShadow.g - fromG[0]) * e) + " " +
-        round3(fromG[1] + (toMid.g - fromG[1]) * e) + " " +
-        round3(fromG[2] + (toHighlight.g - fromG[2]) * e));
-      nodes.b.setAttribute("tableValues",
-        round3(fromB[0] + (toShadow.b - fromB[0]) * e) + " " +
-        round3(fromB[1] + (toMid.b - fromB[1]) * e) + " " +
-        round3(fromB[2] + (toHighlight.b - fromB[2]) * e));
+      nodes.r.setAttribute(
+        "tableValues",
+        round3(fromR[0] + (toShadow.r - fromR[0]) * e) +
+          " " +
+          round3(fromR[1] + (toMid.r - fromR[1]) * e) +
+          " " +
+          round3(fromR[2] + (toHighlight.r - fromR[2]) * e)
+      );
+      nodes.g.setAttribute(
+        "tableValues",
+        round3(fromG[0] + (toShadow.g - fromG[0]) * e) +
+          " " +
+          round3(fromG[1] + (toMid.g - fromG[1]) * e) +
+          " " +
+          round3(fromG[2] + (toHighlight.g - fromG[2]) * e)
+      );
+      nodes.b.setAttribute(
+        "tableValues",
+        round3(fromB[0] + (toShadow.b - fromB[0]) * e) +
+          " " +
+          round3(fromB[1] + (toMid.b - fromB[1]) * e) +
+          " " +
+          round3(fromB[2] + (toHighlight.b - fromB[2]) * e)
+      );
       if (t < 1) {
         _tritoneAnimFrame = requestAnimationFrame(step);
       } else {
@@ -639,13 +671,25 @@
     }
 
     var overrides = stepOverrides || {};
-    if (overrides.shadow) shadowColor = overrides.shadow;
-    if (overrides.mid) midColor = overrides.mid;
-    if (overrides.highlight) highlightColor = overrides.highlight;
+    if (overrides.shadow) {
+      shadowColor = overrides.shadow;
+    }
+    if (overrides.mid) {
+      midColor = overrides.mid;
+    }
+    if (overrides.highlight) {
+      highlightColor = overrides.highlight;
+    }
 
     var transitionMs = getThemeTransitionDuration();
     if (transitionMs > 0) {
-      animateTritoneTableValues(nodes, shadowColor, midColor, highlightColor, transitionMs);
+      animateTritoneTableValues(
+        nodes,
+        shadowColor,
+        midColor,
+        highlightColor,
+        transitionMs
+      );
     } else {
       setTritoneTableValues(nodes, shadowColor, midColor, highlightColor);
     }
@@ -1237,6 +1281,7 @@
       document.documentElement.style.removeProperty(name);
     });
     document.documentElement.removeAttribute("data-image-tone");
+    document.documentElement.removeAttribute("data-coty-year");
   }
 
   function applyPreviewTokens(scale, secondaryScale) {
@@ -1718,14 +1763,23 @@
     }
     var roles = resolveRoleTokens(entry, scale, resolvedMode);
 
-    Object.keys(scale).forEach(function (name) {
-      document.documentElement.style.setProperty(name, scale[name]);
-    });
-    if (secondaryScale) {
+    // Only inject via JS for years where no build-time CSS scale exists
+    var hasExplicitScale =
+      resolvedMode === "dark"
+        ? Boolean(entry.scale_dark)
+        : Boolean(entry.scale_light);
+    if (!hasExplicitScale) {
+      Object.keys(scale).forEach(function (name) {
+        document.documentElement.style.setProperty(name, scale[name]);
+      });
+    }
+    var hasExplicitSecondaryScale =
+      resolvedMode === "dark" ? false : Boolean(entry.secondary_scale_light);
+    if (secondaryScale && !hasExplicitSecondaryScale) {
       Object.keys(secondaryScale).forEach(function (name) {
         document.documentElement.style.setProperty(name, secondaryScale[name]);
       });
-    } else {
+    } else if (!secondaryScale) {
       for (var i = 1; i <= 12; i += 1) {
         document.documentElement.style.removeProperty("--coty-secondary-" + i);
       }
@@ -1938,13 +1992,22 @@
     );
     function resolveStepColor(key) {
       var raw = allOverridesForTritone[key];
-      if (!raw) return null;
-      var secondaryStep = extractStepFromVarToken(String(raw), "coty-secondary");
+      if (!raw) {
+        return null;
+      }
+      var secondaryStep = extractStepFromVarToken(
+        String(raw),
+        "coty-secondary"
+      );
       if (secondaryStep && secondaryScale) {
-        return getScaleColor(secondaryScale, "coty-secondary", secondaryStep) || null;
+        return (
+          getScaleColor(secondaryScale, "coty-secondary", secondaryStep) || null
+        );
       }
       var step = extractStepFromVarToken(String(raw), "coty");
-      if (!step) return null;
+      if (!step) {
+        return null;
+      }
       return getScaleColor(scale, "coty", step) || null;
     }
     applyPantoneTritone(scale, secondaryScale, roles, {
@@ -1987,16 +2050,22 @@
   function readFullDraft(year, mode) {
     try {
       var raw = localStorage.getItem("pantone-lab::" + String(year || ""));
-      if (!raw) return {};
+      if (!raw) {
+        return {};
+      }
       var parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object") return {};
+      if (!parsed || typeof parsed !== "object") {
+        return {};
+      }
       var bucket =
         mode === "dark"
           ? parsed.overrides_dark || {}
           : parsed.overrides_light || {};
       var out = {};
       Object.keys(bucket).forEach(function (k) {
-        if (bucket[k]) out[k] = bucket[k];
+        if (bucket[k]) {
+          out[k] = bucket[k];
+        }
       });
       return out;
     } catch {

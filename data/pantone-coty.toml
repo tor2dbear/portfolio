@@ -649,14 +649,14 @@ source_step_dark = 8
 
 [colors.overrides_light]
 text_muted = "--coty-10"
-surface_page = "--coty-8"
-surface_default = "--coty-7"
+surface_page = "--coty-3"
+surface_default = "--coty-5"
 border_subtle = "--coty-9"
 border_default = "--coty-10"
 border_strong = "--coty-11"
 action = "--coty-1"
 on_action = "--coty-9"
-component_form_bg = "--coty-6"
+component_form_bg = "--coty-4"
 
 [colors.overrides_dark]
 text_default = "--coty-10"
@@ -729,7 +729,7 @@ secondary_source_step_dark = 10
 "11" = "oklch(21% 0.063 18.17)"
 "12" = "oklch(10% 0.026 18.17)"
 
-[colors.scale_light_secondary]
+[colors.secondary_scale_light]
 "1" = "oklch(98% 0.003 262.29)"
 "2" = "oklch(96% 0.006 262.29)"
 "3" = "oklch(92% 0.015 262.29)"
@@ -942,7 +942,7 @@ secondary_source_step_dark = 10
 "11" = "oklch(21% 0.001 247.88)"
 "12" = "oklch(10% 0.001 247.88)"
 
-[colors.scale_light_secondary]
+[colors.secondary_scale_light]
 "1" = "oklch(98% 0.03 100.57)"
 "2" = "oklch(96% 0.065 100.57)"
 "3" = "oklch(89.65% 0.161 100.57)"
