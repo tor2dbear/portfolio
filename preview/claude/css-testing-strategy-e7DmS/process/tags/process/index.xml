@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Sat, 16 May 2026 14:09:48 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/process/tags/process/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Designing in the Native Material</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/designing-in-the-native-material/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/designing-in-the-native-material/</guid>
+      <pubDate>Fri, 08 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;I am writing this from the middle of something I do not yet know how to finish.&lt;/p&gt;
+&lt;p&gt;For most of my working life I have preferred to design directly in the medium the product is actually made from. In the late nineties that meant adjusting CSS in a browser, resizing windows, tweaking values in real time. Even then it felt obvious to me that the web was already its own design environment. The browser was not a preview of the work. It was the work.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The Designer as Coordinator</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/the-designer-as-coordinator/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/the-designer-as-coordinator/</guid>
+      <pubDate>Wed, 22 Apr 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;The design industry has spent the past several years asking whether artificial intelligence will eliminate the need for interface design tools. As systems capable of generating layouts, writing code, and deploying functioning applications improve, traditional design workflows increasingly appear inefficient. Why compose static mockups when software can now be produced directly?&lt;/p&gt;
+&lt;p&gt;And yet, collaborative design environments continue to occupy a central place inside product organizations.&lt;/p&gt;
+&lt;p&gt;This persistence is often explained as inertia: designers are supposedly reluctant to abandon familiar workflows. But such explanations misunderstand the role these environments actually play. They assume that the primary function of design tools is interface generation.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The Medium is the Mockup</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/the-medium-is-the-mockup/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/the-medium-is-the-mockup/</guid>
+      <pubDate>Wed, 18 Mar 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;For decades, digital design has relied on a peculiar assumption: that software must first be translated into another medium before it can be understood.&lt;/p&gt;
+&lt;p&gt;Designers sketch interfaces in wireframes, compose layouts in graphics software, arrange screens in collaborative canvases, and only later see these artifacts reconstructed as functioning systems. The mockup becomes a representational layer suspended between imagination and execution—a blueprint for a product that will eventually exist elsewhere, in another material, another logic, another medium.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Prototyping the Prototype</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/prototyping-the-prototype/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/prototyping-the-prototype/</guid>
+      <pubDate>Thu, 10 Mar 2016 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;If I, some time ago, were to answer whether the prototype was important to my design practice, the answer would probably have been: not really. Perhaps not at all.&lt;/p&gt;
+&lt;p&gt;That answer has changed. Not because my way of working has fundamentally shifted, but because my understanding of what a prototype is has.&lt;/p&gt;
+&lt;h2&gt;This is a prototype&lt;/h2&gt;
+&lt;p&gt;A while back I came across the question of whether it is possible, as a designer, to work solely with prototypes. At the time, I did not fully understand what was at stake, but something about the question stayed with me.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Skeuomorphism as a Transitional Tool</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/skeuomorphism-as-a-transitional-tool/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/skeuomorphism-as-a-transitional-tool/</guid>
+      <pubDate>Mon, 15 Apr 2013 00:00:00 &#43;0000</pubDate>
+      <description>&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;When new technologies appear, they rarely arrive on their own terms.&lt;/p&gt;
+&lt;p&gt;Instead, they borrow the language of what came before.&lt;/p&gt;
+&lt;p&gt;Digital calendars look like paper. Audio apps mimic physical knobs. Early smartphone interfaces resembled leather, glass, and metal. These are all examples of skeuomorphism — a design strategy where new artifacts imitate older ones.&lt;/p&gt;
+&lt;p&gt;Skeuomorphism is often dismissed as decorative or nostalgic. But that view misses something more fundamental:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

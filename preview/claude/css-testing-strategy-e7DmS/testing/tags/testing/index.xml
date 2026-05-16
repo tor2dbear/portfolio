@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Sat, 16 May 2026 14:09:48 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/testing/tags/testing/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CSS fails silently</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/css-fails-silently/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/css-testing-strategy-e7DmS/writing/css-fails-silently/</guid>
+      <pubDate>Sat, 16 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;CSS doesn&amp;rsquo;t throw errors.&lt;/p&gt;
+&lt;p&gt;Write a JavaScript function that calls a method that doesn&amp;rsquo;t exist, and the console tells you immediately. Reference a CSS custom property that hasn&amp;rsquo;t been defined, and nothing happens. The property just doesn&amp;rsquo;t apply. The element renders with whatever value it inherited or defaulted to, and the page looks almost right, or slightly off, or exactly right in the one viewport and one theme you happened to check.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
