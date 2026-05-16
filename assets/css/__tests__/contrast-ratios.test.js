@@ -231,13 +231,11 @@ const TOKEN_FILES = [
   "dimensions/mode/light.css",
   "dimensions/mode/dark.css",
   "dimensions/palette/standard.css",
-  "dimensions/palette/forest.css",
-  "dimensions/palette/mesa.css",
 ];
 
 const MODES = ["light", "dark"];
 // Pantone skipped: --primary and --surface-page resolve through JS-injected --coty-* vars
-const PALETTES = ["standard", "forest", "mesa"];
+const PALETTES = ["standard"];
 
 const WCAG_AA = 4.5;
 const WCAG_AA_LARGE = 3.0;
