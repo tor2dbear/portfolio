@@ -137,8 +137,8 @@
   {{ $dimensions_palette_pantone := resources.Get "css/dimensions/palette/pantone.css" }}
   {{ $dimensions_palette_previews := resources.Get "css/dimensions/palette/previews.css" }}
   {{ $cotyData := index .Site.Data "pantone-coty" }}
-  {{ $coty_scales_tmpl := resources.Get "css/dimensions/palette/coty-scales.css.tmpl" }}
-  {{ $coty_scales := $coty_scales_tmpl | resources.ExecuteAsTemplate "css/coty-scales.css" $cotyData }}
+  {{ $coty_scales_tmpl := resources.Get "templates/coty-scales.css" }}
+  {{ $coty_scales := $coty_scales_tmpl | resources.ExecuteAsTemplate "css/coty-scales-generated.css" $cotyData }}
 
   <!-- CSS dimensions (typography) -->
   {{ $dimensions_typo_editorial := resources.Get "css/dimensions/typography/editorial.css" }}

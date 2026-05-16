@@ -7,3 +7,5 @@ coverage/
 # Complex Hugo templates that prettier-plugin-go-template can't parse
 layouts/partials/head.html
 layouts/partials/footer.html
+# Hugo CSS template — contains Go template syntax, not valid CSS
+assets/templates/coty-scales.css
