@@ -450,7 +450,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $coty_scales $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -486,6 +486,7 @@
     {{ end }}
     {{ $css = $css | append $style $print }}
     {{ $css = $css | resources.Concat "css.css" | minify | fingerprint }}
+    {{ $coty_scales_prod := $coty_scales | minify | fingerprint }}
     <link
       rel="stylesheet"
       type="text/css"
@@ -493,6 +494,7 @@
       integrity="{{ $css.Data.Integrity }}"
       media="all"
     />
+    <link rel="stylesheet" type="text/css" href="{{ $coty_scales_prod.RelPermalink }}" integrity="{{ $coty_scales_prod.Data.Integrity }}" media="all" />
     {{ with $pageCssBundleRef }}
     <link
       rel="stylesheet"
