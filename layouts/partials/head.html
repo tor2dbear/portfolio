@@ -494,7 +494,7 @@
       integrity="{{ $css.Data.Integrity }}"
       media="all"
     />
-    <link rel="stylesheet" type="text/css" href="{{ $coty_scales_prod.RelPermalink }}" integrity="{{ $coty_scales_prod.Data.Integrity }}" media="all" />
+    <link rel="preload" href="{{ $coty_scales_prod.RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     {{ with $pageCssBundleRef }}
     <link
       rel="stylesheet"
