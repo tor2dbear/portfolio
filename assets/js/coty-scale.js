@@ -891,7 +891,12 @@
   }
 
   function buildScale(entry, mode) {
-    return getExplicitScaleForMode(entry, mode);
+    // Fall back to light scale for years without scale_dark (2016, 2021)
+    // so role tokens are always computed and never left stale.
+    return (
+      getExplicitScaleForMode(entry, mode) ||
+      (mode === "dark" ? getExplicitScaleForMode(entry, "light") : null)
+    );
   }
 
   function buildSecondaryScale(entry, mode) {
