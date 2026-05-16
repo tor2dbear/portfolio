@@ -1,37 +1,33 @@
+{{ $enSite := index (where .Page.Site.Sites "Language.Lang" "en") 0 }}
+{{ $recentWriting := first 3 (sort (where (where $enSite.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
+
 <div class="about-content use-subgrid stepped-6-6 place-full">
 <div class="about-main__primary">
   <h3 class="about-main__headline type-headline-3">
-    Produktägare & Art Director baserad i Göteborg. Jag kombinerar design och
-    produktstrategi – med UI/UX-expertis och datadrivet beslutsfattande.
+    Hej, Torbjörn här. Designer baserad i Göteborg.
   </h3>
   <p class="about-main__text type-body">
-    Hej! Mitt namn är Torbjörn Hedberg. Jag leder digital produktutveckling genom
-    att äga backlog, skriva user stories och driva sprintar – samtidigt som jag
-    säkerställer designkvalitet genom min bakgrund inom visuell kommunikation,
-    UI/UX-design och varumärkesutveckling.
-  </p>
-  <p class="about-main__text type-body">
-    Min unika styrka är att förstå både vad användare behöver och vad som driver
-    affärsvärde. Jag har utvecklats från Art Director till Produktägare, vilket
-    ger mig förmågan att inte bara designa lösningar, utan också prioritera vad
-    som ska byggas och varför.
+    Med tiden har mitt arbete gått från att rita skärmar till att avgöra vilka skärmar som ska ritas. Jag leder idag produktarbetet på Lokalguiden. Jobbet består till största del av backloggar, sprintar och samordning snarare än design — men jag tänker fortfarande som designer, och det präglar det mesta på den här sidan.
   </p>
 </div>
 
 <div class="about-main__secondary">
   <h3 class="about-main__headline type-headline-3">
-    Jag leder utvecklingsteam genom strukturerade, agila processer samtidigt
-    som jag säkerställer att varje release är både funktionell och vackert designad.
+    Jag skriver också om design och försöker förstå hur arbetet förändras.
   </h3>
   <p class="about-main__text type-body">
-    I 2-veckors sprintar med utvecklare och intressenter omvandlar jag affärsmål
-    och användarbehov till konkreta features. Min vardag involverar backlog-hantering,
-    sprintplanering, user stories, designsystem och analys av trafik- och konverteringsstatistik.
+    Oftast om hur det fungerar i praktiken — verktyg, processer och hantverket runt omkring.
   </p>
+  {{ if $recentWriting }}
+  <h4 class="type-headline-small">Senaste texter</h4>
+  <ul class="about-main__writing-list type-body">
+    {{ range $recentWriting }}
+    <li class="about-main__writing-item"><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
   <p class="about-main__text type-body">
-    Oavsett om du behöver någon som kan driva produktstrategi, leda agila team
-    eller skapa exceptionella användarupplevelser – jag erbjuder allt tre.
+    Hör av dig om något här är intressant.
   </p>
-  <p class="about-main__text type-body">Kontakta mig gärna om du vill komma i kontakt!</p>
 </div>
 </div>

@@ -14,9 +14,9 @@
 {{ $schemas = $schemas | append $website }}
 
 {{ if .IsHome }}
-  {{ $roles := slice "DesignOps" "Product Designer" "Art Director" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
+  {{ $roles := slice "Designer" "Art Director" "Product Designer" "Product Owner" "UI/UX Designer" "Graphic Designer" }}
   {{ if eq .Site.Language.Lang "sv" }}
-    {{ $roles = slice "DesignOps" "Produktdesigner" "Art Director" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
+    {{ $roles = slice "Designer" "Art Director" "Produktdesigner" "Produktägare" "UI/UX-designer" "Grafisk designer" }}
   {{ end }}
   {{ $workLocation := slice
     (dict "@type" "Place" "name" "Remote")

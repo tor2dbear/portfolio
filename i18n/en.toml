@@ -2,22 +2,28 @@
 other = "is a multi-disciplinary designer based in Gothenburg, Sweden"
 
 [hero_intro_lead]
-other = "Hi, I’m Torbjörn — a"
+other = "Hi, Torbjörn here — a"
 
 [hero_intro_middle]
-other = "For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining"
+other = "For over a decade I’ve worked across"
 
-[hero_emphasis_design]
-other = "design"
+[hero_emphasis_editorial]
+other = "editorial design"
 
-[hero_emphasis_business]
-other = "business value"
+[hero_emphasis_brand]
+other = "brand"
 
 [hero_emphasis_and]
 other = "and"
 
-[hero_emphasis_tech]
-other = "technology"
+[hero_emphasis_digital]
+other = "digital product"
+
+[hero_emphasis_punct]
+other = ","
+
+[hero_intro_suffix]
+other = "sometimes closer to strategy, sometimes closer to the craft. Based in Gothenburg."
 
 [contact_header_start]
 other = "If you have any questions or suggestions on how we could work together, please"
@@ -264,6 +270,9 @@ other = "LinkedIn"
 
 [footer_newsletter_title]
 other = "Newsletter"
+
+[footer_newsletter_description]
+other = "Occasional notes from my desk — design work, things I'm reading, what I'm building."
 
 [footer_newsletter_label]
 other = "Email address"

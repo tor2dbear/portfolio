@@ -2,22 +2,28 @@
 other = "är en multidisiplinär designer, verksam i Göteborg"
 
 [hero_intro_lead]
-other = "Hej, Torbjörn här – en"
+other = "Hej, Torbjörn här —"
 
 [hero_intro_middle]
-other = "I över 10 år har jag rört mig mellan strategi och hantverk. Jag har hjälpt verksamheter att navigera från koncept till färdig produkt genom att förena"
+other = "Under drygt ett decennium har jag rört mig mellan"
 
-[hero_emphasis_design]
-other = "design"
+[hero_emphasis_editorial]
+other = "redaktionell design"
 
-[hero_emphasis_business]
-other = "affärsnytta"
+[hero_emphasis_brand]
+other = "varumärken"
 
 [hero_emphasis_and]
 other = "och"
 
-[hero_emphasis_tech]
-other = "teknik"
+[hero_emphasis_digital]
+other = "digitala produkter"
+
+[hero_emphasis_punct]
+other = " —"
+
+[hero_intro_suffix]
+other = "ibland närmare strategin, ibland närmare hantverket. Baserad i Göteborg."
 
 [contact_header_start]
 other = "Om du har några frågor eller förslag på hur vi kan sammarbeta, vänligen"
@@ -264,6 +270,9 @@ other = "LinkedIn"
 
 [footer_newsletter_title]
 other = "Nyhetsbrev"
+
+[footer_newsletter_description]
+other = "Sporadiska anteckningar — designarbete, vad jag läser, vad jag jobbar på."
 
 [footer_newsletter_label]
 other = "E-postadress"

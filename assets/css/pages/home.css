@@ -162,14 +162,6 @@
 
 /* Placement now handled by .stepped-6-6 on parent (.about-content) */
 
-.about-main__text {
-  margin-bottom: var(--spacing-24);
-}
-
-.about-main__text:last-child {
-  margin-bottom: 0;
-}
-
 /* Contact Section */
 .contact-section {
   /* Additional specific styles if needed */
