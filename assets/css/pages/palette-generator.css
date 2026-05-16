@@ -144,7 +144,7 @@
 .palette-generator__diff-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--spacing-8);
 }
 
 .palette-generator__diff-item {
@@ -219,7 +219,7 @@
 .palette-generator__usage-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--spacing-8);
 }
 
 .palette-generator__usage-item {
@@ -315,7 +315,7 @@
 }
 
 .palette-generator__hint--coty-control-color-count {
-  margin-top: calc(var(--spacing-6) * -1);
+  margin-top: calc(var(--spacing-8) * -1);
 }
 
 .palette-generator__code {
