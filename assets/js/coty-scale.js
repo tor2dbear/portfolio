@@ -891,21 +891,7 @@
   }
 
   function buildScale(entry, mode) {
-    var explicit = getExplicitScaleForMode(entry, mode);
-    if (explicit) {
-      return explicit;
-    }
-    // For years without scale_dark (2016, 2021): build a reversed light scale
-    // so dark mode gets inverted step order and role tokens are always computed.
-    // Injected as inline styles (overrides the light-scale CSS selector).
-    if (mode === "dark" && entry.scale_light) {
-      var reversed = {};
-      for (var i = 1; i <= 12; i += 1) {
-        reversed["--coty-" + i] = entry.scale_light["--coty-" + (13 - i)];
-      }
-      return reversed;
-    }
-    return null;
+    return getExplicitScaleForMode(entry, mode);
   }
 
   function buildSecondaryScale(entry, mode) {
