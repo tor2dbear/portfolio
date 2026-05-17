@@ -205,7 +205,10 @@ function buildCotyTokenMap(colorEntry, mode) {
   tokens.set("--text-default", "--coty-12");
   tokens.set("--surface-page", "--coty-role-surface");
   tokens.set("--surface-default", "--coty-role-surface-strong");
+  tokens.set("--surface-accent", "--coty-5");
   tokens.set("--primary", "--coty-role-primary");
+  tokens.set("--primary-strong", "--coty-role-primary-strong");
+  tokens.set("--text-accent", "--primary-strong");
   tokens.set("--on-primary", "--coty-role-on-primary");
 
   // Year-specific overrides
@@ -297,6 +300,22 @@ describe("COTY Contrast Ratios", () => {
             if (!text || !bg) {
               console.warn(
                 `[${year} ${mode}] Could not resolve body text colors — skipping`
+              );
+              return;
+            }
+
+            const ratio = wcagContrast(text, bg);
+            expect(ratio).not.toBeNull();
+            expect(ratio).toBeGreaterThanOrEqual(WCAG_AA);
+          });
+
+          test("tag (--text-accent on --surface-accent) meets WCAG AA 4.5:1", () => {
+            const text = resolveCotyColor("--text-accent", tokenMap);
+            const bg = resolveCotyColor("--surface-accent", tokenMap);
+
+            if (!text || !bg) {
+              console.warn(
+                `[${year} ${mode}] Could not resolve tag colors — skipping`
               );
               return;
             }

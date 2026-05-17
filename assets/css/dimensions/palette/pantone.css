@@ -37,7 +37,7 @@
   --text-link-hover: var(--coty-11);
 
   --surface-page: var(--coty-role-surface, var(--coty-2));
-  --surface-accent: var(--coty-role-surface-strong, var(--coty-4));
+  --surface-accent: var(--coty-5);
   --surface-default: var(--coty-role-surface-strong, var(--coty-4));
 
   --border-subtle: var(--coty-5);
