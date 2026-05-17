@@ -55,6 +55,9 @@
   --coty-role-primary: var(--coty-9);
   --coty-role-primary-strong: var(--coty-11);
   --coty-role-on-primary: var(--coty-{{ .on_primary_step_dark }});
+{{- if ge .anchor_step 5 }}
+  --surface-accent: var(--coty-3);
+{{- end }}
 {{- else }}
   --coty-role-primary: var(--coty-{{ .source_step_dark }});
   --coty-role-primary-strong: var(--coty-11);

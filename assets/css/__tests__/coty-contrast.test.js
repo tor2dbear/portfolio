@@ -206,14 +206,22 @@ function buildCotyTokenMap(colorEntry, mode) {
   }
 
   // Semantic defaults from pantone.css, with template overrides mirrored.
-  // coty-scales.css sets --surface-accent: --coty-4 for surface-mode anchor=5
-  // years (both modes) to avoid the case where --coty-5 == page bg == tag bg.
+  // Light: anchor=5 → step 4 (avoids tag bg == page bg for 2003/2009).
+  // Dark:  anchor≥5 → step 3 (dark step 5 is too close to steps 6-8 page bg).
   tokens.set("--text-default", "--coty-12");
   tokens.set("--surface-page", "--coty-role-surface");
   tokens.set("--surface-default", "--coty-role-surface-strong");
   tokens.set(
     "--surface-accent",
-    roleMode === "surface" && anchorStep === 5 ? "--coty-4" : "--coty-5"
+    roleMode === "surface"
+      ? mode === "dark"
+        ? anchorStep >= 5
+          ? "--coty-3"
+          : "--coty-5"
+        : anchorStep === 5
+        ? "--coty-4"
+        : "--coty-5"
+      : "--coty-5"
   );
   tokens.set("--primary", "--coty-role-primary");
   tokens.set("--primary-strong", "--coty-role-primary-strong");
