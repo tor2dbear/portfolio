@@ -344,7 +344,6 @@ table {
   --text-link: var(--iris-11);
   --text-link-hover: var(--iris-12);
   --text-accent: var(--primary-strong);
-  --text-tag: var(--iris-11);
 
   /* === BACKGROUND / SURFACE === */
   --surface-page: var(--white);
@@ -355,7 +354,9 @@ table {
   --surface-accent: var(--iris-3);
   --surface-tag: var(--surface-accent); /* deprecated compat */
   --surface-tag-hover: var(--surface-tag); /* deprecated compat */
-  --surface-headline: var(--component-section-headline-bg); /* deprecated compat */
+  --surface-headline: var(
+    --component-section-headline-bg
+  ); /* deprecated compat */
   --surface-ink-strong: var(--iris-11);
 
   /* === BORDER / OUTLINE === */
