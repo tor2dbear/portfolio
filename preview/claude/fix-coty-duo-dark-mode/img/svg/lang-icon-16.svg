@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16 16" class="a">
+    <style>.b{stroke-linecap: round; stroke-width: 1.5; stroke: #000; fill: none; stroke-linejoin: round;}.a{}</style>
+    <g transform="scale(.66666)" class="a">
+        <polyline points="19.652 .748 15.902 2.998 18.152 6.748" class="b"></polyline>
+        <path d="M23.25 8.187v0c-1.04-2.86-3.86-4.67-6.884-4.42" class="b"></path>
+        <polyline points="4.348 23.248 8.098 20.998 5.848 17.248" class="b"></polyline>
+        <path d="M.75 15.808H.749c1.03 2.85 3.85 4.66 6.88 4.41" class="b"></path>
+        <rect width="12" height="12" x=".75" y=".748" rx="1.5" class="b"></rect>
+        <path d="M15.75 11.24h6v0c.82 0 1.5.67 1.5 1.5v9 0c0 .82-.68 1.5-1.5 1.5h-9v0c-.83 0-1.5-.68-1.5-1.5v-6" class="b"></path>
+        <path d="M15.75 20.24v-4.5 0c0-.83.67-1.5 1.5-1.5 .82 0 1.5.67 1.5 1.5v4.5" class="b"></path>
+        <line x1="15.75" x2="18.75" y1="18.75" y2="18.75" class="b"></line>
+        <line x1="6.75" x2="6.75" y1="3.75" y2="5.25" class="b"></line>
+        <line x1="3.75" x2="9.75" y1="5.25" y2="5.25" class="b"></line>
+        <path d="M8.25 5.248s-1.5 4.5-4.5 4.5" class="b"></path>
+        <path d="M6.74 8.014l-.001-.001c.67 1.01 1.78 1.65 3 1.73" class="b"></path>
+    </g>
+</svg>

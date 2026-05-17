@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Sun, 17 May 2026 06:25:06 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/quality/tags/quality/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Failing your own pull requests</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/writing/failing-your-own-pull-requests/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/writing/failing-your-own-pull-requests/</guid>
+      <pubDate>Mon, 04 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;There is a step in the CI pipeline for this portfolio that checks whether the site is fast enough, accessible enough, and well-structured enough to be allowed to merge. If it isn&amp;rsquo;t, the pull request fails.&lt;/p&gt;
+&lt;p&gt;This is a personal website. There is no team. Nobody is reviewing the code. The only person being blocked by a failed quality gate is me.&lt;/p&gt;
+&lt;p&gt;It took a while to decide whether this made sense.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

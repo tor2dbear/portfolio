@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Torbjörn Hedberg · Multidisciplinary Designer</title>
+    <link>https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/</link>
+    <description>Hello there. I’m a multidisciplinary designer. For over 10 years I’ve moved between strategy and craft. I’ve helped organizations navigate from concept to finished product by combining design, business value and technology.</description>
+    <language>en</language>
+    <lastBuildDate>Sun, 17 May 2026 06:25:06 &#43;0000</lastBuildDate>
+    <atom:link href="https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/web-development/tags/web-development/" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Page Unprinted</title>
+      <link>https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/the-page-unprinted/the-page-unprinted/</link>
+      <guid isPermaLink="true">https://tor2dbear.github.io/portfolio/preview/claude/fix-coty-duo-dark-mode/the-page-unprinted/the-page-unprinted/</guid>
+      <pubDate>Mon, 11 May 2026 00:00:00 &#43;0000</pubDate>
+      <description>&lt;p&gt;There&amp;rsquo;s something poetic about print. A PDF is a promise—a fixed moment, a document that won&amp;rsquo;t reflow or rerender. Yet the web, built for screens, treats print as an afterthought.&lt;/p&gt;
+&lt;h2&gt;The Gap Between Screen and Page&lt;/h2&gt;
+&lt;p&gt;When I set out to create print-ready exports for my portfolio, I expected CSS to handle it gracefully. After all, we have &lt;code&gt;@media print&lt;/code&gt;, &lt;code&gt;@page&lt;/code&gt; rules, and break properties. The specification exists. The reality is messier.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
