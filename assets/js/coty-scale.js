@@ -891,12 +891,21 @@
   }
 
   function buildScale(entry, mode) {
-    // Fall back to light scale for years without scale_dark (2016, 2021)
-    // so role tokens are always computed and never left stale.
-    return (
-      getExplicitScaleForMode(entry, mode) ||
-      (mode === "dark" ? getExplicitScaleForMode(entry, "light") : null)
-    );
+    var explicit = getExplicitScaleForMode(entry, mode);
+    if (explicit) {
+      return explicit;
+    }
+    // For years without scale_dark (2016, 2021): build a reversed light scale
+    // so dark mode gets inverted step order and role tokens are always computed.
+    // Injected as inline styles (overrides the light-scale CSS selector).
+    if (mode === "dark" && entry.scale_light) {
+      var reversed = {};
+      for (var i = 1; i <= 12; i += 1) {
+        reversed["--coty-" + i] = entry.scale_light["--coty-" + (13 - i)];
+      }
+      return reversed;
+    }
+    return null;
   }
 
   function buildSecondaryScale(entry, mode) {
@@ -1476,6 +1485,11 @@
     }
     var roles = resolveRoleTokens(entry, scale, resolvedMode);
 
+    // Clear any previously injected inline scale tokens so CSS attribute
+    // selectors take over cleanly when switching to a year with explicit CSS.
+    for (var i = 1; i <= 12; i += 1) {
+      document.documentElement.style.removeProperty("--coty-" + i);
+    }
     // Only inject via JS for years where no build-time CSS scale exists
     var hasExplicitScale =
       resolvedMode === "dark"
