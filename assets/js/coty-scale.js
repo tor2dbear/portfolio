@@ -1452,6 +1452,17 @@
       document.documentElement.style.removeProperty("--coty-" + i);
       document.documentElement.style.removeProperty("--coty-secondary-" + i);
     }
+    // Clear role-token inline styles set by head.html as flash-prevention cache.
+    // CSS attribute-selector rules in coty-scales-generated.css now own these.
+    [
+      "--coty-role-surface",
+      "--coty-role-surface-strong",
+      "--coty-role-primary",
+      "--coty-role-primary-strong",
+      "--coty-role-on-primary",
+    ].forEach(function (name) {
+      document.documentElement.style.removeProperty(name);
+    });
 
     document.documentElement.setAttribute("data-coty-year", String(entry.year));
     applyPreviewTokens(scale, secondaryScale);
