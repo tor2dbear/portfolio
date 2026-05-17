@@ -14,6 +14,10 @@
 :root[data-mode="dark"][data-palette="pantone"][data-coty-year="{{ $year }}"] {
 {{ range $step, $value := .scale_dark -}}  --coty-{{ $step }}: {{ $value }};
 {{ end -}}
+{{- if .secondary_scale_dark -}}
+{{ range $step, $value := .secondary_scale_dark -}}  --coty-secondary-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- end -}}
 }
 {{ end -}}
 {{- end -}}

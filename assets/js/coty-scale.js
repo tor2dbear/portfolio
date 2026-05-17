@@ -1475,6 +1475,7 @@
     // selectors take over cleanly when switching to a year with explicit CSS.
     for (var i = 1; i <= 12; i += 1) {
       document.documentElement.style.removeProperty("--coty-" + i);
+      document.documentElement.style.removeProperty("--coty-secondary-" + i);
     }
     // Only inject via JS for years where no build-time CSS scale exists
     var hasExplicitScale =
@@ -1487,7 +1488,9 @@
       });
     }
     var hasExplicitSecondaryScale =
-      resolvedMode === "dark" ? false : Boolean(entry.secondary_scale_light);
+      resolvedMode === "dark"
+        ? Boolean(entry.secondary_scale_dark)
+        : Boolean(entry.secondary_scale_light);
     if (secondaryScale && !hasExplicitSecondaryScale) {
       Object.keys(secondaryScale).forEach(function (name) {
         document.documentElement.style.setProperty(name, secondaryScale[name]);
