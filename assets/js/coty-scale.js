@@ -18,33 +18,12 @@
   var APPLIED_MANUAL_OVERRIDES = [];
   var _tritoneAnimFrame = null;
   var PANTONE_RUNTIME_TOKEN_NAMES = [
-    "--coty-role-mode",
-    "--coty-role-anchor-step",
-    "--coty-role-primary",
-    "--coty-role-primary-strong",
-    "--coty-role-surface",
-    "--coty-role-surface-strong",
-    "--coty-role-border-subtle",
-    "--coty-role-border-default",
-    "--coty-role-border-strong",
-    "--coty-role-on-primary",
     "--coty-source-step",
     "--coty-secondary-source-step",
-    "--border-subtle",
-    "--border-default",
-    "--border-strong",
-    "--primary",
-    "--primary-strong",
-    "--on-primary",
     "--action",
     "--on-action",
     "--component-nav-cta-bg",
     "--component-nav-cta-text",
-    "--on-secondary",
-    "--accent-primary",
-    "--accent-primary-strong",
-    "--secondary",
-    "--secondary-strong",
     "--image-grayscale",
     "--image-shadow-blend-mode",
     "--image-highlight-blend-mode",
@@ -54,10 +33,6 @@
     "--image-highlight-opacity",
     "--image-blend-mode",
     "--image-background",
-    "--accent-secondary",
-    "--accent-secondary-strong",
-    "--component-toc-active-indicator",
-    "--component-section-headline-bg",
   ];
   var TRITONE_FILTER_ID = "pantone-tritone";
   var TRITONE_SVG_ID = "pantone-tritone-defs";
@@ -1476,29 +1451,6 @@
     for (var i = 1; i <= 12; i += 1) {
       document.documentElement.style.removeProperty("--coty-" + i);
       document.documentElement.style.removeProperty("--coty-secondary-" + i);
-    }
-    // Only inject via JS for years where no build-time CSS scale exists
-    var hasExplicitScale =
-      resolvedMode === "dark"
-        ? Boolean(entry.scale_dark)
-        : Boolean(entry.scale_light);
-    if (!hasExplicitScale) {
-      Object.keys(scale).forEach(function (name) {
-        document.documentElement.style.setProperty(name, scale[name]);
-      });
-    }
-    var hasExplicitSecondaryScale =
-      resolvedMode === "dark"
-        ? Boolean(entry.secondary_scale_dark)
-        : Boolean(entry.secondary_scale_light);
-    if (secondaryScale && !hasExplicitSecondaryScale) {
-      Object.keys(secondaryScale).forEach(function (name) {
-        document.documentElement.style.setProperty(name, secondaryScale[name]);
-      });
-    } else if (!secondaryScale) {
-      for (var i = 1; i <= 12; i += 1) {
-        document.documentElement.style.removeProperty("--coty-secondary-" + i);
-      }
     }
 
     document.documentElement.setAttribute("data-coty-year", String(entry.year));

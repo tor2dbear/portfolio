@@ -46,11 +46,9 @@
 {{ range $step, $value := .secondary_scale_dark -}}  --coty-secondary-{{ $step }}: {{ $value }};
 {{ end -}}
 {{- end -}}
-{{- if eq .role_mode "surface" -}}
-{{- $dss := add .source_step_dark 1 -}}
-{{- if gt $dss 12 -}}{{- $dss = 12 -}}{{- end }}
-  --coty-role-surface: var(--coty-{{ .source_step_dark }});
-  --coty-role-surface-strong: var(--coty-{{ $dss }});
+{{- if eq .role_mode "surface" }}
+  --coty-role-surface: var(--coty-{{ .anchor_step }});
+  --coty-role-surface-strong: var(--coty-{{ add .anchor_step 1 }});
   --coty-role-primary: var(--coty-9);
   --coty-role-primary-strong: var(--coty-11);
   --coty-role-on-primary: var(--coty-{{ .on_primary_step_dark }});
