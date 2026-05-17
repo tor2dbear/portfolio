@@ -237,7 +237,7 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
   }
 
   .footer-meta__item + .footer-meta__item::before {
-    margin-right: var(--spacing-6);
+    margin-right: var(--spacing-8);
   }
 }
 

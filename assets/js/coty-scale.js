@@ -77,11 +77,6 @@
     return Math.round(value * 1000) / 1000;
   }
 
-  function normalizeHue(h) {
-    var hue = h % 360;
-    return hue < 0 ? hue + 360 : hue;
-  }
-
   function findNearestStepFromCurve(curve, lightness) {
     var nearestIndex = 0;
     var nearestDiff = Infinity;
@@ -222,55 +217,6 @@
     };
   }
 
-  function oklchToLinearSrgb(l, c, h) {
-    var hue = h * (Math.PI / 180);
-    var oka = c * Math.cos(hue);
-    var okb = c * Math.sin(hue);
-
-    var l_ = l + 0.3963377774 * oka + 0.2158037573 * okb;
-    var m_ = l - 0.1055613458 * oka - 0.0638541728 * okb;
-    var s_ = l - 0.0894841775 * oka - 1.291485548 * okb;
-
-    var l3 = l_ * l_ * l_;
-    var m3 = m_ * m_ * m_;
-    var s3 = s_ * s_ * s_;
-
-    return {
-      r: 4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3,
-      g: -1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3,
-      b: -0.0041960863 * l3 - 0.7034186147 * m3 + 1.707614701 * s3,
-    };
-  }
-
-  function isInSrgbGamut(l, c, h) {
-    var rgb = oklchToLinearSrgb(l, c, h);
-    return (
-      rgb.r >= 0 &&
-      rgb.r <= 1 &&
-      rgb.g >= 0 &&
-      rgb.g <= 1 &&
-      rgb.b >= 0 &&
-      rgb.b <= 1
-    );
-  }
-
-  function fitChromaToGamut(l, c, h) {
-    if (isInSrgbGamut(l, c, h)) {
-      return c;
-    }
-    var low = 0;
-    var high = c;
-    for (var i = 0; i < 14; i += 1) {
-      var mid = (low + high) * 0.5;
-      if (isInSrgbGamut(l, mid, h)) {
-        low = mid;
-      } else {
-        high = mid;
-      }
-    }
-    return low;
-  }
-
   function oklchToHex(l, c, h) {
     var rgb = oklchToSrgb(l, c, h);
     var r = Math.round(rgb.r * 255);
@@ -281,12 +227,6 @@
       .slice(1)
       .toUpperCase();
     return "#" + value;
-  }
-
-  function formatOklch(l, c, h) {
-    return (
-      "oklch(" + round3(l * 100) + "% " + round3(c) + " " + round3(h) + ")"
-    );
   }
 
   function parseOklchString(input) {
@@ -535,10 +475,18 @@
   }
 
   function parseFuncTableValues(node) {
-    if (!node) return null;
+    if (!node) {
+      return null;
+    }
     var parts = (node.getAttribute("tableValues") || "").trim().split(/\s+/);
-    if (parts.length !== 3) return null;
-    var vals = [parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2])];
+    if (parts.length !== 3) {
+      return null;
+    }
+    var vals = [
+      parseFloat(parts[0]),
+      parseFloat(parts[1]),
+      parseFloat(parts[2]),
+    ];
     return vals.some(isNaN) ? null : vals;
   }
 
@@ -548,15 +496,25 @@
   }
 
   function getThemeTransitionDuration() {
-    if (!document.body || !document.body.classList.contains("darkmodeTransition")) {
+    if (
+      !document.body ||
+      !document.body.classList.contains("darkmodeTransition")
+    ) {
       return 0;
     }
-    var val = document.body.style.getPropertyValue("--theme-transition-duration") || "";
+    var val =
+      document.body.style.getPropertyValue("--theme-transition-duration") || "";
     var ms = parseFloat(val);
     return isNaN(ms) || ms <= 0 ? 0 : ms;
   }
 
-  function animateTritoneTableValues(nodes, shadow, mid, highlight, durationMs) {
+  function animateTritoneTableValues(
+    nodes,
+    shadow,
+    mid,
+    highlight,
+    durationMs
+  ) {
     if (_tritoneAnimFrame) {
       cancelAnimationFrame(_tritoneAnimFrame);
       _tritoneAnimFrame = null;
@@ -577,21 +535,35 @@
     }
     var startTime = null;
     function step(ts) {
-      if (!startTime) startTime = ts;
+      if (!startTime) {
+        startTime = ts;
+      }
       var t = Math.min((ts - startTime) / durationMs, 1);
       var e = easeOutTheme(t);
-      nodes.r.setAttribute("tableValues",
-        round3(fromR[0] + (toShadow.r - fromR[0]) * e) + " " +
-        round3(fromR[1] + (toMid.r - fromR[1]) * e) + " " +
-        round3(fromR[2] + (toHighlight.r - fromR[2]) * e));
-      nodes.g.setAttribute("tableValues",
-        round3(fromG[0] + (toShadow.g - fromG[0]) * e) + " " +
-        round3(fromG[1] + (toMid.g - fromG[1]) * e) + " " +
-        round3(fromG[2] + (toHighlight.g - fromG[2]) * e));
-      nodes.b.setAttribute("tableValues",
-        round3(fromB[0] + (toShadow.b - fromB[0]) * e) + " " +
-        round3(fromB[1] + (toMid.b - fromB[1]) * e) + " " +
-        round3(fromB[2] + (toHighlight.b - fromB[2]) * e));
+      nodes.r.setAttribute(
+        "tableValues",
+        round3(fromR[0] + (toShadow.r - fromR[0]) * e) +
+          " " +
+          round3(fromR[1] + (toMid.r - fromR[1]) * e) +
+          " " +
+          round3(fromR[2] + (toHighlight.r - fromR[2]) * e)
+      );
+      nodes.g.setAttribute(
+        "tableValues",
+        round3(fromG[0] + (toShadow.g - fromG[0]) * e) +
+          " " +
+          round3(fromG[1] + (toMid.g - fromG[1]) * e) +
+          " " +
+          round3(fromG[2] + (toHighlight.g - fromG[2]) * e)
+      );
+      nodes.b.setAttribute(
+        "tableValues",
+        round3(fromB[0] + (toShadow.b - fromB[0]) * e) +
+          " " +
+          round3(fromB[1] + (toMid.b - fromB[1]) * e) +
+          " " +
+          round3(fromB[2] + (toHighlight.b - fromB[2]) * e)
+      );
       if (t < 1) {
         _tritoneAnimFrame = requestAnimationFrame(step);
       } else {
@@ -639,13 +611,25 @@
     }
 
     var overrides = stepOverrides || {};
-    if (overrides.shadow) shadowColor = overrides.shadow;
-    if (overrides.mid) midColor = overrides.mid;
-    if (overrides.highlight) highlightColor = overrides.highlight;
+    if (overrides.shadow) {
+      shadowColor = overrides.shadow;
+    }
+    if (overrides.mid) {
+      midColor = overrides.mid;
+    }
+    if (overrides.highlight) {
+      highlightColor = overrides.highlight;
+    }
 
     var transitionMs = getThemeTransitionDuration();
     if (transitionMs > 0) {
-      animateTritoneTableValues(nodes, shadowColor, midColor, highlightColor, transitionMs);
+      animateTritoneTableValues(
+        nodes,
+        shadowColor,
+        midColor,
+        highlightColor,
+        transitionMs
+      );
     } else {
       setTritoneTableValues(nodes, shadowColor, midColor, highlightColor);
     }
@@ -906,249 +890,22 @@
     return findNearestStepFromCurve(curve, lightness) || DEFAULT_ANCHOR_STEP;
   }
 
-  function buildAnchoredLightness(mode, anchorStep, sourceLightness) {
-    var values = new Array(12);
-    var anchorIndex = Math.max(0, Math.min(11, anchorStep - 1));
-    var source = clamp(sourceLightness, 0, 100);
-    var curve = (mode === "dark" ? DARK_L : LIGHT_L).slice();
-    var delta = source - curve[anchorIndex];
-    // Keep the global curve rigid; only allow a modest shift around source lock.
-    var maxShift = mode === "dark" ? 4 : 3;
-    var shift = clamp(delta, -maxShift, maxShift);
-    var shouldPinSource = Math.abs(delta) <= maxShift;
-    var minL = mode === "dark" ? 4 : 2;
-    var maxL = mode === "dark" ? 98 : 99;
-
-    for (var i = 0; i < 12; i += 1) {
-      values[i] = clamp(curve[i] + shift, minL, maxL);
-    }
-    // Avoid extreme outliers when an explicit light anchor is reused in dark mode.
-    if (shouldPinSource) {
-      values[anchorIndex] = source;
-    }
-    return values;
-  }
-
-  function shouldPinSourceAtAnchor(mode, anchorStep, sourceLightness) {
-    var anchorIndex = Math.max(0, Math.min(11, anchorStep - 1));
-    var curve = mode === "dark" ? DARK_L : LIGHT_L;
-    var source = clamp(sourceLightness, 0, 100);
-    var delta = Math.abs(source - curve[anchorIndex]);
-    var maxShift = mode === "dark" ? 4 : 3;
-    return delta <= maxShift;
-  }
-
-  function resolveChromaProfile(hue, sourceC) {
-    if (sourceC < 0.018) {
-      return "low";
-    }
-    var h = normalizeHue(hue);
-    if (h >= 330 || h <= 95) {
-      return "warm";
-    }
-    if (h >= 170 && h <= 300) {
-      return "cool";
-    }
-    return "neutral";
-  }
-
-  function hueShiftForStep(index, anchorIndex, profile) {
-    if (profile === "low") {
-      return 0;
-    }
-    var shift = 0;
-    if (index > anchorIndex) {
-      var tDark =
-        anchorIndex === 11 ? 0 : (index - anchorIndex) / (11 - anchorIndex);
-      if (profile === "warm") {
-        shift = -5 * Math.pow(tDark, 0.8);
-      }
-      if (profile === "cool") {
-        shift = 2.5 * Math.pow(tDark, 0.85);
-      }
-      if (profile === "neutral") {
-        shift = -1.2 * Math.pow(tDark, 0.9);
-      }
-    } else if (index < anchorIndex) {
-      var tLight = anchorIndex === 0 ? 0 : (anchorIndex - index) / anchorIndex;
-      if (profile === "warm") {
-        shift = 1.5 * Math.pow(tLight, 0.7);
-      }
-      if (profile === "cool") {
-        shift = -1 * Math.pow(tLight, 0.7);
-      }
-      if (profile === "neutral") {
-        shift = 0.5 * Math.pow(tLight, 0.8);
-      }
-    }
-    return shift;
-  }
-
-  function buildAnchoredChroma(
-    lightnessValues,
-    anchorIndex,
-    sourceC,
-    sourceL,
-    profile
-  ) {
-    var values = new Array(12);
-    var maxL = lightnessValues[0];
-    var minL = lightnessValues[11];
-    var source = clamp(sourceC, 0, 0.32);
-    var darkBoostByProfile = {
-      low: 0.08,
-      neutral: 0.22,
-      cool: 0.3,
-      warm: 0.36,
-    };
-    var lightFadeByProfile = {
-      low: 0.7,
-      neutral: 0.84,
-      cool: 0.88,
-      warm: 0.9,
-    };
-    var darkDecayByProfile = {
-      low: 0.2,
-      neutral: 0.42,
-      cool: 0.46,
-      warm: 0.5,
-    };
-    var darkBoost =
-      darkBoostByProfile[profile] + clamp((sourceL - 62) / 26, 0, 1) * 0.28;
-    var lightFade = lightFadeByProfile[profile];
-    var darkDecay = darkDecayByProfile[profile];
-    var lowFloor =
-      profile === "low"
-        ? Math.max(0.0015, source * 0.35)
-        : Math.max(0.004, source * 0.06);
-
-    for (var i = 0; i < 12; i += 1) {
-      if (i === anchorIndex) {
-        values[i] = source;
-        continue;
-      }
-
-      var l = lightnessValues[i];
-      var factor = 1;
-      if (l > sourceL) {
-        var tLight = clamp((l - sourceL) / Math.max(1, maxL - sourceL), 0, 1);
-        factor = 1 - lightFade * Math.pow(tLight, 0.7);
-      } else {
-        var tDark = clamp((sourceL - l) / Math.max(1, sourceL - minL), 0, 1);
-        factor = 1 + darkBoost * Math.sin(Math.PI * Math.min(tDark, 0.78));
-        factor *= 1 - darkDecay * Math.pow(tDark, 2.1);
-      }
-
-      values[i] = clamp(source * factor, lowFloor, 0.28);
-    }
-    return values;
-  }
-
   function buildScale(entry, mode) {
-    var explicitScale = getExplicitScaleForMode(entry, mode);
-    if (explicitScale) {
-      return explicitScale;
-    }
-
-    var rgb = hexToRgb(entry.primary_hex || entry.hex);
-    if (!rgb) {
-      return null;
-    }
-
-    var baseOklch = rgbToOklch(rgb);
-    var hue = normalizeHue(baseOklch.h);
-    var baseChroma = baseOklch.c;
-    var baseLight = baseOklch.l * 100;
-    var chromaProfile = resolveChromaProfile(hue, baseChroma);
-
-    var anchorStep = resolveAnchorStep(entry, mode, baseLight);
-    var anchorIndex = Math.max(0, Math.min(11, anchorStep - 1));
-    var anchoredLightness = buildAnchoredLightness(mode, anchorStep, baseLight);
-    var anchoredChroma = buildAnchoredChroma(
-      anchoredLightness,
-      anchorIndex,
-      baseChroma,
-      baseLight,
-      chromaProfile
+    // Fall back to light scale for years without scale_dark (2016, 2021)
+    // so role tokens are always computed and never left stale.
+    return (
+      getExplicitScaleForMode(entry, mode) ||
+      (mode === "dark" ? getExplicitScaleForMode(entry, "light") : null)
     );
-
-    var tokens = {};
-    for (var i = 0; i < 12; i += 1) {
-      var l = clamp(anchoredLightness[i] / 100, 0, 1);
-      var hueStep = normalizeHue(
-        hue + hueShiftForStep(i, anchorIndex, chromaProfile)
-      );
-      var c = fitChromaToGamut(l, anchoredChroma[i], hueStep);
-      tokens["--coty-" + (i + 1)] = formatOklch(l, c, hueStep);
-    }
-
-    // Only pin exact source color when anchor and source are close on the active curve.
-    // This prevents very light sources from forcing bright anchors in dark mode.
-    if (shouldPinSourceAtAnchor(mode, anchorStep, baseLight)) {
-      tokens["--coty-" + anchorStep] = formatOklch(
-        baseOklch.l,
-        fitChromaToGamut(baseOklch.l, baseOklch.c, hue),
-        hue
-      );
-    }
-
-    return tokens;
   }
 
   function buildSecondaryScale(entry, mode) {
     if (!entry.secondary_hex) {
       return null;
     }
-    var explicitScale =
-      mode === "dark"
-        ? entry.secondary_scale_dark || null
-        : entry.secondary_scale_light || null;
-    if (explicitScale) {
-      return explicitScale;
-    }
-    var rgb = hexToRgb(entry.secondary_hex);
-    if (!rgb) {
-      return null;
-    }
-
-    var baseOklch = rgbToOklch(rgb);
-    var hue = normalizeHue(baseOklch.h);
-    var baseChroma = baseOklch.c;
-    var baseLight = baseOklch.l * 100;
-    var chromaProfile = resolveChromaProfile(hue, baseChroma);
-    var secondaryContext = {
-      anchor_step: entry.secondary_anchor_step || 0,
-    };
-    var anchorStep = resolveAnchorStep(secondaryContext, mode, baseLight);
-    var anchorIndex = Math.max(0, Math.min(11, anchorStep - 1));
-    var anchoredLightness = buildAnchoredLightness(mode, anchorStep, baseLight);
-    var anchoredChroma = buildAnchoredChroma(
-      anchoredLightness,
-      anchorIndex,
-      baseChroma,
-      baseLight,
-      chromaProfile
-    );
-
-    var tokens = {};
-    for (var i = 0; i < 12; i += 1) {
-      var l = clamp(anchoredLightness[i] / 100, 0, 1);
-      var hueStep = normalizeHue(
-        hue + hueShiftForStep(i, anchorIndex, chromaProfile)
-      );
-      var c = fitChromaToGamut(l, anchoredChroma[i], hueStep);
-      tokens["--coty-secondary-" + (i + 1)] = formatOklch(l, c, hueStep);
-    }
-
-    if (shouldPinSourceAtAnchor(mode, anchorStep, baseLight)) {
-      tokens["--coty-secondary-" + anchorStep] = formatOklch(
-        baseOklch.l,
-        fitChromaToGamut(baseOklch.l, baseOklch.c, hue),
-        hue
-      );
-    }
-
-    return tokens;
+    return mode === "dark"
+      ? entry.secondary_scale_dark || null
+      : entry.secondary_scale_light || null;
   }
 
   function resolveRoleTokens(entry, scale, currentMode) {
@@ -1237,6 +994,7 @@
       document.documentElement.style.removeProperty(name);
     });
     document.documentElement.removeAttribute("data-image-tone");
+    document.documentElement.removeAttribute("data-coty-year");
   }
 
   function applyPreviewTokens(scale, secondaryScale) {
@@ -1718,14 +1476,23 @@
     }
     var roles = resolveRoleTokens(entry, scale, resolvedMode);
 
-    Object.keys(scale).forEach(function (name) {
-      document.documentElement.style.setProperty(name, scale[name]);
-    });
-    if (secondaryScale) {
+    // Only inject via JS for years where no build-time CSS scale exists
+    var hasExplicitScale =
+      resolvedMode === "dark"
+        ? Boolean(entry.scale_dark)
+        : Boolean(entry.scale_light);
+    if (!hasExplicitScale) {
+      Object.keys(scale).forEach(function (name) {
+        document.documentElement.style.setProperty(name, scale[name]);
+      });
+    }
+    var hasExplicitSecondaryScale =
+      resolvedMode === "dark" ? false : Boolean(entry.secondary_scale_light);
+    if (secondaryScale && !hasExplicitSecondaryScale) {
       Object.keys(secondaryScale).forEach(function (name) {
         document.documentElement.style.setProperty(name, secondaryScale[name]);
       });
-    } else {
+    } else if (!secondaryScale) {
       for (var i = 1; i <= 12; i += 1) {
         document.documentElement.style.removeProperty("--coty-secondary-" + i);
       }
@@ -1938,13 +1705,22 @@
     );
     function resolveStepColor(key) {
       var raw = allOverridesForTritone[key];
-      if (!raw) return null;
-      var secondaryStep = extractStepFromVarToken(String(raw), "coty-secondary");
+      if (!raw) {
+        return null;
+      }
+      var secondaryStep = extractStepFromVarToken(
+        String(raw),
+        "coty-secondary"
+      );
       if (secondaryStep && secondaryScale) {
-        return getScaleColor(secondaryScale, "coty-secondary", secondaryStep) || null;
+        return (
+          getScaleColor(secondaryScale, "coty-secondary", secondaryStep) || null
+        );
       }
       var step = extractStepFromVarToken(String(raw), "coty");
-      if (!step) return null;
+      if (!step) {
+        return null;
+      }
       return getScaleColor(scale, "coty", step) || null;
     }
     applyPantoneTritone(scale, secondaryScale, roles, {
@@ -1987,16 +1763,22 @@
   function readFullDraft(year, mode) {
     try {
       var raw = localStorage.getItem("pantone-lab::" + String(year || ""));
-      if (!raw) return {};
+      if (!raw) {
+        return {};
+      }
       var parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object") return {};
+      if (!parsed || typeof parsed !== "object") {
+        return {};
+      }
       var bucket =
         mode === "dark"
           ? parsed.overrides_dark || {}
           : parsed.overrides_light || {};
       var out = {};
       Object.keys(bucket).forEach(function (k) {
-        if (bucket[k]) out[k] = bucket[k];
+        if (bucket[k]) {
+          out[k] = bucket[k];
+        }
       });
       return out;
     } catch {
