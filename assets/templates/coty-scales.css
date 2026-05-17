@@ -25,6 +25,10 @@
   --secondary: var(--coty-secondary-4);
   --secondary-strong: var(--coty-secondary-8);
   --on-secondary: var(--coty-12);
+  --component-toc-active-indicator: var(--coty-secondary-8);
+  --component-section-headline-bg: var(--coty-secondary-8);
+  --action: var(--coty-role-primary);
+  --on-action: var(--coty-role-on-primary);
 {{- end }}
 {{- range $key, $val := .overrides }}
   --{{ replace $key "_" "-" }}: var({{ $val }});
@@ -61,6 +65,10 @@
   --secondary: var(--coty-secondary-4);
   --secondary-strong: var(--coty-secondary-8);
   --on-secondary: var(--coty-12);
+  --component-toc-active-indicator: var(--coty-secondary-8);
+  --component-section-headline-bg: var(--coty-secondary-8);
+  --action: var(--coty-role-primary);
+  --on-action: var(--coty-role-on-primary);
 {{- end }}
 {{- range $key, $val := .overrides }}
   --{{ replace $key "_" "-" }}: var({{ $val }});

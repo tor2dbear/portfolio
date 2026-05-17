@@ -1504,56 +1504,6 @@
     document.documentElement.setAttribute("data-coty-year", String(entry.year));
     applyPreviewTokens(scale, secondaryScale);
 
-    document.documentElement.style.setProperty("--coty-role-mode", roles.mode);
-    document.documentElement.style.setProperty(
-      "--coty-role-anchor-step",
-      String(roles.anchor)
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-primary",
-      roles.primary
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-primary-strong",
-      roles.primaryStrong
-    );
-    document.documentElement.style.setProperty("--primary", roles.primary);
-    document.documentElement.style.setProperty(
-      "--primary-strong",
-      roles.primaryStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-surface",
-      roles.surface
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-surface-strong",
-      roles.surfaceStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-border-subtle",
-      scale["--coty-5"] || roles.surfaceStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-border-default",
-      scale["--coty-6"] || roles.surfaceStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-border-strong",
-      scale["--coty-8"] || roles.primaryStrong
-    );
-    document.documentElement.style.setProperty(
-      "--border-subtle",
-      "var(--coty-role-border-subtle)"
-    );
-    document.documentElement.style.setProperty(
-      "--border-default",
-      "var(--coty-role-border-default)"
-    );
-    document.documentElement.style.setProperty(
-      "--border-strong",
-      "var(--coty-role-border-strong)"
-    );
     document.documentElement.style.setProperty(
       "--coty-source-step",
       String(getSourceStepForMode(entry, resolvedMode, roles.anchor))
@@ -1563,32 +1513,7 @@
       hasExplicitSourceStepForMode(entry, resolvedMode) ? "true" : "false"
     );
 
-    // Pantone rule: on-primary must come from COTY scale (never pure black/white).
-    var primaryHex = colorToHex(resolveColorValue(roles.primary));
-    var onLightHex = colorToHex(scale["--coty-1"]);
-    var onDarkHex = colorToHex(scale["--coty-12"]);
-    var onPrimaryToken = "--coty-1";
-    if (primaryHex && onLightHex && onDarkHex) {
-      var contrastToLight = contrastRatio(primaryHex, onLightHex);
-      var contrastToDark = contrastRatio(primaryHex, onDarkHex);
-      onPrimaryToken =
-        contrastToLight >= contrastToDark ? "--coty-1" : "--coty-12";
-    }
-    document.documentElement.style.setProperty(
-      "--coty-role-on-primary",
-      "var(" + onPrimaryToken + ")"
-    );
-    document.documentElement.style.setProperty(
-      "--on-primary",
-      "var(" + onPrimaryToken + ")"
-    );
-    if (secondaryScale) {
-      document.documentElement.style.setProperty("--action", roles.primary);
-      document.documentElement.style.setProperty(
-        "--on-action",
-        "var(" + onPrimaryToken + ")"
-      );
-    } else {
+    if (!secondaryScale) {
       document.documentElement.style.setProperty(
         "--action",
         "var(--text-default)"
@@ -1732,33 +1657,20 @@
       highlight: resolveStepColor("tritone_highlight_step"),
     });
 
-    if (secondaryScale) {
-      document.documentElement.style.setProperty(
-        "--secondary",
-        secondaryScale["--coty-secondary-4"]
-      );
-      document.documentElement.style.setProperty(
-        "--secondary-strong",
-        secondaryScale["--coty-secondary-8"]
-      );
-      document.documentElement.style.setProperty(
-        "--on-secondary",
-        "var(--coty-12)"
-      );
-      document.documentElement.style.setProperty(
-        "--component-toc-active-indicator",
-        secondaryScale["--coty-secondary-8"]
-      );
-      document.documentElement.style.setProperty(
-        "--component-section-headline-bg",
-        secondaryScale["--coty-secondary-8"]
-      );
-    } else {
-      document.documentElement.style.removeProperty("--on-secondary");
+    if (!secondaryScale) {
       clearDuoOverrides();
     }
 
-    applyManualOverrides(entryWithDraft);
+    var draftEntry = Object.assign({}, entry);
+    if (resolvedMode === "dark") {
+      draftEntry.overrides_dark = draftOverrides;
+      draftEntry.overrides_light = {};
+    } else {
+      draftEntry.overrides_light = draftOverrides;
+      draftEntry.overrides_dark = {};
+    }
+    draftEntry.overrides = {};
+    applyManualOverrides(draftEntry);
 
     return entry;
   }
