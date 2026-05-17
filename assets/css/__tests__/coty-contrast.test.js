@@ -236,24 +236,12 @@ describe("COTY Contrast Ratios", () => {
     const missing = cotyData.colors.filter(
       (c) => !c.scale_dark || Object.keys(c.scale_dark).length !== 12
     );
-    // 2016 and 2021 are dual-color years with no scale_dark — they are expected
-    const unexpectedMissing = missing.filter(
-      (c) => c.year !== 2016 && c.year !== 2021
-    );
-    expect(unexpectedMissing.map((c) => c.year)).toEqual([]);
+    expect(missing.map((c) => c.year)).toEqual([]);
   });
 
   for (const mode of ["light", "dark"]) {
     describe(`mode: ${mode}`, () => {
-      // 2016 and 2021 have no scale_dark, skip dark mode for those
-      const yearsToTest =
-        mode === "dark"
-          ? [
-              2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
-              2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2022, 2023,
-              2024, 2025, 2026,
-            ]
-          : Array.from({ length: 27 }, (_, i) => 2000 + i);
+      const yearsToTest = Array.from({ length: 27 }, (_, i) => 2000 + i);
 
       for (const year of yearsToTest) {
         describe(`${year}`, () => {

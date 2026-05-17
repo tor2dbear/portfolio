@@ -891,12 +891,7 @@
   }
 
   function buildScale(entry, mode) {
-    // Fall back to light scale for years without scale_dark (2016, 2021)
-    // so role tokens are always computed and never left stale.
-    return (
-      getExplicitScaleForMode(entry, mode) ||
-      (mode === "dark" ? getExplicitScaleForMode(entry, "light") : null)
-    );
+    return getExplicitScaleForMode(entry, mode);
   }
 
   function buildSecondaryScale(entry, mode) {
@@ -1476,6 +1471,12 @@
     }
     var roles = resolveRoleTokens(entry, scale, resolvedMode);
 
+    // Clear any previously injected inline scale tokens so CSS attribute
+    // selectors take over cleanly when switching to a year with explicit CSS.
+    for (var i = 1; i <= 12; i += 1) {
+      document.documentElement.style.removeProperty("--coty-" + i);
+      document.documentElement.style.removeProperty("--coty-secondary-" + i);
+    }
     // Only inject via JS for years where no build-time CSS scale exists
     var hasExplicitScale =
       resolvedMode === "dark"
@@ -1487,7 +1488,9 @@
       });
     }
     var hasExplicitSecondaryScale =
-      resolvedMode === "dark" ? false : Boolean(entry.secondary_scale_light);
+      resolvedMode === "dark"
+        ? Boolean(entry.secondary_scale_dark)
+        : Boolean(entry.secondary_scale_light);
     if (secondaryScale && !hasExplicitSecondaryScale) {
       Object.keys(secondaryScale).forEach(function (name) {
         document.documentElement.style.setProperty(name, secondaryScale[name]);

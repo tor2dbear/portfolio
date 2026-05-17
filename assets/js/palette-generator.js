@@ -194,7 +194,6 @@
           { key: "text_link", token: "--text-link" },
           { key: "text_link_hover", token: "--text-link-hover" },
           { key: "text_inverse", token: "--text-inverse" },
-          { key: "text_tag", token: "--text-tag" },
           { key: "text_accent", token: "--text-accent" },
           { key: "surface_ink_strong", token: "--surface-ink-strong" },
         ],
@@ -366,13 +365,6 @@
           file: "assets/css/components/button.css",
           selector: "inverse content",
           note: "Text/icons on inverted surfaces and overlays.",
-        },
-      ],
-      "--text-tag": [
-        {
-          file: "assets/css/components/tags.css",
-          selector: ".tag-link",
-          note: "Tag pill text color.",
         },
       ],
       "--text-accent": [
@@ -2022,19 +2014,24 @@
 
     function syncCotyOverrideUIForYear(year) {
       const optionValues = cotyOverrideOptionsForYear(year);
-      const allowed = new Set(optionValues);
       const isDuo = isCotyEntryDuo(year);
 
-      const tritoneStepKeys = new Set(["tritone_shadow_step", "tritone_mid_step", "tritone_highlight_step"]);
+      const tritoneStepKeys = new Set([
+        "tritone_shadow_step",
+        "tritone_mid_step",
+        "tritone_highlight_step",
+      ]);
       Object.keys(cotyOverrideSelects).forEach((key) => {
         const select = cotyOverrideSelects[key];
         if (!select) {
           return;
         }
         const values = tritoneStepKeys.has(key)
-          ? (isDuo
-              ? COTY_OVERRIDE_OPTION_VALUES_BASE.concat(COTY_OVERRIDE_OPTION_VALUES_SECONDARY)
-              : COTY_OVERRIDE_OPTION_VALUES_BASE.slice())
+          ? isDuo
+            ? COTY_OVERRIDE_OPTION_VALUES_BASE.concat(
+                COTY_OVERRIDE_OPTION_VALUES_SECONDARY
+              )
+            : COTY_OVERRIDE_OPTION_VALUES_BASE.slice()
           : optionValues;
         const valueSet = new Set(values);
         const currentValue = select.value || "";
@@ -2903,10 +2900,6 @@
       setDerivedToken("--component-toc-active-indicator", ctx.primary.base);
 
       setDerivedToken("--text-default", ctx.text.default);
-      setDerivedToken(
-        "--text-tag",
-        scaleVar(effectiveRoles.surface, surfaceSteps.tag_text_step || 11)
-      );
       setDerivedToken(
         "--surface-ink-strong",
         scaleVar(
