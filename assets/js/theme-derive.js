@@ -123,7 +123,6 @@
     tokens["--text-accent"] = ctx.text.accent;
 
     tokens["--text-default"] = ctx.text.default;
-    tokens["--text-tag"] = ctx.surface.ink_strong;
     tokens["--surface-ink-strong"] = ctx.surface.ink_strong;
     tokens["--text-muted"] =
       "color-mix(in oklch, var(--gray-11) 60%, var(--surface-ink-strong))";
@@ -189,7 +188,6 @@
       "--surface-default": all["--surface-default"],
       "--surface-tag": all["--surface-tag"],
       "--surface-tag-hover": all["--surface-tag-hover"],
-      "--text-tag": all["--text-tag"],
       "--text-muted": all["--text-muted"],
       "--action": all["--action"],
       "--on-action": all["--on-action"],
