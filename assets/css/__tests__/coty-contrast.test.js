@@ -176,9 +176,11 @@ function buildCotyTokenMap(colorEntry, mode) {
         `--coty-${Math.min(anchorStep + 1, 12)}`
       );
       tokens.set("--coty-role-primary", "--coty-9");
+      tokens.set("--coty-role-primary-strong", "--coty-11");
       tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
     } else {
       tokens.set("--coty-role-primary", `--coty-${anchorStep}`);
+      tokens.set("--coty-role-primary-strong", "--coty-11");
       tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
       tokens.set("--coty-role-surface", "--coty-4");
       tokens.set("--coty-role-surface-strong", "--coty-5");
@@ -192,20 +194,27 @@ function buildCotyTokenMap(colorEntry, mode) {
         `--coty-${Math.min(anchorStep + 1, 12)}`
       );
       tokens.set("--coty-role-primary", "--coty-9");
+      tokens.set("--coty-role-primary-strong", "--coty-11");
       tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
     } else {
       tokens.set("--coty-role-primary", `--coty-${sourceStepDark}`);
+      tokens.set("--coty-role-primary-strong", "--coty-11");
       tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
       tokens.set("--coty-role-surface", "--coty-4");
       tokens.set("--coty-role-surface-strong", "--coty-5");
     }
   }
 
-  // Semantic defaults from pantone.css
+  // Semantic defaults from pantone.css, with template overrides mirrored.
+  // coty-scales.css sets --surface-accent: --coty-4 for surface-mode anchor=5
+  // years (both modes) to avoid the case where --coty-5 == page bg == tag bg.
   tokens.set("--text-default", "--coty-12");
   tokens.set("--surface-page", "--coty-role-surface");
   tokens.set("--surface-default", "--coty-role-surface-strong");
-  tokens.set("--surface-accent", "--coty-5");
+  tokens.set(
+    "--surface-accent",
+    roleMode === "surface" && anchorStep === 5 ? "--coty-4" : "--coty-5"
+  );
   tokens.set("--primary", "--coty-role-primary");
   tokens.set("--primary-strong", "--coty-role-primary-strong");
   tokens.set("--text-accent", "--primary-strong");

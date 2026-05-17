@@ -14,6 +14,9 @@
   --coty-role-primary: var(--coty-9);
   --coty-role-primary-strong: var(--coty-11);
   --coty-role-on-primary: var(--coty-{{ .on_primary_step_light }});
+{{- if eq .anchor_step 5 }}
+  --surface-accent: var(--coty-4);
+{{- end }}
 {{- else }}
   --coty-role-primary: var(--coty-{{ .anchor_step }});
   --coty-role-primary-strong: var(--coty-11);
