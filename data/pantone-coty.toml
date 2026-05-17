@@ -43,6 +43,7 @@ on_primary_step_dark = 1
 [colors.overrides_light]
 text_default = "--coty-10"
 text_muted = "--coty-10"
+surface_default = "--coty-5"
 border_subtle = "--coty-5"
 border_default = "--coty-5"
 border_strong = "--coty-4"
@@ -1081,6 +1082,13 @@ on_primary_step_dark = 1
 "10" = "#f5df4d"
 "11" = "#ede095"
 "12" = "#f9f6e2"
+
+[colors.overrides_light]
+surface_default = "--coty-7"
+
+[colors.overrides_dark]
+surface_default = "--coty-5"
+
 [[colors]]
 year = 2022
 name = "Very Peri"

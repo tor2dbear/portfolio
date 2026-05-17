@@ -204,6 +204,7 @@ function buildCotyTokenMap(colorEntry, mode) {
   // Semantic defaults from pantone.css
   tokens.set("--text-default", "--coty-12");
   tokens.set("--surface-page", "--coty-role-surface");
+  tokens.set("--surface-default", "--coty-role-surface-strong");
   tokens.set("--primary", "--coty-role-primary");
   tokens.set("--on-primary", "--coty-role-on-primary");
 
@@ -296,6 +297,22 @@ describe("COTY Contrast Ratios", () => {
             if (!text || !bg) {
               console.warn(
                 `[${year} ${mode}] Could not resolve body text colors — skipping`
+              );
+              return;
+            }
+
+            const ratio = wcagContrast(text, bg);
+            expect(ratio).not.toBeNull();
+            expect(ratio).toBeGreaterThanOrEqual(WCAG_AA);
+          });
+
+          test("card text (--text-default on --surface-default) meets WCAG AA 4.5:1", () => {
+            const text = resolveCotyColor("--text-default", tokenMap);
+            const bg = resolveCotyColor("--surface-default", tokenMap);
+
+            if (!text || !bg) {
+              console.warn(
+                `[${year} ${mode}] Could not resolve card text colors — skipping`
               );
               return;
             }
