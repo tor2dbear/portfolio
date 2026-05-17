@@ -20,6 +20,10 @@
   var PANTONE_RUNTIME_TOKEN_NAMES = [
     "--coty-source-step",
     "--coty-secondary-source-step",
+    "--coty-role-surface",
+    "--coty-role-surface-strong",
+    "--coty-role-primary",
+    "--coty-role-primary-strong",
     "--action",
     "--on-action",
     "--component-nav-cta-bg",
@@ -1452,16 +1456,22 @@
       document.documentElement.style.removeProperty("--coty-" + i);
       document.documentElement.style.removeProperty("--coty-secondary-" + i);
     }
-    // Clear role-token inline styles set by head.html as flash-prevention cache.
-    // CSS attribute-selector rules in coty-scales-generated.css now own these.
+    // Refresh role-token inline styles: clear any stale flash-prevention value
+    // from head.html and write the values computed from the (possibly
+    // lab-overridden) entry so entryOverride role_mode / anchor_step changes
+    // take immediate visual effect via inline-style precedence.
+    document.documentElement.style.removeProperty("--coty-role-on-primary");
     [
-      "--coty-role-surface",
-      "--coty-role-surface-strong",
-      "--coty-role-primary",
-      "--coty-role-primary-strong",
-      "--coty-role-on-primary",
-    ].forEach(function (name) {
-      document.documentElement.style.removeProperty(name);
+      ["--coty-role-surface", roles.surface],
+      ["--coty-role-surface-strong", roles.surfaceStrong],
+      ["--coty-role-primary", roles.primary],
+      ["--coty-role-primary-strong", roles.primaryStrong],
+    ].forEach(function (pair) {
+      if (pair[1]) {
+        document.documentElement.style.setProperty(pair[0], pair[1]);
+      } else {
+        document.documentElement.style.removeProperty(pair[0]);
+      }
     });
 
     document.documentElement.setAttribute("data-coty-year", String(entry.year));
