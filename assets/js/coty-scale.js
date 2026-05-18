@@ -24,10 +24,6 @@
     "--coty-role-surface-strong",
     "--coty-role-primary",
     "--coty-role-primary-strong",
-    "--action",
-    "--on-action",
-    "--component-nav-cta-bg",
-    "--component-nav-cta-text",
     "--image-grayscale",
     "--image-shadow-blend-mode",
     "--image-highlight-blend-mode",
@@ -1484,25 +1480,6 @@
     document.documentElement.setAttribute(
       "data-coty-source-explicit",
       hasExplicitSourceStepForMode(entry, resolvedMode) ? "true" : "false"
-    );
-
-    if (!secondaryScale) {
-      document.documentElement.style.setProperty(
-        "--action",
-        "var(--text-default)"
-      );
-      document.documentElement.style.setProperty(
-        "--on-action",
-        "var(--surface-page)"
-      );
-    }
-    document.documentElement.style.setProperty(
-      "--component-nav-cta-bg",
-      "var(--primary)"
-    );
-    document.documentElement.style.setProperty(
-      "--component-nav-cta-text",
-      "var(--on-primary)"
     );
 
     var secondaryAnchor = resolveSecondaryAnchorStep(entry, resolvedMode);
