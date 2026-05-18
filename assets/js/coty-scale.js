@@ -18,33 +18,12 @@
   var APPLIED_MANUAL_OVERRIDES = [];
   var _tritoneAnimFrame = null;
   var PANTONE_RUNTIME_TOKEN_NAMES = [
-    "--coty-role-mode",
-    "--coty-role-anchor-step",
-    "--coty-role-primary",
-    "--coty-role-primary-strong",
-    "--coty-role-surface",
-    "--coty-role-surface-strong",
-    "--coty-role-border-subtle",
-    "--coty-role-border-default",
-    "--coty-role-border-strong",
-    "--coty-role-on-primary",
     "--coty-source-step",
     "--coty-secondary-source-step",
-    "--border-subtle",
-    "--border-default",
-    "--border-strong",
-    "--primary",
-    "--primary-strong",
-    "--on-primary",
-    "--action",
-    "--on-action",
-    "--component-nav-cta-bg",
-    "--component-nav-cta-text",
-    "--on-secondary",
-    "--accent-primary",
-    "--accent-primary-strong",
-    "--secondary",
-    "--secondary-strong",
+    "--coty-role-surface",
+    "--coty-role-surface-strong",
+    "--coty-role-primary",
+    "--coty-role-primary-strong",
     "--image-grayscale",
     "--image-shadow-blend-mode",
     "--image-highlight-blend-mode",
@@ -54,10 +33,6 @@
     "--image-highlight-opacity",
     "--image-blend-mode",
     "--image-background",
-    "--accent-secondary",
-    "--accent-secondary-strong",
-    "--component-toc-active-indicator",
-    "--component-section-headline-bg",
   ];
   var TRITONE_FILTER_ID = "pantone-tritone";
   var TRITONE_SVG_ID = "pantone-tritone-defs";
@@ -1477,83 +1452,27 @@
       document.documentElement.style.removeProperty("--coty-" + i);
       document.documentElement.style.removeProperty("--coty-secondary-" + i);
     }
-    // Only inject via JS for years where no build-time CSS scale exists
-    var hasExplicitScale =
-      resolvedMode === "dark"
-        ? Boolean(entry.scale_dark)
-        : Boolean(entry.scale_light);
-    if (!hasExplicitScale) {
-      Object.keys(scale).forEach(function (name) {
-        document.documentElement.style.setProperty(name, scale[name]);
-      });
-    }
-    var hasExplicitSecondaryScale =
-      resolvedMode === "dark"
-        ? Boolean(entry.secondary_scale_dark)
-        : Boolean(entry.secondary_scale_light);
-    if (secondaryScale && !hasExplicitSecondaryScale) {
-      Object.keys(secondaryScale).forEach(function (name) {
-        document.documentElement.style.setProperty(name, secondaryScale[name]);
-      });
-    } else if (!secondaryScale) {
-      for (var i = 1; i <= 12; i += 1) {
-        document.documentElement.style.removeProperty("--coty-secondary-" + i);
+    // Refresh role-token inline styles: clear any stale flash-prevention value
+    // from head.html and write the values computed from the (possibly
+    // lab-overridden) entry so entryOverride role_mode / anchor_step changes
+    // take immediate visual effect via inline-style precedence.
+    document.documentElement.style.removeProperty("--coty-role-on-primary");
+    [
+      ["--coty-role-surface", roles.surface],
+      ["--coty-role-surface-strong", roles.surfaceStrong],
+      ["--coty-role-primary", roles.primary],
+      ["--coty-role-primary-strong", roles.primaryStrong],
+    ].forEach(function (pair) {
+      if (pair[1]) {
+        document.documentElement.style.setProperty(pair[0], pair[1]);
+      } else {
+        document.documentElement.style.removeProperty(pair[0]);
       }
-    }
+    });
 
     document.documentElement.setAttribute("data-coty-year", String(entry.year));
     applyPreviewTokens(scale, secondaryScale);
 
-    document.documentElement.style.setProperty("--coty-role-mode", roles.mode);
-    document.documentElement.style.setProperty(
-      "--coty-role-anchor-step",
-      String(roles.anchor)
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-primary",
-      roles.primary
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-primary-strong",
-      roles.primaryStrong
-    );
-    document.documentElement.style.setProperty("--primary", roles.primary);
-    document.documentElement.style.setProperty(
-      "--primary-strong",
-      roles.primaryStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-surface",
-      roles.surface
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-surface-strong",
-      roles.surfaceStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-border-subtle",
-      scale["--coty-5"] || roles.surfaceStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-border-default",
-      scale["--coty-6"] || roles.surfaceStrong
-    );
-    document.documentElement.style.setProperty(
-      "--coty-role-border-strong",
-      scale["--coty-8"] || roles.primaryStrong
-    );
-    document.documentElement.style.setProperty(
-      "--border-subtle",
-      "var(--coty-role-border-subtle)"
-    );
-    document.documentElement.style.setProperty(
-      "--border-default",
-      "var(--coty-role-border-default)"
-    );
-    document.documentElement.style.setProperty(
-      "--border-strong",
-      "var(--coty-role-border-strong)"
-    );
     document.documentElement.style.setProperty(
       "--coty-source-step",
       String(getSourceStepForMode(entry, resolvedMode, roles.anchor))
@@ -1561,50 +1480,6 @@
     document.documentElement.setAttribute(
       "data-coty-source-explicit",
       hasExplicitSourceStepForMode(entry, resolvedMode) ? "true" : "false"
-    );
-
-    // Pantone rule: on-primary must come from COTY scale (never pure black/white).
-    var primaryHex = colorToHex(resolveColorValue(roles.primary));
-    var onLightHex = colorToHex(scale["--coty-1"]);
-    var onDarkHex = colorToHex(scale["--coty-12"]);
-    var onPrimaryToken = "--coty-1";
-    if (primaryHex && onLightHex && onDarkHex) {
-      var contrastToLight = contrastRatio(primaryHex, onLightHex);
-      var contrastToDark = contrastRatio(primaryHex, onDarkHex);
-      onPrimaryToken =
-        contrastToLight >= contrastToDark ? "--coty-1" : "--coty-12";
-    }
-    document.documentElement.style.setProperty(
-      "--coty-role-on-primary",
-      "var(" + onPrimaryToken + ")"
-    );
-    document.documentElement.style.setProperty(
-      "--on-primary",
-      "var(" + onPrimaryToken + ")"
-    );
-    if (secondaryScale) {
-      document.documentElement.style.setProperty("--action", roles.primary);
-      document.documentElement.style.setProperty(
-        "--on-action",
-        "var(" + onPrimaryToken + ")"
-      );
-    } else {
-      document.documentElement.style.setProperty(
-        "--action",
-        "var(--text-default)"
-      );
-      document.documentElement.style.setProperty(
-        "--on-action",
-        "var(--surface-page)"
-      );
-    }
-    document.documentElement.style.setProperty(
-      "--component-nav-cta-bg",
-      "var(--primary)"
-    );
-    document.documentElement.style.setProperty(
-      "--component-nav-cta-text",
-      "var(--on-primary)"
     );
 
     var secondaryAnchor = resolveSecondaryAnchorStep(entry, resolvedMode);
@@ -1732,33 +1607,20 @@
       highlight: resolveStepColor("tritone_highlight_step"),
     });
 
-    if (secondaryScale) {
-      document.documentElement.style.setProperty(
-        "--secondary",
-        secondaryScale["--coty-secondary-4"]
-      );
-      document.documentElement.style.setProperty(
-        "--secondary-strong",
-        secondaryScale["--coty-secondary-8"]
-      );
-      document.documentElement.style.setProperty(
-        "--on-secondary",
-        "var(--coty-12)"
-      );
-      document.documentElement.style.setProperty(
-        "--component-toc-active-indicator",
-        secondaryScale["--coty-secondary-8"]
-      );
-      document.documentElement.style.setProperty(
-        "--component-section-headline-bg",
-        secondaryScale["--coty-secondary-8"]
-      );
-    } else {
-      document.documentElement.style.removeProperty("--on-secondary");
+    if (!secondaryScale) {
       clearDuoOverrides();
     }
 
-    applyManualOverrides(entryWithDraft);
+    var draftEntry = Object.assign({}, entry);
+    if (resolvedMode === "dark") {
+      draftEntry.overrides_dark = draftOverrides;
+      draftEntry.overrides_light = {};
+    } else {
+      draftEntry.overrides_light = draftOverrides;
+      draftEntry.overrides_dark = {};
+    }
+    draftEntry.overrides = {};
+    applyManualOverrides(draftEntry);
 
     return entry;
   }

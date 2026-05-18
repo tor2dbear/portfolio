@@ -70,7 +70,7 @@ async function main() {
 
   const lhciArgs = [
     "collect",
-    "--numberOfRuns=1",
+    "--numberOfRuns=3",
     "--settings.chromeFlags=--no-sandbox",
     ...urls.flatMap((url) => ["--url", url]),
   ];

@@ -8,6 +8,37 @@
 {{ range $step, $value := .secondary_scale_light -}}  --coty-secondary-{{ $step }}: {{ $value }};
 {{ end -}}
 {{- end -}}
+{{- if eq .role_mode "surface" }}
+  --coty-role-surface: var(--coty-{{ .anchor_step }});
+  --coty-role-surface-strong: var(--coty-{{ add .anchor_step 1 }});
+  --coty-role-primary: var(--coty-9);
+  --coty-role-primary-strong: var(--coty-11);
+  --coty-role-on-primary: var(--coty-{{ .on_primary_step_light }});
+{{- if eq .anchor_step 5 }}
+  --surface-accent: var(--coty-4);
+{{- end }}
+{{- else }}
+  --coty-role-primary: var(--coty-{{ .anchor_step }});
+  --coty-role-primary-strong: var(--coty-11);
+  --coty-role-on-primary: var(--coty-{{ .on_primary_step_light }});
+  --coty-role-surface: var(--coty-4);
+  --coty-role-surface-strong: var(--coty-5);
+{{- end }}
+{{- if .secondary_scale_light }}
+  --secondary: var(--coty-secondary-4);
+  --secondary-strong: var(--coty-secondary-8);
+  --on-secondary: var(--coty-12);
+  --component-toc-active-indicator: var(--coty-secondary-8);
+  --component-section-headline-bg: var(--coty-secondary-8);
+  --action: var(--coty-role-primary);
+  --on-action: var(--coty-role-on-primary);
+{{- end }}
+{{- range $key, $val := .overrides }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
+{{- range $key, $val := .overrides_light }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
 }
 {{ end -}}
 {{- if .scale_dark }}
@@ -18,6 +49,37 @@
 {{ range $step, $value := .secondary_scale_dark -}}  --coty-secondary-{{ $step }}: {{ $value }};
 {{ end -}}
 {{- end -}}
+{{- if eq .role_mode "surface" }}
+  --coty-role-surface: var(--coty-{{ .anchor_step }});
+  --coty-role-surface-strong: var(--coty-{{ add .anchor_step 1 }});
+  --coty-role-primary: var(--coty-9);
+  --coty-role-primary-strong: var(--coty-11);
+  --coty-role-on-primary: var(--coty-{{ .on_primary_step_dark }});
+{{- if ge .anchor_step 5 }}
+  --surface-accent: var(--coty-3);
+{{- end }}
+{{- else }}
+  --coty-role-primary: var(--coty-{{ .source_step_dark }});
+  --coty-role-primary-strong: var(--coty-11);
+  --coty-role-on-primary: var(--coty-{{ .on_primary_step_dark }});
+  --coty-role-surface: var(--coty-4);
+  --coty-role-surface-strong: var(--coty-5);
+{{- end }}
+{{- if .secondary_scale_dark }}
+  --secondary: var(--coty-secondary-4);
+  --secondary-strong: var(--coty-secondary-8);
+  --on-secondary: var(--coty-12);
+  --component-toc-active-indicator: var(--coty-secondary-8);
+  --component-section-headline-bg: var(--coty-secondary-8);
+  --action: var(--coty-role-primary);
+  --on-action: var(--coty-role-on-primary);
+{{- end }}
+{{- range $key, $val := .overrides }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
+{{- range $key, $val := .overrides_dark }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
 }
 {{ end -}}
 {{- end -}}

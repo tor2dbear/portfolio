@@ -54,14 +54,6 @@ focus_source = "primary.base"
 bg_source = "gray-2"
 placeholder_source = "gray-10"
 
-[roles.component.newsletter]
-bg_step = 12
-text_step = 2
-illustration_bg_step = 3
-button_bg_step = 4
-button_text_step = 11
-button_text_role = "primary"
-
 [roles.component.nav_cta]
 bg_source = "primary.base"
 text_source = "primary.on"

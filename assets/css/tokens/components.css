@@ -13,12 +13,6 @@
 
   --component-form-bg: var(--gray-2);
   --component-form-placeholder: var(--text-muted);
-
-  --component-newsletter-bg: var(--iris-12);
-  --component-newsletter-text: var(--iris-2);
-  --component-newsletter-illustration-bg: var(--iris-3);
-  --component-newsletter-button-bg: var(--iris-4);
-  --component-newsletter-button-text: var(--iris-11);
   --component-toast-bg: color-mix(
     in srgb,
     var(--surface-page) 40%,

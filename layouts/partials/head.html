@@ -168,7 +168,6 @@
   {{ $components_pagination := resources.Get "css/components/pagination.css" }}
   {{ $components_breadcrumb := resources.Get "css/components/breadcrumb.css" }}
   {{ $components_tags := resources.Get "css/components/tags.css" }}
-  {{ $components_newsletter := resources.Get "css/components/newsletter.css" }}
   {{ $components_tooltip := resources.Get "css/components/tooltip.css" }}
   {{ $components_download_card := resources.Get "css/components/download-card.css" }}
   {{ $components_table_of_contents := resources.Get "css/components/table-of-contents.css" }}
@@ -418,7 +417,6 @@
     <link rel="stylesheet" type="text/css" href="{{ $components_pagination.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_breadcrumb.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_tags.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $components_newsletter.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_tooltip.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_download_card.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $components_table_of_contents.RelPermalink }}" />
@@ -450,7 +448,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_newsletter $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}

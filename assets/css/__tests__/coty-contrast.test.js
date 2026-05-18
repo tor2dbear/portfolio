@@ -1,18 +1,18 @@
 /**
  * COTY Contrast Ratio Tests
  *
- * Resolves --coty-N scale values for every Pantone Color of the Year × mode
+ * Resolves CSS role-tokens for every Pantone Color of the Year × mode
  * combination and verifies that the key text/background pairs meet WCAG 2.1 AA.
  *
- * Scale data lives in data/pantone-coty.toml (hand-crafted oklch values for
- * light, hex values for dark). Overrides from overrides_light / overrides_dark
- * are applied on top of the pantone.css defaults.
+ * Token resolution mirrors the CSS template in assets/templates/coty-scales.css:
+ *   - surface years: --coty-role-surface → --coty-{anchor_step}
+ *   - primary years: --coty-role-primary → --coty-{anchor_step} (light) / --coty-{source_step_dark} (dark)
  *
- * Pantone palette defaults (from pantone.css):
+ * Semantic token chain (from pantone.css):
  *   --text-default  → --coty-12
- *   --surface-page  → --coty-2  (fallback when --coty-role-surface is absent)
- *   --primary       → --coty-9  (fallback when --coty-role-primary is absent)
- *   --on-primary    → --coty-1  (fallback when --coty-role-on-primary is absent)
+ *   --surface-page  → --coty-role-surface
+ *   --primary       → --coty-role-primary
+ *   --on-primary    → --coty-role-on-primary
  */
 
 const { execSync } = require("child_process");
@@ -145,15 +145,7 @@ function loadCotyData() {
 
 // ─── Token resolution ──────────────────────────────────────────────────────
 
-// pantone.css defaults: what --text-default, --surface-page, etc. resolve to
-// when no JS-injected role tokens are present.
-const PANTONE_DEFAULTS = {
-  "--text-default": "--coty-12",
-  "--surface-page": "--coty-2",
-  "--primary": "--coty-9",
-  "--on-primary": "--coty-1",
-};
-
+// Mirrors assets/templates/coty-scales.css role-token logic.
 function buildCotyTokenMap(colorEntry, mode) {
   const scale =
     mode === "dark" ? colorEntry.scale_dark : colorEntry.scale_light;
@@ -171,19 +163,82 @@ function buildCotyTokenMap(colorEntry, mode) {
     }
   }
 
-  // Apply pantone.css semantic defaults
-  for (const [token, cotyRef] of Object.entries(PANTONE_DEFAULTS)) {
-    tokens.set(token, cotyRef);
+  const roleMode = (colorEntry.role_mode || "").toLowerCase();
+  const anchorStep = Number(colorEntry.anchor_step || 0);
+  const sourceStepDark = Number(colorEntry.source_step_dark || anchorStep);
+
+  if (mode === "light") {
+    const onStep = Number(colorEntry.on_primary_step_light || 1);
+    if (roleMode === "surface") {
+      tokens.set("--coty-role-surface", `--coty-${anchorStep}`);
+      tokens.set(
+        "--coty-role-surface-strong",
+        `--coty-${Math.min(anchorStep + 1, 12)}`
+      );
+      tokens.set("--coty-role-primary", "--coty-9");
+      tokens.set("--coty-role-primary-strong", "--coty-11");
+      tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
+    } else {
+      tokens.set("--coty-role-primary", `--coty-${anchorStep}`);
+      tokens.set("--coty-role-primary-strong", "--coty-11");
+      tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
+      tokens.set("--coty-role-surface", "--coty-4");
+      tokens.set("--coty-role-surface-strong", "--coty-5");
+    }
+  } else {
+    const onStep = Number(colorEntry.on_primary_step_dark || 12);
+    if (roleMode === "surface") {
+      tokens.set("--coty-role-surface", `--coty-${anchorStep}`);
+      tokens.set(
+        "--coty-role-surface-strong",
+        `--coty-${Math.min(anchorStep + 1, 12)}`
+      );
+      tokens.set("--coty-role-primary", "--coty-9");
+      tokens.set("--coty-role-primary-strong", "--coty-11");
+      tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
+    } else {
+      tokens.set("--coty-role-primary", `--coty-${sourceStepDark}`);
+      tokens.set("--coty-role-primary-strong", "--coty-11");
+      tokens.set("--coty-role-on-primary", `--coty-${onStep}`);
+      tokens.set("--coty-role-surface", "--coty-4");
+      tokens.set("--coty-role-surface-strong", "--coty-5");
+    }
   }
 
-  // Apply year-specific overrides (e.g. overrides_light.text_default = "--coty-10")
-  const overrides =
-    mode === "dark" ? colorEntry.overrides_dark : colorEntry.overrides_light;
-  if (overrides) {
-    for (const [snakeKey, cotyRef] of Object.entries(overrides)) {
-      const cssKey = "--" + snakeKey.replace(/_/g, "-");
-      tokens.set(cssKey, cotyRef);
-    }
+  // Semantic defaults from pantone.css, with template overrides mirrored.
+  // Light: anchor=5 → step 4 (avoids tag bg == page bg for 2003/2009).
+  // Dark:  anchor≥5 → step 3 (dark step 5 is too close to steps 6-8 page bg).
+  tokens.set("--text-default", "--coty-12");
+  tokens.set("--surface-page", "--coty-role-surface");
+  tokens.set("--surface-default", "--coty-role-surface-strong");
+  tokens.set(
+    "--surface-accent",
+    roleMode === "surface"
+      ? mode === "dark"
+        ? anchorStep >= 5
+          ? "--coty-3"
+          : "--coty-5"
+        : anchorStep === 5
+        ? "--coty-4"
+        : "--coty-5"
+      : "--coty-5"
+  );
+  tokens.set("--primary", "--coty-role-primary");
+  tokens.set("--primary-strong", "--coty-role-primary-strong");
+  tokens.set("--text-accent", "--primary-strong");
+  tokens.set("--on-primary", "--coty-role-on-primary");
+
+  // Year-specific overrides
+  const overrides = colorEntry.overrides || {};
+  for (const [snakeKey, cotyRef] of Object.entries(overrides)) {
+    tokens.set("--" + snakeKey.replace(/_/g, "-"), cotyRef);
+  }
+  const modeOverrides =
+    mode === "dark"
+      ? colorEntry.overrides_dark || {}
+      : colorEntry.overrides_light || {};
+  for (const [snakeKey, cotyRef] of Object.entries(modeOverrides)) {
+    tokens.set("--" + snakeKey.replace(/_/g, "-"), cotyRef);
   }
 
   return tokens;
@@ -197,7 +252,6 @@ function resolveCotyColor(name, tokens, depth = 0) {
   if (!value) {
     return null;
   }
-  // Raw color value
   if (
     value.startsWith("oklch(") ||
     value.startsWith("hsl(") ||
@@ -205,9 +259,13 @@ function resolveCotyColor(name, tokens, depth = 0) {
   ) {
     return value;
   }
-  // Variable reference (e.g. "--coty-10")
   if (value.startsWith("--")) {
     return resolveCotyColor(value, tokens, depth + 1);
+  }
+  // Handle var() references from overrides
+  const varMatch = value.match(/^var\((--[^,)]+)/);
+  if (varMatch) {
+    return resolveCotyColor(varMatch[1], tokens, depth + 1);
   }
   return null;
 }
@@ -259,6 +317,38 @@ describe("COTY Contrast Ratios", () => {
             if (!text || !bg) {
               console.warn(
                 `[${year} ${mode}] Could not resolve body text colors — skipping`
+              );
+              return;
+            }
+
+            const ratio = wcagContrast(text, bg);
+            expect(ratio).not.toBeNull();
+            expect(ratio).toBeGreaterThanOrEqual(WCAG_AA);
+          });
+
+          test("tag (--text-accent on --surface-accent) meets WCAG AA 4.5:1", () => {
+            const text = resolveCotyColor("--text-accent", tokenMap);
+            const bg = resolveCotyColor("--surface-accent", tokenMap);
+
+            if (!text || !bg) {
+              console.warn(
+                `[${year} ${mode}] Could not resolve tag colors — skipping`
+              );
+              return;
+            }
+
+            const ratio = wcagContrast(text, bg);
+            expect(ratio).not.toBeNull();
+            expect(ratio).toBeGreaterThanOrEqual(WCAG_AA);
+          });
+
+          test("card text (--text-default on --surface-default) meets WCAG AA 4.5:1", () => {
+            const text = resolveCotyColor("--text-default", tokenMap);
+            const bg = resolveCotyColor("--surface-default", tokenMap);
+
+            if (!text || !bg) {
+              console.warn(
+                `[${year} ${mode}] Could not resolve card text colors — skipping`
               );
               return;
             }

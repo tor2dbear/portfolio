@@ -2,7 +2,7 @@
 title = "CSS fails silently"
 date = "2026-05-16"
 author = "Torbjörn Hedberg"
-draft = false
+draft = true
 hidden = false
 description = "On testing a language that never tells you when something is wrong"
 tags = ["css", "testing", "design-system"]
@@ -43,13 +43,17 @@ Contrast ratios. Once you can resolve the chain for a specific combination of mo
 
 Naming conventions and expected structure. Whether the tokens that are supposed to exist actually exist. Whether scales have the steps they should have.
 
-I added these checks to this portfolio. The token validation found bugs on the first run — a typo (`--space-8` instead of `--spacing-8`), and two references to a spacing value that doesn't exist in the scale, quietly falling back to nothing. But the contrast tests found something more interesting: the 2014 Pantone Color of the Year, Radiant Orchid, had a contrast ratio of 3.88:1 between text and background in light mode — below WCAG AA's 4.5:1 threshold. The color looked fine. Nothing was visibly broken. The palette had been in the codebase for a year. The test caught it because it checked all 27 Color of the Year palettes across both light and dark mode — 54 combinations in total.
+I added these checks to this portfolio. The token validation found bugs on the first run — a typo (`--space-8` instead of `--spacing-8`), and two references to a spacing value that doesn't exist in the scale, quietly falling back to nothing. But the contrast tests found something more interesting: the 2014 Pantone Color of the Year, Radiant Orchid, had a contrast ratio of 3.88:1 between text and background in light mode — below WCAG AA's 4.5:1 threshold. The color looked fine. Nothing was visibly broken. The palette had been in the codebase for a year. The test caught it because it checked all 27 Color of the Year palettes across both light and dark mode — 54 combinations, each verified across four token pairs: body text, card text, tags, and primary buttons.
+
+Then the tests demonstrated the problem they were written to catch. The tag contrast checks were passing — all 54 of them — without asserting anything. A role token (`--primary-strong`) was missing from the test's token map, so the chain resolved to null, an early null guard returned, and Jest counted each as a pass. Green output, no assertions. Adding the missing token immediately exposed failures: several dark-mode palettes were rendering tag backgrounds in the same color as the page. They had been that way for as long as the palettes existed.
 
 ## The gap that remains
 
 What these static tests can cover is the structure of the design system — whether it's internally consistent, whether the contracts it makes are honored in the code. What they can't cover is whether those contracts produce the right experience for a person using the site.
 
 That gap is probably irreducible without a browser. But it's also smaller than it looks, because most CSS bugs aren't "the layout is subtly wrong in a way only a human could notice." They're "this token resolves to nothing" or "this contrast is 3.88:1 in light mode with this palette." Those are checkable.
+
+There's a third category that falls between the two. CSS specificity is not the same problem as token resolution, but it produces the same silence. A flash-prevention script was setting `--coty-role-surface` as an inline style to prevent a visible color shift on load. When a refactor stopped the JavaScript from overwriting that value, the inline style won the cascade — higher specificity, no error — and every light-mode palette rendered with a dark background. The tests passed. The page was visually wrong.
 
 ## How it should work
 

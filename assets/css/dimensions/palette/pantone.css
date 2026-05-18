@@ -37,7 +37,7 @@
   --text-link-hover: var(--coty-11);
 
   --surface-page: var(--coty-role-surface, var(--coty-2));
-  --surface-accent: var(--coty-role-surface-strong, var(--coty-4));
+  --surface-accent: var(--coty-5);
   --surface-default: var(--coty-role-surface-strong, var(--coty-4));
 
   --border-subtle: var(--coty-5);
@@ -46,12 +46,6 @@
 
   --component-form-bg: var(--coty-role-surface, var(--coty-3));
   --component-form-placeholder: var(--text-muted);
-
-  --component-newsletter-bg: var(--coty-12);
-  --component-newsletter-text: var(--coty-2);
-  --component-newsletter-illustration-bg: var(--coty-3);
-  --component-newsletter-button-bg: var(--coty-4);
-  --component-newsletter-button-text: var(--coty-11);
 }
 
 /* Dark mode + Pantone overrides */
