@@ -82,8 +82,9 @@
             />
             <!-- Honeypot field for bot protection -->
             <div style="position: absolute; left: -5000px;" aria-hidden="true">
-              <input type="text" name="b_294f66f378d5370fcbc5aa02f_74c003d094" tabindex="-1" value="" />
+              <input type="text" name="email_address_check" tabindex="-1" value="" />
             </div>
+            <input type="hidden" name="locale" value="{{ .Language.Lang }}" />
             <button type="submit" class="footer-newsletter__submit button">
               {{ i18n "footer_newsletter_submit" }}
             </button>
