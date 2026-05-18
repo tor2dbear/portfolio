@@ -1,6 +1,6 @@
 /**
  * Newsletter Form - AJAX Submission
- * Handles Brevo form submissions via fetch to show inline success/error messages
+ * Proxies to Brevo via a Netlify Function to show inline success/error messages
  */
 
 (function () {
@@ -36,7 +36,6 @@
   function showResponse(form, message, isError) {
     var successEl = form.querySelector(".mc-response--success");
     var errorEl = form.querySelector(".mc-response--error");
-
     if (successEl) {
       successEl.style.display = isError ? "none" : "block";
       if (!isError) successEl.textContent = message;
@@ -90,24 +89,31 @@
     hideResponses(form);
     setLoading(form, true);
 
-    var body = new URLSearchParams(new FormData(form)).toString();
     var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-    var timeoutId = controller
-      ? setTimeout(function () { controller.abort(); }, 10000)
-      : null;
+    var timeoutId = controller ? setTimeout(function () { controller.abort(); }, 10000) : null;
 
     fetch(form.action, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: body,
-      mode: "no-cors",
+      body: new URLSearchParams(new FormData(form)).toString(),
       signal: controller ? controller.signal : undefined,
     })
-      .then(function () {
+      .then(function (response) {
         clearTimeout(timeoutId);
         setLoading(form, false);
-        showResponse(form, getMessage("success"), false);
-        form.reset();
+        return response.json();
+      })
+      .then(function (data) {
+        if (data.success) {
+          showResponse(form, getMessage("success"), false);
+          form.reset();
+        } else if (data.error === "already_subscribed") {
+          showResponse(form, getMessage("alreadySubscribed"), true);
+        } else if (data.error === "invalid_email") {
+          showResponse(form, getMessage("invalidEmail"), true);
+        } else {
+          showResponse(form, getMessage("error"), true);
+        }
       })
       .catch(function (err) {
         clearTimeout(timeoutId);

@@ -145,7 +145,7 @@ DefaultContentLanguage = "en"
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
-  newsletter_action = "https://1ce56e1e.sibforms.com/serve/MUIFAAiD8XpID5uKNBbTZPkd-9gsTYxdnF_TAuNDltsR2PZAScXGZK2JA9RvWtjB0Eir2ut1zXy_MYNuUjW5foJdGEzFN8mAGqB94_q7EDkNOVMnPh9_LpkHGb97AolVxsQT8hroRnL__GP8_gQ5OPcwfpIrKRAbCTTL_WZ9RCx8rqrbh5gJx4bTlN3213bJekEgP1YX1uLLo3to6w=="
+  newsletter_action = "/.netlify/functions/newsletter-subscribe"
   newsletter_email_field = "EMAIL"
   dateFormat = "02 Jan 2006, 15:04"
   mainSections = ['writing', 'texter', 'newsletter', 'works']
