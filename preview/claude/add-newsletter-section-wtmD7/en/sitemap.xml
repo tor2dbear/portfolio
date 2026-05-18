@@ -292,6 +292,22 @@
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/quality/tags/quality/</loc>
     <lastmod>2026-05-04T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/newsletter/may-2026/</loc>
+    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/newsletter/</loc>
+    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="sv-SE"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/sv/nyhetsbrev/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/newsletter/"
+                />
+  </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/writing/the-designer-as-coordinator/</loc>
     <lastmod>2026-04-22T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -720,18 +736,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/license/"
-                />
-  </url><url>
-    <loc>https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/newsletter/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="sv-SE"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/sv/nyhetsbrev/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/newsletter/"
                 />
   </url><url>
     <loc>https://tor2dbear.github.io/portfolio/preview/claude/add-newsletter-section-wtmD7/clients/deg17/portfolio-print/</loc>
