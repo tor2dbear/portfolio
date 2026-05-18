@@ -100,17 +100,14 @@
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: body,
+      mode: "no-cors",
       signal: controller ? controller.signal : undefined,
     })
-      .then(function (response) {
+      .then(function () {
         clearTimeout(timeoutId);
         setLoading(form, false);
-        if (response.ok) {
-          showResponse(form, getMessage("success"), false);
-          form.reset();
-        } else {
-          showResponse(form, getMessage("error"), true);
-        }
+        showResponse(form, getMessage("success"), false);
+        form.reset();
       })
       .catch(function (err) {
         clearTimeout(timeoutId);
