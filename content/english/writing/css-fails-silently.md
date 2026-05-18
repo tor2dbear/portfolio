@@ -2,7 +2,7 @@
 title = "CSS fails silently"
 date = "2026-05-16"
 author = "Torbjörn Hedberg"
-draft = false
+draft = true
 hidden = false
 description = "On testing a language that never tells you when something is wrong"
 tags = ["css", "testing", "design-system"]
