@@ -1,0 +1,15 @@
+<article class="article-card">
+  <header>
+    <h2 class="article-card__title type-headline-3">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+
+    {{ if .Description }}
+    <p class="article-card__description type-body">{{ .Description }}</p>
+    {{ end }}
+
+    <div class="article-card__meta type-information is-muted">
+      {{ partial "date.html" . }}
+    </div>
+  </header>
+</article>

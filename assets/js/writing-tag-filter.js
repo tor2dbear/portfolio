@@ -11,6 +11,8 @@ function initWritingTagFilter() {
   const isWritingList =
     /(?:^|\/)writing\/$/.test(normalizedPath) ||
     /(?:^|\/)sv\/texter\/$/.test(normalizedPath) ||
+    /(?:^|\/)newsletter\/$/.test(normalizedPath) ||
+    /(?:^|\/)sv\/nyhetsbrev\/$/.test(normalizedPath) ||
     /(?:^|\/)post\/$/.test(normalizedPath);
 
   if (!isWritingList) {

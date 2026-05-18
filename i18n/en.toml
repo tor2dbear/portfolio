@@ -396,3 +396,15 @@ other = "This text has not been translated to Swedish yet."
 
 [lang_browse_swedish]
 other = "Browse writing in Swedish →"
+
+[newsletter_url]
+other = "newsletter"
+
+[newsletter]
+other = "Newsletter"
+
+[newsletter_english_only]
+other = "This newsletter is not available in Swedish."
+
+[newsletter_back_to_sv]
+other = "Back to newsletters."

@@ -74,13 +74,18 @@ DefaultContentLanguage = "en"
       identifier = "writing"
       url = "/writing/"
     [[languages.en.menu.top]]
-      name = "About me"
+      name = "Newsletter"
       weight = 4
+      identifier = "newsletter"
+      url = "/newsletter/"
+    [[languages.en.menu.top]]
+      name = "About me"
+      weight = 5
       identifier = "about"
       url = "/about"
     [[languages.en.menu.top]]
       name = "contact"
-      weight = 5
+      weight = 6
       identifier = "contact"
       url = "/contact"
 
@@ -113,13 +118,18 @@ DefaultContentLanguage = "en"
       identifier = "writing"
       url = "/sv/texter/"
     [[languages.sv.menu.top]]
-      name = "Om mig"
+      name = "Nyhetsbrev"
       weight = 4
+      identifier = "newsletter"
+      url = "/sv/nyhetsbrev/"
+    [[languages.sv.menu.top]]
+      name = "Om mig"
+      weight = 5
       identifier = "about"
       url = "/sv/om"
     [[languages.sv.menu.top]]
       name = "kontakt"
-      weight = 5
+      weight = 6
       identifier = "contact"
       url = "/sv/kontakt"
 
@@ -127,6 +137,8 @@ DefaultContentLanguage = "en"
   works = '/:slug/:title/'
   writing = '/:slug/:title/'
   texter = '/:slug/:title/'
+  newsletter = '/:slug/:title/'
+  nyhetsbrev = '/:slug/:title/'
   tags = "/:slug/tags/:title/"
 
 [params]
@@ -134,7 +146,7 @@ DefaultContentLanguage = "en"
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
   dateFormat = "02 Jan 2006, 15:04"
-  mainSections = ['writing', 'texter', 'works']
+  mainSections = ['writing', 'texter', 'newsletter', 'works']
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]

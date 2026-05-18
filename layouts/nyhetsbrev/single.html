@@ -1,0 +1,18 @@
+{{ partial "header.html" . }}
+
+<div class="content post use-subgrid">
+  <h1 class="type-headline-1 reveal place-article">{{ .Title }}</h1>
+  <div class="reveal place-article">{{ partial "date.html" . }}</div>
+  <div class="reveal post-tags-wrap place-article">{{ partial "post_tags.html" . }}</div>
+
+  {{ if .Description }}
+  <h2 class="type-preamble reveal place-article">{{ .Description }}</h2>
+  {{ end }}
+
+  <div class="post-content prose reveal place-article">
+    {{ .Content }}
+  </div>
+
+</div>
+
+{{ partial "footer.html" . }}
