@@ -3039,37 +3039,6 @@
       setDerivedToken("--component-form-bg", formBg);
       setToken("--component-form-placeholder", formPlaceholder);
 
-      const newsletter = baseline.roles.component.newsletter;
-      const newsletterBg = newsletter.bg_source
-        ? resolveSource(newsletter.bg_source, ctx)
-        : scaleVar(effectiveRoles.surface, newsletter.bg_step);
-      const newsletterText = newsletter.text_source
-        ? resolveSource(newsletter.text_source, ctx)
-        : scaleVar(effectiveRoles.surface, newsletter.text_step);
-      const newsletterIllustrationBg = newsletter.illustration_bg_source
-        ? resolveSource(newsletter.illustration_bg_source, ctx)
-        : scaleVar(effectiveRoles.surface, newsletter.illustration_bg_step);
-      const newsletterButtonBg = newsletter.button_bg_source
-        ? resolveSource(newsletter.button_bg_source, ctx)
-        : scaleVar(effectiveRoles.surface, newsletter.button_bg_step);
-      const newsletterButtonText = newsletter.button_text_source
-        ? resolveSource(newsletter.button_text_source, ctx)
-        : scaleVar(
-            effectiveRoles[newsletter.button_text_role || "primary"],
-            newsletter.button_text_step
-          );
-
-      setDerivedToken("--component-newsletter-bg", newsletterBg);
-      setDerivedToken("--component-newsletter-text", newsletterText);
-      setDerivedToken(
-        "--component-newsletter-illustration-bg",
-        newsletterIllustrationBg
-      );
-      setDerivedToken("--component-newsletter-button-bg", newsletterButtonBg);
-      setDerivedToken(
-        "--component-newsletter-button-text",
-        newsletterButtonText
-      );
 
       Object.keys(presetOverrides).forEach((key) => {
         const tokenName = "--" + key.replace(/_/g, "-");
