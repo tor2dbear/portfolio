@@ -397,6 +397,9 @@ other = "This text has not been translated to Swedish yet."
 [lang_browse_swedish]
 other = "Browse writing in Swedish →"
 
+[coty_show_controls]
+other = "Show Pantone controls"
+
 [newsletter_url]
 other = "newsletter"
 

@@ -391,6 +391,9 @@ other = "Palettgenerator"
 [all_posts]
 other = "Alla inlägg"
 
+[coty_show_controls]
+other = "Visa Pantone-kontroller"
+
 [newsletter_url]
 other = "nyhetsbrev"
 
