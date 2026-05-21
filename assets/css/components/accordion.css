@@ -14,7 +14,7 @@
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  padding: var(--spacing-16) 0;
+  padding: var(--spacing-16) var(--spacing-8) var(--spacing-16) 0;
   background-image: none;
   cursor: pointer;
   list-style: none;
@@ -29,7 +29,7 @@
   height: 2rem;
   border-radius: 50%;
   top: 50%;
-  right: -0.5rem;
+  right: 0;
   transform: translateY(-50%);
   pointer-events: none;
   opacity: 0;
@@ -117,7 +117,7 @@
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  padding: var(--spacing-16) 0;
+  padding: var(--spacing-16) var(--spacing-8) var(--spacing-16) 0;
   font-family: var(--font-heading);
   font-size: var(--text-base);
   line-height: var(--line-height-tight);
@@ -137,7 +137,7 @@
   height: 2rem;
   border-radius: 50%;
   top: 50%;
-  right: -0.5rem;
+  right: 0;
   transform: translateY(-50%);
   pointer-events: none;
   opacity: 0;
