@@ -74,11 +74,6 @@ DefaultContentLanguage = "en"
       identifier = "writing"
       url = "/writing/"
     [[languages.en.menu.top]]
-      name = "Newsletter"
-      weight = 4
-      identifier = "newsletter"
-      url = "/newsletter/"
-    [[languages.en.menu.top]]
       name = "About me"
       weight = 5
       identifier = "about"
@@ -117,11 +112,6 @@ DefaultContentLanguage = "en"
       weight = 3
       identifier = "writing"
       url = "/sv/texter/"
-    [[languages.sv.menu.top]]
-      name = "Nyhetsbrev"
-      weight = 4
-      identifier = "newsletter"
-      url = "/sv/nyhetsbrev/"
     [[languages.sv.menu.top]]
       name = "Om mig"
       weight = 5
