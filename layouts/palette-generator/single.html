@@ -218,7 +218,16 @@
             <label for="palette-coty-year" class="palette-generator__label"
               >{{ i18n "coty_year" }}</label
             >
-            <div class="select-wrap"><select id="palette-coty-year" data-js="coty-year"></select></div>
+            <div class="palette-generator__year-controls">
+              <div class="select-wrap"><select id="palette-coty-year" data-js="coty-year"></select></div>
+              <button
+                class="palette-generator__reset-year"
+                type="button"
+                data-js="coty-reset-year"
+                title="{{ if eq .Language.Lang "sv" }}Återställ år{{ else }}Reset year{{ end }}"
+                hidden
+              >{{ if eq .Language.Lang "sv" }}↩ Återst.{{ else }}↩ Reset{{ end }}</button>
+            </div>
           </div>
           <p
             class="palette-generator__hint palette-generator__hint--coty-source"
@@ -250,6 +259,13 @@
           </div>
         </details>
 
+        <button
+          class="palette-generator__reset-all"
+          type="button"
+          data-js="coty-reset-all"
+          hidden
+        >{{ if eq .Language.Lang "sv" }}Återställ alla utkast{{ else }}Reset all drafts{{ end }}</button>
+
       </div>
     </section>
 
@@ -272,46 +288,11 @@
           Save palette
         {{ end }}
       </button>
-      <button
-        class="button button--secondary"
-        type="button"
-        data-js="coty-reset-year"
-        hidden
-      >
-        {{ if eq .Language.Lang "sv" }}
-          Återställ år
-        {{ else }}
-          Reset year
-        {{ end }}
-      </button>
-      <button
-        class="button button--secondary"
-        type="button"
-        data-js="coty-reset-all"
-        hidden
-      >
-        {{ if eq .Language.Lang "sv" }}
-          Återställ alla utkast
-        {{ else }}
-          Reset all drafts
-        {{ end }}
-      </button>
       <button class="button" type="button" data-js="coty-apply-draft" title="{{ if eq .Language.Lang "sv" }}Alt+Enter: applicera{{ else }}Alt+Enter: apply{{ end }}" hidden>
         {{ if eq .Language.Lang "sv" }}
           Applicera Pantone-utkast
         {{ else }}
           Apply Pantone draft
-        {{ end }}
-      </button>
-      <button
-        class="button button--primary"
-        type="button"
-        data-js="palette-copy"
-      >
-        {{ if eq .Language.Lang "sv" }}
-          Kopiera spec
-        {{ else }}
-          Copy spec
         {{ end }}
       </button>
     </div>
@@ -330,9 +311,17 @@
       rows="10"
       readonly
     ></textarea>
-    <pre
-      class="palette-generator__code"
-    ><code data-js="palette-export-code"></code></pre>
+    <div class="palette-generator__code-wrap">
+      <pre
+        class="palette-generator__code"
+      ><code data-js="palette-export-code"></code></pre>
+      <button
+        class="palette-generator__copy-btn"
+        type="button"
+        data-js="palette-copy"
+        aria-label="{{ if eq .Language.Lang "sv" }}Kopiera{{ else }}Copy{{ end }}"
+      ><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+    </div>
 
     <p
       class="palette-generator__hint type-body-small"

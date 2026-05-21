@@ -379,13 +379,16 @@
         );
       }
       if (copyButton) {
-        copyButton.textContent = inPantoneLab
-          ? isSwedish
-            ? "Kopiera Pantone-utkast"
-            : "Copy Pantone draft"
-          : isSwedish
-          ? "Kopiera spec"
-          : "Copy spec";
+        copyButton.setAttribute(
+          "aria-label",
+          inPantoneLab
+            ? isSwedish
+              ? "Kopiera Pantone-utkast"
+              : "Copy Pantone draft"
+            : isSwedish
+            ? "Kopiera spec"
+            : "Copy spec"
+        );
       }
       if (footerHint) {
         const paletteHint = footerHint.getAttribute("data-hint-palette") || "";
@@ -1264,32 +1267,32 @@
       }
 
       window.addEventListener("keydown", (evt) => {
-        if (currentActiveSource() !== "pantone") {
+        if (currentActiveSource() !== "pantone" || !evt.altKey) {
           return;
         }
         const target = evt.target;
         const tagName = target && target.tagName ? target.tagName : "";
-        const isEditable =
+        const isTextEditable =
           (target &&
             target.getAttribute &&
             target.getAttribute("contenteditable") === "true") ||
           tagName === "INPUT" ||
-          tagName === "TEXTAREA" ||
-          tagName === "SELECT";
-        if (isEditable || !evt.altKey) {
-          return;
-        }
+          tagName === "TEXTAREA";
+        const isAnyEditable = isTextEditable || tagName === "SELECT";
         if (evt.key === "ArrowLeft") {
+          if (isAnyEditable) return;
           evt.preventDefault();
           shiftYear(-1);
           return;
         }
         if (evt.key === "ArrowRight") {
+          if (isAnyEditable) return;
           evt.preventDefault();
           shiftYear(1);
           return;
         }
         if (evt.key === "Enter" && cotyApplyDraftButton) {
+          if (isTextEditable) return;
           evt.preventDefault();
           cotyApplyDraftButton.click();
         }
@@ -1980,6 +1983,8 @@
       const text = exportArea.value;
       try {
         await navigator.clipboard.writeText(text);
+        copyButton.classList.add("is-copied");
+        setTimeout(() => copyButton.classList.remove("is-copied"), 1500);
       } catch {
         exportArea.select();
       }
