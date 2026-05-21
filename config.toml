@@ -75,12 +75,12 @@ DefaultContentLanguage = "en"
       url = "/writing/"
     [[languages.en.menu.top]]
       name = "About me"
-      weight = 4
+      weight = 5
       identifier = "about"
       url = "/about"
     [[languages.en.menu.top]]
       name = "contact"
-      weight = 5
+      weight = 6
       identifier = "contact"
       url = "/contact"
 
@@ -114,12 +114,12 @@ DefaultContentLanguage = "en"
       url = "/sv/texter/"
     [[languages.sv.menu.top]]
       name = "Om mig"
-      weight = 4
+      weight = 5
       identifier = "about"
       url = "/sv/om"
     [[languages.sv.menu.top]]
       name = "kontakt"
-      weight = 5
+      weight = 6
       identifier = "contact"
       url = "/sv/kontakt"
 
@@ -127,14 +127,18 @@ DefaultContentLanguage = "en"
   works = '/:slug/:title/'
   writing = '/:slug/:title/'
   texter = '/:slug/:title/'
+  newsletter = '/:slug/:title/'
+  nyhetsbrev = '/:slug/:title/'
   tags = "/:slug/tags/:title/"
 
 [params]
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
+  newsletter_action = "/.netlify/functions/newsletter-subscribe"
+  newsletter_email_field = "EMAIL"
   dateFormat = "02 Jan 2006, 15:04"
-  mainSections = ['writing', 'texter', 'works']
+  mainSections = ['writing', 'texter', 'newsletter', 'works']
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]

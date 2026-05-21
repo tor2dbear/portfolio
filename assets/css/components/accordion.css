@@ -14,7 +14,7 @@
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  padding: var(--spacing-16) 0;
+  padding: var(--spacing-16) var(--spacing-8) var(--spacing-16) 0;
   background-image: none;
   cursor: pointer;
   list-style: none;
@@ -25,10 +25,12 @@
 .accordion__trigger::before {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(-1 * var(--spacing-4));
-  right: calc(-1 * var(--spacing-4));
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--state-layer-duration) var(--state-layer-ease);
@@ -115,7 +117,7 @@
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  padding: var(--spacing-16) 0;
+  padding: var(--spacing-16) var(--spacing-8) var(--spacing-16) 0;
   font-family: var(--font-heading);
   font-size: var(--text-base);
   line-height: var(--line-height-tight);
@@ -131,10 +133,12 @@
 .accordion-nested__trigger::before {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(-1 * var(--spacing-4));
-  right: calc(-1 * var(--spacing-4));
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--state-layer-duration) var(--state-layer-ease);

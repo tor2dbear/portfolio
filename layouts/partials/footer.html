@@ -18,6 +18,7 @@
             <li><a href="{{ .Permalink }}">{{ i18n "contact_me" }}</a></li>
           {{ end }}
           <li><a href="{{ printf "%s/" (strings.Trim (i18n "writing_url") "/") | absLangURL }}">{{ i18n "writing" }}</a></li>
+          <li><a href="{{ printf "%s/" (strings.Trim (i18n "newsletter_url") "/") | absLangURL }}">{{ i18n "newsletter" }}</a></li>
           <li><a href="{{ "ui-library/" | absLangURL }}">{{ i18n "ui_library" }}</a></li>
           <li><a href="{{ "palette-generator/" | absLangURL }}">{{ i18n "palette_generator" }}</a></li>
         </ul>
@@ -81,8 +82,9 @@
             />
             <!-- Honeypot field for bot protection -->
             <div style="position: absolute; left: -5000px;" aria-hidden="true">
-              <input type="text" name="b_294f66f378d5370fcbc5aa02f_74c003d094" tabindex="-1" value="" />
+              <input type="text" name="email_address_check" tabindex="-1" value="" />
             </div>
+            <input type="hidden" name="locale" value="{{ .Language.Lang }}" />
             <button type="submit" class="footer-newsletter__submit button">
               {{ i18n "footer_newsletter_submit" }}
             </button>

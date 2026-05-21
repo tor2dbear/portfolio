@@ -263,7 +263,7 @@ other = "LinkedIn"
 other = "Nyhetsbrev"
 
 [footer_newsletter_description]
-other = "Sporadiska anteckningar — designarbete, vad jag läser, vad jag jobbar på."
+other = "Sporadiska anteckningar — designarbete, vad jag läser, vad jag jobbar på. Skickas på engelska."
 
 [footer_newsletter_label]
 other = "E-postadress"
@@ -390,3 +390,18 @@ other = "Palettgenerator"
 
 [all_posts]
 other = "Alla inlägg"
+
+[coty_show_controls]
+other = "Visa Pantone-kontroller"
+
+[newsletter_url]
+other = "nyhetsbrev"
+
+[newsletter]
+other = "Nyhetsbrev"
+
+[newsletter_english_only]
+other = "Det här nyhetsbrevet finns inte på svenska."
+
+[newsletter_back_to_sv]
+other = "Tillbaka till nyhetsbrev."

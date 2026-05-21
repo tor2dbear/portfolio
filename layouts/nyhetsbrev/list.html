@@ -1,0 +1,55 @@
+{{ partial "header.html" . }}
+
+<div class="content list use-subgrid">
+  <div class="post-header place-article">
+    <h1 class="type-headline-small">{{ .Title }}</h1>
+    {{ if .Description }}
+    {{ end }}
+  </div>
+
+  {{ $pages := where .Data.Pages ".Params.draft" "!=" true }}
+  {{ $pages := where $pages ".Params.hidden" "!=" true }}
+
+  {{/* Collect English newsletter pages (all newsletters are English-only) */}}
+  {{ $enOnlyPages := slice }}
+  {{ range site.Sites }}
+    {{ if eq .Language.Lang "en" }}
+      {{ range where .RegularPages "Section" "newsletter" }}
+        {{ if and (not .Params.draft) (not .Params.hidden) }}
+          {{ $enOnlyPages = $enOnlyPages | append . }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ $allPages := $pages | append $enOnlyPages }}
+  {{ $allPages := sort $allPages "Date" "desc" }}
+
+  {{ if gt (len $allPages) 0 }}
+    {{ range $allPages }}
+      <div class="place-article">
+        {{ if eq .Language.Lang "en" }}
+          <article class="article-card">
+            <header>
+              <h2 class="article-card__title type-headline-3">
+                <a href="{{ .RelPermalink }}?from=sv">{{ .Title }} <span class="tag tag--lang">English</span></a>
+              </h2>
+              {{ if .Description }}
+              <p class="article-card__description type-body">{{ .Description }}</p>
+              {{ end }}
+              <div class="article-card__meta type-information is-muted">
+                {{ partial "date.html" . }}
+              </div>
+            </header>
+          </article>
+        {{ else }}
+          {{ .Render "summary" }}
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ else }}
+    <p class="post-header__empty">{{ i18n "no_posts_yet" }}</p>
+  {{ end }}
+</div>
+
+{{ partial "footer.html" . }}
