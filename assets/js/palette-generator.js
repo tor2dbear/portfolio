@@ -777,27 +777,61 @@
     }
 
     function updateCotyOverrideOptionLabels() {
-      const sourceStep = getComputedStyle(document.documentElement)
+      const computedStyle = getComputedStyle(document.documentElement);
+      const sourceStep = computedStyle
         .getPropertyValue("--coty-source-step")
         .trim();
-      const secondarySourceStep = getComputedStyle(document.documentElement)
+      const secondarySourceStep = computedStyle
         .getPropertyValue("--coty-secondary-source-step")
         .trim();
       const isSwedish = document.documentElement.lang === "sv";
-      const sourceSuffix = isSwedish ? " (source)" : " (source)";
+      const sourceSuffix = " (source)";
       const secondarySourceSuffix = isSwedish
         ? " (sekundär source)"
         : " (secondary source)";
+
+      // Resolve what "auto" maps to for each field:
+      // 1. From the entry's TOML baseline overrides (reliable regardless of current select value)
+      // 2. From computed CSS when the select is currently on auto (catches CotyScaleActions defaults)
+      const actions = window.CotyScaleActions;
+      const entry =
+        actions && typeof actions.getEntry === "function"
+          ? actions.getEntry(currentCotyYear())
+          : null;
+      const entryConfig = entry ? getEntryYearConfig(entry) : null;
+      const modeKey = currentCotyMode();
+      const baselineOverrides = entryConfig
+        ? modeKey === "dark"
+          ? entryConfig.overrides_dark
+          : entryConfig.overrides_light
+        : {};
 
       Object.keys(cotyOverrideSelects).forEach((key) => {
         const select = cotyOverrideSelects[key];
         if (!select) {
           return;
         }
+
+        let autoResolvesTo = (baselineOverrides && baselineOverrides[key]) || "";
+        if (!autoResolvesTo && select.value === "") {
+          const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
+          if (field) {
+            const computed = computedStyle
+              .getPropertyValue(field.token)
+              .trim();
+            const m = computed.match(/^var\((--coty(?:-secondary)?-\d+)\)$/);
+            if (m) {
+              autoResolvesTo = m[1];
+            }
+          }
+        }
+
         Array.from(select.options).forEach((option) => {
           const value = option.value || "";
           if (!value) {
-            option.textContent = "auto";
+            option.textContent = autoResolvesTo
+              ? "auto (→ " + autoResolvesTo + ")"
+              : "auto";
             return;
           }
           let label = value;
@@ -809,6 +843,9 @@
             value === "--coty-secondary-" + secondarySourceStep
           ) {
             label += secondarySourceSuffix;
+          }
+          if (autoResolvesTo && value === autoResolvesTo) {
+            label += " (= auto)";
           }
           option.textContent = label;
         });
