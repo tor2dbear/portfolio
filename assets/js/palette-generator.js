@@ -822,19 +822,18 @@
         return getComputedStyle(probe).color || "";
       }
 
-      // Build a reverse map: computed-color-string → coty step name.
-      // Build it once for the whole call so per-field lookups are O(1).
-      const colorToStep = {};
+      // Build separate reverse maps for primary and secondary steps so that
+      // primary always wins when a token's resolved color matches both scales.
+      const primaryColorToStep = {};
+      const secondaryColorToStep = {};
       for (let i = 1; i <= 12; i++) {
-        const step = "--coty-" + i;
-        const c = resolveColorOf(step);
-        if (c && !colorToStep[c]) {
-          colorToStep[c] = step;
+        const c = resolveColorOf("--coty-" + i);
+        if (c && !primaryColorToStep[c]) {
+          primaryColorToStep[c] = "--coty-" + i;
         }
-        const sec = "--coty-secondary-" + i;
-        const cs = resolveColorOf(sec);
-        if (cs && !colorToStep[cs]) {
-          colorToStep[cs] = sec;
+        const cs = resolveColorOf("--coty-secondary-" + i);
+        if (cs && !secondaryColorToStep[cs]) {
+          secondaryColorToStep[cs] = "--coty-secondary-" + i;
         }
       }
 
@@ -850,7 +849,10 @@
           const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
           if (field) {
             const color = resolveColorOf(field.token);
-            autoResolvesTo = (color && colorToStep[color]) || "";
+            autoResolvesTo =
+              (color &&
+                (primaryColorToStep[color] || secondaryColorToStep[color])) ||
+              "";
           }
         }
 
