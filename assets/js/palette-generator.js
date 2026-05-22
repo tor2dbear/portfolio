@@ -809,11 +809,14 @@
       function resolveToCotyStep(tokenName, depth) {
         if (depth <= 0) return "";
         const raw = computedStyle.getPropertyValue(tokenName).trim();
+        // Match var(--coty-N) or var(--coty-secondary-N) as the primary token
+        // (with or without a fallback after the comma)
         const cotyMatch = raw.match(
-          /^var\(\s*(--coty(?:-secondary)?-\d+)\s*\)$/
+          /^var\(\s*(--coty(?:-secondary)?-\d+)\s*[,)]/
         );
         if (cotyMatch) return cotyMatch[1];
-        const varMatch = raw.match(/^var\(\s*(--[a-z0-9-]+)\s*\)$/);
+        // Follow any other var() reference; strip fallback — just take the token name
+        const varMatch = raw.match(/^var\(\s*(--[a-z0-9-]+)/);
         if (varMatch) return resolveToCotyStep(varMatch[1], depth - 1);
         return "";
       }
