@@ -790,8 +790,6 @@
         ? " (sekundär source)"
         : " (secondary source)";
 
-      // TOML baseline overrides for the current year — reliable regardless of
-      // what the user has selected, since getEntry returns the base entry only.
       const cotyActions = window.CotyScaleActions;
       const entry =
         cotyActions && typeof cotyActions.getEntry === "function"
@@ -805,10 +803,22 @@
           : entryConfig.overrides_light
         : {};
 
-      // Color-probe fallback: apply a token as the `color` property on a hidden
-      // element and read back the fully-resolved computed color. This works even
-      // when the chain passes through role tokens set to literal color values
-      // (e.g. --coty-role-primary = oklch(...)) which var()-chain traversal misses.
+      // Determine the "auto" baseline for each field — two complementary paths:
+      //   1. TOML baseline (authoritative): getEntry() returns the unmodified TOML
+      //      entry, so baselineOverrides reflects what "auto" means regardless of
+      //      what the user has drafted. Used when the year's TOML explicitly defines
+      //      a default (e.g. surface_default = "--coty-7").
+      //   2. Color-probe fallback: for fields without a TOML default, apply the
+      //      token as a CSS `color` and read back the fully-resolved computed value.
+      //      Works even when the chain passes through role tokens that coty-scale.js
+      //      sets as literal oklch strings (not var() references). Only attempted
+      //      when select.value === "" (field is at auto, no draft override active —
+      //      a draft override would have changed the token, making the probe
+      //      misleading).
+      //
+      //      Fields with kind:"step" (tritone) are excluded from color probing
+      //      because their tokens are not CSS custom properties — probing them
+      //      would return the inherited text color as a false positive.
       const probe = document.body && document.createElement("span");
       if (probe) {
         probe.style.cssText =
@@ -822,67 +832,70 @@
         return getComputedStyle(probe).color || "";
       }
 
-      // Build separate reverse maps for primary and secondary steps so that
-      // primary always wins when a token's resolved color matches both scales.
-      const primaryColorToStep = {};
-      const secondaryColorToStep = {};
-      for (let i = 1; i <= 12; i++) {
-        const c = resolveColorOf("--coty-" + i);
-        if (c && !primaryColorToStep[c]) {
-          primaryColorToStep[c] = "--coty-" + i;
-        }
-        const cs = resolveColorOf("--coty-secondary-" + i);
-        if (cs && !secondaryColorToStep[cs]) {
-          secondaryColorToStep[cs] = "--coty-secondary-" + i;
-        }
-      }
-
-      Object.keys(cotyOverrideSelects).forEach((key) => {
-        const select = cotyOverrideSelects[key];
-        if (!select) {
-          return;
-        }
-
-        let autoResolvesTo =
-          (baselineOverrides && baselineOverrides[key]) || "";
-        if (!autoResolvesTo && select.value === "") {
-          const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
-          if (field && field.kind !== "step") {
-            const color = resolveColorOf(field.token);
-            autoResolvesTo =
-              (color &&
-                (primaryColorToStep[color] || secondaryColorToStep[color])) ||
-              "";
+      try {
+        // Build separate reverse maps for primary and secondary steps so that
+        // primary always wins when a token's resolved color matches both scales.
+        const primaryColorToStep = {};
+        const secondaryColorToStep = {};
+        for (let i = 1; i <= 12; i++) {
+          const c = resolveColorOf("--coty-" + i);
+          if (c && !primaryColorToStep[c]) {
+            primaryColorToStep[c] = "--coty-" + i;
+          }
+          const cs = resolveColorOf("--coty-secondary-" + i);
+          if (cs && !secondaryColorToStep[cs]) {
+            secondaryColorToStep[cs] = "--coty-secondary-" + i;
           }
         }
 
-        Array.from(select.options).forEach((option) => {
-          const value = option.value || "";
-          if (!value) {
-            option.textContent = autoResolvesTo
-              ? "auto (→ " + autoResolvesTo + ")"
-              : "auto";
+        Object.keys(cotyOverrideSelects).forEach((key) => {
+          const select = cotyOverrideSelects[key];
+          if (!select) {
             return;
           }
-          let label = value;
-          if (sourceStep && value === "--coty-" + sourceStep) {
-            label += sourceSuffix;
-          }
-          if (
-            secondarySourceStep &&
-            value === "--coty-secondary-" + secondarySourceStep
-          ) {
-            label += secondarySourceSuffix;
-          }
-          if (autoResolvesTo && value === autoResolvesTo) {
-            label += " (= auto)";
-          }
-          option.textContent = label;
-        });
-      });
 
-      if (probe && probe.parentNode) {
-        probe.parentNode.removeChild(probe);
+          let autoResolvesTo =
+            (baselineOverrides && baselineOverrides[key]) || "";
+          if (!autoResolvesTo && select.value === "") {
+            const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
+            if (field && field.kind !== "step") {
+              const color = resolveColorOf(field.token);
+              autoResolvesTo =
+                (color &&
+                  (primaryColorToStep[color] ||
+                    secondaryColorToStep[color])) ||
+                "";
+            }
+          }
+
+          Array.from(select.options).forEach((option) => {
+            const value = option.value || "";
+            if (!value) {
+              option.textContent = autoResolvesTo
+                ? "auto (→ " + autoResolvesTo + ")"
+                : "auto";
+              return;
+            }
+            let label = value;
+            if (sourceStep && value === "--coty-" + sourceStep) {
+              label += sourceSuffix;
+            }
+            if (
+              secondarySourceStep &&
+              value === "--coty-secondary-" + secondarySourceStep
+            ) {
+              label += secondarySourceSuffix;
+            }
+            if (autoResolvesTo && value === autoResolvesTo) {
+              label += " (= auto)";
+            }
+            option.textContent = label;
+          });
+        });
+      } finally {
+        if (probe && probe.parentNode) {
+          probe.parentNode.removeChild(probe);
+        }
       }
     }
 
