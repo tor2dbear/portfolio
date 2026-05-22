@@ -806,6 +806,18 @@
           : entryConfig.overrides_light
         : {};
 
+      function resolveToCotyStep(tokenName, depth) {
+        if (depth <= 0) return "";
+        const raw = computedStyle.getPropertyValue(tokenName).trim();
+        const cotyMatch = raw.match(
+          /^var\(\s*(--coty(?:-secondary)?-\d+)\s*\)$/
+        );
+        if (cotyMatch) return cotyMatch[1];
+        const varMatch = raw.match(/^var\(\s*(--[a-z0-9-]+)\s*\)$/);
+        if (varMatch) return resolveToCotyStep(varMatch[1], depth - 1);
+        return "";
+      }
+
       Object.keys(cotyOverrideSelects).forEach((key) => {
         const select = cotyOverrideSelects[key];
         if (!select) {
@@ -816,13 +828,7 @@
         if (!autoResolvesTo && select.value === "") {
           const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
           if (field) {
-            const computed = computedStyle
-              .getPropertyValue(field.token)
-              .trim();
-            const m = computed.match(/^var\((--coty(?:-secondary)?-\d+)\)$/);
-            if (m) {
-              autoResolvesTo = m[1];
-            }
+            autoResolvesTo = resolveToCotyStep(field.token, 5);
           }
         }
 
