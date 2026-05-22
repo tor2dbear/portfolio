@@ -790,13 +790,12 @@
         ? " (sekundär source)"
         : " (secondary source)";
 
-      // Resolve what "auto" maps to for each field:
-      // 1. From the entry's TOML baseline overrides (reliable regardless of current select value)
-      // 2. From computed CSS when the select is currently on auto (catches CotyScaleActions defaults)
-      const actions = window.CotyScaleActions;
+      // TOML baseline overrides for the current year — reliable regardless of
+      // what the user has selected, since getEntry returns the base entry only.
+      const cotyActions = window.CotyScaleActions;
       const entry =
-        actions && typeof actions.getEntry === "function"
-          ? actions.getEntry(currentCotyYear())
+        cotyActions && typeof cotyActions.getEntry === "function"
+          ? cotyActions.getEntry(currentCotyYear())
           : null;
       const entryConfig = entry ? getEntryYearConfig(entry) : null;
       const modeKey = currentCotyMode();
@@ -806,19 +805,37 @@
           : entryConfig.overrides_light
         : {};
 
-      function resolveToCotyStep(tokenName, depth) {
-        if (depth <= 0) return "";
-        const raw = computedStyle.getPropertyValue(tokenName).trim();
-        // Match var(--coty-N) or var(--coty-secondary-N) as the primary token
-        // (with or without a fallback after the comma)
-        const cotyMatch = raw.match(
-          /^var\(\s*(--coty(?:-secondary)?-\d+)\s*[,)]/
-        );
-        if (cotyMatch) return cotyMatch[1];
-        // Follow any other var() reference; strip fallback — just take the token name
-        const varMatch = raw.match(/^var\(\s*(--[a-z0-9-]+)/);
-        if (varMatch) return resolveToCotyStep(varMatch[1], depth - 1);
-        return "";
+      // Color-probe fallback: apply a token as the `color` property on a hidden
+      // element and read back the fully-resolved computed color. This works even
+      // when the chain passes through role tokens set to literal color values
+      // (e.g. --coty-role-primary = oklch(...)) which var()-chain traversal misses.
+      const probe = document.body && document.createElement("span");
+      if (probe) {
+        probe.style.cssText =
+          "position:absolute;left:-9999px;visibility:hidden;pointer-events:none";
+        document.body.appendChild(probe);
+      }
+
+      function resolveColorOf(varName) {
+        if (!probe) return "";
+        probe.style.color = "var(" + varName + ")";
+        return getComputedStyle(probe).color || "";
+      }
+
+      // Build a reverse map: computed-color-string → coty step name.
+      // Build it once for the whole call so per-field lookups are O(1).
+      const colorToStep = {};
+      for (let i = 1; i <= 12; i++) {
+        const step = "--coty-" + i;
+        const c = resolveColorOf(step);
+        if (c && !colorToStep[c]) {
+          colorToStep[c] = step;
+        }
+        const sec = "--coty-secondary-" + i;
+        const cs = resolveColorOf(sec);
+        if (cs && !colorToStep[cs]) {
+          colorToStep[cs] = sec;
+        }
       }
 
       Object.keys(cotyOverrideSelects).forEach((key) => {
@@ -827,11 +844,13 @@
           return;
         }
 
-        let autoResolvesTo = (baselineOverrides && baselineOverrides[key]) || "";
+        let autoResolvesTo =
+          (baselineOverrides && baselineOverrides[key]) || "";
         if (!autoResolvesTo && select.value === "") {
           const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
           if (field) {
-            autoResolvesTo = resolveToCotyStep(field.token, 5);
+            const color = resolveColorOf(field.token);
+            autoResolvesTo = (color && colorToStep[color]) || "";
           }
         }
 
@@ -859,6 +878,10 @@
           option.textContent = label;
         });
       });
+
+      if (probe && probe.parentNode) {
+        probe.parentNode.removeChild(probe);
+      }
     }
 
     function getEntryYearConfig(entry) {
