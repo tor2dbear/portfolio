@@ -231,9 +231,9 @@
         id: "tritone",
         label: "Tritone",
         fields: [
-          { key: "tritone_shadow_step", token: "--tritone-shadow-step" },
-          { key: "tritone_mid_step", token: "--tritone-mid-step" },
-          { key: "tritone_highlight_step", token: "--tritone-highlight-step" },
+          { key: "tritone_shadow_step", token: "--tritone-shadow-step", kind: "step" },
+          { key: "tritone_mid_step", token: "--tritone-mid-step", kind: "step" },
+          { key: "tritone_highlight_step", token: "--tritone-highlight-step", kind: "step" },
         ],
       },
       {
@@ -847,7 +847,7 @@
           (baselineOverrides && baselineOverrides[key]) || "";
         if (!autoResolvesTo && select.value === "") {
           const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
-          if (field) {
+          if (field && field.kind !== "step") {
             const color = resolveColorOf(field.token);
             autoResolvesTo =
               (color &&
