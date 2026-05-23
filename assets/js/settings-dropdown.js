@@ -60,7 +60,7 @@
 
     function syncSettingsPortal() {
       const open = panel && !panel.hasAttribute('hidden');
-      if (open && isGridActive()) {
+      if (open) {
         mountPortal(panel);
         if (overlay) {mountPortal(overlay);}
         return;
