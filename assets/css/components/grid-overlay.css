@@ -51,27 +51,30 @@ html[data-grid-overlay] .grid-overlay {
 .grid-overlay__col:nth-child(14) { --i: 13; }
 
 /* --- Animations --- */
+
+/* clip-path inset instead of transform:scaleY to avoid iOS Safari GPU compositor
+   layer ordering bug. scaleY promoted each column to a separate GPU layer, which
+   the iOS compositor incorrectly stacked above z-index 1000 portaled elements.
+   clip-path masks the existing layer without layer promotion. */
 @keyframes grid-col-in {
-  from { transform: scaleY(0); }
-  to   { transform: scaleY(1); }
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0% 0); }
 }
 
 @keyframes grid-col-out {
-  from { transform: scaleY(1); }
-  to   { transform: scaleY(0); }
+  from { clip-path: inset(0 0 0% 0); }
+  to   { clip-path: inset(0 0 100% 0); }
 }
 
-/* In: columns reveal left→right, each sliding down from top.
+/* In: columns reveal left→right, each clipping down from top.
    Only animates when data-grid-animate is set (explicit toggle only). */
 html[data-grid-animate][data-grid-overlay]:not([data-grid-overlay="closing"]) .grid-overlay__col {
-  transform-origin: top;
   animation: grid-col-in var(--motion-duration-base) var(--motion-ease-decelerate) both;
   animation-delay: calc(var(--i, 0) * var(--motion-stagger-step));
 }
 
-/* Out: columns collapse right→left, sliding up */
+/* Out: columns collapse right→left */
 html[data-grid-animate][data-grid-overlay="closing"] .grid-overlay__col {
-  transform-origin: top;
   animation: grid-col-out var(--motion-duration-base) var(--motion-ease-accelerate) both;
   animation-delay: calc((13 - var(--i, 0)) * var(--motion-stagger-step));
 }
