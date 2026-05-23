@@ -65,6 +65,9 @@
         if (overlay) {mountPortal(overlay);}
         return;
       }
+      if (isGridActive()) {
+        return;
+      }
       restorePortal(panel);
       if (overlay) {restorePortal(overlay);}
     }
