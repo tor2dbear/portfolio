@@ -20,9 +20,6 @@ html[data-grid-overlay] .grid-overlay {
   display: grid;
 }
 
-html[data-grid-overlay="closing"] .grid-overlay {
-  z-index: 50;
-}
 
 .grid-overlay__col {
   grid-row: 1;
