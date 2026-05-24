@@ -211,6 +211,9 @@
       mountPanelPortal(themePanel, themeToggle);
       return;
     }
+    if (document.documentElement.hasAttribute("data-grid-overlay")) {
+      return;
+    }
     restorePanelPortal(themePanel);
   }
 
