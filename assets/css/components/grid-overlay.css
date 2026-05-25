@@ -20,9 +20,6 @@ html[data-grid-overlay] .grid-overlay {
   display: grid;
 }
 
-html[data-grid-overlay="closing"] .grid-overlay {
-  z-index: 50;
-}
 
 .grid-overlay__col {
   grid-row: 1;
@@ -54,29 +51,50 @@ html[data-grid-overlay="closing"] .grid-overlay {
 .grid-overlay__col:nth-child(14) { --i: 13; }
 
 /* --- Animations --- */
+
+/* clip-path inset instead of transform:scaleY to avoid iOS Safari GPU compositor
+   layer ordering bug. scaleY promoted each column to a separate GPU layer, which
+   the iOS compositor incorrectly stacked above z-index 1000 portaled elements.
+   clip-path masks the existing layer without layer promotion.
+
+   Remaining OUT-animation bug: the settings-overlay's backdrop-filter needs to
+   capture the grid (z-index 900) into a backdrop texture. During the OUT animation
+   the columns are immediately fully visible (fill-mode:both starts at clip-path 0%),
+   so the backdrop texture contains visible animated content. iOS Safari and some
+   Chromium builds incorrectly composite that capture layer above the portaled
+   settings panel. The rule below disables backdrop-filter on the portaled overlay
+   while the grid is closing so the compositor falls back to plain z-index ordering.
+   During the IN animation the columns start fully clipped (clip-path 100%) so the
+   captured backdrop is empty and the bug is invisible even without this guard. */
 @keyframes grid-col-in {
-  from { transform: scaleY(0); }
-  to   { transform: scaleY(1); }
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0% 0); }
 }
 
 @keyframes grid-col-out {
-  from { transform: scaleY(1); }
-  to   { transform: scaleY(0); }
+  from { clip-path: inset(0 0 0% 0); }
+  to   { clip-path: inset(0 0 100% 0); }
 }
 
-/* In: columns reveal left→right, each sliding down from top.
+/* In: columns reveal left→right, each clipping down from top.
    Only animates when data-grid-animate is set (explicit toggle only). */
 html[data-grid-animate][data-grid-overlay]:not([data-grid-overlay="closing"]) .grid-overlay__col {
-  transform-origin: top;
   animation: grid-col-in var(--motion-duration-base) var(--motion-ease-decelerate) both;
   animation-delay: calc(var(--i, 0) * var(--motion-stagger-step));
 }
 
-/* Out: columns collapse right→left, sliding up */
+/* Out: columns collapse right→left */
 html[data-grid-animate][data-grid-overlay="closing"] .grid-overlay__col {
-  transform-origin: top;
   animation: grid-col-out var(--motion-duration-base) var(--motion-ease-accelerate) both;
   animation-delay: calc((13 - var(--i, 0)) * var(--motion-stagger-step));
+}
+
+/* During grid close, disable backdrop-filter on the portaled settings overlay.
+   See the comment above for why. The overlay is fading to opacity:0 anyway so
+   removing the blur for 200 ms is invisible in practice. */
+html[data-grid-overlay="closing"] .settings-overlay.dropdown-panel--portal {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -116,6 +116,9 @@
         mountPanelPortal();
         return;
       }
+      if (document.documentElement.hasAttribute('data-grid-overlay')) {
+        return;
+      }
       restorePanelPortal(panel);
     }
 
