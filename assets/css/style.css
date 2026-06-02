@@ -213,6 +213,10 @@ footer {
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
+  :root {
+    --size-page-margins: 0.5rem;
+  }
+
   .top-menu,
   #main,
   footer {
@@ -222,7 +226,7 @@ footer {
         [col-start] 1fr
       )
       [content-end] var(--size-page-margins) [full-end];
-    column-gap: var(--spacing-16);
+    column-gap: var(--spacing-12);
   }
 
   #main {
