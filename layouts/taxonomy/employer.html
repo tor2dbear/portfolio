@@ -70,7 +70,7 @@
       <!-- put this just above the section you wanna go to -->
       <a id="portfolio" data-toc-section="portfolio"></a>
       <h3 class="type-headline-small section-headline">Portfolio</h3>
-      <div class="application-page__portfolio-grid grid-cols-2">
+      <div class="application-page__portfolio-grid">
         {{ $companyName := .Params.company_name }}
         {{ range where .Site.RegularPages "Type" "works" }}
           {{ if in .Params.employers $companyName }}

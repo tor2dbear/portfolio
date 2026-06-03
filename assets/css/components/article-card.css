@@ -52,8 +52,6 @@ article {
    ========================================================================== */
 
 .content.list.tag-page {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--spacing-24);
   row-gap: var(--spacing-32);
 }
 
@@ -63,14 +61,7 @@ article {
   margin-bottom: var(--spacing-8);
 }
 
-.content.list.tag-page article {
-  grid-column: auto;
-  margin-bottom: 0;
-}
-
 .content.list.works-list {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--spacing-24);
   row-gap: var(--spacing-32);
 }
 
@@ -78,43 +69,20 @@ article {
   grid-column: 1 / -1;
 }
 
-.content.list.works-list article {
-  grid-column: auto;
-  margin-bottom: 0;
-}
-
 .content.list article {
-  --col: col-start 1 / span 6;
-  grid-column: var(--col);
+  grid-column: span 6;
+  margin-bottom: 0;
 }
 
 /* Make last odd article span full width */
 .content.list article:nth-last-of-type(1):nth-of-type(odd) {
-  --col: col-start 1 / span 12;
+  grid-column: 1 / -1;
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-  .content.list.tag-page {
-    grid-template-columns: minmax(0, 1fr);
-    column-gap: var(--spacing-16);
-  }
-
-  .content.list.tag-page article {
-    grid-column: auto;
-  }
-
   .content.list article {
-    --col: col-start 1 / span 4;
-  }
-
-  .content.list.works-list {
-    grid-template-columns: minmax(0, 1fr);
-    column-gap: var(--spacing-16);
-  }
-
-  .content.list.works-list article {
-    grid-column: auto;
+    grid-column: 1 / -1;
   }
 }
 
