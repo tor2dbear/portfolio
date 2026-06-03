@@ -113,7 +113,7 @@
 }
 
 /* CV: 2 columns instead of 3 to fit the 8-col main area */
-.content.application-page .about-cv__columns {
+#layout .content.application-page .about-cv__columns {
     column-count: 2;
 }
 
@@ -186,7 +186,7 @@
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
-    .content.application-page .about-cv__columns {
+    #layout .content.application-page .about-cv__columns {
         column-count: 1;
     }
 }
