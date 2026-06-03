@@ -42,14 +42,14 @@
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
-  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20plus.svg");
+  background-image: url("../../img/svg/Streamline%20Ultimate%20Icons%20plus.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
 }
 
 .accordion[open] > .accordion__trigger::after {
-  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20minus.svg");
+  background-image: url("../../img/svg/Streamline%20Ultimate%20Icons%20minus.svg");
 }
 
 .accordion__trigger:hover {
@@ -165,14 +165,14 @@
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
-  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20plus.svg");
+  background-image: url("../../img/svg/Streamline%20Ultimate%20Icons%20plus.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
 }
 
 .accordion-nested[open] > .accordion-nested__trigger::after {
-  background-image: url("/img/svg/Streamline%20Ultimate%20Icons%20minus.svg");
+  background-image: url("../../img/svg/Streamline%20Ultimate%20Icons%20minus.svg");
 }
 
 .accordion-nested__trigger:hover {
