@@ -184,4 +184,11 @@
     }
 }
 
+/* sm: <= 47.9375em */
+@media (max-width: 47.9375em) {
+    .content.application-page .about-cv__columns {
+        column-count: 1;
+    }
+}
+
 /* NOTE: Download card styles moved to assets/css/components/download-card.css */
