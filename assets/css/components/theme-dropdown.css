@@ -185,7 +185,7 @@
   background: var(--surface-page);
   color: var(--text-default);
   border-color: var(--border-default);
-  box-shadow: var(--shadow-03);
+  box-shadow: var(--shadow-01);
 }
 
 .theme-options--segmented .theme-option.active .theme-option-icon {
