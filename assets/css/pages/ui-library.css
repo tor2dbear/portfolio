@@ -563,6 +563,19 @@
   column-gap: var(--spacing-24);
 }
 
+/* Cancel the responsive col-span collapse from grid.css — the demo always
+   shows the desktop 12-column system regardless of viewport width. */
+@media (max-width: 47.9375em) {
+  .grid-demo .col-span-5  { grid-column-end: span 5; }
+  .grid-demo .col-span-6  { grid-column-end: span 6; }
+  .grid-demo .col-span-7  { grid-column-end: span 7; }
+  .grid-demo .col-span-8  { grid-column-end: span 8; }
+  .grid-demo .col-span-9  { grid-column-end: span 9; }
+  .grid-demo .col-span-10 { grid-column-end: span 10; }
+  .grid-demo .col-span-11 { grid-column-end: span 11; }
+  .grid-demo .col-span-12 { grid-column-end: span 12; }
+}
+
 .grid-demo__item {
   padding: var(--spacing-16);
   background-color: var(--primary);
