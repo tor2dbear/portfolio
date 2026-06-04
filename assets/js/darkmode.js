@@ -847,7 +847,7 @@
 
     // Theme toggle icon is static and no longer reflects active mode.
     themeIcon.innerHTML = `<svg width="24" height="24" aria-hidden="true">
-      <use href="/img/svg/sprite.svg?v=20260212a#icon-theme-palette"></use>
+      <use href="${getPlayerSpriteUrl()}#icon-theme-palette"></use>
     </svg>`;
   }
 

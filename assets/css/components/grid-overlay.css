@@ -111,7 +111,7 @@ html[data-grid-overlay="closing"] .settings-overlay.dropdown-panel--portal {
       [content-start] repeat(4, [col-start] 1fr)
       [content-end] var(--size-page-margins)
       [full-end];
-    column-gap: var(--spacing-16);
+    column-gap: var(--spacing-12);
   }
 
   /* Hide extra columns on mobile (4 content + 2 margins = 6 total) */

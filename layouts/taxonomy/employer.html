@@ -22,14 +22,14 @@
       <li class="application-breadcrumb__item application-breadcrumb__item--caps">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
           <svg class="icon icon--sm" aria-hidden="true">
-            <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
+            <use href="{{ "img/svg/sprite.svg?v=20260211b" | absURL }}#icon-home"></use>
           </svg>
           <span>Start</span>
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "/img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use href="{{ "img/svg/sprite.svg?v=20260211b" | absURL }}#icon-arrow-right-micro"></use>
         </svg>
       </li>
       <li class="application-breadcrumb__item application-page__company application-breadcrumb__item--muted application-breadcrumb__item--caps">
@@ -66,11 +66,11 @@
       </div>
     </div>
 
-    <div class="application-page__section application-page__section--portfolio reveal">
+    <div class="application-page__section application-page__section--portfolio">
       <!-- put this just above the section you wanna go to -->
       <a id="portfolio" data-toc-section="portfolio"></a>
       <h3 class="type-headline-small section-headline">Portfolio</h3>
-      <div class="application-page__portfolio-grid grid-cols-2">
+      <div class="application-page__portfolio-grid">
         {{ $companyName := .Params.company_name }}
         {{ range where .Site.RegularPages "Type" "works" }}
           {{ if in .Params.employers $companyName }}

@@ -1,4 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <!-- Contact Icon -->
+  <symbol id="icon-contact" viewBox="0 0 24 24">
+    <path d="M14.5 0.5h-10a4 4 0 0 0 -4 4v5a4 4 0 0 0 4 4h1v4l4.5 -4h4.5a4 4 0 0 0 4 -4v-5a4 4 0 0 0 -4 -4Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+  </symbol>
   <!-- PDF Icon -->
   <symbol id="icon-pdf" viewBox="0 0 24 24">
     <path d="m4.499 19.498 0 -7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
