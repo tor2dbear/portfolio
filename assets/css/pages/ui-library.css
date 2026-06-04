@@ -673,6 +673,7 @@
 .meta-item dd {
   margin: 0;
   font-size: var(--text-sm);
+  line-height: 2;
 }
 
 .meta-item code {
