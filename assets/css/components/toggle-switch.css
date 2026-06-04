@@ -39,7 +39,7 @@
   background: var(--surface-page);
   border-radius: 50%;
   transition: transform var(--motion-duration-base) var(--motion-ease-standard);
-  box-shadow: var(--shadow-03);
+  box-shadow: var(--shadow-01);
 }
 
 /* On state */
