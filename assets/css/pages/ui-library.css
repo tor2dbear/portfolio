@@ -88,11 +88,18 @@
   color: var(--text-default);
 }
 
-/* Color Swatches */
+/* Color Swatches — mirrors page-grid math (12×1fr, gap 24) so columns
+   align visually with the page grid. True CSS subgrid would require
+   threading through details/summary accordion elements. */
 .color-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--spacing-16);
+  grid-template-columns: repeat(12, [col-start] 1fr);
+  column-gap: var(--spacing-24);
+  row-gap: var(--spacing-16);
+}
+
+.color-swatch {
+  grid-column: span 4; /* 3 per row */
 }
 
 .color-swatch {
@@ -345,6 +352,10 @@
 @media (max-width: 29.9375em) {
   .token-preview-grid > .token-preview {
     grid-column: span 4;
+  }
+
+  .color-swatch {
+    grid-column: span 4; /* 1 per row */
   }
 }
 
@@ -782,7 +793,12 @@
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .color-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(4, [col-start] 1fr);
+    column-gap: var(--spacing-16);
+  }
+
+  .color-swatch {
+    grid-column: span 2; /* 2 per row */
   }
 
   .meta-item {
