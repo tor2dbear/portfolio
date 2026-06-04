@@ -4641,11 +4641,7 @@
                     <input
                       type="text"
                       id="input-text"
-                      placeholder="{{ if eq .Language.Lang "sv" }}
-                        Skriv något...
-                      {{ else }}
-                        Type something...
-                      {{ end }}"
+                      placeholder="{{ if eq .Language.Lang "sv" }}Skriv något...{{ else }}Type something...{{ end }}"
                     />
                   </div>
                   <div class="form-group">
@@ -4673,11 +4669,7 @@
                     <input
                       type="text"
                       id="input-disabled"
-                      value="{{ if eq .Language.Lang "sv" }}
-                        Kan inte ändras
-                      {{ else }}
-                        Cannot be changed
-                      {{ end }}"
+                      value="{{ if eq .Language.Lang "sv" }}Kan inte ändras{{ else }}Cannot be changed{{ end }}"
                       disabled
                     />
                   </div>
@@ -4693,11 +4685,7 @@
                       type="text"
                       id="input-error"
                       class="error"
-                      value="{{ if eq .Language.Lang "sv" }}
-                        Ogiltigt värde
-                      {{ else }}
-                        Invalid value
-                      {{ end }}"
+                      value="{{ if eq .Language.Lang "sv" }}Ogiltigt värde{{ else }}Invalid value{{ end }}"
                     />
                     <span class="form-error"
                       >{{ if eq .Language.Lang "sv" }}
@@ -4725,11 +4713,7 @@
                     >
                     <textarea
                       id="textarea-1"
-                      placeholder="{{ if eq .Language.Lang "sv" }}
-                        Skriv ditt meddelande här...
-                      {{ else }}
-                        Write your message here...
-                      {{ end }}"
+                      placeholder="{{ if eq .Language.Lang "sv" }}Skriv ditt meddelande här...{{ else }}Write your message here...{{ end }}"
                     ></textarea>
                     <span class="form-help"
                       >{{ if eq .Language.Lang "sv" }}
