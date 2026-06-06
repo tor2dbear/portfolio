@@ -233,4 +233,13 @@
     display: grid;
     grid-template-columns: subgrid;
   }
+
+  /* All direct children of accordion body divs span the full column range so
+     block-level content (p, h5, token-section, color-grid …) doesn't collapse
+     to a single narrow track when the parent is a multi-column subgrid.
+     Specific children can override with their own grid-column at higher specificity. */
+  .accordion__content > *,
+  .accordion-nested__content > * {
+    grid-column: 1 / -1;
+  }
 }

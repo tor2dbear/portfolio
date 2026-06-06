@@ -88,9 +88,9 @@
   color: var(--text-default);
 }
 
-/* Color Swatches — mirrors page-grid math (12×1fr, gap 24) so columns
-   align visually with the page grid. True CSS subgrid would require
-   threading through details/summary accordion elements. */
+/* Color Swatches — fallback for non-subgrid browsers: mirrors page-grid math
+   (12×1fr on desktop, 4×1fr on mobile, matching gap) so columns align visually.
+   Browsers with subgrid support get the true subgrid path at the bottom of this file. */
 .color-grid {
   display: grid;
   grid-template-columns: repeat(12, [col-start] 1fr);
@@ -803,5 +803,96 @@
 
   .meta-item {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   True subgrid — threads the page-grid column tracks through the entire
+   ui-library tab/accordion chain so that color swatches and other token
+   content align with the official page grid columns.
+
+   Chain: .use-subgrid (page grid, 12 col desktop / 4 col mobile)
+            → .ui-library__tabs  (was flex, now grid+subgrid)
+            → .tabs-content      (now grid+subgrid)
+            → .tab-panel         (now grid+subgrid when active)
+            → .accordion         (already grid+subgrid via accordion.css)
+            → .accordion__content
+            → .token-section     (now grid+subgrid)
+            → .accordion-nested  (already grid+subgrid)
+            → .accordion-nested__content / .color-grid (inherits tracks)
+            → .color-swatch      (span 4 of 12 = 3/row, or 2 of 4 = 2/row)
+
+   All changes are inside @supports so non-subgrid browsers continue to use
+   the explicit repeat(12/4, 1fr) fallback defined above.
+   ========================================================================== */
+@supports (grid-template-columns: subgrid) {
+  /* Convert the flex tab wrapper to a subgrid container.
+     The existing gap: var(--spacing-24) shorthand sets column-gap to 24 px
+     which matches the page grid at desktop. At sm the page grid switches to
+     12 px so we override column-gap there. row-gap keeps the nav↔panel gap. */
+  .ui-library .ui-library__tabs {
+    display: grid;
+    grid-template-columns: subgrid;
+    row-gap: var(--spacing-24);
+  }
+
+  @media (max-width: 47.9375em) {
+    .ui-library .ui-library__tabs {
+      column-gap: var(--spacing-12);
+    }
+  }
+
+  .ui-library .ui-library__tabs > * {
+    grid-column: 1 / -1;
+  }
+
+  .ui-library .tabs-content {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .ui-library .tab-panel.is-active {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+  }
+
+  .ui-library .tab-panel.is-active > * {
+    grid-column: 1 / -1;
+  }
+
+  .ui-library .token-section {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .ui-library .token-section > * {
+    grid-column: 1 / -1;
+  }
+
+  /* color-grid becomes a true subgrid participant.
+     The non-@supports column-gap values (24 px desktop, 12 px mobile)
+     already match the page grid, so no gap override is needed here. */
+  .ui-library .color-grid {
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+  }
+
+  /* Ensure color-swatch spans are stable regardless of cascade order
+     with accordion.css's accordion-nested__content > * { grid-column: 1/-1 } rule. */
+  .ui-library .color-swatch {
+    grid-column: span 4; /* 3 per row, 12-col desktop subgrid */
+  }
+
+  @media (max-width: 47.9375em) {
+    .ui-library .color-swatch {
+      grid-column: span 2; /* 2 per row, 4-col mobile subgrid */
+    }
+  }
+
+  @media (max-width: 29.9375em) {
+    .ui-library .color-swatch {
+      grid-column: span 4; /* 1 per row */
+    }
   }
 }
