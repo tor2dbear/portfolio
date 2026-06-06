@@ -208,38 +208,3 @@
   margin-top: var(--spacing-16);
   margin-bottom: var(--spacing-16);
 }
-
-/* When inside a subgrid context, thread the page grid columns through so
-   accordion content can align to the official grid. No-op when the accordion
-   sits inside a flex or block container (grid-column ignored, subgrid
-   resolves to single implicit column = same visual result as before). */
-@supports (grid-template-columns: subgrid) {
-  .accordion,
-  .accordion-nested {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-column: 1 / -1;
-  }
-
-  .accordion > .accordion__trigger,
-  .accordion > .accordion__content,
-  .accordion-nested > .accordion-nested__trigger,
-  .accordion-nested > .accordion-nested__content {
-    grid-column: 1 / -1;
-  }
-
-  .accordion__content,
-  .accordion-nested__content {
-    display: grid;
-    grid-template-columns: subgrid;
-  }
-
-  /* All direct children of accordion body divs span the full column range so
-     block-level content (p, h5, token-section, color-grid …) doesn't collapse
-     to a single narrow track when the parent is a multi-column subgrid.
-     Specific children can override with their own grid-column at higher specificity. */
-  .accordion__content > *,
-  .accordion-nested__content > * {
-    grid-column: 1 / -1;
-  }
-}

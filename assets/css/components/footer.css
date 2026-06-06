@@ -247,13 +247,3 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
     grid-column: span 12;
   }
 }
-
-/* Subgrid: inherit column tracks (and responsive gaps) from footer.page-grid
-   instead of duplicating the column structure. Per the CSS Grid Level 2 spec,
-   a subgrid's own gap declarations are ignored — the parent grid's column-gap
-   is used automatically. Non-subgrid browsers keep the explicit fallback above. */
-@supports (grid-template-columns: subgrid) {
-  .footer-container {
-    grid-template-columns: subgrid;
-  }
-}
