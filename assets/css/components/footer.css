@@ -205,7 +205,7 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
         [col-start] 1fr
       )
       [content-end] var(--size-page-margins) [full-end];
-    column-gap: var(--spacing-16);
+    column-gap: var(--spacing-12);
   }
 
   .footer-grid {
@@ -245,5 +245,15 @@ html[lang="en"] .footer-menu--tags .footer-tag-link {
 @media (max-width: 29.9375em) {
   .footer-column {
     grid-column: span 12;
+  }
+}
+
+/* Subgrid: inherit column tracks (and responsive gaps) from footer.page-grid
+   instead of duplicating the column structure. Per the CSS Grid Level 2 spec,
+   a subgrid's own gap declarations are ignored — the parent grid's column-gap
+   is used automatically. Non-subgrid browsers keep the explicit fallback above. */
+@supports (grid-template-columns: subgrid) {
+  .footer-container {
+    grid-template-columns: subgrid;
   }
 }
