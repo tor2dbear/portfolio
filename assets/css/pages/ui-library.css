@@ -340,7 +340,7 @@
 @media (max-width: 47.9375em) {
   .token-preview-grid {
     grid-template-columns: repeat(4, [col-start] minmax(0, 1fr));
-    column-gap: var(--spacing-16);
+    column-gap: var(--spacing-12);
   }
 
   .token-preview-grid > .token-preview {
@@ -794,7 +794,7 @@
 @media (max-width: 47.9375em) {
   .color-grid {
     grid-template-columns: repeat(4, [col-start] 1fr);
-    column-gap: var(--spacing-16);
+    column-gap: var(--spacing-12);
   }
 
   .color-swatch {
