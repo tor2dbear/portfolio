@@ -106,6 +106,7 @@
 }
 
 .color-swatch__visual {
+  box-sizing: border-box;
   width: 100%;
   height: 80px;
   border-radius: 6px;
@@ -787,12 +788,12 @@
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .color-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     column-gap: var(--spacing-12);
   }
 
   .color-swatch {
-    grid-column: span 1; /* 3 per row */
+    grid-column: span 1; /* 2 per row */
   }
 
   .meta-item {
