@@ -82,10 +82,8 @@
     const cotyOverrideGroupsRoot = root.querySelector(
       '[data-js="coty-override-groups"]'
     );
-    const cotyRoleModeSelect = root.querySelector('[data-js="coty-role-mode"]');
-    const cotyAnchorStepSelect = root.querySelector(
-      '[data-js="coty-anchor-step"]'
-    );
+    const cotyRoleModeSelect = null;
+    const cotyAnchorStepSelect = null;
     const cotySourceStepLabel = root.querySelector(
       '[data-js="coty-source-step"]'
     );
@@ -93,45 +91,6 @@
       '[data-js="coty-reset-year"]'
     );
     const cotyResetAllButton = root.querySelector('[data-js="coty-reset-all"]');
-    const cotyYearPrevButton = root.querySelector('[data-js="coty-year-prev"]');
-    const cotyYearNextButton = root.querySelector('[data-js="coty-year-next"]');
-    const cotyYearRandomButton = root.querySelector(
-      '[data-js="coty-year-random"]'
-    );
-    const cotyControlColorValueInput = root.querySelector(
-      '[data-js="coty-control-color-value"]'
-    );
-    const cotyControlColorScopeSelect = root.querySelector(
-      '[data-js="coty-control-color-scope"]'
-    );
-    const cotyControlColorTokenSelect = root.querySelector(
-      '[data-js="coty-control-color-token"]'
-    );
-    const cotyControlColorTokenRow = root.querySelector(
-      '[data-js="coty-control-color-token-row"]'
-    );
-    const cotyControlColorToggleButton = root.querySelector(
-      '[data-js="coty-control-color-toggle"]'
-    );
-    const cotyControlColorResetButton = root.querySelector(
-      '[data-js="coty-control-color-reset"]'
-    );
-    const cotyControlColorCountLabel = root.querySelector(
-      '[data-js="coty-control-color-count"]'
-    );
-    const cotyDiffRoot = root.querySelector('[data-js="coty-diff"]');
-    const cotyContrastChecksRoot = root.querySelector(
-      '[data-js="coty-contrast-checks"]'
-    );
-    const cotyTokenUsageRoot = root.querySelector(
-      '[data-js="coty-token-usage"]'
-    );
-    const cotyTokenUsageSelect = root.querySelector(
-      '[data-js="coty-token-usage-select"]'
-    );
-    const cotyTokenUsageList = root.querySelector(
-      '[data-js="coty-token-usage-list"]'
-    );
     const cotyOverrideSelects = {};
     const resetButton = root.querySelector('[data-js="palette-reset"]');
     const saveButton = root.querySelector('[data-js="palette-save"]');
@@ -150,11 +109,9 @@
       root.getAttribute("data-palette-custom-label") || "Custom palette";
 
     const appliedTokens = new Set();
-    const controlColorAppliedTokens = new Set();
     const currentTokenValues = {};
     const CUSTOM_PALETTE_KEY = "theme-custom-palette";
     const COTY_LAB_DRAFT_KEY_PREFIX = "pantone-lab::";
-    const COTY_CONTROL_COLOR_KEY = "pantone-lab-control-color";
     const COTY_OVERRIDE_OPTION_VALUES_BASE = [
       "",
       "--coty-1",
@@ -274,9 +231,9 @@
         id: "tritone",
         label: "Tritone",
         fields: [
-          { key: "tritone_shadow_step", token: "--tritone-shadow-step" },
-          { key: "tritone_mid_step", token: "--tritone-mid-step" },
-          { key: "tritone_highlight_step", token: "--tritone-highlight-step" },
+          { key: "tritone_shadow_step", token: "--tritone-shadow-step", kind: "step" },
+          { key: "tritone_mid_step", token: "--tritone-mid-step", kind: "step" },
+          { key: "tritone_highlight_step", token: "--tritone-highlight-step", kind: "step" },
         ],
       },
       {
@@ -316,321 +273,9 @@
     const COTY_OVERRIDE_FIELDS = COTY_OVERRIDE_GROUPS.flatMap(
       (group) => group.fields
     );
-    const COTY_TOKEN_USAGE_INDEX = {
-      "--text-default": [
-        {
-          file: "assets/css/style.css",
-          selector: "body",
-          note: "Global default text color.",
-        },
-        {
-          file: "assets/css/utilities/typography.css",
-          selector: "text elements",
-          note: "Typographic defaults and prose styles.",
-        },
-        {
-          file: "assets/css/components/theme-dropdown.css",
-          selector: ".theme-dropdown",
-          note: "Theme menu text rendering.",
-        },
-      ],
-      "--text-muted": [
-        {
-          file: "assets/css/pages/palette-generator.css",
-          selector: ".palette-generator__label",
-          note: "Generator labels and helper text.",
-        },
-        {
-          file: "assets/css/style.css",
-          selector: ".meta and subdued text",
-          note: "Muted metadata and secondary copy.",
-        },
-      ],
-      "--text-link": [
-        {
-          file: "assets/css/utilities/typography.css",
-          selector: "a",
-          note: "Base link color.",
-        },
-      ],
-      "--text-link-hover": [
-        {
-          file: "assets/css/utilities/typography.css",
-          selector: "a:hover",
-          note: "Link hover color.",
-        },
-      ],
-      "--text-inverse": [
-        {
-          file: "assets/css/components/button.css",
-          selector: "inverse content",
-          note: "Text/icons on inverted surfaces and overlays.",
-        },
-      ],
-      "--text-accent": [
-        {
-          file: "assets/css/tokens/legacy.css",
-          selector: ":root",
-          note: "Legacy alias used by some components.",
-        },
-      ],
-      "--surface-ink-strong": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Strong ink basis for derived muted text.",
-        },
-      ],
-      "--surface-page": [
-        {
-          file: "assets/css/style.css",
-          selector: "body",
-          note: "Global page background.",
-        },
-        {
-          file: "assets/css/components/footer.css",
-          selector: ".footer",
-          note: "Footer surface and separators.",
-        },
-        {
-          file: "assets/css/pages/palette-generator.css",
-          selector: ".palette-generator__export and code blocks",
-          note: "Generator preview surfaces.",
-        },
-      ],
-      "--surface-default": [
-        {
-          file: "assets/css/pages/palette-generator.css",
-          selector: ".palette-generator__panel",
-          note: "Generator card/background surfaces.",
-        },
-        {
-          file: "assets/css/components/tabs.css",
-          selector: ".tabs-nav",
-          note: "Tab container surfaces.",
-        },
-        {
-          file: "assets/css/components/download-card.css",
-          selector: ".download-card",
-          note: "Content cards and utility surfaces.",
-        },
-      ],
-      "--surface-tag": [
-        {
-          file: "assets/css/components/tags.css",
-          selector: ".tag-link",
-          note: "Tag background color.",
-        },
-      ],
-      "--surface-tag-hover": [
-        {
-          file: "assets/css/components/tags.css",
-          selector: ".tag-link:hover",
-          note: "Tag hover/active background.",
-        },
-      ],
-      "--border-subtle": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Default low-contrast borders.",
-        },
-      ],
-      "--border-default": [
-        {
-          file: "assets/css/components/form.css",
-          selector: ".form-input, .form-textarea, .form-select",
-          note: "Default control and field borders.",
-        },
-        {
-          file: "assets/css/components/theme-dropdown.css",
-          selector: ".theme-dropdown and select controls",
-          note: "Default panel/control separators.",
-        },
-      ],
-      "--border-strong": [
-        {
-          file: "assets/css/components/accordion.css",
-          selector: ".accordion*",
-          note: "Strong separator and open-state emphasis.",
-        },
-        {
-          file: "assets/css/components/theme-dropdown.css",
-          selector: ".theme-dropdown",
-          note: "Panel and interactive border contrast.",
-        },
-      ],
-      "--component-form-bg": [
-        {
-          file: "assets/css/components/form.css",
-          selector: ".form-input, .form-textarea, .form-select",
-          note: "Input field background.",
-        },
-      ],
-      "--component-form-placeholder": [
-        {
-          file: "assets/css/components/form.css",
-          selector: "::placeholder",
-          note: "Placeholder text in form controls.",
-        },
-      ],
-      "--image-background": [
-        {
-          file: "assets/css/style.css",
-          selector: "picture::before/::after, .video-wrapper::before/::after",
-          note: "Image treatment duotone overlay background.",
-        },
-        {
-          file: "assets/js/coty-scale.js",
-          selector: "runtime token assignment",
-          note: "Pantone mode and duotone defaults.",
-        },
-      ],
-      "--component-newsletter-bg": [
-        {
-          file: "assets/css/components/footer.css",
-          selector: ".newsletter",
-          note: "Newsletter card background.",
-        },
-      ],
-      "--component-newsletter-text": [
-        {
-          file: "assets/css/components/footer.css",
-          selector: ".newsletter__title and copy",
-          note: "Newsletter text color.",
-        },
-      ],
-      "--component-newsletter-illustration-bg": [
-        {
-          file: "assets/css/components/footer.css",
-          selector: ".newsletter__illustration",
-          note: "Newsletter illustration block bg.",
-        },
-      ],
-      "--primary": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Primary role base used by roles and components.",
-        },
-      ],
-      "--primary-strong": [
-        {
-          file: "assets/css/components/button.css",
-          selector: ".button interactions",
-          note: "Primary role strong/hover states.",
-        },
-      ],
-      "--on-primary": [
-        {
-          file: "assets/css/components/button.css",
-          selector: ".button--primary",
-          note: "Text/icon color on primary backgrounds.",
-        },
-        {
-          file: "assets/js/coty-scale.js",
-          selector: "runtime selection",
-          note: "Set from COTY scale steps, not fixed white/black.",
-        },
-      ],
-      "--action": [
-        {
-          file: "assets/css/components/button.css",
-          selector: ".button",
-          note: "Default button background.",
-        },
-      ],
-      "--on-action": [
-        {
-          file: "assets/css/components/button.css",
-          selector: ".button",
-          note: "Default button text/icon color.",
-        },
-      ],
-      "--secondary": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Secondary role base.",
-        },
-      ],
-      "--secondary-strong": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Secondary role strong variant.",
-        },
-      ],
-      "--on-secondary": [
-        {
-          file: "assets/css/tokens/semantic.css",
-          selector: ":root",
-          note: "Text/icon color on secondary backgrounds.",
-        },
-      ],
-      "--state-focus": [
-        {
-          file: "assets/css/utilities/typography.css",
-          selector: ":focus-visible outlines",
-          note: "Focus ring and emphasis states.",
-        },
-      ],
-      "--state-selected": [
-        {
-          file: "assets/css/pages/palette-generator.css",
-          selector: ".palette-generator__contrast-status[data-pass='true']",
-          note: "Pass-state indicator color.",
-        },
-      ],
-      "--component-nav-cta-bg": [
-        {
-          file: "assets/css/components/navigation.css",
-          selector: ".menu__cta",
-          note: "Header CTA background.",
-        },
-        {
-          file: "assets/js/theme-derive.js",
-          selector: "derived token mapping",
-          note: "Mapped from primary role at runtime.",
-        },
-      ],
-      "--component-nav-cta-text": [
-        {
-          file: "assets/css/components/navigation.css",
-          selector: ".menu__cta",
-          note: "Header CTA text color.",
-        },
-        {
-          file: "assets/js/theme-derive.js",
-          selector: "derived token mapping",
-          note: "Mapped from primary role at runtime.",
-        },
-      ],
-      "--component-toc-active-indicator": [
-        {
-          file: "assets/css/components/table-of-contents.css",
-          selector: ".table-of-contents .active",
-          note: "Active ToC indicator.",
-        },
-      ],
-      "--component-section-headline-bg": [
-        {
-          file: "assets/css/utilities/typography.css",
-          selector: ".section-headline",
-          note: "Section headline background accent.",
-        },
-      ],
-    };
     const cotyDraftByYear = {};
-    const cotyControlColorState = {
-      enabled: false,
-      color: "#ff4d4d",
-      scope: "primary",
-      token: "--primary",
-    };
     let syncingFromThemeEvent = false;
     let activeTab = "palette";
-    let contrastMeasureNode = null;
 
     function isPressed(button) {
       if (!button) {
@@ -734,13 +379,16 @@
         );
       }
       if (copyButton) {
-        copyButton.textContent = inPantoneLab
-          ? isSwedish
-            ? "Kopiera Pantone-utkast"
-            : "Copy Pantone draft"
-          : isSwedish
-          ? "Kopiera spec"
-          : "Copy spec";
+        copyButton.setAttribute(
+          "aria-label",
+          inPantoneLab
+            ? isSwedish
+              ? "Kopiera Pantone-utkast"
+              : "Copy Pantone draft"
+            : isSwedish
+            ? "Kopiera spec"
+            : "Copy spec"
+        );
       }
       if (footerHint) {
         const paletteHint = footerHint.getAttribute("data-hint-palette") || "";
@@ -759,957 +407,6 @@
       return selected ? selected.value : "standard";
     }
 
-    function uniqueTokenList(tokens) {
-      const seen = new Set();
-      return tokens.filter((token) => {
-        if (!token || seen.has(token)) {
-          return false;
-        }
-        seen.add(token);
-        return true;
-      });
-    }
-
-    function getControlColorTokenGroups() {
-      const textGroup = COTY_OVERRIDE_GROUPS.find(
-        (group) => group.id === "text"
-      );
-      const surfaceGroup = COTY_OVERRIDE_GROUPS.find(
-        (group) => group.id === "surface"
-      );
-      const primaryGroup = COTY_OVERRIDE_GROUPS.find(
-        (group) => group.id === "primary"
-      );
-      const secondaryGroup = COTY_OVERRIDE_GROUPS.find(
-        (group) => group.id === "secondary"
-      );
-      const borderGroup = COTY_OVERRIDE_GROUPS.find(
-        (group) => group.id === "border"
-      );
-
-      const textTokens = textGroup
-        ? textGroup.fields.map((field) => field.token)
-        : [];
-      const surfaceTokens = surfaceGroup
-        ? surfaceGroup.fields.map((field) => field.token)
-        : [];
-      const primaryTokens = primaryGroup
-        ? primaryGroup.fields.map((field) => field.token)
-        : [];
-      const secondaryTokens = secondaryGroup
-        ? secondaryGroup.fields.map((field) => field.token)
-        : [];
-      const borderTokens = borderGroup
-        ? borderGroup.fields.map((field) => field.token)
-        : [];
-
-      return {
-        text: uniqueTokenList(textTokens),
-        surface: uniqueTokenList(surfaceTokens),
-        border: uniqueTokenList(borderTokens),
-        primary: uniqueTokenList(primaryTokens.concat(secondaryTokens)),
-      };
-    }
-
-    function ensureContrastMeasureNode() {
-      if (contrastMeasureNode) {
-        return contrastMeasureNode;
-      }
-      const node = document.createElement("span");
-      node.style.position = "absolute";
-      node.style.visibility = "hidden";
-      node.style.pointerEvents = "none";
-      node.style.inset = "-9999px auto auto -9999px";
-      node.style.inlineSize = "1px";
-      node.style.blockSize = "1px";
-      node.style.color = "#000";
-      document.body.appendChild(node);
-      contrastMeasureNode = node;
-      return node;
-    }
-
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
-    }
-
-    function linearToSrgb(value) {
-      if (value <= 0.0031308) {
-        return 12.92 * value;
-      }
-      return 1.055 * Math.pow(value, 1 / 2.4) - 0.055;
-    }
-
-    function parseRgbComponent(part) {
-      const value = String(part || "").trim();
-      if (!value) {
-        return NaN;
-      }
-      if (value.endsWith("%")) {
-        return (Number(value.slice(0, -1)) / 100) * 255;
-      }
-      return Number(value);
-    }
-
-    function parseRgbColor(value) {
-      const raw = String(value || "").trim();
-      if (!raw) {
-        return null;
-      }
-
-      const rgbMatch = raw.match(/^rgba?\(([^)]+)\)$/i);
-      if (rgbMatch) {
-        const body = rgbMatch[1].trim();
-        const colorPart = body.split("/")[0].trim();
-        const pieces = colorPart.includes(",")
-          ? colorPart.split(",").map((part) => part.trim())
-          : colorPart.split(/\s+/).map((part) => part.trim());
-        if (pieces.length < 3) {
-          return null;
-        }
-        return {
-          r: parseRgbComponent(pieces[0]),
-          g: parseRgbComponent(pieces[1]),
-          b: parseRgbComponent(pieces[2]),
-        };
-      }
-
-      const srgbMatch = raw.match(/^color\(\s*srgb\s+([^)]+)\)$/i);
-      if (srgbMatch) {
-        const colorPart = srgbMatch[1].split("/")[0].trim();
-        const pieces = colorPart.split(/\s+/).map((part) => part.trim());
-        if (pieces.length < 3) {
-          return null;
-        }
-        const asUnit = pieces.map((part) => {
-          if (part.endsWith("%")) {
-            return Number(part.slice(0, -1)) / 100;
-          }
-          return Number(part);
-        });
-        if (asUnit.some((number) => Number.isNaN(number))) {
-          return null;
-        }
-        return {
-          r: asUnit[0] * 255,
-          g: asUnit[1] * 255,
-          b: asUnit[2] * 255,
-        };
-      }
-
-      const oklchMatch = raw.match(
-        /^oklch\(\s*([0-9.]+)%\s+([0-9.]+)\s+([0-9.]+)(?:deg)?(?:\s*\/\s*[0-9.]+%?)?\s*\)$/i
-      );
-      if (oklchMatch) {
-        const l = Number(oklchMatch[1]) / 100;
-        const c = Number(oklchMatch[2]);
-        const h = Number(oklchMatch[3]) * (Math.PI / 180);
-        if ([l, c, h].some((number) => Number.isNaN(number))) {
-          return null;
-        }
-
-        const oka = c * Math.cos(h);
-        const okb = c * Math.sin(h);
-
-        const l_ = l + 0.3963377774 * oka + 0.2158037573 * okb;
-        const m_ = l - 0.1055613458 * oka - 0.0638541728 * okb;
-        const s_ = l - 0.0894841775 * oka - 1.291485548 * okb;
-
-        const l3 = l_ * l_ * l_;
-        const m3 = m_ * m_ * m_;
-        const s3 = s_ * s_ * s_;
-
-        const linearR =
-          4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3;
-        const linearG =
-          -1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3;
-        const linearB =
-          -0.0041960863 * l3 - 0.7034186147 * m3 + 1.707614701 * s3;
-
-        return {
-          r: clamp(linearToSrgb(linearR), 0, 1) * 255,
-          g: clamp(linearToSrgb(linearG), 0, 1) * 255,
-          b: clamp(linearToSrgb(linearB), 0, 1) * 255,
-        };
-      }
-
-      return null;
-    }
-
-    function resolveVarToken(value) {
-      const match = String(value || "")
-        .trim()
-        .match(/^var\(\s*(--[A-Za-z0-9-_]+)(?:\s*,\s*(.+))?\)$/);
-      if (!match) {
-        return null;
-      }
-      return {
-        name: match[1],
-        fallback: match[2] ? String(match[2]).trim() : "",
-      };
-    }
-
-    function resolveColorValue(value, styles, depth) {
-      const currentDepth = typeof depth === "number" ? depth : 0;
-      if (currentDepth > 8) {
-        return String(value || "").trim();
-      }
-      const trimmed = String(value || "").trim();
-      if (!trimmed) {
-        return "";
-      }
-      const varToken = resolveVarToken(trimmed);
-      if (!varToken) {
-        return trimmed;
-      }
-      const resolved = styles.getPropertyValue(varToken.name).trim();
-      if (resolved) {
-        return resolveColorValue(resolved, styles, currentDepth + 1);
-      }
-      if (varToken.fallback) {
-        return resolveColorValue(varToken.fallback, styles, currentDepth + 1);
-      }
-      return "";
-    }
-
-    function resolveColorToRgb(value) {
-      if (!value) {
-        return null;
-      }
-      const node = ensureContrastMeasureNode();
-      const styles = getComputedStyle(document.documentElement);
-      const resolvedValue = resolveColorValue(value, styles, 0);
-      if (!resolvedValue) {
-        return null;
-      }
-      node.style.color = "";
-      node.style.color = String(resolvedValue);
-      const computed = getComputedStyle(node).color;
-      const parsedComputed = parseRgbColor(computed);
-      if (parsedComputed) {
-        return parsedComputed;
-      }
-      return parseRgbColor(resolvedValue);
-    }
-
-    function relativeLuminance(rgb) {
-      if (!rgb) {
-        return 0;
-      }
-      const channel = (component) => {
-        const value = component / 255;
-        return value <= 0.03928
-          ? value / 12.92
-          : Math.pow((value + 0.055) / 1.055, 2.4);
-      };
-      return (
-        0.2126 * channel(rgb.r) +
-        0.7152 * channel(rgb.g) +
-        0.0722 * channel(rgb.b)
-      );
-    }
-
-    function contrastRatio(foreground, background) {
-      const fg = resolveColorToRgb(foreground);
-      const bg = resolveColorToRgb(background);
-      if (!fg || !bg) {
-        return null;
-      }
-      const l1 = relativeLuminance(fg);
-      const l2 = relativeLuminance(bg);
-      const lighter = Math.max(l1, l2);
-      const darker = Math.min(l1, l2);
-      return (lighter + 0.05) / (darker + 0.05);
-    }
-
-    function formatContrastRatio(value) {
-      if (!value || !isFinite(value)) {
-        return "-";
-      }
-      return value.toFixed(2) + ":1";
-    }
-
-    function updateCotyContrastChecks() {
-      if (!cotyContrastChecksRoot) {
-        return;
-      }
-      const isSwedish = document.documentElement.lang === "sv";
-      const pairs = [
-        {
-          label: "--surface-page / --text-default",
-          foreground: "--text-default",
-          background: "--surface-page",
-          threshold: 4.5,
-          requirement: "text",
-        },
-        {
-          label: "--surface-default / --text-default",
-          foreground: "--text-default",
-          background: "--surface-default",
-          threshold: 4.5,
-          requirement: "text",
-        },
-        {
-          label: "--primary / --on-primary",
-          foreground: "--on-primary",
-          background: "--primary",
-          threshold: 4.5,
-          requirement: "text",
-        },
-        {
-          label: "--action / --on-action",
-          foreground: "--on-action",
-          background: "--action",
-          threshold: 4.5,
-          requirement: "text",
-        },
-        {
-          label: "--component-nav-cta-bg / --component-nav-cta-text",
-          foreground: "--component-nav-cta-text",
-          background: "--component-nav-cta-bg",
-          threshold: 4.5,
-          requirement: "text",
-        },
-        {
-          label: "--surface-default / --border-default",
-          foreground: "--border-default",
-          background: "--surface-default",
-          threshold: 3,
-          requirement: "non-text",
-        },
-        {
-          label: "--surface-page / --border-strong",
-          foreground: "--border-strong",
-          background: "--surface-page",
-          threshold: 3,
-          requirement: "non-text",
-        },
-      ];
-      const rootStyles = getComputedStyle(document.documentElement);
-      cotyContrastChecksRoot.innerHTML = "";
-
-      pairs.forEach((pair) => {
-        const fg = rootStyles.getPropertyValue(pair.foreground).trim();
-        const bg = rootStyles.getPropertyValue(pair.background).trim();
-        const ratio = contrastRatio(fg, bg);
-        const pass = Boolean(ratio && ratio >= pair.threshold);
-
-        const item = document.createElement("div");
-        item.className = "palette-generator__contrast-item";
-
-        const pairLabel = document.createElement("div");
-        pairLabel.className = "palette-generator__contrast-pair";
-        pairLabel.textContent = pair.label;
-
-        const ratioLabel = document.createElement("div");
-        ratioLabel.className = "palette-generator__contrast-ratio";
-        ratioLabel.textContent =
-          (isSwedish ? "Kontrast: " : "Contrast: ") +
-          formatContrastRatio(ratio);
-
-        const status = document.createElement("div");
-        status.className = "palette-generator__contrast-status";
-        status.setAttribute("data-pass", pass ? "true" : "false");
-        const requirementLabel =
-          pair.requirement === "non-text"
-            ? isSwedish
-              ? "AA UI/non-text (3:1)"
-              : "AA UI/non-text (3:1)"
-            : isSwedish
-            ? "AA normal text (4.5:1)"
-            : "AA normal text (4.5:1)";
-        status.textContent = requirementLabel + ": " + (pass ? "Pass" : "Fail");
-
-        item.appendChild(pairLabel);
-        item.appendChild(ratioLabel);
-        item.appendChild(status);
-        cotyContrastChecksRoot.appendChild(item);
-      });
-    }
-
-    function formatDiffValue(value) {
-      return value ? String(value) : "auto";
-    }
-
-    function getCotyTokenChangeState(token) {
-      const year = currentCotyYear();
-      const actions = window.CotyScaleActions;
-      if (!year || !actions || typeof actions.getEntry !== "function") {
-        return {
-          lightChanged: false,
-          darkChanged: false,
-          lightBase: "auto",
-          lightCurrent: "auto",
-          darkBase: "auto",
-          darkCurrent: "auto",
-        };
-      }
-
-      const entry = actions.getEntry(year);
-      if (!entry) {
-        return {
-          lightChanged: false,
-          darkChanged: false,
-          lightBase: "auto",
-          lightCurrent: "auto",
-          darkBase: "auto",
-          darkCurrent: "auto",
-        };
-      }
-
-      const field = COTY_OVERRIDE_FIELDS.find(
-        (candidate) => candidate.token === token
-      );
-      if (!field) {
-        return {
-          lightChanged: false,
-          darkChanged: false,
-          lightBase: "auto",
-          lightCurrent: "auto",
-          darkBase: "auto",
-          darkCurrent: "auto",
-        };
-      }
-
-      const baseConfig = sanitizeCotyDraft(getEntryYearConfig(entry), year);
-      const currentConfig = sanitizeCotyDraft(getCotyDraftForYear(year), year);
-      const lightBase = formatDiffValue(
-        (baseConfig.overrides_light || {})[field.key] || ""
-      );
-      const lightCurrent = formatDiffValue(
-        (currentConfig.overrides_light || {})[field.key] || ""
-      );
-      const darkBase = formatDiffValue(
-        (baseConfig.overrides_dark || {})[field.key] || ""
-      );
-      const darkCurrent = formatDiffValue(
-        (currentConfig.overrides_dark || {})[field.key] || ""
-      );
-
-      return {
-        lightChanged: lightBase !== lightCurrent,
-        darkChanged: darkBase !== darkCurrent,
-        lightBase: lightBase,
-        lightCurrent: lightCurrent,
-        darkBase: darkBase,
-        darkCurrent: darkCurrent,
-      };
-    }
-
-    function updateCotyDiffView() {
-      if (!cotyDiffRoot) {
-        return;
-      }
-      const isSwedish = document.documentElement.lang === "sv";
-      const year = currentCotyYear();
-      const actions = window.CotyScaleActions;
-      if (!year || !actions || typeof actions.getEntry !== "function") {
-        cotyDiffRoot.textContent = isSwedish
-          ? "Ingen årsdata tillgänglig."
-          : "No year data available.";
-        return;
-      }
-
-      const entry = actions.getEntry(year);
-      if (!entry) {
-        cotyDiffRoot.textContent = isSwedish
-          ? "Ingen årsdata tillgänglig."
-          : "No year data available.";
-        return;
-      }
-
-      const baseConfig = sanitizeCotyDraft(getEntryYearConfig(entry), year);
-      const currentConfig = sanitizeCotyDraft(getCotyDraftForYear(year), year);
-      const tokenLabelByKey = {};
-      COTY_OVERRIDE_FIELDS.forEach((field) => {
-        tokenLabelByKey[field.key] = field.token;
-      });
-
-      const changes = [];
-
-      if (
-        (baseConfig.role_mode || "auto") !== (currentConfig.role_mode || "auto")
-      ) {
-        changes.push({
-          mode: "all",
-          token: "--coty-role-mode",
-          base: formatDiffValue(baseConfig.role_mode),
-          current: formatDiffValue(currentConfig.role_mode),
-        });
-      }
-
-      if (
-        String(baseConfig.anchor_step || "") !==
-        String(currentConfig.anchor_step || "")
-      ) {
-        changes.push({
-          mode: "all",
-          token: "--coty-anchor-step",
-          base: formatDiffValue(baseConfig.anchor_step),
-          current: formatDiffValue(currentConfig.anchor_step),
-        });
-      }
-
-      ["light", "dark"].forEach((mode) => {
-        const baseBucket = baseConfig["overrides_" + mode] || {};
-        const currentBucket = currentConfig["overrides_" + mode] || {};
-        Object.keys(tokenLabelByKey).forEach((key) => {
-          const baseValue = formatDiffValue(baseBucket[key] || "");
-          const currentValue = formatDiffValue(currentBucket[key] || "");
-          if (baseValue === currentValue) {
-            return;
-          }
-          changes.push({
-            mode: mode,
-            token: tokenLabelByKey[key],
-            base: baseValue,
-            current: currentValue,
-          });
-        });
-      });
-
-      const lightCount = changes.filter(
-        (change) => change.mode === "light"
-      ).length;
-      const darkCount = changes.filter(
-        (change) => change.mode === "dark"
-      ).length;
-      const globalCount = changes.filter(
-        (change) => change.mode === "all"
-      ).length;
-      const visibleChanges = changes.slice();
-
-      cotyDiffRoot.innerHTML = "";
-
-      const summary = document.createElement("div");
-      summary.className = "palette-generator__diff-summary";
-
-      const allBadge = document.createElement("span");
-      allBadge.className = "palette-generator__diff-badge";
-      allBadge.textContent = isSwedish
-        ? "Totalt: " + changes.length
-        : "Total: " + changes.length;
-
-      const lightBadge = document.createElement("span");
-      lightBadge.className = "palette-generator__diff-badge";
-      lightBadge.textContent = isSwedish
-        ? "Light: " + lightCount
-        : "Light: " + lightCount;
-
-      const darkBadge = document.createElement("span");
-      darkBadge.className = "palette-generator__diff-badge";
-      darkBadge.textContent = isSwedish
-        ? "Dark: " + darkCount
-        : "Dark: " + darkCount;
-
-      const globalBadge = document.createElement("span");
-      globalBadge.className = "palette-generator__diff-badge";
-      globalBadge.textContent = isSwedish
-        ? "Globalt: " + globalCount
-        : "Global: " + globalCount;
-
-      summary.appendChild(allBadge);
-      summary.appendChild(lightBadge);
-      summary.appendChild(darkBadge);
-      summary.appendChild(globalBadge);
-      cotyDiffRoot.appendChild(summary);
-
-      if (!visibleChanges.length) {
-        const empty = document.createElement("p");
-        empty.className = "palette-generator__hint";
-        empty.textContent = isSwedish
-          ? "Inga avvikelser mot bas för år " + year + "."
-          : "No differences vs base for year " + year + ".";
-        cotyDiffRoot.appendChild(empty);
-        return;
-      }
-
-      const list = document.createElement("div");
-      list.className = "palette-generator__diff-list";
-
-      visibleChanges.forEach((change) => {
-        const item = document.createElement("article");
-        item.className = "palette-generator__diff-item";
-
-        const token = document.createElement("div");
-        token.className = "palette-generator__diff-token";
-        token.textContent =
-          (change.mode === "all" ? "[all] " : "[" + change.mode + "] ") +
-          change.token;
-        token.tabIndex = 0;
-        token.setAttribute("role", "button");
-        token.setAttribute("data-token", change.token);
-        token.setAttribute(
-          "aria-label",
-          (isSwedish ? "Visa usage för " : "Show usage for ") + change.token
-        );
-        token.addEventListener("click", () => {
-          setSelectedUsageToken(change.token, { focus: true });
-          updateCotyTokenUsagePanel();
-        });
-        token.addEventListener("keydown", (evt) => {
-          if (evt.key !== "Enter" && evt.key !== " ") {
-            return;
-          }
-          evt.preventDefault();
-          setSelectedUsageToken(change.token, { focus: true });
-          updateCotyTokenUsagePanel();
-        });
-
-        const base = document.createElement("div");
-        base.className = "palette-generator__diff-value";
-        const baseLabel = document.createElement("strong");
-        baseLabel.textContent = "base: ";
-        const baseValue = document.createElement("span");
-        baseValue.textContent = change.base;
-        base.appendChild(baseLabel);
-        base.appendChild(baseValue);
-
-        const current = document.createElement("div");
-        current.className = "palette-generator__diff-value";
-        const currentLabel = document.createElement("strong");
-        currentLabel.textContent = "current: ";
-        const currentValue = document.createElement("span");
-        currentValue.textContent = change.current;
-        current.appendChild(currentLabel);
-        current.appendChild(currentValue);
-
-        item.appendChild(token);
-        item.appendChild(base);
-        item.appendChild(current);
-        list.appendChild(item);
-      });
-
-      cotyDiffRoot.appendChild(list);
-    }
-
-    function populateCotyTokenUsageSelect() {
-      if (!cotyTokenUsageSelect) {
-        return;
-      }
-      const tokens = uniqueTokenList(
-        COTY_OVERRIDE_FIELDS.map((field) => field.token).concat(
-          Object.keys(COTY_TOKEN_USAGE_INDEX)
-        )
-      );
-      const current = cotyTokenUsageSelect.value;
-      cotyTokenUsageSelect.innerHTML = "";
-      tokens.forEach((token) => {
-        const option = document.createElement("option");
-        option.value = token;
-        option.textContent = token;
-        cotyTokenUsageSelect.appendChild(option);
-      });
-      if (tokens.indexOf(current) > -1) {
-        cotyTokenUsageSelect.value = current;
-      } else {
-        cotyTokenUsageSelect.value = tokens[0] || "";
-      }
-    }
-
-    function focusTokenUsagePanel() {
-      if (!cotyTokenUsageRoot) {
-        return;
-      }
-      const details = cotyTokenUsageRoot.closest("details");
-      if (details) {
-        details.open = true;
-      }
-      cotyTokenUsageRoot.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-
-    function setSelectedUsageToken(token, options) {
-      if (!cotyTokenUsageSelect || !token) {
-        return;
-      }
-      const option = cotyTokenUsageSelect.querySelector(
-        'option[value="' + token + '"]'
-      );
-      if (!option) {
-        return;
-      }
-      cotyTokenUsageSelect.value = token;
-      const opts = options || {};
-      if (opts.focus) {
-        focusTokenUsagePanel();
-      }
-    }
-
-    function updateCotyTokenUsagePanel() {
-      if (!cotyTokenUsageRoot || !cotyTokenUsageList) {
-        return;
-      }
-      const isSwedish = document.documentElement.lang === "sv";
-      const token = cotyTokenUsageSelect ? cotyTokenUsageSelect.value : "";
-      cotyTokenUsageList.innerHTML = "";
-      if (!token) {
-        const empty = document.createElement("p");
-        empty.className = "palette-generator__hint";
-        empty.textContent = isSwedish ? "Välj en token." : "Select a token.";
-        cotyTokenUsageList.appendChild(empty);
-        return;
-      }
-
-      const rootStyles = getComputedStyle(document.documentElement);
-      const currentValue = rootStyles.getPropertyValue(token).trim() || "auto";
-      const entries = COTY_TOKEN_USAGE_INDEX[token] || [];
-
-      const summary = document.createElement("div");
-      summary.className = "palette-generator__diff-summary";
-
-      const valueBadge = document.createElement("span");
-      valueBadge.className = "palette-generator__diff-badge";
-      valueBadge.textContent =
-        (isSwedish ? "Aktuellt värde: " : "Current value: ") + currentValue;
-
-      const refsBadge = document.createElement("span");
-      refsBadge.className = "palette-generator__diff-badge";
-      refsBadge.textContent =
-        (isSwedish ? "Referenser: " : "References: ") + entries.length;
-
-      const changeState = getCotyTokenChangeState(token);
-      const lightBadge = document.createElement("span");
-      lightBadge.className = "palette-generator__diff-badge";
-      lightBadge.textContent = isSwedish
-        ? "Light: " + (changeState.lightChanged ? "ändrad" : "bas")
-        : "Light: " + (changeState.lightChanged ? "changed" : "base");
-
-      const darkBadge = document.createElement("span");
-      darkBadge.className = "palette-generator__diff-badge";
-      darkBadge.textContent = isSwedish
-        ? "Dark: " + (changeState.darkChanged ? "ändrad" : "bas")
-        : "Dark: " + (changeState.darkChanged ? "changed" : "base");
-
-      summary.appendChild(valueBadge);
-      summary.appendChild(refsBadge);
-      summary.appendChild(lightBadge);
-      summary.appendChild(darkBadge);
-      cotyTokenUsageList.appendChild(summary);
-
-      if (changeState.lightChanged || changeState.darkChanged) {
-        const changeItem = document.createElement("article");
-        changeItem.className = "palette-generator__usage-item";
-
-        const title = document.createElement("div");
-        title.className = "palette-generator__usage-file";
-        title.textContent = isSwedish
-          ? "Diff mot bas för token"
-          : "Diff against base for token";
-        changeItem.appendChild(title);
-
-        const lightLine = document.createElement("div");
-        lightLine.className = "palette-generator__usage-selector";
-        lightLine.textContent =
-          "light: " + changeState.lightBase + " -> " + changeState.lightCurrent;
-        changeItem.appendChild(lightLine);
-
-        const darkLine = document.createElement("div");
-        darkLine.className = "palette-generator__usage-selector";
-        darkLine.textContent =
-          "dark: " + changeState.darkBase + " -> " + changeState.darkCurrent;
-        changeItem.appendChild(darkLine);
-
-        cotyTokenUsageList.appendChild(changeItem);
-      }
-
-      if (!entries.length) {
-        const empty = document.createElement("p");
-        empty.className = "palette-generator__hint";
-        empty.textContent = isSwedish
-          ? "Ingen usage-mappning ännu för denna token."
-          : "No usage mapping yet for this token.";
-        cotyTokenUsageList.appendChild(empty);
-        return;
-      }
-
-      entries.forEach((entry) => {
-        const item = document.createElement("article");
-        item.className = "palette-generator__usage-item";
-
-        const file = document.createElement("div");
-        file.className = "palette-generator__usage-file";
-        file.textContent = entry.file || "";
-
-        const selector = document.createElement("div");
-        selector.className = "palette-generator__usage-selector";
-        selector.textContent = entry.selector || "";
-
-        item.appendChild(file);
-        item.appendChild(selector);
-
-        if (entry.note) {
-          const note = document.createElement("div");
-          note.className = "palette-generator__usage-note";
-          note.textContent = entry.note;
-          item.appendChild(note);
-        }
-
-        cotyTokenUsageList.appendChild(item);
-      });
-    }
-
-    function controlColorStoragePayload() {
-      return {
-        enabled: Boolean(cotyControlColorState.enabled),
-        color: cotyControlColorState.color,
-        scope: cotyControlColorState.scope,
-        token: cotyControlColorState.token,
-      };
-    }
-
-    function saveControlColorState() {
-      try {
-        localStorage.setItem(
-          COTY_CONTROL_COLOR_KEY,
-          JSON.stringify(controlColorStoragePayload())
-        );
-      } catch {
-        // Ignore localStorage failures
-      }
-    }
-
-    function loadControlColorState() {
-      try {
-        const raw = localStorage.getItem(COTY_CONTROL_COLOR_KEY);
-        if (!raw) {
-          return;
-        }
-        const parsed = JSON.parse(raw);
-        if (!parsed || typeof parsed !== "object") {
-          return;
-        }
-        cotyControlColorState.enabled = Boolean(parsed.enabled);
-        cotyControlColorState.color =
-          typeof parsed.color === "string"
-            ? parsed.color
-            : cotyControlColorState.color;
-        cotyControlColorState.scope =
-          typeof parsed.scope === "string"
-            ? parsed.scope
-            : cotyControlColorState.scope;
-        cotyControlColorState.token =
-          typeof parsed.token === "string"
-            ? parsed.token
-            : cotyControlColorState.token;
-      } catch {
-        // Ignore localStorage failures
-      }
-    }
-
-    function clearControlColorOverrides() {
-      controlColorAppliedTokens.forEach((token) => {
-        document.documentElement.style.removeProperty(token);
-      });
-      controlColorAppliedTokens.clear();
-    }
-
-    function controlColorTargetTokens() {
-      const groups = getControlColorTokenGroups();
-      if (cotyControlColorState.scope === "text") {
-        return groups.text;
-      }
-      if (cotyControlColorState.scope === "surface") {
-        return groups.surface;
-      }
-      if (cotyControlColorState.scope === "border") {
-        return groups.border;
-      }
-      if (cotyControlColorState.scope === "token") {
-        return cotyControlColorState.token ? [cotyControlColorState.token] : [];
-      }
-      return groups.primary;
-    }
-
-    function updateControlColorCountLabel() {
-      if (!cotyControlColorCountLabel) {
-        return;
-      }
-      const isSwedish = document.documentElement.lang === "sv";
-      const count = controlColorTargetTokens().length;
-      const active = cotyControlColorState.enabled
-        ? isSwedish
-          ? "aktiv"
-          : "active"
-        : isSwedish
-        ? "av"
-        : "off";
-      cotyControlColorCountLabel.textContent = isSwedish
-        ? "Påverkade tokens: " + count + " (" + active + ")"
-        : "Affected tokens: " + count + " (" + active + ")";
-    }
-
-    function applyControlColorOverrides() {
-      clearControlColorOverrides();
-      if (!cotyControlColorState.enabled) {
-        return;
-      }
-      if (currentActiveSource() !== "pantone") {
-        return;
-      }
-      const targets = controlColorTargetTokens();
-      targets.forEach((token) => {
-        document.documentElement.style.setProperty(
-          token,
-          cotyControlColorState.color
-        );
-        controlColorAppliedTokens.add(token);
-      });
-    }
-
-    function populateControlColorTokenSelect() {
-      if (!cotyControlColorTokenSelect) {
-        return;
-      }
-      const tokens = uniqueTokenList(
-        COTY_OVERRIDE_FIELDS.map((field) => field.token)
-      );
-      cotyControlColorTokenSelect.innerHTML = "";
-      tokens.forEach((token) => {
-        const option = document.createElement("option");
-        option.value = token;
-        option.textContent = token;
-        cotyControlColorTokenSelect.appendChild(option);
-      });
-      if (tokens.indexOf(cotyControlColorState.token) > -1) {
-        cotyControlColorTokenSelect.value = cotyControlColorState.token;
-      } else {
-        cotyControlColorState.token = tokens[0] || "";
-        cotyControlColorTokenSelect.value = cotyControlColorState.token;
-      }
-    }
-
-    function syncControlColorUI() {
-      if (cotyControlColorValueInput) {
-        cotyControlColorValueInput.value = cotyControlColorState.color;
-      }
-      if (cotyControlColorScopeSelect) {
-        cotyControlColorScopeSelect.value = cotyControlColorState.scope;
-      }
-      if (cotyControlColorTokenSelect) {
-        cotyControlColorTokenSelect.value = cotyControlColorState.token;
-      }
-      if (cotyControlColorTokenRow) {
-        if (cotyControlColorState.scope === "token") {
-          cotyControlColorTokenRow.removeAttribute("hidden");
-        } else {
-          cotyControlColorTokenRow.setAttribute("hidden", "");
-        }
-      }
-      if (cotyControlColorToggleButton) {
-        setToggleState(
-          cotyControlColorToggleButton,
-          cotyControlColorState.enabled,
-          {
-            on: document.documentElement.lang === "sv" ? "Aktiv" : "Active",
-            off: document.documentElement.lang === "sv" ? "Aktivera" : "Enable",
-          }
-        );
-      }
-      updateControlColorCountLabel();
-    }
-
     function reapplyGeneratorState() {
       if (currentPresetName() === "pantone") {
         // Pantone Lab owns runtime tokens via CotyScaleActions.
@@ -1724,12 +421,31 @@
           currentPolicies(currentPresetName())
         );
       }
-      applyControlColorOverrides();
-      updateCotyDiffView();
-      updateCotyContrastChecks();
-      updateCotyTokenUsagePanel();
       updateCotySourceStepLabel();
       updateCotyOverrideOptionLabels();
+      updateRoleSwatches();
+    }
+
+    function updateRoleSwatches() {
+      const ROLE_TOKENS = {
+        text: "--text-default",
+        surface: "--surface-page",
+        border: "--border-default",
+        primary: "--primary",
+        secondary: "--secondary",
+      };
+      Object.entries(roleSelects).forEach(([role, select]) => {
+        if (!select) {
+          return;
+        }
+        const row = select.closest(".palette-generator__row");
+        const swatch = row ? row.querySelector("[data-role-swatch]") : null;
+        if (!swatch) {
+          return;
+        }
+        const token = ROLE_TOKENS[role];
+        swatch.style.background = token ? "var(" + token + ")" : "";
+      });
     }
 
     function tokenVar(token) {
@@ -2061,42 +777,126 @@
     }
 
     function updateCotyOverrideOptionLabels() {
-      const sourceStep = getComputedStyle(document.documentElement)
+      const computedStyle = getComputedStyle(document.documentElement);
+      const sourceStep = computedStyle
         .getPropertyValue("--coty-source-step")
         .trim();
-      const secondarySourceStep = getComputedStyle(document.documentElement)
+      const secondarySourceStep = computedStyle
         .getPropertyValue("--coty-secondary-source-step")
         .trim();
       const isSwedish = document.documentElement.lang === "sv";
-      const sourceSuffix = isSwedish ? " (source)" : " (source)";
+      const sourceSuffix = " (source)";
       const secondarySourceSuffix = isSwedish
         ? " (sekundär source)"
         : " (secondary source)";
 
-      Object.keys(cotyOverrideSelects).forEach((key) => {
-        const select = cotyOverrideSelects[key];
-        if (!select) {
-          return;
+      const cotyActions = window.CotyScaleActions;
+      const entry =
+        cotyActions && typeof cotyActions.getEntry === "function"
+          ? cotyActions.getEntry(currentCotyYear())
+          : null;
+      const entryConfig = entry ? getEntryYearConfig(entry) : null;
+      const modeKey = currentCotyMode();
+      const baselineOverrides = entryConfig
+        ? modeKey === "dark"
+          ? entryConfig.overrides_dark
+          : entryConfig.overrides_light
+        : {};
+
+      // Determine the "auto" baseline for each field — two complementary paths:
+      //   1. TOML baseline (authoritative): getEntry() returns the unmodified TOML
+      //      entry, so baselineOverrides reflects what "auto" means regardless of
+      //      what the user has drafted. Used when the year's TOML explicitly defines
+      //      a default (e.g. surface_default = "--coty-7").
+      //   2. Color-probe fallback: for fields without a TOML default, apply the
+      //      token as a CSS `color` and read back the fully-resolved computed value.
+      //      Works even when the chain passes through role tokens that coty-scale.js
+      //      sets as literal oklch strings (not var() references). Only attempted
+      //      when select.value === "" (field is at auto, no draft override active —
+      //      a draft override would have changed the token, making the probe
+      //      misleading).
+      //
+      //      Fields with kind:"step" (tritone) are excluded from color probing
+      //      because their tokens are not CSS custom properties — probing them
+      //      would return the inherited text color as a false positive.
+      const probe = document.body && document.createElement("span");
+      if (probe) {
+        probe.style.cssText =
+          "position:absolute;left:-9999px;visibility:hidden;pointer-events:none";
+        document.body.appendChild(probe);
+      }
+
+      function resolveColorOf(varName) {
+        if (!probe) return "";
+        probe.style.color = "var(" + varName + ")";
+        return getComputedStyle(probe).color || "";
+      }
+
+      try {
+        // Build separate reverse maps for primary and secondary steps so that
+        // primary always wins when a token's resolved color matches both scales.
+        const primaryColorToStep = {};
+        const secondaryColorToStep = {};
+        for (let i = 1; i <= 12; i++) {
+          const c = resolveColorOf("--coty-" + i);
+          if (c && !primaryColorToStep[c]) {
+            primaryColorToStep[c] = "--coty-" + i;
+          }
+          const cs = resolveColorOf("--coty-secondary-" + i);
+          if (cs && !secondaryColorToStep[cs]) {
+            secondaryColorToStep[cs] = "--coty-secondary-" + i;
+          }
         }
-        Array.from(select.options).forEach((option) => {
-          const value = option.value || "";
-          if (!value) {
-            option.textContent = "auto";
+
+        Object.keys(cotyOverrideSelects).forEach((key) => {
+          const select = cotyOverrideSelects[key];
+          if (!select) {
             return;
           }
-          let label = value;
-          if (sourceStep && value === "--coty-" + sourceStep) {
-            label += sourceSuffix;
+
+          let autoResolvesTo =
+            (baselineOverrides && baselineOverrides[key]) || "";
+          if (!autoResolvesTo && select.value === "") {
+            const field = COTY_OVERRIDE_FIELDS.find((f) => f.key === key);
+            if (field && field.kind !== "step") {
+              const color = resolveColorOf(field.token);
+              autoResolvesTo =
+                (color &&
+                  (primaryColorToStep[color] ||
+                    secondaryColorToStep[color])) ||
+                "";
+            }
           }
-          if (
-            secondarySourceStep &&
-            value === "--coty-secondary-" + secondarySourceStep
-          ) {
-            label += secondarySourceSuffix;
-          }
-          option.textContent = label;
+
+          Array.from(select.options).forEach((option) => {
+            const value = option.value || "";
+            if (!value) {
+              option.textContent = autoResolvesTo
+                ? "auto (→ " + autoResolvesTo + ")"
+                : "auto";
+              return;
+            }
+            let label = value;
+            if (sourceStep && value === "--coty-" + sourceStep) {
+              label += sourceSuffix;
+            }
+            if (
+              secondarySourceStep &&
+              value === "--coty-secondary-" + secondarySourceStep
+            ) {
+              label += secondarySourceSuffix;
+            }
+            if (autoResolvesTo && value === autoResolvesTo) {
+              label += " (= auto)";
+            }
+            option.textContent = label;
+          });
         });
-      });
+      } finally {
+        if (probe && probe.parentNode) {
+          probe.parentNode.removeChild(probe);
+        }
+      }
     }
 
     function getEntryYearConfig(entry) {
@@ -2520,20 +1320,6 @@
         cotyYearSelect.appendChild(option);
       });
 
-      if (cotyAnchorStepSelect) {
-        cotyAnchorStepSelect.innerHTML = "";
-        const autoOption = document.createElement("option");
-        autoOption.value = "";
-        autoOption.textContent = "auto";
-        cotyAnchorStepSelect.appendChild(autoOption);
-        for (let step = 1; step <= 12; step += 1) {
-          const stepOption = document.createElement("option");
-          stepOption.value = String(step);
-          stepOption.textContent = String(step);
-          cotyAnchorStepSelect.appendChild(stepOption);
-        }
-      }
-
       cotyYearSelect.value = String(actions.getCurrentYear());
       syncCotyOverrideUIForYear(cotyYearSelect.value);
       writeCotyControls(getCotyDraftForYear(cotyYearSelect.value));
@@ -2564,62 +1350,35 @@
         applyCurrentYearSelection();
       }
 
-      if (cotyYearPrevButton) {
-        cotyYearPrevButton.addEventListener("click", () => shiftYear(-1));
-      }
-      if (cotyYearNextButton) {
-        cotyYearNextButton.addEventListener("click", () => shiftYear(1));
-      }
-      if (cotyYearRandomButton) {
-        cotyYearRandomButton.addEventListener("click", () => {
-          if (!cotyYearSelect) {
-            return;
-          }
-          const optionValues = Array.from(cotyYearSelect.options).map(
-            (option) => option.value
-          );
-          if (optionValues.length <= 1) {
-            return;
-          }
-          const currentValue = cotyYearSelect.value;
-          const candidates = optionValues.filter(
-            (value) => value !== currentValue
-          );
-          const randomIndex = Math.floor(Math.random() * candidates.length);
-          cotyYearSelect.value = candidates[randomIndex];
-          applyCurrentYearSelection();
-        });
-      }
-
       window.addEventListener("keydown", (evt) => {
-        if (currentActiveSource() !== "pantone") {
+        if (currentActiveSource() !== "pantone" || !evt.altKey) {
           return;
         }
         const target = evt.target;
         const tagName = target && target.tagName ? target.tagName : "";
-        const isEditable =
+        const isTextEditable =
           (target &&
             target.getAttribute &&
             target.getAttribute("contenteditable") === "true") ||
           tagName === "INPUT" ||
-          tagName === "TEXTAREA" ||
-          tagName === "SELECT";
-        if (isEditable || !evt.altKey) {
-          return;
-        }
+          tagName === "TEXTAREA";
+        const isAnyEditable = isTextEditable || tagName === "SELECT";
         if (evt.key === "ArrowLeft") {
+          if (isAnyEditable) return;
           evt.preventDefault();
           shiftYear(-1);
           return;
         }
         if (evt.key === "ArrowRight") {
+          if (isAnyEditable) return;
           evt.preventDefault();
           shiftYear(1);
           return;
         }
-        if (evt.key.toLowerCase() === "r" && cotyYearRandomButton) {
+        if (evt.key === "Enter" && cotyApplyDraftButton) {
+          if (isTextEditable) return;
           evt.preventDefault();
-          cotyYearRandomButton.click();
+          cotyApplyDraftButton.click();
         }
       });
 
@@ -2637,24 +1396,12 @@
         reapplyGeneratorState();
       };
 
-      if (cotyRoleModeSelect) {
-        cotyRoleModeSelect.addEventListener("change", onCotyControlChange);
-      }
-      if (cotyAnchorStepSelect) {
-        cotyAnchorStepSelect.addEventListener("change", onCotyControlChange);
-      }
       Object.keys(cotyOverrideSelects).forEach((key) => {
         const select = cotyOverrideSelects[key];
         if (!select) {
           return;
         }
         select.addEventListener("change", () => {
-          const field = COTY_OVERRIDE_FIELDS.find(
-            (candidate) => candidate.key === key
-          );
-          if (field) {
-            setSelectedUsageToken(field.token);
-          }
           onCotyControlChange();
         });
       });
@@ -2682,58 +1429,6 @@
           const year = currentCotyYear();
           syncCotyOverrideUIForYear(year);
           writeCotyControls(getCotyDraftForYear(year));
-          reapplyGeneratorState();
-        });
-      }
-    }
-
-    function initControlColorControls() {
-      if (
-        !cotyControlColorValueInput ||
-        !cotyControlColorScopeSelect ||
-        !cotyControlColorTokenSelect
-      ) {
-        return;
-      }
-      loadControlColorState();
-      populateControlColorTokenSelect();
-      syncControlColorUI();
-
-      cotyControlColorValueInput.addEventListener("input", () => {
-        cotyControlColorState.color =
-          cotyControlColorValueInput.value || "#ff4d4d";
-        saveControlColorState();
-        reapplyGeneratorState();
-      });
-
-      cotyControlColorScopeSelect.addEventListener("change", () => {
-        cotyControlColorState.scope =
-          cotyControlColorScopeSelect.value || "primary";
-        syncControlColorUI();
-        saveControlColorState();
-        reapplyGeneratorState();
-      });
-
-      cotyControlColorTokenSelect.addEventListener("change", () => {
-        cotyControlColorState.token = cotyControlColorTokenSelect.value || "";
-        saveControlColorState();
-        reapplyGeneratorState();
-      });
-
-      if (cotyControlColorToggleButton) {
-        cotyControlColorToggleButton.addEventListener("click", () => {
-          cotyControlColorState.enabled = !cotyControlColorState.enabled;
-          syncControlColorUI();
-          saveControlColorState();
-          reapplyGeneratorState();
-        });
-      }
-
-      if (cotyControlColorResetButton) {
-        cotyControlColorResetButton.addEventListener("click", () => {
-          cotyControlColorState.enabled = false;
-          syncControlColorUI();
-          saveControlColorState();
           reapplyGeneratorState();
         });
       }
@@ -3215,7 +1910,6 @@
       } else {
         applyFromRoles(currentRoles(), name, currentPolicies(name));
       }
-      applyControlColorOverrides();
       updateCotySourceStepLabel();
       updateCotyOverrideOptionLabels();
     }
@@ -3305,14 +1999,7 @@
     }
 
     renderCotyOverrideControls();
-    populateCotyTokenUsageSelect();
     initCotyYearControl();
-    initControlColorControls();
-    if (cotyTokenUsageSelect) {
-      cotyTokenUsageSelect.addEventListener("change", () => {
-        updateCotyTokenUsagePanel();
-      });
-    }
 
     const presetNames = Object.keys(presets)
       .filter((name) => name !== "pantone")
@@ -3364,7 +2051,6 @@
     });
 
     resetButton.addEventListener("click", () => {
-      clearControlColorOverrides();
       clearTokens();
       const currentPalette =
         document.documentElement.getAttribute("data-palette") || "standard";
@@ -3381,6 +2067,8 @@
       const text = exportArea.value;
       try {
         await navigator.clipboard.writeText(text);
+        copyButton.classList.add("is-copied");
+        setTimeout(() => copyButton.classList.remove("is-copied"), 1500);
       } catch {
         exportArea.select();
       }
@@ -3524,7 +2212,6 @@
     window.addEventListener("theme:mode-changed", () => {
       syncCotyOverrideUIForYear(currentCotyYear());
       writeCotyControls(getCotyDraftForYear(currentCotyYear()));
-      syncControlColorUI();
       reapplyGeneratorState();
     });
 
