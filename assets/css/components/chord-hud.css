@@ -18,7 +18,7 @@
   color: var(--text-default);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-normal);
-  box-shadow: var(--shadow-01);
+  box-shadow: var(--shadow-03);
   pointer-events: none;
   white-space: nowrap;
 }

@@ -88,11 +88,15 @@
   color: var(--text-default);
 }
 
-/* Color Swatches */
 .color-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--spacing-16);
+  grid-template-columns: repeat(12, [col-start] 1fr);
+  column-gap: var(--spacing-24);
+  row-gap: var(--spacing-16);
+}
+
+.color-swatch {
+  grid-column: span 4; /* 3 per row */
 }
 
 .color-swatch {
@@ -102,6 +106,7 @@
 }
 
 .color-swatch__visual {
+  box-sizing: border-box;
   width: 100%;
   height: 80px;
   border-radius: 6px;
@@ -333,7 +338,7 @@
 @media (max-width: 47.9375em) {
   .token-preview-grid {
     grid-template-columns: repeat(4, [col-start] minmax(0, 1fr));
-    column-gap: var(--spacing-16);
+    column-gap: var(--spacing-12);
   }
 
   .token-preview-grid > .token-preview {
@@ -346,6 +351,7 @@
   .token-preview-grid > .token-preview {
     grid-column: span 4;
   }
+
 }
 
 .token-preview {
@@ -563,6 +569,19 @@
   column-gap: var(--spacing-24);
 }
 
+/* Cancel the responsive col-span collapse from grid.css — the demo always
+   shows the desktop 12-column system regardless of viewport width. */
+@media (max-width: 47.9375em) {
+  .grid-demo .col-span-5  { grid-column-end: span 5; }
+  .grid-demo .col-span-6  { grid-column-end: span 6; }
+  .grid-demo .col-span-7  { grid-column-end: span 7; }
+  .grid-demo .col-span-8  { grid-column-end: span 8; }
+  .grid-demo .col-span-9  { grid-column-end: span 9; }
+  .grid-demo .col-span-10 { grid-column-end: span 10; }
+  .grid-demo .col-span-11 { grid-column-end: span 11; }
+  .grid-demo .col-span-12 { grid-column-end: span 12; }
+}
+
 .grid-demo__item {
   padding: var(--spacing-16);
   background-color: var(--primary);
@@ -673,6 +692,7 @@
 .meta-item dd {
   margin: 0;
   font-size: var(--text-sm);
+  line-height: 2;
 }
 
 .meta-item code {
@@ -768,7 +788,12 @@
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .color-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--spacing-12);
+  }
+
+  .color-swatch {
+    grid-column: span 1; /* 2 per row */
   }
 
   .meta-item {

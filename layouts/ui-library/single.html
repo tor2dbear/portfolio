@@ -2684,7 +2684,7 @@
                 <code>--shadow-01</code>
               </p>
               <p class="type-information token-preview__value">
-                10/15/6 multi-layer
+                1/2 micro
               </p>
             </div>
             <div class="token-preview">
@@ -2707,7 +2707,7 @@
               <p class="type-information text-muted">
                 <code>--shadow-03</code>
               </p>
-              <p class="type-information token-preview__value">1/2 micro</p>
+              <p class="type-information token-preview__value">10/15/6 multi-layer</p>
             </div>
           </div>
         </details>
@@ -3942,12 +3942,12 @@
 
               <div class="component-examples">
                 <h5 class="type-headline-small">Toast</h5>
-                <div class="component-example-group">
+                <div class="component-example-group component-example-group--center">
                   <div
                     class="toast toast--visible"
                     role="status"
                     aria-live="polite"
-                    style="position: static; transform: none;"
+                    style="position: relative; transform: none;"
                   >
                     <span class="toast__icon" aria-hidden="true">
                       <svg>
@@ -4641,11 +4641,7 @@
                     <input
                       type="text"
                       id="input-text"
-                      placeholder="{{ if eq .Language.Lang "sv" }}
-                        Skriv något...
-                      {{ else }}
-                        Type something...
-                      {{ end }}"
+                      placeholder="{{ if eq .Language.Lang "sv" }}Skriv något...{{ else }}Type something...{{ end }}"
                     />
                   </div>
                   <div class="form-group">
@@ -4673,11 +4669,7 @@
                     <input
                       type="text"
                       id="input-disabled"
-                      value="{{ if eq .Language.Lang "sv" }}
-                        Kan inte ändras
-                      {{ else }}
-                        Cannot be changed
-                      {{ end }}"
+                      value="{{ if eq .Language.Lang "sv" }}Kan inte ändras{{ else }}Cannot be changed{{ end }}"
                       disabled
                     />
                   </div>
@@ -4693,11 +4685,7 @@
                       type="text"
                       id="input-error"
                       class="error"
-                      value="{{ if eq .Language.Lang "sv" }}
-                        Ogiltigt värde
-                      {{ else }}
-                        Invalid value
-                      {{ end }}"
+                      value="{{ if eq .Language.Lang "sv" }}Ogiltigt värde{{ else }}Invalid value{{ end }}"
                     />
                     <span class="form-error"
                       >{{ if eq .Language.Lang "sv" }}
@@ -4725,11 +4713,7 @@
                     >
                     <textarea
                       id="textarea-1"
-                      placeholder="{{ if eq .Language.Lang "sv" }}
-                        Skriv ditt meddelande här...
-                      {{ else }}
-                        Write your message here...
-                      {{ end }}"
+                      placeholder="{{ if eq .Language.Lang "sv" }}Skriv ditt meddelande här...{{ else }}Write your message here...{{ end }}"
                     ></textarea>
                     <span class="form-help"
                       >{{ if eq .Language.Lang "sv" }}
