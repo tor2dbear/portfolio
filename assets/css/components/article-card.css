@@ -38,9 +38,11 @@ article {
 .summary-card:hover .header-image {
   -webkit-filter: contrast(1.2);
   filter: contrast(1.2);
-  transition: -webkit-filter var(--motion-duration-xslow) var(--motion-ease-standard);
+  transition: -webkit-filter var(--motion-duration-xslow)
+    var(--motion-ease-standard);
   transition: filter var(--motion-duration-xslow) var(--motion-ease-standard);
-  transition: filter var(--motion-duration-xslow) var(--motion-ease-standard), -webkit-filter var(--motion-duration-xslow) var(--motion-ease-standard);
+  transition: filter var(--motion-duration-xslow) var(--motion-ease-standard),
+    -webkit-filter var(--motion-duration-xslow) var(--motion-ease-standard);
 }
 
 .related-items__image {
@@ -50,6 +52,15 @@ article {
 /* ==========================================================================
    List Page Grid Layout
    ========================================================================== */
+
+/* Base vertical rhythm for every list page. A `.use-subgrid` container
+   inherits the parent grid's columns + column-gap but NOT its row-gap, and
+   the article items carry `margin-bottom: 0`, so each list must set its own
+   row-gap. Without this, plain `.content.list` pages (writing, texter,
+   newsletter, post, taxonomy) collapse with no spacing between items. */
+.content.list {
+  row-gap: var(--spacing-32);
+}
 
 .content.list.tag-page {
   row-gap: var(--spacing-32);
