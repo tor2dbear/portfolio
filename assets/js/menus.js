@@ -13,7 +13,6 @@
             ARIA_HIDDEN = 'aria-hidden',
             MENU_OPEN = 0,
             MENU_CLOSED = 1,
-            MENU_PARENT_CLASS_NAME = 'pure-menu-has-children',
             MENU_ACTIVE_SELECTOR = '.pure-menu-active',
             MENU_LINK_SELECTOR = '.pure-menu-link',
             MENU_SELECTOR = '.pure-menu-children',
@@ -163,7 +162,7 @@
     function initDropdowns() {
         var dropdownParents = document.querySelectorAll('.pure-menu-has-children');
         for (var i = 0; i < dropdownParents.length; i++) {
-            var ddm = new PureDropdown(dropdownParents[i]);
+            new PureDropdown(dropdownParents[i]);
         }
     }
 

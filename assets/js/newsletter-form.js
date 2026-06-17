@@ -38,11 +38,11 @@
     var errorEl = form.querySelector(".mc-response--error");
     if (successEl) {
       successEl.style.display = isError ? "none" : "block";
-      if (!isError) successEl.textContent = message;
+      if (!isError) {successEl.textContent = message;}
     }
     if (errorEl) {
       errorEl.style.display = isError ? "block" : "none";
-      if (isError) errorEl.textContent = message;
+      if (isError) {errorEl.textContent = message;}
     }
   }
 
@@ -56,7 +56,7 @@
 
   function setLoading(form, isLoading) {
     var submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
-    if (!submitBtn) return;
+    if (!submitBtn) {return;}
     submitBtn.disabled = isLoading;
     if (isLoading) {
       submitBtn.setAttribute("data-original-text", submitBtn.value || submitBtn.textContent);

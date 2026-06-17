@@ -8,8 +8,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "eslint assets/js/**/*.js",
-    "lint:fix": "eslint assets/js/**/*.js --fix",
+    "lint": "eslint assets/js",
+    "lint:fix": "eslint assets/js --fix",
     "format": "prettier --write \"**/*.{js,json,md,html,css}\"",
     "format:check": "prettier --check \"**/*.{js,json,md,html,css}\"",
     "prepare": "husky"

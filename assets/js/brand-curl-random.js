@@ -3,12 +3,12 @@
  */
 (function () {
   const brandLoop = document.querySelector("[data-js=\"brand-loop\"]");
-  if (!brandLoop) return;
+  if (!brandLoop) {return;}
 
   const prefersReduced =
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefersReduced) return;
+  if (prefersReduced) {return;}
 
   const randomAttr = brandLoop.getAttribute("data-curl-random");
   if (randomAttr === null || randomAttr === "false" || randomAttr === "0") {
@@ -17,7 +17,7 @@
 
   const baseRaw = brandLoop.getAttribute("data-curl-base");
   const variantsRaw = brandLoop.getAttribute("data-curl-variants");
-  if (!baseRaw || !variantsRaw) return;
+  if (!baseRaw || !variantsRaw) {return;}
 
   let base;
   let variants;
@@ -28,7 +28,7 @@
     return;
   }
 
-  if (!Array.isArray(variants) || variants.length === 0) return;
+  if (!Array.isArray(variants) || variants.length === 0) {return;}
 
   const parseNumber = (value, fallback) => {
     const parsed = Number.parseFloat(value);
@@ -72,9 +72,9 @@
   const doubleChance = 0.2;
 
   const pickOtherVariant = (current) => {
-    if (activeVariants.length < 2) return null;
+    if (activeVariants.length < 2) {return null;}
     const pool = activeVariants.filter((variant) => variant !== current);
-    if (!pool.length) return null;
+    if (!pool.length) {return null;}
     return pool[Math.floor(Math.random() * pool.length)];
   };
 
@@ -90,7 +90,7 @@
     ? variants.filter((variant) => variant !== bridgeVariant)
     : variants;
 
-  if (activeVariants.length === 0) return;
+  if (activeVariants.length === 0) {return;}
 
   const bridgePath = bridgeVariant ? bridgeVariant.d : null;
   const sequence = shuffle(activeVariants);
@@ -205,14 +205,14 @@
     });
   });
 
-  if (t <= 0) return;
+  if (t <= 0) {return;}
 
   const keyTimes = times.map((time) =>
     (time / t).toFixed(6)
   );
 
   const path = brandLoop.querySelector(".brand__mark-loop-path");
-  if (!path) return;
+  if (!path) {return;}
 
   const existing = path.querySelector("animate");
   if (existing) {

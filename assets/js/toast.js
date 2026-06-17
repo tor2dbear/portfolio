@@ -41,7 +41,7 @@
     var scripts = document.querySelectorAll('script[src]');
     for (var i = scripts.length - 1; i >= 0; i -= 1) {
       var src = scripts[i].getAttribute('src') || scripts[i].src || '';
-      if (!src) continue;
+      if (!src) {continue;}
       if (src.indexOf('/js') !== -1 || src.indexOf('js.') !== -1) {
         try {
           return new URL('img/svg/sprite.svg?v=20260211b', src).toString();
@@ -55,7 +55,7 @@
 
   /** Resolve the sprite.svg base path from an existing <use> in the DOM */
   function getSpriteBase() {
-    if (spriteBase) return spriteBase;
+    if (spriteBase) {return spriteBase;}
     var uses = document.querySelectorAll('svg use');
     for (var i = 0; i < uses.length; i += 1) {
       var href = getUseHref(uses[i]);
@@ -64,7 +64,7 @@
         break;
       }
     }
-    if (!spriteBase) spriteBase = inferSpriteBaseFromScripts();
+    if (!spriteBase) {spriteBase = inferSpriteBaseFromScripts();}
     return spriteBase;
   }
 
@@ -75,15 +75,15 @@
   }
 
   function onTouchStart(e) {
-    if (!el || !el.classList.contains('toast--visible')) return;
-    if (!e.changedTouches || !e.changedTouches.length) return;
+    if (!el || !el.classList.contains('toast--visible')) {return;}
+    if (!e.changedTouches || !e.changedTouches.length) {return;}
     swipeTracking = true;
     swipeStartX = e.changedTouches[0].clientX;
     swipeStartY = e.changedTouches[0].clientY;
   }
 
   function onTouchMove(e) {
-    if (!swipeTracking || !e.changedTouches || !e.changedTouches.length) return;
+    if (!swipeTracking || !e.changedTouches || !e.changedTouches.length) {return;}
     var deltaY = e.changedTouches[0].clientY - swipeStartY;
     var deltaX = e.changedTouches[0].clientX - swipeStartX;
     if (deltaY < 0 && Math.abs(deltaY) > Math.abs(deltaX)) {
@@ -92,7 +92,7 @@
   }
 
   function onTouchEnd(e) {
-    if (!swipeTracking || !e.changedTouches || !e.changedTouches.length) return;
+    if (!swipeTracking || !e.changedTouches || !e.changedTouches.length) {return;}
     var deltaY = e.changedTouches[0].clientY - swipeStartY;
     var deltaX = e.changedTouches[0].clientX - swipeStartX;
     resetSwipe();
@@ -102,7 +102,7 @@
   }
 
   function getOrCreate() {
-    if (el) return el;
+    if (el) {return el;}
     el = document.createElement('div');
     el.className = 'toast';
     el.setAttribute('role', 'status');
@@ -133,7 +133,7 @@
   }
 
   function setIcon(iconId) {
-    if (!iconWrap) return;
+    if (!iconWrap) {return;}
     iconWrap.innerHTML = '';
     if (!iconId) {
       iconWrap.style.display = 'none';
@@ -175,7 +175,7 @@
   }
 
   function hide() {
-    if (!el) return;
+    if (!el) {return;}
     clearTimeout(hideTimer);
 
     el.classList.remove('toast--visible');
@@ -211,7 +211,7 @@
     var raw;
     try {
       raw = localStorage.getItem(PENDING_KEY);
-      if (raw) localStorage.removeItem(PENDING_KEY);
+      if (raw) {localStorage.removeItem(PENDING_KEY);}
     } catch (e) {
       return;
     }
@@ -246,7 +246,7 @@
 
   // Also handle bfcache restoration (back/forward navigation)
   window.addEventListener('pageshow', function (e) {
-    if (e.persisted) checkPendingToast();
+    if (e.persisted) {checkPendingToast();}
   });
 
   window.Toast = { show: show, hide: hide, queue: queue };
