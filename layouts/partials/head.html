@@ -556,18 +556,6 @@
   </script>
 
   <!-- JavaScript resources -->
-  {{/*  <script src="js/darkmode-initial.js" defer></script>
-  <script src="js/ui.js" defer></script>
-  <script src="js/header-line.js" defer></script>
-  <script src="js/header-hide.js" defer></script>
-  <script src="js/theme.js" defer></script>
-  <script src="js/darkmode.js" defer></script>
-  <script src="js/client-check.js" defer></script>
-  <script src="js/progressbar.js" defer></script>
-  {{ $mainJs := resources.Get "js/progressbar.js" | js.Build "main.js" | minify | fingerprint }}
-  <script src="{{ $mainJs.RelPermalink }}" defer></script>  */}}
-
-  <!-- JavaScript resources -->
   {{ $js1 := resources.Get "js/ui.js" }}
   {{ $js2 := resources.Get "js/header-line.js" }}
   {{ $js3 := resources.Get "js/header-hide.js" }}
