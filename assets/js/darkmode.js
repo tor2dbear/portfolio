@@ -413,15 +413,19 @@
     }
     document.documentElement.setAttribute("data-palette", palette);
 
-    const cotyActions = getCotyActions();
-    if (cotyActions) {
-      if (palette === "pantone") {
-        if (typeof cotyActions.applyForMode === "function") {
+    if (palette === "pantone") {
+      // Pantone needs the lazily-loaded CotyScale engine; load it on demand.
+      ensureCotyLoaded(function (cotyActions) {
+        if (cotyActions && typeof cotyActions.applyForMode === "function") {
           cotyActions.applyForMode(
             document.documentElement.getAttribute("data-mode") || "light"
           );
+          syncCotyPlayerUI();
         }
-      } else if (typeof cotyActions.clearRuntime === "function") {
+      });
+    } else {
+      const cotyActions = getCotyActions();
+      if (cotyActions && typeof cotyActions.clearRuntime === "function") {
         cotyActions.clearRuntime();
       }
     }
@@ -433,6 +437,57 @@
 
   function getCotyActions() {
     return window.CotyScaleActions || null;
+  }
+
+  // CotyScale (the Pantone engine, ~52KB) is not in the global bundle. It is
+  // loaded on demand the first time Pantone is needed. Callbacks queued before
+  // the script finishes loading all run once it is ready. `init()` is invoked
+  // on first load so applyForMode()/state is set up before callers use it.
+  const cotyLoadCallbacks = [];
+  let cotyLoadStarted = false;
+
+  function ensureCotyLoaded(callback) {
+    if (window.CotyScaleActions) {
+      if (callback) {
+        callback(window.CotyScaleActions);
+      }
+      return;
+    }
+    if (callback) {
+      cotyLoadCallbacks.push(callback);
+    }
+    if (cotyLoadStarted) {
+      return;
+    }
+    cotyLoadStarted = true;
+
+    const finish = (actions) => {
+      if (actions && typeof actions.init === "function") {
+        actions.init();
+      }
+      while (cotyLoadCallbacks.length) {
+        cotyLoadCallbacks.shift()(actions);
+      }
+    };
+
+    let script = document.querySelector("script[data-coty-scale]");
+    if (!script) {
+      const src = window.__cotyScaleSrc;
+      if (!src) {
+        finish(null);
+        return;
+      }
+      script = document.createElement("script");
+      script.src = src;
+      script.setAttribute("data-coty-scale", "");
+      document.head.appendChild(script);
+    }
+    script.addEventListener(
+      "load",
+      () => finish(window.CotyScaleActions || null),
+      { once: true }
+    );
+    script.addEventListener("error", () => finish(null), { once: true });
   }
 
   function getCurrentCotyYear() {
