@@ -38,6 +38,11 @@ module.exports = [
         cancelAnimationFrame: "readonly",
         Event: "readonly",
         KeyboardEvent: "readonly",
+        IntersectionObserver: "readonly",
+        AbortController: "readonly",
+        performance: "readonly",
+        sessionStorage: "readonly",
+        atob: "readonly",
         module: "readonly",
         require: "readonly",
         process: "readonly",
@@ -49,7 +54,10 @@ module.exports = [
     rules: {
       // Error prevention
       "no-console": ["warn", { allow: ["warn", "error"] }],
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", caughtErrors: "none" },
+      ],
       "no-undef": "error",
 
       // Best practices

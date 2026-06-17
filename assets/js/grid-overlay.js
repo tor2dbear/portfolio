@@ -31,7 +31,7 @@
   }
 
   function disable(showToast) {
-    if (closing) return;
+    if (closing) {return;}
     closing = true;
 
     document.documentElement.setAttribute("data-grid-animate", "");
@@ -85,7 +85,7 @@
   }
 
   function closeSettingsPanelOnMobile() {
-    if (!window.matchMedia("(max-width: 29.9375em)").matches) return;
+    if (!window.matchMedia("(max-width: 29.9375em)").matches) {return;}
 
     var settingsPanel = document.querySelector('[data-js="settings-panel"]');
     var settingsOverlay = document.querySelector('[data-js="settings-overlay"]');
@@ -117,7 +117,7 @@
 
   function updateFooterGrid(on) {
     var el = document.querySelector('[data-js="footer-grid"]');
-    if (!el) return;
+    if (!el) {return;}
     var btn = document.querySelector('[data-js="grid-toggle"]');
     var title = btn ? btn.getAttribute("data-toast-title") : "Grid";
     var label = on

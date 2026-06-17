@@ -41,7 +41,7 @@
         const href = this.getAttribute('href');
 
         // Skip if no href or if it's just "#"
-        if (!href || href === '#') return;
+        if (!href || href === '#') {return;}
 
         try {
           // Parse the URL
@@ -58,7 +58,7 @@
 
           // Extract the hash
           const hash = href.includes('#') ? href.split('#')[1] : null;
-          if (!hash) return;
+          if (!hash) {return;}
 
           // Find the target element
           const target = document.getElementById(hash);

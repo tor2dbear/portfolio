@@ -827,7 +827,7 @@
       }
 
       function resolveColorOf(varName) {
-        if (!probe) return "";
+        if (!probe) {return "";}
         probe.style.color = "var(" + varName + ")";
         return getComputedStyle(probe).color || "";
       }
@@ -1364,19 +1364,19 @@
           tagName === "TEXTAREA";
         const isAnyEditable = isTextEditable || tagName === "SELECT";
         if (evt.key === "ArrowLeft") {
-          if (isAnyEditable) return;
+          if (isAnyEditable) {return;}
           evt.preventDefault();
           shiftYear(-1);
           return;
         }
         if (evt.key === "ArrowRight") {
-          if (isAnyEditable) return;
+          if (isAnyEditable) {return;}
           evt.preventDefault();
           shiftYear(1);
           return;
         }
         if (evt.key === "Enter" && cotyApplyDraftButton) {
-          if (isTextEditable) return;
+          if (isTextEditable) {return;}
           evt.preventDefault();
           cotyApplyDraftButton.click();
         }

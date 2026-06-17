@@ -910,20 +910,6 @@
   // META TAG MANAGEMENT
   // ==========================================================================
 
-  function updateThemeColorMeta() {
-    const themeColorMetas = document.querySelectorAll('meta[name="theme-color"]');
-    if (!themeColorMetas.length) {
-      return;
-    }
-    var color = resolvePageColor();
-    themeColorMetas.forEach(function (meta) {
-      meta.setAttribute("content", color);
-    });
-    try {
-      localStorage.setItem("theme-color-cache", color);
-    } catch (e) {}
-  }
-
   function resolvePageColor() {
     var activeMode = document.documentElement.getAttribute("data-mode") || "light";
     var fallback = activeMode === "dark" ? "#18181b" : "#FFFFFF";
@@ -2144,7 +2130,7 @@
       requestAnimationFrame(function () {
         document.documentElement.classList.remove("theme-loading");
         var s = document.getElementById("theme-no-trans");
-        if (s) s.remove();
+        if (s) {s.remove();}
       });
     });
   });

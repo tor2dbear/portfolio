@@ -94,9 +94,9 @@
    */
   function extractRefFromReferrer(segment) {
     try {
-      if (!document.referrer) return null;
+      if (!document.referrer) {return null;}
       const referrerUrl = new URL(document.referrer);
-      if (referrerUrl.origin !== window.location.origin) return null;
+      if (referrerUrl.origin !== window.location.origin) {return null;}
       return extractRefFromPath(referrerUrl.pathname, segment);
     } catch (_error) {
       return null;
@@ -126,9 +126,9 @@
    * Update top menu contact button for focus mode
    */
   function updateContactButton(context) {
-    if (!context || !context.ref) return;
+    if (!context || !context.ref) {return;}
     const contactButton = document.querySelector('.top-menu__item--contact .top-menu__link--button');
-    if (!contactButton) return;
+    if (!contactButton) {return;}
 
     const path = window.location.pathname;
     const langPrefix = path.startsWith('/sv/') ? '/sv' : '';
@@ -144,8 +144,6 @@
     }
 
     const label = contactButton.querySelector('.top-menu__label--long');
-    const iconDefault = contactButton.querySelector('[data-focus-icon="contact-default"]');
-    const iconProfile = contactButton.querySelector('[data-focus-icon="contact-profile"]');
 
     if (label) {
       if (isRootContext) {
@@ -252,7 +250,7 @@
       : fallbackElement
       ? [fallbackElement]
       : [];
-    if (!elements.length) return;
+    if (!elements.length) {return;}
 
     // Build client page URL
     const clientPath = `/clients/${encodeURIComponent(clientRef)}/`;
@@ -284,7 +282,7 @@
       : fallbackElement
       ? [fallbackElement]
       : [];
-    if (!elements.length) return;
+    if (!elements.length) {return;}
 
     const employerPath = `/employers/${encodeURIComponent(employerRef)}/`;
     const employerName = decodeURIComponent(employerRef).replace(/-/g, ' ');
@@ -306,7 +304,7 @@
    * Update "back to client" links in table of contents
    */
   function updateTableOfContents(context) {
-    if (context.type !== CONFIG.VIEW_CLIENT || !context.ref) return;
+    if (context.type !== CONFIG.VIEW_CLIENT || !context.ref) {return;}
 
     const clientPath = `/clients/${encodeURIComponent(context.ref)}/`;
     const tocLinks = {
@@ -329,7 +327,7 @@
    * Filter related items by active client/employer ref
    */
   function filterRelatedItems(context) {
-    if (!context || !context.ref) return;
+    if (!context || !context.ref) {return;}
 
     if (context.type === CONFIG.VIEW_CLIENT) {
       const items = document.querySelectorAll('.related-items__item.show-on-client');
@@ -342,7 +340,7 @@
           .filter(Boolean);
         const matches = clients.includes(context.ref);
         item.style.display = matches ? '' : 'none';
-        if (matches) visibleCount += 1;
+        if (matches) {visibleCount += 1;}
       });
       if (title) {
         title.style.display = visibleCount > 0 ? '' : 'none';
@@ -360,7 +358,7 @@
           .filter(Boolean);
         const matches = employers.includes(context.ref);
         item.style.display = matches ? '' : 'none';
-        if (matches) visibleCount += 1;
+        if (matches) {visibleCount += 1;}
       });
       if (title) {
         title.style.display = visibleCount > 0 ? '' : 'none';

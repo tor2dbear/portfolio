@@ -28,7 +28,7 @@
     overlay.classList.remove('is-open');
     document.documentElement.classList.remove('lightbox-open');
     img.src = '';
-    if (previousFocus) previousFocus.focus();
+    if (previousFocus) {previousFocus.focus();}
   }
 
   document.addEventListener('click', function (e) {
@@ -40,12 +40,12 @@
   });
 
   overlay.addEventListener('click', function (e) {
-    if (e.target === overlay) close();
+    if (e.target === overlay) {close();}
   });
 
   closeBtn.addEventListener('click', close);
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && overlay.classList.contains('is-open')) close();
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) {close();}
   });
 })();

@@ -15,10 +15,10 @@
       setLanguage: function() {}
     };
 
-    if (!toggle || !panel) return;
+    if (!toggle || !panel) {return;}
 
     function setPendingToast(languageName) {
-      if (!languageName) return;
+      if (!languageName) {return;}
       try {
         localStorage.setItem('pending-toast', JSON.stringify({
           category: 'language',
@@ -29,18 +29,18 @@
     }
 
     function navigateByInput(input) {
-      if (!input) return;
+      if (!input) {return;}
       const href = input.getAttribute('data-language-href');
-      if (!href) return;
+      if (!href) {return;}
       const name = input.getAttribute('data-language-name') || '';
       setPendingToast(name);
       window.location.href = href;
     }
 
     function navigateByLanguageCode(code) {
-      if (!code) return;
+      if (!code) {return;}
       const input = document.querySelector(`input[type="radio"][data-language-code="${code}"][data-language-href]`);
-      if (!input) return;
+      if (!input) {return;}
       navigateByInput(input);
     }
 
@@ -50,13 +50,13 @@
     }
 
     function shouldUsePanelPortal() {
-      if (panel.hasAttribute('hidden')) return false;
-      if (!window.matchMedia('(min-width: 30em)').matches) return false;
+      if (panel.hasAttribute('hidden')) {return false;}
+      if (!window.matchMedia('(min-width: 30em)').matches) {return false;}
       return isGridActive();
     }
 
     function ensurePanelPortalOrigin() {
-      if (panel.__portalPlaceholder) return;
+      if (panel.__portalPlaceholder) {return;}
       const placeholder = document.createComment('dropdown-portal-anchor');
       panel.parentNode.insertBefore(placeholder, panel);
       panel.__portalPlaceholder = placeholder;
@@ -70,7 +70,7 @@
       const gutter = 8;
 
       let left = toggleRect.right - panelWidth;
-      if (left < gutter) left = gutter;
+      if (left < gutter) {left = gutter;}
       if (left + panelWidth > viewportWidth - gutter) {
         left = viewportWidth - panelWidth - gutter;
       }
@@ -93,7 +93,7 @@
     }
 
     function restorePanelPortal(panelEl) {
-      if (!panelEl || !panelEl.classList.contains('dropdown-panel--portal')) return;
+      if (!panelEl || !panelEl.classList.contains('dropdown-panel--portal')) {return;}
 
       const placeholder = panelEl.__portalPlaceholder;
       if (placeholder && placeholder.parentNode) {
@@ -129,7 +129,7 @@
       if (isHidden) {
         closeThemePanel();
         panel.removeAttribute('hidden');
-        if (overlay) overlay.removeAttribute('hidden');
+        if (overlay) {overlay.removeAttribute('hidden');}
         toggle.setAttribute('aria-expanded', 'true');
         syncLanguagePanelPortal();
       } else {
@@ -140,7 +140,7 @@
     function closePanel() {
       if (panel && !panel.hasAttribute('hidden')) {
         panel.setAttribute('hidden', '');
-        if (overlay) overlay.setAttribute('hidden', '');
+        if (overlay) {overlay.setAttribute('hidden', '');}
         toggle.setAttribute('aria-expanded', 'false');
         syncLanguagePanelPortal();
       }
@@ -153,8 +153,8 @@
 
       if (themePanel && !themePanel.hasAttribute('hidden')) {
         themePanel.setAttribute('hidden', '');
-        if (themeOverlay) themeOverlay.setAttribute('hidden', '');
-        if (themeToggle) themeToggle.setAttribute('aria-expanded', 'false');
+        if (themeOverlay) {themeOverlay.setAttribute('hidden', '');}
+        if (themeToggle) {themeToggle.setAttribute('aria-expanded', 'false');}
         restorePanelPortal(themePanel);
       }
     }
@@ -235,7 +235,7 @@
         }
       });
 
-      panel.addEventListener('touchend', function(e) {
+      panel.addEventListener('touchend', function () {
         const deltaY = touchCurrentY - touchStartY;
 
         panel.style.transition = 'transform 0.3s ease-in-out';

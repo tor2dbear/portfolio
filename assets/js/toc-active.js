@@ -16,10 +16,10 @@
 
   function initTocActive() {
     const toc = document.querySelector(".toc");
-    if (!toc) return;
+    if (!toc) {return;}
 
     const links = Array.from(toc.querySelectorAll("[data-toc-link]"));
-    if (!links.length) return;
+    if (!links.length) {return;}
 
     const sections = Array.from(document.querySelectorAll("[data-toc-section]"));
     const linkIds = new Set(
@@ -31,19 +31,19 @@
       setActiveLink(links, initialId);
     } else {
       const firstId = links[0].getAttribute("data-toc-link");
-      if (firstId) setActiveLink(links, firstId);
+      if (firstId) {setActiveLink(links, firstId);}
     }
 
-    if (!("IntersectionObserver" in window) || !sections.length) return;
-    if (typeof IntersectionObserver !== "function") return;
+    if (!("IntersectionObserver" in window) || !sections.length) {return;}
+    if (typeof IntersectionObserver !== "function") {return;}
 
     let activeId = null;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+          if (!entry.isIntersecting) {return;}
           const id = entry.target.getAttribute("data-toc-section");
-          if (!id || id === activeId || !linkIds.has(id)) return;
+          if (!id || id === activeId || !linkIds.has(id)) {return;}
           activeId = id;
           setActiveLink(links, id);
         });
@@ -55,7 +55,7 @@
       }
     );
 
-    if (!observer || typeof observer.observe !== "function") return;
+    if (!observer || typeof observer.observe !== "function") {return;}
 
     sections.forEach((section) => observer.observe(section));
   }
