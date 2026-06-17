@@ -96,10 +96,11 @@ function scoreToPoints(score) {
   return Number.isFinite(points) ? points : null;
 }
 
-function pickTopOpportunities(lhr, maxItems = 5) {
+function pickTopOpportunities(lhr, maxItems = 5, ignoreAudits = new Set()) {
   const items = [];
   const audits = lhr?.audits ?? {};
   for (const [auditId, audit] of Object.entries(audits)) {
+    if (ignoreAudits.has(auditId)) continue;
     const details = audit?.details;
     if (!details || details.type !== "opportunity") continue;
     const savingsMs = asInt(details.overallSavingsMs, 0);
@@ -168,7 +169,7 @@ function aggregateLighthouseRuns(lighthouseRuns) {
   return aggregated;
 }
 
-async function parseLighthouse(lighthouseDir) {
+async function parseLighthouse(lighthouseDir, ignoreAudits = new Set()) {
   const files = await listFilesRecursive(lighthouseDir);
   const lhrFiles = files.filter((f) => path.basename(f).startsWith("lhr-") && f.endsWith(".json"));
   const results = [];
@@ -186,7 +187,7 @@ async function parseLighthouse(lighthouseDir) {
         bestPractices: scoreToPoints(lhr?.categories?.["best-practices"]?.score),
         seo: scoreToPoints(lhr?.categories?.seo?.score),
       },
-      opportunities: pickTopOpportunities(lhr),
+      opportunities: pickTopOpportunities(lhr, 5, ignoreAudits),
     });
   }
 
@@ -421,9 +422,11 @@ async function main() {
   let lighthouseRunsAggregated = null;
   let axeRuns = null;
 
+  const ignoreLighthouseAudits = new Set(policy?.policy?.backlog?.ignoreLighthouseAudits ?? []);
+
   if (lighthouseDir) {
     try {
-      lighthouseRuns = await parseLighthouse(lighthouseDir);
+      lighthouseRuns = await parseLighthouse(lighthouseDir, ignoreLighthouseAudits);
       lighthouseRunsAggregated = aggregateLighthouseRuns(lighthouseRuns);
     } catch (err) {
       lighthouseRuns = null;

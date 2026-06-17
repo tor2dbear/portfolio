@@ -43,3 +43,11 @@ policy:
   backlog:
     axeImpacts:
       - minor
+
+    # Lighthouse opportunity audits to exclude from "Backlog candidates".
+    # CI serves the build with `python3 -m http.server`, which never gzips
+    # and sends no cache headers. These audits therefore report huge (false)
+    # savings and drown out real items. Production (Netlify) brotli/gzip-
+    # compresses all text, so this audit does not apply there.
+    ignoreLighthouseAudits:
+      - uses-text-compression
