@@ -1,7 +1,7 @@
 {{ partial "header.html" . }}
 
 {{ $style := resources.Get "css/clientpage.css" }}
-{{ $css := slice $style | resources.Concat "employer.css" }}
+{{ $css := slice $style | resources.Concat "employer.css" | minify | fingerprint }}
 
 
 <link
@@ -19,20 +19,31 @@
 <div class="content application-page use-subgrid">
   <nav class="application-breadcrumb show-on-employer reveal">
     <ul>
-      <li class="application-breadcrumb__item application-breadcrumb__item--caps">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--caps"
+      >
+        <a
+          class="application-breadcrumb__link"
+          href="{{ .Site.BaseURL | relLangURL }}"
+        >
           <svg class="icon icon--sm" aria-hidden="true">
-            <use href="{{ "img/svg/sprite.svg?v=20260211b" | absURL }}#icon-home"></use>
+            <use
+              href="{{ "img/svg/sprite.svg?v=20260211b" | absURL }}#icon-home"
+            ></use>
           </svg>
           <span>Start</span>
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | absURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | absURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-page__company application-breadcrumb__item--muted application-breadcrumb__item--caps">
+      <li
+        class="application-breadcrumb__item application-page__company application-breadcrumb__item--muted application-breadcrumb__item--caps"
+      >
         {{ .Params.company_name }}
       </li>
     </ul>
@@ -41,7 +52,9 @@
 
   <!-- Main column -->
   <div class="application-page__main" style="--col: col-start 1 / span 8">
-    <div class="application-page__section application-page__section--letter reveal">
+    <div
+      class="application-page__section application-page__section--letter reveal"
+    >
       <!-- put this just above the section you wanna go to -->
       <a id="letter" data-toc-section="letter"></a>
       <h3 class="type-headline-small section-headline">Letter</h3>
@@ -56,7 +69,9 @@
       <div class="type-information is-muted application-page__meta">
         {{ partial "date.html" . }}
       </div>
-      <p class="type-body">{{ with .Params.body }}{{ . | safeHTML }}{{ end }}</p>
+      <p class="type-body">
+        {{ with .Params.body }}{{ . | safeHTML }}{{ end }}
+      </p>
       <!-- Mobile downloads: all downloads after Letter section -->
       <div class="download-inline">
         <h3 class="type-headline-small section-headline">Download</h3>
@@ -88,7 +103,9 @@
     </div>
 
     <!-- Contact section moved to main column -->
-    <div class="application-page__section application-page__section--contact reveal">
+    <div
+      class="application-page__section application-page__section--contact reveal"
+    >
       <a id="contact" class="anchor-offset" data-toc-section="contact"></a>
       <h3 class="type-headline-small section-headline">Contact</h3>
       {{ partial "contact_info.html" . }}
@@ -101,7 +118,9 @@
     <div class="application-page__sidebar-sticky reveal reveal--delay">
       <!-- Table of Contents -->
       <ul class="toc">
-        <li class="toc__header"><h3 class="type-headline-small">Table of content</h3></li>
+        <li class="toc__header">
+          <h3 class="type-headline-small">Table of content</h3>
+        </li>
         <li class="toc__item">
           <a href="#letter" data-toc-link="letter">Letter</a>
         </li>
@@ -119,9 +138,7 @@
       <!-- Downloads -->
       <div class="download-list">
         <a id="download"></a>
-        <h3 class="type-headline-small section-headline">
-          Download
-        </h3>
+        <h3 class="type-headline-small section-headline">Download</h3>
         {{/* Supports both absolute paths (/images/file.pdf) and page bundle resources (file.pdf) */}}
         {{ partial "download-card.html" (dict "page" . "path" .Params.attach_letter "label" "Letter + CV") }}
         {{ partial "download-card.html" (dict "page" . "path" .Params.attach_portfolio "label" "Portfolio") }}

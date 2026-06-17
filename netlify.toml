@@ -92,3 +92,17 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Hugo fingerprints all CSS/JS (content hash in the filename), so they can be
+# cached forever — a content change produces a new URL. Every referenced .css
+# and .js bundle is fingerprinted (the page-bundles, the main bundle, the
+# lazy/standalone scripts, and the client/employer/print bundles).
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
