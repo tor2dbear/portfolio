@@ -380,6 +380,16 @@
   {{ end }}
 
   {{ $isDevBuild := or hugo.IsServer (eq hugo.Environment "development") }}
+
+  {{/* CotyScale = the Pantone palette engine (~52KB). It is NOT bundled
+       globally; it loads only where Pantone can actually be shown: pages where
+       Pantone is already the active palette (injected by the inline script
+       below), the palette generator, the ui-library, or on demand when a
+       visitor switches to Pantone (see darkmode.js ensureCotyLoaded()). */}}
+  {{ $cotyScaleJs := resources.Get "js/coty-scale.js" }}
+  {{ if not $isDevBuild }}
+    {{ $cotyScaleJs = $cotyScaleJs | minify | fingerprint }}
+  {{ end }}
   <!-- CSS loading -->
   {{ if $isDevBuild }}
     <!-- CSS development -->
@@ -530,6 +540,26 @@
       var storedTypography = localStorage.getItem("theme-typography") || "editorial";
       document.documentElement.setAttribute("data-typography", storedTypography);
 
+      // CotyScale (Pantone engine) is lazy-loaded. Expose its URL for
+      // darkmode.js, and when Pantone is already active inject it now — before
+      // the deferred bundle — so returning Pantone users get their scale with
+      // no flash (the cached --coty-role-surface above bridges the gap).
+      window.__cotyScaleSrc = "{{ $cotyScaleJs.RelPermalink }}";
+      if (storedPalette === "pantone") {
+        var cotyScript = document.createElement("script");
+        cotyScript.src = window.__cotyScaleSrc;
+        cotyScript.setAttribute("data-coty-scale", "");
+        cotyScript.onload = function () {
+          if (
+            window.CotyScaleActions &&
+            typeof window.CotyScaleActions.init === "function"
+          ) {
+            window.CotyScaleActions.init();
+          }
+        };
+        document.head.appendChild(cotyScript);
+      }
+
       // Suppress CSS transitions during initial paint so permanent transitions
       // on elements like .top-menu don't animate from the browser default to the
       // correct palette color. Lifted after init via double-rAF in darkmode.js.
@@ -547,7 +577,6 @@
   {{ $js3 := resources.Get "js/header-hide.js" }}
   {{ $js_toast := resources.Get "js/toast.js" }}
   {{ $js_theme_derive := resources.Get "js/theme-derive.js" | default (resources.FromString "js/theme-derive-fallback.js" "(function(){window.ThemeDerive=window.ThemeDerive||{};})();") }}
-  {{ $js_coty_scale := resources.Get "js/coty-scale.js" }}
   {{ $js4 := resources.Get "js/darkmode.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
@@ -569,6 +598,13 @@
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
+  {{/* Pantone engine: eager only where it is always needed (palette generator
+       + ui-library). Placed before the other defer scripts so it executes
+       before darkmode.js. Pantone-active pages inject it from the inline head
+       script; everyone else loads it on demand via ensureCotyLoaded(). */}}
+  {{ if or $isPaletteGeneratorPage $isUiLibraryPage }}
+    <script src="{{ $cotyScaleJs.RelPermalink }}" data-coty-scale defer></script>
+  {{ end }}
   {{ if $isDevBuild }}
     <!-- JavaScript development -->
     <script src="{{ $js1.RelPermalink }}" defer></script>
@@ -576,7 +612,6 @@
     <script src="{{ $js3.RelPermalink }}" defer></script>
     <script src="{{ $js_toast.RelPermalink }}" defer></script>
     <script src="{{ $js_theme_derive.RelPermalink }}" defer></script>
-    <script src="{{ $js_coty_scale.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
@@ -607,7 +642,7 @@
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_coty_scale $js4 $js5 $js6 $js8 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}
