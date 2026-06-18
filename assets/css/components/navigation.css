@@ -45,6 +45,13 @@ html[data-grid-overlay] .top-menu {
   z-index: 800;
 }
 
+/* Header-carried grain — reuses .grain-overlay styling but is clipped to the
+   header so it stays fixed with the sticky header on mobile. Hidden by default;
+   only shown at the mobile breakpoint where the header sticks (see below). */
+.grain-overlay--nav {
+  display: none;
+}
+
 /* ==========================================================================
    Navigation Lists
    ========================================================================== */
@@ -259,6 +266,17 @@ html[data-grid-overlay] .top-menu {
 
   :root {
     --size-header-height-neg: -4.5rem;
+  }
+
+  /* Lift the sticky header above the page grain (z 850) so its opaque surface
+     hides the scrolling grain, then show the header's own grain — which moves
+     with the header — so the effect stays put while the header is fixed. */
+  .top-menu {
+    z-index: 851;
+  }
+
+  .grain-overlay--nav {
+    display: block;
   }
 
   .top-menu.relative {
