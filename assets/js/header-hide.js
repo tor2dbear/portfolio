@@ -101,6 +101,16 @@
           curDirection = 0;
           prevDirection = 0;
           lastY = prevScroll;
+          // Start in-flow when at the top so the very first downward scroll moves
+          // the header with the page immediately. Otherwise the header only gets
+          // '.relative' if a scroll event happens to fire while curScroll < 10,
+          // which a fast flick after reload can skip — leaving it stuck (sticky)
+          // until the hide threshold (300px) is crossed.
+          if (prevScroll < 10) {
+            header.classList.add('relative');
+          } else {
+            header.classList.remove('relative');
+          }
           w.addEventListener('scroll', checkScroll);
       };
 
