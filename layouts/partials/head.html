@@ -738,6 +738,18 @@
   {{ end }}
 
 
+  <!-- Cloudflare Web Analytics (cookieless, production only) -->
+  {{ with .Site.Params.cloudflare_analytics_token }}
+    {{ if not $isDevBuild }}
+      <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "{{ . }}"}'
+      ></script>
+    {{ end }}
+  {{ end }}
+
+
   <!-- Custom JS -->
   {{ range .Site.Params.custom_js }}
     {{ if findRE "https?://" . }}

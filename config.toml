@@ -139,6 +139,11 @@ DefaultContentLanguage = "en"
   newsletter_email_field = "EMAIL"
   dateFormat = "02 Jan 2006, 15:04"
   mainSections = ['writing', 'texter', 'newsletter', 'works']
+  # Cloudflare Web Analytics site token (cookieless, privacy-friendly).
+  # Get it from the Cloudflare dashboard → Analytics & Logs → Web Analytics →
+  # Add a site. The beacon loads in production builds only (see partials/head.html).
+  # Leave empty to disable.
+  cloudflare_analytics_token = ""
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]

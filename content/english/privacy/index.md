@@ -12,7 +12,7 @@ In line with GDPR and to be transparent, this page explains what data I collect 
 - Newsletter sign‑ups: email address submitted via the form in the footer.
 - Contact form: name, email address, subject, and message.
 
-This site does not use first‑party analytics or tracking cookies. However, some third‑party services may set cookies, such as Google reCAPTCHA (used on the contact form).
+For aggregate visitor statistics I use Cloudflare Web Analytics. It is privacy‑first: it sets no cookies, does not fingerprint you, and does not collect any personal data — it only records anonymous, aggregated metrics such as page views and referrers. This site uses no tracking cookies of its own. However, some third‑party services may set cookies, such as Google reCAPTCHA (used on the contact form).
 
 I also use Google Search Console to understand how visitors find the site via Google Search. This does not give me access to personal data about you.
 
