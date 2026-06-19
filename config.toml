@@ -143,7 +143,7 @@ DefaultContentLanguage = "en"
   # Get it from the Cloudflare dashboard → Analytics & Logs → Web Analytics →
   # Add a site. The beacon loads in production builds only (see partials/head.html).
   # Leave empty to disable.
-  cloudflare_analytics_token = ""
+  cloudflare_analytics_token = "c6c51a6ea4c246019358361804383602"
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
