@@ -141,9 +141,13 @@ DefaultContentLanguage = "en"
   mainSections = ['writing', 'texter', 'newsletter', 'works']
   # Cloudflare Web Analytics site token (cookieless, privacy-friendly).
   # Get it from the Cloudflare dashboard → Analytics & Logs → Web Analytics →
-  # Add a site. The beacon loads in production builds only (see partials/head.html).
-  # Leave empty to disable.
+  # Add a site. The beacon loads only when the build's baseURL host matches
+  # cloudflare_analytics_host below, so deploy previews (Netlify, GitHub Pages)
+  # never emit it and pollute production stats. Leave the token empty to disable.
   cloudflare_analytics_token = "c6c51a6ea4c246019358361804383602"
+  # Canonical production host the beacon is allowed to run on. Must match the
+  # host of the baseURL used for the production build.
+  cloudflare_analytics_host = "www.tor-bjorn.com"
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]

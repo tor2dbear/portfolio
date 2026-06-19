@@ -738,9 +738,18 @@
   {{ end }}
 
 
-  <!-- Cloudflare Web Analytics (cookieless, production only) -->
+  <!-- Cloudflare Web Analytics (cookieless, production host only) -->
+  {{/* Gate on the canonical production host, not just $isDevBuild: deploy
+       previews (Netlify deploy-preview/branch-deploy, GitHub Pages) build with
+       `hugo --minify` and no HUGO_ENV, so Hugo defaults to the production
+       environment and would otherwise emit the beacon under a preview URL,
+       polluting production analytics. Comparing the build's baseURL host to the
+       configured production host suppresses the beacon everywhere except the
+       real production build. */}}
   {{ with .Site.Params.cloudflare_analytics_token }}
-    {{ if not $isDevBuild }}
+    {{ $prodHost := $.Site.Params.cloudflare_analytics_host }}
+    {{ $buildHost := (urls.Parse $.Site.BaseURL).Hostname }}
+    {{ if and (not $isDevBuild) $prodHost (eq $buildHost $prodHost) }}
       <script
         defer
         src="https://static.cloudflareinsights.com/beacon.min.js"
