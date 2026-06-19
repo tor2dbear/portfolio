@@ -13,7 +13,7 @@ I enlighet med GDPR och för att vara transparent beskriver jag här vilken data
 - Nyhetsbrev: e‑postadress som skickas via formuläret i sidfoten.
 - Kontaktformulär: namn, e‑postadress, ämne och meddelande.
 
-Sajten använder inga egna analysverktyg eller förstapartscookies. Däremot kan vissa tredjepartstjänster sätta cookies, till exempel Google reCAPTCHA (används i kontaktformuläret).
+För övergripande besöksstatistik använder jag Cloudflare Web Analytics. Det är integritetsvänligt: det sätter inga cookies, fingeravtryckar dig inte och samlar inte in några personuppgifter — det registrerar endast anonym, aggregerad statistik som sidvisningar och hänvisande källor. Sajten använder inga egna spårningscookies. Däremot kan vissa tredjepartstjänster sätta cookies, till exempel Google reCAPTCHA (används i kontaktformuläret).
 
 Jag använder även Google Search Console för att förstå hur besökare hittar hit via Google. Det ger mig inte tillgång till personuppgifter om dig.
 
