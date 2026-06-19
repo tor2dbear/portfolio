@@ -1,11 +1,12 @@
 {{ partial "header.html" . }}
 
+
 <div class="content list works-list use-subgrid">
   <div class="post-header">
-    <h2 class="type-headline-small">{{ .Title }}</h2>
+    <h1 class="type-headline-small">{{ .Title }}</h1>
   </div>
   {{ range where .Data.Pages ".Params.hidden" "!=" true }}
-    {{ .Render "summary"}}
+    {{ .Render "summary" }}
   {{ end }}
 </div>
 
