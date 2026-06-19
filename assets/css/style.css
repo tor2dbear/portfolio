@@ -557,7 +557,7 @@ video {
 }
 
 .grain-overlay::before {
-  background-image: url("../img/svg/grain-black.svg");
+  background-image: url("img/svg/grain-black.svg");
   background-size: 720px 720px;
   background-position: 0 0;
   mix-blend-mode: multiply;
@@ -565,7 +565,7 @@ video {
 }
 
 .grain-overlay::after {
-  background-image: url("../img/svg/grain-white.svg");
+  background-image: url("img/svg/grain-white.svg");
   background-size: 940px 940px;
   background-position: 18px 12px;
   mix-blend-mode: screen;
