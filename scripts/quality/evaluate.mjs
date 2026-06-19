@@ -391,11 +391,34 @@ function formatMarkdown({ policy, mode, lighthouseRuns, axeRuns, blockers, runUr
     }
   }
 
-  backlogItems.sort((a, b) => b.weight - a.weight);
-  const topBacklog = backlogItems.slice(0, 10);
+  // Collapse duplicates: the same Lighthouse audit (or axe violation) is
+  // reported on every run and every route, so one recurring finding would
+  // otherwise fill the entire list and bury everything else. Group by
+  // kind+title, keep the highest weight, and track the distinct routes hit.
+  const byFinding = new Map();
+  for (const item of backlogItems) {
+    const key = `${item.kind}:${item.title}`;
+    const existing = byFinding.get(key);
+    if (existing) {
+      existing.weight = Math.max(existing.weight, item.weight);
+      existing.routes.add(item.route);
+    } else {
+      byFinding.set(key, {
+        kind: item.kind,
+        title: item.title,
+        weight: item.weight,
+        routes: new Set([item.route]),
+      });
+    }
+  }
+
+  const dedupedBacklog = [...byFinding.values()].sort((a, b) => b.weight - a.weight);
+  const topBacklog = dedupedBacklog.slice(0, 10);
   if (topBacklog.length === 0) lines.push("- None");
   for (const item of topBacklog) {
-    lines.push(`- ${item.kind} on \`${item.route}\`: ${safeMarkdown(item.title)}`);
+    const routes = [...item.routes].sort();
+    const scope = routes.length === 1 ? `\`${routes[0]}\`` : `${routes.length} routes`;
+    lines.push(`- ${item.kind} (${scope}): ${safeMarkdown(item.title)}`);
   }
 
   lines.push("");
