@@ -11,6 +11,41 @@ body {
   scroll-padding-top: calc(var(--size-header-height) + var(--spacing-16));
 }
 
+/* || ========== Skip link (a11y) --------------------------------- */
+/* The first focusable element on the page. Hidden off-screen but kept in
+   the tab order, then slides into the top-left over the header when focused
+   (Tab). Styled to match the chord HUD. Targets #main (tabindex="-1"). */
+.skip-link {
+  position: fixed;
+  top: var(--spacing-16);
+  left: var(--spacing-16);
+  z-index: 1300;
+  padding: var(--spacing-8) var(--spacing-12);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-8);
+  background: color-mix(in srgb, var(--surface-page) 92%, transparent);
+  color: var(--text-default);
+  font-size: var(--text-xs);
+  text-decoration: none;
+  box-shadow: var(--shadow-03);
+  transform: translateY(calc(-100% - var(--spacing-24)));
+  transition: transform var(--motion-duration-fast, 150ms)
+    var(--motion-ease-standard, ease);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  box-shadow: var(--shadow-03), var(--ring-focus);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+
 /* || ========== Transitions ------------------------------------- */
 
 /* Theme-swap transition for theme-driven surfaces, text, borders, and icons. */

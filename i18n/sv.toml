@@ -405,3 +405,9 @@ other = "Det här nyhetsbrevet finns inte på svenska."
 
 [newsletter_back_to_sv]
 other = "Tillbaka till nyhetsbrev."
+
+[skip_to_content]
+other = "Hoppa till innehåll"
+
+[pagination_label]
+other = "Sidnavigering"

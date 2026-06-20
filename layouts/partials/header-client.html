@@ -4,8 +4,9 @@
 {{ partial "head.html" . }}
 
 <body>
+<a class="skip-link" href="#main">{{ i18n "skip_to_content" }}</a>
 <div id="layout">
 
   {{ partial "topmenu.html" . }}
 
-  <main id="main" class="application-main">
+  <main id="main" class="application-main" tabindex="-1">
