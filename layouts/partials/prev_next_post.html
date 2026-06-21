@@ -2,14 +2,14 @@
 <div class="post-nav pure-g">
   <div class="post-nav__col pure-u-10-24">
     {{ if .PrevInSection }}
-    <nav class="post-nav__prev">
+    <nav class="post-nav__prev" aria-label="{{ i18n "previous_post" }}">
       <a class="post-nav__link" href="{{ .PrevInSection.Permalink }}">{{ .PrevInSection.Title }}</a>
     </nav>
     {{ end }}
   </div>
   <div class="post-nav__col pure-u-10-24">
     {{ if .NextInSection }}
-    <nav class="post-nav__next">
+    <nav class="post-nav__next" aria-label="{{ i18n "next_post" }}">
       <a class="post-nav__link" href="{{ .NextInSection.Permalink }}">{{ .NextInSection.Title }}</a>
     </nav>
     {{ end }}

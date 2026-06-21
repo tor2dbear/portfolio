@@ -411,3 +411,12 @@ other = "Hoppa till innehåll"
 
 [pagination_label]
 other = "Sidnavigering"
+
+[previous_post]
+other = "Föregående inlägg"
+
+[next_post]
+other = "Nästa inlägg"
+
+[breadcrumb_label]
+other = "Brödsmulor"

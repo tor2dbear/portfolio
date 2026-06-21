@@ -40,9 +40,18 @@ body {
   outline: none;
 }
 
+/* Respect the OS "reduce motion" preference globally: near-instant
+   transitions/animations everywhere (components like accordion, tabs,
+   lightbox, toggles and the chord HUD weren't covered before). JS-driven
+   reveals (reveal-on-scroll.js) already short-circuit under this preference. */
 @media (prefers-reduced-motion: reduce) {
-  .skip-link {
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

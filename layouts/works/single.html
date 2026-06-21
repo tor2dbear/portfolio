@@ -1,7 +1,7 @@
 {{ partial "header.html" . }}
 
 <div class="content post works-post use-subgrid">
-  <nav class="application-breadcrumb show-on-client">
+  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb show-on-client">
     <ul>
       <li class="application-breadcrumb__item">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
@@ -28,7 +28,7 @@
       <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
   </nav>
-  <nav class="application-breadcrumb show-on-employer">
+  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb show-on-employer">
     <ul>
       <li class="application-breadcrumb__item">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
@@ -96,7 +96,7 @@
     {{ partial "project-info.html" . }}
   {{ end }}
 
-  <nav class="application-breadcrumb application-breadcrumb--footer show-on-client">
+  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb application-breadcrumb--footer show-on-client">
     <ul>
       <li class="application-breadcrumb__item">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
@@ -123,7 +123,7 @@
       <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
     </ul>
   </nav>
-  <nav class="application-breadcrumb application-breadcrumb--footer show-on-employer">
+  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb application-breadcrumb--footer show-on-employer">
     <ul>
       <li class="application-breadcrumb__item">
         <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
