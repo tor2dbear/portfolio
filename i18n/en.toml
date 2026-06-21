@@ -411,3 +411,9 @@ other = "This newsletter is not available in Swedish."
 
 [newsletter_back_to_sv]
 other = "Back to newsletters."
+
+[skip_to_content]
+other = "Skip to content"
+
+[pagination_label]
+other = "Pagination"
