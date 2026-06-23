@@ -417,3 +417,12 @@ other = "Skip to content"
 
 [pagination_label]
 other = "Pagination"
+
+[previous_post]
+other = "Previous post"
+
+[next_post]
+other = "Next post"
+
+[breadcrumb_label]
+other = "Breadcrumb"
