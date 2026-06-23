@@ -19,9 +19,14 @@ permissions:
   contents: write
 
 concurrency:
-  # Serialize with itself so two cleanups never race a push to gh-pages.
-  group: gh-pages-cleanup
-  cancel-in-progress: false
+  # Share the per-branch lane with the preview deploy (gh-pages.yml) so a
+  # cleanup and an in-flight deploy for the SAME branch are serialized: the
+  # cleanup (newer, fired on PR close) cancels a still-running deploy before it
+  # can push the preview folder back. Cleanups of *different* branches may run
+  # in parallel; the rebase-and-retry push below keeps those from clobbering
+  # each other.
+  group: preview-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   cleanup:
