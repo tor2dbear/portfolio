@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24" class="a">
-    <style>.b{stroke-linecap: round; stroke-width: 1.5; stroke: #000; fill: none; stroke-linejoin: round;}.a{}</style>
-    <polyline points="8.25 14.25 12 18 15.75 14.25" class="b"></polyline>
-    <line x1="12" x2="12" y1="6.75" y2="18" class="b"></line>
-    <circle cx="12" cy="12" r="11.25" class="b"></circle>
-</svg>
