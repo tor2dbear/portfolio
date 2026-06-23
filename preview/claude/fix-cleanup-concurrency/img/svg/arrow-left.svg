@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24" class="a">
-    <style>.b{stroke-linecap: round; stroke-width: 1.5; stroke: #000; fill: none; stroke-linejoin: round;}.c{stroke-linecap: round; stroke-width: 1.5; fill-rule: evenodd; stroke: #000; fill: none; stroke-linejoin: round;}.a{}</style>
-    <line x1="23.25" x2=".75" y1="12" y2="12" class="b"></line>
-    <polyline points="11.25 1.5 .75 12 11.25 22.5" class="c"></polyline>
-</svg>
