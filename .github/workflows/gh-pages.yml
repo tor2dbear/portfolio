@@ -75,6 +75,10 @@ jobs:
           keep_files: true
 
       - name: Wait for GitHub Pages deployment
+        # Non-fatal: GitHub Pages serving lags behind the (successful) deploy,
+        # so a timeout here must not fail the whole job. The preview link is
+        # still posted below and goes live a little later.
+        continue-on-error: true
         run: |
           URL="https://tor2dbear.github.io/portfolio/preview/${{ env.PREVIEW_BRANCH }}/"
           echo "Waiting for $URL to be available..."
