@@ -11,12 +11,14 @@ set -euo pipefail
 # - 1 => run build
 #
 # Policy:
-# - Always skip deploy previews (PRs). GitHub Pages handles previews in this repo.
-# - Skip non-main branches unless the commit message includes "[netlify]".
+# - Always build production (main/master).
+# - Always build deploy previews (PRs). These are non-metered on Netlify (they
+#   consume no credits) and replace the previous GitHub Pages preview flow.
+# - Skip other branch deploys unless the commit message includes "[netlify]".
 
 if [[ "${CONTEXT:-}" == "deploy-preview" ]]; then
-  echo "Skipping Netlify deploy preview build (CONTEXT=deploy-preview)."
-  exit 0
+  echo "Building Netlify deploy preview (CONTEXT=deploy-preview)."
+  exit 1
 fi
 
 branch="${BRANCH:-}"

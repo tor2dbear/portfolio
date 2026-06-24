@@ -4,8 +4,9 @@
 [build]
   publish = "public"
   command = "hugo --minify --baseURL $URL"
-  # Skip all preview builds - use GitHub Pages for previews instead
-  # To force a Netlify preview, add [netlify] to your commit message
+  # Deploy Previews (PRs) build automatically and are non-metered (free).
+  # Non-PR branch builds are skipped unless the commit message contains [netlify].
+  # See scripts/netlify/ignore.sh for the full policy.
   ignore = "bash scripts/netlify/ignore.sh"
 
 [build.environment]

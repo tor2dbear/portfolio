@@ -47,6 +47,10 @@ jobs:
       - name: Build
         run: hugo --minify
 
+      - name: Security audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
   quality:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
