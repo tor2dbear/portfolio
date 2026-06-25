@@ -13,17 +13,13 @@
   <h3 class="about-main__headline type-headline-3">
     I also write about design, and try to make sense of how the work is changing.
   </h3>
-  <p class="about-main__text type-body">
-    Mostly about how it works in practice — tools, processes, the craft around it.
-  </p>
-  {{ if $recentWriting }}
-  <h4 class="type-headline-small">Recent writing</h4>
-  <ul class="about-main__writing-list type-body">
-    {{ range $recentWriting }}
-    <li class="about-main__writing-item"><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-    {{ end }}
-  </ul>
+  {{ $links := slice }}
+  {{ range $recentWriting }}
+    {{ $links = $links | append (printf `<a href="%s">%s</a>` .RelPermalink .Title) }}
   {{ end }}
+  <p class="about-main__text type-body">
+    Mostly about how it works in practice — tools, processes, the craft around it.{{ with $links }} Lately I've written {{ delimit . ", " " and " | safeHTML }}.{{ end }}
+  </p>
   <p class="about-main__text type-body">
     Get in touch if any of this is interesting.
   </p>

@@ -1003,16 +1003,9 @@ p:empty {
   margin-bottom: 0;
 }
 
-.about-main__writing-list {
-  margin-bottom: var(--spacing-24);
-}
-
-/* Give the recent-writing links a comfortable, non-overlapping tap target
-   (the bare text links were ~25px tall — below the ~48px touch minimum). */
-.about-main__writing-item a {
-  display: inline-block;
-  padding-block: var(--spacing-12);
-}
+/* Recent-writing links now live inline in the about prose (no list), so no
+   dedicated spacing rule is needed — inline text links are exempt from the
+   tap-target minimum. */
 
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
