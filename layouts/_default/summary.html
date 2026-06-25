@@ -1,7 +1,7 @@
 <article>
   <header class="summary-card">
     <div class="summary-card__image header-image">
-      <a href="{{ .RelPermalink }}">{{ partial "headerimage.html" . }}</a>
+      <a href="{{ .RelPermalink }}" aria-hidden="true" tabindex="-1">{{ partial "headerimage.html" . }}</a>
     </div>
 
     <h2 class="summary-card__title">

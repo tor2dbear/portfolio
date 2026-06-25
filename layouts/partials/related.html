@@ -28,7 +28,7 @@
     {{ end }}
     <article class="related-items__item reveal {{ $delayClass }}">
       <div class="related-items__image">
-        <a href="{{ $page.RelPermalink }}">{{ partial "headerimage.html" $page }}</a>
+        <a href="{{ $page.RelPermalink }}" aria-hidden="true" tabindex="-1">{{ partial "headerimage.html" $page }}</a>
       </div>
       <header class="related-items__header">
         <h2 class="type-headline-4">

@@ -1007,6 +1007,13 @@ p:empty {
   margin-bottom: var(--spacing-24);
 }
 
+/* Give the recent-writing links a comfortable, non-overlapping tap target
+   (the bare text links were ~25px tall — below the ~48px touch minimum). */
+.about-main__writing-item a {
+  display: inline-block;
+  padding-block: var(--spacing-12);
+}
+
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
 /* reCAPTCHA */
