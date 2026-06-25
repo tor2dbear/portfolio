@@ -1,5 +1,13 @@
-{{ .Scratch.Set "src" (.Resources.GetMatch (printf "%s*" .Params.header_image)) }}
-{{ $src := .Scratch.Get "src" }}
+{{/* Header / summary-card image. Used for summary cards (home featured,
+     related, taxonomy lists) and the contact portrait — never a full-bleed
+     hero, so resolution-switching (srcset width descriptors + sizes) is the
+     right tool, not art-direction. */}}
+{{ $page := . }}
+{{ $src := .Resources.GetMatch (printf "%s*" .Params.header_image) }}
+
+{{/* Pages may legitimately have no header image (empty header_image / no
+     resource in the bundle); render nothing rather than dereferencing nil. */}}
+{{ with $src }}
 
 {{/* Check file format. Originally from: https://hugomodo.github.io/blog/image-processing-and-svgs/ */}}
 {{ $pathArr := split $src "." }}
@@ -15,67 +23,37 @@
     </video>
   </div>
 {{ else }}
-  {{ .Scratch.Set "small" ($src.Resize "500x webp") }}
-  {{ .Scratch.Set "medium" ($src.Resize "800x webp") }}
-  {{ .Scratch.Set "large" ($src.Resize "1200x webp") }}
-  {{ .Scratch.Set "xlarge" ($src.Resize "1500x webp") }}
-  {{ .Scratch.Set "xxlarge" ($src.Resize "2000x webp") }}
-  {{ .Scratch.Set "fallback" ($src.Resize "1200x jpg") }}
+  {{/* Resolution-switching: one webp srcset with width descriptors, the
+       browser picks the smallest candidate that satisfies (sizes-width × DPR).
+       Skip candidates wider than the original so Hugo never upscales. */}}
+  {{ $widths := slice 500 800 1200 1500 2000 }}
+  {{ $srcset := slice }}
+  {{ range $widths }}
+    {{ if ge $src.Width . }}
+      {{ $img := $src.Resize (printf "%dx webp" .) }}
+      {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink .) }}
+    {{ end }}
+  {{ end }}
+  {{/* If the original is narrower than the smallest candidate, offer it as-is. */}}
+  {{ if not $srcset }}
+    {{ $img := $src.Resize (printf "%dx webp" $src.Width) }}
+    {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink $src.Width) }}
+  {{ end }}
 
-  {{ $small := .Scratch.Get "small" }}
-  {{ $medium := .Scratch.Get "medium" }}
-  {{ $large := .Scratch.Get "large" }}
-  {{ $xlarge := .Scratch.Get "xlarge" }}
-  {{ $xxlarge := .Scratch.Get "xxlarge" }}
-  {{ $fallback := .Scratch.Get "fallback" }}
+  {{/* sizes mirrors the real layout: full width on mobile (all cards stack to
+       span-4 ≤767px), and at most the wide card's ~66vw on larger screens.
+       Mobile is what Lighthouse audits, where 100vw is exact. */}}
+  {{ $sizes := "(max-width: 767px) 100vw, 66vw" }}
 
-  {{/* Size-based image breakpoints (performance). No art-direction crops here. */}}
+  {{ $fallbackWidth := cond (lt $src.Width 1200) $src.Width 1200 }}
+  {{ $fallback := $src.Resize (printf "%dx jpg" $fallbackWidth) }}
+
   <picture>
-    <source
-      media="(max-width: 376px) and (max-resolution: 1dppx),
-              (max-width: 376px) and (-webkit-max-device-pixel-ratio: 1)"
-      srcset="{{ $small.Permalink }}"
-    />
-    <source
-      media="(max-width: 376px) and (min-resolution: 2dppx),
-              (max-width: 376px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $large.Permalink }}"
-    />
-    <source
-      media="(max-width: 992px) and (max-resolution: 1dppx),
-              (max-width: 992px) and (-webkit-max-device-pixel-ratio: 1)"
-      srcset="{{ $medium.Permalink }}"
-    />
-    <source
-      media="(max-width: 992px) and (min-resolution: 2dppx),
-              (max-width: 992px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $xlarge.Permalink }}"
-    />
-    <source
-      media="(max-width: 1400px) and (min-resolution: 1dppx),
-              (max-width: 1400px) and (-webkit-min-device-pixel-ratio: 1)"
-      srcset="{{ $large.Permalink }}"
-    />
-    <source
-      media="(max-width: 1400px) and (min-resolution: 2dppx),
-              (max-width: 1400px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $xxlarge.Permalink }}"
-    />
-    <source
-      media="(min-width: 1401px) and (min-resolution: 1dppx),
-              (min-width: 1401px) and (-webkit-min-device-pixel-ratio: 1)"
-      srcset="{{ $xlarge.Permalink }}"
-    />
-    <source
-      media="(min-width: 1401px) and (min-resolution: 2dppx),
-              (min-width: 1401px) and (-webkit-min-device-pixel-ratio: 2)"
-      srcset="{{ $xxlarge.Permalink }}"
-    />
-
+    <source type="image/webp" srcset="{{ delimit $srcset ", " }}" sizes="{{ $sizes }}" />
     <img
-      alt="{{ .Title }}"
-      title="{{ .Title }}"
-      src="{{ $fallback.Permalink }}"
+      alt="{{ $page.Title }}"
+      title="{{ $page.Title }}"
+      src="{{ $fallback.RelPermalink }}"
       height="{{ $src.Height }}"
       width="{{ $src.Width }}"
       loading="lazy"
@@ -83,4 +61,6 @@
       class="img-fluid"
     />
   </picture>
+{{ end }}
+
 {{ end }}

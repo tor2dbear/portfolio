@@ -294,30 +294,31 @@ git fetch --prune
 - **Build**: Automatic on push to main/master
 
 ### Preview Builds
-Preview builds use **GitHub Pages** instead of Netlify to save build credits.
+Preview builds use **Netlify Deploy Previews**. These are non-metered on Netlify
+(they consume no credits), so there is no longer a reason to host previews on
+GitHub Pages — keeping the repo free to go private without breaking previews.
 
 **How it works**:
-1. Push to any non-main/master branch triggers GitHub Actions
-2. Hugo builds with branch-specific baseURL
-3. Deploys to GitHub Pages at `/preview/<branch-name>/`
+1. Opening/updating a PR against main/master triggers a Netlify Deploy Preview
+2. Hugo builds with the deploy-preview baseURL (`--buildDrafts --buildFuture`)
+3. Netlify posts the preview link as a PR check / comment automatically
 
-**Preview URLs**:
-- Branch `feature/new-thing-a1b2` → `https://tor2dbear.github.io/portfolio/preview/feature/new-thing-a1b2/`
-- PR comments automatically include preview link
+The build gate lives in `scripts/netlify/ignore.sh`: production and deploy
+previews always build; other branch deploys are skipped unless the commit
+message contains `[netlify]`.
 
-### Forcing a Netlify Preview
-By default, Netlify skips all non-production builds. To force a Netlify preview:
-
-**Add `[netlify]` to your commit message**:
+### Forcing a Netlify build on a non-PR branch
+Branch deploys (pushes to a branch without an open PR) are skipped by default.
+To force one, **add `[netlify]` to your commit message**:
 ```bash
 git commit -m "feat: my changes [netlify]"
 ```
 
-This triggers a full Netlify deploy preview with all Netlify features (redirects, headers, etc.).
-
 ### Configuration Files
-- **GitHub Actions**: `.github/workflows/gh-pages.yml`
-- **Netlify**: `netlify.toml`
+- **Netlify**: `netlify.toml` (production + deploy previews) and
+  `scripts/netlify/ignore.sh` (build gate)
+- **GitHub Actions**: `.github/workflows/pr-checks.yml` (lint, tests, build,
+  Lighthouse/axe quality gate)
 
 ---
 

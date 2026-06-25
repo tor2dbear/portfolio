@@ -29,7 +29,9 @@ Workflow: `.github/workflows/pr-checks.yml`
 - Posts/updates a sticky PR comment: “CI Quality Report”
 - Fails the workflow only on **BLOCKERS** (per `quality-policy.yml`)
 
-Preview deploys are handled separately by `.github/workflows/gh-pages.yml`.
+Preview deploys are handled by **Netlify Deploy Previews** (free / non-metered),
+built automatically for every PR against main. The build gate lives in
+`scripts/netlify/ignore.sh`.
 
 ## Run locally
 
