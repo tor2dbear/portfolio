@@ -1003,9 +1003,22 @@ p:empty {
   margin-bottom: 0;
 }
 
-/* Recent-writing links now live inline in the about prose (no list), so no
-   dedicated spacing rule is needed — inline text links are exempt from the
-   tap-target minimum. */
+/* Recent-writing links now live inline in the about prose (no list). Give them
+   a clear in-text affordance — underline + the iris link colour — rather than
+   leaving them indistinguishable from body text. Underline + colour (not colour
+   alone) keeps it accessible. Inline text links stay exempt from the tap-target
+   minimum. */
+.about-main__text a {
+  color: var(--text-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.about-main__text a:hover,
+.about-main__text a:focus-visible {
+  color: var(--text-link-hover);
+}
 
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
