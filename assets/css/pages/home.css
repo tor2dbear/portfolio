@@ -144,6 +144,29 @@
   font-size: var(--text-xl);
 }
 
+/* Works grid responds to the layout dimension. The card spans are set inline
+   as var(--works-span-*, <column default>), so column (no override) keeps the
+   asymmetric 8+4 / 4+8 rhythm. Editorial goes full-width and dramatic; index
+   becomes a dense, uniform 3-up contact sheet. Only affects >= 48em — mobile
+   always collapses to one column via the grid's --col-sm fallback. */
+@media (min-width: 48em) {
+  :root[data-layout="editorial"] {
+    --works-span-wide: span 12;
+    --works-span-compact: span 12;
+  }
+
+  :root[data-layout="index"] {
+    --works-span-wide: span 4;
+    --works-span-compact: span 4;
+  }
+
+  /* In the uniform index grid, drop the wide cards' larger title so every
+     cell reads the same. */
+  :root[data-layout="index"] .works-section .summary-card--wide .summary-card__title {
+    font-size: var(--text-xl);
+  }
+}
+
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .works-section .summary-card__title {
