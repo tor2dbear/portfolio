@@ -918,7 +918,13 @@
   }
 
   function applyLayout(layout) {
-    document.documentElement.setAttribute("data-layout", layout);
+    var root = document.documentElement;
+    root.setAttribute("data-layout", layout);
+    // The measure (max-width, a direct var()) repaints immediately, but some
+    // engines defer recomputing calc(var()) on the inherited font-size until a
+    // reflow is forced — so the type size would otherwise only update on the
+    // next scroll. Reading a layout property flushes that synchronously.
+    void root.offsetWidth;
   }
 
   function updateLayoutUI(currentLayout) {
