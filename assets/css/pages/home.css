@@ -221,9 +221,57 @@
 }
 
 .home-page .contact-info {
-  --col: col-start 1 / span 6;
+  --col: var(--contact-info-col, col-start 1 / span 6);
   grid-column: var(--col);
   grid-row: 1;
+}
+
+/* Column usage of the about + contact sections varies by layout (>= 48em;
+   mobile always stacks). Column keeps today's arrangement via the fallbacks. */
+@media (min-width: 48em) {
+  /* Contact split: column 6/6, editorial 4/8 (portrait-forward),
+     index 7/5 (info-forward). */
+  :root[data-layout="editorial"] {
+    --contact-info-col: col-start 1 / span 4;
+    --contact-portrait-col: col-start 5 / span 8;
+  }
+
+  :root[data-layout="index"] {
+    --contact-info-col: col-start 1 / span 7;
+    --contact-portrait-col: col-start 8 / span 5;
+  }
+
+  /* About: editorial stacks the three blocks full-width; index packs them
+     into a dense 3-up row. Column keeps the diagonal stepped-6-6 default.
+     --col-md/--col-lg are set too, otherwise stepped-6-6's own tablet
+     overrides (--col-md) would win between 48-64em. */
+  :root[data-layout="editorial"] .about-content > * {
+    --col: col-start 1 / span 12;
+    --col-lg: col-start 1 / span 12;
+    --col-md: col-start 1 / span 12;
+    --row: auto;
+  }
+
+  :root[data-layout="index"] .about-content > :nth-child(1) {
+    --col: col-start 1 / span 4;
+    --col-lg: col-start 1 / span 4;
+    --col-md: col-start 1 / span 4;
+    --row: 1;
+  }
+
+  :root[data-layout="index"] .about-content > :nth-child(2) {
+    --col: col-start 5 / span 4;
+    --col-lg: col-start 5 / span 4;
+    --col-md: col-start 5 / span 4;
+    --row: 1;
+  }
+
+  :root[data-layout="index"] .about-content > :nth-child(3) {
+    --col: col-start 9 / span 4;
+    --col-lg: col-start 9 / span 4;
+    --col-md: col-start 9 / span 4;
+    --row: 1;
+  }
 }
 
 /* sm: <= 47.9375em */
