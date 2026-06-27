@@ -12,6 +12,6 @@
   --layout-heading-gap: var(--spacing-16);
   --layout-col-gap: var(--spacing-16);
   --layout-row-gap: var(--spacing-16);
-  --layout-scale-ratio: 0.95;
+  --layout-scale-ratio: 0.9;
   --layout-prose-rhythm: 0.8;
 }
