@@ -2,7 +2,7 @@
 
 /* Grid Templates */
 [class*="grid-template-"] {
-  column-gap: 1.5rem;
+  column-gap: var(--layout-col-gap);
   display: grid;
 }
 

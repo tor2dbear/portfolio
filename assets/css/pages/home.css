@@ -8,7 +8,7 @@
 .home-section {
   display: grid;
   grid-column: 1 / -1;
-  padding: var(--spacing-64) 0;
+  padding: var(--layout-section-rhythm) 0;
   scroll-margin-top: calc(var(--size-header-height) + var(--spacing-16));
 }
 
@@ -23,12 +23,12 @@
 @supports not (grid-template-columns: subgrid) {
   .home-page {
     grid-template-columns: repeat(12, [col-start] 1fr);
-    column-gap: var(--spacing-24);
+    column-gap: var(--layout-col-gap);
   }
 
   .home-section {
     grid-template-columns: repeat(12, [col-start] 1fr);
-    column-gap: var(--spacing-24);
+    column-gap: var(--layout-col-gap);
   }
 }
 
@@ -58,7 +58,7 @@
 }
 
 .section-heading {
-  margin-bottom: var(--spacing-32);
+  margin-bottom: var(--layout-heading-gap);
   text-align: left;
   color: var(--text-default);
   font-family: var(--font-ui);
@@ -71,7 +71,7 @@
 
 /* Hero Section */
 .hero-section {
-  padding: var(--spacing-96) 0;
+  padding: var(--layout-hero-rhythm) 0;
 }
 
 .hero-title {
@@ -80,7 +80,7 @@
   line-height: 1.4;
   font-size: calc(
     clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl)) *
-      var(--type-scale-display)
+      var(--type-scale-display) * var(--layout-scale-ratio)
   );
   letter-spacing: var(--display-tracking);
 }

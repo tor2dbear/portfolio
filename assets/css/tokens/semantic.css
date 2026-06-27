@@ -203,6 +203,20 @@
     rgba(0, 0, 0, 0.08) 0px 2px 6px -2px;
   --shadow-03: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+
+  /* === LAYOUT (composition) ===
+     Spatial-structure knobs for the (planned) data-layout dimension.
+     Defaults equal today's hardcoded values, so introducing this layer is a
+     visual no-op. Overridden per document via
+     html[data-layout="column|editorial|index"]. Same pattern as the
+     --state-mix-* knobs above. */
+  --layout-section-rhythm: var(--spacing-64);
+  --layout-hero-rhythm: var(--spacing-96);
+  --layout-heading-gap: var(--spacing-32);
+  --layout-col-gap: var(--spacing-24);
+  --layout-row-gap: var(--spacing-32);
+  --layout-measure: var(--measure-prose);
+  --layout-scale-ratio: 1;
 }
 
 :root[data-state-intensity="soft"] {
