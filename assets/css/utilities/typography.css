@@ -422,6 +422,15 @@ figcaption {
    An optional .prose-measure class is available as a safety net for prose
    content that renders outside the grid (e.g. CMS embeds). */
 .prose-measure :is(p, ul, ol, blockquote, table) {
+  max-width: var(--measure-prose);
+}
+
+/* Reading measure + vertical rhythm respond to the active layout dimension.
+   Defaults (column) resolve to today's values, so this is a no-op there;
+   editorial narrows the measure and opens the rhythm, index tightens it.
+   Applied to text elements (not the container) so images/galleries can still
+   bleed full width. */
+.prose :is(p, h2, h3, ul, ol, blockquote, table) {
   max-width: var(--layout-measure);
 }
 
@@ -432,22 +441,22 @@ figcaption {
   color: var(--text-default);
   letter-spacing: var(--tracking-normal);
   text-wrap-style: pretty;
-  margin-bottom: var(--spacing-24);
+  margin-bottom: calc(var(--spacing-24) * var(--layout-prose-rhythm));
 }
 
 .prose h2 {
-  margin-top: var(--spacing-48);
-  margin-bottom: var(--spacing-16);
+  margin-top: calc(var(--spacing-48) * var(--layout-prose-rhythm));
+  margin-bottom: calc(var(--spacing-16) * var(--layout-prose-rhythm));
 }
 
 .prose h3 {
-  margin-top: var(--spacing-32);
-  margin-bottom: var(--spacing-12);
+  margin-top: calc(var(--spacing-32) * var(--layout-prose-rhythm));
+  margin-bottom: calc(var(--spacing-12) * var(--layout-prose-rhythm));
 }
 
 .prose ul,
 .prose ol {
-  margin-bottom: var(--spacing-24);
+  margin-bottom: calc(var(--spacing-24) * var(--layout-prose-rhythm));
   padding-left: var(--spacing-24);
   font-family: var(--font-body);
   font-size: var(--text-lg);

@@ -14,4 +14,5 @@
   --layout-col-gap: var(--spacing-32);
   --layout-measure: var(--measure-wide);
   --layout-scale-ratio: 1.15;
+  --layout-prose-rhythm: 1.25;
 }

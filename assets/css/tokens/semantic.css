@@ -215,8 +215,13 @@
   --layout-heading-gap: var(--spacing-32);
   --layout-col-gap: var(--spacing-24);
   --layout-row-gap: var(--spacing-32);
-  --layout-measure: var(--measure-prose);
+  /* Prose reading-measure cap. `none` = uncapped (today's column behaviour);
+     editorial narrows it. NOT consumed by .prose-measure (that keeps its own
+     fixed cap). */
+  --layout-measure: none;
   --layout-scale-ratio: 1;
+  /* Multiplier on prose vertical rhythm (paragraph/heading spacing). 1 = today. */
+  --layout-prose-rhythm: 1;
 }
 
 :root[data-state-intensity="soft"] {
