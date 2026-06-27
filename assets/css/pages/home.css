@@ -161,8 +161,8 @@
   }
 
   /* In the uniform index grid, drop the wide cards' larger title so every
-     cell reads the same. */
-  :root[data-layout="index"] .works-section .summary-card--wide .summary-card__title {
+     cell reads the same (homepage works + works/tag listings). */
+  :root[data-layout="index"] .summary-card--wide .summary-card__title {
     font-size: var(--text-xl);
   }
 }
