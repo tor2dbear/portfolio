@@ -180,7 +180,7 @@
 }
 
 .about-content {
-  row-gap: var(--spacing-32);
+  row-gap: calc(var(--spacing-32) * var(--layout-prose-rhythm));
 }
 
 /* Placement now handled by .stepped-6-6 on parent (.about-content) */

@@ -302,7 +302,10 @@ h3,
 /* Type: Headline 4 */
 h4,
 .type-headline-4 {
-  font-size: clamp(var(--text-xl), calc(1.167rem + 0.417vw), var(--text-3xl));
+  font-size: calc(
+    clamp(var(--text-xl), calc(1.167rem + 0.417vw), var(--text-3xl)) *
+      var(--layout-scale-ratio)
+  );
   text-wrap: pretty;
 }
 
@@ -349,7 +352,7 @@ h5,
 
 /* Type: Body */
 .type-body {
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--layout-scale-ratio));
   line-height: var(--line-height-normal);
   color: var(--text-default);
   font-family: var(--font-body);

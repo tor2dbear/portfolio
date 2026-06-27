@@ -1,8 +1,10 @@
 /* Footer Component Styles */
 
 .footer {
-  padding: var(--spacing-48) 0;
-  margin-top: var(--spacing-64);
+  /* Light layout response: the footer breathes with the active layout's
+     vertical rhythm, but its type stays fixed (utilitarian chrome). */
+  padding: calc(var(--spacing-48) * var(--layout-prose-rhythm)) 0;
+  margin-top: calc(var(--spacing-64) * var(--layout-prose-rhythm));
 }
 
 .footer-container {
