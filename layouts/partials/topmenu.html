@@ -21,17 +21,9 @@
           {{- end -}}
         {{- end -}}
 
-        {{- /* Theme dropdown (mode + palette) */ -}}
-        <li class="top-menu__item top-menu__item--theme">
-          {{ partial "theme-dropdown.html" . }}
-        </li>
-
-        {{- /* Language dropdown */ -}}
-        <li class="top-menu__item top-menu__item--language">
-          {{ partial "language-dropdown.html" . }}
-        </li>
-
-        {{- /* Settings dropdown (xs only) */ -}}
+        {{- /* Settings panel — single combined control (mode + typography +
+               layout + effects + language) at all breakpoints. Desktop:
+               dropdown popover. Mobile: bottom sheet. */ -}}
         <li class="top-menu__item top-menu__item--settings">
           {{ partial "settings-dropdown.html" . }}
         </li>

@@ -58,14 +58,20 @@
       el.classList.add('dropdown-panel--portal');
     }
 
+    // Only the mobile bottom sheet portals to <body>. At >= 30em the panel is
+    // an anchored dropdown popover and must stay inside its relative container.
+    function isMobileSheet() {
+      return !window.matchMedia('(min-width: 30em)').matches;
+    }
+
     function syncSettingsPortal() {
       const open = panel && !panel.hasAttribute('hidden');
-      if (open) {
+      if (open && isMobileSheet()) {
         mountPortal(panel);
         if (overlay) {mountPortal(overlay);}
         return;
       }
-      if (isGridActive()) {
+      if (isGridActive() && isMobileSheet()) {
         return;
       }
       restorePortal(panel);

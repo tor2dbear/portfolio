@@ -3,7 +3,7 @@
    ============================================================================ */
 
 .settings-dropdown {
-  display: none;
+  display: block;
   position: relative;
 }
 
@@ -130,12 +130,44 @@
   visibility: visible;
 }
 
-/* xs: <= 29.9375em */
-@media (max-width: 29.9375em) {
-  .settings-dropdown {
-    display: block;
+/* ≥ 30em: render as an anchored dropdown popover (not a bottom sheet).
+   Values mirror the proven .theme-panel popover it replaces. The panel is
+   NOT portaled at this width (see settings-dropdown.js), so absolute
+   positioning anchors it under the toggle. */
+@media (min-width: 30em) {
+  .settings-panel {
+    --theme-panel-width: 304px;
+    position: absolute;
+    top: calc(100% + var(--spacing-8));
+    right: var(--spacing-8);
+    left: auto;
+    bottom: auto;
+    width: var(--theme-panel-width);
+    min-width: var(--theme-panel-width);
+    max-width: var(--theme-panel-width);
+    max-height: calc(100vh - var(--size-header-height) - var(--spacing-24));
+    overflow-y: auto;
+    border-radius: var(--spacing-12);
+    padding: var(--spacing-16) var(--spacing-12);
+    transform: translateY(calc(var(--spacing-8) * -1));
   }
 
+  .settings-panel:not([hidden]) {
+    transform: translateY(0);
+  }
+
+  /* No mobile-sheet drag handle or full-screen scrim on desktop. */
+  .settings-panel::before {
+    display: none;
+  }
+
+  .settings-overlay {
+    display: none;
+  }
+}
+
+/* xs: <= 29.9375em */
+@media (max-width: 29.9375em) {
   .settings-panel .toggle-switch__shortcut {
     display: none;
   }

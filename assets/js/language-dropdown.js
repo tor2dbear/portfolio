@@ -1,6 +1,11 @@
 /**
- * Language Dropdown Toggle
- * Handles opening/closing the language selection panel
+ * Language navigation + (optional) dropdown panel.
+ *
+ * Language switching binds the radio inputs globally and exposes
+ * window.LanguageActions, so it works from the unified settings panel even
+ * though the standalone language dropdown panel/toggle has been retired.
+ * The legacy panel code below the guard only runs if `.language-panel` is
+ * present in the DOM.
  */
 
 (function() {
@@ -10,12 +15,6 @@
     const toggle = document.querySelector('.language-toggle');
     const panel = document.querySelector('.language-panel');
     const overlay = document.querySelector('.language-overlay');
-
-    window.LanguageActions = window.LanguageActions || {
-      setLanguage: function() {}
-    };
-
-    if (!toggle || !panel) {return;}
 
     function setPendingToast(languageName) {
       if (!languageName) {return;}
@@ -43,6 +42,20 @@
       if (!input) {return;}
       navigateByInput(input);
     }
+
+    // Navigation works regardless of the legacy panel — the language radio
+    // inputs live in the settings panel.
+    window.LanguageActions = { setLanguage: navigateByLanguageCode };
+
+    document.querySelectorAll('input[type="radio"][data-language-href]').forEach(function(input) {
+      input.addEventListener('change', function() {
+        navigateByInput(input);
+      });
+    });
+
+    // Everything below drives the standalone language dropdown panel, which is
+    // optional. When it is absent (unified settings panel), we stop here.
+    if (!toggle || !panel) {return;}
 
     function isGridActive() {
       const value = document.documentElement.getAttribute('data-grid-overlay');
@@ -159,10 +172,6 @@
       }
     }
 
-    window.LanguageActions = {
-      setLanguage: navigateByLanguageCode
-    };
-
     // Toggle on click
     toggle.addEventListener('click', togglePanel);
     syncLanguagePanelPortal();
@@ -199,12 +208,6 @@
       if (e.key === 'Escape') {
         closePanel();
       }
-    });
-
-    document.querySelectorAll('input[type="radio"][data-language-href]').forEach(function(input) {
-      input.addEventListener('change', function() {
-        navigateByInput(input);
-      });
     });
 
     // Touch support for swipe-to-close on mobile bottom sheet
