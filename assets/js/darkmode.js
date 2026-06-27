@@ -25,6 +25,7 @@
   let cotyStopButtons;
   let cotyShuffleButtons;
   let typographyOptions;
+  let layoutOptions;
   let effectBlendButtons;
   let effectGrainButtons;
   let effectMotionButtons;
@@ -882,6 +883,48 @@
     typographyOptions.forEach((option) => {
       const typography = option.getAttribute("data-typography");
       if (typography === currentTypography) {
+        option.classList.add("active");
+        option.setAttribute("aria-current", "true");
+      } else {
+        option.classList.remove("active");
+        option.removeAttribute("aria-current");
+      }
+    });
+  }
+
+  // Layout dimension (column/editorial/index). Simpler than typography — it
+  // only sets a data attribute, with no web fonts to preload.
+  function setLayout(layout) {
+    localStorage.setItem("theme-layout", layout);
+    updateLayoutUI(layout);
+    applyLayout(layout);
+
+    var clickedOpt = document.querySelector(
+      '[data-js="layout-option"][data-layout="' + layout + '"]'
+    );
+    var layoutLabel = clickedOpt
+      ? clickedOpt.getAttribute("aria-label")
+      : layout;
+    var layoutCategory = document.querySelector(
+      '[data-toast-category="layout"]'
+    );
+    var layoutCategoryLabel = layoutCategory
+      ? layoutCategory.getAttribute("data-toast-label")
+      : "";
+
+    if (window.Toast) {
+      window.Toast.show(layoutCategoryLabel, layoutLabel);
+    }
+  }
+
+  function applyLayout(layout) {
+    document.documentElement.setAttribute("data-layout", layout);
+  }
+
+  function updateLayoutUI(currentLayout) {
+    layoutOptions.forEach((option) => {
+      const layout = option.getAttribute("data-layout");
+      if (layout === currentLayout) {
         option.classList.add("active");
         option.setAttribute("aria-current", "true");
       } else {
@@ -1825,6 +1868,7 @@
     typographyOptions = document.querySelectorAll(
       '[data-js="typography-option"]'
     );
+    layoutOptions = document.querySelectorAll('[data-js="layout-option"]');
     effectBlendButtons = document.querySelectorAll(
       '[data-js="effect-blend-toggle"]'
     );
@@ -1840,6 +1884,7 @@
     const storedPalette = localStorage.getItem("theme-palette") || "standard";
     const storedTypography =
       localStorage.getItem("theme-typography") || "editorial";
+    const storedLayout = localStorage.getItem("theme-layout") || "column";
     const normalizedStoredPalette =
       storedPalette === "coty" ? "pantone" : storedPalette;
     const storedCotyTransportUiState =
@@ -1882,6 +1927,7 @@
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
+    applyLayout(storedLayout);
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
     });
@@ -1896,6 +1942,7 @@
     updateModeUI(storedMode);
     updatePaletteUI(initialPalette);
     updateTypographyUI(storedTypography);
+    updateLayoutUI(storedLayout);
     syncCotyPlaybackTimer();
     setCotyTransportUiState(
       initialPantoneState !== "inactive"
@@ -1915,6 +1962,7 @@
       setMode: setMode,
       setPalette: setPalette,
       setTypography: setTypography,
+      setLayout: setLayout,
       togglePantone: togglePantoneMode,
       toggleBlend: function () {
         setBlendEnabled(
@@ -2088,6 +2136,14 @@
       option.addEventListener("click", function () {
         const typography = this.getAttribute("data-typography");
         setTypography(typography);
+      });
+    });
+
+    // Layout option listeners
+    layoutOptions.forEach((option) => {
+      option.addEventListener("click", function () {
+        const layout = this.getAttribute("data-layout");
+        setLayout(layout);
       });
     });
 

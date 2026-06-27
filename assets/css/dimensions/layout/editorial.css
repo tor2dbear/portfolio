@@ -1,0 +1,17 @@
+/* ============================================================================
+   LAYOUT: Editorial
+
+   Airy, asymmetric, magazine-like. Wider section rhythm, a tighter editorial
+   measure (45ch vs the 70ch prose default) and a slightly amplified display
+   scale. Only spatial tokens — colour and font face stay owned by the palette
+   and typography dimensions (fully orthogonal).
+   ============================================================================ */
+
+:root[data-layout="editorial"] {
+  --layout-section-rhythm: var(--spacing-96);
+  --layout-hero-rhythm: var(--spacing-160);
+  --layout-heading-gap: var(--spacing-48);
+  --layout-col-gap: var(--spacing-32);
+  --layout-measure: var(--measure-wide);
+  --layout-scale-ratio: 1.15;
+}

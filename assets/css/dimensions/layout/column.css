@@ -1,0 +1,12 @@
+/* ============================================================================
+   LAYOUT: Column (default)
+
+   The current composition — one generous measure, standard vertical rhythm.
+   Inherits every --layout-* default from tokens/semantic.css; this file exists
+   so the dimension has an explicit baseline and a dropdown target. Selecting
+   "column" is therefore identical to the site's pre-data-layout appearance.
+   ============================================================================ */
+
+:root[data-layout="column"] {
+  /* Intentionally empty — all values inherit the :root defaults. */
+}

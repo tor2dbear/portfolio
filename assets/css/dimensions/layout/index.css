@@ -1,0 +1,16 @@
+/* ============================================================================
+   LAYOUT: Index
+
+   Dense, modular, image-forward. Tight rhythm and gaps pack more onto the
+   screen at once; the display scale is dialled back so headings sit closer to
+   body text. Like the others, it only touches spatial tokens.
+   ============================================================================ */
+
+:root[data-layout="index"] {
+  --layout-section-rhythm: var(--spacing-40);
+  --layout-hero-rhythm: var(--spacing-64);
+  --layout-heading-gap: var(--spacing-16);
+  --layout-col-gap: var(--spacing-16);
+  --layout-row-gap: var(--spacing-16);
+  --layout-scale-ratio: 0.95;
+}

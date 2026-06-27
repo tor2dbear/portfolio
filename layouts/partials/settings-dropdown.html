@@ -134,6 +134,65 @@
 
     <div class="theme-section">
       <div class="theme-section-heading">
+        <h3 class="theme-section-title">{{ i18n "layout" }}</h3>
+        {{/* No keyboard chord yet: "L" is taken by the language prefix.
+             Pick a free mnemonic before adding a data-shortcut chip here. */}}
+      </div>
+      {{/* Layout options reuse the typography option styling for now;
+           the inline SVGs are mini composition diagrams. */}}
+      <div class="theme-options theme-options--typography">
+        <button
+          class="theme-option theme-option--typography"
+          data-layout="column"
+          data-js="layout-option"
+          aria-label="Column"
+        >
+          <span class="typography-preview">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+              <rect x="6" y="2" width="4" height="12" rx="0.5" />
+            </svg>
+          </span>
+          <span class="typography-label">Column</span>
+        </button>
+
+        <button
+          class="theme-option theme-option--typography"
+          data-layout="editorial"
+          data-js="layout-option"
+          aria-label="Editorial"
+        >
+          <span class="typography-preview">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+              <rect x="2" y="2" width="3" height="12" rx="0.5" />
+              <rect x="7" y="2" width="7" height="7" rx="0.5" />
+            </svg>
+          </span>
+          <span class="typography-label">Editorial</span>
+        </button>
+
+        <button
+          class="theme-option theme-option--typography"
+          data-layout="index"
+          data-js="layout-option"
+          aria-label="Index"
+        >
+          <span class="typography-preview">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+              <rect x="2" y="2" width="5" height="5" rx="0.5" />
+              <rect x="9" y="2" width="5" height="5" rx="0.5" />
+              <rect x="2" y="9" width="5" height="5" rx="0.5" />
+              <rect x="9" y="9" width="5" height="5" rx="0.5" />
+            </svg>
+          </span>
+          <span class="typography-label">Index</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="theme-divider"></div>
+
+    <div class="theme-section">
+      <div class="theme-section-heading">
         <h3 class="theme-section-title">Effects</h3>
         <span class="toggle-switch__shortcut" data-shortcut="E">E</span>
       </div>
