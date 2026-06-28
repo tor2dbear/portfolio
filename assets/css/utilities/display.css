@@ -60,7 +60,9 @@
   transition:
     opacity var(--reveal-duration, var(--motion-duration-reveal)) var(--motion-ease-decelerate) var(--reveal-delay, 0ms),
     transform var(--reveal-duration, var(--motion-duration-reveal)) var(--motion-ease-decelerate) var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+  /* No persistent will-change: it kept revealed elements on a cached GPU layer,
+     which deferred font-size repaints until the next scroll when switching
+     layout. opacity/transform still animate fine without the hint. */
 }
 
 .reveal--delay {
