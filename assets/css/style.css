@@ -675,14 +675,16 @@ p:empty {
 }
 
 .content.post {
-  /* Width controlled by grid placement on #main (--content-max-width) */
-  --post-media-gap: var(--spacing-24);
+  /* Width controlled by grid placement on #main (--content-max-width).
+     Media gap scales with the layout's vertical density (editorial airier,
+     index tighter; column = x1 = unchanged). */
+  --post-media-gap: calc(var(--spacing-24) * var(--layout-prose-rhythm));
 }
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .content.post {
-    --post-media-gap: var(--spacing-16);
+    --post-media-gap: calc(var(--spacing-16) * var(--layout-prose-rhythm));
   }
 }
 
