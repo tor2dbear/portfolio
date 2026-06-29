@@ -39,11 +39,47 @@
   row-gap: var(--post-media-gap, var(--spacing-24));
 }
 
+/* Align 2-up galleries to the page's 12-column grid: become a real subgrid so
+   each image spans half the gallery's inherited tracks and the gutter is the
+   page gutter (column-gap: normal = inherit the parent's --layout-col-gap).
+   Non-subgrid browsers keep the repeat(2,1fr) fallback above. */
+@supports (grid-template-columns: subgrid) {
+  .gallery.grid-cols-2 {
+    grid-template-columns: subgrid;
+    column-gap: normal;
+  }
+
+  .gallery.grid-cols-2 > * {
+    grid-column: span var(--gallery-col-half, 5);
+  }
+
+  /* Half-span keyed to placement (place-wide=10/2, full=12/2, prose=8/2). */
+  .gallery.grid-cols-2.place-wide {
+    --gallery-col-half: 5;
+  }
+  .gallery.grid-cols-2.place-full {
+    --gallery-col-half: 6;
+  }
+  .gallery.grid-cols-2.place-prose {
+    --gallery-col-half: 4;
+  }
+}
+
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .gallery.grid-cols-2 {
     column-gap: calc(var(--spacing-16) * var(--layout-prose-rhythm));
     row-gap: var(--post-media-gap, var(--spacing-16));
+  }
+
+  /* Parent collapses to 4 columns; stay side-by-side at 2+2, grid-aligned. */
+  @supports (grid-template-columns: subgrid) {
+    .gallery.grid-cols-2 {
+      column-gap: normal;
+    }
+    .gallery.grid-cols-2 > * {
+      grid-column: span 2;
+    }
   }
 }
 
