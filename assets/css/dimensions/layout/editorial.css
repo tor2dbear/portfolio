@@ -27,3 +27,35 @@
     --layout-hero-rhythm: var(--spacing-96);
   }
 }
+
+/* ============================================================================
+   Structural treatment (beyond tokens) — makes editorial markedly different,
+   not just "bigger". Scoped so colour/typography stay untouched.
+   ============================================================================ */
+
+/* A — centred display type, magazine-masthead feel. Body prose stays
+   left-aligned (centred body is hard to read). Applies at all widths. */
+:root[data-layout="editorial"] .hero-title,
+:root[data-layout="editorial"] .section-heading,
+:root[data-layout="editorial"] .works-post__title,
+:root[data-layout="editorial"] .works-post__description {
+  text-align: center;
+}
+
+/* Desktop-only structural placement (mobile keeps the single-column flow;
+   col-start 9 doesn't exist on the 4-col mobile grid). */
+@media (min-width: 64em) {
+  /* A — centre the article masthead blocks symmetrically on the page. */
+  :root[data-layout="editorial"] .works-post__title {
+    --col: col-start 1 / span 12;
+  }
+  :root[data-layout="editorial"] .works-post__description {
+    --col: col-start 3 / span 8;
+  }
+
+  /* B — project-info becomes a right-hand sidebar; prose stays in cols 1-8,
+     so the fact box sits alongside the body via grid auto-placement. */
+  :root[data-layout="editorial"] .content.post.works-post > .project-info {
+    --col: col-start 9 / span 4;
+  }
+}
