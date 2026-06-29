@@ -16,3 +16,14 @@
   --layout-scale-ratio: 1.15;
   --layout-prose-rhythm: 1.25;
 }
+
+/* sm: on narrow screens the amplified type overflows and the large rhythm is
+   excessive, so editorial falls back to the baseline type scale and gentler
+   spacing. Layout still reads as airier via prose-rhythm/measure. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="editorial"] {
+    --layout-scale-ratio: 1;
+    --layout-section-rhythm: var(--spacing-64);
+    --layout-hero-rhythm: var(--spacing-96);
+  }
+}
