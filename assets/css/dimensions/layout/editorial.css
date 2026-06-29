@@ -1,10 +1,10 @@
 /* ============================================================================
    LAYOUT: Editorial
 
-   Airy, asymmetric, magazine-like. Wider section rhythm, a tighter editorial
-   measure (45ch vs the 70ch prose default) and a slightly amplified display
-   scale. Only spatial tokens — colour and font face stay owned by the palette
-   and typography dimensions (fully orthogonal).
+   Airy, asymmetric, magazine-like. Wider section rhythm, a narrower body
+   measure (controlled by grid columns, not a ch cap) and a slightly amplified
+   display scale. Only spatial tokens — colour and font face stay owned by the
+   palette and typography dimensions (fully orthogonal).
    ============================================================================ */
 
 :root[data-layout="editorial"] {
@@ -12,7 +12,8 @@
   --layout-hero-rhythm: var(--spacing-160);
   --layout-heading-gap: var(--spacing-48);
   --layout-col-gap: var(--spacing-32);
-  --layout-measure: var(--measure-wide);
+  /* Body reading measure is set by grid columns (see body placement below),
+     not a ch cap, so --layout-measure stays at the `none` default. */
   --layout-scale-ratio: 1.15;
   --layout-prose-rhythm: 1.25;
 }
@@ -33,9 +34,10 @@
    not just "bigger". Scoped so colour/typography stay untouched.
    ============================================================================ */
 
-/* Centred magazine masthead: display type + the date/tags row are centred.
-   Body prose keeps left-aligned text (centred body is hard to read); only its
-   container is centred (below). Applies at all widths. */
+/* Centred magazine masthead. The title spans full width; the date / tags /
+   description row centres in a narrower column. Centring is applied at ALL
+   widths (text-align + the responsive --col* cascade below) so it never skews
+   against a left-placed preset at mid sizes. Colour/typography stay untouched. */
 :root[data-layout="editorial"] .hero-title,
 :root[data-layout="editorial"] .section-heading,
 :root[data-layout="editorial"] .works-post__title,
@@ -45,41 +47,57 @@
   text-align: center;
 }
 
-/* Desktop structural placement: full-bleed hero, everything else centred in a
-   narrower column. Mobile keeps the single-column flow. The high-specificity
-   selectors (incl. #main / the full :not() chain) are needed to beat the
-   works-post placement rules in style.css, which loads after this file. */
+/* Masthead placement — reuse the grid.css presets' values (these elements carry
+   .place-wide / .place-prose, so overriding --col* drives the same responsive
+   cascade). Applied at all widths; grid.css supplies the --col-sm full-width
+   fallback at ≤47.9375em, which is what removes the old mid-size skew. */
+
+/* Title → full content width (= .place-full). */
+:root[data-layout="editorial"] .works-post__title {
+  --col: col-start 1 / span 12;
+}
+
+/* Description / date / tags → centred column (= .place-article: centred, with
+   its tested --col-lg / --col-md responsive steps). */
+:root[data-layout="editorial"] .works-post__description,
+:root[data-layout="editorial"] .works-post__meta,
+:root[data-layout="editorial"] .works-post__tags {
+  --col: col-start 3 / span 8;
+  --col-lg: col-start 2 / span 10;
+  --col-md: col-start 1 / span 12;
+}
+
+/* Tag chips sit in a flex row, so text-align can't centre them. */
+:root[data-layout="editorial"] .works-post__tags .tag-list__items {
+  justify-content: center;
+}
+
+/* Desktop structural placement: full-bleed hero; body + project-info centred in
+   a narrow 6-col column (cols 4-9). The body reading measure is now set by this
+   column count rather than a ch cap, so the prose fills its centred cell — no
+   left-hug — and reads at a comfortable width. High-specificity selectors (incl.
+   #main / the full :not() chain) beat the works-post placement rules in
+   style.css, which loads after this file. Mobile keeps the single-column flow. */
 @media (min-width: 64em) {
-  /* Hero image spans the full content width (was place-wide / span 10). */
+  /* Hero image spans the full content width (= .place-full). */
   :root[data-layout="editorial"] #main .content.post.works-post > figure {
     --col: col-start 1 / span 12;
     grid-column: col-start 1 / span 12;
   }
 
-  /* Title spans full width (centred text); date/tags/description centre in
-     cols 3-10. */
-  :root[data-layout="editorial"] .works-post__title {
-    --col: col-start 1 / span 12;
-  }
-  :root[data-layout="editorial"] .works-post__description,
-  :root[data-layout="editorial"] .works-post__meta,
-  :root[data-layout="editorial"] .works-post__tags {
-    --col: col-start 3 / span 8;
-  }
-
-  /* Body text container centres in cols 3-10 (text stays left-aligned).
-     Galleries/figures keep their own placement via the :not() exclusions. */
+  /* Body text container — centred 6-col column. Galleries/figures keep their
+     own placement via the :not() exclusions. */
   :root[data-layout="editorial"]
     .content.post.works-post
     > .post-content.place-prose
     > :not(.gallery):not(figure):not(.project-info):not(.post-nav) {
-    --col: col-start 3 / span 8;
-    grid-column: col-start 3 / span 8;
+    --col: col-start 4 / span 6;
+    grid-column: col-start 4 / span 6;
   }
 
-  /* Project-info box centres too (replaces the earlier sidebar attempt). */
+  /* Project-info box shares the same centred 6-col column. */
   :root[data-layout="editorial"] .content.post.works-post > .project-info {
-    --col: col-start 3 / span 8;
-    grid-column: col-start 3 / span 8;
+    --col: col-start 4 / span 6;
+    grid-column: col-start 4 / span 6;
   }
 }
