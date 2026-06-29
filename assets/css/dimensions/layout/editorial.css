@@ -33,29 +33,53 @@
    not just "bigger". Scoped so colour/typography stay untouched.
    ============================================================================ */
 
-/* A — centred display type, magazine-masthead feel. Body prose stays
-   left-aligned (centred body is hard to read). Applies at all widths. */
+/* Centred magazine masthead: display type + the date/tags row are centred.
+   Body prose keeps left-aligned text (centred body is hard to read); only its
+   container is centred (below). Applies at all widths. */
 :root[data-layout="editorial"] .hero-title,
 :root[data-layout="editorial"] .section-heading,
 :root[data-layout="editorial"] .works-post__title,
-:root[data-layout="editorial"] .works-post__description {
+:root[data-layout="editorial"] .works-post__description,
+:root[data-layout="editorial"] .works-post__meta,
+:root[data-layout="editorial"] .works-post__tags {
   text-align: center;
 }
 
-/* Desktop-only structural placement (mobile keeps the single-column flow;
-   col-start 9 doesn't exist on the 4-col mobile grid). */
+/* Desktop structural placement: full-bleed hero, everything else centred in a
+   narrower column. Mobile keeps the single-column flow. The high-specificity
+   selectors (incl. #main / the full :not() chain) are needed to beat the
+   works-post placement rules in style.css, which loads after this file. */
 @media (min-width: 64em) {
-  /* A — centre the article masthead blocks symmetrically on the page. */
+  /* Hero image spans the full content width (was place-wide / span 10). */
+  :root[data-layout="editorial"] #main .content.post.works-post > figure {
+    --col: col-start 1 / span 12;
+    grid-column: col-start 1 / span 12;
+  }
+
+  /* Title spans full width (centred text); date/tags/description centre in
+     cols 3-10. */
   :root[data-layout="editorial"] .works-post__title {
     --col: col-start 1 / span 12;
   }
-  :root[data-layout="editorial"] .works-post__description {
+  :root[data-layout="editorial"] .works-post__description,
+  :root[data-layout="editorial"] .works-post__meta,
+  :root[data-layout="editorial"] .works-post__tags {
     --col: col-start 3 / span 8;
   }
 
-  /* B — project-info becomes a right-hand sidebar; prose stays in cols 1-8,
-     so the fact box sits alongside the body via grid auto-placement. */
+  /* Body text container centres in cols 3-10 (text stays left-aligned).
+     Galleries/figures keep their own placement via the :not() exclusions. */
+  :root[data-layout="editorial"]
+    .content.post.works-post
+    > .post-content.place-prose
+    > :not(.gallery):not(figure):not(.project-info):not(.post-nav) {
+    --col: col-start 3 / span 8;
+    grid-column: col-start 3 / span 8;
+  }
+
+  /* Project-info box centres too (replaces the earlier sidebar attempt). */
   :root[data-layout="editorial"] .content.post.works-post > .project-info {
-    --col: col-start 9 / span 4;
+    --col: col-start 3 / span 8;
+    grid-column: col-start 3 / span 8;
   }
 }
