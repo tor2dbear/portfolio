@@ -231,7 +231,7 @@ footer {
       [col-start] 1fr
     )
     [content-end] var(--size-page-margins) [full-end];
-  column-gap: var(--spacing-24);
+  column-gap: var(--layout-col-gap);
 }
 
 #main,
@@ -250,8 +250,8 @@ footer {
       [col-start] 1fr
     )
     [content-end] var(--size-page-margins) [full-end];
-  column-gap: var(--spacing-24);
-  row-gap: var(--spacing-32);
+  column-gap: var(--layout-col-gap);
+  row-gap: var(--layout-row-gap);
   width: 100%;
 }
 
