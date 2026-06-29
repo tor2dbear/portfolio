@@ -17,13 +17,13 @@
   --layout-prose-rhythm: 1.25;
 }
 
-/* sm: on narrow screens the amplified type overflows and the large rhythm is
-   excessive, so editorial falls back to the baseline type scale and gentler
-   spacing. Layout still reads as airier via prose-rhythm/measure. */
+/* sm: keep the editorial type bump but a touch gentler than desktop — a long
+   single-word title at full 1.15 can nudge the edge on the narrowest phones.
+   Hero rhythm stays tamed (spacing-160 is excessive hero padding on a phone).
+   The earlier overflow was the footer grid gaps, not the type (now fixed). */
 @media (max-width: 47.9375em) {
   :root[data-layout="editorial"] {
-    --layout-scale-ratio: 1;
-    --layout-section-rhythm: var(--spacing-64);
+    --layout-scale-ratio: 1.1;
     --layout-hero-rhythm: var(--spacing-96);
   }
 }
