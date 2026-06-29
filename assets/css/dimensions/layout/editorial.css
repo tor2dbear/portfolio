@@ -47,6 +47,13 @@
   text-align: center;
 }
 
+/* The homepage hero title is capped to content-max-width-narrow and lives in a
+   full-width container, so on wide screens the (centred) text sat in a box stuck
+   to the left. Centre the box itself to match the centred magazine masthead. */
+:root[data-layout="editorial"] .hero-title {
+  margin-inline: auto;
+}
+
 /* Masthead placement — reuse the grid.css presets' values (these elements carry
    .place-wide / .place-prose, so overriding --col* drives the same responsive
    cascade). Applied at all widths; grid.css supplies the --col-sm full-width
