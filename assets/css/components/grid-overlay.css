@@ -11,7 +11,8 @@
     [content-start] repeat(12, [col-start] 1fr)
     [content-end] var(--size-page-margins)
     [full-end];
-  column-gap: var(--spacing-24);
+  /* Mirror the active layout's gap so the overlay matches real content. */
+  column-gap: var(--layout-col-gap);
   max-width: var(--content-max-width);
   margin: 0 auto;
 }
