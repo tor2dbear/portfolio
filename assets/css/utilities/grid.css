@@ -35,6 +35,14 @@
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
+  /* The 12-track page grid (used by the footer) keeps full column-gap on
+     mobile from --layout-col-gap; with 13 inter-track gaps that overflows a
+     phone in editorial (spacing-32 -> ~416px). The gaps sit between unused
+     tracks, so shrinking them here is purely a width fix, no visual change. */
+  .page-grid {
+    column-gap: var(--spacing-16);
+  }
+
   @supports not (grid-template-columns: subgrid) {
     .use-subgrid {
       grid-template-columns: repeat(4, [col-start] 1fr);
