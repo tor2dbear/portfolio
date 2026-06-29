@@ -888,8 +888,10 @@ p:empty {
 
 .about-cv__section {
   break-inside: avoid;
-  display: inline-block;
-  width: 100%;
+  /* flow-root (not inline-block): inline-block baseline-aligns the sections,
+     which staggered the column tops. A block-level BFC keeps each section
+     intact (break-inside: avoid) while the columns start flush at the top. */
+  display: flow-root;
   margin-bottom: var(--spacing-32);
 }
 
