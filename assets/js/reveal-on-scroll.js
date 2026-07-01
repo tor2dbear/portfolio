@@ -55,56 +55,44 @@
   };
 
   /**
-   * The About CV sections fade in individually (driven by the container's
-   * .is-revealed state in CSS). Their stagger must follow *visual* order — a
-   * top-to-bottom, left-to-right wipe — but the multi-column balance puts
-   * sections in different positions at each width, so the order can't be
-   * expressed in CSS. Measure positions here and write a per-section
-   * --reveal-delay. Recomputed on resize (harmless once already revealed).
+   * The About CV sections fade in one by one as they scroll into view — an
+   * individual, scroll-linked cascade that naturally follows visual reading
+   * order (whatever column a section lands in). A dedicated, eager observer
+   * per section — NOT the shared reveal system, whose 0.15 threshold + stagger
+   * pass stranded some sections at opacity:0 inside the balanced multi-column,
+   * gapping the column tops. Sections already in view reveal on observe.
    */
-  const CV_STAGGER_STEP = 70; // ms between sections
-  const CV_STAGGER_MAX = 420; // cap so long CVs don't drag on
-  const orderCvStagger = () => {
-    document.querySelectorAll(".about-cv").forEach((cv) => {
-      const sections = Array.from(cv.querySelectorAll(".about-cv__section"));
-      if (!sections.length) {
-        return;
-      }
-      const measured = sections.map((el) => {
-        const rect = el.getBoundingClientRect();
-        return { el, top: rect.top, left: rect.left };
-      });
-      // Top-to-bottom wipe: order by vertical position (bucketed so sections
-      // sharing a row tie by left→right). A section near the top fades early
-      // whichever column it landed in — so top-right doesn't come last.
-      measured.sort((a, b) => {
-        const rowA = Math.round(a.top / 20);
-        const rowB = Math.round(b.top / 20);
-        return rowA - rowB || a.left - b.left;
-      });
-      measured.forEach((item, index) => {
-        const delay = Math.min(index * CV_STAGGER_STEP, CV_STAGGER_MAX);
-        item.el.style.setProperty("--reveal-delay", `${delay}ms`);
-      });
-    });
+  const revealCvSections = () => {
+    const sections = Array.from(
+      document.querySelectorAll(".about-cv__section")
+    );
+    if (!sections.length) {
+      return;
+    }
+    const reduce =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) {
+      sections.forEach((el) => el.classList.add("is-revealed"));
+      return;
+    }
+    const cvObserver = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+          entry.target.classList.add("is-revealed");
+          obs.unobserve(entry.target);
+        });
+      },
+      { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0.01 }
+    );
+    sections.forEach((el) => cvObserver.observe(el));
   };
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Order CV fades before any reveal can fire so the first reveal is staggered.
-    orderCvStagger();
-    let cvResizeRaf = 0;
-    window.addEventListener("resize", () => {
-      if (cvResizeRaf) {
-        window.cancelAnimationFrame(cvResizeRaf);
-      }
-      cvResizeRaf = window.requestAnimationFrame(orderCvStagger);
-    });
-    // Late reflows (web fonts, images) can re-balance the columns before the
-    // CV scrolls into view — recompute once things settle.
-    window.addEventListener("load", orderCvStagger);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(orderCvStagger);
-    }
+    revealCvSections();
 
     const postContentChildren = document.querySelectorAll(".post-content > *");
     postContentChildren.forEach((child) => {

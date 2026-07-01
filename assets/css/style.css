@@ -893,12 +893,12 @@ p:empty {
      intact (break-inside: avoid) while the columns start flush at the top. */
   display: flow-root;
   margin-bottom: var(--spacing-32);
-  /* Each section fades in individually, but driven off the container's
-     .is-revealed (below) rather than a per-section IntersectionObserver:
-     inside the balanced multi-column, per-section observers stranded some
-     sections at opacity:0 while they still took up space, gapping the column
-     tops. Delegating to the container keeps every section in sync (no gaps)
-     while still animating one by one via the staggered delays below. */
+  /* Each section fades in as it scrolls into view (reveal-on-scroll.js adds
+     .is-revealed per section) — an individual, scroll-linked cascade in
+     natural top-to-bottom order. Kept off the shared .reveal system, whose
+     thresholds stranded some sections at opacity:0 inside the balanced
+     multi-column, gapping the column tops; a dedicated eager observer reveals
+     every section reliably. */
   opacity: 0;
   transform: translateY(var(--reveal-distance, var(--motion-distance-md)));
   transition:
@@ -906,20 +906,15 @@ p:empty {
       var(--motion-ease-decelerate),
     transform var(--reveal-duration, var(--motion-duration-reveal))
       var(--motion-ease-decelerate);
-  /* Stagger set per section by JS (reveal-on-scroll.js) in *visual* order —
-     a top-to-bottom, left-to-right wipe — because the multi-column balance,
-     and therefore each section's position, changes with screen width and can't
-     be expressed with DOM-order nth-child. Falls back to 0 (all together). */
-  transition-delay: var(--reveal-delay, 0ms);
 }
 
-.about-cv.is-revealed .about-cv__section {
+.about-cv__section.is-revealed {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* The container itself no longer fades as a block — it stays purely the reveal
-   trigger so the fade reads as individual sections, not a single blur-in. */
+/* The container itself no longer fades as a block — its sections carry the
+   fade, so it reads as individual sections rather than one blur-in. */
 .about-cv.reveal {
   opacity: 1;
   transform: none;
