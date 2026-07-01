@@ -895,39 +895,17 @@ p:empty {
      intact (break-inside: avoid) while the columns start flush at the top. */
   display: flow-root;
   margin-bottom: var(--spacing-32);
-  /* Each section fades in as it scrolls into view (reveal-on-scroll.js adds
-     .is-revealed per section) — an individual, scroll-linked cascade in
-     natural top-to-bottom order. Kept off the shared .reveal system, whose
-     thresholds stranded some sections at opacity:0 inside the balanced
-     multi-column, gapping the column tops; a dedicated eager observer reveals
-     every section reliably. */
-  opacity: 0;
-  transform: translateY(var(--reveal-distance, var(--motion-distance-md)));
-  transition:
-    opacity var(--reveal-duration, var(--motion-duration-reveal))
-      var(--motion-ease-decelerate),
-    transform var(--reveal-duration, var(--motion-duration-reveal))
-      var(--motion-ease-decelerate);
+  /* The fade itself (opacity/transform/transition + reduced-motion) comes from
+     the shared .reveal rules — each section carries .reveal and is revealed
+     individually on scroll (reveal-on-scroll.js), with a left→right stagger. */
 }
 
-.about-cv__section.is-revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* The container itself no longer fades as a block — its sections carry the
-   fade, so it reads as individual sections rather than one blur-in. */
+/* The container is .reveal too, but must NOT fade as a block — its sections
+   each carry the fade, so the CV reads as individual sections revealing on
+   scroll rather than one block blur-in. */
 .about-cv.reveal {
   opacity: 1;
   transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about-cv__section {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 }
 
 .about-cv__heading {
