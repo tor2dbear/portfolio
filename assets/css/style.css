@@ -906,31 +906,16 @@ p:empty {
       var(--motion-ease-decelerate),
     transform var(--reveal-duration, var(--motion-duration-reveal))
       var(--motion-ease-decelerate);
+  /* Stagger set per section by JS (reveal-on-scroll.js) in *visual* order —
+     a top-to-bottom, left-to-right wipe — because the multi-column balance,
+     and therefore each section's position, changes with screen width and can't
+     be expressed with DOM-order nth-child. Falls back to 0 (all together). */
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 .about-cv.is-revealed .about-cv__section {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* Stagger the individual fades in DOM order (capped so long CV lists don't
-   drag on). Applies to base (6) and extended (13) section counts alike. */
-.about-cv.is-revealed .about-cv__columns > .about-cv__section:nth-child(2) {
-  transition-delay: 70ms;
-}
-.about-cv.is-revealed .about-cv__columns > .about-cv__section:nth-child(3) {
-  transition-delay: 140ms;
-}
-.about-cv.is-revealed .about-cv__columns > .about-cv__section:nth-child(4) {
-  transition-delay: 210ms;
-}
-.about-cv.is-revealed .about-cv__columns > .about-cv__section:nth-child(5) {
-  transition-delay: 280ms;
-}
-.about-cv.is-revealed
-  .about-cv__columns
-  > .about-cv__section:nth-child(n + 6) {
-  transition-delay: 350ms;
 }
 
 /* The container itself no longer fades as a block — it stays purely the reveal
