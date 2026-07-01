@@ -27,7 +27,9 @@ body {
   color: var(--text-default);
   font-size: var(--text-xs);
   text-decoration: none;
-  box-shadow: var(--shadow-03);
+  /* No shadow while parked off-screen — shadow-03's blur bled below the
+     element's bottom edge (just above the viewport top) and showed as a faint
+     drop shadow over the header. The shadow is added on :focus, when visible. */
   transform: translateY(calc(-100% - var(--spacing-24)));
   transition: transform var(--motion-duration-fast, 150ms)
     var(--motion-ease-standard, ease);
