@@ -116,6 +116,11 @@
     break-inside: avoid;
     page-break-inside: avoid;
     margin-bottom: 1rem;
+    /* Sections fade in via the container's .is-revealed at runtime; force them
+       visible for print in case a section hasn't been revealed yet. */
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 
   .about-cv__heading {
