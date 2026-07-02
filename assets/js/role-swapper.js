@@ -1,28 +1,23 @@
 /**
  * Hero role swapper for the homepage — typewriter effect.
  *
- * The role is deleted one character at a time and the next role typed back in,
- * so the line's width changes gradually. In a centred layout (editorial) that
- * reads as intentional typing that re-centres smoothly, rather than a jump; in
- * left-aligned layouts the role simply grows/shrinks at the end of its line
- * (a <br> follows it, so nothing else shifts). No reserved width, so there's no
- * gap around short roles.
+ * The role is deleted one character at a time and the next role typed back in.
+ * Only the differing tail is retyped when consecutive roles share a prefix
+ * (e.g. "Product Designer" → "Product Owner").
  *
- * Only the differing tail is retyped: consecutive roles that share a prefix
- * (e.g. "Product Designer" → "Product Owner") delete back to the common prefix
- * and type the rest, which shortens the motion and never does more work than a
- * full delete/retype.
+ * Reduced motion: honours BOTH the OS `prefers-reduced-motion` and the site's
+ * own "Reduce motion" toggle (html[data-effect-reduced-motion="on"]), and reacts
+ * live — toggling it on pauses on a complete role, toggling it off resumes.
  *
  * A11y: the animated text is decorative (aria-hidden on the container); a
  * separate visually-hidden role keeps the heading's accessible name stable.
- * Reduced motion → a single static role, no typing (and no caret).
  */
 (function () {
   "use strict";
 
-  const TYPE_SPEED = 68; // ms per character while typing
-  const DELETE_SPEED = 34; // ms per character while deleting
-  const HOLD = 3400; // ms to hold a completed role (keeps the line calm)
+  const TYPE_SPEED = 125; // ms per character while typing (calm, natural)
+  const DELETE_SPEED = 60; // ms per character while deleting
+  const HOLD = 5000; // ms to hold a completed role (low change frequency)
 
   function parseRoles(value) {
     if (!value) {
@@ -69,55 +64,113 @@
     }
 
     const full = (i) => roles[i] + suffix;
-
-    // Reduced motion (or no matchMedia): show one static role, no typing/caret.
-    const prefersReducedMotion =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-      textEl.textContent = full(index);
-      return;
-    }
-
     const hold = Number(swapper.getAttribute("data-interval")) || HOLD;
     const typeSpeed =
       Number(swapper.getAttribute("data-type-speed")) || TYPE_SPEED;
     const deleteSpeed =
       Number(swapper.getAttribute("data-delete-speed")) || DELETE_SPEED;
 
+    const reduceMq =
+      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    const isReduced = () =>
+      (reduceMq && reduceMq.matches) ||
+      document.documentElement.getAttribute("data-effect-reduced-motion") ===
+        "on";
+
     let text = full(index);
     let deleting = true;
-    textEl.textContent = text;
-    // Only show the caret while the JS typewriter is actually running.
-    swapper.classList.add("is-animating");
+    let timer = null;
+    let running = false;
+
+    const setTyping = (on) => {
+      swapper.classList.toggle("is-typing", on);
+    };
 
     const step = () => {
+      if (isReduced()) {
+        stop();
+        return;
+      }
       if (deleting) {
         const next = (index + 1) % roles.length;
         const floor = commonPrefixLength(full(index), full(next));
         if (text.length > floor) {
+          setTyping(true);
           text = text.slice(0, -1);
           textEl.textContent = text;
-          window.setTimeout(step, deleteSpeed);
+          timer = window.setTimeout(step, deleteSpeed);
         } else {
           index = next;
           deleting = false;
-          window.setTimeout(step, typeSpeed);
+          timer = window.setTimeout(step, typeSpeed);
         }
       } else {
         const target = full(index);
         if (text.length < target.length) {
+          setTyping(true);
           text = target.slice(0, text.length + 1);
           textEl.textContent = text;
-          window.setTimeout(step, typeSpeed);
+          timer = window.setTimeout(step, typeSpeed);
         } else {
+          // Role complete → hide the caret and hold before the next change.
+          setTyping(false);
           deleting = true;
-          window.setTimeout(step, hold);
+          timer = window.setTimeout(step, hold);
         }
       }
     };
 
-    // Hold the initial role, then start deleting.
-    window.setTimeout(step, hold);
+    function stop() {
+      running = false;
+      if (timer) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+      // Rest on a complete role, never a half-typed one.
+      deleting = true;
+      text = full(index);
+      textEl.textContent = text;
+      setTyping(false);
+    }
+
+    function start() {
+      if (running || isReduced()) {
+        return;
+      }
+      running = true;
+      deleting = true;
+      text = full(index);
+      textEl.textContent = text;
+      timer = window.setTimeout(step, hold);
+    }
+
+    const onMotionChange = () => {
+      if (isReduced()) {
+        stop();
+      } else {
+        start();
+      }
+    };
+
+    if (reduceMq) {
+      if (reduceMq.addEventListener) {
+        reduceMq.addEventListener("change", onMotionChange);
+      } else if (reduceMq.addListener) {
+        reduceMq.addListener(onMotionChange);
+      }
+    }
+    if (window.MutationObserver) {
+      const observer = new MutationObserver(onMotionChange);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-effect-reduced-motion"],
+      });
+    }
+
+    if (isReduced()) {
+      textEl.textContent = full(index);
+    } else {
+      start();
+    }
   });
 })();

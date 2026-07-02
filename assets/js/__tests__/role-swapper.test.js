@@ -1,15 +1,18 @@
 /**
  * Tests for role-swapper.js
- * Typewriter hero role text with reduced-motion support.
+ * Typewriter hero role text with reduced-motion support (OS + site toggle).
  */
 
 describe("Role Swapper - Hero Text", () => {
+  // Explicit speeds so timing is deterministic regardless of the defaults.
   const markup = (attrs = "") => `
     <span
       data-js="role-swapper"
       data-roles='["One","Two","Three"]'
       data-suffix="."
       data-interval="1000"
+      data-type-speed="100"
+      data-delete-speed="50"
       ${attrs}
     ><span data-js="role-swapper-text">One.</span></span>
   `;
@@ -19,6 +22,8 @@ describe("Role Swapper - Hero Text", () => {
   afterEach(() => {
     jest.useRealTimers();
     jest.resetModules();
+    document.documentElement.removeAttribute("data-effect-reduced-motion");
+    delete window.matchMedia;
   });
 
   test("types the next role in after deleting the current one", () => {
@@ -27,11 +32,10 @@ describe("Role Swapper - Hero Text", () => {
     require("../role-swapper");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
-    // Starts on the first role, fully typed.
     expect(textEl().textContent).toBe("One.");
 
-    // Hold (1000) + delete "One." (4 * 40) + type "Two." (4 * 70) = 1440ms.
-    jest.advanceTimersByTime(1600);
+    // hold 1000 + delete "One." (4*50) + type "Two." (4*100) + a switch step.
+    jest.advanceTimersByTime(1800);
     expect(textEl().textContent).toBe("Two.");
   });
 
@@ -41,8 +45,8 @@ describe("Role Swapper - Hero Text", () => {
     require("../role-swapper");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
-    // Hold 1000 + 4 deletes (160) lands on the empty string.
-    jest.advanceTimersByTime(1160);
+    // hold 1000 + 4 deletes (200) lands on the empty string.
+    jest.advanceTimersByTime(1180);
     expect(textEl().textContent).toBe("");
   });
 
@@ -58,15 +62,26 @@ describe("Role Swapper - Hero Text", () => {
     Math.random.mockRestore();
   });
 
-  test("does not animate when reduced motion is enabled", () => {
+  test("does not animate when OS reduced motion is enabled", () => {
     document.body.innerHTML = markup();
-
     window.matchMedia = jest.fn().mockImplementation((query) => ({
       matches: query === "(prefers-reduced-motion: reduce)",
       media: query,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     }));
+
+    jest.useFakeTimers();
+    require("../role-swapper");
+    document.dispatchEvent(new Event("DOMContentLoaded"));
+
+    jest.advanceTimersByTime(5000);
+    expect(textEl().textContent).toBe("One.");
+  });
+
+  test("does not animate when the site reduce-motion toggle is on", () => {
+    document.documentElement.setAttribute("data-effect-reduced-motion", "on");
+    document.body.innerHTML = markup();
 
     jest.useFakeTimers();
     require("../role-swapper");
