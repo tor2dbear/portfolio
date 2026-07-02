@@ -425,6 +425,74 @@ footer > * {
   }
 }
 
+/* ============================================================================
+   Index layout: works body as a contact sheet
+
+   In the index layout the works body becomes a uniform image grid — every body
+   image packs 3-up (2-up on mobile), whether it's a standalone <figure> or one
+   paired inside a gallery. The body div becomes a real grid (it's display:
+   contents otherwise); text/headings span the full width and the <br> soft-break
+   separators are removed so they don't take a cell. The hero (a direct child of
+   .works-post, not .post-content) is untouched, as are column/editorial. The
+   selectors mirror the placement rules above but with a data-layout prefix, so
+   they out-specify them at every breakpoint. */
+:root[data-layout="index"]
+  .content.post.works-post
+  > .post-content.place-prose {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--layout-col-gap);
+  row-gap: var(--layout-row-gap);
+  grid-column: col-start 1 / span 12;
+}
+
+/* Flatten galleries so their figures join the body grid. */
+:root[data-layout="index"]
+  .content.post.works-post
+  > .post-content.place-prose
+  .gallery {
+  display: contents;
+}
+
+/* Images → one cell each. */
+:root[data-layout="index"]
+  .content.post.works-post
+  > .post-content.place-prose
+  > figure,
+:root[data-layout="index"]
+  .content.post.works-post
+  > .post-content.place-prose
+  .gallery
+  > figure {
+  grid-column: auto / span 1;
+}
+
+/* Drop the soft-break separators between images (they'd each take a slot). */
+:root[data-layout="index"]
+  .content.post.works-post
+  > .post-content.place-prose
+  > br {
+  display: none;
+}
+
+/* Text / headings / everything else spans the full row. */
+:root[data-layout="index"]
+  .content.post.works-post
+  > .post-content.place-prose
+  > :not(figure):not(.gallery):not(br) {
+  grid-column: 1 / -1;
+}
+
+/* sm: 2-up on the 4-column mobile grid. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="index"]
+    .content.post.works-post
+    > .post-content.place-prose {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-column: col-start 1 / span 4;
+  }
+}
+
 .legal-page__title,
 .default-single__description {
   margin-bottom: var(--spacing-16);
