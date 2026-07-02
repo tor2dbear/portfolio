@@ -142,8 +142,11 @@
   background: var(--text-default);
 }
 
+/* Blink a fixed number of whole cycles and stay off (forwards) — not infinite —
+   so it can't loop back to "on" at the boundary and leave a clipped flash.
+   Keep the iteration count in sync with BLINK_AFTER in role-swapper.js. */
 .role-swapper.is-blinking .role-swapper__text::after {
-  animation: role-caret-blink 1s infinite;
+  animation: role-caret-blink 1s 2 forwards;
 }
 
 @keyframes role-caret-blink {

@@ -3,9 +3,9 @@
  *
  * Per typed role the caret runs through: type (solid) → settle (solid, a beat
  * right after the last letter so it doesn't feel cut off) → blink → idle
- * (hidden) → short blink → delete (solid) → type the next. On page load the
- * initial role starts in the idle phase — no blink up front. Only the differing
- * tail is retyped when consecutive roles share a prefix.
+ * (hidden) → delete (solid) → type the next. No blink before deletion. On page
+ * load the initial role starts in the idle phase — no blink up front. Only the
+ * differing tail is retyped when consecutive roles share a prefix.
  *
  * Reduced motion: honours BOTH the OS `prefers-reduced-motion` and the site's
  * own toggle (html[data-effect-reduced-motion="on"]), and reacts live.
@@ -20,10 +20,9 @@
   const DELETE_SPEED = 60; // ms per character while deleting
   const HOLD = 5000; // total pause between roles (blinks + idle)
   const SETTLE = 300; // solid caret beat right after the last letter is typed
-  // Blink durations are whole multiples of the 1s CSS blink period so the caret
-  // ends a blink phase cleanly on "off" — no clipped half-blink at the end.
+  // BLINK_AFTER should match the CSS blink: iterations × period. The caret
+  // blinks 2× (see .is-blinking in home.css) at 1s, then stays off.
   const BLINK_AFTER = 2000; // caret blink after typing (the emphasis is here)
-  const BLINK_BEFORE = 1000; // short caret blink just before the next delete
 
   function parseRoles(value) {
     if (!value) {
@@ -76,7 +75,6 @@
     const typeSpeed = num("data-type-speed", TYPE_SPEED);
     const deleteSpeed = num("data-delete-speed", DELETE_SPEED);
     const blinkAfterMs = num("data-blink", BLINK_AFTER);
-    const blinkBeforeMs = num("data-blink-before", BLINK_BEFORE);
     const settleMs = num("data-settle", SETTLE);
 
     const reduceMq =
@@ -130,16 +128,8 @@
 
     function idlePhase() {
       setCaret("off");
-      const idle = Math.max(
-        hold - settleMs - blinkAfterMs - blinkBeforeMs,
-        0
-      );
-      schedule(blinkBefore, idle);
-    }
-
-    function blinkBefore() {
-      setCaret("blink");
-      schedule(deleteStep, blinkBeforeMs);
+      const idle = Math.max(hold - settleMs - blinkAfterMs, 0);
+      schedule(deleteStep, idle);
     }
 
     function deleteStep() {
