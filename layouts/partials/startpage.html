@@ -13,19 +13,11 @@
       data-roles="{{ $roles | jsonify }}"
       data-start="random"
       data-suffix="."
-      aria-live="polite"
-      aria-atomic="true"
-      >
-      {{ range $index, $role := $roles }}
-        <span
-          class="role-swapper__item{{ if eq $index 0 }} is-active{{ end }}"
-          data-role="{{ $role }}"
-          aria-hidden="{{ if eq $index 0 }}false{{ else }}true{{ end }}"
-          >{{ $role }}.</span
-        >
-      {{ end }}
-    </span
-    >
+      aria-hidden="true"
+      ><span class="role-swapper__text" data-js="role-swapper-text"
+        >{{ index $roles 0 }}.</span
+      ></span
+    ><span class="sr-only">{{ index $roles 0 }}.</span>
     <br />
     {{ i18n "hero_intro_middle" }}
     <span class="hero-emphasis">{{ i18n "hero_emphasis_editorial" }}</span>,

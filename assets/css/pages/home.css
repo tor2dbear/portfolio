@@ -85,27 +85,14 @@
   letter-spacing: var(--display-tracking);
 }
 
+/* Typewriter role (role-swapper.js types/deletes one char at a time). No
+   reserved width — the role grows/shrinks with its text, so a centred hero
+   re-centres smoothly and there's no gap around short roles. nowrap keeps the
+   role on one line. */
 .role-swapper {
   color: var(--text-accent);
   font-weight: inherit;
-  display: inline-block;
-  min-width: 0;
-  position: relative;
   white-space: nowrap;
-  transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
-}
-
-.role-swapper__item {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
-}
-
-.role-swapper__item.is-active {
-  position: relative;
-  opacity: 1;
 }
 
 .hero-emphasis {

@@ -1,97 +1,78 @@
 /**
  * Tests for role-swapper.js
- * Rotating hero role text with reduced-motion support
+ * Typewriter hero role text with reduced-motion support.
  */
 
 describe("Role Swapper - Hero Text", () => {
+  const markup = (attrs = "") => `
+    <span
+      data-js="role-swapper"
+      data-roles='["One","Two","Three"]'
+      data-suffix="."
+      data-interval="1000"
+      ${attrs}
+    ><span data-js="role-swapper-text">One.</span></span>
+  `;
+
+  const textEl = () => document.querySelector('[data-js="role-swapper-text"]');
+
   afterEach(() => {
     jest.useRealTimers();
     jest.resetModules();
   });
 
-  test("cycles through roles on an interval", () => {
-    document.body.innerHTML = `
-      <span
-        data-js="role-swapper"
-        data-interval="1000"
-        data-fade="100"
-      >
-        <span class="role-swapper__item is-active" data-role="One" aria-hidden="false">One.</span>
-        <span class="role-swapper__item" data-role="Two" aria-hidden="true">Two.</span>
-      </span>
-    `;
-
+  test("types the next role in after deleting the current one", () => {
+    document.body.innerHTML = markup();
     jest.useFakeTimers();
     require("../role-swapper");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
-    expect(
-      document.querySelector(".role-swapper__item.is-active").textContent
-    ).toBe("One.");
+    // Starts on the first role, fully typed.
+    expect(textEl().textContent).toBe("One.");
 
-    jest.advanceTimersByTime(1100);
+    // Hold (1000) + delete "One." (4 * 40) + type "Two." (4 * 70) = 1440ms.
+    jest.advanceTimersByTime(1600);
+    expect(textEl().textContent).toBe("Two.");
+  });
 
-    expect(
-      document.querySelector(".role-swapper__item.is-active").textContent
-    ).toBe("Two.");
+  test("passes through an empty string between roles", () => {
+    document.body.innerHTML = markup();
+    jest.useFakeTimers();
+    require("../role-swapper");
+    document.dispatchEvent(new Event("DOMContentLoaded"));
+
+    // Hold 1000 + 4 deletes (160) lands on the empty string.
+    jest.advanceTimersByTime(1160);
+    expect(textEl().textContent).toBe("");
   });
 
   test("starts from a random role when configured", () => {
-    document.body.innerHTML = `
-      <span
-        data-js="role-swapper"
-        data-start="random"
-        data-interval="1000"
-        data-fade="100"
-      >
-        <span class="role-swapper__item is-active" data-role="One" aria-hidden="false">One.</span>
-        <span class="role-swapper__item" data-role="Two" aria-hidden="true">Two.</span>
-        <span class="role-swapper__item" data-role="Three" aria-hidden="true">Three.</span>
-      </span>
-    `;
-
+    document.body.innerHTML = markup('data-start="random"');
     jest.useFakeTimers();
-    jest.spyOn(Math, "random").mockReturnValue(0.6);
+    jest.spyOn(Math, "random").mockReturnValue(0.6); // floor(0.6 * 3) = 1
+
     require("../role-swapper");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
-    expect(
-      document.querySelector(".role-swapper__item.is-active").textContent
-    ).toBe("Two.");
-
+    expect(textEl().textContent).toBe("Two.");
     Math.random.mockRestore();
   });
 
   test("does not animate when reduced motion is enabled", () => {
-    document.body.innerHTML = `
-      <span
-        data-js="role-swapper"
-        data-interval="1000"
-        data-fade="100"
-      >
-        <span class="role-swapper__item is-active" data-role="One" aria-hidden="false">One.</span>
-        <span class="role-swapper__item" data-role="Two" aria-hidden="true">Two.</span>
-      </span>
-    `;
+    document.body.innerHTML = markup();
 
     window.matchMedia = jest.fn().mockImplementation((query) => ({
       matches: query === "(prefers-reduced-motion: reduce)",
       media: query,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
     }));
 
     jest.useFakeTimers();
     require("../role-swapper");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
-    jest.advanceTimersByTime(2000);
-
-    expect(
-      document.querySelector(".role-swapper__item.is-active").textContent
-    ).toBe("One.");
+    jest.advanceTimersByTime(5000);
+    expect(textEl().textContent).toBe("One.");
   });
 });
