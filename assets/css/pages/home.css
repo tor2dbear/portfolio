@@ -95,6 +95,37 @@
   white-space: nowrap;
 }
 
+/* Blinking caret, only while the JS typewriter is running (is-animating). A
+   CSS bar rather than a font glyph so it tracks currentColor and the type
+   size. */
+.role-swapper.is-animating .role-swapper__text::after {
+  content: "";
+  display: inline-block;
+  width: 0.06em;
+  height: 0.9em;
+  margin-left: 0.04em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  animation: role-caret-blink 1.05s infinite;
+}
+
+@keyframes role-caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-swapper.is-animating .role-swapper__text::after {
+    display: none;
+  }
+}
+
 .hero-emphasis {
   background: var(--surface-accent);
   padding: 0 var(--spacing-4);

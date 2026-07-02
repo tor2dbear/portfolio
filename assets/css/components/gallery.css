@@ -90,3 +90,22 @@
   max-width: 100%;
   height: auto;
 }
+
+/* Index layout: works images pack into a uniform contact sheet — 3-up on
+   desktop, 2-up on mobile — regardless of a gallery's manual pairing (1+1 /
+   2x2 / full). Overrides the subgrid + per-placement half-spans; each figure
+   takes one cell. */
+:root[data-layout="index"] .gallery {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--layout-col-gap);
+}
+
+:root[data-layout="index"] .gallery > * {
+  grid-column: auto / span 1;
+}
+
+@media (max-width: 47.9375em) {
+  :root[data-layout="index"] .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
