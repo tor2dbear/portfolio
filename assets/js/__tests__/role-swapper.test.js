@@ -14,6 +14,8 @@ describe("Role Swapper - Hero Text", () => {
       data-type-speed="100"
       data-delete-speed="50"
       data-blink="200"
+      data-blink-before="200"
+      data-settle="100"
       ${attrs}
     ><span data-js="role-swapper-text">One.</span></span>
   `;
@@ -35,7 +37,7 @@ describe("Role Swapper - Hero Text", () => {
 
     expect(textEl().textContent).toBe("One.");
 
-    // hold 1000 + delete "One." (4*50) + type "Two." (4*100) + a switch step.
+    // ~pause (idle+blinks+settle=800) + delete "One." (200) + type "Two." (400).
     jest.advanceTimersByTime(1800);
     expect(textEl().textContent).toBe("Two.");
   });
@@ -46,8 +48,8 @@ describe("Role Swapper - Hero Text", () => {
     require("../role-swapper");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
-    // hold 1000 + 4 deletes (200) lands on the empty string.
-    jest.advanceTimersByTime(1180);
+    // idle 500 + blink-before 200 + settle 100 + 4 deletes (200) → empty string.
+    jest.advanceTimersByTime(970);
     expect(textEl().textContent).toBe("");
   });
 

@@ -1,9 +1,12 @@
 /**
  * Hero role swapper for the homepage — typewriter effect.
  *
- * Per role the caret runs through: type (solid) → blink briefly → idle (hidden)
- * → blink briefly → delete (solid) → type the next. Only the differing tail is
- * retyped when consecutive roles share a prefix.
+ * Per typed role the caret runs through: type (solid) → blink briefly → idle
+ * (hidden) → blink → settle (solid) → delete (solid) → type the next. The
+ * settle beat keeps the caret visible as deletion begins so it doesn't feel cut
+ * off. On page load the initial role starts in the idle phase — no blink up
+ * front. Only the differing tail is retyped when consecutive roles share a
+ * prefix.
  *
  * Reduced motion: honours BOTH the OS `prefers-reduced-motion` and the site's
  * own toggle (html[data-effect-reduced-motion="on"]), and reacts live.
@@ -16,8 +19,10 @@
 
   const TYPE_SPEED = 125; // ms per character while typing
   const DELETE_SPEED = 60; // ms per character while deleting
-  const HOLD = 5000; // ms between roles (incl. the two blink bursts)
-  const BLINK = 1000; // ms the caret blinks before and after the animation
+  const HOLD = 5000; // total pause between roles (blinks + idle)
+  const BLINK_AFTER = 1000; // caret blink just after a role finishes
+  const BLINK_BEFORE = 2200; // caret blink just before the next role deletes
+  const SETTLE = 250; // solid caret beat before deletion begins
 
   function parseRoles(value) {
     if (!value) {
@@ -64,12 +69,14 @@
     }
 
     const full = (i) => roles[i] + suffix;
-    const hold = Number(swapper.getAttribute("data-interval")) || HOLD;
-    const typeSpeed =
-      Number(swapper.getAttribute("data-type-speed")) || TYPE_SPEED;
-    const deleteSpeed =
-      Number(swapper.getAttribute("data-delete-speed")) || DELETE_SPEED;
-    const blink = Number(swapper.getAttribute("data-blink")) || BLINK;
+    const num = (attr, fallback) =>
+      Number(swapper.getAttribute(attr)) || fallback;
+    const hold = num("data-interval", HOLD);
+    const typeSpeed = num("data-type-speed", TYPE_SPEED);
+    const deleteSpeed = num("data-delete-speed", DELETE_SPEED);
+    const blinkAfterMs = num("data-blink", BLINK_AFTER);
+    const blinkBeforeMs = num("data-blink-before", BLINK_BEFORE);
+    const settleMs = num("data-settle", SETTLE);
 
     const reduceMq =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -82,7 +89,7 @@
     let timer = null;
     let running = false;
 
-    // caret: "solid" (typing) | "blink" (boundary) | "off" (idle/hidden)
+    // caret: "solid" (typing/settle) | "blink" (boundary) | "off" (idle)
     const setCaret = (state) => {
       swapper.classList.toggle("is-typing", state === "solid");
       swapper.classList.toggle("is-blinking", state === "blink");
@@ -110,21 +117,30 @@
 
     function blinkAfter() {
       setCaret("blink");
-      schedule(idlePhase, blink);
+      schedule(idlePhase, blinkAfterMs);
     }
 
     function idlePhase() {
       setCaret("off");
-      schedule(blinkBefore, Math.max(hold - 2 * blink, 0));
+      const idle = Math.max(
+        hold - blinkAfterMs - blinkBeforeMs - settleMs,
+        0
+      );
+      schedule(blinkBefore, idle);
     }
 
     function blinkBefore() {
       setCaret("blink");
-      schedule(startDeleting, blink);
+      schedule(settlePhase, blinkBeforeMs);
     }
 
-    function startDeleting() {
-      deleteStep();
+    function settlePhase() {
+      if (isReduced()) {
+        stop();
+        return;
+      }
+      setCaret("solid");
+      schedule(deleteStep, settleMs);
     }
 
     function deleteStep() {
@@ -164,8 +180,8 @@
       running = true;
       text = full(index);
       textEl.textContent = text;
-      // The initial role is already complete → begin at the post-role blink.
-      blinkAfter();
+      // Begin in the idle phase → no blink on page load.
+      idlePhase();
     }
 
     const onMotionChange = () => {
