@@ -126,11 +126,13 @@
   }
 }
 
-/* Caret — shown only while the typewriter is actively typing/deleting
-   (is-typing, toggled by role-swapper.js), hidden while a role is held. A CSS
-   bar rather than a font glyph so it tracks the type size; coloured with the
-   normal text colour, not the role accent. */
-.role-swapper.is-typing .role-swapper__text::after {
+/* Caret — a CSS bar (tracks the type size), coloured with the normal text
+   colour, not the role accent. Solid while actively typing/deleting
+   (is-typing); blinking briefly just after a role completes and just before the
+   next one starts (is-blinking); hidden while a role is held. States toggled by
+   role-swapper.js. */
+.role-swapper.is-typing .role-swapper__text::after,
+.role-swapper.is-blinking .role-swapper__text::after {
   content: "";
   display: inline-block;
   width: 0.06em;
@@ -138,6 +140,21 @@
   margin-left: 0.06em;
   vertical-align: -0.08em;
   background: var(--text-default);
+}
+
+.role-swapper.is-blinking .role-swapper__text::after {
+  animation: role-caret-blink 1s infinite;
+}
+
+@keyframes role-caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .hero-emphasis {

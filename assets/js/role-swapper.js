@@ -1,13 +1,12 @@
 /**
  * Hero role swapper for the homepage — typewriter effect.
  *
- * The role is deleted one character at a time and the next role typed back in.
- * Only the differing tail is retyped when consecutive roles share a prefix
- * (e.g. "Product Designer" → "Product Owner").
+ * Per role the caret runs through: type (solid) → blink briefly → idle (hidden)
+ * → blink briefly → delete (solid) → type the next. Only the differing tail is
+ * retyped when consecutive roles share a prefix.
  *
  * Reduced motion: honours BOTH the OS `prefers-reduced-motion` and the site's
- * own "Reduce motion" toggle (html[data-effect-reduced-motion="on"]), and reacts
- * live — toggling it on pauses on a complete role, toggling it off resumes.
+ * own toggle (html[data-effect-reduced-motion="on"]), and reacts live.
  *
  * A11y: the animated text is decorative (aria-hidden on the container); a
  * separate visually-hidden role keeps the heading's accessible name stable.
@@ -15,9 +14,10 @@
 (function () {
   "use strict";
 
-  const TYPE_SPEED = 125; // ms per character while typing (calm, natural)
+  const TYPE_SPEED = 125; // ms per character while typing
   const DELETE_SPEED = 60; // ms per character while deleting
-  const HOLD = 5000; // ms to hold a completed role (low change frequency)
+  const HOLD = 5000; // ms between roles (incl. the two blink bursts)
+  const BLINK = 1000; // ms the caret blinks before and after the animation
 
   function parseRoles(value) {
     if (!value) {
@@ -69,6 +69,7 @@
       Number(swapper.getAttribute("data-type-speed")) || TYPE_SPEED;
     const deleteSpeed =
       Number(swapper.getAttribute("data-delete-speed")) || DELETE_SPEED;
+    const blink = Number(swapper.getAttribute("data-blink")) || BLINK;
 
     const reduceMq =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -78,47 +79,71 @@
         "on";
 
     let text = full(index);
-    let deleting = true;
     let timer = null;
     let running = false;
 
-    const setTyping = (on) => {
-      swapper.classList.toggle("is-typing", on);
+    // caret: "solid" (typing) | "blink" (boundary) | "off" (idle/hidden)
+    const setCaret = (state) => {
+      swapper.classList.toggle("is-typing", state === "solid");
+      swapper.classList.toggle("is-blinking", state === "blink");
     };
 
-    const step = () => {
+    const schedule = (fn, ms) => {
+      timer = window.setTimeout(fn, ms);
+    };
+
+    function typeStep() {
       if (isReduced()) {
         stop();
         return;
       }
-      if (deleting) {
-        const next = (index + 1) % roles.length;
-        const floor = commonPrefixLength(full(index), full(next));
-        if (text.length > floor) {
-          setTyping(true);
-          text = text.slice(0, -1);
-          textEl.textContent = text;
-          timer = window.setTimeout(step, deleteSpeed);
-        } else {
-          index = next;
-          deleting = false;
-          timer = window.setTimeout(step, typeSpeed);
-        }
+      setCaret("solid");
+      const target = full(index);
+      if (text.length < target.length) {
+        text = target.slice(0, text.length + 1);
+        textEl.textContent = text;
+        schedule(typeStep, typeSpeed);
       } else {
-        const target = full(index);
-        if (text.length < target.length) {
-          setTyping(true);
-          text = target.slice(0, text.length + 1);
-          textEl.textContent = text;
-          timer = window.setTimeout(step, typeSpeed);
-        } else {
-          // Role complete → hide the caret and hold before the next change.
-          setTyping(false);
-          deleting = true;
-          timer = window.setTimeout(step, hold);
-        }
+        blinkAfter();
       }
-    };
+    }
+
+    function blinkAfter() {
+      setCaret("blink");
+      schedule(idlePhase, blink);
+    }
+
+    function idlePhase() {
+      setCaret("off");
+      schedule(blinkBefore, Math.max(hold - 2 * blink, 0));
+    }
+
+    function blinkBefore() {
+      setCaret("blink");
+      schedule(startDeleting, blink);
+    }
+
+    function startDeleting() {
+      deleteStep();
+    }
+
+    function deleteStep() {
+      if (isReduced()) {
+        stop();
+        return;
+      }
+      setCaret("solid");
+      const next = (index + 1) % roles.length;
+      const floor = commonPrefixLength(full(index), full(next));
+      if (text.length > floor) {
+        text = text.slice(0, -1);
+        textEl.textContent = text;
+        schedule(deleteStep, deleteSpeed);
+      } else {
+        index = next;
+        schedule(typeStep, typeSpeed);
+      }
+    }
 
     function stop() {
       running = false;
@@ -127,10 +152,9 @@
         timer = null;
       }
       // Rest on a complete role, never a half-typed one.
-      deleting = true;
       text = full(index);
       textEl.textContent = text;
-      setTyping(false);
+      setCaret("off");
     }
 
     function start() {
@@ -138,10 +162,10 @@
         return;
       }
       running = true;
-      deleting = true;
       text = full(index);
       textEl.textContent = text;
-      timer = window.setTimeout(step, hold);
+      // The initial role is already complete → begin at the post-role blink.
+      blinkAfter();
     }
 
     const onMotionChange = () => {

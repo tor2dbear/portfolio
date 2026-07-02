@@ -13,6 +13,7 @@ describe("Role Swapper - Hero Text", () => {
       data-interval="1000"
       data-type-speed="100"
       data-delete-speed="50"
+      data-blink="200"
       ${attrs}
     ><span data-js="role-swapper-text">One.</span></span>
   `;
