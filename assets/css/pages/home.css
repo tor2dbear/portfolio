@@ -110,11 +110,13 @@
   }
 }
 
-/* Per-typeface tuning: the mono typeface (technical) is wider, so the lead +
-   role stop fitting on one line a bit sooner. Break the role onto its own line
-   up to 700px for it (combine the typography dimension with the media query —
-   the same pattern can add a breakpoint for any other typeface). */
-@media (max-width: 43.75em) {
+/* Per-typeface tuning: the mono typeface (technical) is much wider, so the lead
+   + role stop fitting on one line well before the default breakpoint. Break the
+   role onto its own line up to 800px for it (combine the typography dimension
+   with the media query). The same pattern extends to a typeface+layout combo,
+   e.g. :root[data-typography="technical"][data-layout="editorial"], since
+   editorial scales the type up (1.15×) and wraps a little sooner still. */
+@media (max-width: 50em) {
   :root[data-typography="technical"] .role-swapper {
     display: block;
   }
