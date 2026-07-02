@@ -20,7 +20,9 @@
   const DELETE_SPEED = 60; // ms per character while deleting
   const HOLD = 5000; // total pause between roles (blinks + idle)
   const SETTLE = 300; // solid caret beat right after the last letter is typed
-  const BLINK_AFTER = 2200; // caret blink after typing (the emphasis is here)
+  // Blink durations are whole multiples of the 1s CSS blink period so the caret
+  // ends a blink phase cleanly on "off" — no clipped half-blink at the end.
+  const BLINK_AFTER = 2000; // caret blink after typing (the emphasis is here)
   const BLINK_BEFORE = 1000; // short caret blink just before the next delete
 
   function parseRoles(value) {
