@@ -85,16 +85,29 @@
   letter-spacing: var(--display-tracking);
 }
 
-/* Typewriter role (role-swapper.js types/deletes one char at a time). On its
-   OWN line (display:block, forced by the markup having no inline text after it)
-   so the lead line above is fixed text that never re-wraps as the role's width
-   changes — that's what stops the page reflowing and characters like "—" from
-   hopping between lines. No reserved width, so the role grows/shrinks tight with
-   no gap; a centred hero re-centres this line only. */
+/* Typewriter role (role-swapper.js types/deletes one char at a time). No
+   reserved width, so it grows/shrinks tight with no gap. Inline by default: on
+   larger screens the hero is capped to a narrow max-width, so even the longest
+   role fits on the lead's line and there's no re-wrap. */
 .role-swapper {
-  display: block;
   color: var(--text-accent);
   font-weight: inherit;
+}
+
+/* Below ~680px the hero becomes viewport-constrained and the lead + role no
+   longer fit one line, so the growing/shrinking role would re-wrap the sentence
+   (the page jumps, the em dash hops between lines). Drop the role onto its own
+   line here: the lead above is then fixed text that wraps identically whatever
+   the role is, and only the role's own line changes. The break after the role
+   is hidden since the block already starts a new line for the following text. */
+@media (max-width: 42.5em) {
+  .role-swapper {
+    display: block;
+  }
+
+  .hero-role-br {
+    display: none;
+  }
 }
 
 /* Blinking caret, only while the JS typewriter is running (is-animating). A
