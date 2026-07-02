@@ -85,14 +85,16 @@
   letter-spacing: var(--display-tracking);
 }
 
-/* Typewriter role (role-swapper.js types/deletes one char at a time). No
-   reserved width — the role grows/shrinks with its text, so a centred hero
-   re-centres smoothly and there's no gap around short roles. nowrap keeps the
-   role on one line. */
+/* Typewriter role (role-swapper.js types/deletes one char at a time). On its
+   OWN line (display:block, forced by the markup having no inline text after it)
+   so the lead line above is fixed text that never re-wraps as the role's width
+   changes — that's what stops the page reflowing and characters like "—" from
+   hopping between lines. No reserved width, so the role grows/shrinks tight with
+   no gap; a centred hero re-centres this line only. */
 .role-swapper {
+  display: block;
   color: var(--text-accent);
   font-weight: inherit;
-  white-space: nowrap;
 }
 
 /* Blinking caret, only while the JS typewriter is running (is-animating). A
