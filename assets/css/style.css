@@ -454,7 +454,10 @@ footer > * {
   display: contents;
 }
 
-/* Images → one cell each. */
+/* Images → one cell each. Drop the per-figure media margin so the grid gap
+   alone spaces the cells — standalone figures carry .post figure's margin-bottom
+   while gallery figures have margin:0, which made the unpaired ones sit further
+   apart. */
 :root[data-layout="index"]
   .content.post.works-post
   > .post-content.place-prose
@@ -465,6 +468,7 @@ footer > * {
   .gallery
   > figure {
   grid-column: auto / span 1;
+  margin: 0;
 }
 
 /* Drop the soft-break separators between images (they'd each take a slot). */
