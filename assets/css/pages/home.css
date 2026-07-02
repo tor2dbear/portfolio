@@ -110,6 +110,20 @@
   }
 }
 
+/* Per-typeface tuning: the mono typeface (technical) is wider, so the lead +
+   role stop fitting on one line a bit sooner. Break the role onto its own line
+   up to 700px for it (combine the typography dimension with the media query —
+   the same pattern can add a breakpoint for any other typeface). */
+@media (max-width: 43.75em) {
+  :root[data-typography="technical"] .role-swapper {
+    display: block;
+  }
+
+  :root[data-typography="technical"] .hero-role-br {
+    display: none;
+  }
+}
+
 /* Caret — shown only while the typewriter is actively typing/deleting
    (is-typing, toggled by role-swapper.js), hidden while a role is held. A CSS
    bar rather than a font glyph so it tracks the type size; coloured with the
