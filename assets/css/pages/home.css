@@ -155,6 +155,12 @@
     --works-span-compact: span 12;
   }
 
+  /* Every editorial card is full-width, so the compact cards get the same
+     large title as the wide ones (no small/large mix per row). */
+  :root[data-layout="editorial"] .summary-card--compact .summary-card__title {
+    font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
+  }
+
   :root[data-layout="index"] {
     --works-span-wide: span 4;
     --works-span-compact: span 4;

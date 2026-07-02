@@ -884,10 +884,6 @@ p:empty {
   margin-bottom: var(--spacing-32);
 }
 
-.about-main__secondary .about-main__headline {
-  margin-top: var(--spacing-32);
-}
-
 .about-cv__section {
   break-inside: avoid;
   /* flow-root (not inline-block): inline-block baseline-aligns the sections,
