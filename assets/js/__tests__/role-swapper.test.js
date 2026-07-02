@@ -48,7 +48,7 @@ describe("Role Swapper - Hero Text", () => {
     require("../role-swapper");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
-    // idle 500 + blink-before 200 + settle 100 + 4 deletes (200) → empty string.
+    // idle 500 + blink-before 200 + deletes → passes through the empty string.
     jest.advanceTimersByTime(970);
     expect(textEl().textContent).toBe("");
   });
