@@ -221,25 +221,31 @@
   }
 }
 
-/* Index layout: works cards become compact rows — small thumbnail + title +
-   meta + tags on one line, like an index / filmography. The .summary-card
-   header is flattened (display:contents) so its image/title/meta join the
-   article's row grid alongside the tags. Applies wherever summary cards appear
-   (home featured + works listings). */
-:root[data-layout="index"] article:has(> .summary-card) {
-  display: grid;
-  grid-template-columns: var(--place-card-thumb, 5rem) minmax(0, 1fr) auto auto;
-  align-items: center;
-  column-gap: var(--layout-col-gap);
-  padding: var(--spacing-12) 0;
-  border-top: 1px solid var(--border-subtle);
-}
+/* Index layout: works cards become compact rows — thumbnail + title + meta +
+   tags, like an index / filmography. The .summary-card header is flattened
+   (display:contents) so its image/title/meta join the article's grid alongside
+   the tags. Applies wherever summary cards appear (home featured + listings).
 
+   Mobile-first: thumbnail left, title/meta/tags stacked right. At >= 48em it
+   opens up to a single-line row. */
 :root[data-layout="index"] .summary-card {
   display: contents;
 }
 
+:root[data-layout="index"] article:has(> .summary-card) {
+  display: grid;
+  grid-template-columns: var(--place-card-thumb, 4.5rem) minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--spacing-16);
+  row-gap: var(--spacing-4);
+  padding: var(--spacing-16) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Thumbnail: column 1, spanning the stacked text rows. */
 :root[data-layout="index"] .summary-card__image {
+  grid-column: 1;
+  grid-row: 1 / -1;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: var(--radius-4);
@@ -251,18 +257,47 @@
   object-fit: cover;
 }
 
+/* Title / meta / tags stack in column 2. */
 :root[data-layout="index"] .summary-card__title {
+  grid-column: 2;
   margin: 0;
   font-size: var(--text-lg);
 }
 
 :root[data-layout="index"] .summary-card__meta {
+  grid-column: 2;
   margin: 0;
-  white-space: nowrap;
 }
 
 :root[data-layout="index"] article:has(> .summary-card) .tag-list {
-  justify-self: end;
+  grid-column: 2;
+  justify-self: start;
+}
+
+/* >= 48em: single-line row — thumb | title | meta | tags. */
+@media (min-width: 48em) {
+  :root[data-layout="index"] article:has(> .summary-card) {
+    grid-template-columns:
+      var(--place-card-thumb, 5rem) minmax(0, 1fr) auto auto;
+    align-items: center;
+    column-gap: var(--layout-col-gap);
+    row-gap: 0;
+    padding: var(--spacing-12) 0;
+  }
+
+  :root[data-layout="index"] .summary-card__image {
+    grid-row: auto;
+  }
+
+  :root[data-layout="index"] .summary-card__meta {
+    grid-column: 3;
+    white-space: nowrap;
+  }
+
+  :root[data-layout="index"] article:has(> .summary-card) .tag-list {
+    grid-column: 4;
+    justify-self: end;
+  }
 }
 
 /* sm: <= 47.9375em */
