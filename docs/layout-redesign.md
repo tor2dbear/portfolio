@@ -119,8 +119,9 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 ### Works article (single)
 - Column: standard reading. **DONE**
 - Editorial: full-bleed hero, centred masthead, body measure by columns. **DONE**
-- Index: body images as a uniform 3-up contact sheet (2-up mobile). **DONE**
-  - **TBD:** should the *masthead* (title/meta) also go more compact/list-like on index?
+- Index: body images as a uniform 3-up contact sheet (2-up mobile). **DONE**.
+  Masthead (title/meta) goes **compact / list-like** to match index. **DECIDED**
+- Order: title stays above the hero in **all** layouts (reordering parked). **DECIDED**
 
 ### Writing listing + article
 - **TBD** across all layouts — do writing pages follow the same treatments, or
@@ -140,22 +141,28 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 
 ## Editorial — the "bigger moves"
 
-You mentioned wanting *larger* changes to editorial beyond today's centred
-masthead. Capture the direction here so we can build it:
+**Decided ambition — two moves:**
 
-- **TBD:** what's the ambition? e.g. drop caps / lead-ins, wider asymmetric
-  columns, pull-quotes, larger display type, section rules, more whitespace…
-- **TBD:** which surfaces get the strongest editorial treatment (home vs article)?
+1. **Section rules + more whitespace** — thin dividers between sections and a more
+   open vertical rhythm. Mostly `--layout-*` tokens; applies broadly (home
+   sections + article).
+2. **Drop caps (anfang)** — a large initial at the start of body prose.
+
+*Parked (not now):* pull quotes, asymmetric / margin-note columns.
+
+- **TBD:** exact surfaces for drop caps (works body only, or long-form writing
+  too?) — refine when building.
 
 ## Open decisions (roll-up)
 
 1. Index hero — **compact / utilitarian.** ✅
 2. Featured / works rows — **small thumbnail (~1 col) + title + year + tags.** ✅
    (row hover treatment still TBD)
-3. Index masthead on works articles — list-like? **TBD**
+3. Index masthead on works articles — **compact / list-like.** ✅
 4. Writing pages — which treatment per layout? **TBD**
-5. Editorial "bigger moves" — the actual ambition. **TBD**
-6. Reordering — e.g. hero image above title on works, per layout. **TBD**
+5. Editorial "bigger moves" — **section rules + more whitespace, and drop caps.** ✅
+6. Reordering — **parked** (title above hero everywhere); mechanism ready in the
+   Placement API when wanted. ✅
 
 ## Parked / backlog
 
