@@ -98,21 +98,23 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 ### Home — hero
 - Column: as today. **DONE**
 - Editorial: centred, full-width, typewriter role on its own line < breakpoint. **DONE**
-- Index: as today. **TARGET?** — should the hero shrink / go more compact/utilitarian on index? **TBD**
+- Index: **compact / utilitarian** — smaller display type + tighter hero rhythm
+  (scale down `--layout-hero-rhythm` / `--layout-scale-ratio`). **DECIDED**
 
 ### Home — featured works
 - Column: asymmetric 8+4 / 4+8 rhythm. **DONE**
 - Editorial: full-width, dramatic cards. **DONE**
-- Index: **TARGET → present as ROWS, not an image grid.** Each work = a row
-  (title, year/meta, tags; thumbnail small or none). Less image-centric, reads
-  like a filmography / table of contents.
-  - **TBD:** thumbnail — tiny (e.g. 1–2 col) or none? Row content + order?
-  - **TBD:** hover/focus treatment for a row?
+- Index: **ROWS, not an image grid** — each work = a row with a **small
+  thumbnail (~1 col)** + **title + year + tags**. Less image-centric, reads like
+  a filmography / index. **DECIDED**
+  - Tokens: row = full width; `--place-card-thumb: span 1`; title primary, year +
+    tags as secondary meta.
+  - **TBD:** row hover / focus treatment?
 
 ### Works listing (`/works`, tags, terms)
 - Column / editorial: as today (layout-responsive grid). **DONE**
-- Index: **TARGET → same ROW treatment as featured** (consistent index = list).
-  **TBD:** identical to featured rows, or denser?
+- Index: **same ROW treatment as featured** (small thumb + title / year / tags).
+  **DECIDED.** **TBD:** identical to featured rows, or a touch denser?
 
 ### Works article (single)
 - Column: standard reading. **DONE**
@@ -147,11 +149,13 @@ masthead. Capture the direction here so we can build it:
 
 ## Open decisions (roll-up)
 
-1. Index hero — compact or as-is? **TBD**
-2. Featured/works rows — thumbnail size (tiny/none), row anatomy, hover. **TBD**
+1. Index hero — **compact / utilitarian.** ✅
+2. Featured / works rows — **small thumbnail (~1 col) + title + year + tags.** ✅
+   (row hover treatment still TBD)
 3. Index masthead on works articles — list-like? **TBD**
 4. Writing pages — which treatment per layout? **TBD**
 5. Editorial "bigger moves" — the actual ambition. **TBD**
+6. Reordering — e.g. hero image above title on works, per layout. **TBD**
 
 ## Parked / backlog
 
