@@ -21,6 +21,66 @@
 | **Index** | Dense, list-like — a literal *index*. **Less image-centric.** | Small / rows, minimal |
 | ~~Terminal~~ | *Parked* — a text-only, image-free layout. Revisit later. | None |
 
+## Placement API (the mechanism)
+
+Layouts are a **data layer over a declarative placement vocabulary**, not a pile
+of per-surface overrides. Markup says *what* an element is (a semantic role);
+each layout defines *where* it goes (columns) and *in what order* (rows / areas)
+via tokens. This keeps the existing `--col` / `.place-*` API and extends it —
+adding a layout becomes "fill in a table", not "write new rules".
+
+### Roles (vocabulary)
+
+A small set of semantic placement roles — finalise as we go, and only tokenise
+what actually varies by layout:
+
+`hero` · `title` · `meta` · `lede` · `feature` · `card` · `figure` · `prose` · `aside` · `nav`
+
+### Column placement — role → token
+
+```css
+/* vocabulary: defined once */
+.place-figure { grid-column: var(--place-figure, col-start 1 / span 10); }
+
+/* layout: just a table of values — no surface rules, no specificity fights */
+:root[data-layout="index"]     { --place-figure: auto / span 4; }
+:root[data-layout="editorial"] { --place-figure: col-start 1 / span 12; }
+```
+
+`--col` / `.place-*` stay as the escape hatch for genuine one-offs.
+
+### Order / 2-D placement — reorder between layouts
+
+CSS Grid decouples *visual position* from *DOM order*, so an element can move
+anywhere per layout with the DOM unchanged. Two mechanisms:
+
+1. **Named areas (structured regions)** — best for reordering a fixed set (e.g. a
+   works masthead: hero / title / meta). Each layout redraws the template:
+   ```css
+   .works-masthead { display: grid; grid-template-areas: var(--masthead-areas); }
+   .works-masthead__hero  { grid-area: hero; }
+   .works-masthead__title { grid-area: title; }
+
+   :root[data-layout="column"]    { --masthead-areas: "title" "hero"; }
+   :root[data-layout="editorial"] { --masthead-areas: "hero" "title"; } /* image on top */
+   ```
+2. **Row token (single elements)** — `.place-x { grid-row: var(--row-x, auto); }`
+   set per layout. Lighter than areas for one-off moves.
+
+### Accessibility guard-rail
+
+DOM / source order = **reading, tab and screen-reader order**. Grid reordering is
+*visual only*. Keep the DOM in a sensible default order, and be careful moving
+**focusable / interactive** elements (visual vs tab order can desync). Swapping a
+hero image and a title is low-risk; large reorders of interactive content are not
+— those get flagged.
+
+### How this maps to the matrix
+
+Every cell in the Layout × Surface matrix below is ultimately a set of token
+values (`--place-*`, `--row-*` / `--*-areas`, `--layout-*`). Filling the matrix
+*is* defining the tokens.
+
 ## Cross-cutting principles (keep)
 
 - **Orthogonal:** layout owns composition/rhythm/image-treatment only. Colour →
