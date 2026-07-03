@@ -234,24 +234,33 @@
 
 :root[data-layout="index"] article:has(> .summary-card) {
   display: grid;
-  grid-template-columns: var(--place-card-thumb, 4.5rem) minmax(0, 1fr);
+  grid-template-columns: var(--place-card-thumb, 3.75rem) minmax(0, 1fr);
   align-items: start;
-  column-gap: var(--spacing-16);
-  row-gap: var(--spacing-4);
-  padding: var(--spacing-16) 0;
+  column-gap: var(--spacing-12);
+  row-gap: var(--spacing-2);
+  padding: var(--spacing-12) 0;
   border-top: 1px solid var(--border-subtle);
 }
 
-/* Thumbnail: column 1, spanning the stacked text rows. */
+/* Thumbnail: column 1, spanning the stacked text rows. It STRETCHES to the
+   text-stack height instead of carrying a fixed aspect-ratio — the image box is
+   `overflow: hidden` (min-content height 0), so it contributes nothing to track
+   sizing and never inflates the gaps between title/meta/tags. (A fixed
+   aspect-ratio here would distribute its height across the spanned rows and open
+   a gap under a single-line title.) The thumb reads at a consistent ratio because
+   every row has the same title+date+tags structure. */
 :root[data-layout="index"] .summary-card__image {
   grid-column: 1;
   grid-row: 1 / -1;
-  aspect-ratio: 4 / 3;
+  align-self: stretch;
+  min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-4);
 }
 
+:root[data-layout="index"] .summary-card__image a,
 :root[data-layout="index"] .summary-card__image :is(picture, img) {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -287,6 +296,8 @@
 
   :root[data-layout="index"] .summary-card__image {
     grid-row: auto;
+    align-self: center;
+    aspect-ratio: 4 / 3;
   }
 
   :root[data-layout="index"] .summary-card__meta {
