@@ -213,16 +213,56 @@
     font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
   }
 
+  /* Index presents works as full-width rows (row treatment below), so every
+     card spans the full content width. */
   :root[data-layout="index"] {
-    --works-span-wide: span 4;
-    --works-span-compact: span 4;
+    --works-span-wide: span 12;
+    --works-span-compact: span 12;
   }
+}
 
-  /* In the uniform index grid, drop the wide cards' larger title so every
-     cell reads the same (homepage works + works/tag listings). */
-  :root[data-layout="index"] .summary-card--wide .summary-card__title {
-    font-size: var(--text-xl);
-  }
+/* Index layout: works cards become compact rows — small thumbnail + title +
+   meta + tags on one line, like an index / filmography. The .summary-card
+   header is flattened (display:contents) so its image/title/meta join the
+   article's row grid alongside the tags. Applies wherever summary cards appear
+   (home featured + works listings). */
+:root[data-layout="index"] article:has(> .summary-card) {
+  display: grid;
+  grid-template-columns: var(--place-card-thumb, 5rem) minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: var(--layout-col-gap);
+  padding: var(--spacing-12) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+:root[data-layout="index"] .summary-card {
+  display: contents;
+}
+
+:root[data-layout="index"] .summary-card__image {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-4);
+}
+
+:root[data-layout="index"] .summary-card__image :is(picture, img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+:root[data-layout="index"] .summary-card__title {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+:root[data-layout="index"] .summary-card__meta {
+  margin: 0;
+  white-space: nowrap;
+}
+
+:root[data-layout="index"] article:has(> .summary-card) .tag-list {
+  justify-self: end;
 }
 
 /* sm: <= 47.9375em */
