@@ -233,8 +233,10 @@
 }
 
 :root[data-layout="index"] article:has(> .summary-card) {
+  /* Placement API token: thumbnail column width (overridable per context). */
+  --place-card-thumb: 3.75rem;
   display: grid;
-  grid-template-columns: var(--place-card-thumb, 3.75rem) minmax(0, 1fr);
+  grid-template-columns: var(--place-card-thumb) minmax(0, 1fr);
   align-items: start;
   column-gap: var(--spacing-12);
   row-gap: var(--spacing-8);
@@ -286,8 +288,9 @@
 /* >= 48em: single-line row — thumb | title | meta | tags. */
 @media (min-width: 48em) {
   :root[data-layout="index"] article:has(> .summary-card) {
+    --place-card-thumb: 5rem;
     grid-template-columns:
-      var(--place-card-thumb, 5rem) minmax(0, 1fr) auto auto;
+      var(--place-card-thumb) minmax(0, 1fr) auto auto;
     align-items: center;
     column-gap: var(--layout-col-gap);
     row-gap: 0;
