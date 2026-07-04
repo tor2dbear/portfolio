@@ -237,8 +237,8 @@
   grid-template-columns: var(--place-card-thumb, 3.75rem) minmax(0, 1fr);
   align-items: start;
   column-gap: var(--spacing-12);
-  row-gap: var(--spacing-2);
-  padding: var(--spacing-12) 0;
+  row-gap: var(--spacing-8);
+  padding: var(--spacing-16) 0;
   border-top: 1px solid var(--border-subtle);
 }
 
