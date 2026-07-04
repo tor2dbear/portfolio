@@ -85,6 +85,15 @@
   letter-spacing: var(--display-tracking);
 }
 
+/* Index hero is utilitarian: dial the lead all the way down to near body-text
+   size (scoped to the hero only, so the global --layout-scale-ratio still governs
+   the rest of index's headings). */
+:root[data-layout="index"] .hero-section .hero-title {
+  font-size: var(--text-lg);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--tracking-normal);
+}
+
 /* Typewriter role (role-swapper.js types/deletes one char at a time). No
    reserved width, so it grows/shrinks tight with no gap. Inline by default: on
    larger screens the hero is capped to a narrow max-width, so even the longest
@@ -239,28 +248,35 @@
   grid-template-columns: var(--place-card-thumb) minmax(0, 1fr);
   align-items: start;
   column-gap: var(--spacing-12);
-  row-gap: var(--spacing-8);
-  padding: var(--spacing-16) 0;
+  row-gap: var(--spacing-4);
+  padding: var(--spacing-12) 0;
   border-top: 1px solid var(--border-subtle);
 }
 
-/* Thumbnail: column 1, spanning the stacked text rows. It STRETCHES to the
-   text-stack height instead of carrying a fixed aspect-ratio — the image box is
-   `overflow: hidden` (min-content height 0), so it contributes nothing to track
-   sizing and never inflates the gaps between title/meta/tags. (A fixed
-   aspect-ratio here would distribute its height across the spanned rows and open
-   a gap under a single-line title.) The thumb reads at a consistent ratio because
-   every row has the same title+date+tags structure. */
+/* Thumbnail: column 1, spanning the stacked text rows. The image is taken OUT
+   OF FLOW (the anchor is absolutely positioned) so it contributes nothing to
+   grid track sizing — the text column alone drives each row's height and the
+   image can never inflate the gaps between title/meta/tags. The box then
+   stretches to the text-stack height and the image cover-fills it, giving every
+   row a uniform thumbnail regardless of the source image's aspect ratio.
+   (Letting the image stay in flow makes its intrinsic height stretch the rows
+   apart — the bug that produced the uneven, bottom-heavy rows.) */
 :root[data-layout="index"] .summary-card__image {
   grid-column: 1;
   grid-row: 1 / -1;
   align-self: stretch;
+  position: relative;
   min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-4);
 }
 
-:root[data-layout="index"] .summary-card__image a,
+:root[data-layout="index"] .summary-card__image a {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
 :root[data-layout="index"] .summary-card__image :is(picture, img) {
   display: block;
   width: 100%;
@@ -269,10 +285,22 @@
 }
 
 /* Title / meta / tags stack in column 2. */
+/* Title truncates to a single line — rows stay uniform height and the thumbnail
+   (which stretches to the text stack) never has to accommodate a wrapped title. */
 :root[data-layout="index"] .summary-card__title {
   grid-column: 2;
+  min-width: 0;
   margin: 0;
   font-size: var(--text-lg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:root[data-layout="index"] .summary-card__title a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 :root[data-layout="index"] .summary-card__meta {
