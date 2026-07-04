@@ -243,7 +243,7 @@
 
 :root[data-layout="index"] article:has(> .summary-card) {
   /* Placement API token: thumbnail column width (overridable per context). */
-  --place-card-thumb: 3.75rem;
+  --place-card-thumb: 3rem;
   display: grid;
   grid-template-columns: var(--place-card-thumb) minmax(0, 1fr);
   align-items: start;
@@ -253,40 +253,32 @@
   border-top: 1px solid var(--border-subtle);
 }
 
-/* Thumbnail: column 1, spanning the stacked text rows. The image is taken OUT
-   OF FLOW (the anchor is absolutely positioned) so it contributes nothing to
-   grid track sizing — the text column alone drives each row's height and the
-   image can never inflate the gaps between title/meta/tags. The box then
-   stretches to the text-stack height and the image cover-fills it, giving every
-   row a uniform thumbnail regardless of the source image's aspect ratio.
-   (Letting the image stay in flow makes its intrinsic height stretch the rows
-   apart — the bug that produced the uneven, bottom-heavy rows.) */
+/* Thumbnail: column 1, top-aligned beside the text, shown at the source image's
+   ORIGINAL aspect ratio (natural height, no crop). The thumb column is kept
+   deliberately small (3rem) so even a portrait cover is shorter than the
+   title/date/tags stack — that's what stops the image from stretching the grid
+   rows and pooling empty space at the bottom of each row. The text column drives
+   the row height; the image simply sits at the top of column 1. */
 :root[data-layout="index"] .summary-card__image {
   grid-column: 1;
   grid-row: 1 / -1;
-  align-self: stretch;
-  position: relative;
-  min-height: 0;
+  align-self: start;
   overflow: hidden;
   border-radius: var(--radius-4);
 }
 
 :root[data-layout="index"] .summary-card__image a {
-  position: absolute;
-  inset: 0;
   display: block;
 }
 
 :root[data-layout="index"] .summary-card__image :is(picture, img) {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
 }
 
-/* Title / meta / tags stack in column 2. */
-/* Title truncates to a single line — rows stay uniform height and the thumbnail
-   (which stretches to the text stack) never has to accommodate a wrapped title. */
+/* Title / meta / tags stack in column 2. Title truncates to a single line so
+   every row stays the same height and long titles don't wrap. */
 :root[data-layout="index"] .summary-card__title {
   grid-column: 2;
   min-width: 0;
@@ -325,10 +317,18 @@
     padding: var(--spacing-12) 0;
   }
 
+  /* Single-line desktop rows stay uniform: a fixed-ratio cover thumb (a natural
+     ratio here would let a portrait cover tower over the one-line text and make
+     the dense rows wildly uneven). */
   :root[data-layout="index"] .summary-card__image {
     grid-row: auto;
     align-self: center;
     aspect-ratio: 4 / 3;
+  }
+
+  :root[data-layout="index"] .summary-card__image :is(picture, img) {
+    height: 100%;
+    object-fit: cover;
   }
 
   :root[data-layout="index"] .summary-card__meta {
