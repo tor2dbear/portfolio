@@ -247,6 +247,7 @@
   /* Zero the global `article { margin-bottom: 3rem }` (which gives column/
      editorial their inter-card rhythm) — index rows are a flush divided list. */
   margin: 0;
+  position: relative;
   display: grid;
   grid-template-columns: var(--place-card-thumb) minmax(0, 1fr);
   align-items: start;
@@ -256,16 +257,18 @@
   border-top: 1px solid var(--border-subtle);
 }
 
-/* Thumbnail: column 1, top-aligned beside the text, shown at the source image's
-   ORIGINAL aspect ratio (natural height, no crop). The thumb column is kept
-   deliberately small (3rem) so even a portrait cover is shorter than the
-   title/date/tags stack — that's what stops the image from stretching the grid
-   rows and pooling empty space at the bottom of each row. The text column drives
-   the row height; the image simply sits at the top of column 1. */
+/* Thumbnail: shown at the source image's ORIGINAL aspect ratio (natural height,
+   no crop), top-aligned in the reserved first column. It is positioned
+   ABSOLUTELY so it contributes nothing to the grid's row sizing — otherwise a
+   spanning thumbnail distributes its height across the three text rows and, since
+   each image has a different natural height, the title→date gap wanders row to
+   row. Out of flow, the text column alone drives every row and that gap is
+   exactly the row-gap on every card. */
 :root[data-layout="index"] .summary-card__image {
-  grid-column: 1;
-  grid-row: 1 / -1;
-  align-self: start;
+  position: absolute;
+  top: var(--spacing-12);
+  left: 0;
+  width: var(--place-card-thumb);
   overflow: hidden;
   border-radius: var(--radius-4);
 }
@@ -322,8 +325,11 @@
 
   /* Single-line desktop rows stay uniform: a fixed-ratio cover thumb (a natural
      ratio here would let a portrait cover tower over the one-line text and make
-     the dense rows wildly uneven). */
+     the dense rows wildly uneven). Back in flow as a normal grid item (mobile
+     positions it absolutely to keep the stacked rows deterministic). */
   :root[data-layout="index"] .summary-card__image {
+    position: static;
+    grid-column: 1;
     grid-row: auto;
     align-self: center;
     aspect-ratio: 4 / 3;
