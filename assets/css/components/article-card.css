@@ -166,6 +166,20 @@ article {
   border-top: 1px solid var(--border-subtle);
 }
 
+/* The clientpage / employerpage variants ("More from portfolio") toggle
+   visibility with an ID selector (#layout.clientpage … { display: block }) that
+   out-specifies the grid rule above — without matching that specificity the item
+   stays a plain block and the absolute thumbnail overlaps the title. Restore the
+   row grid for them. */
+:root[data-layout="index"]
+  #layout.clientpage
+  .related-items__item.show-on-client,
+:root[data-layout="index"]
+  #layout.employerpage
+  .related-items__item.show-on-employer {
+  display: grid;
+}
+
 /* Thumbnail: original ratio, top-aligned, positioned absolutely so it never
    affects row height (see summary-card.css for the full rationale). */
 :root[data-layout="index"] .related-items__image {
