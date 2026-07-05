@@ -145,6 +145,12 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 ### Footer
 - Gutters track the active layout. **DONE**
 
+## Editorial — works cards + related
+
+- Featured / listing / related cards: **full-width (one per row), centred title /
+  date / tags, larger magazine-scale title.** Related drops 3-up → single column.
+  Lives in `dimensions/layout/editorial.css` (global). **DONE**
+
 ## Editorial — the "bigger moves"
 
 **Decided ambition — two moves:**
