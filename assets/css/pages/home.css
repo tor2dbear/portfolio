@@ -244,6 +244,9 @@
 :root[data-layout="index"] article:has(> .summary-card) {
   /* Placement API token: thumbnail column width (overridable per context). */
   --place-card-thumb: 3rem;
+  /* Zero the global `article { margin-bottom: 3rem }` (which gives column/
+     editorial their inter-card rhythm) — index rows are a flush divided list. */
+  margin: 0;
   display: grid;
   grid-template-columns: var(--place-card-thumb) minmax(0, 1fr);
   align-items: start;
