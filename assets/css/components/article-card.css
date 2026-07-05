@@ -131,3 +131,118 @@ article {
     --col: col-start 1 / span 4;
   }
 }
+
+/* ==========================================================================
+   Related Items — INDEX layout (rows)
+
+   Match the index "works as rows" treatment used for summary cards, so the
+   Related section under a works article reads the same. The markup differs
+   (grouped .related-items__header with title + date), so the header is flattened
+   with display:contents and its title/date join the article's row grid — the
+   rest mirrors components/summary-card.css exactly.
+   ========================================================================== */
+
+/* Each related item is a full-width row (any grid track count → 1 / -1). The
+   container (.content.post.use-subgrid) has no row-gap, so zeroing the article
+   margin makes the rows a flush divided list. */
+:root[data-layout="index"] .content.post > .related-items__item {
+  grid-column: 1 / -1;
+}
+
+:root[data-layout="index"] .related-items__header {
+  display: contents;
+}
+
+:root[data-layout="index"] .related-items__item {
+  --place-card-thumb: 3rem;
+  margin: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--place-card-thumb) minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--spacing-12);
+  row-gap: var(--spacing-4);
+  padding: var(--spacing-12) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Thumbnail: original ratio, top-aligned, positioned absolutely so it never
+   affects row height (see summary-card.css for the full rationale). */
+:root[data-layout="index"] .related-items__image {
+  position: absolute;
+  top: var(--spacing-12);
+  left: 0;
+  width: var(--place-card-thumb);
+  overflow: hidden;
+  border-radius: var(--radius-4);
+}
+
+:root[data-layout="index"] .related-items__image a {
+  display: block;
+}
+
+:root[data-layout="index"] .related-items__image :is(picture, img) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+:root[data-layout="index"] .related-items__header .type-headline-4 {
+  grid-column: 2;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-lg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:root[data-layout="index"] .related-items__header .type-headline-4 a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:root[data-layout="index"] .related-items__header .type-information {
+  grid-column: 2;
+  margin: 0;
+}
+
+:root[data-layout="index"] .related-items__item .tag-list {
+  grid-column: 2;
+  justify-self: start;
+}
+
+/* >= 48em: single-line row — thumb | title | date | tags. */
+@media (min-width: 48em) {
+  :root[data-layout="index"] .related-items__item {
+    --place-card-thumb: 5rem;
+    grid-template-columns:
+      var(--place-card-thumb) minmax(0, 1fr) auto auto;
+    align-items: center;
+    column-gap: var(--layout-col-gap);
+    row-gap: 0;
+  }
+
+  :root[data-layout="index"] .related-items__image {
+    position: static;
+    grid-column: 1;
+    align-self: center;
+    aspect-ratio: 4 / 3;
+  }
+
+  :root[data-layout="index"] .related-items__image :is(picture, img) {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :root[data-layout="index"] .related-items__header .type-information {
+    grid-column: 3;
+    white-space: nowrap;
+  }
+
+  :root[data-layout="index"] .related-items__item .tag-list {
+    grid-column: 4;
+    justify-self: end;
+  }
+}
