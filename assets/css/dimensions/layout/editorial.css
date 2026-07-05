@@ -154,3 +154,56 @@
 :root[data-layout="editorial"] .related-items__header .type-headline-4 {
   font-size: clamp(var(--text-2xl), calc(1.5rem + 0.75vw), var(--text-4xl));
 }
+
+/* ============================================================================
+   The "bigger moves": section rules + drop caps
+
+   1. Thin rules between sections, riding the already-open editorial rhythm, so
+      the page reads as distinct magazine sections.
+   2. A drop cap (anfang) opening the works article body.
+   Structural / compositional only — colour (palette) and font face (typography)
+   stay untouched, so this remains orthogonal.
+   ============================================================================ */
+
+/* Home: a hairline between consecutive sections (never before the first). The
+   sections already carry --layout-section-rhythm padding, so the rule sits in
+   generous whitespace. */
+:root[data-layout="editorial"] .home-section + .home-section {
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Works article: a section rule opening the Related block. */
+:root[data-layout="editorial"] .content.post > .related-items__title {
+  margin-top: var(--layout-section-rhythm);
+  padding-top: var(--layout-heading-gap);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Drop cap: the first letter of the opening paragraph of the works body. The
+   body prose is left-aligned (only the masthead is centred), so a left float sits
+   correctly. Size/leading only — the initial keeps the body's own typeface,
+   weight and colour. (`:first-of-type` can't target the first .post-content since
+   masthead divs precede it, so apply to the body prose's first paragraph and
+   cancel it on the continuation block after .project-info.) */
+:root[data-layout="editorial"]
+  .content.post.works-post
+  .post-content.place-prose
+  > p:first-of-type::first-letter {
+  float: left;
+  margin-right: 0.08em;
+  padding-top: 0.06em;
+  font-size: 3.4em;
+  line-height: 0.68;
+}
+
+:root[data-layout="editorial"]
+  .content.post.works-post
+  .project-info
+  + .post-content.place-prose
+  > p:first-of-type::first-letter {
+  float: none;
+  margin-right: 0;
+  padding-top: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
