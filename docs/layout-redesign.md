@@ -155,15 +155,17 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 
 **Decided ambition — two moves:**
 
-1. **Section rules + more whitespace** — thin dividers between sections and a more
-   open vertical rhythm. Mostly `--layout-*` tokens; applies broadly (home
-   sections + article).
-2. **Drop caps (anfang)** — a large initial at the start of body prose.
+1. **Section rules + more whitespace** — thin dividers between sections riding the
+   open editorial rhythm. **DONE** — hairline between consecutive `.home-section`s
+   and one opening the Related block in a works article.
+2. **Drop caps (anfang)** — a large initial at the start of body prose. **DONE**
+   on the works article body's opening paragraph (size/leading only; keeps the
+   body typeface/weight/colour → orthogonal).
 
 *Parked (not now):* pull quotes, asymmetric / margin-note columns.
 
-- **TBD:** exact surfaces for drop caps (works body only, or long-form writing
-  too?) — refine when building.
+- **TBD:** extend drop caps to long-form writing/texter articles? (works body only
+  for now.) Tune the cap size per typeface if needed.
 
 ## Open decisions (roll-up)
 
@@ -188,5 +190,7 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 1. ~~**Index featured → rows** (home), verify.~~ **DONE**
 2. ~~**Index works listing → rows** (reuse #1), verify.~~ **DONE** (rules moved to
    the global `summary-card.css` so they cover every summary-card surface).
-3. **Editorial "bigger moves"** once the ambition is set. ← next
-4. Fill remaining TBDs surface by surface (row hover, listing density, writing pages).
+3. ~~**Editorial "bigger moves"**~~ **DONE** (section rules + drop cap; plus
+   editorial centred full-width works cards + related).
+4. Fill remaining TBDs surface by surface (row hover, listing density, writing
+   pages, drop caps on long-form writing). ← next
