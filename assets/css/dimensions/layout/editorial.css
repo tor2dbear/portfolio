@@ -207,3 +207,48 @@
   font-size: inherit;
   line-height: inherit;
 }
+
+/* ----------------------------------------------------------------------------
+   Writing / texter / post articles — editorial (magazine reading)
+
+   These use .content.post (NOT .works-post) with a .place-article masthead.
+   Centre the masthead — but not the body: prose stays left-aligned so it reads
+   well and the drop cap's left float sits correctly. Then open with a drop cap.
+   ---------------------------------------------------------------------------- */
+:root[data-layout="editorial"]
+  .content.post:not(.works-post)
+  > .place-article:not(.post-content) {
+  text-align: center;
+}
+
+:root[data-layout="editorial"]
+  .content.post:not(.works-post)
+  .post-tags-wrap
+  .tag-list__items {
+  justify-content: center;
+}
+
+:root[data-layout="editorial"]
+  .content.post:not(.works-post)
+  .post-content.prose
+  > p:first-of-type::first-letter {
+  float: left;
+  margin-right: 0.08em;
+  padding-top: 0.06em;
+  font-size: 3.4em;
+  line-height: 0.68;
+}
+
+/* Writing listing cards (.article-card — text only, no image): centred, with a
+   larger magazine-scale title to match the works cards. */
+:root[data-layout="editorial"] .article-card {
+  text-align: center;
+}
+
+:root[data-layout="editorial"] .article-card .tag-list__items {
+  justify-content: center;
+}
+
+:root[data-layout="editorial"] .article-card__title {
+  font-size: clamp(var(--text-2xl), calc(1.5rem + 0.75vw), var(--text-4xl));
+}

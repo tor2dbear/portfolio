@@ -260,3 +260,35 @@ article {
     justify-self: end;
   }
 }
+
+/* ==========================================================================
+   Writing / texter / newsletter listing — INDEX layout
+
+   These cards (.article-card) are text-only (no image), so instead of the
+   thumbnail rows used for works they become a tight, full-width divided list:
+   compact title + description + date + tags, flush dividers. The listing wraps
+   each card in a .place-article div; index makes that wrapper full width. The
+   container's row-gap is already zeroed for index in summary-card.css.
+   ========================================================================== */
+:root[data-layout="index"] .content.list > .place-article {
+  grid-column: 1 / -1;
+}
+
+:root[data-layout="index"] .article-card {
+  margin: 0;
+  padding: var(--spacing-16) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+:root[data-layout="index"] .article-card__title {
+  margin: 0 0 var(--spacing-4);
+  font-size: var(--text-lg);
+}
+
+:root[data-layout="index"] .article-card__description {
+  margin: 0 0 var(--spacing-8);
+}
+
+:root[data-layout="index"] .article-card__meta {
+  margin: 0;
+}
