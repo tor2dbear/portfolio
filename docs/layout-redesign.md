@@ -104,17 +104,23 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 ### Home — featured works
 - Column: asymmetric 8+4 / 4+8 rhythm. **DONE**
 - Editorial: full-width, dramatic cards. **DONE**
-- Index: **ROWS, not an image grid** — each work = a row with a **small
-  thumbnail (~1 col)** + **title + year + tags**. Less image-centric, reads like
-  a filmography / index. **DECIDED**
-  - Tokens: row = full width; `--place-card-thumb: span 1`; title primary, year +
-    tags as secondary meta.
+- Index: **ROWS, not an image grid** — each work = a flush divided list row with a
+  small **natural-ratio thumbnail** + **title (truncated) + full date + tags**.
+  Reads like a filmography / index. **DONE**
+  - Mechanism: `.summary-card` flattened (`display:contents`); the `<article>`
+    becomes the row grid. Thumb column = `--place-card-thumb` (3rem mobile / 5rem
+    desktop). Mobile: absolutely-positioned thumb (natural ratio, out of flow so
+    row heights are deterministic) + stacked title/date/tags. Desktop ≥48em:
+    single-line `thumb | title | meta | tags` with a uniform cover thumb.
   - **TBD:** row hover / focus treatment?
 
 ### Works listing (`/works`, tags, terms)
 - Column / editorial: as today (layout-responsive grid). **DONE**
-- Index: **same ROW treatment as featured** (small thumb + title / year / tags).
-  **DECIDED.** **TBD:** identical to featured rows, or a touch denser?
+- Index: **same ROW treatment as featured** — rules live in
+  `components/summary-card.css` (global bundle), so `/works`, taxonomy and terms
+  all get it. Both container shapes handled (`.content.startpage` span-12 +
+  `.content.list` full-width article + zeroed row-gap for flush dividers). **DONE**
+  - **TBD:** a touch denser than featured, or identical? (currently identical)
 
 ### Works article (single)
 - Column: standard reading. **DONE**
@@ -173,7 +179,8 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 
 ## Build order (proposal)
 
-1. **Index featured → rows** (home), verify.
-2. **Index works listing → rows** (reuse #1), verify.
-3. **Editorial "bigger moves"** once the ambition is set.
-4. Fill remaining TBDs surface by surface.
+1. ~~**Index featured → rows** (home), verify.~~ **DONE**
+2. ~~**Index works listing → rows** (reuse #1), verify.~~ **DONE** (rules moved to
+   the global `summary-card.css` so they cover every summary-card surface).
+3. **Editorial "bigger moves"** once the ambition is set. ← next
+4. Fill remaining TBDs surface by surface (row hover, listing density, writing pages).
