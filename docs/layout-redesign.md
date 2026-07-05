@@ -130,8 +130,16 @@ Legend: **DONE** (in PR #218) · **TARGET** (this redesign) · **TBD** (decide).
 - Order: title stays above the hero in **all** layouts (reordering parked). **DECIDED**
 
 ### Writing listing + article
-- **TBD** across all layouts — do writing pages follow the same treatments, or
-  stay closer to column for readability? (Editorial probably yes; index rows?)
+- **Decided:** editorial = magazine reading; index = utilitarian but readable.
+- Column: as today. **DONE**
+- Editorial: centred article masthead (title/date/tags/description) + drop cap on
+  the opening paragraph (body stays left for reading); listing cards centred with
+  a larger title. **DONE**
+- Index: listing is a tight full-width divided list (compact title + description +
+  date + tags, flush dividers — no thumbnail, these cards are text-only); the
+  article stays close to column so long-form reads well. **DONE**
+  - **TBD:** narrow the editorial writing *body* measure (cols 4–9 like works),
+    and/or extend the drop cap to index? (left as-is for now.)
 
 ### About / CV
 - Editorial: centred display headlines; CV columns. **DONE**
