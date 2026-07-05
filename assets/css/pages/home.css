@@ -205,27 +205,16 @@
   font-size: var(--text-xl);
 }
 
-/* Works grid responds to the layout dimension. The card spans are set inline
-   as var(--works-span-*, <column default>), so column (no override) keeps the
-   asymmetric 8+4 / 4+8 rhythm. Editorial goes full-width and dramatic; index
-   becomes a dense, uniform 3-up contact sheet. Only affects >= 48em — mobile
-   always collapses to one column via the grid's --col-sm fallback. */
-@media (min-width: 48em) {
-  :root[data-layout="editorial"] {
-    --works-span-wide: span 12;
-    --works-span-compact: span 12;
-  }
+/* Works grid responds to the layout dimension. The card spans are set inline as
+   var(--works-span-*, <column default>), so column (no override) keeps the
+   asymmetric 8+4 / 4+8 rhythm.
 
-  /* Every editorial card is full-width, so the compact cards get the same
-     large title as the wide ones (no small/large mix per row). */
-  :root[data-layout="editorial"] .summary-card--compact .summary-card__title {
-    font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
-  }
-}
-
-/* NOTE: the index "works as rows" treatment lives in components/summary-card.css
-   so it loads on every page a summary card appears (home featured + /works
-   listing + taxonomy + terms), not just the home bundle. */
+   NOTE: the per-layout card treatments now live in global stylesheets so they
+   apply on every surface a works card appears (home featured + /works listing +
+   taxonomy + terms + related), not just the home bundle:
+   - index → components/summary-card.css (+ article-card.css for related)
+   - editorial → dimensions/layout/editorial.css
+   Both set --works-span-*: span 12 and their own card styling there. */
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {

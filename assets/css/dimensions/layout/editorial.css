@@ -109,3 +109,48 @@
     grid-column: col-start 4 / span 6;
   }
 }
+
+/* ============================================================================
+   Works cards (featured, listing, related) — editorial treatment
+
+   Full-width, one card per row, with centred title / date / tags and a larger
+   magazine-scale title, echoing the centred masthead. Column keeps the default
+   card grid; index turns cards into rows; editorial makes them big and centred.
+   ============================================================================ */
+
+/* Full-width: one card per row. Two container shapes carry works cards —
+   .content.startpage (home, terms) via the --works-span-* token, and
+   .content.list (/works, taxonomy) via the article's own grid placement. */
+@media (min-width: 48em) {
+  :root[data-layout="editorial"] {
+    --works-span-wide: span 12;
+    --works-span-compact: span 12;
+  }
+}
+
+:root[data-layout="editorial"] .content.list article {
+  grid-column: 1 / -1;
+}
+
+/* Related: 3-up → a single centred column. */
+:root[data-layout="editorial"] .content.post > .related-items__item {
+  grid-column: 1 / -1;
+}
+
+/* Centre the card text; the tag row is a flex container so it needs its own
+   centring. */
+:root[data-layout="editorial"] article:has(> .summary-card),
+:root[data-layout="editorial"] .related-items__item {
+  text-align: center;
+}
+
+:root[data-layout="editorial"] article:has(> .summary-card) .tag-list__items,
+:root[data-layout="editorial"] .related-items__item .tag-list__items {
+  justify-content: center;
+}
+
+/* Larger, magazine-scale title (a step up from the default card title). */
+:root[data-layout="editorial"] .summary-card__title,
+:root[data-layout="editorial"] .related-items__header .type-headline-4 {
+  font-size: clamp(var(--text-2xl), calc(1.5rem + 0.75vw), var(--text-4xl));
+}
