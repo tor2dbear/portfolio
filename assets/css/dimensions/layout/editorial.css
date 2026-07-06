@@ -108,6 +108,24 @@
     --col: col-start 4 / span 6;
     grid-column: col-start 4 / span 6;
   }
+
+  /* Body figures / galleries: CENTRED wide column (cols 2–11 = a centred 10-col
+     band) instead of the base's left-hugging cols 1–10, so the media reads
+     centred under the centred text. Extra margin-block opens the text↔media gap,
+     which felt tight. (The container has no row-gap; figure margins set the
+     rhythm.) */
+  :root[data-layout="editorial"]
+    .content.post.works-post
+    > .post-content.place-prose
+    > figure,
+  :root[data-layout="editorial"]
+    .content.post.works-post
+    > .post-content.place-prose
+    > .gallery {
+    --col: col-start 2 / span 10;
+    grid-column: col-start 2 / span 10;
+    margin-block: var(--spacing-32);
+  }
 }
 
 /* ============================================================================

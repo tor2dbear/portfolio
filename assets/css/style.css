@@ -497,6 +497,45 @@ footer > * {
   }
 }
 
+/* Index works masthead (desktop): hero on the left (cols 1–8) with the preamble
+   riding up beside it (cols 9–12). The preamble precedes the hero in the DOM, so
+   the top rows are pinned explicitly (title r1, date r2, tags r3, hero+preamble
+   r4) — that also lets the preamble jump down beside the hero while DOM/tab order
+   stays intact. The masthead items span full width so the full-width body blocks
+   below can't back-fill the empty right-hand cells and land above the hero.
+   Below 64em everything keeps the default single-column stack.
+   (Edge case: an article with no tags leaves row 3 empty; works items normally
+   have tags. Harden with grid-template-areas if that ever bites.) */
+@media (min-width: 64em) {
+  :root[data-layout="index"] .content.post.works-post > .works-post__title {
+    grid-column: col-start 1 / -1;
+    grid-row: 1;
+  }
+
+  :root[data-layout="index"] .content.post.works-post > .works-post__meta {
+    grid-column: col-start 1 / -1;
+    grid-row: 2;
+  }
+
+  :root[data-layout="index"] .content.post.works-post > .works-post__tags {
+    grid-column: col-start 1 / -1;
+    grid-row: 3;
+  }
+
+  :root[data-layout="index"] #main .content.post.works-post > figure {
+    grid-column: col-start 1 / span 8;
+    grid-row: 4;
+  }
+
+  :root[data-layout="index"]
+    .content.post.works-post
+    > .works-post__description {
+    grid-column: col-start 9 / span 4;
+    grid-row: 4;
+    align-self: start;
+  }
+}
+
 .legal-page__title,
 .default-single__description {
   margin-bottom: var(--spacing-16);
