@@ -497,42 +497,31 @@ footer > * {
   }
 }
 
-/* Index works masthead (desktop): hero on the left (cols 1–8) with the preamble
-   riding up beside it (cols 9–12). The preamble precedes the hero in the DOM, so
-   the top rows are pinned explicitly (title r1, date r2, tags r3, hero+preamble
-   r4) — that also lets the preamble jump down beside the hero while DOM/tab order
-   stays intact. The masthead items span full width so the full-width body blocks
-   below can't back-fill the empty right-hand cells and land above the hero.
+/* Index works article (desktop): the project-info box rides up beside the hero.
+   Hero → left (cols 1–8); project-info → right (cols 9–12), pulled up onto the
+   hero's row. project-info sits after the body in the DOM, but grid places it
+   beside the hero while DOM/tab order stays intact.
+
+   Row math: on a normal works page the masthead always renders four items
+   (title, description, meta, tags — each present even when empty) and the
+   breadcrumb navs are display:none, so the masthead reliably fills rows 1–4 and
+   the hero lands on row 5. The full-width body blocks below can't back-fill the
+   narrower masthead cells, so they stay under the hero/box.
    Below 64em everything keeps the default single-column stack.
-   (Edge case: an article with no tags leaves row 3 empty; works items normally
-   have tags. Harden with grid-template-areas if that ever bites.) */
+   (Edge case: a clientpage/employerpage view shows one breadcrumb nav, adding a
+   row; revisit with grid-template-areas if index + client view is ever needed.) */
 @media (min-width: 64em) {
-  :root[data-layout="index"] .content.post.works-post > .works-post__title {
-    grid-column: col-start 1 / -1;
-    grid-row: 1;
-  }
-
-  :root[data-layout="index"] .content.post.works-post > .works-post__meta {
-    grid-column: col-start 1 / -1;
-    grid-row: 2;
-  }
-
-  :root[data-layout="index"] .content.post.works-post > .works-post__tags {
-    grid-column: col-start 1 / -1;
-    grid-row: 3;
-  }
-
   :root[data-layout="index"] #main .content.post.works-post > figure {
     grid-column: col-start 1 / span 8;
-    grid-row: 4;
+    grid-row: 5;
   }
 
-  :root[data-layout="index"]
-    .content.post.works-post
-    > .works-post__description {
+  :root[data-layout="index"] .content.post.works-post > .project-info {
     grid-column: col-start 9 / span 4;
-    grid-row: 4;
+    grid-row: 5;
     align-self: start;
+    /* Narrow beside the hero: collapse the 3-up ROLE/DETAILS/CLIENT to a stack. */
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

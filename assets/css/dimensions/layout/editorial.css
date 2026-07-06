@@ -103,10 +103,12 @@
     grid-column: col-start 4 / span 6;
   }
 
-  /* Project-info box shares the same centred 6-col column. */
+  /* Project-info box: centred to the same wide band as the figures (cols 2–11)
+     rather than the narrow 6-col text column — its 3-up ROLE/DETAILS/CLIENT needs
+     the room and reads as a centred spec panel, aligned with the media. */
   :root[data-layout="editorial"] .content.post.works-post > .project-info {
-    --col: col-start 4 / span 6;
-    grid-column: col-start 4 / span 6;
+    --col: col-start 2 / span 10;
+    grid-column: col-start 2 / span 10;
   }
 
   /* Body figures / galleries: CENTRED wide column (cols 2–11 = a centred 10-col
