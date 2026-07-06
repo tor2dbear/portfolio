@@ -516,7 +516,10 @@ footer > * {
     grid-row: 5;
   }
 
-  :root[data-layout="index"] .content.post.works-post > .project-info {
+  /* #main (an id) is required to outrank the .content.post > :not(…) AD-mapping
+     rule, whose long :not() chain gives it very high specificity and otherwise
+     re-places .project-info full-width. */
+  :root[data-layout="index"] #main .content.post.works-post > .project-info {
     grid-column: col-start 9 / span 4;
     grid-row: 5;
     align-self: start;

@@ -105,8 +105,11 @@
 
   /* Project-info box: centred to the same wide band as the figures (cols 2–11)
      rather than the narrow 6-col text column — its 3-up ROLE/DETAILS/CLIENT needs
-     the room and reads as a centred spec panel, aligned with the media. */
-  :root[data-layout="editorial"] .content.post.works-post > .project-info {
+     the room and reads as a centred spec panel, aligned with the media.
+     #main (an id) is required to outrank the .content.post > :not(…) AD-mapping
+     rule (very high specificity from its :not() chain), which otherwise re-places
+     .project-info at the default left-hugging cols 1–10. */
+  :root[data-layout="editorial"] #main .content.post.works-post > .project-info {
     --col: col-start 2 / span 10;
     grid-column: col-start 2 / span 10;
   }
