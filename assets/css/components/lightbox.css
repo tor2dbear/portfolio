@@ -71,7 +71,107 @@ figure[data-lightbox] {
   cursor: zoom-in;
 }
 
-:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"] .lightbox__img {
+.lightbox__nav {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+}
+
+.lightbox__nav[hidden] {
+  display: none;
+}
+
+.lightbox__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.lightbox__nav-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.lightbox__nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.lightbox__counter {
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Terminal layout: the lightbox chrome goes text-only to match the page —
+   bracketed words instead of circular icon buttons. */
+:root[data-layout="terminal"] .lightbox__nav-btn,
+:root[data-layout="terminal"] .lightbox__close {
+  background: transparent;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+:root[data-layout="terminal"] .lightbox__close svg {
+  display: none;
+}
+
+:root[data-layout="terminal"] .lightbox__close::before {
+  content: "[esc]";
+}
+
+:root[data-layout="terminal"] .lightbox__nav-btn--prev,
+:root[data-layout="terminal"] .lightbox__nav-btn--next {
+  font-size: 1rem;
+}
+
+:root[data-layout="terminal"] .lightbox__nav-btn--prev::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .lightbox__nav-btn--prev::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .lightbox__nav-btn--next::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .lightbox__nav-btn--next::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .lightbox__nav-btn:hover:not(:disabled),
+:root[data-layout="terminal"] .lightbox__close:hover {
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+:root[data-layout="terminal"] .lightbox__counter {
+  font-family: var(--font-mono);
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .lightbox__img {
   -webkit-filter: url(#pantone-tritone);
   -moz-filter: url(#pantone-tritone);
   filter: url(#pantone-tritone);

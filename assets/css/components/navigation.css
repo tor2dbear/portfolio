@@ -73,6 +73,13 @@ html[data-grid-overlay] .top-menu {
   align-items: center;
 }
 
+/* Terminal-layout statusbar quick-toggles: text stand-ins for the dropdown
+   controls, rendered only when data-layout="terminal" (see
+   dimensions/layout/terminal.css). */
+.top-menu__item--terminal-quick {
+  display: none;
+}
+
 /* ==========================================================================
    Contact Button (in Navigation)
    ========================================================================== */
@@ -315,7 +322,6 @@ html[data-grid-overlay] .top-menu {
 
 /* xs: <= 29.9375em */
 @media (max-width: 29.9375em) {
-
   .top-menu__label--long {
     display: none;
   }

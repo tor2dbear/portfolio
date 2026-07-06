@@ -117,7 +117,6 @@
     return playerSpriteUrl;
   }
 
-
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
@@ -706,12 +705,41 @@
     });
   }
 
-  // Layout dimension (column/editorial/index). Simpler than typography — it
-  // only sets a data attribute, with no web fonts to preload.
+  // Layout dimension (column/editorial/index/terminal). Simpler than
+  // typography — it only sets a data attribute, with no web fonts to preload.
+
+  // A layout can declare companion dimensions that switch along with it when
+  // the user picks the layout (never on page load). The user can still change
+  // any dimension afterwards — this is a starting point, not a lock. Add
+  // entries here to pair other layouts with a default typography/palette.
+  var LAYOUT_PAIRINGS = {
+    terminal: { typography: "technical" },
+  };
+
+  function applyLayoutPairings(layout) {
+    var pairing = LAYOUT_PAIRINGS[layout];
+    if (!pairing) {
+      return;
+    }
+    if (
+      pairing.typography &&
+      localStorage.getItem("theme-typography") !== pairing.typography
+    ) {
+      setTypography(pairing.typography);
+    }
+    if (
+      pairing.palette &&
+      localStorage.getItem("theme-palette") !== pairing.palette
+    ) {
+      setPalette(pairing.palette);
+    }
+  }
+
   function setLayout(layout) {
     localStorage.setItem("theme-layout", layout);
     updateLayoutUI(layout);
     applyLayout(layout);
+    applyLayoutPairings(layout);
 
     var clickedOpt = document.querySelector(
       '[data-js="layout-option"][data-layout="' + layout + '"]'
@@ -774,7 +802,8 @@
   // ==========================================================================
 
   function resolvePageColor() {
-    var activeMode = document.documentElement.getAttribute("data-mode") || "light";
+    var activeMode =
+      document.documentElement.getAttribute("data-mode") || "light";
     var fallback = activeMode === "dark" ? "#18181b" : "#FFFFFF";
     if (!document.body) {
       return fallback;
@@ -793,9 +822,11 @@
 
     function tick(now) {
       var color = resolvePageColor();
-      document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
-        meta.setAttribute("content", color);
-      });
+      document
+        .querySelectorAll('meta[name="theme-color"]')
+        .forEach(function (meta) {
+          meta.setAttribute("content", color);
+        });
       if (now - startTime < duration) {
         themeColorAnimFrame = requestAnimationFrame(tick);
       } else {
@@ -1233,7 +1264,10 @@
       prePantoneBlendEnabled =
         document.documentElement.getAttribute("data-effect-blend") === "on";
       try {
-        localStorage.setItem(PRE_PANTONE_BLEND_KEY, prePantoneBlendEnabled ? "1" : "0");
+        localStorage.setItem(
+          PRE_PANTONE_BLEND_KEY,
+          prePantoneBlendEnabled ? "1" : "0"
+        );
       } catch {
         // Ignore storage failures.
       }
@@ -1461,7 +1495,9 @@
       );
     } else {
       updateFooterPaletteLabel(currentPalette);
-      animateThemeColorMeta(opts.transitionDuration || THEME_SWAP_TRANSITION_DEFAULT_MS);
+      animateThemeColorMeta(
+        opts.transitionDuration || THEME_SWAP_TRANSITION_DEFAULT_MS
+      );
     }
 
     if (!opts.silent) {
@@ -1877,6 +1913,36 @@
       });
     });
 
+    // Terminal layout: statusbar quick toggle that shows the resolved mode as
+    // a bracketed word; clicking flips light/dark (an explicit choice, so it
+    // replaces "system"). The label tracks every mode change via the
+    // theme:mode-changed event, including system-preference flips.
+    const terminalModeToggle = document.querySelector(
+      '[data-js="terminal-mode-toggle"]'
+    );
+    if (terminalModeToggle) {
+      const syncTerminalModeLabel = function () {
+        const resolved =
+          document.documentElement.getAttribute("data-mode") === "dark"
+            ? "dark"
+            : "light";
+        const label =
+          terminalModeToggle.getAttribute("data-label-" + resolved) || resolved;
+        // Brackets live in the text (not pseudo-elements) so they hug the
+        // label with no flex-item gaps.
+        terminalModeToggle.textContent = "[" + label + "]";
+      };
+      syncTerminalModeLabel();
+      window.addEventListener("theme:mode-changed", syncTerminalModeLabel);
+      terminalModeToggle.addEventListener("click", function () {
+        setMode(
+          document.documentElement.getAttribute("data-mode") === "dark"
+            ? "light"
+            : "dark"
+        );
+      });
+    }
+
     if (effectBlendButtons) {
       effectBlendButtons.forEach((button) => {
         button.addEventListener("click", function () {
@@ -1916,7 +1982,9 @@
       requestAnimationFrame(function () {
         document.documentElement.classList.remove("theme-loading");
         var s = document.getElementById("theme-no-trans");
-        if (s) {s.remove();}
+        if (s) {
+          s.remove();
+        }
       });
     });
   });

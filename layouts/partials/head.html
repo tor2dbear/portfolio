@@ -151,6 +151,7 @@
   {{ $dimensions_layout_column := resources.Get "css/dimensions/layout/column.css" }}
   {{ $dimensions_layout_editorial := resources.Get "css/dimensions/layout/editorial.css" }}
   {{ $dimensions_layout_index := resources.Get "css/dimensions/layout/index.css" }}
+  {{ $dimensions_layout_terminal := resources.Get "css/dimensions/layout/terminal.css" }}
 
   <!-- CSS utilities -->
   {{ $utilities_typography := resources.Get "css/utilities/typography.css" }}
@@ -417,6 +418,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_column.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_editorial.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_index.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_terminal.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_grid.RelPermalink }}" />
@@ -466,7 +468,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $dimensions_layout_terminal $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -548,7 +550,7 @@
       var storedTypography = localStorage.getItem("theme-typography") || "editorial";
       document.documentElement.setAttribute("data-typography", storedTypography);
 
-      // Set layout (column/editorial/index)
+      // Set layout (column/editorial/index/terminal)
       var storedLayout = localStorage.getItem("theme-layout") || "column";
       document.documentElement.setAttribute("data-layout", storedLayout);
 
