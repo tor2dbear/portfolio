@@ -92,7 +92,8 @@
 :root[data-layout="terminal"] .type-preamble,
 :root[data-layout="terminal"] .type-lead,
 :root[data-layout="terminal"] .type-body,
-:root[data-layout="terminal"] .startpage-heading__cta {
+:root[data-layout="terminal"] .startpage-heading__cta,
+:root[data-layout="terminal"] #main :is(h1, h2, h3, h4, h5, h6) {
   font-size: var(--terminal-font-size);
   line-height: var(--terminal-line-height);
   font-weight: 700;
@@ -117,14 +118,68 @@
   color: var(--text-accent);
 }
 
-/* Headings gain a mono comment prefix — hierarchy you can read. */
+/* ============================================================================
+   Headings are executed commands
+   The heading text is the (quoted) argument; the dimmed prompt and verb are
+   pseudo-elements. cat for prose, ls for listings — overrides below.
+   ============================================================================ */
+
+:root[data-layout="terminal"] .content h2,
+:root[data-layout="terminal"] .content h3,
+:root[data-layout="terminal"] .section-heading,
+:root[data-layout="terminal"] .about-cv__title {
+  text-transform: lowercase;
+}
+
 :root[data-layout="terminal"] .content h2::before,
 :root[data-layout="terminal"] .content h3::before,
-:root[data-layout="terminal"] .section-heading::before {
-  content: "## ";
+:root[data-layout="terminal"] .section-heading::before,
+:root[data-layout="terminal"] .about-cv__title::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ cat '";
   font-family: var(--font-mono);
   font-weight: 400;
   color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .content h2::after,
+:root[data-layout="terminal"] .content h3::after,
+:root[data-layout="terminal"] .section-heading::after,
+:root[data-layout="terminal"] .about-cv__title::after {
+  content: ".md'";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+/* Listing sections run ls instead: featured works, contact, related. */
+:root[data-layout="terminal"] .works-section .post-header h2::before,
+:root[data-layout="terminal"] .contact-section .section-heading::before,
+:root[data-layout="terminal"] .content .related-items__title::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ ls '";
+}
+
+:root[data-layout="terminal"] .works-section .post-header h2::after,
+:root[data-layout="terminal"] .contact-section .section-heading::after,
+:root[data-layout="terminal"] .content .related-items__title::after {
+  content: "'/";
+}
+
+/* Compact PS1 on small screens, matching the header prompt. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .content h2::before,
+  :root[data-layout="terminal"] .content h3::before,
+  :root[data-layout="terminal"] .section-heading::before,
+  :root[data-layout="terminal"] .about-cv__title::before {
+    content: var(--terminal-cwd, "~") "$ cat '";
+  }
+
+  :root[data-layout="terminal"] .works-section .post-header h2::before,
+  :root[data-layout="terminal"] .contact-section .section-heading::before,
+  :root[data-layout="terminal"] .content .related-items__title::before {
+    content: var(--terminal-cwd, "~") "$ ls '";
+  }
 }
 
 /* ============================================================================
@@ -187,14 +242,23 @@
   display: contents;
 }
 
-:root[data-layout="terminal"] .brand {
+:root[data-layout="terminal"] .terminal-prompt {
+  display: block;
   flex: 1 1 auto;
+  font-size: var(--terminal-statusbar-font-size);
+  white-space: nowrap;
 }
 
 :root[data-layout="terminal"] .top-menu__item--terminal-quick,
-:root[data-layout="terminal"] .top-menu__item--settings,
-:root[data-layout="terminal"] .top-menu__item--contact {
+:root[data-layout="terminal"] .top-menu__item--settings {
   order: 1;
+}
+
+/* Contact is navigation — it lists with the other rows, freeing the prompt
+   row from its longest label. */
+:root[data-layout="terminal"] .top-menu__item--contact {
+  order: 11;
+  flex: 1 0 100%;
 }
 
 /* A rule opens the ls output; the nav element's ::before is a flex item too
@@ -216,53 +280,57 @@
   flex: 1 0 100%;
 }
 
-/* Brand: the phonetic words follow the active typography (the component CSS
-   pins them to --font-sans), and the curl stays — frozen. The SMIL morph is
-   disabled the same way prefers-reduced-motion does it, and progressbar.js
-   treats terminal as zero progress, so the mark is the bare 24px loop. */
-:root[data-layout="terminal"] .brand__link {
-  font-family: inherit;
-}
-
-/* The component pins .brand to --text-3xl; that leaks into the ~$ prompt and
-   the em-sized curl. One statusbar size for the whole prompt line. */
+/* The phonetic brand steps aside for the prompt (JetBrains Mono lacks the
+   IPA glyphs anyway); in a prompt the host position IS a domain, and the
+   home link rides on it. Prompt strings come from --terminal-host/--cwd,
+   emitted per page in head.html. */
 :root[data-layout="terminal"] .brand {
-  font-size: var(--terminal-statusbar-font-size);
-}
-
-:root[data-layout="terminal"] .brand__mark {
-  height: 1em;
-  /* progressbar.js sets an inline width (24px at zero progress); the
-     !important keeps the glyph square and letter-sized regardless. */
-  width: 1em !important;
-  align-self: center;
-}
-
-:root[data-layout="terminal"] .brand__mark-loop-path animate {
   display: none;
 }
 
-:root[data-layout="terminal"] .brand,
-:root[data-layout="terminal"] .brand__link {
-  white-space: nowrap;
+:root[data-layout="terminal"] .terminal-prompt__user,
+:root[data-layout="terminal"] .terminal-prompt__cwd {
+  color: var(--text-muted, inherit);
 }
 
-:root[data-layout="terminal"] .brand__link::before {
-  content: "~$ ";
-  font-family: var(--font-mono);
-  color: var(--text-link, currentColor);
+:root[data-layout="terminal"] .terminal-prompt__user::before {
+  content: "visitor@";
 }
 
-:root[data-layout="terminal"] .brand__word {
-  font-size: var(--terminal-statusbar-font-size);
+:root[data-layout="terminal"] .terminal-prompt__host {
+  color: var(--text-link, var(--text-default));
+  font-weight: 700;
+  text-decoration: none;
 }
 
-:root[data-layout="terminal"] .brand__word--lead {
-  margin-right: 0;
+:root[data-layout="terminal"] .terminal-prompt__host:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-:root[data-layout="terminal"] .brand__word--tail {
-  margin-left: 0;
+:root[data-layout="terminal"] .terminal-prompt__host::before {
+  content: var(--terminal-host, "tor-bjorn.com");
+}
+
+:root[data-layout="terminal"] .terminal-prompt__cwd::before {
+  content: ":" var(--terminal-cwd, "~") "$";
+}
+
+:root[data-layout="terminal"] .terminal-prompt__cmd {
+  margin-left: 1ch;
+}
+
+/* Compact PS1 below md — just cwd$, like a real trimmed prompt. The full
+   user@host prompt plus four controls won't share a 48rem row until ~64em. */
+@media (max-width: 63.9375em) {
+  :root[data-layout="terminal"] .terminal-prompt__user,
+  :root[data-layout="terminal"] .terminal-prompt__host {
+    display: none;
+  }
+
+  :root[data-layout="terminal"] .terminal-prompt__cwd::before {
+    content: var(--terminal-cwd, "~") "$";
+  }
 }
 
 /* Nav rows: lowercase directory names, one per row, trailing slash. The
@@ -315,7 +383,7 @@
   }
 }
 
-/* Contact: strip the button chrome down to a bracketed word. */
+/* Contact: strip the button chrome down to a nav row. */
 :root[data-layout="terminal"] .top-menu__item--contact .top-menu__link--button {
   background: transparent;
   border: none;
@@ -333,13 +401,12 @@
   text-underline-offset: 3px;
 }
 
-:root[data-layout="terminal"] .top-menu__label--long::before {
-  content: "[";
-  font-family: var(--font-mono);
+:root[data-layout="terminal"] .top-menu__label--long {
+  text-transform: lowercase;
 }
 
 :root[data-layout="terminal"] .top-menu__label--long::after {
-  content: "]";
+  content: "/";
   font-family: var(--font-mono);
 }
 
@@ -437,12 +504,26 @@
   min-width: 0;
 }
 
-/* No "## " on row titles or the works ingress (an h2 typographically, not a
-   section heading). The selectors must outweigh .content h2::before. */
+/* Row titles and the works ingress are output, not commands — no prompt
+   pseudos. Selectors must outweigh the .content h2/h3 rules. Row titles in
+   the writing list (article cards) are rows too. */
 :root[data-layout="terminal"] .content .summary-card__title::before,
 :root[data-layout="terminal"] .summary-card__title::before,
-:root[data-layout="terminal"] .content .works-post__description::before {
+:root[data-layout="terminal"] .content .works-post__description::before,
+:root[data-layout="terminal"] .content .article-card__title::before,
+:root[data-layout="terminal"] .content .summary-card__title::after,
+:root[data-layout="terminal"] .summary-card__title::after,
+:root[data-layout="terminal"] .content .works-post__description::after,
+:root[data-layout="terminal"] .content .article-card__title::after {
   content: none;
+}
+
+/* Keep row titles in their natural case — they are file names, not commands,
+   but forcing lowercase on real titles reads wrong. */
+:root[data-layout="terminal"] .content .summary-card__title,
+:root[data-layout="terminal"] .content .works-post__description,
+:root[data-layout="terminal"] .content .article-card__title {
+  text-transform: none;
 }
 
 :root[data-layout="terminal"] .summary-card__title a {
@@ -558,8 +639,13 @@
   margin: 0;
 }
 
-:root[data-layout="terminal"] .related-items__item .type-headline-4::before {
+:root[data-layout="terminal"] .related-items__item .type-headline-4::before,
+:root[data-layout="terminal"] .related-items__item .type-headline-4::after {
   content: none;
+}
+
+:root[data-layout="terminal"] .related-items__item .type-headline-4 {
+  text-transform: none;
 }
 
 :root[data-layout="terminal"] .related-items__item .type-headline-4 a {
@@ -692,6 +778,91 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
+}
+
+/* The sitemap is literally a recursive listing. */
+:root[data-layout="terminal"] .footer-grid--primary::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ ls -R ~/";
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+}
+
+/* The newsletter heading is its own command. */
+:root[data-layout="terminal"] .footer-heading--newsletter {
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .footer-heading--newsletter::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ cat '";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .footer-heading--newsletter::after {
+  content: ".txt'";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .footer-grid--primary::before {
+    content: var(--terminal-cwd, "~") "$ ls -R ~/";
+  }
+
+  :root[data-layout="terminal"] .footer-heading--newsletter::before {
+    content: var(--terminal-cwd, "~") "$ cat '";
+  }
+}
+
+/* The buffer ends with an empty prompt, waiting. */
+:root[data-layout="terminal"] .terminal-tail {
+  display: block;
+  grid-column: content-start / content-end;
+  justify-self: start;
+  text-align: left;
+  margin-top: var(--spacing-24);
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .terminal-tail__prompt::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ ";
+  color: var(--text-muted, inherit);
+}
+
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .terminal-tail__prompt::before {
+    content: var(--terminal-cwd, "~") "$ ";
+  }
+}
+
+:root[data-layout="terminal"] .terminal-tail__caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  vertical-align: text-bottom;
+  background: var(--text-accent, currentColor);
+  animation: terminal-caret-blink 1.1s steps(1) infinite;
+}
+
+@keyframes terminal-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-layout="terminal"] .terminal-tail__caret {
+    animation: none;
+  }
+}
+
+:root[data-effect-reduced-motion="on"] .terminal-tail__caret {
+  animation: none;
 }
 
 :root[data-layout="terminal"] .footer-column {

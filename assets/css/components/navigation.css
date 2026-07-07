@@ -80,6 +80,11 @@ html[data-grid-overlay] .top-menu {
   display: none;
 }
 
+/* Terminal-layout prompt line (visitor@host:cwd$) — same deal. */
+.terminal-prompt {
+  display: none;
+}
+
 /* ==========================================================================
    Contact Button (in Navigation)
    ========================================================================== */

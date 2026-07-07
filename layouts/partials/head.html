@@ -525,6 +525,23 @@
   {{ end }}
 
 
+  {{/* Terminal layout prompt strings: host from the site URL, cwd from the
+       current page's first path segment (language prefix stripped). Consumed
+       as CSS string vars by dimensions/layout/terminal.css; harmless (unused)
+       in every other layout. */}}
+  {{- $terminalHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
+  {{- $terminalPath := strings.TrimPrefix "/" .RelPermalink -}}
+  {{- $terminalPath = strings.TrimPrefix (printf "%s/" .Language.Lang) $terminalPath -}}
+  {{- $terminalSeg := index (split $terminalPath "/") 0 -}}
+  {{- $terminalCwd := "~" -}}
+  {{- if $terminalSeg -}}{{- $terminalCwd = printf "~/%s" $terminalSeg -}}{{- end -}}
+  <style>
+    :root {
+      --terminal-host: {{ printf "%q" $terminalHost | safeCSS }};
+      --terminal-cwd: {{ printf "%q" $terminalCwd | safeCSS }};
+    }
+  </style>
+
   <!-- Dark mode -->
   <script>
     (function () {

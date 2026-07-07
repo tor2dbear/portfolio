@@ -2,6 +2,17 @@
   <div class="grain-overlay grain-overlay--nav" aria-hidden="true"></div>
   <div class="top-menu__container">
     {{ partial "brand.html" . }}
+    {{/* Terminal layout: the prompt line — visitor@host:cwd$ ls nav/. Host is the clickable home link; text comes from the CSS vars in head.html. Hidden in every other layout; the brand hides under terminal instead. */}}
+    <div class="terminal-prompt">
+      <span class="terminal-prompt__user" aria-hidden="true"></span
+      ><a
+        class="terminal-prompt__host"
+        href="{{ .Site.BaseURL | relLangURL }}"
+        aria-label="{{ i18n "menu_title" | default "Home" }}"
+      ></a
+      ><span class="terminal-prompt__cwd" aria-hidden="true"></span
+      ><span class="terminal-prompt__cmd" aria-hidden="true">ls nav/</span>
+    </div>
     <nav class="top-menu__nav" aria-label="{{ i18n "menu_title" }}">
       <ul class="top-menu__list">
         {{- $urltop := .RelPermalink -}}
