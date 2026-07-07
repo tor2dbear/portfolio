@@ -193,7 +193,10 @@
     });
 
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && panel && !panel.hasAttribute("hidden")) {
+        // Consume the event so the terminal layout's exit-on-Escape handler,
+        // which may run after us on this same keydown, doesn't also fire.
+        e.preventDefault();
         closePanel();
       }
     });

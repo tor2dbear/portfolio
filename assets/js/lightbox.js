@@ -131,6 +131,9 @@
       return;
     }
     if (e.key === "Escape") {
+      // Consume the event so the terminal layout's exit-on-Escape handler,
+      // which may run after us on this same keydown, doesn't also fire.
+      e.preventDefault();
       close();
     }
     if (e.key === "ArrowLeft") {
