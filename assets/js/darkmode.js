@@ -830,6 +830,11 @@
 
   function applyLayout(layout) {
     var root = document.documentElement;
+    // Visual tool pages opt out of terminal: render column here, keep the
+    // stored preference (terminal resumes on the next regular page).
+    if (layout === "terminal" && root.hasAttribute("data-terminal-exempt")) {
+      layout = "column";
+    }
     root.setAttribute("data-layout", layout);
     // The measure (max-width, a direct var()) repaints immediately, but some
     // engines defer recomputing calc(var()) on the inherited font-size until a
@@ -2024,7 +2029,12 @@
         return;
       }
       if (e.key === "Escape") {
+        // defaultPrevented: the lightbox/settings panel already consumed this
+        // very keypress to close itself — the state checks alone can't catch
+        // that, since a handler registered before this one has by now removed
+        // the open-marker the checks look for.
         if (
+          e.defaultPrevented ||
           document.documentElement.classList.contains("lightbox-open") ||
           document.documentElement.hasAttribute("data-settings-panel-open")
         ) {

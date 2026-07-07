@@ -567,8 +567,16 @@
       var storedTypography = localStorage.getItem("theme-typography") || "editorial";
       document.documentElement.setAttribute("data-typography", storedTypography);
 
-      // Set layout (column/editorial/index/terminal)
+      // Set layout (column/editorial/index/terminal). Visual tool pages
+      // opt out of terminal (data-terminal-exempt on <html>): they render
+      // column here while the stored preference stays untouched.
       var storedLayout = localStorage.getItem("theme-layout") || "column";
+      if (
+        storedLayout === "terminal" &&
+        document.documentElement.hasAttribute("data-terminal-exempt")
+      ) {
+        storedLayout = "column";
+      }
       document.documentElement.setAttribute("data-layout", storedLayout);
 
       // CotyScale (Pantone engine) is lazy-loaded. Expose its URL for
