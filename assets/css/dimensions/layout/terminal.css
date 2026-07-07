@@ -40,9 +40,12 @@
   --size-header-height: 0rem;
 }
 
-/* #main is capped at --content-max-width (1280px) while the margin tracks are
-   computed from 100vw; uncap it so all three regions share the same math. */
-:root[data-layout="terminal"] #main {
+/* #main and .footer-container are capped at --content-max-width (1280px)
+   while the margin tracks are computed from 100vw — on screens wider than
+   the cap their content edge drifts from the header's. Uncap both so all
+   three regions share the same math. */
+:root[data-layout="terminal"] #main,
+:root[data-layout="terminal"] .footer-container {
   max-width: none;
 }
 
