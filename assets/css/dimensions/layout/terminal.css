@@ -186,6 +186,160 @@
 }
 
 /* ============================================================================
+   Post pages are ONE file: a single cat on the title prints everything.
+   Inner headings render as markdown inside the output, not as new commands.
+   ============================================================================ */
+
+:root[data-layout="terminal"] .content.post h1::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ cat '";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .content.post h1::after {
+  content: ".md'";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .content.post h2::before {
+  content: "## ";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .content.post h3::before {
+  content: "### ";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .content.post h2,
+:root[data-layout="terminal"] .content.post h3 {
+  text-transform: none;
+}
+
+:root[data-layout="terminal"] .content.post h2::after,
+:root[data-layout="terminal"] .content.post h3::after {
+  content: none;
+}
+
+/* The ingress/description is plain output — no marker at all. */
+:root[data-layout="terminal"] .content.post .type-preamble::before,
+:root[data-layout="terminal"] .content.post .type-preamble::after {
+  content: none;
+}
+
+/* Related is a section after the file — it keeps its ls command. */
+:root[data-layout="terminal"] .content.post .related-items__title {
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .content.post .related-items__title::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ ls '";
+}
+
+:root[data-layout="terminal"] .content.post .related-items__title::after {
+  content: "'/";
+}
+
+/* Project info is the directory next to the file: ls 'info'/, one column,
+   one size. */
+:root[data-layout="terminal"] .content.post > .project-info::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ ls 'info'/";
+  display: block;
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-bottom: var(--spacing-8);
+}
+
+:root[data-layout="terminal"] .project-info__title,
+:root[data-layout="terminal"] .project-info__label,
+:root[data-layout="terminal"] .project-info__text,
+:root[data-layout="terminal"] .project-info__value {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+  letter-spacing: normal;
+}
+
+:root[data-layout="terminal"] .project-info__section {
+  margin-bottom: var(--spacing-8);
+}
+
+/* The image run after the info block is its own listing. */
+:root[data-layout="terminal"] {
+  --terminal-gallery-arg: "'images'";
+}
+
+:root:lang(sv)[data-layout="terminal"] {
+  --terminal-gallery-arg: "'bilder'";
+}
+
+:root[data-layout="terminal"] .content.post .project-info + .gallery,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content
+  > .gallery:first-child {
+  margin-top: var(--spacing-16);
+}
+
+/* The image run may be loose figures (their ::before is the token), so the
+   prompt rides on the content block itself when it opens with a figure. */
+:root[data-layout="terminal"] .content.post .project-info + .gallery::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content
+  > .gallery:first-child::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content:has(figure)::before {
+  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-cwd, "~") "$ ls " var(--terminal-gallery-arg) "/";
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  color: var(--text-muted, inherit);
+  margin-top: var(--spacing-16);
+}
+
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .content.post h1::before {
+    content: var(--terminal-cwd, "~") "$ cat '";
+  }
+
+  :root[data-layout="terminal"] .content.post .related-items__title::before {
+    content: var(--terminal-cwd, "~") "$ ls '";
+  }
+
+  :root[data-layout="terminal"] .content.post > .project-info::before {
+    content: var(--terminal-cwd, "~") "$ ls 'info'/";
+  }
+
+  :root[data-layout="terminal"] .content.post .project-info + .gallery::before,
+  :root[data-layout="terminal"]
+    .content.post
+    .project-info
+    + .post-content
+    > .gallery:first-child::before,
+  :root[data-layout="terminal"]
+    .content.post
+    .project-info
+    + .post-content:has(figure)::before {
+    content: var(--terminal-cwd, "~") "$ ls " var(--terminal-gallery-arg) "/";
+  }
+}
+
+/* ============================================================================
    Statusbar header
    Same DOM, reflowed: row 1 is the prompt (brand) with the text controls at
    the right edge; the nav links print as one row per link below — the output
@@ -648,7 +802,15 @@
 }
 
 :root[data-layout="terminal"] .related-items__item .type-headline-4::before,
-:root[data-layout="terminal"] .related-items__item .type-headline-4::after {
+:root[data-layout="terminal"] .related-items__item .type-headline-4::after,
+:root[data-layout="terminal"]
+  .content.post
+  .related-items__item
+  .type-headline-4::before,
+:root[data-layout="terminal"]
+  .content.post
+  .related-items__item
+  .type-headline-4::after {
   content: none;
 }
 
@@ -673,6 +835,7 @@
 /* Project info (role/details/client): drop the panel chrome, keep the
    columns as plain text. (Selector mirrors style.css's to outweigh it.) */
 :root[data-layout="terminal"] .content.post > .project-info {
+  display: block;
   background: transparent;
   background-color: transparent;
   border: none;
