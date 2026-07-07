@@ -82,7 +82,8 @@ html[data-grid-overlay] .top-menu {
 
 /* Terminal-layout prompt lines (visitor@host:cwd$) — same deal. */
 .terminal-prompt,
-.top-menu__item--terminal-prompt {
+.top-menu__item--terminal-prompt,
+.terminal-boot {
   display: none;
 }
 

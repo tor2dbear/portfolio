@@ -429,3 +429,9 @@ other = "… +6 rader (klicka för att visa)"
 
 [terminal_settings_collapse]
 other = "(dölj)"
+
+[terminal_boot_ok]
+other = "[ ok ] palett · typografi · layout laddade"
+
+[terminal_exit_hint]
+other = "skriv exit eller tryck esc för att lämna terminalen"

@@ -1,5 +1,23 @@
 <header id="topmenu" class="top-menu" data-js="top-menu">
   <div class="grain-overlay grain-overlay--nav" aria-hidden="true"></div>
+  {{/* Terminal layout: boot banner — ascii curl, fake boot lines and the exit hint. Hidden in every other layout. */}}
+  <div class="terminal-boot">
+    <pre class="terminal-boot__art" aria-hidden="true">
+       ____
+  ____/    \____________________
+       \___/</pre
+    >
+    <p class="terminal-boot__title" aria-hidden="true"></p>
+    <p class="terminal-boot__line" aria-hidden="true">
+      {{ i18n "terminal_boot_ok" }}
+    </p>
+    <p class="terminal-boot__line">
+      <span class="terminal-boot__hint">{{ i18n "terminal_exit_hint" }}</span>
+      <button class="terminal-boot__exit" type="button" data-js="terminal-exit">
+        [exit]
+      </button>
+    </p>
+  </div>
   <div class="top-menu__container">
     {{ partial "brand.html" . }}
     {{/* Terminal layout: the prompt line — visitor@host:cwd$ ls nav/. Host is the clickable home link; text comes from the CSS vars in head.html. Hidden in every other layout; the brand hides under terminal instead. */}}

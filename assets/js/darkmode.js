@@ -716,6 +716,29 @@
     terminal: { typography: "technical" },
   };
 
+  // Leave the terminal: back to the snapshotted layout, and restore the
+  // snapshotted typography if the pairing's choice (technical) is still
+  // active — a manual typography change inside the terminal is respected.
+  function exitTerminal() {
+    if (document.documentElement.getAttribute("data-layout") !== "terminal") {
+      return;
+    }
+    var previousLayout =
+      localStorage.getItem("theme-layout-previous") || "column";
+    if (previousLayout === "terminal") {
+      previousLayout = "column";
+    }
+    var previousTypography = localStorage.getItem("theme-typography-previous");
+    setLayout(previousLayout);
+    if (
+      previousTypography &&
+      previousTypography !== "technical" &&
+      localStorage.getItem("theme-typography") === "technical"
+    ) {
+      setTypography(previousTypography);
+    }
+  }
+
   function applyLayoutPairings(layout) {
     var pairing = LAYOUT_PAIRINGS[layout];
     if (!pairing) {
@@ -736,6 +759,17 @@
   }
 
   function setLayout(layout) {
+    // Entering terminal snapshots where the user came from, so exit (ESC,
+    // typing "exit", the boot [exit] button) can return there — including
+    // the typography the pairing is about to replace.
+    var currentLayout = localStorage.getItem("theme-layout") || "column";
+    if (layout === "terminal" && currentLayout !== "terminal") {
+      localStorage.setItem("theme-layout-previous", currentLayout);
+      localStorage.setItem(
+        "theme-typography-previous",
+        localStorage.getItem("theme-typography") || "editorial"
+      );
+    }
     localStorage.setItem("theme-layout", layout);
     updateLayoutUI(layout);
     applyLayout(layout);
@@ -1917,6 +1951,59 @@
         const layout = this.getAttribute("data-layout");
         setLayout(layout);
       });
+    });
+
+    // Terminal exit routes: the boot [exit] button, the ESC key (when no
+    // panel/lightbox/input claims it), and literally typing "exit" + Enter.
+    document
+      .querySelectorAll('[data-js="terminal-exit"]')
+      .forEach(function (button) {
+        button.addEventListener("click", exitTerminal);
+      });
+
+    let terminalTypedBuffer = "";
+    document.addEventListener("keydown", function (e) {
+      if (document.documentElement.getAttribute("data-layout") !== "terminal") {
+        return;
+      }
+      var target = e.target;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      if (e.key === "Escape") {
+        if (
+          document.documentElement.classList.contains("lightbox-open") ||
+          document.documentElement.hasAttribute("data-settings-panel-open")
+        ) {
+          return; // their own Escape handlers close them first
+        }
+        exitTerminal();
+        return;
+      }
+      if (e.key === "Enter") {
+        if (terminalTypedBuffer.endsWith("exit")) {
+          exitTerminal();
+        }
+        terminalTypedBuffer = "";
+        return;
+      }
+      if (
+        e.key.length === 1 &&
+        /[a-z]/i.test(e.key) &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey
+      ) {
+        terminalTypedBuffer = (terminalTypedBuffer + e.key.toLowerCase()).slice(
+          -8
+        );
+      }
     });
 
     // Terminal layout: statusbar quick toggle that shows the resolved mode as

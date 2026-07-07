@@ -435,3 +435,9 @@ other = "… +6 lines (click to expand)"
 
 [terminal_settings_collapse]
 other = "(collapse)"
+
+[terminal_boot_ok]
+other = "[ ok ] palette · typography · layout loaded"
+
+[terminal_exit_hint]
+other = "type exit or press esc to leave the terminal"
