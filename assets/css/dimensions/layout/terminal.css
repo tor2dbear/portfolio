@@ -35,16 +35,9 @@
   --terminal-font-size: var(--text-base);
   --terminal-line-height: 1.7;
 
-  /* Statusbar header */
-  --size-header-height: 3rem;
-}
-
-/* sm: <= 47.9375em — the neg offset mirrors --size-header-height for the
-   hide-on-scroll transform (see navigation.css). */
-@media (max-width: 47.9375em) {
-  :root[data-layout="terminal"] {
-    --size-header-height-neg: -3rem;
-  }
+  /* The header is static (scrolls away) and multi-row, so anchor scroll
+     padding needs no header offset. */
+  --size-header-height: 0rem;
 }
 
 /* #main is capped at --content-max-width (1280px) while the margin tracks are
@@ -136,12 +129,22 @@
 
 /* ============================================================================
    Statusbar header
-   Same DOM: brand + nav links + settings toggle + contact. Compressed to a
-   text row; the bottom edge is a clipped box-drawing rule, not a border.
+   Same DOM, reflowed: row 1 is the prompt (brand) with the text controls at
+   the right edge; the nav links print as one row per link below — the output
+   of `ls ~`. The whole block is static and scrolls away like a terminal
+   buffer; box-drawing rules frame the nav rows.
    ============================================================================ */
 
 :root[data-layout="terminal"] .top-menu {
   border-bottom: none;
+  position: relative;
+  height: auto;
+  padding-bottom: var(--spacing-4);
+}
+
+/* The mobile hide-on-scroll transform has no place on a static header. */
+:root[data-layout="terminal"] .top-menu.hide {
+  transform: none;
 }
 
 /* Box-drawing rule pinned to the header's bottom edge, clipped to width. */
@@ -149,8 +152,8 @@
   content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: var(--size-page-margins);
+  right: var(--size-page-margins);
   grid-column: full-start / full-end;
   overflow: hidden;
   white-space: nowrap;
@@ -162,25 +165,80 @@
   text-align: center;
 }
 
-:root[data-layout="terminal"] .top-menu {
-  position: sticky;
-}
-
-/* The statusbar sets everything in one small size; both columns size to
-   content (the default minmax(0,1fr) squeezed the brand into overlap). */
 :root[data-layout="terminal"] {
   --terminal-statusbar-font-size: var(--text-sm);
 }
 
+/* Row 1: brand grows to push the controls right; nav items break onto their
+   own full-width rows below (order separates them from the controls). The
+   nav element and its list are display:contents so every item lays out in
+   this one flex context. */
 :root[data-layout="terminal"] .top-menu > div {
-  grid-template-columns: auto auto;
-  justify-content: space-between;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
   column-gap: var(--spacing-16);
+  row-gap: var(--spacing-2);
+  padding-block: var(--spacing-8) 0;
 }
 
-/* Brand: hide the animated curl mark; the phonetic words already read
-   /tɔːrbjɔːrn/ — pure text. A mono prompt marker leads the line. */
+:root[data-layout="terminal"] .top-menu__nav,
+:root[data-layout="terminal"] .top-menu__list {
+  display: contents;
+}
+
+:root[data-layout="terminal"] .brand {
+  flex: 1 1 auto;
+}
+
+:root[data-layout="terminal"] .top-menu__item--terminal-quick,
+:root[data-layout="terminal"] .top-menu__item--settings,
+:root[data-layout="terminal"] .top-menu__item--contact {
+  order: 1;
+}
+
+/* A rule opens the ls output; the nav element's ::before is a flex item too
+   (display:contents elements still render their pseudos). */
+:root[data-layout="terminal"] .top-menu__nav::before {
+  content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
+  order: 9;
+  flex: 1 0 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--terminal-statusbar-font-size);
+  line-height: 1.4;
+  color: var(--border-subtle);
+}
+
+:root[data-layout="terminal"] .top-menu__item--nav {
+  order: 10;
+  flex: 1 0 100%;
+}
+
+/* Brand: the phonetic words follow the active typography (the component CSS
+   pins them to --font-sans), and the curl stays — frozen. The SMIL morph is
+   disabled the same way prefers-reduced-motion does it, and progressbar.js
+   treats terminal as zero progress, so the mark is the bare 24px loop. */
+:root[data-layout="terminal"] .brand__link {
+  font-family: inherit;
+}
+
+/* The component pins .brand to --text-3xl; that leaks into the ~$ prompt and
+   the em-sized curl. One statusbar size for the whole prompt line. */
+:root[data-layout="terminal"] .brand {
+  font-size: var(--terminal-statusbar-font-size);
+}
+
 :root[data-layout="terminal"] .brand__mark {
+  height: 1em;
+  /* progressbar.js sets an inline width (24px at zero progress); the
+     !important keeps the glyph square and letter-sized regardless. */
+  width: 1em !important;
+  align-self: center;
+}
+
+:root[data-layout="terminal"] .brand__mark-loop-path animate {
   display: none;
 }
 
@@ -207,20 +265,54 @@
   margin-left: 0;
 }
 
-/* Nav links: plain words; the active page reads as a path. */
+/* Nav rows: lowercase directory names, one per row, trailing slash. The
+   active page carries the ~/ prefix. Background/hover chrome from the
+   component CSS is stripped. */
 :root[data-layout="terminal"] .top-menu__link {
   font-size: var(--terminal-statusbar-font-size);
   padding-inline: 0;
 }
 
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link {
+  display: inline;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: var(--terminal-font-size);
+  text-transform: lowercase;
+  color: var(--text-link, var(--text-default));
+}
+
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link:hover,
+:root[data-layout="terminal"]
+  .top-menu__item--nav
+  .top-menu__link:focus-visible {
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link::after {
+  content: "/";
+  font-family: var(--font-mono);
+}
+
 :root[data-layout="terminal"] .top-menu__link.active {
   text-decoration: none;
-  color: var(--text-link, currentColor);
+  font-weight: 700;
 }
 
 :root[data-layout="terminal"] .top-menu__link.active::before {
   content: "~/";
   font-family: var(--font-mono);
+}
+
+/* The component CSS hides nav items entirely below 48em — the ls rows cost
+   no horizontal space, so they come back on mobile. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .top-menu__item--nav {
+    display: block;
+  }
 }
 
 /* Contact: strip the button chrome down to a bracketed word. */
@@ -253,6 +345,14 @@
 
 :root[data-layout="terminal"] .top-menu__label--icon {
   display: none;
+}
+
+/* The component CSS swaps the contact label for an icon below 30em; text is
+   the terminal's icon, so the word stays at every width. */
+@media (max-width: 29.9375em) {
+  :root[data-layout="terminal"] .top-menu__label--long {
+    display: inline;
+  }
 }
 
 /* Settings toggle: icon → the word, bracketed. The label text comes from the

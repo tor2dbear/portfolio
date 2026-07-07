@@ -767,6 +767,12 @@
     // reflow is forced — so the type size would otherwise only update on the
     // next scroll. Reading a layout property flushes that synchronously.
     void root.offsetWidth;
+    // Let layout-sensitive scripts (e.g. the brand progress mark) re-sync.
+    window.dispatchEvent(
+      new window.CustomEvent("theme:layout-changed", {
+        detail: { layout: layout },
+      })
+    );
   }
 
   function updateLayoutUI(currentLayout) {
