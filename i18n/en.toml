@@ -429,3 +429,9 @@ other = "Next post"
 
 [breadcrumb_label]
 other = "Breadcrumb"
+
+[terminal_settings_expand]
+other = "… +6 lines (click to expand)"
+
+[terminal_settings_collapse]
+other = "(collapse)"

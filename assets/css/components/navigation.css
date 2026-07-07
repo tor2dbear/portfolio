@@ -80,8 +80,9 @@ html[data-grid-overlay] .top-menu {
   display: none;
 }
 
-/* Terminal-layout prompt line (visitor@host:cwd$) — same deal. */
-.terminal-prompt {
+/* Terminal-layout prompt lines (visitor@host:cwd$) — same deal. */
+.terminal-prompt,
+.top-menu__item--terminal-prompt {
   display: none;
 }
 

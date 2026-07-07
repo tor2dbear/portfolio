@@ -232,6 +232,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  justify-content: flex-start;
   column-gap: var(--spacing-16);
   row-gap: var(--spacing-2);
   padding-block: var(--spacing-8) 0;
@@ -244,14 +245,35 @@
 
 :root[data-layout="terminal"] .terminal-prompt {
   display: block;
-  flex: 1 1 auto;
+  flex: 1 0 100%;
   font-size: var(--terminal-statusbar-font-size);
   white-space: nowrap;
 }
 
-:root[data-layout="terminal"] .top-menu__item--terminal-quick,
-:root[data-layout="terminal"] .top-menu__item--settings {
-  order: 1;
+/* Second executed command: ls settings/ — placed after the nav rows. */
+:root[data-layout="terminal"] .top-menu__item--terminal-prompt {
+  display: block;
+  order: 20;
+  flex: 1 0 100%;
+}
+
+:root[data-layout="terminal"]
+  .top-menu__item--terminal-prompt
+  .terminal-prompt {
+  flex: none;
+}
+
+:root[data-layout="terminal"] .terminal-prompt__host-plain {
+  font-weight: 700;
+}
+
+:root[data-layout="terminal"] .terminal-prompt__host-plain::before {
+  content: var(--terminal-host, "tor-bjorn.com");
+}
+
+/* The quick toggles and the expander are the ls settings/ output row. */
+:root[data-layout="terminal"] .top-menu__item--terminal-quick {
+  order: 21;
 }
 
 /* Contact is navigation — it lists with the other rows, freeing the prompt
@@ -259,20 +281,6 @@
 :root[data-layout="terminal"] .top-menu__item--contact {
   order: 11;
   flex: 1 0 100%;
-}
-
-/* A rule opens the ls output; the nav element's ::before is a flex item too
-   (display:contents elements still render their pseudos). */
-:root[data-layout="terminal"] .top-menu__nav::before {
-  content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-  order: 9;
-  flex: 1 0 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: var(--terminal-statusbar-font-size);
-  line-height: 1.4;
-  color: var(--border-subtle);
 }
 
 :root[data-layout="terminal"] .top-menu__item--nav {
@@ -324,7 +332,8 @@
    user@host prompt plus four controls won't share a 48rem row until ~64em. */
 @media (max-width: 63.9375em) {
   :root[data-layout="terminal"] .terminal-prompt__user,
-  :root[data-layout="terminal"] .terminal-prompt__host {
+  :root[data-layout="terminal"] .terminal-prompt__host,
+  :root[data-layout="terminal"] .terminal-prompt__host-plain {
     display: none;
   }
 
@@ -422,9 +431,17 @@
   }
 }
 
-/* Settings toggle: icon → the word, bracketed. The label text comes from the
-   button's aria-label via attr() so it follows i18n for free. */
+/* The settings li dissolves so the toggle and the panel can take separate
+   places in the command block: toggle on the output row, panel below it. */
+:root[data-layout="terminal"] .top-menu__item--settings,
+:root[data-layout="terminal"] .settings-dropdown {
+  display: contents;
+}
+
+/* The toggle is the collapsed-output marker: "… +6 lines (click to expand)",
+   dimmed like elided output; the i18n'd labels ride on data attributes. */
 :root[data-layout="terminal"] .settings-toggle {
+  order: 21;
   background: transparent;
   border: none;
   border-radius: 0;
@@ -433,7 +450,8 @@
   min-height: 0;
   font-size: var(--terminal-statusbar-font-size);
   font-family: inherit;
-  color: var(--text-link, var(--text-default));
+  color: var(--text-muted, var(--text-default));
+  cursor: pointer;
 }
 
 :root[data-layout="terminal"] .settings-toggle:hover {
@@ -447,10 +465,14 @@
   display: none;
 }
 
-/* Label + both brackets in one pseudo: whitespace nodes left by the hidden
-   icon span would otherwise render as a gap before a separate "]". */
+/* One pseudo carries the whole label: whitespace nodes left by the hidden
+   icon span would otherwise render as stray gaps. */
 :root[data-layout="terminal"] .settings-toggle::before {
-  content: "[" attr(aria-label) "]";
+  content: attr(data-terminal-expand);
+}
+
+:root[data-layout="terminal"] .settings-toggle[aria-expanded="true"]::before {
+  content: attr(data-terminal-collapse);
 }
 
 /* ============================================================================
@@ -967,45 +989,30 @@
 }
 
 /* ============================================================================
-   Settings panel → printed output
-   No overlay dropdown: at >= 30em the panel breaks out of its anchor (the
-   .settings-dropdown li goes static, so the absolutely positioned panel
-   resolves against the sticky .top-menu) and prints as a flat full-window
-   text block directly under the statusbar. Below 30em the bottom sheet
-   remains (portaled, working) but shares the same text-only content styling.
+   Settings panel → expanded command output
+   At >= 30em the panel is a normal in-flow block inside the header's flex
+   container (the li and wrapper are display:contents), so expanding really
+   pushes the page down — output printing into the buffer. Below 30em the
+   bottom sheet remains (portaled, working) with the same text-only content.
    ============================================================================ */
 
 @media (min-width: 30em) {
-  :root[data-layout="terminal"] .settings-dropdown {
-    position: static;
-  }
-
   :root[data-layout="terminal"] .settings-panel {
-    top: 100%;
-    left: var(--size-page-margins);
-    right: var(--size-page-margins);
-    width: auto;
+    order: 22;
+    flex: 1 0 100%;
+    position: static;
+    width: 100%;
     min-width: 0;
     max-width: none;
-    background: var(--surface-page);
+    max-height: none;
+    overflow: visible;
+    background: transparent;
     border: none;
     border-radius: 0;
     box-shadow: none;
-    padding: var(--spacing-8) 0 var(--spacing-16);
+    padding: var(--spacing-8) 0 0;
     transform: none;
-  }
-
-  /* Printed output ends in a rule, like the statusbar edge above it. */
-  :root[data-layout="terminal"] .settings-panel::after {
-    content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-    display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    font-family: var(--font-mono);
-    font-size: var(--terminal-font-size);
-    line-height: 1;
-    color: var(--border-subtle);
-    margin-top: var(--spacing-8);
+    transition: none;
   }
 }
 

@@ -423,3 +423,9 @@ other = "Nästa inlägg"
 
 [breadcrumb_label]
 other = "Brödsmulor"
+
+[terminal_settings_expand]
+other = "… +6 rader (klicka för att visa)"
+
+[terminal_settings_collapse]
+other = "(dölj)"

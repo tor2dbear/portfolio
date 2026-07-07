@@ -38,6 +38,19 @@
           {{- end -}}
         {{- end -}}
 
+        {{/* Terminal layout: second executed command — settings print as its collapsed output. Hidden in every other layout. */}}
+        <li
+          class="top-menu__item top-menu__item--terminal-prompt"
+          aria-hidden="true"
+        >
+          <span class="terminal-prompt terminal-prompt--settings">
+            <span class="terminal-prompt__user"></span
+            ><span class="terminal-prompt__host-plain"></span
+            ><span class="terminal-prompt__cwd"></span
+            ><span class="terminal-prompt__cmd">ls settings/</span>
+          </span>
+        </li>
+
         {{/* Terminal layout: bracketed text quick-toggles in the statusbar. Hidden in every other layout (see dimensions/layout/terminal.css). */}}
         <li class="top-menu__item top-menu__item--terminal-quick">
           {{- range first 1 .Translations }}
