@@ -10,6 +10,29 @@
    file only draws its decorative glyphs (prompts, rules, brackets) in mono so
    they hold up under any typeface. Pairs with typography: technical via the
    layout-pairing map in darkmode.js.
+
+   Structure: the tokens and the "Shared text chrome" section below carry the
+   primitives (PS1 strings, the text-button reset, hover underline, bracket
+   and slash glyphs); the sections after them mostly just pick content strings
+   and layout. New components get the right look by joining a shared group.
+
+   CONTRACT — what this layout relies on outside this file:
+   - --terminal-host / --terminal-cwd: per-page CSS string vars emitted by
+     head.html. The fallbacks here only cover pages that miss that block.
+   - topmenu.html: .terminal-boot banner, .terminal-prompt rows and the
+     quick-toggle/home li's exist only for this layout (hidden elsewhere by
+     navigation.css); footer.html: .terminal-tail with data-exit-hint.
+   - settings-dropdown.html: data-terminal-expand/-collapse on
+     .settings-toggle carry the expander labels; effect buttons label
+     themselves via data-toast-title/aria-label.
+   - summary templates: .summary-card__year spans (hidden in other layouts)
+     become the ls-row year column.
+   - footer.html: .footer-meta__item [data-category] becomes the env var name.
+   - DOM order on work posts: the gallery prompt needs .project-info followed
+     by .gallery / .post-content containing figures.
+   - Pages that cannot adapt opt out with data-terminal-exempt on <html>
+     (header.html); darkmode.js and the pre-hydration script fall back to
+     column there without touching the stored preference.
    ============================================================================ */
 
 :root[data-layout="terminal"] {
@@ -35,9 +58,31 @@
   --terminal-font-size: var(--text-base);
   --terminal-line-height: 1.7;
 
+  /* The PS1 strings — every prompt in the buffer composes from these.
+     The short form (cwd only) is what small screens collapse to. */
+  --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
+  --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-short);
+
+  /* Figure tokens and the gallery listing argument. */
+  --terminal-image-label: "[image ";
+  --terminal-gallery-arg: "'images'";
+
   /* The header is static (scrolls away) and multi-row, so anchor scroll
      padding needs no header offset. */
   --size-header-height: 0rem;
+}
+
+:root:lang(sv)[data-layout="terminal"] {
+  --terminal-image-label: "[bild ";
+  --terminal-gallery-arg: "'bilder'";
+}
+
+/* Compact PS1 on small screens — one redefinition trims every prompt. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] {
+    --terminal-ps1: var(--terminal-ps1-short);
+  }
 }
 
 /* #main and .footer-container are capped at --content-max-width (1280px)
@@ -128,6 +173,172 @@
 }
 
 /* ============================================================================
+   Shared text chrome — the primitives every terminal component composes from.
+   Individual sections below only pick content strings and layout on top.
+   ============================================================================ */
+
+/* Prompt/command pseudos: dimmed mono, never bold — the PS1s, the cat/ls
+   verbs and the md heading markers all read as chrome around the content. */
+:root[data-layout="terminal"] .content h2::before,
+:root[data-layout="terminal"] .content h3::before,
+:root[data-layout="terminal"] .section-heading::before,
+:root[data-layout="terminal"] .about-cv__title::before,
+:root[data-layout="terminal"] .works-section .post-header h2::before,
+:root[data-layout="terminal"] .content h2::after,
+:root[data-layout="terminal"] .content h3::after,
+:root[data-layout="terminal"] .section-heading::after,
+:root[data-layout="terminal"] .about-cv__title::after,
+:root[data-layout="terminal"] .works-section .post-header h2::after,
+:root[data-layout="terminal"] .content.post h1::before,
+:root[data-layout="terminal"] .content.post h1::after,
+:root[data-layout="terminal"] .content.post h2::before,
+:root[data-layout="terminal"] .content.post h3::before,
+:root[data-layout="terminal"] .footer-heading--newsletter::before,
+:root[data-layout="terminal"] .footer-heading--newsletter::after {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+/* Block prompts: commands that print on their own line above their output. */
+:root[data-layout="terminal"] .content.post > .project-info::before,
+:root[data-layout="terminal"] .content.post .project-info + .gallery::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content
+  > .gallery:first-child::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content:has(figure)::before,
+:root[data-layout="terminal"] .footer-grid--primary::before,
+:root[data-layout="terminal"] .footer-meta::before,
+:root[data-layout="terminal"] .footer-newsletter__fields::before,
+:root[data-layout="terminal"] .contact-form__form::before {
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+}
+
+/* Text-button reset: every control in the buffer is a bare word. Colour
+   defaults to link; muted controls override below where they're styled. */
+:root[data-layout="terminal"] .settings-toggle,
+:root[data-layout="terminal"] .terminal-quick,
+:root[data-layout="terminal"] .terminal-boot__exit,
+:root[data-layout="terminal"] .footer-newsletter__submit,
+:root[data-layout="terminal"] #main .button,
+:root[data-layout="terminal"] .settings-panel .theme-option,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button,
+:root[data-layout="terminal"] .settings-panel .language-option,
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button,
+:root[data-layout="terminal"] .contact-form__submit {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  font-size: var(--terminal-font-size);
+  font-family: inherit;
+  color: var(--text-link, var(--text-default));
+  cursor: pointer;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-option,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button,
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button {
+  width: auto;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+/* Text inputs join the stream: borderless, inheriting the buffer's face. */
+:root[data-layout="terminal"] .footer-newsletter__input,
+:root[data-layout="terminal"] .contact-form .form-input {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--terminal-font-size);
+  caret-color: var(--text-accent, currentColor);
+}
+
+:root[data-layout="terminal"] .footer-newsletter__input:focus,
+:root[data-layout="terminal"] .contact-form .form-input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Hover: underline is the terminal's only hover effect — no surfaces. */
+:root[data-layout="terminal"] .terminal-prompt__host:hover,
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link:hover,
+:root[data-layout="terminal"]
+  .top-menu__item--nav
+  .top-menu__link:focus-visible,
+:root[data-layout="terminal"]
+  .top-menu__item--contact
+  .top-menu__link--button:hover,
+:root[data-layout="terminal"] .settings-toggle:hover,
+:root[data-layout="terminal"] .terminal-quick:hover,
+:root[data-layout="terminal"] .terminal-boot__exit:hover,
+:root[data-layout="terminal"] .tag:hover,
+:root[data-layout="terminal"] .footer-newsletter__submit:hover,
+:root[data-layout="terminal"] #main .button:hover,
+:root[data-layout="terminal"] .settings-panel .theme-option:hover,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button:hover,
+:root[data-layout="terminal"] .coty-transport__trigger:hover,
+:root[data-layout="terminal"] .coty-player__button:hover,
+:root[data-layout="terminal"] .contact-form__submit:hover {
+  background: transparent;
+  background-image: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Bracketed controls: [word] marks the actionable/active thing. */
+:root[data-layout="terminal"] .terminal-quick--lang::before,
+:root[data-layout="terminal"] .footer-newsletter__submit::before,
+:root[data-layout="terminal"] #main .button::before,
+:root[data-layout="terminal"] .settings-panel .theme-option.active::before,
+:root[data-layout="terminal"]
+  .settings-panel
+  .language-option--current
+  .language-name::before,
+:root[data-layout="terminal"] .contact-form__submit::before {
+  content: "[";
+  font-family: var(--font-mono);
+}
+
+:root[data-layout="terminal"] .terminal-quick--lang::after,
+:root[data-layout="terminal"] .footer-newsletter__submit::after,
+:root[data-layout="terminal"] #main .button::after,
+:root[data-layout="terminal"] .settings-panel .theme-option.active::after,
+:root[data-layout="terminal"]
+  .settings-panel
+  .language-option--current
+  .language-name::after,
+:root[data-layout="terminal"] .contact-form__submit::after {
+  content: "]";
+  font-family: var(--font-mono);
+}
+
+/* Links that are directories carry the trailing slash. */
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link::after,
+:root[data-layout="terminal"] .top-menu__label--long::after,
+:root[data-layout="terminal"] .summary-card__title a::after,
+:root[data-layout="terminal"] .related-items__item .type-headline-4 a::after {
+  content: "/";
+  font-family: var(--font-mono);
+}
+
+/* ============================================================================
    Headings are executed commands
    The heading text is the (quoted) argument; the dimmed prompt and verb are
    pseudo-elements. cat for prose, ls for listings — overrides below.
@@ -144,11 +355,7 @@
 :root[data-layout="terminal"] .content h3::before,
 :root[data-layout="terminal"] .section-heading::before,
 :root[data-layout="terminal"] .about-cv__title::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ cat '";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
+  content: var(--terminal-ps1) "cat '";
 }
 
 :root[data-layout="terminal"] .content h2::after,
@@ -156,17 +363,13 @@
 :root[data-layout="terminal"] .section-heading::after,
 :root[data-layout="terminal"] .about-cv__title::after {
   content: ".md'";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
 }
 
 /* Listing sections run ls instead: featured works, contact, related. */
 :root[data-layout="terminal"] .works-section .post-header h2::before,
 :root[data-layout="terminal"] .contact-section .section-heading::before,
 :root[data-layout="terminal"] .content .related-items__title::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ ls '";
+  content: var(--terminal-ps1) "ls '";
 }
 
 :root[data-layout="terminal"] .works-section .post-header h2::after,
@@ -175,54 +378,25 @@
   content: "'/";
 }
 
-/* Compact PS1 on small screens, matching the header prompt. */
-@media (max-width: 47.9375em) {
-  :root[data-layout="terminal"] .content h2::before,
-  :root[data-layout="terminal"] .content h3::before,
-  :root[data-layout="terminal"] .section-heading::before,
-  :root[data-layout="terminal"] .about-cv__title::before {
-    content: var(--terminal-cwd, "~") "$ cat '";
-  }
-
-  :root[data-layout="terminal"] .works-section .post-header h2::before,
-  :root[data-layout="terminal"] .contact-section .section-heading::before,
-  :root[data-layout="terminal"] .content .related-items__title::before {
-    content: var(--terminal-cwd, "~") "$ ls '";
-  }
-}
-
 /* ============================================================================
    Post pages are ONE file: a single cat on the title prints everything.
    Inner headings render as markdown inside the output, not as new commands.
    ============================================================================ */
 
 :root[data-layout="terminal"] .content.post h1::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ cat '";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
+  content: var(--terminal-ps1) "cat '";
 }
 
 :root[data-layout="terminal"] .content.post h1::after {
   content: ".md'";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
 }
 
 :root[data-layout="terminal"] .content.post h2::before {
   content: "## ";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
 }
 
 :root[data-layout="terminal"] .content.post h3::before {
   content: "### ";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
 }
 
 :root[data-layout="terminal"] .content.post h2,
@@ -247,8 +421,7 @@
 }
 
 :root[data-layout="terminal"] .content.post .related-items__title::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ ls '";
+  content: var(--terminal-ps1) "ls '";
 }
 
 :root[data-layout="terminal"] .content.post .related-items__title::after {
@@ -258,11 +431,8 @@
 /* Project info is the directory next to the file: ls 'info'/, one column,
    one size. */
 :root[data-layout="terminal"] .content.post > .project-info::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ ls 'info'/";
+  content: var(--terminal-ps1) "ls 'info'/";
   display: block;
-  font-family: var(--font-mono);
-  color: var(--text-muted, inherit);
   margin-bottom: var(--spacing-8);
 }
 
@@ -277,15 +447,6 @@
 
 :root[data-layout="terminal"] .project-info__section {
   margin-bottom: var(--spacing-8);
-}
-
-/* The image run after the info block is its own listing. */
-:root[data-layout="terminal"] {
-  --terminal-gallery-arg: "'images'";
-}
-
-:root:lang(sv)[data-layout="terminal"] {
-  --terminal-gallery-arg: "'bilder'";
 }
 
 :root[data-layout="terminal"] .content.post .project-info + .gallery,
@@ -309,40 +470,10 @@
   .content.post
   .project-info
   + .post-content:has(figure)::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ ls " var(--terminal-gallery-arg) "/";
+  content: var(--terminal-ps1) "ls " var(--terminal-gallery-arg) "/";
   display: block;
-  font-family: var(--font-mono);
   font-size: var(--terminal-font-size);
-  color: var(--text-muted, inherit);
   margin-top: var(--spacing-16);
-}
-
-@media (max-width: 47.9375em) {
-  :root[data-layout="terminal"] .content.post h1::before {
-    content: var(--terminal-cwd, "~") "$ cat '";
-  }
-
-  :root[data-layout="terminal"] .content.post .related-items__title::before {
-    content: var(--terminal-cwd, "~") "$ ls '";
-  }
-
-  :root[data-layout="terminal"] .content.post > .project-info::before {
-    content: var(--terminal-cwd, "~") "$ ls 'info'/";
-  }
-
-  :root[data-layout="terminal"] .content.post .project-info + .gallery::before,
-  :root[data-layout="terminal"]
-    .content.post
-    .project-info
-    + .post-content
-    > .gallery:first-child::before,
-  :root[data-layout="terminal"]
-    .content.post
-    .project-info
-    + .post-content:has(figure)::before {
-    content: var(--terminal-cwd, "~") "$ ls " var(--terminal-gallery-arg) "/";
-  }
 }
 
 /* ============================================================================
@@ -363,11 +494,6 @@
 /* The mobile hide-on-scroll transform has no place on a static header. */
 :root[data-layout="terminal"] .top-menu.hide {
   transform: none;
-}
-
-/* One size means one size — the header rows match the body. */
-:root[data-layout="terminal"] {
-  --terminal-statusbar-font-size: var(--terminal-font-size);
 }
 
 /* Row 1: brand grows to push the controls right; nav items break onto their
@@ -392,7 +518,7 @@
 :root[data-layout="terminal"] .terminal-prompt {
   display: block;
   flex: 1 0 100%;
-  font-size: var(--terminal-statusbar-font-size);
+  font-size: var(--terminal-font-size);
   white-space: nowrap;
 }
 
@@ -461,11 +587,6 @@
   text-decoration: none;
 }
 
-:root[data-layout="terminal"] .terminal-prompt__host:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 :root[data-layout="terminal"] .terminal-prompt__host::before {
   content: var(--terminal-host, "tor-bjorn.com");
 }
@@ -479,7 +600,9 @@
 }
 
 /* Compact PS1 below md — just cwd$, like a real trimmed prompt. The full
-   user@host prompt plus four controls won't share a 48rem row until ~64em. */
+   user@host prompt plus four controls won't share a 48rem row until ~64em.
+   (The header trims earlier than the content prompts: it shares its row
+   with the quick toggles.) */
 @media (max-width: 63.9375em) {
   :root[data-layout="terminal"] .terminal-prompt__user,
   :root[data-layout="terminal"] .terminal-prompt__host,
@@ -496,7 +619,7 @@
    active page carries the ~/ prefix. Background/hover chrome from the
    component CSS is stripped. */
 :root[data-layout="terminal"] .top-menu__link {
-  font-size: var(--terminal-statusbar-font-size);
+  font-size: var(--terminal-font-size);
   padding-inline: 0;
 }
 
@@ -508,20 +631,6 @@
   font-size: var(--terminal-font-size);
   text-transform: lowercase;
   color: var(--text-link, var(--text-default));
-}
-
-:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link:hover,
-:root[data-layout="terminal"]
-  .top-menu__item--nav
-  .top-menu__link:focus-visible {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link::after {
-  content: "/";
-  font-family: var(--font-mono);
 }
 
 :root[data-layout="terminal"] .top-menu__link.active {
@@ -552,21 +661,8 @@
   color: var(--text-link, var(--text-default));
 }
 
-:root[data-layout="terminal"]
-  .top-menu__item--contact
-  .top-menu__link--button:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 :root[data-layout="terminal"] .top-menu__label--long {
   text-transform: lowercase;
-}
-
-:root[data-layout="terminal"] .top-menu__label--long::after {
-  content: "/";
-  font-family: var(--font-mono);
 }
 
 :root[data-layout="terminal"] .top-menu__label--icon {
@@ -592,23 +688,7 @@
    dimmed like elided output; the i18n'd labels ride on data attributes. */
 :root[data-layout="terminal"] .settings-toggle {
   order: 21;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  min-width: 0;
-  min-height: 0;
-  font-size: var(--terminal-statusbar-font-size);
-  font-family: inherit;
   color: var(--text-muted, var(--text-default));
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .settings-toggle:hover {
-  background: transparent;
-  border: none;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 :root[data-layout="terminal"] .settings-icon {
@@ -702,11 +782,6 @@
   color: var(--text-link, currentColor);
 }
 
-:root[data-layout="terminal"] .summary-card__title a::after {
-  content: "/";
-  font-family: var(--font-mono);
-}
-
 /* Tags sit at the right edge of the row, as plain muted words. */
 :root[data-layout="terminal"] .summary-card--wide article .tag-list,
 :root[data-layout="terminal"] .summary-card--compact article .tag-list {
@@ -734,18 +809,12 @@
   text-transform: lowercase;
 }
 
-:root[data-layout="terminal"] .tag:hover {
-  background-image: none;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 /* ============================================================================
    Content figures → [image n] tokens
    Every markdown image already renders as figure[data-lightbox] with the
    existing lightbox listening for clicks. Hide the picture, print a numbered
    token. Numbering: a CSS counter on the content container. Keyboard access
-   is added by terminal-tokens.js (tabindex + Enter/Space).
+   is added by lightbox.js (tabindex + Enter/Space).
    ============================================================================ */
 
 :root[data-layout="terminal"] .content {
@@ -824,6 +893,7 @@
 
 :root[data-layout="terminal"] .related-items__item .type-headline-4 {
   margin: 0;
+  text-transform: none;
 }
 
 :root[data-layout="terminal"] .related-items__item .type-headline-4::before,
@@ -839,18 +909,9 @@
   content: none;
 }
 
-:root[data-layout="terminal"] .related-items__item .type-headline-4 {
-  text-transform: none;
-}
-
 :root[data-layout="terminal"] .related-items__item .type-headline-4 a {
   color: var(--text-link, currentColor);
   font-weight: 400;
-}
-
-:root[data-layout="terminal"] .related-items__item .type-headline-4 a::after {
-  content: "/";
-  font-family: var(--font-mono);
 }
 
 :root[data-layout="terminal"] .related-items__item .type-information {
@@ -866,10 +927,6 @@
   border: none;
   border-radius: 0;
   padding: 0;
-}
-
-:root:lang(sv)[data-layout="terminal"] {
-  --terminal-image-label: "[bild ";
 }
 
 /* Each gallery is a grid item (blockified), so its tokens print as one line
@@ -891,24 +948,25 @@
   padding-left: 2ch;
 }
 
-:root[data-layout="terminal"] .prose ul > li::before {
-  content: "- ";
-  font-family: var(--font-mono);
-  color: var(--text-muted, inherit);
-  margin-left: -2ch;
-}
-
 :root[data-layout="terminal"] .prose blockquote {
   border-left: none;
   padding-left: 2ch;
   font-style: inherit;
 }
 
+:root[data-layout="terminal"] .prose ul > li::before,
 :root[data-layout="terminal"] .prose blockquote::before {
-  content: "> ";
   font-family: var(--font-mono);
   color: var(--text-muted, inherit);
   margin-left: -2ch;
+}
+
+:root[data-layout="terminal"] .prose ul > li::before {
+  content: "- ";
+}
+
+:root[data-layout="terminal"] .prose blockquote::before {
+  content: "> ";
 }
 
 /* ============================================================================
@@ -983,54 +1041,13 @@
 }
 
 :root[data-layout="terminal"] .footer-newsletter__fields::before {
-  content: var(--terminal-cwd, "~") "$ subscribe --email";
-  font-family: var(--font-mono);
-  color: var(--text-muted, inherit);
+  content: var(--terminal-ps1-short) "subscribe --email";
   white-space: nowrap;
 }
 
 :root[data-layout="terminal"] .footer-newsletter__input {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
   flex: 1 1 12ch;
   min-width: 0;
-  font-family: inherit;
-  font-size: var(--terminal-font-size);
-  caret-color: var(--text-accent, currentColor);
-}
-
-:root[data-layout="terminal"] .footer-newsletter__input:focus {
-  outline: none;
-}
-
-:root[data-layout="terminal"] .footer-newsletter__submit {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  min-height: 0;
-  font-size: var(--terminal-font-size);
-  font-family: inherit;
-  color: var(--text-link, var(--text-default));
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .footer-newsletter__submit::before {
-  content: "[";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] .footer-newsletter__submit::after {
-  content: "]";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] .footer-newsletter__submit:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 /* ============================================================================
@@ -1045,10 +1062,7 @@
 
 /* The sitemap is literally a recursive listing. */
 :root[data-layout="terminal"] .footer-grid--primary::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ ls -R ~/";
-  font-family: var(--font-mono);
-  color: var(--text-muted, inherit);
+  content: var(--terminal-ps1) "ls -R ~/";
 }
 
 /* The newsletter heading is its own command. */
@@ -1057,28 +1071,11 @@
 }
 
 :root[data-layout="terminal"] .footer-heading--newsletter::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ cat '";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
+  content: var(--terminal-ps1) "cat '";
 }
 
 :root[data-layout="terminal"] .footer-heading--newsletter::after {
   content: ".txt'";
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--text-muted, inherit);
-}
-
-@media (max-width: 47.9375em) {
-  :root[data-layout="terminal"] .footer-grid--primary::before {
-    content: var(--terminal-cwd, "~") "$ ls -R ~/";
-  }
-
-  :root[data-layout="terminal"] .footer-heading--newsletter::before {
-    content: var(--terminal-cwd, "~") "$ cat '";
-  }
 }
 
 /* The legal/status row is an executed env — flat rows, never centred.
@@ -1089,10 +1086,8 @@
 }
 
 :root[data-layout="terminal"] .footer-meta::before {
-  content: var(--terminal-cwd, "~") "$ env";
+  content: var(--terminal-ps1-short) "env";
   display: block;
-  font-family: var(--font-mono);
-  color: var(--text-muted, inherit);
 }
 
 :root[data-layout="terminal"] .footer-meta__list {
@@ -1160,18 +1155,7 @@
 }
 
 :root[data-layout="terminal"] .terminal-boot__exit {
-  background: transparent;
-  border: none;
-  padding: 0;
   font-family: var(--font-mono);
-  font-size: var(--terminal-font-size);
-  color: var(--text-link, var(--text-default));
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .terminal-boot__exit:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 /* The buffer ends with an empty prompt, waiting. */
@@ -1185,15 +1169,8 @@
 }
 
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
-  content: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
-    var(--terminal-cwd, "~") "$ ";
+  content: var(--terminal-ps1);
   color: var(--text-muted, inherit);
-}
-
-@media (max-width: 47.9375em) {
-  :root[data-layout="terminal"] .terminal-tail__prompt::before {
-    content: var(--terminal-cwd, "~") "$ ";
-  }
 }
 
 /* Fish-style ghost suggestion after the caret: exit, with the hint. */
@@ -1269,33 +1246,6 @@
   display: none;
 }
 
-/* Buttons anywhere in the stream (404 CTA, forms) go text-only. */
-:root[data-layout="terminal"] #main .button {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  min-height: 0;
-  color: var(--text-link, var(--text-default));
-  font-size: var(--terminal-font-size);
-}
-
-:root[data-layout="terminal"] #main .button::before {
-  content: "[";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] #main .button::after {
-  content: "]";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] #main .button:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 /* ============================================================================
    Statusbar quick-toggles
    [sv] [mörkt] — text stand-ins for the dropdown controls. Hidden in every
@@ -1308,31 +1258,9 @@
 }
 
 :root[data-layout="terminal"] .terminal-quick {
-  background: transparent;
-  border: none;
-  padding: 0;
   display: inline-flex;
   align-items: baseline;
-  font-family: inherit;
-  font-size: var(--terminal-statusbar-font-size);
-  color: var(--text-link, var(--text-default));
   text-decoration: none;
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .terminal-quick--lang::before {
-  content: "[";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] .terminal-quick--lang::after {
-  content: "]";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] .terminal-quick:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 /* ============================================================================
@@ -1402,36 +1330,17 @@
 }
 
 :root[data-layout="terminal"] .settings-panel .theme-option {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0;
-  width: auto;
-  height: auto;
-  min-height: 0;
-  min-width: 0;
-  flex: 0 0 auto;
   display: inline-flex;
   flex-direction: row;
   align-items: baseline;
   gap: 0;
-  font-size: var(--terminal-font-size);
-  font-family: inherit;
-  color: var(--text-link, var(--text-default));
-  cursor: pointer;
 }
 
 :root[data-layout="terminal"] .settings-panel .theme-option.active {
   background: transparent;
   border: none;
   box-shadow: none;
-}
-
-:root[data-layout="terminal"] .settings-panel .theme-option:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  font-weight: 700;
 }
 
 :root[data-layout="terminal"] .settings-panel .theme-option-icon,
@@ -1446,20 +1355,6 @@
   font-size: var(--terminal-font-size);
 }
 
-:root[data-layout="terminal"] .settings-panel .theme-option.active {
-  font-weight: 700;
-}
-
-:root[data-layout="terminal"] .settings-panel .theme-option.active::before {
-  content: "[";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] .settings-panel .theme-option.active::after {
-  content: "]";
-  font-family: var(--font-mono);
-}
-
 /* Effects: icon buttons become text. The i18n'd toast title is the best
    short label; aria-label is the fallback for buttons without one. */
 :root[data-layout="terminal"] .settings-panel .theme-effects {
@@ -1469,28 +1364,6 @@
   align-items: baseline;
   gap: 0 2ch;
   padding: 0;
-}
-
-:root[data-layout="terminal"] .settings-panel .theme-effect-button {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  width: auto;
-  height: auto;
-  min-height: 0;
-  min-width: 0;
-  flex: 0 0 auto;
-  font-size: var(--terminal-font-size);
-  font-family: inherit;
-  color: var(--text-link, var(--text-default));
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .settings-panel .theme-effect-button:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 :root[data-layout="terminal"] .settings-panel .theme-effect-button svg {
@@ -1539,37 +1412,12 @@
   display: none;
 }
 
-:root[data-layout="terminal"] .settings-panel .language-option {
-  padding: 0;
-  border: none;
-  background: transparent;
-  font-size: var(--terminal-font-size);
-  color: var(--text-link, var(--text-default));
-  cursor: pointer;
-}
-
 :root[data-layout="terminal"] .settings-panel .language-option .language-name {
   font-size: var(--terminal-font-size);
 }
 
 :root[data-layout="terminal"] .settings-panel .language-option--current {
   font-weight: 700;
-}
-
-:root[data-layout="terminal"]
-  .settings-panel
-  .language-option--current
-  .language-name::before {
-  content: "[";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"]
-  .settings-panel
-  .language-option--current
-  .language-name::after {
-  content: "]";
-  font-family: var(--font-mono);
 }
 
 /* Keyboard-shortcut chips: keep the hint, drop the chip chrome. */
@@ -1617,24 +1465,7 @@
 
 /* Collapsed: the trigger is the job notice itself. */
 :root[data-layout="terminal"] .coty-transport__trigger {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  min-width: 0;
-  min-height: 0;
-  width: auto;
-  height: auto;
-  font-size: var(--terminal-font-size);
-  font-family: inherit;
   color: var(--text-muted, inherit);
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .coty-transport__trigger:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 :root[data-layout="terminal"] .coty-transport__trigger-icon {
@@ -1658,28 +1489,6 @@
   align-items: baseline;
   gap: 2ch;
   padding: 0;
-}
-
-:root[data-layout="terminal"] .coty-player__button {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  min-width: 0;
-  min-height: 0;
-  width: auto;
-  height: auto;
-  flex: 0 0 auto;
-  font-size: var(--terminal-font-size);
-  font-family: inherit;
-  color: var(--text-link, var(--text-default));
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .coty-player__button:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 :root[data-layout="terminal"] .coty-player__button svg {
@@ -1735,10 +1544,8 @@
    ============================================================================ */
 
 :root[data-layout="terminal"] .contact-form__form::before {
-  content: var(--terminal-cwd, "~") "$ contact";
+  content: var(--terminal-ps1-short) "contact";
   display: block;
-  font-family: var(--font-mono);
-  color: var(--text-muted, inherit);
 }
 
 :root[data-layout="terminal"] .contact-form .form-group {
@@ -1768,21 +1575,7 @@
 
 :root[data-layout="terminal"] .contact-form .form-input {
   flex: 1 1 auto;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0;
-  font-family: inherit;
-  font-size: var(--terminal-font-size);
   color: var(--text-default);
-  caret-color: var(--text-accent, currentColor);
-}
-
-:root[data-layout="terminal"] .contact-form .form-input:focus {
-  outline: none;
-  border: none;
-  box-shadow: none;
 }
 
 /* The message is a heredoc: its label prints the command, EOF closes it. */
@@ -1805,7 +1598,7 @@
   .contact-form
   .form-group:has(.contact-form__textarea)
   .form-label::before {
-  content: var(--terminal-cwd, "~") "$ cat > ";
+  content: var(--terminal-ps1-short) "cat > ";
 }
 
 :root[data-layout="terminal"]
@@ -1835,31 +1628,6 @@
 :root[data-layout="terminal"] .contact-form__submit {
   display: inline-block;
   margin: var(--spacing-8) 0 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  min-height: 0;
-  font-size: var(--terminal-font-size);
-  font-family: inherit;
-  color: var(--text-link, var(--text-default));
-  cursor: pointer;
-}
-
-:root[data-layout="terminal"] .contact-form__submit:hover {
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-:root[data-layout="terminal"] .contact-form__submit::before {
-  content: "[";
-  font-family: var(--font-mono);
-}
-
-:root[data-layout="terminal"] .contact-form__submit::after {
-  content: "]";
-  font-family: var(--font-mono);
 }
 
 /* ============================================================================
