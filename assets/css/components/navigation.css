@@ -80,10 +80,12 @@ html[data-grid-overlay] .top-menu {
   display: none;
 }
 
-/* Terminal-layout prompt lines (visitor@host:cwd$) — same deal. */
+/* Terminal-layout prompt lines (visitor@host:cwd$) — same deal. The boot
+   selector needs the element to outweigh the `.top-menu > div` grid rule
+   above, which would otherwise keep the banner visible in other layouts. */
 .terminal-prompt,
 .top-menu__item--terminal-prompt,
-.terminal-boot {
+.top-menu > div.terminal-boot {
   display: none;
 }
 

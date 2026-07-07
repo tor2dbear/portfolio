@@ -730,12 +730,15 @@
     }
     var previousTypography = localStorage.getItem("theme-typography-previous");
     setLayout(previousLayout);
-    if (
-      previousTypography &&
-      previousTypography !== "technical" &&
-      localStorage.getItem("theme-typography") === "technical"
-    ) {
-      setTypography(previousTypography);
+    if (localStorage.getItem("theme-typography") === "technical") {
+      if (previousTypography && previousTypography !== "technical") {
+        setTypography(previousTypography);
+      } else if (!previousTypography) {
+        // No snapshot (terminal was entered before snapshots existed, or
+        // storage was cleared): fall back to the site default rather than
+        // leaving the pairing's mono behind.
+        setTypography("editorial");
+      }
     }
   }
 
