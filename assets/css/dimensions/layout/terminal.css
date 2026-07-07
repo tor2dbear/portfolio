@@ -1862,3 +1862,82 @@
   content: "]";
   font-family: var(--font-mono);
 }
+
+/* ============================================================================
+   Boot theater
+   .terminal-booting (set by darkmode.js on entry + once per session) stages
+   the chrome in: banner lines print, the prompts type their commands, the
+   output rows land — content below is never gated. Reduced-motion users
+   never receive the class.
+   ============================================================================ */
+
+@keyframes terminal-print {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes terminal-type {
+  from {
+    max-width: 0;
+  }
+
+  to {
+    max-width: 14ch;
+  }
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-boot__art {
+  animation: terminal-print 10ms both 0.05s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-boot__title {
+  animation: terminal-print 10ms both 0.2s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-boot__line {
+  animation: terminal-print 10ms both 0.35s;
+}
+
+:root[data-layout="terminal"].terminal-booting
+  .terminal-boot__line
+  + .terminal-boot__line {
+  animation-delay: 0.5s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-prompt {
+  animation: terminal-print 10ms both 0.65s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-prompt__cmd {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  animation: terminal-type 0.4s steps(12, end) both 0.7s;
+}
+
+:root[data-layout="terminal"].terminal-booting .top-menu__item--nav,
+:root[data-layout="terminal"].terminal-booting .top-menu__item--contact {
+  animation: terminal-print 10ms both 1.15s;
+}
+
+:root[data-layout="terminal"].terminal-booting
+  .top-menu__item--terminal-prompt {
+  animation: terminal-print 10ms both 1.3s;
+}
+
+:root[data-layout="terminal"].terminal-booting
+  .top-menu__item--terminal-prompt
+  .terminal-prompt__cmd {
+  animation-delay: 1.35s;
+}
+
+:root[data-layout="terminal"].terminal-booting .top-menu__item--terminal-quick,
+:root[data-layout="terminal"].terminal-booting .settings-toggle {
+  animation: terminal-print 10ms both 1.8s;
+}

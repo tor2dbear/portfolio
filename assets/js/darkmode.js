@@ -716,6 +716,37 @@
     terminal: { typography: "technical" },
   };
 
+  // Boot theater: a short staged print of the terminal chrome. Plays when
+  // the user enters the layout and once per browser session on load —
+  // never for reduced-motion users (system preference or the site toggle).
+  var terminalBootTimer = null;
+
+  function playTerminalBoot() {
+    if (
+      (typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+      document.documentElement.getAttribute("data-effect-reduced-motion") ===
+        "on"
+    ) {
+      return;
+    }
+    var root = document.documentElement;
+    root.classList.remove("terminal-booting");
+    void root.offsetWidth;
+    root.classList.add("terminal-booting");
+    try {
+      sessionStorage.setItem("terminal-boot-played", "1");
+    } catch (e) {
+      /* storage unavailable — the boot simply replays next load */
+    }
+    if (terminalBootTimer) {
+      window.clearTimeout(terminalBootTimer);
+    }
+    terminalBootTimer = window.setTimeout(function () {
+      root.classList.remove("terminal-booting");
+    }, 2400);
+  }
+
   // Leave the terminal: back to the snapshotted layout, and restore the
   // snapshotted typography if the pairing's choice (technical) is still
   // active — a manual typography change inside the terminal is respected.
@@ -772,6 +803,7 @@
         "theme-typography-previous",
         localStorage.getItem("theme-typography") || "editorial"
       );
+      playTerminalBoot();
     }
     localStorage.setItem("theme-layout", layout);
     updateLayoutUI(layout);
@@ -1955,6 +1987,18 @@
         setLayout(layout);
       });
     });
+
+    // First terminal page load of the session boots; navigations after
+    // that print instantly, like a real terminal.
+    if (storedLayout === "terminal") {
+      try {
+        if (!sessionStorage.getItem("terminal-boot-played")) {
+          playTerminalBoot();
+        }
+      } catch (e) {
+        /* storage unavailable — skip the theater */
+      }
+    }
 
     // Terminal exit routes: the boot [exit] button, the ESC key (when no
     // panel/lightbox/input claims it), and literally typing "exit" + Enter.
