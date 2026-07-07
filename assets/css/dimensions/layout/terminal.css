@@ -434,6 +434,10 @@
   flex: 1 0 100%;
 }
 
+:root[data-layout="terminal"] .top-menu__item--terminal-home {
+  display: block;
+}
+
 /* The phonetic brand steps aside for the prompt (JetBrains Mono lacks the
    IPA glyphs anyway); in a prompt the host position IS a domain, and the
    home link rides on it. Prompt strings come from --terminal-host/--cwd,
@@ -1132,7 +1136,7 @@
 :root[data-layout="terminal"] .terminal-boot__art {
   font-family: var(--font-mono);
   font-size: var(--terminal-font-size);
-  line-height: 1.25;
+  line-height: 1.2;
   color: var(--text-accent, currentColor);
   background: transparent;
   border: none;
@@ -1142,17 +1146,12 @@
   overflow-x: auto;
 }
 
-/* The title p is empty in markup (content comes from the host var), so the
-   global p:empty rule would hide it. */
-:root[data-layout="terminal"] .terminal-boot__title {
-  display: block;
-  margin: 0;
-}
-
-:root[data-layout="terminal"] .terminal-boot__title::before {
-  content: var(--terminal-host, "tor-bjorn.com") " — terminal";
-  font-family: var(--font-mono);
-  font-weight: 700;
+/* The framed banner is ~48ch wide — shrink it on narrow screens so the box
+   closes inside the viewport. */
+@media (max-width: 29.9375em) {
+  :root[data-layout="terminal"] .terminal-boot__art {
+    font-size: 0.72rem;
+  }
 }
 
 :root[data-layout="terminal"] .terminal-boot__line {
@@ -1895,22 +1894,12 @@
   animation: terminal-print 10ms both 0.05s;
 }
 
-:root[data-layout="terminal"].terminal-booting .terminal-boot__title {
-  animation: terminal-print 10ms both 0.15s;
-}
-
 :root[data-layout="terminal"].terminal-booting .terminal-boot__line {
-  animation: terminal-print 10ms both 0.25s;
-}
-
-:root[data-layout="terminal"].terminal-booting
-  .terminal-boot__line
-  + .terminal-boot__line {
-  animation-delay: 0.35s;
+  animation: terminal-print 10ms both 0.2s;
 }
 
 :root[data-layout="terminal"].terminal-booting .terminal-prompt {
-  animation: terminal-print 10ms both 0.45s;
+  animation: terminal-print 10ms both 0.35s;
 }
 
 :root[data-layout="terminal"].terminal-booting .terminal-prompt__cmd {
@@ -1918,37 +1907,37 @@
   overflow: hidden;
   white-space: nowrap;
   vertical-align: bottom;
-  animation: terminal-type 0.3s steps(12, end) both 0.5s;
+  animation: terminal-type 0.3s steps(12, end) both 0.4s;
 }
 
 :root[data-layout="terminal"].terminal-booting .top-menu__item--nav,
 :root[data-layout="terminal"].terminal-booting .top-menu__item--contact {
-  animation: terminal-print 10ms both 0.85s;
+  animation: terminal-print 10ms both 0.75s;
 }
 
 :root[data-layout="terminal"].terminal-booting
   .top-menu__item--terminal-prompt {
-  animation: terminal-print 10ms both 0.95s;
+  animation: terminal-print 10ms both 0.85s;
 }
 
 :root[data-layout="terminal"].terminal-booting
   .top-menu__item--terminal-prompt
   .terminal-prompt__cmd {
-  animation-delay: 1s;
+  animation-delay: 0.9s;
 }
 
 :root[data-layout="terminal"].terminal-booting .top-menu__item--terminal-quick,
 :root[data-layout="terminal"].terminal-booting .settings-toggle {
-  animation: terminal-print 10ms both 1.3s;
+  animation: terminal-print 10ms both 1.2s;
 }
 
 /* The rest of the buffer prints after the chrome — the whole screenful at
    once (output is instant in a real terminal), footer a beat later. Opacity
    only, so the layout never shifts and nothing re-flows. */
 :root[data-layout="terminal"].terminal-booting #main {
-  animation: terminal-print 10ms both 1.45s;
+  animation: terminal-print 10ms both 1.35s;
 }
 
 :root[data-layout="terminal"].terminal-booting footer {
-  animation: terminal-print 10ms both 1.6s;
+  animation: terminal-print 10ms both 1.5s;
 }

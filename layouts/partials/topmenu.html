@@ -1,16 +1,24 @@
 <header id="topmenu" class="top-menu" data-js="top-menu">
   <div class="grain-overlay grain-overlay--nav" aria-hidden="true"></div>
-  {{/* Terminal layout: boot banner — ascii curl, fake boot lines and the exit hint. Hidden in every other layout. */}}
+  {{/* Terminal layout: boot banner — framed ascii curl, host title and boot line built with rune-counted padding so the box always closes. The exit hint prints below the frame. Hidden in every other layout. */}}
+  {{- $bootHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
+  {{- $bootTitle := printf "%s — terminal" $bootHost -}}
+  {{- $bootLines := slice "        ___" "       /   \\" "       \\   /" "  ______/ \\______________" "" $bootTitle (i18n "terminal_boot_ok") -}}
+  {{- $bootInner := 0 -}}
+  {{- range $bootLines -}}
+    {{- $w := strings.RuneCount . -}}
+    {{- if gt $w $bootInner }}{{ $bootInner = $w }}{{ end -}}
+  {{- end -}}
+  {{- $bootRows := slice (printf "╭─%s─╮" (strings.Repeat $bootInner "─")) -}}
+  {{- range $bootLines -}}
+    {{- $pad := strings.Repeat (sub $bootInner (strings.RuneCount .)) " " -}}
+    {{- $bootRows = $bootRows | append (printf "│ %s%s │" . $pad) -}}
+  {{- end -}}
+  {{- $bootRows = $bootRows | append (printf "╰─%s─╯" (strings.Repeat $bootInner "─")) -}}
   <div class="terminal-boot">
     <pre class="terminal-boot__art" aria-hidden="true">
-       ____
-  ____/    \____________________
-       \___/</pre
+{{ delimit $bootRows "\n" }}</pre
     >
-    <p class="terminal-boot__title" aria-hidden="true"></p>
-    <p class="terminal-boot__line" aria-hidden="true">
-      {{ i18n "terminal_boot_ok" }}
-    </p>
     <p class="terminal-boot__line">
       <span class="terminal-boot__hint">{{ i18n "terminal_exit_hint" }}</span>
       <button class="terminal-boot__exit" type="button" data-js="terminal-exit">
@@ -35,6 +43,16 @@
       <ul class="top-menu__list">
         {{- $urltop := .RelPermalink -}}
         {{- $homeURL := "/" | relLangURL -}}
+        {{/* Terminal layout: explicit home row — the prompt's host link is easy to miss. Hidden in every other layout. */}}
+        <li
+          class="top-menu__item top-menu__item--nav top-menu__item--terminal-home"
+        >
+          <a
+            class="top-menu__link {{ if .IsHome }}active{{ end }}"
+            href="{{ "/" | relLangURL }}"
+            >{{ i18n "home" }}</a
+          >
+        </li>
         {{- range .Site.Menus.top -}}
           {{- $nameLower := lower .Name -}}
           {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}

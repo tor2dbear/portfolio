@@ -76,7 +76,8 @@ html[data-grid-overlay] .top-menu {
 /* Terminal-layout statusbar quick-toggles: text stand-ins for the dropdown
    controls, rendered only when data-layout="terminal" (see
    dimensions/layout/terminal.css). */
-.top-menu__item--terminal-quick {
+.top-menu__item--terminal-quick,
+.top-menu__item--terminal-home {
   display: none;
 }
 
