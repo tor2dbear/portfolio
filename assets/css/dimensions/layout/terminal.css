@@ -1896,21 +1896,21 @@
 }
 
 :root[data-layout="terminal"].terminal-booting .terminal-boot__title {
-  animation: terminal-print 10ms both 0.2s;
+  animation: terminal-print 10ms both 0.15s;
 }
 
 :root[data-layout="terminal"].terminal-booting .terminal-boot__line {
-  animation: terminal-print 10ms both 0.35s;
+  animation: terminal-print 10ms both 0.25s;
 }
 
 :root[data-layout="terminal"].terminal-booting
   .terminal-boot__line
   + .terminal-boot__line {
-  animation-delay: 0.5s;
+  animation-delay: 0.35s;
 }
 
 :root[data-layout="terminal"].terminal-booting .terminal-prompt {
-  animation: terminal-print 10ms both 0.65s;
+  animation: terminal-print 10ms both 0.45s;
 }
 
 :root[data-layout="terminal"].terminal-booting .terminal-prompt__cmd {
@@ -1918,26 +1918,37 @@
   overflow: hidden;
   white-space: nowrap;
   vertical-align: bottom;
-  animation: terminal-type 0.4s steps(12, end) both 0.7s;
+  animation: terminal-type 0.3s steps(12, end) both 0.5s;
 }
 
 :root[data-layout="terminal"].terminal-booting .top-menu__item--nav,
 :root[data-layout="terminal"].terminal-booting .top-menu__item--contact {
-  animation: terminal-print 10ms both 1.15s;
+  animation: terminal-print 10ms both 0.85s;
 }
 
 :root[data-layout="terminal"].terminal-booting
   .top-menu__item--terminal-prompt {
-  animation: terminal-print 10ms both 1.3s;
+  animation: terminal-print 10ms both 0.95s;
 }
 
 :root[data-layout="terminal"].terminal-booting
   .top-menu__item--terminal-prompt
   .terminal-prompt__cmd {
-  animation-delay: 1.35s;
+  animation-delay: 1s;
 }
 
 :root[data-layout="terminal"].terminal-booting .top-menu__item--terminal-quick,
 :root[data-layout="terminal"].terminal-booting .settings-toggle {
-  animation: terminal-print 10ms both 1.8s;
+  animation: terminal-print 10ms both 1.3s;
+}
+
+/* The rest of the buffer prints after the chrome — the whole screenful at
+   once (output is instant in a real terminal), footer a beat later. Opacity
+   only, so the layout never shifts and nothing re-flows. */
+:root[data-layout="terminal"].terminal-booting #main {
+  animation: terminal-print 10ms both 1.45s;
+}
+
+:root[data-layout="terminal"].terminal-booting footer {
+  animation: terminal-print 10ms both 1.6s;
 }
