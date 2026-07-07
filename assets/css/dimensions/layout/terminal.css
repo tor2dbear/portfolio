@@ -194,7 +194,7 @@
   border-bottom: none;
   position: relative;
   height: auto;
-  padding-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-16);
 }
 
 /* The mobile hide-on-scroll transform has no place on a static header. */
@@ -202,26 +202,9 @@
   transform: none;
 }
 
-/* Box-drawing rule pinned to the header's bottom edge, clipped to width. */
-:root[data-layout="terminal"] .top-menu::after {
-  content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-  position: absolute;
-  bottom: 0;
-  left: var(--size-page-margins);
-  right: var(--size-page-margins);
-  grid-column: full-start / full-end;
-  overflow: hidden;
-  white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: var(--terminal-font-size);
-  line-height: 1;
-  color: var(--border-subtle);
-  pointer-events: none;
-  text-align: center;
-}
-
+/* One size means one size — the header rows match the body. */
 :root[data-layout="terminal"] {
-  --terminal-statusbar-font-size: var(--text-sm);
+  --terminal-statusbar-font-size: var(--terminal-font-size);
 }
 
 /* Row 1: brand grows to push the controls right; nav items break onto their
@@ -709,6 +692,35 @@
 }
 
 /* ============================================================================
+   cat output carries light markdown idioms: - bullets, > quotes
+   ============================================================================ */
+
+:root[data-layout="terminal"] .prose ul {
+  list-style: none;
+  padding-left: 2ch;
+}
+
+:root[data-layout="terminal"] .prose ul > li::before {
+  content: "- ";
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-left: -2ch;
+}
+
+:root[data-layout="terminal"] .prose blockquote {
+  border-left: none;
+  padding-left: 2ch;
+  font-style: inherit;
+}
+
+:root[data-layout="terminal"] .prose blockquote::before {
+  content: "> ";
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-left: -2ch;
+}
+
+/* ============================================================================
    One column, one stream
    Subgrid placements (about 6+6, contact split, CV columns) collapse — every
    placed child spans the whole window. Inline --col styles are vars consumed
@@ -735,21 +747,59 @@
   display: block;
 }
 
+:root[data-layout="terminal"] .about-cv__columns {
+  column-count: 1;
+}
+
+:root[data-layout="terminal"] .about-cv__text,
+:root[data-layout="terminal"] .about-cv__heading {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+}
+
+:root[data-layout="terminal"] .about-cv__icon {
+  display: none;
+}
+
+/* Small type utilities join the single size (dates, meta rows). */
+:root[data-layout="terminal"] .type-information,
+:root[data-layout="terminal"] .post-date {
+  font-size: var(--terminal-font-size);
+}
+
 /* The contact portrait is an image — a terminal has no place for it. */
 :root[data-layout="terminal"] .contact-portrait {
   display: none;
 }
 
-/* Newsletter form: text-only affordances — underlined input, bracketed
-   submit. */
+/* Newsletter form: the input line IS a prompt — ~$ subscribe --email _ */
+:root[data-layout="terminal"] .footer-newsletter__fields {
+  display: flex;
+  align-items: baseline;
+  gap: 1ch;
+}
+
+:root[data-layout="terminal"] .footer-newsletter__fields::before {
+  content: var(--terminal-cwd, "~") "$ subscribe --email";
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  white-space: nowrap;
+}
+
 :root[data-layout="terminal"] .footer-newsletter__input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border-default);
   border-radius: 0;
-  padding-inline: 0;
+  padding: 0;
+  flex: 1 1 auto;
+  min-width: 8ch;
   font-family: inherit;
   font-size: var(--terminal-font-size);
+  caret-color: var(--text-accent, currentColor);
+}
+
+:root[data-layout="terminal"] .footer-newsletter__input:focus {
+  outline: none;
 }
 
 :root[data-layout="terminal"] .footer-newsletter__submit {
@@ -783,18 +833,6 @@
 /* ============================================================================
    Footer: stacked text rows inside the same window
    ============================================================================ */
-
-:root[data-layout="terminal"] footer::before {
-  content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────";
-  grid-column: content-start / content-end;
-  overflow: hidden;
-  white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: var(--terminal-font-size);
-  line-height: 1;
-  color: var(--border-subtle);
-  pointer-events: none;
-}
 
 :root[data-layout="terminal"] .footer-grid--primary {
   display: flex;
@@ -1017,6 +1055,17 @@
 }
 
 /* --- Text-only panel content (all widths) --- */
+
+:root[data-layout="terminal"] .settings-panel .theme-section,
+:root[data-layout="terminal"] .settings-panel .theme-section-heading,
+:root[data-layout="terminal"] .settings-panel .language-list {
+  padding: 0;
+  margin: 0;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-section {
+  margin-bottom: var(--spacing-8);
+}
 
 :root[data-layout="terminal"] .theme-section-title {
   font-size: var(--terminal-font-size);
