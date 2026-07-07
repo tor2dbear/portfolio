@@ -1141,12 +1141,21 @@
   overflow-x: auto;
 }
 
-/* The framed banner is ~48ch wide — shrink it on narrow screens so the box
-   closes inside the viewport. */
-@media (max-width: 29.9375em) {
-  :root[data-layout="terminal"] .terminal-boot__art {
-    font-size: 0.72rem;
-  }
+/* Host title + boot-ok line: the banner's text rows, printed under the frame
+   so they wrap on a narrow screen instead of forcing the box wide. Accent
+   like the art they sit under; each on its own line. */
+:root[data-layout="terminal"] .terminal-boot__meta {
+  margin: 0 0 var(--spacing-8);
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 1.4;
+  color: var(--text-accent, currentColor);
+  overflow-wrap: anywhere;
+}
+
+:root[data-layout="terminal"] .terminal-boot__title,
+:root[data-layout="terminal"] .terminal-boot__status {
+  display: block;
 }
 
 :root[data-layout="terminal"] .terminal-boot__line {
@@ -1660,6 +1669,10 @@
 
 :root[data-layout="terminal"].terminal-booting .terminal-boot__art {
   animation: terminal-print 10ms both 0.05s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-boot__meta {
+  animation: terminal-print 10ms both 0.12s;
 }
 
 :root[data-layout="terminal"].terminal-booting .terminal-boot__line {

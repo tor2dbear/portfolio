@@ -1,9 +1,9 @@
 <header id="topmenu" class="top-menu" data-js="top-menu">
   <div class="grain-overlay grain-overlay--nav" aria-hidden="true"></div>
-  {{/* Terminal layout: boot banner — framed ascii curl, host title and boot line built with rune-counted padding so the box always closes. The exit hint prints below the frame. Hidden in every other layout. */}}
+  {{/* Terminal layout: boot banner. Only the ascii curl is framed (rune-counted padding so the box always closes) — the box width is fixed at ~26ch so it fits any phone. The host title and boot line print as wrapping rows below the frame; framing them would size the box to the longest line and blow it past a narrow viewport. Hidden in every other layout. */}}
   {{- $bootHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
   {{- $bootTitle := printf "%s — terminal" $bootHost -}}
-  {{- $bootLines := slice "        ___" "       /   \\" "       \\   /" "  ______/ \\______________" "" $bootTitle (i18n "terminal_boot_ok") -}}
+  {{- $bootLines := slice "        ___" "       /   \\" "       \\   /" "  ______/ \\______________" -}}
   {{- $bootInner := 0 -}}
   {{- range $bootLines -}}
     {{- $w := strings.RuneCount . -}}
@@ -19,6 +19,10 @@
     <pre class="terminal-boot__art" aria-hidden="true">
 {{ delimit $bootRows "\n" }}</pre
     >
+    <p class="terminal-boot__meta" aria-hidden="true">
+      <span class="terminal-boot__title">{{ $bootTitle }}</span>
+      <span class="terminal-boot__status">{{ i18n "terminal_boot_ok" }}</span>
+    </p>
     <p class="terminal-boot__line">
       <span class="terminal-boot__hint">{{ i18n "terminal_exit_hint" }}</span>
       <button class="terminal-boot__exit" type="button" data-js="terminal-exit">
