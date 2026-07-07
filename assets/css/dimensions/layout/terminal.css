@@ -786,8 +786,9 @@
 /* Newsletter form: the input line IS a prompt — ~$ subscribe --email _ */
 :root[data-layout="terminal"] .footer-newsletter__fields {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 1ch;
+  gap: var(--spacing-4) 1ch;
 }
 
 :root[data-layout="terminal"] .footer-newsletter__fields::before {
@@ -802,8 +803,8 @@
   border: none;
   border-radius: 0;
   padding: 0;
-  flex: 1 1 auto;
-  min-width: 8ch;
+  flex: 1 1 12ch;
+  min-width: 0;
   font-family: inherit;
   font-size: var(--terminal-font-size);
   caret-color: var(--text-accent, currentColor);
