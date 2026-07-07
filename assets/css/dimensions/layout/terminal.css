@@ -109,6 +109,12 @@
   font-weight: inherit;
 }
 
+/* Prose bodies carry their own --text-lg sizing — same size as everything. */
+:root[data-layout="terminal"] .prose :is(p, ul, ol, li, blockquote, table) {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+}
+
 :root[data-layout="terminal"] .type-headline-small {
   text-transform: none;
 }
@@ -762,10 +768,25 @@
   color: var(--text-muted, currentColor);
 }
 
-/* Only lightbox-backed figures are interactive (svg/gif figures have no
-   full-size source to open). */
+/* Only lightbox-backed figures are interactive. */
 :root[data-layout="terminal"] .content figure[data-lightbox] {
   cursor: pointer;
+}
+
+/* Video figures can't open in the image lightbox — they play inline
+   instead of collapsing into a dead token. */
+:root[data-layout="terminal"] .content figure:has(video) {
+  display: block;
+  counter-increment: none;
+  margin-right: 0;
+}
+
+:root[data-layout="terminal"] .content figure:has(video)::before {
+  content: none;
+}
+
+:root[data-layout="terminal"] .content figure:has(video) .video-wrapper {
+  display: block;
 }
 
 :root[data-layout="terminal"] .content figure[data-lightbox]::before {
