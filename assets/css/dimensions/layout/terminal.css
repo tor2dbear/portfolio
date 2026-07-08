@@ -1353,10 +1353,10 @@
 }
 
 /* During a flow the prompt shows the current field name (email>, name>, …)
-   instead of the shell PS1, and the trailing hint offers the abort word. */
-:root[data-layout="terminal"]
-  .terminal-tail[data-flow-label]
-  .terminal-tail__prompt::before {
+   instead of the shell PS1, and the trailing hint offers the abort word. The
+   label is read from the prompt span's OWN attribute — attr() can't reach an
+   ancestor's — so darkmode.js sets data-flow-label on both. */
+:root[data-layout="terminal"] .terminal-tail__prompt[data-flow-label]::before {
   content: attr(data-flow-label) " ";
   color: var(--text-muted, inherit);
 }

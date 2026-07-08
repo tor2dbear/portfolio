@@ -75,6 +75,11 @@ describe("terminal command line", () => {
           </div>
         </div>
         <button data-js="grid-toggle" aria-pressed="false"></button>
+        <a class="terminal-prompt__host" href="/"></a>
+        <nav class="top-menu__nav">
+          <a class="top-menu__link" href="/writing/">Writing</a>
+          <a class="top-menu__link" href="/about/">About</a>
+        </nav>
         <div data-js="coty-transport" hidden>
           <button data-js="coty-transport-trigger" aria-label="Show"></button>
           <button
@@ -283,6 +288,94 @@ describe("terminal command line", () => {
     typeCommand("cancel");
     expect(tailPrompt()).toBeNull();
     expect(sessionText()).toContain("^C");
+  });
+
+  test("pantone <year> activates and sets that year", () => {
+    loadModule();
+    typeCommand("pantone 2026");
+    expect(sessionText()).toContain("year → 2026");
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+    expect(window.CotyScaleActions.setYear).toHaveBeenCalled();
+  });
+
+  test("pantone rejects a year that isn't available", () => {
+    loadModule();
+    typeCommand("pantone 1999");
+    expect(sessionText()).toContain("no year 1999");
+    // No activation on a rejected year.
+    expect(document.documentElement.getAttribute("data-palette")).not.toBe(
+      "pantone"
+    );
+  });
+
+  test("an unknown pantone option reports usage without toggling", () => {
+    loadModule();
+    typeCommand("pantone on");
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+    typeCommand("pantone wat");
+    expect(sessionText()).toContain("unknown option 'wat'");
+    // Still active — an unknown option must not toggle Pantone off.
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+  });
+
+  test("pantone next advances the year and activates", () => {
+    loadModule();
+    typeCommand("pantone next");
+    expect(sessionText()).toContain("next year");
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+  });
+
+  test("grain on / off / toggle drives the grain effect", () => {
+    loadModule();
+    typeCommand("grain on");
+    expect(document.documentElement.getAttribute("data-effect-grain")).toBe(
+      "on"
+    );
+    typeCommand("grain off");
+    expect(document.documentElement.getAttribute("data-effect-grain")).toBe(
+      "off"
+    );
+    typeCommand("grain");
+    expect(document.documentElement.getAttribute("data-effect-grain")).toBe(
+      "on"
+    );
+  });
+
+  test("blend and motion effects respond to on/off", () => {
+    loadModule();
+    typeCommand("blend on");
+    expect(document.documentElement.getAttribute("data-effect-blend")).toBe(
+      "on"
+    );
+    typeCommand("motion on");
+    expect(
+      document.documentElement.getAttribute("data-effect-reduced-motion")
+    ).toBe("on");
+  });
+
+  test("cd rejects unknown pages and resolves known ones", () => {
+    // jsdom's window.location is non-configurable, so the navigation side
+    // effect isn't observable here — assert the resolution logic instead: an
+    // unknown page errors, a known nav page does not (it produces a navigate
+    // action, exercised for real in the browser check).
+    loadModule();
+    typeCommand("cd nope");
+    expect(sessionText()).toContain("no such file or directory: nope");
+
+    const before = sessionText();
+    typeCommand("cd writing");
+    // No new error line for a page that exists in the nav.
+    expect(sessionText().slice(before.length)).not.toContain(
+      "no such file or directory"
+    );
   });
 
   test("subscribe reuses the newsletter form action", async () => {

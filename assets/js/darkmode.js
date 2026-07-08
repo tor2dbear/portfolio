@@ -1243,6 +1243,12 @@
           ? cotyTransportHome.next
           : null;
       cotyTransportHome.parent.insertBefore(node, ref);
+      // Back as the floating pill: land in the collapsed three-dot resting
+      // state right away rather than leaving the full player expanded (it was
+      // forced open while inline in the terminal settings).
+      if (isPantoneModeActive()) {
+        setCotyTransportUiState("collapsed");
+      }
     }
   }
 
@@ -2174,10 +2180,12 @@
       "  whoami    who's asking",
       "  date      date & time",
       "  pwd       working dir",
+      "  cd <page> change page",
       "  echo      print text",
       "  neofetch  session info",
       "  dark|light|system  mode",
-      "  pantone   [on|off] effect",
+      "  pantone   [on|off|YYYY]",
+      "  grain|blend|motion on/off",
       "  grid      layout grid",
       "  contact   message me",
       "  subscribe newsletter",
@@ -2216,6 +2224,63 @@
         "lang      " + (document.documentElement.getAttribute("lang") || "en"),
         "shell     tor-sh 1.0",
       ];
+    }
+
+    // "on"/"off" from an argument, otherwise "toggle".
+    function onOffState(arg) {
+      var value = (arg || "").toLowerCase();
+      if (value === "on" || value === "enable" || value === "1") {
+        return "on";
+      }
+      if (value === "off" || value === "disable" || value === "0") {
+        return "off";
+      }
+      return "toggle";
+    }
+
+    // The home link the terminal prompt already points at (falls back to root).
+    function terminalHomeUrl() {
+      var host = document.querySelector(".terminal-prompt__host[href]");
+      return (host && host.getAttribute("href")) || "/";
+    }
+
+    // Map the nav's pages to `cd` targets, keyed by both URL slug and link text
+    // (so `cd writing` and `cd essays` both resolve if that's the label).
+    function terminalNavTargets() {
+      var map = {};
+      var links = document.querySelectorAll(
+        ".top-menu__nav a[href], .top-menu__link[href]"
+      );
+      links.forEach(function (link) {
+        var href = link.getAttribute("href");
+        if (!href || href.charAt(0) === "#") {
+          return;
+        }
+        var path = href.replace(/[?#].*$/, "").replace(/\/+$/, "");
+        var slug = path.split("/").filter(Boolean).pop();
+        if (slug) {
+          map[slug.toLowerCase()] = href;
+        }
+        var text = (link.textContent || "").trim().toLowerCase();
+        if (text) {
+          map[text] = href;
+        }
+      });
+      return map;
+    }
+
+    function resolveCdTarget(dest) {
+      var key = String(dest || "")
+        .replace(/^\/+|\/+$/g, "")
+        .toLowerCase();
+      if (!key) {
+        return terminalHomeUrl();
+      }
+      if (key === "home" || key === "~") {
+        return terminalHomeUrl();
+      }
+      var targets = terminalNavTargets();
+      return targets[key] || null;
     }
 
     // Returns { echo, lines, action }. `echo` is the command as typed (printed
@@ -2267,18 +2332,103 @@
               action: { type: "pantone", state: "on" },
             };
           }
+          if (sub === "next" || sub === "prev" || sub === "previous") {
+            var step = sub === "next" ? 1 : -1;
+            return {
+              echo: input,
+              lines: ["pantone: " + (step > 0 ? "next" : "previous") + " year"],
+              action: { type: "pantone", state: "step", step: step },
+            };
+          }
+          if (/^\d{4}$/.test(sub)) {
+            var wanted = parseInt(sub, 10);
+            var actions = getCotyActions();
+            var entries =
+              actions && typeof actions.getEntries === "function"
+                ? actions.getEntries()
+                : null;
+            if (
+              entries &&
+              entries.length &&
+              !entries.some(function (entry) {
+                return Number(entry.year) === wanted;
+              })
+            ) {
+              var years = entries
+                .map(function (entry) {
+                  return entry.year;
+                })
+                .join(", ");
+              return {
+                echo: input,
+                lines: ["pantone: no year " + wanted + " — try: " + years],
+                action: null,
+              };
+            }
+            return {
+              echo: input,
+              lines: ["pantone: year → " + wanted],
+              action: { type: "pantone", state: "year", year: wanted },
+            };
+          }
+          if (sub) {
+            return {
+              echo: input,
+              lines: [
+                "pantone: unknown option '" +
+                  sub +
+                  "' — try on, off, next, prev, or a year",
+              ],
+              action: null,
+            };
+          }
           return {
             echo: input,
             lines: ["pantone: colour-of-the-year toggled"],
             action: { type: "pantone", state: "toggle" },
           };
         }
-        case "grid":
+        case "grid": {
+          var gridState = onOffState(args[0]);
           return {
             echo: input,
-            lines: ["grid: toggled"],
-            action: { type: "grid" },
+            lines: ["grid: " + gridState],
+            action: { type: "grid", state: gridState },
           };
+        }
+        case "grain":
+        case "blend":
+        case "motion": {
+          var effectState = onOffState(args[0]);
+          return {
+            echo: input,
+            lines: [cmd + ": " + effectState],
+            action: { type: "effect", effect: cmd, state: effectState },
+          };
+        }
+        case "cd": {
+          var dest = args[0] || "~";
+          if (dest === "~" || dest === "/" || dest === "..") {
+            return {
+              echo: input,
+              lines: [],
+              action: { type: "navigate", url: terminalHomeUrl() },
+            };
+          }
+          var target = resolveCdTarget(dest);
+          if (!target) {
+            return {
+              echo: input,
+              lines: ["cd: no such file or directory: " + dest],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "navigate", url: target },
+          };
+        }
         case "contact":
           return {
             echo: input,
@@ -2381,17 +2531,77 @@
             if (!isPantoneModeActive()) {
               activatePantone({ playing: false, resetYear: true });
             }
+          } else if (action.state === "year") {
+            if (!isPantoneModeActive()) {
+              activatePantone({ playing: false, resetYear: false });
+            }
+            setCotyYear(action.year, {
+              fromUser: true,
+              transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+            });
+          } else if (action.state === "step") {
+            if (!isPantoneModeActive()) {
+              activatePantone({ playing: false, resetYear: false });
+            }
+            advanceCotyYear(action.step, {
+              fromUser: true,
+              transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+            });
           } else {
             togglePantoneMode();
           }
           break;
         case "grid": {
           var gridBtn = document.querySelector('[data-js="grid-toggle"]');
-          if (gridBtn) {
+          if (!gridBtn) {
+            break;
+          }
+          var gridOn =
+            document.documentElement.hasAttribute("data-grid-overlay");
+          if (action.state === "toggle" || (action.state === "on") !== gridOn) {
             gridBtn.click();
           }
           break;
         }
+        case "effect": {
+          var effects = {
+            grain: {
+              attr: "data-effect-grain",
+              set: setGrainEnabled,
+            },
+            blend: {
+              attr: "data-effect-blend",
+              set: setBlendEnabled,
+            },
+            motion: {
+              attr: "data-effect-reduced-motion",
+              set: setReducedMotionEnabled,
+            },
+          };
+          var effect = effects[action.effect];
+          if (!effect) {
+            break;
+          }
+          var isOn =
+            document.documentElement.getAttribute(effect.attr) === "on";
+          var target =
+            action.state === "on"
+              ? true
+              : action.state === "off"
+              ? false
+              : !isOn;
+          effect.set(target);
+          break;
+        }
+        case "navigate":
+          if (action.url) {
+            try {
+              window.location.assign(action.url);
+            } catch (err) {
+              window.location.href = action.url;
+            }
+          }
+          break;
         case "flow":
           startTerminalFlow(action.flow);
           break;
@@ -2599,15 +2809,25 @@
     };
 
     // The prompt is shown verbatim; field steps pass "email>", the confirm step
-    // passes its full question. Pass null to restore the shell PS1.
+    // passes its full question. Pass null to restore the shell PS1. The label is
+    // set on BOTH the tail (so the hint's ::after can switch) and the prompt
+    // span (so its ::before can read the label via attr() — attr() only sees the
+    // pseudo-element's own element, not an ancestor).
     function setFlowPrompt(prompt) {
       if (!terminalTail) {
         return;
       }
+      var promptEl = terminalTail.querySelector(".terminal-tail__prompt");
       if (prompt) {
         terminalTail.setAttribute("data-flow-label", prompt);
+        if (promptEl) {
+          promptEl.setAttribute("data-flow-label", prompt);
+        }
       } else {
         terminalTail.removeAttribute("data-flow-label");
+        if (promptEl) {
+          promptEl.removeAttribute("data-flow-label");
+        }
       }
     }
 
