@@ -1141,7 +1141,11 @@
   margin: 0 0 var(--spacing-8);
   white-space: pre;
   max-width: 100%;
-  overflow-x: auto;
+  /* Not overflow-x:auto — that makes overflow-y compute to auto too, and the
+     block glyphs sit a hair taller than the line box, so a stray vertical
+     scrollbar appears. The art is sized per breakpoint to fit; clip both axes
+     so no scroll container is ever created. */
+  overflow: clip;
 }
 
 /* Two curl sizes, swapped by breakpoint so each viewport gets art that fits:
