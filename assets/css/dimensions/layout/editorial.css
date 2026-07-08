@@ -8,8 +8,8 @@
    ============================================================================ */
 
 :root[data-layout="editorial"] {
-  --layout-section-rhythm: var(--spacing-96);
-  --layout-hero-rhythm: var(--spacing-160);
+  --layout-section-rhythm: clamp(2.5rem, 0.6rem + 8.43vw, 6rem); /* 40 → 96 */
+  --layout-hero-rhythm: clamp(4rem, 0.75rem + 14.46vw, 10rem); /* 64 → 160 */
   --layout-heading-gap: var(--spacing-48);
   --layout-col-gap: var(--spacing-32);
   /* Body reading measure is set by grid columns (see body placement below),
@@ -37,12 +37,11 @@
 
 /* sm: keep the editorial type bump but a touch gentler than desktop — a long
    single-word title at full 1.15 can nudge the edge on the narrowest phones.
-   Hero rhythm stays tamed (spacing-160 is excessive hero padding on a phone).
-   The earlier overflow was the footer grid gaps, not the type (now fixed). */
+   (Hero rhythm no longer needs a step here — the fluid clamp above already tames
+   it toward the phone floor.) */
 @media (max-width: 47.9375em) {
   :root[data-layout="editorial"] {
     --layout-scale-ratio: 1.1;
-    --layout-hero-rhythm: var(--spacing-96);
   }
 }
 

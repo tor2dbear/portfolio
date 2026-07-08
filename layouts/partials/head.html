@@ -321,8 +321,10 @@
   {{ if $isHomePage }}
     <!-- Critical CSS - Above the fold -->
     <style>
-      /* Hero Section - Critical for LCP */
-      .hero-section { padding: var(--spacing-96) 0; }
+      /* Hero Section - Critical for LCP. Rides the fluid layout token (one source
+         of truth); the data-layout attribute is already set by the head script
+         above, so the right layout's clamp applies before first paint. */
+      .hero-section { padding: var(--layout-hero-rhythm) 0; }
       .hero-title {
         max-width: var(--content-max-width-narrow);
         line-height: 1.4;
@@ -373,9 +375,6 @@
       .reveal.is-revealed {
         opacity: 1;
         transform: translateY(0);
-      }
-      @media (max-width: 47.9375em) {
-        .hero-section { padding: var(--spacing-64) 0; }
       }
       @media (prefers-reduced-motion: reduce) {
         .role-swapper { transition: none; }

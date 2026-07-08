@@ -18,16 +18,32 @@ Definieras i `:root` (defaults) i `tokens/semantic.css`, åsidosätts per `:root
 
 ### A. Sektionsrytm (vertikal)
 
-| Token                       | Default (idag)      | Konsument                                          |
-| --------------------------- | ------------------- | -------------------------------------------------- |
-| `--layout-section-rhythm`   | `var(--spacing-64)` | `.home-section` padding                            |
-| `--layout-hero-rhythm`      | `var(--spacing-96)` | hero padding                                       |
-| `--layout-heading-gap`      | `var(--spacing-32)` | `.section-heading` margin-bottom                   |
-| `--layout-block-gap`        | `var(--spacing-32)` | vertikalt mellanrum mellan content-block / row-gap |
-| `--layout-content-top`      | `var(--spacing-80)` | `.content` padding-top (innersidor)                |
-| `--layout-hero-heading-top` | `var(--spacing-80)` | `.startpage-heading` padding-top (hem-hero)        |
-| `--layout-about-cv-gap`     | `var(--spacing-64)` | `.about-cv` margin-top                             |
-| `--layout-contact-info-gap` | `var(--spacing-64)` | `.contact-info` margin-bottom                      |
+| Token                       | Default (kolumn)                              | Konsument                                                |
+| --------------------------- | --------------------------------------------- | -------------------------------------------------------- |
+| `--layout-section-rhythm`   | `clamp(2rem, 0.92rem + 4.82vw, 4rem)` (32→64) | `.home-section` padding                                  |
+| `--layout-hero-rhythm`      | `clamp(4rem, 2.92rem + 4.82vw, 6rem)` (64→96) | hero padding                                             |
+| `--layout-heading-gap`      | `var(--spacing-32)`                           | `.section-heading` margin-bottom                         |
+| `--layout-block-gap`        | `calc(var(--spacing-32) * prose-rhythm)`      | mellan/inuti kompositionsblock (titlar, sektioner, kort) |
+| `--layout-title-gap`        | `calc(var(--spacing-24) * prose-rhythm)`      | under masthead-/hero-titel                               |
+| `--layout-label-gap`        | `calc(var(--spacing-16) * prose-rhythm)`      | under liten etikett/underrubrik                          |
+| `--layout-content-top`      | `var(--spacing-80)`                           | `.content` padding-top (innersidor)                      |
+| `--layout-hero-heading-top` | `var(--spacing-80)`                           | `.startpage-heading` padding-top (hem-hero)              |
+| `--layout-about-cv-gap`     | `var(--spacing-64)`                           | `.about-cv` margin-top                                   |
+| `--layout-contact-info-gap` | `var(--spacing-64)`                           | `.contact-info` margin-bottom                            |
+
+> **Fluid rytm:** `section-rhythm` och `hero-rhythm` är `clamp()` — tokenen skalar
+> själv med viewporten (min på telefon → max på desktop), så små skärmar komprimeras
+> automatiskt utan egenskaps-overrides i media-queries. Varje layout re-klampar till
+> sina egna min/max; `.home-section` / `.hero-section` (och kritisk CSS i `head.html`)
+> läser bara tokenen. Detta ersatte de gamla `.home-section`/`.hero-section`
+> padding-överskrivningarna som ignorerade layoutens rytm på små skärmar.
+
+> **Blockrytm:** `block-gap` / `title-gap` / `label-gap` skalas av
+> `--layout-prose-rhythm` (kolumn ×1 = no-op; editorial 1.25 = luftigare; index 0.8
+> och terminal 0.9 = tätare). Kompositions-marginaler (about/works/contact-titlar,
+> kort, project-info) läser dessa i stället för rå `--spacing`, vilket knyter
+> blockrytmen till layouten. Komponent-interna småmarginaler (ikoner 4–8 px,
+> specialsidor, `type-display` 160) lämnas på råa `--spacing`.
 
 > **Hem-hero (index):** hero-sektionen bär redan `--layout-hero-rhythm`, så
 > `--layout-hero-heading-top` staplade dubbelt utrymme ovanför leden. Index drar ned den till

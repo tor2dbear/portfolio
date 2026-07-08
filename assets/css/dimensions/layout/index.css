@@ -7,8 +7,12 @@
    ============================================================================ */
 
 :root[data-layout="index"] {
-  --layout-section-rhythm: var(--spacing-40);
-  --layout-hero-rhythm: var(--spacing-64);
+  --layout-section-rhythm: clamp(
+    1.5rem,
+    0.96rem + 2.41vw,
+    2.5rem
+  ); /* 24 → 40 */
+  --layout-hero-rhythm: clamp(2.5rem, 1.69rem + 3.61vw, 4rem); /* 40 → 64 */
   --layout-heading-gap: var(--spacing-16);
   --layout-col-gap: var(--spacing-16);
   --layout-row-gap: var(--spacing-16);

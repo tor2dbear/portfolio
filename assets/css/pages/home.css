@@ -336,12 +336,12 @@
 }
 
 .contact-content {
-  row-gap: var(--spacing-32);
+  row-gap: var(--layout-block-gap);
   align-items: start;
 }
 
 .hero-title {
-  margin-bottom: var(--spacing-24);
+  margin-bottom: var(--layout-title-gap);
 }
 
 .home-page .contact-info {
@@ -428,22 +428,8 @@
   }
 }
 
-/* sm: <= 47.9375em */
-@media (max-width: 47.9375em) {
-  /* about-main placement now handled by stepped-6-6 sm collapse */
-
-  .home-section {
-    padding: var(--spacing-48) 0;
-  }
-
-  .hero-section {
-    padding: var(--spacing-64) 0;
-  }
-}
-
-/* xs: <= 29.9375em */
-@media (max-width: 29.9375em) {
-  .home-section {
-    padding: var(--spacing-32) 0;
-  }
-}
+/* Section + hero padding are no longer stepped down here: the rhythm rides the
+   fluid --layout-section-rhythm / --layout-hero-rhythm tokens (see the layout
+   dimension files), which compact themselves toward their phone floor. Overriding
+   the property here would have ignored the layout's own rhythm on small screens
+   (it did — index/terminal were being bumped larger than intended). */

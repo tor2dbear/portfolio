@@ -1,9 +1,15 @@
 # Spacing-streamline — inventering & plan
 
-> Status: **plan för granskning** (ingen kod skriven än). Uppföljning på
-> `layout-dimension-plan.md`. Mål: all komposition-/sidspacing går genom ett
-> lager som kan knytas till `data-layout`, med **en sanningskälla per rytm** och
-> responsiv variation i _tokenen_ — inte i egenskapen.
+> Status: **genomförd (A+B+C)** på gren `claude/layout-spacing-tokens-eccmno`
+> (PR #223). Beslut: fluid `clamp()` för section/hero-rytm; blockrytm skalad av
+> `--layout-prose-rhythm`. Kontraktet dokumenteras i `layout-dimension-plan.md`.
+> Uppföljning på `layout-dimension-plan.md`. Mål: all komposition-/sidspacing går
+> genom ett lager som kan knytas till `data-layout`, med **en sanningskälla per
+> rytm** och responsiv variation i _tokenen_ — inte i egenskapen.
+>
+> **Utfall:** de gamla `.home-section`/`.hero-section` padding-överskrivningarna
+> och `head.html`-dubbletten är borta; index/terminal fick faktiska buggfixar på
+> sm/xs (de bumpades tidigare _större_ än layouten avsåg). Kolumn är oförändrad.
 
 ---
 
