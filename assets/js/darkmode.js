@@ -1094,8 +1094,18 @@
     });
   }
 
+  function isTerminalLayout() {
+    return document.documentElement.getAttribute("data-layout") === "terminal";
+  }
+
   function collapseCotyTransport() {
-    if (!isPantoneModeActive() || isAnyBottomSheetOpen()) {
+    // Inline in the terminal the controls stay open — the collapse/hover
+    // choreography is only for the floating pill.
+    if (
+      !isPantoneModeActive() ||
+      isAnyBottomSheetOpen() ||
+      isTerminalLayout()
+    ) {
       return;
     }
     stopCotyTransportCollapseTimer();
@@ -1107,7 +1117,11 @@
 
   function scheduleCotyTransportCollapse() {
     stopCotyTransportCollapseTimer();
-    if (!isPantoneModeActive() || isAnyBottomSheetOpen()) {
+    if (
+      !isPantoneModeActive() ||
+      isAnyBottomSheetOpen() ||
+      isTerminalLayout()
+    ) {
       return;
     }
     cotyTransportCollapseTimer = window.setTimeout(function () {
@@ -1180,6 +1194,55 @@
       stopCotyTransportHoverEnterTimer();
       cotyTransportHasUserEngaged = false;
       setCotyTransportUiState("expanded");
+    }
+  }
+
+  // The Pantone controls are one node reused at every layout. In the terminal
+  // they belong inline inside the settings panel (under the Effects toggles),
+  // not floating over the page; everywhere else they float. Rather than
+  // duplicate the DOM, move the node and remember its home so it returns to
+  // exactly where it started when the user leaves the terminal.
+  let cotyTransportHome = null;
+
+  function rememberCotyTransportHome(node) {
+    if (cotyTransportHome || !node || !node.parentNode) {
+      return;
+    }
+    cotyTransportHome = { parent: node.parentNode, next: node.nextSibling };
+  }
+
+  function syncCotyTransportPlacement() {
+    const node = document.querySelector('[data-js="coty-transport"]');
+    if (!node) {
+      return;
+    }
+    rememberCotyTransportHome(node);
+    if (isTerminalLayout()) {
+      const panel = document.querySelector('[data-js="settings-panel"]');
+      const modeToggle = document.querySelector('[data-js="coty-mode-toggle"]');
+      const anchor = modeToggle ? modeToggle.closest(".theme-section") : null;
+      if (panel && anchor && anchor.parentNode === panel) {
+        if (anchor.nextSibling !== node) {
+          panel.insertBefore(node, anchor.nextSibling);
+        }
+      } else if (panel && node.parentNode !== panel) {
+        panel.appendChild(node);
+      }
+      // Inline, it is always expanded — no floating collapse state.
+      setCotyTransportUiState("expanded");
+    } else if (
+      cotyTransportHome &&
+      cotyTransportHome.parent &&
+      cotyTransportHome.parent.isConnected &&
+      node.parentNode !== cotyTransportHome.parent
+    ) {
+      // Only restore into a home that is still part of the live document, and
+      // never anchor to a detached reference node.
+      const ref =
+        cotyTransportHome.next && cotyTransportHome.next.isConnected
+          ? cotyTransportHome.next
+          : null;
+      cotyTransportHome.parent.insertBefore(node, ref);
     }
   }
 
@@ -1864,6 +1927,11 @@
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
+    // Record the Pantone controls' authored (floating) home before applyLayout
+    // can move them, so returning from the terminal restores them correctly.
+    rememberCotyTransportHome(
+      document.querySelector('[data-js="coty-transport"]')
+    );
     applyLayout(storedLayout);
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
@@ -1894,6 +1962,20 @@
         expandCotyTransport({ autoCollapse: true });
       }
     }
+
+    // Park the Pantone controls where the current layout wants them (inline in
+    // the terminal settings, floating otherwise), and keep them in sync as the
+    // user switches layouts. Deregister any handler from a previous init so the
+    // listener never accumulates if this ever runs more than once.
+    if (window.__cotyPlacementHandler) {
+      window.removeEventListener(
+        "theme:layout-changed",
+        window.__cotyPlacementHandler
+      );
+    }
+    window.__cotyPlacementHandler = syncCotyTransportPlacement;
+    window.addEventListener("theme:layout-changed", syncCotyTransportPlacement);
+    syncCotyTransportPlacement();
 
     window.ThemeActions = {
       setMode: setMode,
@@ -2066,6 +2148,316 @@
         );
       }
     });
+
+    // ======================================================================
+    // Terminal command line
+    // The tail's <input> is a real prompt. Tapping it focuses the field and
+    // opens the on-screen keyboard (the fix that makes the terminal usable on
+    // touch devices), and Enter runs a small set of commands + easter eggs.
+    // Parsing is separated from side effects: runTerminalCommand() returns the
+    // text to print plus an optional action, and applyTerminalAction() carries
+    // it out by reusing the theme/layout functions already defined above.
+    // ======================================================================
+    const terminalInput = document.querySelector('[data-js="terminal-input"]');
+    const terminalTail = terminalInput
+      ? terminalInput.closest(".terminal-tail")
+      : null;
+    const terminalSession = document.querySelector(
+      '[data-js="terminal-session"]'
+    );
+
+    const TERMINAL_HELP = [
+      "available commands:",
+      "  help              this list",
+      "  whoami            who's asking",
+      "  date              current date & time",
+      "  pwd               print working directory",
+      "  echo <text>       print text",
+      "  neofetch          session summary",
+      "  dark | light | system   colour mode",
+      "  pantone [on|off]  colour-of-the-year effect",
+      "  grid              toggle the layout grid",
+      "  clear             clear the screen",
+      "  exit              leave the terminal",
+    ];
+
+    function terminalHost() {
+      return (window.location && window.location.hostname) || "tor-bjorn.com";
+    }
+
+    function resolvedModeLabel() {
+      return document.documentElement.getAttribute("data-mode") === "dark"
+        ? "dark"
+        : "light";
+    }
+
+    function paletteLabel() {
+      var palette =
+        document.documentElement.getAttribute("data-palette") || "standard";
+      if (palette === "pantone") {
+        return "pantone (" + getCurrentCotyYear() + ")";
+      }
+      return palette;
+    }
+
+    function neofetchLines() {
+      var host = terminalHost();
+      return [
+        "visitor@" + host,
+        "-----------------",
+        "host      " + host,
+        "layout    terminal",
+        "mode      " + resolvedModeLabel(),
+        "palette   " + paletteLabel(),
+        "lang      " + (document.documentElement.getAttribute("lang") || "en"),
+        "shell     tor-sh 1.0",
+      ];
+    }
+
+    // Returns { echo, lines, action }. `echo` is the command as typed (printed
+    // with the prompt), `lines` are output rows, `action` (or null) is applied
+    // separately. Kept free of DOM mutation so it is straightforward to test.
+    function runTerminalCommand(raw) {
+      var input = String(raw === null || raw === undefined ? "" : raw).trim();
+      if (!input) {
+        return { echo: "", lines: [], action: null };
+      }
+      var parts = input.split(/\s+/);
+      var cmd = parts[0].toLowerCase();
+      var args = parts.slice(1);
+      var rest = input.slice(parts[0].length).trim();
+
+      switch (cmd) {
+        case "help":
+        case "?":
+          return { echo: input, lines: TERMINAL_HELP.slice(), action: null };
+        case "exit":
+        case "quit":
+        case "logout":
+          return { echo: input, lines: [], action: { type: "exit" } };
+        case "clear":
+          return { echo: "", lines: [], action: { type: "clear" } };
+        case "dark":
+        case "light":
+        case "system":
+          return {
+            echo: input,
+            lines: ["mode → " + cmd],
+            action: { type: "mode", mode: cmd },
+          };
+        case "pantone": {
+          var sub = (args[0] || "").toLowerCase();
+          if (sub === "off" || sub === "stop") {
+            return {
+              echo: input,
+              lines: ["pantone: colour-of-the-year off"],
+              action: { type: "pantone", state: "off" },
+            };
+          }
+          if (sub === "on" || sub === "start") {
+            return {
+              echo: input,
+              lines: [
+                "pantone: colour-of-the-year on (" + getCurrentCotyYear() + ")",
+              ],
+              action: { type: "pantone", state: "on" },
+            };
+          }
+          return {
+            echo: input,
+            lines: ["pantone: colour-of-the-year toggled"],
+            action: { type: "pantone", state: "toggle" },
+          };
+        }
+        case "grid":
+          return {
+            echo: input,
+            lines: ["grid: toggled"],
+            action: { type: "grid" },
+          };
+        case "echo":
+          return { echo: input, lines: [rest], action: null };
+        case "whoami":
+          return {
+            echo: input,
+            lines: ["visitor", "(not logged in — but welcome anyway)"],
+            action: null,
+          };
+        case "date":
+          return {
+            echo: input,
+            lines: [new Date().toString()],
+            action: null,
+          };
+        case "pwd":
+          return {
+            echo: input,
+            lines: [(window.location && window.location.pathname) || "/"],
+            action: null,
+          };
+        case "neofetch":
+        case "screenfetch":
+          return {
+            echo: input,
+            lines: neofetchLines(),
+            action: { type: "art" },
+          };
+        case "sudo":
+          return {
+            echo: input,
+            lines: [
+              "permission denied: nice try 😏",
+              "(this incident has been reported)",
+            ],
+            action: null,
+          };
+        case "coffee":
+        case "brew":
+          return {
+            echo: input,
+            lines: ["HTTP 418 — I'm a teapot ☕"],
+            action: null,
+          };
+        case "make":
+          if ((args[0] || "").toLowerCase() === "coffee") {
+            return {
+              echo: input,
+              lines: ["HTTP 418 — I'm a teapot ☕"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [
+              "make: *** no rule to make target '" + (args[0] || "") + "'.",
+            ],
+            action: null,
+          };
+        default:
+          return {
+            echo: input,
+            lines: [cmd + ": command not found — try 'help'"],
+            action: null,
+          };
+      }
+    }
+
+    function applyTerminalAction(action) {
+      if (!action) {
+        return;
+      }
+      switch (action.type) {
+        case "exit":
+          exitTerminal();
+          break;
+        case "clear":
+          if (terminalSession) {
+            terminalSession.textContent = "";
+          }
+          break;
+        case "mode":
+          setMode(action.mode);
+          break;
+        case "pantone":
+          if (action.state === "off") {
+            stopPantone();
+          } else if (action.state === "on") {
+            if (!isPantoneModeActive()) {
+              activatePantone({ playing: false, resetYear: true });
+            }
+          } else {
+            togglePantoneMode();
+          }
+          break;
+        case "grid": {
+          var gridBtn = document.querySelector('[data-js="grid-toggle"]');
+          if (gridBtn) {
+            gridBtn.click();
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    }
+
+    function printTerminalLine(text, className) {
+      if (!terminalSession) {
+        return;
+      }
+      var line = document.createElement("span");
+      line.className = "terminal-session__line " + className;
+      line.textContent = text;
+      terminalSession.appendChild(line);
+    }
+
+    function runTerminalInput(raw) {
+      var result = runTerminalCommand(raw);
+      if (result.echo) {
+        printTerminalLine(result.echo, "terminal-session__cmd");
+      }
+      var artLines =
+        result.action && result.action.type === "art" ? terminalArtLines() : [];
+      artLines.forEach(function (line) {
+        printTerminalLine(
+          line,
+          "terminal-session__out terminal-session__out--art"
+        );
+      });
+      (result.lines || []).forEach(function (line) {
+        printTerminalLine(line, "terminal-session__out");
+      });
+      applyTerminalAction(result.action);
+      // Keep the newest output and the prompt in view; refocus so the mobile
+      // keyboard stays up for the next command.
+      if (
+        terminalInput &&
+        document.documentElement.getAttribute("data-layout") === "terminal"
+      ) {
+        window.requestAnimationFrame(function () {
+          window.scrollTo(0, document.body.scrollHeight);
+          terminalInput.focus();
+        });
+      }
+    }
+
+    // The boot banner's small block-curl, reused as neofetch art when present.
+    function terminalArtLines() {
+      var art = document.querySelector(".terminal-boot__art--sm");
+      if (!art || !art.textContent) {
+        return [];
+      }
+      return art.textContent.replace(/^\n+|\n+$/g, "").split("\n");
+    }
+
+    function syncTerminalInputSize() {
+      if (!terminalInput) {
+        return;
+      }
+      terminalInput.size = Math.max(1, terminalInput.value.length);
+      if (terminalTail) {
+        terminalTail.classList.toggle("is-typing", terminalInput.value !== "");
+      }
+    }
+
+    if (terminalInput) {
+      terminalInput.addEventListener("input", syncTerminalInputSize);
+      terminalInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var value = terminalInput.value;
+          terminalInput.value = "";
+          syncTerminalInputSize();
+          runTerminalInput(value);
+        } else if (e.key === "Escape" && terminalInput.value === "") {
+          // Empty prompt + Escape leaves the terminal, matching the global
+          // handler (which ignores events targeting inputs).
+          terminalInput.blur();
+          exitTerminal();
+        }
+      });
+      syncTerminalInputSize();
+    }
 
     // Terminal layout: statusbar quick toggle that shows the resolved mode as
     // a bracketed word; clicking flips light/dark (an explicit choice, so it

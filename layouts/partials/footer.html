@@ -164,9 +164,28 @@
       </ul>
     </div>
 
-    {{/* Terminal layout: the buffer ends with an empty prompt awaiting input. Prompt text comes from the CSS vars in head.html; hidden in every other layout. */}}
-    <p class="terminal-tail" aria-hidden="true" data-exit-hint="{{ i18n "terminal_exit_hint" }}">
-      <span class="terminal-tail__prompt"></span><span class="terminal-tail__caret"></span><span class="terminal-tail__suggest">exit</span>
+    {{/* Terminal layout: the buffer ends with a live prompt. A real <input> so
+         mobile keyboards open on tap and commands / easter eggs can be typed —
+         see the command engine in darkmode.js. The session log above it holds
+         the printed output of executed commands. Prompt text comes from the CSS
+         vars in head.html; the whole block is hidden in every other layout. */}}
+    <div class="terminal-session" data-js="terminal-session" aria-live="polite"></div>
+    <p class="terminal-tail" data-exit-hint="{{ i18n "terminal_exit_hint" }}">
+      <span class="terminal-tail__prompt" aria-hidden="true"></span
+      ><span class="terminal-tail__caret" aria-hidden="true"></span
+      ><label class="sr-only" for="terminal-input">{{ i18n "terminal_input_label" }}</label
+      ><input
+        id="terminal-input"
+        class="terminal-tail__input"
+        data-js="terminal-input"
+        type="text"
+        size="1"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        spellcheck="false"
+        enterkeyhint="go"
+      />
     </p>
   </div>
 </footer>

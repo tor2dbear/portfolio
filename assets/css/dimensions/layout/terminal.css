@@ -1218,15 +1218,32 @@
   font-size: var(--terminal-font-size);
 }
 
+:root[data-layout="terminal"] .terminal-tail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
   content: var(--terminal-ps1);
   color: var(--text-muted, inherit);
 }
 
-/* Fish-style ghost suggestion after the caret: exit, with the hint. */
-:root[data-layout="terminal"] .terminal-tail__suggest {
-  color: var(--text-muted, inherit);
-  opacity: 0.7;
+/* The live command line: seamless with the buffer — no chrome, mono font,
+   themed native caret. Auto-sized to its content (JS keeps size in sync) so
+   the trailing hint hugs the text instead of floating to the far right. */
+:root[data-layout="terminal"] .terminal-tail__input {
+  flex: 0 1 auto;
+  min-width: 1ch;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  caret-color: var(--text-accent, currentColor);
+  outline: none;
 }
 
 :root[data-layout="terminal"] .terminal-tail::after {
@@ -1236,6 +1253,8 @@
   opacity: 0.7;
 }
 
+/* Idle block caret hugging the prompt — an invitation to tap. It gives way to
+   the native text caret the moment the input is focused or holds text. */
 :root[data-layout="terminal"] .terminal-tail__caret {
   display: inline-block;
   width: 0.55em;
@@ -1243,6 +1262,11 @@
   vertical-align: text-bottom;
   background: var(--text-accent, currentColor);
   animation: terminal-caret-blink 1.1s steps(1) infinite;
+}
+
+:root[data-layout="terminal"] .terminal-tail:focus-within .terminal-tail__caret,
+:root[data-layout="terminal"] .terminal-tail.is-typing .terminal-tail__caret {
+  display: none;
 }
 
 @keyframes terminal-caret-blink {
@@ -1259,6 +1283,47 @@
 
 :root[data-effect-reduced-motion="on"] .terminal-tail__caret {
   animation: none;
+}
+
+/* Command output: each executed line prints into the buffer above the live
+   prompt, so the page reads as one continuous session. Empty (and so invisible)
+   until a command runs. */
+:root[data-layout="terminal"] .terminal-session {
+  display: block;
+  grid-column: content-start / content-end;
+  justify-self: start;
+  margin-top: var(--spacing-24);
+  font-size: var(--terminal-font-size);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-layout="terminal"] .terminal-session:empty {
+  display: none;
+}
+
+/* First tail after a non-empty session log sits tight against it, not a full
+   buffer gap — the prompt follows its own output. */
+:root[data-layout="terminal"] .terminal-session:not(:empty) + .terminal-tail {
+  margin-top: var(--spacing-8);
+}
+
+:root[data-layout="terminal"] .terminal-session__line {
+  display: block;
+}
+
+/* Echoed command lines carry the real prompt string, like scrollback. */
+:root[data-layout="terminal"] .terminal-session__cmd::before {
+  content: var(--terminal-ps1);
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__out {
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__out--art {
+  color: inherit;
 }
 
 :root[data-layout="terminal"] .footer-column {
@@ -1530,19 +1595,40 @@
    ============================================================================ */
 
 :root[data-layout="terminal"] .coty-transport {
-  left: var(--size-page-margins);
-  right: var(--size-page-margins);
+  /* Inline job line inside the settings buffer, not a floating pill: JS moves
+     the node under the Effects toggles (see syncCotyTransportPlacement in
+     darkmode.js), and these overrides drop the fixed positioning so it lays
+     out in normal flow. */
+  position: static;
+  inset: auto;
+  z-index: auto;
+  left: auto;
+  right: auto;
+  margin: 0;
   width: auto;
   max-width: none;
   justify-content: flex-start;
-  padding: var(--spacing-4) 0;
-  background: var(--surface-page);
+  padding: var(--spacing-4) 0 0;
+  background: transparent;
   border: none;
   border-radius: 0;
   box-shadow: none;
+  transform: none;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   font-size: var(--terminal-font-size);
+}
+
+/* The pill's mobile rule hides .coty-transport while a panel is open; inline in
+   the terminal that is exactly when we want it, so keep it visible. */
+@media (max-width: 29.9375em) {
+  html[data-layout="terminal"][data-settings-panel-open="true"] .coty-transport,
+  html[data-layout="terminal"][data-theme-panel-open="true"] .coty-transport {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
 }
 
 :root[data-layout="terminal"]
