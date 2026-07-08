@@ -1265,13 +1265,6 @@
   opacity: 0.7;
 }
 
-:root[data-layout="terminal"] .terminal-tail::after {
-  content: "  # " attr(data-exit-hint);
-  font-family: var(--font-mono);
-  color: var(--text-muted, inherit);
-  opacity: 0.7;
-}
-
 /* Idle block caret hugging the prompt — an invitation to tap. It gives way to
    the native text caret the moment the input is focused or holds text. */
 :root[data-layout="terminal"] .terminal-tail__caret {

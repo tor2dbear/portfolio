@@ -747,11 +747,16 @@
     }, 2400);
   }
 
+  // Set by the command engine's init to its endTerminalFlow(), so exitTerminal
+  // (which lives out here, unable to reach the init closure) can abort any
+  // half-finished contact/subscribe flow on the way out.
+  var terminalFlowReset = null;
+
   // Leave the terminal: back to the snapshotted layout, and restore the
   // snapshotted typography if the pairing's choice (technical) is still
   // active — a manual typography change inside the terminal is respected.
   function exitTerminal() {
-    if (document.documentElement.getAttribute("data-layout") !== "terminal") {
+    if (!isTerminalLayout()) {
       return;
     }
     // Wipe the command scrollback so it neither lingers on the way out nor
@@ -759,6 +764,10 @@
     var sessionLog = document.querySelector('[data-js="terminal-session"]');
     if (sessionLog) {
       sessionLog.textContent = "";
+    }
+    // Reset any in-progress interactive flow so re-entering starts clean.
+    if (terminalFlowReset) {
+      terminalFlowReset();
     }
     var previousLayout =
       localStorage.getItem("theme-layout-previous") || "column";
@@ -1234,8 +1243,13 @@
       } else if (panel && node.parentNode !== panel) {
         panel.appendChild(node);
       }
-      // Inline, it is always expanded — no floating collapse state.
-      setCotyTransportUiState("expanded");
+      // Inline, it is always expanded — but only touch (and persist) the
+      // ui-state when Pantone is actually active/visible, so entering the
+      // terminal with the effect off doesn't clobber the floating pill's
+      // collapsed preference.
+      if (isPantoneModeActive()) {
+        setCotyTransportUiState("expanded");
+      }
     } else if (
       cotyTransportHome &&
       cotyTransportHome.parent &&
@@ -2199,6 +2213,20 @@
       "  exit      leave the terminal",
     ];
 
+    // Toggleable image effects, keyed by command word. `invert` flags that the
+    // command's sense is the opposite of its data-attribute: "motion on" means
+    // animation on, i.e. data-effect-reduced-motion OFF. Built once, not per
+    // command.
+    const TERMINAL_EFFECTS = {
+      grain: { attr: "data-effect-grain", set: setGrainEnabled, invert: false },
+      blend: { attr: "data-effect-blend", set: setBlendEnabled, invert: false },
+      motion: {
+        attr: "data-effect-reduced-motion",
+        set: setReducedMotionEnabled,
+        invert: true,
+      },
+    };
+
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
     }
@@ -2251,8 +2279,13 @@
     }
 
     // Map the nav's pages to `cd` targets, keyed by both URL slug and link text
-    // (so `cd writing` and `cd essays` both resolve if that's the label).
+    // (so `cd writing` and `cd essays` both resolve if that's the label). Built
+    // once — the nav is static for the page's lifetime.
+    var terminalNavTargetsCache = null;
     function terminalNavTargets() {
+      if (terminalNavTargetsCache) {
+        return terminalNavTargetsCache;
+      }
       var map = {};
       var links = document.querySelectorAll(
         ".top-menu__nav a[href], .top-menu__link[href]"
@@ -2272,6 +2305,7 @@
           map[text] = href;
         }
       });
+      terminalNavTargetsCache = map;
       return map;
     }
 
@@ -2562,41 +2596,36 @@
           if (!gridBtn) {
             break;
           }
-          var gridOn =
-            document.documentElement.hasAttribute("data-grid-overlay");
+          // "closing" means the overlay is animating out — treat it as off, the
+          // same as grid-overlay.js's own open() guard, so a mid-close toggle
+          // isn't misread as on.
+          var gridAttr =
+            document.documentElement.getAttribute("data-grid-overlay");
+          var gridOn = gridAttr !== null && gridAttr !== "closing";
           if (action.state === "toggle" || (action.state === "on") !== gridOn) {
             gridBtn.click();
           }
           break;
         }
         case "effect": {
-          var effects = {
-            grain: {
-              attr: "data-effect-grain",
-              set: setGrainEnabled,
-            },
-            blend: {
-              attr: "data-effect-blend",
-              set: setBlendEnabled,
-            },
-            motion: {
-              attr: "data-effect-reduced-motion",
-              set: setReducedMotionEnabled,
-            },
-          };
-          var effect = effects[action.effect];
+          var effect = TERMINAL_EFFECTS[action.effect];
           if (!effect) {
             break;
           }
-          var isOn =
+          // `feature` is what the command word means (grain/blend present, or
+          // motion playing). For motion that is the inverse of the underlying
+          // data-effect-reduced-motion attribute, so `motion on` restores
+          // animation rather than suppressing it.
+          var attrOn =
             document.documentElement.getAttribute(effect.attr) === "on";
-          var target =
+          var featureOn = effect.invert ? !attrOn : attrOn;
+          var targetFeature =
             action.state === "on"
               ? true
               : action.state === "off"
               ? false
-              : !isOn;
-          effect.set(target);
+              : !featureOn;
+          effect.set(effect.invert ? !targetFeature : targetFeature);
           break;
         }
         case "navigate":
@@ -2658,10 +2687,7 @@
     }
 
     function scrollTerminalToEnd() {
-      if (
-        terminalInput &&
-        document.documentElement.getAttribute("data-layout") === "terminal"
-      ) {
+      if (terminalInput && isTerminalLayout()) {
         window.requestAnimationFrame(function () {
           window.scrollTo(0, document.body.scrollHeight);
           terminalInput.focus();
@@ -2743,15 +2769,28 @@
           body: new window.URLSearchParams(formData).toString(),
         })
         .then(function (response) {
+          // A non-OK status returns HTML, not JSON — surface it as a server
+          // error rather than letting response.json() reject into the generic
+          // "offline" catch.
+          if (!response || !response.ok) {
+            printTerminalLine(
+              "couldn't subscribe — the server rejected it.",
+              "terminal-session__out"
+            );
+            return null;
+          }
           return response.json();
         })
         .then(function (result) {
-          if (result && result.success) {
+          if (!result) {
+            return; // non-OK already reported
+          }
+          if (result.success) {
             printTerminalLine(
               "subscribed — check your inbox to confirm.",
               "terminal-session__out"
             );
-          } else if (result && result.error === "already_subscribed") {
+          } else if (result.error === "already_subscribed") {
             printTerminalLine(
               "you're already subscribed.",
               "terminal-session__out"
@@ -2852,6 +2891,9 @@
       setFlowPrompt(null);
     }
 
+    // Let the top-level exitTerminal() abort a flow when leaving the terminal.
+    terminalFlowReset = endTerminalFlow;
+
     function handleTerminalFlowInput(raw) {
       var flow = terminalFlow;
       var value = String(raw === null || raw === undefined ? "" : raw).trim();
@@ -2928,11 +2970,22 @@
           }
         } else if (e.key === "Escape") {
           if (terminalFlow) {
-            // Escape aborts an in-progress flow rather than leaving.
+            // Escape aborts an in-progress flow rather than leaving — clear the
+            // half-typed value too, so it isn't run as a command on next Enter.
             e.preventDefault();
+            terminalInput.value = "";
+            syncTerminalInputSize();
             printTerminalLine("^C", "terminal-session__out");
             endTerminalFlow();
             scrollTerminalToEnd();
+          } else if (
+            e.defaultPrevented ||
+            document.documentElement.classList.contains("lightbox-open") ||
+            document.documentElement.hasAttribute("data-settings-panel-open")
+          ) {
+            // An open overlay owns this Escape — let it close first, exactly as
+            // the global handler defers.
+            return;
           } else if (terminalInput.value === "") {
             // Empty prompt + Escape leaves the terminal, matching the global
             // handler (which ignores events targeting inputs).

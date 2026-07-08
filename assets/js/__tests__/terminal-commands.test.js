@@ -75,6 +75,7 @@ describe("terminal command line", () => {
           </div>
         </div>
         <button data-js="grid-toggle" aria-pressed="false"></button>
+        <button data-js="terminal-exit">[exit]</button>
         <a class="terminal-prompt__host" href="/"></a>
         <nav class="top-menu__nav">
           <a class="top-menu__link" href="/writing/">Writing</a>
@@ -299,6 +300,33 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("^C");
   });
 
+  test("exit during a flow resets it (no stale flow on re-entry)", () => {
+    localStorage.setItem("theme-layout-previous", "column");
+    loadModule();
+    typeCommand("contact");
+    expect(tailPrompt()).toBe("email>");
+    // Leaving via the [exit] button (typing "exit" mid-flow would be flow
+    // input, not the command) must clear the flow state + label.
+    document.querySelector('[data-js="terminal-exit"]').click();
+    expect(document.documentElement.getAttribute("data-layout")).not.toBe(
+      "terminal"
+    );
+    expect(tailPrompt()).toBeNull();
+  });
+
+  test("Escape aborting a flow clears the half-typed input", () => {
+    loadModule();
+    typeCommand("contact");
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "hello";
+    input.dispatchEvent(new window.Event("input", { bubbles: true }));
+    input.dispatchEvent(
+      new window.KeyboardEvent("keydown", { key: "Escape", bubbles: true })
+    );
+    expect(tailPrompt()).toBeNull(); // flow aborted
+    expect(input.value).toBe(""); // stale text cleared
+  });
+
   test("pantone <year> activates and sets that year", () => {
     loadModule();
     typeCommand("pantone 2026");
@@ -358,13 +386,26 @@ describe("terminal command line", () => {
     );
   });
 
-  test("blend and motion effects respond to on/off", () => {
+  test("blend responds to on/off", () => {
     loadModule();
     typeCommand("blend on");
     expect(document.documentElement.getAttribute("data-effect-blend")).toBe(
       "on"
     );
+    typeCommand("blend off");
+    expect(document.documentElement.getAttribute("data-effect-blend")).toBe(
+      "off"
+    );
+  });
+
+  test("motion on means animation ON (reduced-motion off), and vice versa", () => {
+    loadModule();
+    // "motion on" = motion enabled = reduced-motion OFF (inverse of the attr).
     typeCommand("motion on");
+    expect(
+      document.documentElement.getAttribute("data-effect-reduced-motion")
+    ).toBe("off");
+    typeCommand("motion off");
     expect(
       document.documentElement.getAttribute("data-effect-reduced-motion")
     ).toBe("on");
@@ -407,5 +448,24 @@ describe("terminal command line", () => {
     expect(url).toBe("https://example.test/subscribe");
     expect(opts.body).toContain("EMAIL=me%40example.com");
     expect(sessionText().toLowerCase()).toContain("subscribed");
+  });
+
+  test("subscribe reports a server error instead of parsing non-OK JSON", async () => {
+    // Non-OK response with an HTML body — response.json() would reject; the
+    // guard must report a server error, not the generic "offline".
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: () => Promise.reject(new Error("not json")),
+    });
+
+    loadModule();
+    typeCommand("subscribe");
+    typeCommand("me@example.com");
+    typeCommand("y");
+    await flush();
+
+    expect(sessionText().toLowerCase()).toContain("server rejected");
+    expect(sessionText().toLowerCase()).not.toContain("offline");
   });
 });
