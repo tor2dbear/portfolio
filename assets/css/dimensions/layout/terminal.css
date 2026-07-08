@@ -552,6 +552,12 @@
   flex: none;
 }
 
+/* The `cd` echo carried in from a nav click (see darkmode.js): the command
+   that got you here, printed above this page's own prompt as scrollback. */
+:root[data-layout="terminal"] .terminal-prompt--cd {
+  margin-bottom: var(--spacing-4);
+}
+
 :root[data-layout="terminal"] .terminal-prompt__host-plain {
   font-weight: 700;
 }
@@ -1208,7 +1214,14 @@
   font-family: var(--font-mono);
 }
 
-/* The buffer ends with an empty prompt, waiting. */
+/* Subsequent pages in a session skip the login banner (ASCII art + status):
+   a MOTD prints once, not on every cd. The exit hint stays — it's navigation
+   help, not boot chrome. Flag is set pre-paint in head.html, so no flash. */
+:root[data-terminal-booted][data-layout="terminal"] .terminal-boot__art,
+:root[data-terminal-booted][data-layout="terminal"] .terminal-boot__meta {
+  display: none;
+}
+
 /* The buffer ends with a live prompt. Kept as a normal block so the prompt,
    caret, input and hint all flow inline like one line of terminal text —
    crucially NOT a flex row, which (with the input's native field box) pushed

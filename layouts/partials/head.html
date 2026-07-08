@@ -621,6 +621,20 @@
       }
       document.documentElement.setAttribute("data-layout", storedLayout);
 
+      // Terminal boot banner is a login MOTD: shown once per session. If the
+      // boot already played, mark the document so the ASCII art + status line
+      // are hidden pre-paint on this (subsequent) page — no flash.
+      try {
+        if (
+          storedLayout === "terminal" &&
+          sessionStorage.getItem("terminal-boot-played")
+        ) {
+          document.documentElement.setAttribute("data-terminal-booted", "1");
+        }
+      } catch (e) {
+        /* sessionStorage unavailable — banner simply shows */
+      }
+
       // Image blend + grain effects up front too, so a shared look (or a returning
       // visitor) paints with the correct treatment instead of flashing the default.
       var storedBlend = localStorage.getItem("theme-effect-blend");

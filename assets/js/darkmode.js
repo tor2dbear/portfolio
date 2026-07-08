@@ -2630,6 +2630,8 @@
         }
         case "navigate":
           if (action.url) {
+            // Carry a `cd` echo to the destination, same as a nav click.
+            stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
             try {
               window.location.assign(action.url);
             } catch (err) {
@@ -2996,6 +2998,133 @@
       });
       syncTerminalInputSize();
     }
+
+    // ----------------------------------------------------------------------
+    // Nav "cd" feedback
+    // A full page load gives almost no signal that navigation happened. So a
+    // nav click (or a typed `cd`) reads like running `cd <page>`: we stash the
+    // command, and the destination page prints it as the first scrollback line
+    // above its own `~/cwd$ ls nav/` prompt — the real cd→ls sequence, with no
+    // scroll and no boot theater. Purely additive; navigation is never delayed.
+    // ----------------------------------------------------------------------
+    const TERMINAL_CD_KEY = "terminal-cd";
+
+    function currentTerminalCwd() {
+      var value = window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue("--terminal-cwd")
+        .trim()
+        .replace(/^["']|["']$/g, "");
+      return value || "~";
+    }
+
+    // Derive a page's cwd (~ or ~/segment) from a link href, mirroring the
+    // per-page logic in head.html (strip origin, query/hash, and lang prefix).
+    function hrefToCwd(href) {
+      var path = String(href || "")
+        .replace(/^[a-z]+:\/\/[^/]+/i, "")
+        .replace(/[?#].*$/, "")
+        .replace(/^\/+|\/+$/g, "");
+      var lang = (
+        document.documentElement.getAttribute("lang") || ""
+      ).toLowerCase();
+      var parts = path.split("/").filter(Boolean);
+      if (parts.length && parts[0].toLowerCase() === lang) {
+        parts.shift();
+      }
+      return parts.length ? "~/" + parts[0] : "~";
+    }
+
+    function stashTerminalCd(fromCwd, targetCwd) {
+      if (fromCwd === targetCwd) {
+        return; // same directory — nothing to echo
+      }
+      try {
+        sessionStorage.setItem(
+          TERMINAL_CD_KEY,
+          JSON.stringify({ from: fromCwd, cmd: "cd " + targetCwd })
+        );
+      } catch (e) {
+        /* sessionStorage unavailable — skip the echo */
+      }
+    }
+
+    // Print any pending `cd` as scrollback above this page's first prompt.
+    function printPendingTerminalCd() {
+      if (!isTerminalLayout()) {
+        return;
+      }
+      var raw;
+      try {
+        raw = sessionStorage.getItem(TERMINAL_CD_KEY);
+        sessionStorage.removeItem(TERMINAL_CD_KEY);
+      } catch (e) {
+        return;
+      }
+      if (!raw) {
+        return;
+      }
+      var data;
+      try {
+        data = JSON.parse(raw);
+      } catch (e) {
+        return;
+      }
+      if (!data || !data.cmd) {
+        return;
+      }
+      var container = document.querySelector(".top-menu__container");
+      var anchor = container
+        ? container.querySelector(":scope > .terminal-prompt")
+        : null;
+      if (!container || !anchor) {
+        return;
+      }
+      var line = document.createElement("span");
+      line.className = "terminal-prompt terminal-prompt--cd";
+      line.setAttribute("aria-hidden", "true");
+      // Override the prompt's cwd to where we came from, so CSS renders the
+      // exact PS1 (responsive compact form included) for that directory.
+      line.style.setProperty("--terminal-cwd", '"' + data.from + '"');
+      line.innerHTML =
+        '<span class="terminal-prompt__user"></span>' +
+        '<span class="terminal-prompt__host-plain"></span>' +
+        '<span class="terminal-prompt__cwd"></span>' +
+        '<span class="terminal-prompt__cmd"></span>';
+      line.querySelector(".terminal-prompt__cmd").textContent = data.cmd;
+      container.insertBefore(line, anchor);
+    }
+
+    // Nav clicks that change page read as `cd <page>` on the next screen.
+    document.addEventListener("click", function (e) {
+      if (
+        !isTerminalLayout() ||
+        e.defaultPrevented ||
+        e.button !== 0 ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey
+      ) {
+        return;
+      }
+      var link =
+        e.target && e.target.closest
+          ? e.target.closest(
+              ".top-menu__nav a[href], .terminal-prompt__host[href]"
+            )
+          : null;
+      if (!link) {
+        return;
+      }
+      var href = link.getAttribute("href");
+      if (!href || href.charAt(0) === "#") {
+        return;
+      }
+      stashTerminalCd(currentTerminalCwd(), hrefToCwd(href));
+    });
+
+    printPendingTerminalCd();
 
     // Terminal layout: statusbar quick toggle that shows the resolved mode as
     // a bracketed word; clicking flips light/dark (an explicit choice, so it

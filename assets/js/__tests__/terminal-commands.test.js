@@ -76,11 +76,16 @@ describe("terminal command line", () => {
         </div>
         <button data-js="grid-toggle" aria-pressed="false"></button>
         <button data-js="terminal-exit">[exit]</button>
-        <a class="terminal-prompt__host" href="/"></a>
-        <nav class="top-menu__nav">
-          <a class="top-menu__link" href="/writing/">Writing</a>
-          <a class="top-menu__link" href="/about/">About</a>
-        </nav>
+        <div class="top-menu__container">
+          <span class="terminal-prompt terminal-prompt--nav"
+            ><span class="terminal-prompt__cmd">ls nav/</span></span
+          >
+          <nav class="top-menu__nav">
+            <a class="terminal-prompt__host" href="/"></a>
+            <a class="top-menu__link" href="/writing/">Writing</a>
+            <a class="top-menu__link" href="/about/">About</a>
+          </nav>
+        </div>
         <div data-js="coty-transport" hidden>
           <button data-js="coty-transport-trigger" aria-label="Show"></button>
           <button
@@ -448,6 +453,37 @@ describe("terminal command line", () => {
     expect(url).toBe("https://example.test/subscribe");
     expect(opts.body).toContain("EMAIL=me%40example.com");
     expect(sessionText().toLowerCase()).toContain("subscribed");
+  });
+
+  // ---- Nav "cd" feedback ------------------------------------------------
+
+  test("clicking a nav link stashes a cd command for the next page", () => {
+    loadModule();
+    sessionStorage.removeItem("terminal-cd");
+    document.querySelector('.top-menu__link[href="/writing/"]').click();
+    const stashed = JSON.parse(sessionStorage.getItem("terminal-cd"));
+    expect(stashed.cmd).toBe("cd ~/writing");
+  });
+
+  test("a pending cd prints as scrollback above the page's first prompt", () => {
+    sessionStorage.setItem(
+      "terminal-cd",
+      JSON.stringify({ from: "~/writing", cmd: "cd ~/about" })
+    );
+    loadModule();
+    const container = document.querySelector(".top-menu__container");
+    const first = container.querySelector(":scope > .terminal-prompt");
+    // The injected echo is the container's first prompt, before the nav prompt.
+    expect(first.classList.contains("terminal-prompt--cd")).toBe(true);
+    expect(first.querySelector(".terminal-prompt__cmd").textContent).toBe(
+      "cd ~/about"
+    );
+    // Its cwd is overridden to where we came from.
+    expect(first.style.getPropertyValue("--terminal-cwd")).toContain(
+      "~/writing"
+    );
+    // Consumed — not shown again on a plain reload.
+    expect(sessionStorage.getItem("terminal-cd")).toBeNull();
   });
 
   test("subscribe reports a server error instead of parsing non-OK JSON", async () => {
