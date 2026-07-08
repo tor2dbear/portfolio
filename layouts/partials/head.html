@@ -545,6 +545,49 @@
   <!-- Dark mode -->
   <script>
     (function () {
+      // Shareable-look links: a ?theme= param encodes a full composition
+      // (layout, typography, mode, palette, Pantone year, blend, grain). Applied
+      // here — before the CSS below reads the data-* attributes — so a shared
+      // link paints correctly with no flash, and persisted to localStorage so the
+      // choice sticks after the query is cleaned from the URL (see theme-share.js).
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var payload = params.get("theme");
+        if (payload) {
+          var allow = {
+            layout: ["column", "editorial", "index", "terminal"],
+            font: ["editorial", "refined", "expressive", "technical", "system"],
+            mode: ["light", "dark", "system"],
+            palette: ["standard", "pantone"],
+          };
+          var map = { layout: "theme-layout", font: "theme-typography", mode: "theme-mode", palette: "theme-palette" };
+          var kv = {};
+          payload.split(",").forEach(function (pair) {
+            var i = pair.indexOf(":");
+            if (i > 0) { kv[pair.slice(0, i).trim()] = pair.slice(i + 1).trim(); }
+          });
+          Object.keys(map).forEach(function (k) {
+            if (kv[k] && allow[k].indexOf(kv[k]) > -1) {
+              localStorage.setItem(map[k], kv[k]);
+            }
+          });
+          if (kv.palette === "pantone") {
+            localStorage.setItem("theme-pantone-state", "paused");
+            if (/^\d{4}$/.test(kv.year || "")) {
+              localStorage.setItem("theme-coty-year", kv.year);
+            }
+          } else if (kv.palette === "standard") {
+            localStorage.setItem("theme-pantone-state", "inactive");
+          }
+          if (kv.blend === "0" || kv.blend === "1") {
+            localStorage.setItem("theme-effect-blend", kv.blend);
+          }
+          if (kv.grain === "0" || kv.grain === "1") {
+            localStorage.setItem("theme-effect-grain", kv.grain);
+          }
+        }
+      } catch (e) {}
+
       // Set mode (light/dark/system)
       var storedMode = localStorage.getItem("theme-mode") || "system";
       if (storedMode === "system") {
@@ -578,6 +621,19 @@
         storedLayout = "column";
       }
       document.documentElement.setAttribute("data-layout", storedLayout);
+
+      // Image blend + grain effects up front too, so a shared look (or a returning
+      // visitor) paints with the correct treatment instead of flashing the default.
+      var storedBlend = localStorage.getItem("theme-effect-blend");
+      document.documentElement.setAttribute(
+        "data-effect-blend",
+        storedBlend === null ? "on" : storedBlend === "1" ? "on" : "off"
+      );
+      var storedGrain = localStorage.getItem("theme-effect-grain");
+      document.documentElement.setAttribute(
+        "data-effect-grain",
+        storedGrain === "1" ? "on" : "off"
+      );
 
       // CotyScale (Pantone engine) is lazy-loaded. Expose its URL for
       // darkmode.js, and when Pantone is already active inject it now — before
@@ -623,6 +679,7 @@
   {{ $js9 := resources.Get "js/role-swapper.js" }}
   {{ $js10 := resources.Get "js/ui-library-tabs.js" }}
   {{ $js11 := resources.Get "js/settings-dropdown.js" }}
+  {{ $js_theme_share := resources.Get "js/theme-share.js" }}
   {{ $js12 := resources.Get "js/reveal-on-scroll.js" }}
   {{ $js13 := resources.Get "js/newsletter-form.js" }}
   {{ $js14 := resources.Get "js/toc-active.js" }}
@@ -662,6 +719,7 @@
       <script src="{{ $js10.RelPermalink }}" defer></script>
     {{ end }}
     <script src="{{ $js11.RelPermalink }}" defer></script>
+    <script src="{{ $js_theme_share.RelPermalink }}" defer></script>
     <script src="{{ $js12.RelPermalink }}" defer></script>
     <script src="{{ $js13.RelPermalink }}" defer></script>
     <script src="{{ $js14.RelPermalink }}" defer></script>
@@ -681,7 +739,7 @@
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

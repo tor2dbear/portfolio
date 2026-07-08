@@ -454,8 +454,41 @@
       </div>
     </div>
 
+    <div class="theme-divider"></div>
+
+    <div class="theme-section">
+      <button
+        type="button"
+        class="settings-share"
+        data-js="theme-share"
+        data-toast-title="{{ i18n "toast_share_title" }}"
+        data-toast-copied="{{ i18n "toast_share_copied" }}"
+        data-toast-failed="{{ i18n "toast_share_failed" }}"
+        data-toast-icon="icon-new-window"
+      >
+        <svg
+          class="settings-share__icon"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M9.5 13.5 14.5 8.5m-6.25 1.5H6a3 3 0 0 0 0 6h2.25m7.5-6H18a3 3 0 0 1 0 6h-2.25"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="settings-share__label">{{ i18n "share_theme" }}</span>
+      </button>
+    </div>
+
     {{- if gt $languageCount 1 -}}
       <div class="theme-divider"></div>
+
 
       <div class="theme-section">
         <div class="theme-section-heading">

@@ -222,6 +222,18 @@
   --layout-scale-ratio: 1;
   /* Multiplier on prose vertical rhythm (paragraph/heading spacing). 1 = today. */
   --layout-prose-rhythm: 1;
+
+  /* Page/section spacing knobs. These were hardcoded margins/paddings; lifting
+     them into the layout layer lets each composition tune its own breathing room.
+     Defaults equal today's hardcoded values, so column is a visual no-op. */
+  /* .content top padding (inner pages) */
+  --layout-content-top: var(--spacing-80);
+  /* .startpage-heading top pad (home hero) */
+  --layout-hero-heading-top: var(--spacing-80);
+  /* .about-cv margin-top */
+  --layout-about-cv-gap: var(--spacing-64);
+  /* .contact-info margin-bottom */
+  --layout-contact-info-gap: var(--spacing-64);
 }
 
 :root[data-state-intensity="soft"] {

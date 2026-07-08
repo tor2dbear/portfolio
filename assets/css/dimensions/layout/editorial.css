@@ -17,6 +17,15 @@
   --layout-scale-ratio: 1.15;
   --layout-prose-rhythm: 1.25;
 
+  /* Airy page rhythm. The hero section already carries a generous
+     --layout-hero-rhythm (spacing-160), so the heading's own top pad is trimmed
+     to avoid an excessive double gap; inner-page and about/contact gaps open up
+     to match the magazine spacing. */
+  --layout-hero-heading-top: var(--spacing-24);
+  --layout-content-top: var(--spacing-96);
+  --layout-about-cv-gap: var(--spacing-96);
+  --layout-contact-info-gap: var(--spacing-96);
+
   /* Drop cap (anfang) — tune here in one place. Leading/offsets are relative to
      the cap's own font-size so they scale together; watch the mono typeface,
      which is widest. */

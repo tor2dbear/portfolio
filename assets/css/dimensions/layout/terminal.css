@@ -45,6 +45,14 @@
   --layout-scale-ratio: 1;
   --layout-prose-rhythm: 0.9;
 
+  /* Page/section spacing knobs — the whole stream sits on one tight gap so the
+     buffer reads as a continuous terminal session (replaces the old direct
+     .content / .startpage-heading padding override below). */
+  --layout-content-top: var(--spacing-24);
+  --layout-hero-heading-top: var(--spacing-24);
+  --layout-about-cv-gap: var(--spacing-24);
+  --layout-contact-info-gap: var(--spacing-24);
+
   /* The terminal window: the 12-col grid's side tracks absorb everything
      beyond ~48rem, so header, main and footer (which share the grid template
      in style.css) all narrow to the same centred stream. */
@@ -104,12 +112,9 @@
   transition: none !important;
 }
 
-/* Page containers carry a generous top padding; the stream starts right
-   under the statusbar. */
-:root[data-layout="terminal"] .content,
-:root[data-layout="terminal"] .startpage-heading {
-  padding-top: var(--spacing-24);
-}
+/* Page-container top padding (.content / .startpage-heading) now rides the
+   --layout-content-top / --layout-hero-heading-top tokens set above, so the
+   stream still starts right under the statusbar. */
 
 /* ============================================================================
    One type size

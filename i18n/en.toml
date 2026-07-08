@@ -370,6 +370,18 @@ other = "On"
 [toast_grid_off]
 other = "Off"
 
+[share_theme]
+other = "Share this look"
+
+[toast_share_title]
+other = "Share"
+
+[toast_share_copied]
+other = "Link copied"
+
+[toast_share_failed]
+other = "Copy failed"
+
 [no_posts_yet]
 other = "No posts yet. Check back soon!"
 

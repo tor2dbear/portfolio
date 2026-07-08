@@ -103,34 +103,109 @@
   font-weight: inherit;
 }
 
-/* Below ~680px the hero becomes viewport-constrained and the lead + role no
-   longer fit one line, so the growing/shrinking role would re-wrap the sentence
-   (the page jumps, the em dash hops between lines). Drop the role onto its own
-   line here: the lead above is then fixed text that wraps identically whatever
-   the role is, and only the role's own line changes. The break after the role
-   is hidden since the block already starts a new line for the following text. */
-@media (max-width: 42.5em) {
-  .role-swapper {
+/* Role line-break, tuned per layout + typeface.
+
+   When the hero is viewport-constrained the lead + the longest role stop fitting
+   on one line, so the growing/shrinking role would re-wrap the sentence (the page
+   jumps, the em dash hops between lines). Below each threshold we drop the role
+   onto its own line: the lead above is then fixed text that wraps identically
+   whatever the role is, and only the role's own line changes. The <br> after the
+   role is hidden since the block already starts a new line for what follows.
+
+   The threshold tracks the hero font size — set by the LAYOUT (index dials the
+   hero down to ~text-lg; terminal flattens it to ~text-base; editorial scales it
+   up 1.15×) — and the typeface WIDTH (mono/technical is widest, so it wraps
+   earliest). Values were verified against the longest role with Chrome
+   screenshots at the boundary widths. Each rule is scoped to its layout so the
+   ranges never fight; the mono bump is a wider, more-specific companion to each
+   layout's base break. */
+
+/* Column (default) — the generous ~30–36px hero. */
+@media (max-width: 38em) {
+  :root:not([data-layout="editorial"]):not([data-layout="index"]):not(
+      [data-layout="terminal"]
+    )
+    .role-swapper {
     display: block;
   }
 
-  .hero-role-br {
+  :root:not([data-layout="editorial"]):not([data-layout="index"]):not(
+      [data-layout="terminal"]
+    )
+    .hero-role-br {
     display: none;
   }
 }
 
-/* Per-typeface tuning: the mono typeface (technical) is much wider, so the lead
-   + role stop fitting on one line well before the default breakpoint. Break the
-   role onto its own line up to 800px for it (combine the typography dimension
-   with the media query). The same pattern extends to a typeface+layout combo,
-   e.g. :root[data-typography="technical"][data-layout="editorial"], since
-   editorial scales the type up (1.15×) and wraps a little sooner still. */
-@media (max-width: 50em) {
-  :root[data-typography="technical"] .role-swapper {
+@media (max-width: 42em) {
+  :root:not([data-layout="editorial"]):not([data-layout="index"]):not(
+      [data-layout="terminal"]
+    )[data-typography="technical"]
+    .role-swapper {
     display: block;
   }
 
-  :root[data-typography="technical"] .hero-role-br {
+  :root:not([data-layout="editorial"]):not([data-layout="index"]):not(
+      [data-layout="terminal"]
+    )[data-typography="technical"]
+    .hero-role-br {
+    display: none;
+  }
+}
+
+/* Editorial — the hero is scaled up 1.15×, so it wraps a step sooner. */
+@media (max-width: 42em) {
+  :root[data-layout="editorial"] .role-swapper {
+    display: block;
+  }
+
+  :root[data-layout="editorial"] .hero-role-br {
+    display: none;
+  }
+}
+
+@media (max-width: 46em) {
+  :root[data-layout="editorial"][data-typography="technical"] .role-swapper {
+    display: block;
+  }
+
+  :root[data-layout="editorial"][data-typography="technical"] .hero-role-br {
+    display: none;
+  }
+}
+
+/* Index — the hero is dialled down to ~text-lg, so the sentence keeps fitting far
+   narrower; only break on small phones. */
+@media (max-width: 26em) {
+  :root[data-layout="index"] .role-swapper {
+    display: block;
+  }
+
+  :root[data-layout="index"] .hero-role-br {
+    display: none;
+  }
+}
+
+@media (max-width: 30em) {
+  :root[data-layout="index"][data-typography="technical"] .role-swapper {
+    display: block;
+  }
+
+  :root[data-layout="index"][data-typography="technical"] .hero-role-br {
+    display: none;
+  }
+}
+
+/* Terminal — a flat ~text-base hero with a still (non-typewriter) role. One
+   breakpoint covers every typeface (incl. the wider mono); the frozen role means
+   a wrap can't jump, but keeping the whole role on its own line avoids splitting
+   it mid-word on narrow phones. */
+@media (max-width: 28em) {
+  :root[data-layout="terminal"] .role-swapper {
+    display: block;
+  }
+
+  :root[data-layout="terminal"] .hero-role-br {
     display: none;
   }
 }

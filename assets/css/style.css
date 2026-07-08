@@ -195,14 +195,14 @@ body.darkmodeTransition
 }
 
 .content {
-  padding-top: var(--spacing-80);
+  padding-top: var(--layout-content-top);
   grid-column: content-start / content-end;
   grid-auto-rows: -webkit-max-content;
   grid-auto-rows: max-content;
 }
 
 .startpage-heading {
-  padding-top: var(--spacing-80);
+  padding-top: var(--layout-hero-heading-top);
 }
 
 .startpage-heading h1 {
@@ -298,7 +298,9 @@ footer > * {
     .place-prose
   ):not(.place-article):not(.place-narrow):not(.place-aside):not(
     .place-aside-left
-  ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
+  ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(
+    .project-info
+  ):not(.place-wide-center) {
   --col: col-start 1 / span 10;
   grid-column: var(--col);
   grid-row: var(--row, auto);
@@ -311,7 +313,9 @@ footer > * {
       .place-prose
     ):not(.place-article):not(.place-narrow):not(.place-aside):not(
       .place-aside-left
-    ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
+    ):not(.place-bleed):not(.related-items__title):not(
+      .related-items__item
+    ):not(.project-info):not(.place-wide-center) {
     --col: col-start 1 / span 12;
   }
 }
@@ -323,7 +327,9 @@ footer > * {
       .place-prose
     ):not(.place-article):not(.place-narrow):not(.place-aside):not(
       .place-aside-left
-    ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
+    ):not(.place-bleed):not(.related-items__title):not(
+      .related-items__item
+    ):not(.project-info):not(.place-wide-center) {
     --col: col-start 1 / span 4;
   }
 }
@@ -970,7 +976,7 @@ p:empty {
 /* || ========== About page ------------------------------------- */
 .about-cv {
   grid-column: content-start / content-end;
-  margin-top: var(--spacing-64);
+  margin-top: var(--layout-about-cv-gap);
 }
 
 .about-cv__icon,
@@ -1063,7 +1069,7 @@ p:empty {
 }
 
 .contact-info {
-  margin-bottom: var(--spacing-64);
+  margin-bottom: var(--layout-contact-info-gap);
 }
 
 /* || ========== Client page ------------------------------------- */
