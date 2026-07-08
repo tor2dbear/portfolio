@@ -80,6 +80,7 @@
 .use-subgrid > [style*="--col"],
 .use-subgrid > .place-full,
 .use-subgrid > .place-wide,
+.use-subgrid > .place-wide-center,
 .use-subgrid > .place-prose,
 .use-subgrid > .place-article,
 .use-subgrid > .place-narrow,
@@ -95,6 +96,7 @@
   .use-subgrid > [style*="--col"],
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
+  .use-subgrid > .place-wide-center,
   .use-subgrid > .place-prose,
   .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
@@ -110,6 +112,7 @@
   .use-subgrid > [style*="--col"],
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
+  .use-subgrid > .place-wide-center,
   .use-subgrid > .place-prose,
   .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
@@ -125,6 +128,7 @@
   .use-subgrid > [style*="--col"],
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
+  .use-subgrid > .place-wide-center,
   .use-subgrid > .place-prose,
   .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
@@ -139,6 +143,7 @@
 
 .place-full       { --col: col-start 1  / span 12; }
 .place-wide       { --col: col-start 1  / span 10; }
+.place-wide-center { --col: col-start 2  / span 10; }
 .place-prose      { --col: col-start 1  / span 8;  }
 .place-article    { --col: col-start 3  / span 8;  --col-lg: col-start 2 / span 10; --col-md: col-start 1 / span 12; }
 .place-narrow     { --col: col-start 2  / span 8;  }

@@ -16,6 +16,14 @@
      not a ch cap, so --layout-measure stays at the `none` default. */
   --layout-scale-ratio: 1.15;
   --layout-prose-rhythm: 1.25;
+
+  /* Drop cap (anfang) — tune here in one place. Leading/offsets are relative to
+     the cap's own font-size so they scale together; watch the mono typeface,
+     which is widest. */
+  --dropcap-size: 3.4em;
+  --dropcap-leading: 0.68;
+  --dropcap-gap: 0.08em;
+  --dropcap-shift: 0.06em;
 }
 
 /* sm: keep the editorial type bump but a touch gentler than desktop — a long
@@ -105,11 +113,8 @@
 
   /* Project-info box: centred to the same wide band as the figures (cols 2–11)
      rather than the narrow 6-col text column — its 3-up ROLE/DETAILS/CLIENT needs
-     the room and reads as a centred spec panel, aligned with the media.
-     #main (an id) is required to outrank the .content.post > :not(…) AD-mapping
-     rule (very high specificity from its :not() chain), which otherwise re-places
-     .project-info at the default left-hugging cols 1–10. */
-  :root[data-layout="editorial"] #main .content.post.works-post > .project-info {
+     the room and reads as a centred spec panel, aligned with the media. */
+  :root[data-layout="editorial"] .content.post.works-post > .project-info {
     --col: col-start 2 / span 10;
     grid-column: col-start 2 / span 10;
   }
@@ -213,10 +218,10 @@
   .post-content.place-prose
   > p:first-of-type::first-letter {
   float: left;
-  margin-right: 0.08em;
-  padding-top: 0.06em;
-  font-size: 3.4em;
-  line-height: 0.68;
+  margin-right: var(--dropcap-gap);
+  padding-top: var(--dropcap-shift);
+  font-size: var(--dropcap-size);
+  line-height: var(--dropcap-leading);
 }
 
 :root[data-layout="editorial"]
@@ -256,10 +261,10 @@
   .post-content.prose
   > p:first-of-type::first-letter {
   float: left;
-  margin-right: 0.08em;
-  padding-top: 0.06em;
-  font-size: 3.4em;
-  line-height: 0.68;
+  margin-right: var(--dropcap-gap);
+  padding-top: var(--dropcap-shift);
+  font-size: var(--dropcap-size);
+  line-height: var(--dropcap-leading);
 }
 
 /* Writing listing cards (.article-card — text only, no image): centred, with a

@@ -298,7 +298,7 @@ footer > * {
     .place-prose
   ):not(.place-article):not(.place-narrow):not(.place-aside):not(
     .place-aside-left
-  ):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+  ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
   --col: col-start 1 / span 10;
   grid-column: var(--col);
   grid-row: var(--row, auto);
@@ -311,7 +311,7 @@ footer > * {
       .place-prose
     ):not(.place-article):not(.place-narrow):not(.place-aside):not(
       .place-aside-left
-    ):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+    ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
     --col: col-start 1 / span 12;
   }
 }
@@ -323,7 +323,7 @@ footer > * {
       .place-prose
     ):not(.place-article):not(.place-narrow):not(.place-aside):not(
       .place-aside-left
-    ):not(.place-bleed):not(.related-items__title):not(.related-items__item) {
+    ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
     --col: col-start 1 / span 4;
   }
 }
@@ -340,8 +340,7 @@ footer > * {
 .content.post.works-post > figure.header-img,
 #main .content.post.works-post > figure:first-of-type,
 .content.post.works-post > figure.reveal:first-of-type,
-.content.post.works-post > .post-nav,
-.content.post.works-post > .project-info {
+.content.post.works-post > .post-nav {
   --col: col-start 1 / span 10;
   grid-column: var(--col);
 }
@@ -351,8 +350,7 @@ footer > * {
   .content.post.works-post > figure.header-img,
   #main .content.post.works-post > figure:first-of-type,
   .content.post.works-post > figure.reveal:first-of-type,
-  .content.post.works-post > .post-nav,
-  .content.post.works-post > .project-info {
+  .content.post.works-post > .post-nav {
     --col: col-start 1 / span 12;
   }
 }
@@ -362,8 +360,7 @@ footer > * {
   .content.post.works-post > figure.header-img,
   #main .content.post.works-post > figure:first-of-type,
   .content.post.works-post > figure.reveal:first-of-type,
-  .content.post.works-post > .post-nav,
-  .content.post.works-post > .project-info {
+  .content.post.works-post > .post-nav {
     --col: col-start 1 / span 4;
   }
 }
@@ -516,10 +513,7 @@ footer > * {
     grid-row: 5;
   }
 
-  /* #main (an id) is required to outrank the .content.post > :not(…) AD-mapping
-     rule, whose long :not() chain gives it very high specificity and otherwise
-     re-places .project-info full-width. */
-  :root[data-layout="index"] #main .content.post.works-post > .project-info {
+  :root[data-layout="index"] .content.post.works-post > .project-info {
     grid-column: col-start 9 / span 4;
     grid-row: 5;
     align-self: start;
@@ -800,7 +794,10 @@ p:empty {
   padding: 2rem 2rem;
   margin-bottom: var(--spacing-32);
   background-color: var(--surface-default);
-  --col: col-start 1 / span 12;
+  /* Self-contained responsive placement (previously inherited from the
+     .content.post AD-mapping fallback below): span 10 desktop, 12 tablet, 4
+     mobile. Kept identical so column stays a no-op; layout overrides win above. */
+  --col: col-start 1 / span 10;
   grid-column: var(--col);
   grid-column-gap: 3rem;
   transition: background-color
@@ -810,6 +807,18 @@ p:empty {
       var(--motion-ease-theme),
     color var(--theme-transition-duration, var(--motion-duration-xslow))
       var(--motion-ease-theme);
+}
+
+@media (max-width: 79.9375em) {
+  .content.post > .project-info {
+    --col: col-start 1 / span 12;
+  }
+}
+
+@media (max-width: 47.9375em) {
+  .content.post > .project-info {
+    --col: col-start 1 / span 4;
+  }
 }
 
 .content.post > .project-info.project-info--cols-2 {

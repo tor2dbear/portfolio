@@ -81,8 +81,8 @@
 }
 
 :root[data-layout="index"] article:has(> .summary-card) {
-  /* Placement API token: thumbnail column width (overridable per context). */
-  --place-card-thumb: 3rem;
+  /* --place-card-thumb (thumbnail column width) is defined on the index layout
+     in dimensions/layout/index.css and inherited here. */
   /* Zero the global `article { margin-bottom: 3rem }` (which gives column/
      editorial their inter-card rhythm) — index rows are a flush divided list. */
   margin: 0;
@@ -153,7 +153,6 @@
 /* >= 48em: single-line row — thumb | title | meta | tags. */
 @media (min-width: 48em) {
   :root[data-layout="index"] article:has(> .summary-card) {
-    --place-card-thumb: 5rem;
     grid-template-columns:
       var(--place-card-thumb) minmax(0, 1fr) auto auto;
     align-items: center;

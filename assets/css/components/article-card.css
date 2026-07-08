@@ -154,7 +154,7 @@ article {
 }
 
 :root[data-layout="index"] .related-items__item {
-  --place-card-thumb: 3rem;
+  /* --place-card-thumb inherited from the index layout (index.css). */
   margin: 0;
   position: relative;
   display: grid;
@@ -230,7 +230,6 @@ article {
 /* >= 48em: single-line row — thumb | title | date | tags. */
 @media (min-width: 48em) {
   :root[data-layout="index"] .related-items__item {
-    --place-card-thumb: 5rem;
     grid-template-columns:
       var(--place-card-thumb) minmax(0, 1fr) auto auto;
     align-items: center;
