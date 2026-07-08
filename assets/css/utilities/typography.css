@@ -550,6 +550,10 @@ figcaption {
    CONTENT-SPECIFIC TYPOGRAPHY
    ========================================================================== */
 
+/* Heading-hugs-its-content: a heading sits close to the text right below it.
+   Intentionally a CONSTANT (raw --spacing-8), not layout-scaled — this is
+   typographic proximity/legibility, not compositional density. See the
+   "layout-tied vs constant" note in docs/layout-dimension-plan.md. */
 .content
   :is(h1, h2, h3, h4, h5, h6):not(.type-headline-1):not(.type-preamble):not(
     .type-headline-4
@@ -557,6 +561,12 @@ figcaption {
   margin-bottom: var(--spacing-8);
 }
 
+/* NOTE (inconsistency to resolve): this raw 16px OVERRIDES the layout-tied
+   `.prose p` rhythm (calc(--spacing-24 * --layout-prose-rhythm)) above, so post
+   paragraphs alone don't scale with the layout. Leave as-is for now — flipping it
+   to `calc(var(--spacing-16) * var(--layout-prose-rhythm))` (a no-op for column)
+   is a deliberate visual change on editorial/index/terminal post pages and needs
+   sign-off. */
 .content.post .prose p {
   margin-bottom: var(--spacing-16);
   hyphens: auto;

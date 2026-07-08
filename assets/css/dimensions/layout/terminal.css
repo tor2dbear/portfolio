@@ -38,11 +38,19 @@
 :root[data-layout="terminal"] {
   /* Composition tokens */
   --layout-section-rhythm: clamp(
-    1.5rem,
-    0.96rem + 2.41vw,
-    2.5rem
+    var(--spacing-24),
+    calc(
+      var(--spacing-24) + 16 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-40)
   ); /* 24 → 40 */
-  --layout-hero-rhythm: clamp(1rem, 0.73rem + 1.2vw, 1.5rem); /* 16 → 24 */
+  --layout-hero-rhythm: clamp(
+    var(--spacing-16),
+    calc(
+      var(--spacing-16) + 8 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-24)
+  ); /* 16 → 24 */
   --layout-heading-gap: var(--spacing-16);
   --layout-col-gap: var(--spacing-16);
   --layout-row-gap: var(--spacing-16);

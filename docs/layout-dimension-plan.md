@@ -18,19 +18,19 @@ Definieras i `:root` (defaults) i `tokens/semantic.css`, åsidosätts per `:root
 
 ### A. Sektionsrytm (vertikal)
 
-| Token                       | Default (kolumn)                              | Konsument                                                |
-| --------------------------- | --------------------------------------------- | -------------------------------------------------------- |
-| `--layout-section-rhythm`   | `clamp(2rem, 0.92rem + 4.82vw, 4rem)` (32→64) | `.home-section` padding                                  |
-| `--layout-hero-rhythm`      | `clamp(4rem, 2.92rem + 4.82vw, 6rem)` (64→96) | hero padding                                             |
-| `--layout-heading-gap`      | `var(--spacing-32)`                           | `.section-heading` margin-bottom                         |
-| `--layout-block-gap`        | `calc(var(--spacing-32) * prose-rhythm)`      | mellan/inuti kompositionsblock (titlar, sektioner, kort) |
-| `--layout-title-gap`        | `calc(var(--spacing-24) * prose-rhythm)`      | under masthead-/hero-titel                               |
-| `--layout-label-gap`        | `calc(var(--spacing-16) * prose-rhythm)`      | under liten etikett/underrubrik                          |
-| `--layout-card-gap`         | `calc(var(--spacing-48) * prose-rhythm)`      | `article` inter-kort-marginal (index/terminal nollar)    |
-| `--layout-content-top`      | `var(--spacing-80)`                           | `.content` padding-top (innersidor)                      |
-| `--layout-hero-heading-top` | `var(--spacing-80)`                           | `.startpage-heading` padding-top (hem-hero)              |
-| `--layout-about-cv-gap`     | `var(--spacing-64)`                           | `.about-cv` margin-top                                   |
-| `--layout-contact-info-gap` | `var(--spacing-64)`                           | `.contact-info` margin-bottom                            |
+| Token                       | Default (kolumn)                        | Konsument                                                |
+| --------------------------- | --------------------------------------- | -------------------------------------------------------- |
+| `--layout-section-rhythm`   | fluid `clamp` 32→64 (se mönster nedan)  | `.home-section` padding                                  |
+| `--layout-hero-rhythm`      | fluid `clamp` 64→96                     | hero padding                                             |
+| `--layout-heading-gap`      | `var(--spacing-32)`                     | `.section-heading` margin-bottom                         |
+| `--layout-block-gap`        | `calc(var(--spacing-32) * block-scale)` | mellan/inuti kompositionsblock (titlar, sektioner, kort) |
+| `--layout-title-gap`        | `calc(var(--spacing-24) * block-scale)` | under masthead-/hero-titel                               |
+| `--layout-label-gap`        | `calc(var(--spacing-16) * block-scale)` | under liten etikett/underrubrik                          |
+| `--layout-card-gap`         | `calc(var(--spacing-48) * block-scale)` | `article` inter-kort-marginal (index/terminal nollar)    |
+| `--layout-content-top`      | `var(--spacing-80)`                     | `.content` padding-top (innersidor)                      |
+| `--layout-hero-heading-top` | `var(--spacing-80)`                     | `.startpage-heading` padding-top (hem-hero)              |
+| `--layout-about-cv-gap`     | `var(--spacing-64)`                     | `.about-cv` margin-top                                   |
+| `--layout-contact-info-gap` | `var(--spacing-64)`                     | `.contact-info` margin-bottom                            |
 
 > **Fluid rytm:** `section-rhythm` och `hero-rhythm` är `clamp()` — tokenen skalar
 > själv med viewporten (min på telefon → max på desktop), så små skärmar komprimeras
@@ -38,13 +38,50 @@ Definieras i `:root` (defaults) i `tokens/semantic.css`, åsidosätts per `:root
 > sina egna min/max; `.home-section` / `.hero-section` (och kritisk CSS i `head.html`)
 > läser bara tokenen. Detta ersatte de gamla `.home-section`/`.hero-section`
 > padding-överskrivningarna som ignorerade layoutens rytm på små skärmar.
+>
+> **Clamp-mönstret** (så ingen räknar lutning för hand): ändpunkterna är `--spacing-*`
+> och interpolationen härleds ur en delad range som definieras **en gång**:
+>
+> ```css
+> --fluid-floor: 360px; /* under detta: MIN */
+> --fluid-span: 664; /* 1024 − 360, unitless (px) — divisorn */
+> --layout-section-rhythm: clamp(
+>   var(--spacing-32),
+>   calc(
+>     var(--spacing-32) + 32 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+>   ),
+>   var(--spacing-64)
+> ); /* 32 → 64 */
+> ```
+>
+> `Δpx` (här 32) = `max − min` i px (`--spacing-N` = N px). Vid 360px = MIN, vid 1024px = MAX.
 
-> **Blockrytm:** `block-gap` / `title-gap` / `label-gap` skalas av
-> `--layout-prose-rhythm` (kolumn ×1 = no-op; editorial 1.25 = luftigare; index 0.8
+> **Två täthetsspakar (medvetet separata):**
+>
+> - `--layout-prose-rhythm` skalar **prosarytm** (stycke-/rubrikavstånd i brödtext).
+> - `--layout-block-scale` skalar **kompositions-block/kort** (`block-gap`-familjen).
+>   Default `var(--layout-prose-rhythm)` → no-op idag, men en layout kan sätta den
+>   ensam (t.ex. tät text men luftiga kort). `block-gap` / `title-gap` / `label-gap`
+>   / `card-gap` läser `--layout-block-scale`; prosareglerna i `typography.css` läser
+>   `--layout-prose-rhythm`.
+
+> **Layout-knutet vs konstant** — principen för när en spacing ska skala med layouten:
+>
+> - **Layout-knutet** (skalar med täthet): kompositionsrytm — section, hero, block,
+>   kort, prosans stycke-/rubrikrytm. Läs en `--layout-*`-token.
+> - **Konstant** (typografisk närhet/läsbarhet, samma i alla layouter): mikro-avstånd
+>   som "rubrik hugger sin text" (`.content :is(h…)` 8px), etikett-/ikon-gap (4–12px),
+>   specialsidor, `type-display` 160. Lämnas på rå `--spacing-*` **med en kommentar**
+>   som säger att det är avsiktligt.
+>
+> Känd kvarleva att besluta: `.content.post .prose p` (rå 16px) skriver över den
+> layout-knutna `.prose p`-rytmen — se kommentar i `typography.css`.
+
+> **Blockrytm:** `block-gap` / `title-gap` / `label-gap` / `card-gap` skalas av
+> `--layout-block-scale` (kolumn ×1 = no-op; editorial 1.25 = luftigare; index 0.8
 > och terminal 0.9 = tätare). Kompositions-marginaler (about/works/contact-titlar,
 > kort, project-info) läser dessa i stället för rå `--spacing`, vilket knyter
-> blockrytmen till layouten. Komponent-interna småmarginaler (ikoner 4–8 px,
-> specialsidor, `type-display` 160) lämnas på råa `--spacing`.
+> blockrytmen till layouten.
 
 > **Hem-hero (index):** hero-sektionen bär redan `--layout-hero-rhythm`, så
 > `--layout-hero-heading-top` staplade dubbelt utrymme ovanför leden. Index drar ned den till
