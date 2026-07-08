@@ -117,7 +117,6 @@
     return playerSpriteUrl;
   }
 
-
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
@@ -706,12 +705,110 @@
     });
   }
 
-  // Layout dimension (column/editorial/index). Simpler than typography — it
-  // only sets a data attribute, with no web fonts to preload.
+  // Layout dimension (column/editorial/index/terminal). Simpler than
+  // typography — it only sets a data attribute, with no web fonts to preload.
+
+  // A layout can declare companion dimensions that switch along with it when
+  // the user picks the layout (never on page load). The user can still change
+  // any dimension afterwards — this is a starting point, not a lock. Add
+  // entries here to pair other layouts with a default typography/palette.
+  var LAYOUT_PAIRINGS = {
+    terminal: { typography: "technical" },
+  };
+
+  // Boot theater: a short staged print of the terminal chrome. Plays when
+  // the user enters the layout and once per browser session on load —
+  // never for reduced-motion users (system preference or the site toggle).
+  var terminalBootTimer = null;
+
+  function playTerminalBoot() {
+    if (
+      (typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+      document.documentElement.getAttribute("data-effect-reduced-motion") ===
+        "on"
+    ) {
+      return;
+    }
+    var root = document.documentElement;
+    root.classList.remove("terminal-booting");
+    void root.offsetWidth;
+    root.classList.add("terminal-booting");
+    try {
+      sessionStorage.setItem("terminal-boot-played", "1");
+    } catch (e) {
+      /* storage unavailable — the boot simply replays next load */
+    }
+    if (terminalBootTimer) {
+      window.clearTimeout(terminalBootTimer);
+    }
+    terminalBootTimer = window.setTimeout(function () {
+      root.classList.remove("terminal-booting");
+    }, 2400);
+  }
+
+  // Leave the terminal: back to the snapshotted layout, and restore the
+  // snapshotted typography if the pairing's choice (technical) is still
+  // active — a manual typography change inside the terminal is respected.
+  function exitTerminal() {
+    if (document.documentElement.getAttribute("data-layout") !== "terminal") {
+      return;
+    }
+    var previousLayout =
+      localStorage.getItem("theme-layout-previous") || "column";
+    if (previousLayout === "terminal") {
+      previousLayout = "column";
+    }
+    var previousTypography = localStorage.getItem("theme-typography-previous");
+    setLayout(previousLayout);
+    if (localStorage.getItem("theme-typography") === "technical") {
+      if (previousTypography && previousTypography !== "technical") {
+        setTypography(previousTypography);
+      } else if (!previousTypography) {
+        // No snapshot (terminal was entered before snapshots existed, or
+        // storage was cleared): fall back to the site default rather than
+        // leaving the pairing's mono behind.
+        setTypography("editorial");
+      }
+    }
+  }
+
+  function applyLayoutPairings(layout) {
+    var pairing = LAYOUT_PAIRINGS[layout];
+    if (!pairing) {
+      return;
+    }
+    if (
+      pairing.typography &&
+      localStorage.getItem("theme-typography") !== pairing.typography
+    ) {
+      setTypography(pairing.typography);
+    }
+    if (
+      pairing.palette &&
+      localStorage.getItem("theme-palette") !== pairing.palette
+    ) {
+      setPalette(pairing.palette);
+    }
+  }
+
   function setLayout(layout) {
+    // Entering terminal snapshots where the user came from, so exit (ESC,
+    // typing "exit", the boot [exit] button) can return there — including
+    // the typography the pairing is about to replace.
+    var currentLayout = localStorage.getItem("theme-layout") || "column";
+    if (layout === "terminal" && currentLayout !== "terminal") {
+      localStorage.setItem("theme-layout-previous", currentLayout);
+      localStorage.setItem(
+        "theme-typography-previous",
+        localStorage.getItem("theme-typography") || "editorial"
+      );
+      playTerminalBoot();
+    }
     localStorage.setItem("theme-layout", layout);
     updateLayoutUI(layout);
     applyLayout(layout);
+    applyLayoutPairings(layout);
 
     var clickedOpt = document.querySelector(
       '[data-js="layout-option"][data-layout="' + layout + '"]'
@@ -733,12 +830,23 @@
 
   function applyLayout(layout) {
     var root = document.documentElement;
+    // Visual tool pages opt out of terminal: render column here, keep the
+    // stored preference (terminal resumes on the next regular page).
+    if (layout === "terminal" && root.hasAttribute("data-terminal-exempt")) {
+      layout = "column";
+    }
     root.setAttribute("data-layout", layout);
     // The measure (max-width, a direct var()) repaints immediately, but some
     // engines defer recomputing calc(var()) on the inherited font-size until a
     // reflow is forced — so the type size would otherwise only update on the
     // next scroll. Reading a layout property flushes that synchronously.
     void root.offsetWidth;
+    // Let layout-sensitive scripts (e.g. the brand progress mark) re-sync.
+    window.dispatchEvent(
+      new window.CustomEvent("theme:layout-changed", {
+        detail: { layout: layout },
+      })
+    );
   }
 
   function updateLayoutUI(currentLayout) {
@@ -774,7 +882,8 @@
   // ==========================================================================
 
   function resolvePageColor() {
-    var activeMode = document.documentElement.getAttribute("data-mode") || "light";
+    var activeMode =
+      document.documentElement.getAttribute("data-mode") || "light";
     var fallback = activeMode === "dark" ? "#18181b" : "#FFFFFF";
     if (!document.body) {
       return fallback;
@@ -793,9 +902,11 @@
 
     function tick(now) {
       var color = resolvePageColor();
-      document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
-        meta.setAttribute("content", color);
-      });
+      document
+        .querySelectorAll('meta[name="theme-color"]')
+        .forEach(function (meta) {
+          meta.setAttribute("content", color);
+        });
       if (now - startTime < duration) {
         themeColorAnimFrame = requestAnimationFrame(tick);
       } else {
@@ -1233,7 +1344,10 @@
       prePantoneBlendEnabled =
         document.documentElement.getAttribute("data-effect-blend") === "on";
       try {
-        localStorage.setItem(PRE_PANTONE_BLEND_KEY, prePantoneBlendEnabled ? "1" : "0");
+        localStorage.setItem(
+          PRE_PANTONE_BLEND_KEY,
+          prePantoneBlendEnabled ? "1" : "0"
+        );
       } catch {
         // Ignore storage failures.
       }
@@ -1461,7 +1575,9 @@
       );
     } else {
       updateFooterPaletteLabel(currentPalette);
-      animateThemeColorMeta(opts.transitionDuration || THEME_SWAP_TRANSITION_DEFAULT_MS);
+      animateThemeColorMeta(
+        opts.transitionDuration || THEME_SWAP_TRANSITION_DEFAULT_MS
+      );
     }
 
     if (!opts.silent) {
@@ -1877,6 +1993,106 @@
       });
     });
 
+    // First terminal page load of the session boots; navigations after
+    // that print instantly, like a real terminal.
+    if (storedLayout === "terminal") {
+      try {
+        if (!sessionStorage.getItem("terminal-boot-played")) {
+          playTerminalBoot();
+        }
+      } catch (e) {
+        /* storage unavailable — skip the theater */
+      }
+    }
+
+    // Terminal exit routes: the boot [exit] button, the ESC key (when no
+    // panel/lightbox/input claims it), and literally typing "exit" + Enter.
+    document
+      .querySelectorAll('[data-js="terminal-exit"]')
+      .forEach(function (button) {
+        button.addEventListener("click", exitTerminal);
+      });
+
+    let terminalTypedBuffer = "";
+    document.addEventListener("keydown", function (e) {
+      if (document.documentElement.getAttribute("data-layout") !== "terminal") {
+        return;
+      }
+      var target = e.target;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      if (e.key === "Escape") {
+        // defaultPrevented: the lightbox/settings panel already consumed this
+        // very keypress to close itself — the state checks alone can't catch
+        // that, since a handler registered before this one has by now removed
+        // the open-marker the checks look for.
+        if (
+          e.defaultPrevented ||
+          document.documentElement.classList.contains("lightbox-open") ||
+          document.documentElement.hasAttribute("data-settings-panel-open")
+        ) {
+          return; // their own Escape handlers close them first
+        }
+        exitTerminal();
+        return;
+      }
+      if (e.key === "Enter") {
+        if (terminalTypedBuffer.endsWith("exit")) {
+          exitTerminal();
+        }
+        terminalTypedBuffer = "";
+        return;
+      }
+      if (
+        e.key.length === 1 &&
+        /[a-z]/i.test(e.key) &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey
+      ) {
+        terminalTypedBuffer = (terminalTypedBuffer + e.key.toLowerCase()).slice(
+          -8
+        );
+      }
+    });
+
+    // Terminal layout: statusbar quick toggle that shows the resolved mode as
+    // a bracketed word; clicking flips light/dark (an explicit choice, so it
+    // replaces "system"). The label tracks every mode change via the
+    // theme:mode-changed event, including system-preference flips.
+    const terminalModeToggle = document.querySelector(
+      '[data-js="terminal-mode-toggle"]'
+    );
+    if (terminalModeToggle) {
+      const syncTerminalModeLabel = function () {
+        const resolved =
+          document.documentElement.getAttribute("data-mode") === "dark"
+            ? "dark"
+            : "light";
+        const label =
+          terminalModeToggle.getAttribute("data-label-" + resolved) || resolved;
+        // Brackets live in the text (not pseudo-elements) so they hug the
+        // label with no flex-item gaps.
+        terminalModeToggle.textContent = "[" + label + "]";
+      };
+      syncTerminalModeLabel();
+      window.addEventListener("theme:mode-changed", syncTerminalModeLabel);
+      terminalModeToggle.addEventListener("click", function () {
+        setMode(
+          document.documentElement.getAttribute("data-mode") === "dark"
+            ? "light"
+            : "dark"
+        );
+      });
+    }
+
     if (effectBlendButtons) {
       effectBlendButtons.forEach((button) => {
         button.addEventListener("click", function () {
@@ -1916,7 +2132,9 @@
       requestAnimationFrame(function () {
         document.documentElement.classList.remove("theme-loading");
         var s = document.getElementById("theme-no-trans");
-        if (s) {s.remove();}
+        if (s) {
+          s.remove();
+        }
       });
     });
   });

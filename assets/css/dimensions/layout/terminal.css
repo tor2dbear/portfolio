@@ -1,0 +1,1753 @@
+/* ============================================================================
+   LAYOUT: Terminal
+
+   Text all the way down. One type size, a fixed ~terminal-window measure that
+   header, content stream and footer all align to, no images in the flow
+   (figures collapse to numbered [image n] tokens that open the lightbox),
+   no icons, no button chrome, dividers drawn with box-drawing characters.
+
+   Colour stays owned by palette/mode and the text face by typography — this
+   file only draws its decorative glyphs (prompts, rules, brackets) in mono so
+   they hold up under any typeface. Pairs with typography: technical via the
+   layout-pairing map in darkmode.js.
+
+   Structure: the tokens and the "Shared text chrome" section below carry the
+   primitives (PS1 strings, the text-button reset, hover underline, bracket
+   and slash glyphs); the sections after them mostly just pick content strings
+   and layout. New components get the right look by joining a shared group.
+
+   CONTRACT — what this layout relies on outside this file:
+   - --terminal-host / --terminal-cwd: per-page CSS string vars emitted by
+     head.html. The fallbacks here only cover pages that miss that block.
+   - topmenu.html: .terminal-boot banner, .terminal-prompt rows and the
+     quick-toggle/home li's exist only for this layout (hidden elsewhere by
+     navigation.css); footer.html: .terminal-tail with data-exit-hint.
+   - settings-dropdown.html: data-terminal-expand/-collapse on
+     .settings-toggle carry the expander labels; effect buttons label
+     themselves via data-toast-title/aria-label.
+   - summary templates: .summary-card__year spans (hidden in other layouts)
+     become the ls-row year column.
+   - footer.html: .footer-meta__item [data-category] becomes the env var name.
+   - DOM order on work posts: the gallery prompt needs .project-info followed
+     by .gallery / .post-content containing figures.
+   - Pages that cannot adapt opt out with data-terminal-exempt on <html>
+     (header.html); darkmode.js and the pre-hydration script fall back to
+     column there without touching the stored preference.
+   ============================================================================ */
+
+:root[data-layout="terminal"] {
+  /* Composition tokens */
+  --layout-section-rhythm: var(--spacing-40);
+  --layout-hero-rhythm: var(--spacing-24);
+  --layout-heading-gap: var(--spacing-16);
+  --layout-col-gap: var(--spacing-16);
+  --layout-row-gap: var(--spacing-16);
+  --layout-scale-ratio: 1;
+  --layout-prose-rhythm: 0.9;
+
+  /* The terminal window: the 12-col grid's side tracks absorb everything
+     beyond ~48rem, so header, main and footer (which share the grid template
+     in style.css) all narrow to the same centred stream. */
+  --terminal-window: 48rem;
+  --size-page-margins: max(
+    var(--spacing-16),
+    calc((100vw - var(--terminal-window)) / 2)
+  );
+
+  /* One text size everywhere; hierarchy is weight + colour + indent. */
+  --terminal-font-size: var(--text-base);
+  --terminal-line-height: 1.7;
+
+  /* The PS1 strings — every prompt in the buffer composes from these.
+     The short form (cwd only) is what small screens collapse to. */
+  --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
+  --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-short);
+
+  /* Figure tokens and the gallery listing argument. */
+  --terminal-image-label: "[image ";
+  --terminal-gallery-arg: "'images'";
+
+  /* The header is static (scrolls away) and multi-row, so anchor scroll
+     padding needs no header offset. */
+  --size-header-height: 0rem;
+}
+
+:root:lang(sv)[data-layout="terminal"] {
+  --terminal-image-label: "[bild ";
+  --terminal-gallery-arg: "'bilder'";
+}
+
+/* Compact PS1 on small screens — one redefinition trims every prompt. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] {
+    --terminal-ps1: var(--terminal-ps1-short);
+  }
+}
+
+/* #main and .footer-container are capped at --content-max-width (1280px)
+   while the margin tracks are computed from 100vw — on screens wider than
+   the cap their content edge drifts from the header's. Uncap both so all
+   three regions share the same math. */
+:root[data-layout="terminal"] #main,
+:root[data-layout="terminal"] .footer-container {
+  max-width: none;
+}
+
+/* Reveal-on-scroll waits for images to load before showing an element, and
+   the summary-card images are display:none here (lazy imgs that never load),
+   so the reveal would never fire. A terminal doesn't fade anyway — everything
+   is just there. */
+:root[data-layout="terminal"] .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Page containers carry a generous top padding; the stream starts right
+   under the statusbar. */
+:root[data-layout="terminal"] .content,
+:root[data-layout="terminal"] .startpage-heading {
+  padding-top: var(--spacing-24);
+}
+
+/* ============================================================================
+   One type size
+   The type classes multiply distinct clamp() bases by --layout-scale-ratio,
+   so a ratio alone can't flatten the scale — override the sizes directly.
+   Bold is the only size axis left.
+   ============================================================================ */
+
+:root[data-layout="terminal"] body {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+}
+
+:root[data-layout="terminal"] h1,
+:root[data-layout="terminal"] h2,
+:root[data-layout="terminal"] h3,
+:root[data-layout="terminal"] h4,
+:root[data-layout="terminal"] h5,
+:root[data-layout="terminal"] h6,
+:root[data-layout="terminal"] .type-display-1,
+:root[data-layout="terminal"] .type-display-2,
+:root[data-layout="terminal"] .type-headline-1,
+:root[data-layout="terminal"] .type-headline-2,
+:root[data-layout="terminal"] .type-headline-3,
+:root[data-layout="terminal"] .type-headline-4,
+:root[data-layout="terminal"] .type-headline-5,
+:root[data-layout="terminal"] .type-headline-small,
+:root[data-layout="terminal"] .type-preamble,
+:root[data-layout="terminal"] .type-lead,
+:root[data-layout="terminal"] .type-body,
+:root[data-layout="terminal"] .startpage-heading__cta,
+:root[data-layout="terminal"] #main :is(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+  font-weight: 700;
+  letter-spacing: normal;
+}
+
+:root[data-layout="terminal"] .type-preamble,
+:root[data-layout="terminal"] .type-lead,
+:root[data-layout="terminal"] .type-body {
+  font-weight: inherit;
+}
+
+/* Prose bodies carry their own --text-lg sizing — same size as everything. */
+:root[data-layout="terminal"] .prose :is(p, ul, ol, li, blockquote, table) {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+}
+
+:root[data-layout="terminal"] .type-headline-small {
+  text-transform: none;
+}
+
+/* Hero emphasis marks drop their highlight pill — colour only. */
+:root[data-layout="terminal"] .hero-emphasis {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: var(--text-accent);
+}
+
+/* ============================================================================
+   Shared text chrome — the primitives every terminal component composes from.
+   Individual sections below only pick content strings and layout on top.
+   ============================================================================ */
+
+/* Prompt/command pseudos: dimmed mono, never bold — the PS1s, the cat/ls
+   verbs and the md heading markers all read as chrome around the content. */
+:root[data-layout="terminal"] .content h2::before,
+:root[data-layout="terminal"] .content h3::before,
+:root[data-layout="terminal"] .section-heading::before,
+:root[data-layout="terminal"] .about-cv__title::before,
+:root[data-layout="terminal"] .works-section .post-header h2::before,
+:root[data-layout="terminal"] .content h2::after,
+:root[data-layout="terminal"] .content h3::after,
+:root[data-layout="terminal"] .section-heading::after,
+:root[data-layout="terminal"] .about-cv__title::after,
+:root[data-layout="terminal"] .works-section .post-header h2::after,
+:root[data-layout="terminal"] .content.post h1::before,
+:root[data-layout="terminal"] .content.post h1::after,
+:root[data-layout="terminal"] .content.post h2::before,
+:root[data-layout="terminal"] .content.post h3::before,
+:root[data-layout="terminal"] .footer-heading--newsletter::before,
+:root[data-layout="terminal"] .footer-heading--newsletter::after {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+/* Block prompts: commands that print on their own line above their output. */
+:root[data-layout="terminal"] .content.post > .project-info::before,
+:root[data-layout="terminal"] .content.post .project-info + .gallery::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content
+  > .gallery:first-child::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content:has(figure)::before,
+:root[data-layout="terminal"] .footer-grid--primary::before,
+:root[data-layout="terminal"] .footer-meta::before,
+:root[data-layout="terminal"] .footer-newsletter__fields::before,
+:root[data-layout="terminal"] .contact-form__form::before {
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+}
+
+/* Text-button reset: every control in the buffer is a bare word. Colour
+   defaults to link; muted controls override below where they're styled. */
+:root[data-layout="terminal"] .settings-toggle,
+:root[data-layout="terminal"] .terminal-quick,
+:root[data-layout="terminal"] .terminal-boot__exit,
+:root[data-layout="terminal"] .footer-newsletter__submit,
+:root[data-layout="terminal"] #main .button,
+:root[data-layout="terminal"] .settings-panel .theme-option,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button,
+:root[data-layout="terminal"] .settings-panel .language-option,
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button,
+:root[data-layout="terminal"] .contact-form__submit {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  font-size: var(--terminal-font-size);
+  font-family: inherit;
+  color: var(--text-link, var(--text-default));
+  cursor: pointer;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-option,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button,
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button {
+  width: auto;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+/* Text inputs join the stream: borderless, inheriting the buffer's face. */
+:root[data-layout="terminal"] .footer-newsletter__input,
+:root[data-layout="terminal"] .contact-form .form-input {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--terminal-font-size);
+  caret-color: var(--text-accent, currentColor);
+}
+
+:root[data-layout="terminal"] .footer-newsletter__input:focus,
+:root[data-layout="terminal"] .contact-form .form-input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Hover: underline is the terminal's only hover effect — no surfaces. */
+:root[data-layout="terminal"] .terminal-prompt__host:hover,
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link:hover,
+:root[data-layout="terminal"]
+  .top-menu__item--nav
+  .top-menu__link:focus-visible,
+:root[data-layout="terminal"]
+  .top-menu__item--contact
+  .top-menu__link--button:hover,
+:root[data-layout="terminal"] .settings-toggle:hover,
+:root[data-layout="terminal"] .terminal-quick:hover,
+:root[data-layout="terminal"] .terminal-boot__exit:hover,
+:root[data-layout="terminal"] .tag:hover,
+:root[data-layout="terminal"] .footer-newsletter__submit:hover,
+:root[data-layout="terminal"] #main .button:hover,
+:root[data-layout="terminal"] .settings-panel .theme-option:hover,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button:hover,
+:root[data-layout="terminal"] .coty-transport__trigger:hover,
+:root[data-layout="terminal"] .coty-player__button:hover,
+:root[data-layout="terminal"] .contact-form__submit:hover {
+  background: transparent;
+  background-image: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Bracketed controls: [word] marks the actionable/active thing. */
+:root[data-layout="terminal"] .terminal-quick--lang::before,
+:root[data-layout="terminal"] .footer-newsletter__submit::before,
+:root[data-layout="terminal"] #main .button::before,
+:root[data-layout="terminal"] .settings-panel .theme-option.active::before,
+:root[data-layout="terminal"]
+  .settings-panel
+  .language-option--current
+  .language-name::before,
+:root[data-layout="terminal"] .contact-form__submit::before {
+  content: "[";
+  font-family: var(--font-mono);
+}
+
+:root[data-layout="terminal"] .terminal-quick--lang::after,
+:root[data-layout="terminal"] .footer-newsletter__submit::after,
+:root[data-layout="terminal"] #main .button::after,
+:root[data-layout="terminal"] .settings-panel .theme-option.active::after,
+:root[data-layout="terminal"]
+  .settings-panel
+  .language-option--current
+  .language-name::after,
+:root[data-layout="terminal"] .contact-form__submit::after {
+  content: "]";
+  font-family: var(--font-mono);
+}
+
+/* Links that are directories carry the trailing slash. */
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link::after,
+:root[data-layout="terminal"] .top-menu__label--long::after,
+:root[data-layout="terminal"] .summary-card__title a::after,
+:root[data-layout="terminal"] .related-items__item .type-headline-4 a::after {
+  content: "/";
+  font-family: var(--font-mono);
+}
+
+/* ============================================================================
+   Headings are executed commands
+   The heading text is the (quoted) argument; the dimmed prompt and verb are
+   pseudo-elements. cat for prose, ls for listings — overrides below.
+   ============================================================================ */
+
+:root[data-layout="terminal"] .content h2,
+:root[data-layout="terminal"] .content h3,
+:root[data-layout="terminal"] .section-heading,
+:root[data-layout="terminal"] .about-cv__title {
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .content h2::before,
+:root[data-layout="terminal"] .content h3::before,
+:root[data-layout="terminal"] .section-heading::before,
+:root[data-layout="terminal"] .about-cv__title::before {
+  content: var(--terminal-ps1) "cat '";
+}
+
+:root[data-layout="terminal"] .content h2::after,
+:root[data-layout="terminal"] .content h3::after,
+:root[data-layout="terminal"] .section-heading::after,
+:root[data-layout="terminal"] .about-cv__title::after {
+  content: ".md'";
+}
+
+/* Listing sections run ls instead: featured works, contact, related. */
+:root[data-layout="terminal"] .works-section .post-header h2::before,
+:root[data-layout="terminal"] .contact-section .section-heading::before,
+:root[data-layout="terminal"] .content .related-items__title::before {
+  content: var(--terminal-ps1) "ls '";
+}
+
+:root[data-layout="terminal"] .works-section .post-header h2::after,
+:root[data-layout="terminal"] .contact-section .section-heading::after,
+:root[data-layout="terminal"] .content .related-items__title::after {
+  content: "'/";
+}
+
+/* ============================================================================
+   Post pages are ONE file: a single cat on the title prints everything.
+   Inner headings render as markdown inside the output, not as new commands.
+   ============================================================================ */
+
+:root[data-layout="terminal"] .content.post h1::before {
+  content: var(--terminal-ps1) "cat '";
+}
+
+:root[data-layout="terminal"] .content.post h1::after {
+  content: ".md'";
+}
+
+:root[data-layout="terminal"] .content.post h2::before {
+  content: "## ";
+}
+
+:root[data-layout="terminal"] .content.post h3::before {
+  content: "### ";
+}
+
+:root[data-layout="terminal"] .content.post h2,
+:root[data-layout="terminal"] .content.post h3 {
+  text-transform: none;
+}
+
+:root[data-layout="terminal"] .content.post h2::after,
+:root[data-layout="terminal"] .content.post h3::after {
+  content: none;
+}
+
+/* The ingress/description is plain output — no marker at all. */
+:root[data-layout="terminal"] .content.post .type-preamble::before,
+:root[data-layout="terminal"] .content.post .type-preamble::after {
+  content: none;
+}
+
+/* Related is a section after the file — it keeps its ls command. */
+:root[data-layout="terminal"] .content.post .related-items__title {
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .content.post .related-items__title::before {
+  content: var(--terminal-ps1) "ls '";
+}
+
+:root[data-layout="terminal"] .content.post .related-items__title::after {
+  content: "'/";
+}
+
+/* Project info is the directory next to the file: ls 'info'/, one column,
+   one size. */
+:root[data-layout="terminal"] .content.post > .project-info::before {
+  content: var(--terminal-ps1) "ls 'info'/";
+  display: block;
+  margin-bottom: var(--spacing-8);
+}
+
+:root[data-layout="terminal"] .project-info__title,
+:root[data-layout="terminal"] .project-info__label,
+:root[data-layout="terminal"] .project-info__text,
+:root[data-layout="terminal"] .project-info__value {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+  letter-spacing: normal;
+}
+
+:root[data-layout="terminal"] .project-info__section {
+  margin-bottom: var(--spacing-8);
+}
+
+:root[data-layout="terminal"] .content.post .project-info + .gallery,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content
+  > .gallery:first-child {
+  margin-top: var(--spacing-16);
+}
+
+/* The image run may be loose figures (their ::before is the token), so the
+   prompt rides on the content block itself when it opens with a figure. */
+:root[data-layout="terminal"] .content.post .project-info + .gallery::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content
+  > .gallery:first-child::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content:has(figure)::before {
+  content: var(--terminal-ps1) "ls " var(--terminal-gallery-arg) "/";
+  display: block;
+  font-size: var(--terminal-font-size);
+  margin-top: var(--spacing-16);
+}
+
+/* ============================================================================
+   Statusbar header
+   Same DOM, reflowed: row 1 is the prompt (brand) with the text controls at
+   the right edge; the nav links print as one row per link below — the output
+   of `ls ~`. The whole block is static and scrolls away like a terminal
+   buffer; box-drawing rules frame the nav rows.
+   ============================================================================ */
+
+:root[data-layout="terminal"] .top-menu {
+  border-bottom: none;
+  position: relative;
+  height: auto;
+  padding-bottom: var(--spacing-16);
+}
+
+/* The mobile hide-on-scroll transform has no place on a static header. */
+:root[data-layout="terminal"] .top-menu.hide {
+  transform: none;
+}
+
+/* Row 1: brand grows to push the controls right; nav items break onto their
+   own full-width rows below (order separates them from the controls). The
+   nav element and its list are display:contents so every item lays out in
+   this one flex context. */
+:root[data-layout="terminal"] .top-menu > .top-menu__container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  column-gap: var(--spacing-16);
+  row-gap: var(--spacing-2);
+  padding-block: var(--spacing-8) 0;
+}
+
+:root[data-layout="terminal"] .top-menu__nav,
+:root[data-layout="terminal"] .top-menu__list {
+  display: contents;
+}
+
+:root[data-layout="terminal"] .terminal-prompt {
+  display: block;
+  flex: 1 0 100%;
+  font-size: var(--terminal-font-size);
+  white-space: nowrap;
+}
+
+/* Second executed command: ls settings/ — placed after the nav rows. */
+:root[data-layout="terminal"] .top-menu__item--terminal-prompt {
+  display: block;
+  order: 20;
+  flex: 1 0 100%;
+}
+
+:root[data-layout="terminal"]
+  .top-menu__item--terminal-prompt
+  .terminal-prompt {
+  flex: none;
+}
+
+:root[data-layout="terminal"] .terminal-prompt__host-plain {
+  font-weight: 700;
+}
+
+:root[data-layout="terminal"] .terminal-prompt__host-plain::before {
+  content: var(--terminal-host, "tor-bjorn.com");
+}
+
+/* The quick toggles and the expander are the ls settings/ output row. */
+:root[data-layout="terminal"] .top-menu__item--terminal-quick {
+  order: 21;
+}
+
+/* Contact is navigation — it lists with the other rows, freeing the prompt
+   row from its longest label. */
+:root[data-layout="terminal"] .top-menu__item--contact {
+  order: 11;
+  flex: 1 0 100%;
+}
+
+:root[data-layout="terminal"] .top-menu__item--nav {
+  order: 10;
+  flex: 1 0 100%;
+}
+
+:root[data-layout="terminal"] .top-menu__item--terminal-home {
+  display: block;
+}
+
+/* The phonetic brand steps aside for the prompt (JetBrains Mono lacks the
+   IPA glyphs anyway); in a prompt the host position IS a domain, and the
+   home link rides on it. Prompt strings come from --terminal-host/--cwd,
+   emitted per page in head.html. */
+:root[data-layout="terminal"] .brand {
+  display: none;
+}
+
+:root[data-layout="terminal"] .terminal-prompt__user,
+:root[data-layout="terminal"] .terminal-prompt__cwd {
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-prompt__user::before {
+  content: "visitor@";
+}
+
+:root[data-layout="terminal"] .terminal-prompt__host {
+  color: var(--text-link, var(--text-default));
+  font-weight: 700;
+  text-decoration: none;
+}
+
+:root[data-layout="terminal"] .terminal-prompt__host::before {
+  content: var(--terminal-host, "tor-bjorn.com");
+}
+
+:root[data-layout="terminal"] .terminal-prompt__cwd::before {
+  content: ":" var(--terminal-cwd, "~") "$";
+}
+
+:root[data-layout="terminal"] .terminal-prompt__cmd {
+  margin-left: 1ch;
+}
+
+/* Compact PS1 below md — just cwd$, like a real trimmed prompt. The full
+   user@host prompt plus four controls won't share a 48rem row until ~64em.
+   (The header trims earlier than the content prompts: it shares its row
+   with the quick toggles.) */
+@media (max-width: 63.9375em) {
+  :root[data-layout="terminal"] .terminal-prompt__user,
+  :root[data-layout="terminal"] .terminal-prompt__host,
+  :root[data-layout="terminal"] .terminal-prompt__host-plain {
+    display: none;
+  }
+
+  :root[data-layout="terminal"] .terminal-prompt__cwd::before {
+    content: var(--terminal-cwd, "~") "$";
+  }
+}
+
+/* Nav rows: lowercase directory names, one per row, trailing slash. The
+   active page carries the ~/ prefix. Background/hover chrome from the
+   component CSS is stripped. */
+:root[data-layout="terminal"] .top-menu__link {
+  font-size: var(--terminal-font-size);
+  padding-inline: 0;
+}
+
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link {
+  display: inline;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: var(--terminal-font-size);
+  text-transform: lowercase;
+  color: var(--text-link, var(--text-default));
+}
+
+:root[data-layout="terminal"] .top-menu__link.active {
+  text-decoration: none;
+  font-weight: 700;
+}
+
+:root[data-layout="terminal"] .top-menu__link.active::before {
+  content: "~/";
+  font-family: var(--font-mono);
+}
+
+/* The component CSS hides nav items entirely below 48em — the ls rows cost
+   no horizontal space, so they come back on mobile. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .top-menu__item--nav {
+    display: block;
+  }
+}
+
+/* Contact: strip the button chrome down to a nav row. */
+:root[data-layout="terminal"] .top-menu__item--contact .top-menu__link--button {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+  color: var(--text-link, var(--text-default));
+}
+
+:root[data-layout="terminal"] .top-menu__label--long {
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .top-menu__label--icon {
+  display: none;
+}
+
+/* The component CSS swaps the contact label for an icon below 30em; text is
+   the terminal's icon, so the word stays at every width. */
+@media (max-width: 29.9375em) {
+  :root[data-layout="terminal"] .top-menu__label--long {
+    display: inline;
+  }
+}
+
+/* The settings li dissolves so the toggle and the panel can take separate
+   places in the command block: toggle on the output row, panel below it. */
+:root[data-layout="terminal"] .top-menu__item--settings,
+:root[data-layout="terminal"] .settings-dropdown {
+  display: contents;
+}
+
+/* The toggle is the collapsed-output marker: "… +6 lines (click to expand)",
+   dimmed like elided output; the i18n'd labels ride on data attributes. */
+:root[data-layout="terminal"] .settings-toggle {
+  order: 21;
+  color: var(--text-muted, var(--text-default));
+}
+
+:root[data-layout="terminal"] .settings-icon {
+  display: none;
+}
+
+/* One pseudo carries the whole label: whitespace nodes left by the hidden
+   icon span would otherwise render as stray gaps. */
+:root[data-layout="terminal"] .settings-toggle::before {
+  content: attr(data-terminal-expand);
+}
+
+:root[data-layout="terminal"] .settings-toggle[aria-expanded="true"]::before {
+  content: attr(data-terminal-collapse);
+}
+
+/* ============================================================================
+   Works listings: ls-style rows
+   Cards flatten to text rows — year, title, tags — no thumbnails, no borders.
+   The homepage/terms grids collapse to one column via the span vars.
+   ============================================================================ */
+
+:root[data-layout="terminal"] {
+  --works-span-wide: 1 / -1;
+  --works-span-compact: 1 / -1;
+}
+
+:root[data-layout="terminal"] .summary-card__image {
+  display: none;
+}
+
+/* One row per work: year, linked title, tags. The card header and the
+   trailing tag list live in the same article, so the article is the row. */
+:root[data-layout="terminal"] .summary-card--wide article,
+:root[data-layout="terminal"] .summary-card--compact article {
+  display: flex;
+  align-items: baseline;
+  gap: 2ch;
+  margin: 0;
+}
+
+:root[data-layout="terminal"] .summary-card {
+  display: flex;
+  align-items: baseline;
+  gap: 2ch;
+  min-width: 0;
+}
+
+:root[data-layout="terminal"] .summary-card__year {
+  display: inline;
+  order: -1;
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .summary-card__meta {
+  display: none;
+}
+
+:root[data-layout="terminal"] .summary-card__title {
+  font-size: var(--terminal-font-size);
+  font-weight: 400;
+  margin: 0;
+  min-width: 0;
+}
+
+/* Row titles and the works ingress are output, not commands — no prompt
+   pseudos. Selectors must outweigh the .content h2/h3 rules. Row titles in
+   the writing list (article cards) are rows too. */
+:root[data-layout="terminal"] .content .summary-card__title::before,
+:root[data-layout="terminal"] .summary-card__title::before,
+:root[data-layout="terminal"] .content .works-post__description::before,
+:root[data-layout="terminal"] .content .article-card__title::before,
+:root[data-layout="terminal"] .content .summary-card__title::after,
+:root[data-layout="terminal"] .summary-card__title::after,
+:root[data-layout="terminal"] .content .works-post__description::after,
+:root[data-layout="terminal"] .content .article-card__title::after {
+  content: none;
+}
+
+/* Keep row titles in their natural case — they are file names, not commands,
+   but forcing lowercase on real titles reads wrong. */
+:root[data-layout="terminal"] .content .summary-card__title,
+:root[data-layout="terminal"] .content .works-post__description,
+:root[data-layout="terminal"] .content .article-card__title {
+  text-transform: none;
+}
+
+:root[data-layout="terminal"] .summary-card__title a {
+  color: var(--text-link, currentColor);
+}
+
+/* Tags sit at the right edge of the row, as plain muted words. */
+:root[data-layout="terminal"] .summary-card--wide article .tag-list,
+:root[data-layout="terminal"] .summary-card--compact article .tag-list {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+:root[data-layout="terminal"] .tag-list,
+:root[data-layout="terminal"] .tag-list__items {
+  display: flex;
+  gap: 0 1ch;
+  margin: 0;
+  padding: 0;
+}
+
+:root[data-layout="terminal"] .tag {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  background-image: none;
+  font-size: var(--terminal-font-size);
+  letter-spacing: normal;
+  color: var(--text-muted, inherit);
+  text-transform: lowercase;
+}
+
+/* ============================================================================
+   Content figures → [image n] tokens
+   Every markdown image already renders as figure[data-lightbox] with the
+   existing lightbox listening for clicks. Hide the picture, print a numbered
+   token. Numbering: a CSS counter on the content container. Keyboard access
+   is added by lightbox.js (tabindex + Enter/Space).
+   ============================================================================ */
+
+:root[data-layout="terminal"] .content {
+  counter-reset: terminal-image;
+}
+
+:root[data-layout="terminal"] .content figure {
+  counter-increment: terminal-image;
+  display: inline-block;
+  width: auto;
+  margin: 0;
+}
+
+:root[data-layout="terminal"] .content figure picture,
+:root[data-layout="terminal"] .content figure .video-wrapper,
+:root[data-layout="terminal"] .content figure figcaption {
+  display: none;
+}
+
+:root[data-layout="terminal"] .content figure::before {
+  content: var(--terminal-image-label, "[image ") counter(terminal-image) "]";
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  color: var(--text-muted, currentColor);
+}
+
+/* Only lightbox-backed figures are interactive. */
+:root[data-layout="terminal"] .content figure[data-lightbox] {
+  cursor: pointer;
+}
+
+/* Video figures can't open in the image lightbox — they play inline
+   instead of collapsing into a dead token. */
+:root[data-layout="terminal"] .content figure:has(video) {
+  display: block;
+  counter-increment: none;
+  margin-right: 0;
+}
+
+:root[data-layout="terminal"] .content figure:has(video)::before {
+  content: none;
+}
+
+:root[data-layout="terminal"] .content figure:has(video) .video-wrapper {
+  display: block;
+}
+
+:root[data-layout="terminal"] .content figure[data-lightbox]::before {
+  color: var(--text-link, currentColor);
+}
+
+:root[data-layout="terminal"] .content figure[data-lightbox]:hover::before,
+:root[data-layout="terminal"]
+  .content
+  figure[data-lightbox]:focus-visible::before {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+:root[data-layout="terminal"] .content figure[data-lightbox]:focus-visible {
+  outline: var(--spacing-2) solid var(--state-focus);
+  outline-offset: var(--spacing-2);
+}
+
+/* Related works: image-forward cards become rows like the works listing. */
+:root[data-layout="terminal"] .related-items__image {
+  display: none;
+}
+
+:root[data-layout="terminal"] .related-items__item {
+  display: flex;
+  align-items: baseline;
+  gap: 2ch;
+  margin: 0;
+}
+
+:root[data-layout="terminal"] .related-items__item .type-headline-4 {
+  margin: 0;
+  text-transform: none;
+}
+
+:root[data-layout="terminal"] .related-items__item .type-headline-4::before,
+:root[data-layout="terminal"] .related-items__item .type-headline-4::after,
+:root[data-layout="terminal"]
+  .content.post
+  .related-items__item
+  .type-headline-4::before,
+:root[data-layout="terminal"]
+  .content.post
+  .related-items__item
+  .type-headline-4::after {
+  content: none;
+}
+
+:root[data-layout="terminal"] .related-items__item .type-headline-4 a {
+  color: var(--text-link, currentColor);
+  font-weight: 400;
+}
+
+:root[data-layout="terminal"] .related-items__item .type-information {
+  display: none;
+}
+
+/* Project info (role/details/client): drop the panel chrome, keep the
+   columns as plain text. (Selector mirrors style.css's to outweigh it.) */
+:root[data-layout="terminal"] .content.post > .project-info {
+  display: block;
+  background: transparent;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+/* Each gallery is a grid item (blockified), so its tokens print as one line
+   per gallery — ls -1 style. Deliberate: reads more terminal than inline. */
+:root[data-layout="terminal"] .gallery {
+  display: block;
+}
+
+:root[data-layout="terminal"] .content figure {
+  margin-right: 1ch;
+}
+
+/* ============================================================================
+   cat output carries light markdown idioms: - bullets, > quotes
+   ============================================================================ */
+
+:root[data-layout="terminal"] .prose ul {
+  list-style: none;
+  padding-left: 2ch;
+}
+
+:root[data-layout="terminal"] .prose blockquote {
+  border-left: none;
+  padding-left: 2ch;
+  font-style: inherit;
+}
+
+:root[data-layout="terminal"] .prose ul > li::before,
+:root[data-layout="terminal"] .prose blockquote::before {
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-left: -2ch;
+}
+
+:root[data-layout="terminal"] .prose ul > li::before {
+  content: "- ";
+}
+
+:root[data-layout="terminal"] .prose blockquote::before {
+  content: "> ";
+}
+
+/* ============================================================================
+   One column, one stream
+   Subgrid placements (about 6+6, contact split, CV columns) collapse — every
+   placed child spans the whole window. Inline --col styles are vars consumed
+   by grid-column rules, so a direct grid-column override wins.
+   ============================================================================ */
+
+:root[data-layout="terminal"] #main .use-subgrid > * {
+  grid-column: content-start / content-end;
+}
+
+/* .post-content is display:contents, so the prose children are grid items
+   of .content themselves — span them across the window too (80 cols). */
+:root[data-layout="terminal"] #main .use-subgrid .post-content > * {
+  grid-column: content-start / content-end;
+}
+
+:root[data-layout="terminal"] #main .use-subgrid .use-subgrid > * {
+  grid-column: 1 / -1;
+}
+
+/* The about/CV two-column step and the CV's inner columns stack. */
+:root[data-layout="terminal"] .about-cv,
+:root[data-layout="terminal"] .about-content {
+  display: block;
+}
+
+:root[data-layout="terminal"] .about-cv__columns {
+  column-count: 1;
+}
+
+:root[data-layout="terminal"] .about-cv__text,
+:root[data-layout="terminal"] .about-cv__heading {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+}
+
+:root[data-layout="terminal"] .about-cv__icon {
+  display: none;
+}
+
+/* Small type utilities join the single size (dates, meta rows). */
+:root[data-layout="terminal"] .type-information,
+:root[data-layout="terminal"] .post-date {
+  font-size: var(--terminal-font-size);
+}
+
+/* The contact portrait is an image — a terminal has no place for it. */
+:root[data-layout="terminal"] .contact-portrait {
+  display: none;
+}
+
+/* The contact page's form/info split stacks into the stream. */
+:root[data-layout="terminal"] .content.contact .contact-layout,
+:root[data-layout="terminal"] .contact-layout {
+  display: block;
+  margin-top: var(--spacing-24);
+}
+
+:root[data-layout="terminal"] .contact-layout > * {
+  margin-bottom: var(--spacing-24);
+}
+
+/* Newsletter form: the input line IS a prompt — ~$ subscribe --email _ */
+:root[data-layout="terminal"] .footer-newsletter__fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-4) 1ch;
+}
+
+:root[data-layout="terminal"] .footer-newsletter__fields::before {
+  content: var(--terminal-ps1-short) "subscribe --email";
+  white-space: nowrap;
+}
+
+:root[data-layout="terminal"] .footer-newsletter__input {
+  flex: 1 1 12ch;
+  min-width: 0;
+}
+
+/* ============================================================================
+   Footer: stacked text rows inside the same window
+   ============================================================================ */
+
+:root[data-layout="terminal"] .footer-grid--primary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+/* The sitemap is literally a recursive listing. */
+:root[data-layout="terminal"] .footer-grid--primary::before {
+  content: var(--terminal-ps1) "ls -R ~/";
+}
+
+/* The newsletter heading is its own command. */
+:root[data-layout="terminal"] .footer-heading--newsletter {
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .footer-heading--newsletter::before {
+  content: var(--terminal-ps1) "cat '";
+}
+
+:root[data-layout="terminal"] .footer-heading--newsletter::after {
+  content: ".txt'";
+}
+
+/* The legal/status row is an executed env — flat rows, never centred.
+   display:block kills the subgrid so the prompt doesn't wrap in a track. */
+:root[data-layout="terminal"] .footer-meta {
+  display: block;
+  text-align: left;
+}
+
+:root[data-layout="terminal"] .footer-meta::before {
+  content: var(--terminal-ps1-short) "env";
+  display: block;
+}
+
+:root[data-layout="terminal"] .footer-meta__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0 2ch;
+  margin: 0;
+  padding: 0;
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .footer-meta__item {
+  margin: 0;
+  padding: 0;
+}
+
+/* The label spans hold icons only — gone; the value spans carry their
+   category name, which becomes the env variable: LÄGE=Mörkt. */
+:root[data-layout="terminal"] .footer-meta__label {
+  display: none;
+}
+
+:root[data-layout="terminal"] .footer-meta__item [data-category]::before {
+  content: attr(data-category) "=";
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--text-muted, inherit);
+}
+
+/* ============================================================================
+   Boot banner — ascii curl, fake boot lines, exit hint
+   ============================================================================ */
+
+:root[data-layout="terminal"] .terminal-boot {
+  display: block;
+  padding-top: var(--spacing-16);
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .terminal-boot__art {
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  /* Block glyphs (█) fill the full em box; line-height 1 makes stacked rows
+     tile into one solid shape with no seams between lines. */
+  line-height: 1;
+  color: var(--text-accent, currentColor);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-8);
+  white-space: pre;
+  max-width: 100%;
+  /* Not overflow-x:auto — that makes overflow-y compute to auto too, and the
+     block glyphs sit a hair taller than the line box, so a stray vertical
+     scrollbar appears. The art is sized per breakpoint to fit; clip both axes
+     so no scroll container is ever created. */
+  overflow: clip;
+}
+
+/* Two curl sizes, swapped by breakpoint so each viewport gets art that fits:
+   the compact ~26-col one on phones, the detailed ~40-col one from 40em up
+   (where it clears the viewport comfortably). */
+:root[data-layout="terminal"] .terminal-boot__art--lg {
+  display: none;
+}
+
+@media (min-width: 40em) {
+  :root[data-layout="terminal"] .terminal-boot__art--sm {
+    display: none;
+  }
+
+  :root[data-layout="terminal"] .terminal-boot__art--lg {
+    display: block;
+  }
+}
+
+/* Host title + boot-ok line: the banner's text rows, printed under the frame
+   so they wrap on a narrow screen instead of forcing the box wide. Accent
+   like the art they sit under; each on its own line. */
+:root[data-layout="terminal"] .terminal-boot__meta {
+  margin: 0 0 var(--spacing-8);
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 1.4;
+  color: var(--text-accent, currentColor);
+  overflow-wrap: anywhere;
+}
+
+:root[data-layout="terminal"] .terminal-boot__title,
+:root[data-layout="terminal"] .terminal-boot__status {
+  display: block;
+}
+
+:root[data-layout="terminal"] .terminal-boot__line {
+  color: var(--text-muted, inherit);
+  margin: 0;
+}
+
+:root[data-layout="terminal"] .terminal-boot__exit {
+  font-family: var(--font-mono);
+}
+
+/* The buffer ends with an empty prompt, waiting. */
+:root[data-layout="terminal"] .terminal-tail {
+  display: block;
+  grid-column: content-start / content-end;
+  justify-self: start;
+  text-align: left;
+  margin-top: var(--spacing-24);
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .terminal-tail__prompt::before {
+  content: var(--terminal-ps1);
+  color: var(--text-muted, inherit);
+}
+
+/* Fish-style ghost suggestion after the caret: exit, with the hint. */
+:root[data-layout="terminal"] .terminal-tail__suggest {
+  color: var(--text-muted, inherit);
+  opacity: 0.7;
+}
+
+:root[data-layout="terminal"] .terminal-tail::after {
+  content: "  # " attr(data-exit-hint);
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  opacity: 0.7;
+}
+
+:root[data-layout="terminal"] .terminal-tail__caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  vertical-align: text-bottom;
+  background: var(--text-accent, currentColor);
+  animation: terminal-caret-blink 1.1s steps(1) infinite;
+}
+
+@keyframes terminal-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-layout="terminal"] .terminal-tail__caret {
+    animation: none;
+  }
+}
+
+:root[data-effect-reduced-motion="on"] .terminal-tail__caret {
+  animation: none;
+}
+
+:root[data-layout="terminal"] .footer-column {
+  display: flex;
+  gap: 2ch;
+  align-items: baseline;
+}
+
+:root[data-layout="terminal"] .footer-heading {
+  font-size: var(--terminal-font-size);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+  margin: 0;
+  min-width: 12ch;
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .footer-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1ch;
+}
+
+:root[data-layout="terminal"] .footer-menu li + li::before {
+  content: "· ";
+  color: var(--text-muted, inherit);
+}
+
+/* Icons are graphics — the stream and footer drop them; their adjacent text
+   labels (or sr-only spans) already carry the meaning. */
+:root[data-layout="terminal"] #main .icon,
+:root[data-layout="terminal"] footer .icon,
+:root[data-layout="terminal"] #main svg.icon,
+:root[data-layout="terminal"] footer svg.icon {
+  display: none;
+}
+
+/* ============================================================================
+   Statusbar quick-toggles
+   [sv] [mörkt] — text stand-ins for the dropdown controls. Hidden in every
+   other layout (navigation.css).
+   ============================================================================ */
+
+:root[data-layout="terminal"] .top-menu__item--terminal-quick {
+  display: flex;
+  align-items: center;
+}
+
+:root[data-layout="terminal"] .terminal-quick {
+  display: inline-flex;
+  align-items: baseline;
+  text-decoration: none;
+}
+
+/* ============================================================================
+   Settings panel → expanded command output
+   The panel is a normal in-flow block inside the header's flex container (the
+   li and wrapper are display:contents), so expanding really pushes the page
+   down — output printing into the buffer. This holds at EVERY width: the
+   terminal never uses the mobile bottom sheet (settings-dropdown.js opts out
+   of the portal in this layout), so the panel prints inline on phones too.
+   ============================================================================ */
+
+:root[data-layout="terminal"] .settings-panel {
+  order: 22;
+  flex: 1 0 100%;
+  position: static;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: var(--spacing-8) 0 0;
+  transform: none;
+  transition: none;
+}
+
+/* No dimming backdrop — inline output has nothing to sit over. (Below 30em
+   the component CSS makes this a full-screen fixed overlay.) */
+:root[data-layout="terminal"] .settings-overlay {
+  display: none;
+}
+
+/* --- Text-only panel content (all widths) --- */
+
+:root[data-layout="terminal"] .settings-panel .theme-section,
+:root[data-layout="terminal"] .settings-panel .theme-section-heading,
+:root[data-layout="terminal"] .settings-panel .language-list {
+  padding: 0;
+  margin: 0;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-section {
+  margin-bottom: var(--spacing-8);
+}
+
+:root[data-layout="terminal"] .theme-section-title {
+  font-size: var(--terminal-font-size);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .theme-divider {
+  display: none;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-options {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 2ch;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-option {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-option.active {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-option-icon,
+:root[data-layout="terminal"] .settings-panel .typography-preview {
+  display: none;
+}
+
+/* The label is display:none by default (the Aa preview carries it); in the
+   printout the label IS the control. */
+:root[data-layout="terminal"] .settings-panel .typography-label {
+  display: inline;
+  font-size: var(--terminal-font-size);
+}
+
+/* Effects: icon buttons become text. The i18n'd toast title is the best
+   short label; aria-label is the fallback for buttons without one. */
+:root[data-layout="terminal"] .settings-panel .theme-effects {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 2ch;
+  padding: 0;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-effect-button svg {
+  display: none;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-effect-button::before {
+  content: attr(aria-label);
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+:root[data-layout="terminal"]
+  .settings-panel
+  .theme-effect-button[data-toast-title]::before {
+  content: attr(data-toast-title);
+}
+
+:root[data-layout="terminal"]
+  .settings-panel
+  .theme-effect-button[aria-pressed="true"][data-toast-title]::before {
+  content: "[" attr(data-toast-title) "]";
+}
+
+:root[data-layout="terminal"]
+  .settings-panel
+  .theme-effect-button[aria-pressed="true"] {
+  font-weight: 700;
+}
+
+:root[data-layout="terminal"]
+  .settings-panel
+  .theme-effect-button[aria-pressed="true"]::before {
+  content: "[" attr(aria-label) "]";
+  font-family: inherit;
+}
+
+/* Language radios: plain words, current one bracketed. */
+:root[data-layout="terminal"] .settings-panel .language-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2ch;
+}
+
+:root[data-layout="terminal"] .settings-panel .radio__visual {
+  display: none;
+}
+
+:root[data-layout="terminal"] .settings-panel .language-option .language-name {
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .settings-panel .language-option--current {
+  font-weight: 700;
+}
+
+/* Keyboard-shortcut chips: keep the hint, drop the chip chrome. */
+:root[data-layout="terminal"] .settings-panel .toggle-switch__shortcut,
+:root[data-layout="terminal"] .settings-panel .shortcut-key {
+  background: transparent;
+  border: none;
+  padding: 0;
+  height: auto;
+  color: var(--text-muted, inherit);
+  font-family: var(--font-mono);
+}
+
+/* ============================================================================
+   Pantone player → background job
+   The floating pill becomes job-control output pinned to the buffer's bottom
+   edge: collapsed it's the bg-job notice, expanded it's the job line with
+   text controls. Same DOM, same JS states.
+   ============================================================================ */
+
+:root[data-layout="terminal"] .coty-transport {
+  left: var(--size-page-margins);
+  right: var(--size-page-margins);
+  width: auto;
+  max-width: none;
+  justify-content: flex-start;
+  padding: var(--spacing-4) 0;
+  background: var(--surface-page);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"]
+  .coty-transport[data-ui-state="expanded"]::before {
+  content: "[1]+ running  pantone &";
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-right: 2ch;
+  white-space: nowrap;
+}
+
+/* Collapsed: the trigger is the job notice itself. */
+:root[data-layout="terminal"] .coty-transport__trigger {
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .coty-transport__trigger-icon {
+  display: none;
+}
+
+:root[data-layout="terminal"] .coty-transport__trigger::before {
+  content: "[1]+ pantone &";
+  font-family: var(--font-mono);
+}
+
+:root[data-layout="terminal"] .coty-player--transport {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+:root[data-layout="terminal"] .coty-player__controls {
+  display: flex;
+  align-items: baseline;
+  gap: 2ch;
+  padding: 0;
+}
+
+:root[data-layout="terminal"] .coty-player__button svg {
+  display: none;
+}
+
+:root[data-layout="terminal"] .coty-player__button::before {
+  content: "[" attr(aria-label) "]";
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+/* Job-control words instead of the verbose i18n labels (kept as aria). */
+:root[data-layout="terminal"]
+  .coty-player__button[data-js="coty-stop"]::before {
+  content: "[kill]";
+}
+
+:root[data-layout="terminal"]
+  .coty-player__button[data-js="coty-prev"]::before {
+  content: "[prev]";
+}
+
+:root[data-layout="terminal"]
+  .coty-player__button[data-js="coty-next"]::before {
+  content: "[next]";
+}
+
+:root[data-layout="terminal"]
+  .coty-player__button[data-js="coty-shuffle"]::before {
+  content: "[shuffle]";
+}
+
+:root[data-layout="terminal"]
+  .coty-player__button[data-js="coty-transport-toggle"][data-playing="true"]::before {
+  content: "[pause]";
+}
+
+:root[data-layout="terminal"]
+  .coty-player__button[data-js="coty-transport-toggle"][data-playing="false"]::before {
+  content: "[play]";
+}
+
+/* ============================================================================
+   Contact form → prompt sequence
+   ~$ contact
+     --name  _
+     --email _
+   ~$ cat > message.txt <<EOF
+   [textarea]
+   EOF
+   [send]
+   ============================================================================ */
+
+:root[data-layout="terminal"] .contact-form__form::before {
+  content: var(--terminal-ps1-short) "contact";
+  display: block;
+}
+
+:root[data-layout="terminal"] .contact-form .form-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  gap: 1ch;
+  margin: 0 0 var(--spacing-4);
+}
+
+:root[data-layout="terminal"] .contact-form .form-label {
+  font-size: var(--terminal-font-size);
+  font-family: inherit;
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+  text-transform: lowercase;
+  white-space: nowrap;
+  margin: 0;
+  padding-left: 2ch;
+}
+
+:root[data-layout="terminal"] .contact-form .form-label::before {
+  content: "--";
+  font-family: var(--font-mono);
+}
+
+:root[data-layout="terminal"] .contact-form .form-input {
+  flex: 1 1 auto;
+  color: var(--text-default);
+}
+
+/* The message is a heredoc: its label prints the command, EOF closes it. */
+:root[data-layout="terminal"]
+  .contact-form
+  .form-group:has(.contact-form__textarea) {
+  display: block;
+  margin-top: var(--spacing-16);
+}
+
+:root[data-layout="terminal"]
+  .contact-form
+  .form-group:has(.contact-form__textarea)
+  .form-label {
+  display: block;
+  padding-left: 0;
+}
+
+:root[data-layout="terminal"]
+  .contact-form
+  .form-group:has(.contact-form__textarea)
+  .form-label::before {
+  content: var(--terminal-ps1-short) "cat > ";
+}
+
+:root[data-layout="terminal"]
+  .contact-form
+  .form-group:has(.contact-form__textarea)
+  .form-label::after {
+  content: ".txt <<EOF";
+  font-family: var(--font-mono);
+  text-transform: none;
+}
+
+:root[data-layout="terminal"] .contact-form__textarea {
+  display: block;
+  width: 100%;
+  resize: vertical;
+}
+
+:root[data-layout="terminal"]
+  .contact-form
+  .form-group:has(.contact-form__textarea)::after {
+  content: "EOF";
+  display: block;
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .contact-form__submit {
+  display: inline-block;
+  margin: var(--spacing-8) 0 0;
+}
+
+/* ============================================================================
+   Boot theater
+   .terminal-booting (set by darkmode.js on entry + once per session) stages
+   the chrome in: banner lines print, the prompts type their commands, the
+   output rows land — content below is never gated. Reduced-motion users
+   never receive the class.
+   ============================================================================ */
+
+@keyframes terminal-print {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes terminal-type {
+  from {
+    max-width: 0;
+  }
+
+  to {
+    max-width: 14ch;
+  }
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-boot__art {
+  animation: terminal-print 10ms both 0.05s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-boot__meta {
+  animation: terminal-print 10ms both 0.12s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-boot__line {
+  animation: terminal-print 10ms both 0.2s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-prompt {
+  animation: terminal-print 10ms both 0.35s;
+}
+
+:root[data-layout="terminal"].terminal-booting .terminal-prompt__cmd {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  animation: terminal-type 0.3s steps(12, end) both 0.4s;
+}
+
+:root[data-layout="terminal"].terminal-booting .top-menu__item--nav,
+:root[data-layout="terminal"].terminal-booting .top-menu__item--contact {
+  animation: terminal-print 10ms both 0.75s;
+}
+
+:root[data-layout="terminal"].terminal-booting
+  .top-menu__item--terminal-prompt {
+  animation: terminal-print 10ms both 0.85s;
+}
+
+:root[data-layout="terminal"].terminal-booting
+  .top-menu__item--terminal-prompt
+  .terminal-prompt__cmd {
+  animation-delay: 0.9s;
+}
+
+:root[data-layout="terminal"].terminal-booting .top-menu__item--terminal-quick,
+:root[data-layout="terminal"].terminal-booting .settings-toggle {
+  animation: terminal-print 10ms both 1.2s;
+}
+
+/* The rest of the buffer prints after the chrome — the whole screenful at
+   once (output is instant in a real terminal), footer a beat later. Opacity
+   only, so the layout never shifts and nothing re-flows. */
+:root[data-layout="terminal"].terminal-booting #main {
+  animation: terminal-print 10ms both 1.35s;
+}
+
+:root[data-layout="terminal"].terminal-booting footer {
+  animation: terminal-print 10ms both 1.5s;
+}

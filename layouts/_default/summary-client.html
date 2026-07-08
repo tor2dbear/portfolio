@@ -17,6 +17,11 @@
     <div class="summary-card__meta">
       {{ partial "date.html" . }}
     </div>
+
+    {{/* Terminal layout only: bare year for the ls-style row (hidden in every other layout, see summary-card.css) */}}
+    <span class="summary-card__year" aria-hidden="true"
+      >{{ .Date.Format "2006" }}</span
+    >
   </header>
   {{ partial "post_tags.html" . }}
 </article>
