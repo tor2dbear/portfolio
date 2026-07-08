@@ -1478,6 +1478,42 @@
   font-family: var(--font-mono);
 }
 
+/* Share action: a plain command line, not a boxed button (the base .settings-share
+   carries a border/pill that reads as chrome the terminal doesn't use). Strip it
+   to text and drop the icon like every other panel control; hover underlines like
+   the terminal's links. */
+:root[data-layout="terminal"] .settings-panel .settings-share {
+  display: inline-flex;
+  align-items: baseline;
+  width: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: var(--terminal-font-size);
+  font-weight: 400;
+  line-height: var(--terminal-line-height);
+  color: var(--text-default);
+}
+
+:root[data-layout="terminal"] .settings-panel .settings-share:hover,
+:root[data-layout="terminal"] .settings-panel .settings-share:focus-visible {
+  background: none;
+  box-shadow: none;
+  outline: none;
+  text-decoration: underline;
+}
+
+:root[data-layout="terminal"] .settings-panel .settings-share__icon {
+  display: none;
+}
+
+:root[data-layout="terminal"] .settings-panel .settings-share__label {
+  text-transform: lowercase;
+}
+
 /* ============================================================================
    Pantone player → background job
    The floating pill becomes job-control output pinned to the buffer's bottom
