@@ -803,6 +803,10 @@
         "theme-typography-previous",
         localStorage.getItem("theme-typography") || "editorial"
       );
+      // Snap to the top so the boot banner/animation plays in view — otherwise a
+      // visitor part-way down the page enters the terminal mid-stream and misses
+      // it. Instant (not smooth) so it lands before the layout reflows.
+      window.scrollTo(0, 0);
       playTerminalBoot();
     }
     localStorage.setItem("theme-layout", layout);
