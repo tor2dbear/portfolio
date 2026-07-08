@@ -1131,14 +1131,34 @@
 :root[data-layout="terminal"] .terminal-boot__art {
   font-family: var(--font-mono);
   font-size: var(--terminal-font-size);
-  line-height: 1.2;
+  /* Block glyphs (█) fill the full em box; line-height 1 makes stacked rows
+     tile into one solid shape with no seams between lines. */
+  line-height: 1;
   color: var(--text-accent, currentColor);
   background: transparent;
   border: none;
   padding: 0;
   margin: 0 0 var(--spacing-8);
   white-space: pre;
+  max-width: 100%;
   overflow-x: auto;
+}
+
+/* Two curl sizes, swapped by breakpoint so each viewport gets art that fits:
+   the compact ~26-col one on phones, the detailed ~40-col one from 40em up
+   (where it clears the viewport comfortably). */
+:root[data-layout="terminal"] .terminal-boot__art--lg {
+  display: none;
+}
+
+@media (min-width: 40em) {
+  :root[data-layout="terminal"] .terminal-boot__art--sm {
+    display: none;
+  }
+
+  :root[data-layout="terminal"] .terminal-boot__art--lg {
+    display: block;
+  }
 }
 
 /* Host title + boot-ok line: the banner's text rows, printed under the frame
