@@ -550,14 +550,18 @@ figcaption {
    CONTENT-SPECIFIC TYPOGRAPHY
    ========================================================================== */
 
-/* Heading-hugs-its-content: a heading sits close to the text right below it.
-   Intentionally a CONSTANT (raw --spacing-8), not layout-scaled — this is
-   typographic proximity/legibility, not compositional density. See the
-   "layout-tied vs constant" note in docs/layout-dimension-plan.md. */
+/* Heading-hugs-its-content: a generic content heading sits close to the text
+   below it (a CONSTANT — typographic proximity, not layout density). The class
+   exclusions are wrapped in :where() so they add NO specificity — otherwise this
+   catch-all (was (0,5,1)) out-specified the dedicated `.content.post .prose h2/h3`
+   rules (0,3,1) and silently forced their margin to 8px. At (0,1,1) it now only
+   governs headings that have no dedicated rule of their own. */
 .content
-  :is(h1, h2, h3, h4, h5, h6):not(.type-headline-1):not(.type-preamble):not(
-    .type-headline-4
-  ):not(.accordion__title) {
+  :is(h1, h2, h3, h4, h5, h6):where(
+    :not(.type-headline-1):not(.type-preamble):not(.type-headline-4):not(
+        .accordion__title
+      )
+  ) {
   margin-bottom: var(--spacing-8);
 }
 
@@ -589,19 +593,22 @@ figcaption {
   margin-bottom: var(--spacing-24);
 }
 
-/* Article prose hierarchy */
+/* Article prose hierarchy. Body headings sit a clear STEP below the preamble
+   (~clamp 3xl→5xl): h2 lands ~24px, h3 ~21px, so a section heading never reads as
+   the same tier as the lead. Margins ride --layout-prose-rhythm to match the body
+   paragraph rhythm (column ×1 = the old 32/16, 24/12). */
 .content.post .prose h2 {
-  font-size: clamp(var(--text-4xl), calc(1.2rem + 0.75vw), var(--text-6xl));
+  font-size: clamp(var(--text-2xl), calc(1.2rem + 0.4vw), var(--text-4xl));
   line-height: var(--line-height-tight);
-  margin-top: var(--spacing-32);
-  margin-bottom: var(--spacing-16);
+  margin-top: calc(var(--spacing-32) * var(--layout-prose-rhythm));
+  margin-bottom: calc(var(--spacing-16) * var(--layout-prose-rhythm));
 }
 
 .content.post .prose h3 {
-  font-size: clamp(var(--text-2xl), calc(1rem + 0.55vw), var(--text-4xl));
+  font-size: clamp(var(--text-xl), calc(1rem + 0.35vw), var(--text-3xl));
   line-height: var(--line-height-tight);
-  margin-top: var(--spacing-24);
-  margin-bottom: var(--spacing-12);
+  margin-top: calc(var(--spacing-24) * var(--layout-prose-rhythm));
+  margin-bottom: calc(var(--spacing-12) * var(--layout-prose-rhythm));
 }
 
 .content.post .prose :is(ul, ol) {
