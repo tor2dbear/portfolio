@@ -7,6 +7,12 @@
   margin-top: calc(var(--spacing-64) * var(--layout-prose-rhythm));
 }
 
+/* Terminal-layout tail prompt: rendered only when data-layout="terminal"
+   (see dimensions/layout/terminal.css). */
+.terminal-tail {
+  display: none;
+}
+
 .footer-container {
   grid-column: full-start / full-end;
   width: 100%;

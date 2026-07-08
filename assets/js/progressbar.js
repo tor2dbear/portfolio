@@ -24,18 +24,15 @@ function updateMetrics() {
   const containerWidth = headerContainer
     ? headerContainer.offsetWidth
     : brandContainer
-      ? brandContainer.offsetWidth
-      : 0;
+    ? brandContainer.offsetWidth
+    : 0;
   const navWidth = nav ? nav.offsetWidth : 0;
   const columnGapValue = headerContainer
     ? parseFloat(getComputedStyle(headerContainer).columnGap)
     : 0;
   const columnGap = Number.isNaN(columnGapValue) ? 0 : columnGapValue;
   const availableWidth = Math.max(0, containerWidth - navWidth - columnGap);
-  const wordWidth = brandWords.reduce(
-    (sum, word) => sum + word.offsetWidth,
-    0
-  );
+  const wordWidth = brandWords.reduce((sum, word) => sum + word.offsetWidth, 0);
   const maxGap = Math.max(0, availableWidth - wordWidth);
   const lineGap = Math.max(0, maxGap - loopWidth);
 
@@ -62,12 +59,7 @@ function scheduleProgressUpdate() {
 }
 
 function progressBar() {
-  if (
-    !brandMark ||
-    !brandLineLeft ||
-    !brandLineRight ||
-    !brandLoop
-  ) {
+  if (!brandMark || !brandLineLeft || !brandLineRight || !brandLoop) {
     return;
   }
   var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
@@ -82,7 +74,12 @@ function progressBar() {
     typeof window.matchMedia === "function" &&
     window.matchMedia("(max-width: 47.9375em)").matches;
 
-  if (isCompact) {
+  // The terminal layout shows the curl as a static letter-sized glyph: no
+  // scroll progress, so the side lines stay at zero and the mark is loop-only.
+  const isTerminal =
+    rootElement && rootElement.getAttribute("data-layout") === "terminal";
+
+  if (isCompact || isTerminal) {
     progress = 0;
   }
 
@@ -99,10 +96,7 @@ function progressBar() {
   brandMark.setAttribute("viewBox", "0 0 " + resolvedWidth + " " + loopHeight);
 
   brandLineLeft.setAttribute("x2", leftLength.toFixed(2));
-  brandLineRight.setAttribute(
-    "x1",
-    (leftLength + loopWidth).toFixed(2)
-  );
+  brandLineRight.setAttribute("x1", (leftLength + loopWidth).toFixed(2));
   brandLineRight.setAttribute("x2", resolvedWidth.toFixed(2));
   brandLoop.setAttribute(
     "transform",
@@ -148,3 +142,6 @@ window.addEventListener("load", () => {
 window.addEventListener("pageshow", () => settleBrand(12));
 window.addEventListener("resize", syncBrand);
 window.addEventListener("scroll", scheduleProgressUpdate, { passive: true });
+// Re-sync when the layout dimension changes (terminal freezes the mark at
+// loop width; leaving terminal must restore the scroll-progress state).
+window.addEventListener("theme:layout-changed", () => settleBrand(6));

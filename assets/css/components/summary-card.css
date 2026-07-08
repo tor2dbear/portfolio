@@ -9,6 +9,11 @@
   margin-bottom: var(--spacing-12);
 }
 
+.summary-card__year {
+  /* Only the terminal layout renders the bare year (ls-style rows). */
+  display: none;
+}
+
 .summary-card__meta {
   font-size: var(--text-xs);
   line-height: var(--line-height-normal);
@@ -153,8 +158,7 @@
 /* >= 48em: single-line row — thumb | title | meta | tags. */
 @media (min-width: 48em) {
   :root[data-layout="index"] article:has(> .summary-card) {
-    grid-template-columns:
-      var(--place-card-thumb) minmax(0, 1fr) auto auto;
+    grid-template-columns: var(--place-card-thumb) minmax(0, 1fr) auto auto;
     align-items: center;
     column-gap: var(--layout-col-gap);
     row-gap: 0;

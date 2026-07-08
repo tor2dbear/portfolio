@@ -78,11 +78,14 @@
     const settleMs = num("data-settle", SETTLE);
 
     const reduceMq =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)");
     const isReduced = () =>
       (reduceMq && reduceMq.matches) ||
       document.documentElement.getAttribute("data-effect-reduced-motion") ===
-        "on";
+        "on" ||
+      // The terminal layout wants a still prompt — no typewriter loop.
+      document.documentElement.getAttribute("data-layout") === "terminal";
 
     let text = full(index);
     let timer = null;
@@ -192,7 +195,7 @@
       const observer = new MutationObserver(onMotionChange);
       observer.observe(document.documentElement, {
         attributes: true,
-        attributeFilter: ["data-effect-reduced-motion"],
+        attributeFilter: ["data-effect-reduced-motion", "data-layout"],
       });
     }
 

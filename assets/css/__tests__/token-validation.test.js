@@ -40,6 +40,8 @@ const HTML_TEMPLATE_VARS = new Set([
   "--motion-demo-duration",
   "--motion-demo-ease",
   "--motion-demo-distance",
+  "--terminal-host", // per-page prompt strings emitted by head.html
+  "--terminal-cwd",
 ]);
 
 function isAllowlisted(varName) {

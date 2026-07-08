@@ -73,6 +73,23 @@ html[data-grid-overlay] .top-menu {
   align-items: center;
 }
 
+/* Terminal-layout statusbar quick-toggles: text stand-ins for the dropdown
+   controls, rendered only when data-layout="terminal" (see
+   dimensions/layout/terminal.css). */
+.top-menu__item--terminal-quick,
+.top-menu__item--terminal-home {
+  display: none;
+}
+
+/* Terminal-layout prompt lines (visitor@host:cwd$) — same deal. The boot
+   selector needs the element to outweigh the `.top-menu > div` grid rule
+   above, which would otherwise keep the banner visible in other layouts. */
+.terminal-prompt,
+.top-menu__item--terminal-prompt,
+.top-menu > div.terminal-boot {
+  display: none;
+}
+
 /* ==========================================================================
    Contact Button (in Navigation)
    ========================================================================== */
@@ -315,7 +332,6 @@ html[data-grid-overlay] .top-menu {
 
 /* xs: <= 29.9375em */
 @media (max-width: 29.9375em) {
-
   .top-menu__label--long {
     display: none;
   }
