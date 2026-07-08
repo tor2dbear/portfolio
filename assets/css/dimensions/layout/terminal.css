@@ -1209,6 +1209,10 @@
 }
 
 /* The buffer ends with an empty prompt, waiting. */
+/* The buffer ends with a live prompt. Kept as a normal block so the prompt,
+   caret, input and hint all flow inline like one line of terminal text —
+   crucially NOT a flex row, which (with the input's native field box) pushed
+   the field onto its own line on mobile. */
 :root[data-layout="terminal"] .terminal-tail {
   display: block;
   grid-column: content-start / content-end;
@@ -1218,32 +1222,47 @@
   font-size: var(--terminal-font-size);
 }
 
-:root[data-layout="terminal"] .terminal-tail {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-}
-
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
   content: var(--terminal-ps1);
   color: var(--text-muted, inherit);
 }
 
-/* The live command line: seamless with the buffer — no chrome, mono font,
-   themed native caret. Auto-sized to its content (JS keeps size in sync) so
-   the trailing hint hugs the text instead of floating to the far right. */
+/* The live command line: an inline field with all native chrome stripped
+   (-webkit-appearance:none kills the rounded box / focus ring iOS draws), so
+   it reads as raw prompt text with the themed caret. Auto-sized to its content
+   (JS keeps the size attribute in sync) so the trailing hint hugs the text. */
 :root[data-layout="terminal"] .terminal-tail__input {
-  flex: 0 1 auto;
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline;
+  width: auto;
   min-width: 1ch;
   margin: 0;
   padding: 0;
   border: 0;
+  border-radius: 0;
   background: none;
+  box-shadow: none;
   color: inherit;
   font: inherit;
   line-height: inherit;
+  vertical-align: baseline;
   caret-color: var(--text-accent, currentColor);
   outline: none;
+}
+
+/* Belt-and-braces for iOS Safari, which still paints an inner box otherwise. */
+:root[data-layout="terminal"] .terminal-tail__input:focus,
+:root[data-layout="terminal"] .terminal-tail__input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+:root[data-layout="terminal"] .terminal-tail::after {
+  content: "  # " attr(data-exit-hint);
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  opacity: 0.7;
 }
 
 :root[data-layout="terminal"] .terminal-tail::after {
@@ -1324,6 +1343,26 @@
 
 :root[data-layout="terminal"] .terminal-session__out--art {
   color: inherit;
+}
+
+/* Echoed answers inside an interactive flow (contact / subscribe) read like
+   what the user typed at the field prompt. */
+:root[data-layout="terminal"] .terminal-session__flow {
+  display: block;
+  color: var(--text-default, inherit);
+}
+
+/* During a flow the prompt shows the current field name (email>, name>, …)
+   instead of the shell PS1, and the trailing hint offers the abort word. */
+:root[data-layout="terminal"]
+  .terminal-tail[data-flow-label]
+  .terminal-tail__prompt::before {
+  content: attr(data-flow-label) " ";
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-tail[data-flow-label]::after {
+  content: "  # type cancel to abort";
 }
 
 :root[data-layout="terminal"] .footer-column {

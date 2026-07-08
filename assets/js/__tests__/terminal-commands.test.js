@@ -84,6 +84,10 @@ describe("terminal command line", () => {
             aria-label="Play"
           ><svg data-js="coty-play-icon"></svg></button>
         </div>
+        <form class="footer-newsletter__form" action="https://example.test/subscribe" method="post" data-mc-form novalidate>
+          <input type="email" name="EMAIL" />
+          <input type="hidden" name="locale" value="en" />
+        </form>
         <div class="terminal-session" data-js="terminal-session" aria-live="polite"></div>
         <p class="terminal-tail" data-exit-hint="type exit or press esc">
           <span class="terminal-tail__prompt"></span
@@ -125,7 +129,7 @@ describe("terminal command line", () => {
     loadModule();
     typeCommand("help");
     expect(sessionText()).toContain("help");
-    expect(sessionText()).toContain("available commands:");
+    expect(sessionText()).toContain("commands:");
     expect(document.querySelector('[data-js="terminal-input"]').value).toBe("");
   });
 
@@ -214,5 +218,92 @@ describe("terminal command line", () => {
     expect(document.documentElement.getAttribute("data-layout")).not.toBe(
       "terminal"
     );
+  });
+
+  // ---- Interactive flows (contact / subscribe) --------------------------
+
+  const flush = async () => {
+    for (let i = 0; i < 6; i++) {
+      await Promise.resolve();
+    }
+  };
+
+  function tailPrompt() {
+    return document
+      .querySelector(".terminal-tail")
+      .getAttribute("data-flow-label");
+  }
+
+  test("contact walks through prompts and POSTs to the Netlify form", async () => {
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+    window.fetch = fetchMock;
+
+    loadModule();
+    typeCommand("contact");
+    // The prompt switches to the first field.
+    expect(tailPrompt()).toBe("email>");
+    expect(sessionText()).toContain("contact —");
+
+    typeCommand("me@example.com");
+    expect(tailPrompt()).toBe("name>");
+    typeCommand("Ada");
+    expect(tailPrompt()).toBe("message>");
+    typeCommand("hello there");
+    // Now at the confirmation step.
+    expect(tailPrompt()).toBe("send this? [Y/n]");
+
+    typeCommand("y");
+    await flush();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, opts] = fetchMock.mock.calls[0];
+    expect(url).toBe("/");
+    expect(opts.body).toContain("form-name=contact");
+    expect(opts.body).toContain("email=me%40example.com");
+    expect(opts.body).toContain("name=Ada");
+    expect(sessionText().toLowerCase()).toContain("message sent");
+    // Flow ended: prompt restored.
+    expect(tailPrompt()).toBeNull();
+  });
+
+  test("contact re-prompts on an invalid email", () => {
+    loadModule();
+    typeCommand("contact");
+    typeCommand("not-an-email");
+    // Still on the email step, with an error printed.
+    expect(tailPrompt()).toBe("email>");
+    expect(sessionText().toLowerCase()).toContain("email");
+  });
+
+  test("cancel aborts a flow", () => {
+    loadModule();
+    typeCommand("contact");
+    typeCommand("cancel");
+    expect(tailPrompt()).toBeNull();
+    expect(sessionText()).toContain("^C");
+  });
+
+  test("subscribe reuses the newsletter form action", async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ success: true }),
+    });
+    window.fetch = fetchMock;
+
+    loadModule();
+    typeCommand("subscribe");
+    expect(tailPrompt()).toBe("email>");
+    typeCommand("me@example.com");
+    expect(tailPrompt()).toBe("subscribe with this address? [Y/n]");
+    typeCommand("y");
+    await flush();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, opts] = fetchMock.mock.calls[0];
+    expect(url).toBe("https://example.test/subscribe");
+    expect(opts.body).toContain("EMAIL=me%40example.com");
+    expect(sessionText().toLowerCase()).toContain("subscribed");
   });
 });

@@ -2166,19 +2166,23 @@
       '[data-js="terminal-session"]'
     );
 
+    // Kept narrow (a ~12-char command column + short descriptions) so every
+    // line fits a phone's ~36-char terminal width without wrapping mid-column.
     const TERMINAL_HELP = [
-      "available commands:",
-      "  help              this list",
-      "  whoami            who's asking",
-      "  date              current date & time",
-      "  pwd               print working directory",
-      "  echo <text>       print text",
-      "  neofetch          session summary",
-      "  dark | light | system   colour mode",
-      "  pantone [on|off]  colour-of-the-year effect",
-      "  grid              toggle the layout grid",
-      "  clear             clear the screen",
-      "  exit              leave the terminal",
+      "commands:",
+      "  help      this list",
+      "  whoami    who's asking",
+      "  date      date & time",
+      "  pwd       working dir",
+      "  echo      print text",
+      "  neofetch  session info",
+      "  dark|light|system  mode",
+      "  pantone   [on|off] effect",
+      "  grid      layout grid",
+      "  contact   message me",
+      "  subscribe newsletter",
+      "  clear     wipe the screen",
+      "  exit      leave the terminal",
     ];
 
     function terminalHost() {
@@ -2274,6 +2278,18 @@
             echo: input,
             lines: ["grid: toggled"],
             action: { type: "grid" },
+          };
+        case "contact":
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "flow", flow: "contact" },
+          };
+        case "subscribe":
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "flow", flow: "subscribe" },
           };
         case "echo":
           return { echo: input, lines: [rest], action: null };
@@ -2376,6 +2392,9 @@
           }
           break;
         }
+        case "flow":
+          startTerminalFlow(action.flow);
+          break;
         default:
           break;
       }
@@ -2410,6 +2429,19 @@
       applyTerminalAction(result.action);
       // Keep the newest output and the prompt in view; refocus so the mobile
       // keyboard stays up for the next command.
+      scrollTerminalToEnd();
+    }
+
+    // The boot banner's small block-curl, reused as neofetch art when present.
+    function terminalArtLines() {
+      var art = document.querySelector(".terminal-boot__art--sm");
+      if (!art || !art.textContent) {
+        return [];
+      }
+      return art.textContent.replace(/^\n+|\n+$/g, "").split("\n");
+    }
+
+    function scrollTerminalToEnd() {
       if (
         terminalInput &&
         document.documentElement.getAttribute("data-layout") === "terminal"
@@ -2421,13 +2453,227 @@
       }
     }
 
-    // The boot banner's small block-curl, reused as neofetch art when present.
-    function terminalArtLines() {
-      var art = document.querySelector(".terminal-boot__art--sm");
-      if (!art || !art.textContent) {
-        return [];
+    // ----------------------------------------------------------------------
+    // Interactive prompt flows (contact, subscribe)
+    // Some commands aren't one-shot: they collect a few fields one prompt at a
+    // time, like a CLI wizard, then POST to the very same backend the on-page
+    // forms use. While a flow runs, Enter feeds the current step (not the
+    // command parser), the prompt shows the field name, and `cancel`/Escape
+    // aborts. Contact posts to the Netlify form endpoint; subscribe reuses the
+    // footer newsletter form's action and hidden fields.
+    // ----------------------------------------------------------------------
+    let terminalFlow = null;
+
+    function isEmailish(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    function nonEmpty(value) {
+      return value.length > 0;
+    }
+
+    function submitContactFlow(data) {
+      printTerminalLine("sending…", "terminal-session__out");
+      var body = new window.URLSearchParams({
+        "form-name": "contact",
+        "bot-field": "",
+        name: data.name || "",
+        email: data.email || "",
+        message: data.message || "",
+      }).toString();
+      window
+        .fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body,
+        })
+        .then(function (response) {
+          printTerminalLine(
+            response && response.ok
+              ? "message sent — thanks, I'll be in touch."
+              : "send failed — try the contact page instead.",
+            "terminal-session__out"
+          );
+        })
+        .catch(function () {
+          printTerminalLine(
+            "send failed — you may be offline.",
+            "terminal-session__out"
+          );
+        })
+        .then(scrollTerminalToEnd);
+    }
+
+    function submitSubscribeFlow(data) {
+      var form = document.querySelector("form[data-mc-form]");
+      if (!form) {
+        printTerminalLine(
+          "subscribe: the newsletter isn't available here.",
+          "terminal-session__out"
+        );
+        scrollTerminalToEnd();
+        return;
       }
-      return art.textContent.replace(/^\n+|\n+$/g, "").split("\n");
+      var emailField = form.querySelector('input[type="email"]');
+      var formData = new window.FormData(form);
+      if (emailField && emailField.name) {
+        formData.set(emailField.name, data.email);
+      }
+      printTerminalLine("subscribing…", "terminal-session__out");
+      window
+        .fetch(form.action, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new window.URLSearchParams(formData).toString(),
+        })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (result) {
+          if (result && result.success) {
+            printTerminalLine(
+              "subscribed — check your inbox to confirm.",
+              "terminal-session__out"
+            );
+          } else if (result && result.error === "already_subscribed") {
+            printTerminalLine(
+              "you're already subscribed.",
+              "terminal-session__out"
+            );
+          } else {
+            printTerminalLine(
+              "couldn't subscribe — try the footer form.",
+              "terminal-session__out"
+            );
+          }
+        })
+        .catch(function () {
+          printTerminalLine(
+            "couldn't subscribe — you may be offline.",
+            "terminal-session__out"
+          );
+        })
+        .then(scrollTerminalToEnd);
+    }
+
+    var TERMINAL_FLOWS = {
+      contact: {
+        intro: "contact — send me a message. type 'cancel' to abort.",
+        steps: [
+          {
+            key: "email",
+            label: "email",
+            validate: isEmailish,
+            error: "that doesn't look like an email — try again",
+          },
+          {
+            key: "name",
+            label: "name",
+            validate: nonEmpty,
+            error: "name can't be empty",
+          },
+          {
+            key: "message",
+            label: "message",
+            validate: nonEmpty,
+            error: "message can't be empty",
+          },
+        ],
+        confirm: "send this? [Y/n]",
+        submit: submitContactFlow,
+      },
+      subscribe: {
+        intro:
+          "subscribe — the occasional note, no spam. type 'cancel' to abort.",
+        steps: [
+          {
+            key: "email",
+            label: "email",
+            validate: isEmailish,
+            error: "that doesn't look like an email — try again",
+          },
+        ],
+        confirm: "subscribe with this address? [Y/n]",
+        submit: submitSubscribeFlow,
+      },
+    };
+
+    // The prompt is shown verbatim; field steps pass "email>", the confirm step
+    // passes its full question. Pass null to restore the shell PS1.
+    function setFlowPrompt(prompt) {
+      if (!terminalTail) {
+        return;
+      }
+      if (prompt) {
+        terminalTail.setAttribute("data-flow-label", prompt);
+      } else {
+        terminalTail.removeAttribute("data-flow-label");
+      }
+    }
+
+    function startTerminalFlow(name) {
+      var def = TERMINAL_FLOWS[name];
+      if (!def) {
+        return;
+      }
+      terminalFlow = { def: def, step: 0, data: {}, confirming: false };
+      printTerminalLine(def.intro, "terminal-session__out");
+      setFlowPrompt(def.steps[0].label + ">");
+    }
+
+    function endTerminalFlow() {
+      terminalFlow = null;
+      setFlowPrompt(null);
+    }
+
+    function handleTerminalFlowInput(raw) {
+      var flow = terminalFlow;
+      var value = String(raw === null || raw === undefined ? "" : raw).trim();
+
+      if (value.toLowerCase() === "cancel") {
+        printTerminalLine("^C", "terminal-session__out");
+        endTerminalFlow();
+        return;
+      }
+
+      if (!flow.confirming) {
+        var stepDef = flow.def.steps[flow.step];
+        printTerminalLine(
+          stepDef.label + "> " + value,
+          "terminal-session__flow"
+        );
+        if (stepDef.validate && !stepDef.validate(value)) {
+          printTerminalLine(stepDef.error, "terminal-session__out");
+          return; // stay on this step
+        }
+        flow.data[stepDef.key] = value;
+        flow.step += 1;
+        if (flow.step < flow.def.steps.length) {
+          setFlowPrompt(flow.def.steps[flow.step].label + ">");
+        } else {
+          flow.confirming = true;
+          setFlowPrompt(flow.def.confirm);
+        }
+        return;
+      }
+
+      // Confirmation step: empty / y / yes sends; n / no aborts.
+      printTerminalLine(
+        flow.def.confirm + " " + value,
+        "terminal-session__flow"
+      );
+      var answer = value.toLowerCase();
+      if (answer === "" || answer === "y" || answer === "yes") {
+        var submit = flow.def.submit;
+        var data = flow.data;
+        endTerminalFlow();
+        submit(data);
+      } else if (answer === "n" || answer === "no") {
+        printTerminalLine("cancelled", "terminal-session__out");
+        endTerminalFlow();
+      } else {
+        printTerminalLine("please answer y or n", "terminal-session__out");
+      }
     }
 
     function syncTerminalInputSize() {
@@ -2448,12 +2694,25 @@
           var value = terminalInput.value;
           terminalInput.value = "";
           syncTerminalInputSize();
-          runTerminalInput(value);
-        } else if (e.key === "Escape" && terminalInput.value === "") {
-          // Empty prompt + Escape leaves the terminal, matching the global
-          // handler (which ignores events targeting inputs).
-          terminalInput.blur();
-          exitTerminal();
+          if (terminalFlow) {
+            handleTerminalFlowInput(value);
+            scrollTerminalToEnd();
+          } else {
+            runTerminalInput(value);
+          }
+        } else if (e.key === "Escape") {
+          if (terminalFlow) {
+            // Escape aborts an in-progress flow rather than leaving.
+            e.preventDefault();
+            printTerminalLine("^C", "terminal-session__out");
+            endTerminalFlow();
+            scrollTerminalToEnd();
+          } else if (terminalInput.value === "") {
+            // Empty prompt + Escape leaves the terminal, matching the global
+            // handler (which ignores events targeting inputs).
+            terminalInput.blur();
+            exitTerminal();
+          }
         }
       });
       syncTerminalInputSize();
