@@ -1,13 +1,21 @@
 <article class="reveal">
   <header class="summary-card">
     <div class="summary-card__image header-image">
-      <a href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}&ref={{ . }}{{ end }}" aria-hidden="true" tabindex="-1"
+      <a
+        href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}
+          &ref={{ . }}
+        {{ end }}"
+        aria-hidden="true"
+        tabindex="-1"
         >{{ partial "headerimage.html" . }}</a
       >
     </div>
 
     <h2 class="summary-card__title">
-      <a href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}&ref={{ . }}{{ end }}"
+      <a
+        href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}
+          &ref={{ . }}
+        {{ end }}"
         >{{ .Title }}{{ if isset .Params "subtitle" }}
           –
         {{ end }}{{ .Params.subtitle }}</a
@@ -17,6 +25,11 @@
     <div class="summary-card__meta">
       {{ partial "date.html" . }}
     </div>
+
+    {{/* Terminal layout only: bare year for the ls-style row (hidden in every other layout, see summary-card.css) */}}
+    <span class="summary-card__year" aria-hidden="true"
+      >{{ .Date.Format "2006" }}</span
+    >
   </header>
   {{ partial "post_tags.html" . }}
 </article>

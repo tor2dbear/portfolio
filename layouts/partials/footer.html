@@ -163,6 +163,11 @@
         </li>
       </ul>
     </div>
+
+    {{/* Terminal layout: the buffer ends with an empty prompt awaiting input. Prompt text comes from the CSS vars in head.html; hidden in every other layout. */}}
+    <p class="terminal-tail" aria-hidden="true" data-exit-hint="{{ i18n "terminal_exit_hint" }}">
+      <span class="terminal-tail__prompt"></span><span class="terminal-tail__caret"></span><span class="terminal-tail__suggest">exit</span>
+    </p>
   </div>
 </footer>
 <!-- Toast category labels (read by toast.js for title line) -->

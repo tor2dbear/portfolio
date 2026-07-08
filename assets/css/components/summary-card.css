@@ -9,6 +9,11 @@
   margin-bottom: var(--spacing-12);
 }
 
+.summary-card__year {
+  /* Only the terminal layout renders the bare year (ls-style rows). */
+  display: none;
+}
+
 .summary-card__meta {
   font-size: var(--text-xs);
   line-height: var(--line-height-normal);
