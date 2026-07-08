@@ -69,9 +69,10 @@
   }
 
   function buildUrl() {
+    // Preserve any existing query + hash (e.g. focus-mode client/employer views
+    // like ?view=client&ref=…, or a section anchor) and only add/replace the
+    // theme param, so a shared link reproduces the same page, not just the look.
     var url = new URL(window.location.href);
-    url.hash = "";
-    url.search = "";
     url.searchParams.set("theme", buildPayload());
     return url.toString();
   }
