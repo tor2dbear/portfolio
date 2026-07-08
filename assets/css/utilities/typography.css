@@ -272,7 +272,7 @@ h1,
 .type-headline-1 {
   font-size: calc(
     clamp(var(--text-6xl), calc(2rem + 1.25vw), var(--text-8xl)) *
-      var(--type-scale-display)
+      var(--type-scale-display) * var(--layout-scale-ratio)
   );
   letter-spacing: var(--headline-tracking);
   text-wrap: pretty;
@@ -281,7 +281,10 @@ h1,
 /* Type: Headline 2 */
 h2,
 .type-headline-2 {
-  font-size: clamp(var(--text-6xl), calc(1.75rem + 0.625vw), var(--text-10xl));
+  font-size: calc(
+    clamp(var(--text-6xl), calc(1.75rem + 0.625vw), var(--text-10xl)) *
+      var(--layout-scale-ratio)
+  );
   letter-spacing: var(--headline-tracking);
   text-wrap: pretty;
 }
@@ -289,14 +292,20 @@ h2,
 /* Type: Headline 3 */
 h3,
 .type-headline-3 {
-  font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
+  font-size: calc(
+    clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl)) *
+      var(--layout-scale-ratio)
+  );
   text-wrap: pretty;
 }
 
 /* Type: Headline 4 */
 h4,
 .type-headline-4 {
-  font-size: clamp(var(--text-xl), calc(1.167rem + 0.417vw), var(--text-3xl));
+  font-size: calc(
+    clamp(var(--text-xl), calc(1.167rem + 0.417vw), var(--text-3xl)) *
+      var(--layout-scale-ratio)
+  );
   text-wrap: pretty;
 }
 
@@ -322,7 +331,10 @@ h5,
 
 /* Type: Preamble (Ingress) */
 .type-preamble {
-  font-size: clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl));
+  font-size: calc(
+    clamp(var(--text-3xl), calc(1.375rem + 0.625vw), var(--text-5xl)) *
+      var(--layout-scale-ratio)
+  );
   color: var(--text-default);
   line-height: var(--line-height-tight);
   font-weight: var(--serif-weight-regular);
@@ -340,7 +352,7 @@ h5,
 
 /* Type: Body */
 .type-body {
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--layout-scale-ratio));
   line-height: var(--line-height-normal);
   color: var(--text-default);
   font-family: var(--font-body);
@@ -425,32 +437,41 @@ figcaption {
   max-width: var(--measure-prose);
 }
 
+/* Reading measure + vertical rhythm respond to the active layout dimension.
+   Defaults (column) resolve to today's values, so this is a no-op there;
+   editorial narrows the measure and opens the rhythm, index tightens it.
+   Applied to text elements (not the container) so images/galleries can still
+   bleed full width. */
+.prose :is(p, h2, h3, ul, ol, blockquote, table) {
+  max-width: var(--layout-measure);
+}
+
 .prose p {
   font-family: var(--font-body);
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--layout-scale-ratio));
   line-height: var(--line-height-normal);
   color: var(--text-default);
   letter-spacing: var(--tracking-normal);
   text-wrap-style: pretty;
-  margin-bottom: var(--spacing-24);
+  margin-bottom: calc(var(--spacing-24) * var(--layout-prose-rhythm));
 }
 
 .prose h2 {
-  margin-top: var(--spacing-48);
-  margin-bottom: var(--spacing-16);
+  margin-top: calc(var(--spacing-48) * var(--layout-prose-rhythm));
+  margin-bottom: calc(var(--spacing-16) * var(--layout-prose-rhythm));
 }
 
 .prose h3 {
-  margin-top: var(--spacing-32);
-  margin-bottom: var(--spacing-12);
+  margin-top: calc(var(--spacing-32) * var(--layout-prose-rhythm));
+  margin-bottom: calc(var(--spacing-12) * var(--layout-prose-rhythm));
 }
 
 .prose ul,
 .prose ol {
-  margin-bottom: var(--spacing-24);
+  margin-bottom: calc(var(--spacing-24) * var(--layout-prose-rhythm));
   padding-left: var(--spacing-24);
   font-family: var(--font-body);
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--layout-scale-ratio));
   line-height: var(--line-height-normal);
   color: var(--text-default);
 }
@@ -466,7 +487,7 @@ figcaption {
 .prose li {
   margin-bottom: var(--spacing-8);
   font-family: var(--font-body);
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--layout-scale-ratio));
   line-height: var(--line-height-normal);
   color: var(--text-default);
 }

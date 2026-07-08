@@ -1,0 +1,282 @@
+/* ============================================================================
+   LAYOUT: Editorial
+
+   Airy, asymmetric, magazine-like. Wider section rhythm, a narrower body
+   measure (controlled by grid columns, not a ch cap) and a slightly amplified
+   display scale. Only spatial tokens — colour and font face stay owned by the
+   palette and typography dimensions (fully orthogonal).
+   ============================================================================ */
+
+:root[data-layout="editorial"] {
+  --layout-section-rhythm: var(--spacing-96);
+  --layout-hero-rhythm: var(--spacing-160);
+  --layout-heading-gap: var(--spacing-48);
+  --layout-col-gap: var(--spacing-32);
+  /* Body reading measure is set by grid columns (see body placement below),
+     not a ch cap, so --layout-measure stays at the `none` default. */
+  --layout-scale-ratio: 1.15;
+  --layout-prose-rhythm: 1.25;
+
+  /* Drop cap (anfang) — tune here in one place. Leading/offsets are relative to
+     the cap's own font-size so they scale together; watch the mono typeface,
+     which is widest. */
+  --dropcap-size: 3.4em;
+  --dropcap-leading: 0.68;
+  --dropcap-gap: 0.08em;
+  --dropcap-shift: 0.06em;
+}
+
+/* sm: keep the editorial type bump but a touch gentler than desktop — a long
+   single-word title at full 1.15 can nudge the edge on the narrowest phones.
+   Hero rhythm stays tamed (spacing-160 is excessive hero padding on a phone).
+   The earlier overflow was the footer grid gaps, not the type (now fixed). */
+@media (max-width: 47.9375em) {
+  :root[data-layout="editorial"] {
+    --layout-scale-ratio: 1.1;
+    --layout-hero-rhythm: var(--spacing-96);
+  }
+}
+
+/* ============================================================================
+   Structural treatment (beyond tokens) — makes editorial markedly different,
+   not just "bigger". Scoped so colour/typography stay untouched.
+   ============================================================================ */
+
+/* Centred magazine masthead. The title spans full width; the date / tags /
+   description row centres in a narrower column. Centring is applied at ALL
+   widths (text-align + the responsive --col* cascade below) so it never skews
+   against a left-placed preset at mid sizes. Colour/typography stay untouched. */
+:root[data-layout="editorial"] .hero-title,
+:root[data-layout="editorial"] .section-heading,
+:root[data-layout="editorial"] .about-main__headline,
+:root[data-layout="editorial"] .works-post__title,
+:root[data-layout="editorial"] .works-post__description,
+:root[data-layout="editorial"] .works-post__meta,
+:root[data-layout="editorial"] .works-post__tags {
+  text-align: center;
+}
+
+/* The homepage hero title is capped to content-max-width-narrow and lives in a
+   full-width container, so on wide screens the (centred) text sat in a box stuck
+   to the left. Centre the box itself to match the centred magazine masthead. */
+:root[data-layout="editorial"] .hero-title {
+  margin-inline: auto;
+}
+
+/* Masthead placement — reuse the grid.css presets' values (these elements carry
+   .place-wide / .place-prose, so overriding --col* drives the same responsive
+   cascade). Applied at all widths; grid.css supplies the --col-sm full-width
+   fallback at ≤47.9375em, which is what removes the old mid-size skew. */
+
+/* Title → full content width (= .place-full). */
+:root[data-layout="editorial"] .works-post__title {
+  --col: col-start 1 / span 12;
+}
+
+/* Description / date / tags → centred column (= .place-article: centred, with
+   its tested --col-lg / --col-md responsive steps). */
+:root[data-layout="editorial"] .works-post__description,
+:root[data-layout="editorial"] .works-post__meta,
+:root[data-layout="editorial"] .works-post__tags {
+  --col: col-start 3 / span 8;
+  --col-lg: col-start 2 / span 10;
+  --col-md: col-start 1 / span 12;
+}
+
+/* Tag chips sit in a flex row, so text-align can't centre them. */
+:root[data-layout="editorial"] .works-post__tags .tag-list__items {
+  justify-content: center;
+}
+
+/* Desktop structural placement: full-bleed hero; body + project-info centred in
+   a narrow 6-col column (cols 4-9). The body reading measure is now set by this
+   column count rather than a ch cap, so the prose fills its centred cell — no
+   left-hug — and reads at a comfortable width. High-specificity selectors (incl.
+   #main / the full :not() chain) beat the works-post placement rules in
+   style.css, which loads after this file. Mobile keeps the single-column flow. */
+@media (min-width: 64em) {
+  /* Hero image spans the full content width (= .place-full). */
+  :root[data-layout="editorial"] #main .content.post.works-post > figure {
+    --col: col-start 1 / span 12;
+    grid-column: col-start 1 / span 12;
+  }
+
+  /* Body text container — centred 6-col column. Galleries/figures keep their
+     own placement via the :not() exclusions. */
+  :root[data-layout="editorial"]
+    .content.post.works-post
+    > .post-content.place-prose
+    > :not(.gallery):not(figure):not(.project-info):not(.post-nav) {
+    --col: col-start 4 / span 6;
+    grid-column: col-start 4 / span 6;
+  }
+
+  /* Project-info box: centred to the same wide band as the figures (cols 2–11)
+     rather than the narrow 6-col text column — its 3-up ROLE/DETAILS/CLIENT needs
+     the room and reads as a centred spec panel, aligned with the media. */
+  :root[data-layout="editorial"] .content.post.works-post > .project-info {
+    --col: col-start 2 / span 10;
+    grid-column: col-start 2 / span 10;
+  }
+
+  /* Body figures / galleries: CENTRED wide column (cols 2–11 = a centred 10-col
+     band) instead of the base's left-hugging cols 1–10, so the media reads
+     centred under the centred text. Extra margin-block opens the text↔media gap,
+     which felt tight. (The container has no row-gap; figure margins set the
+     rhythm.) */
+  :root[data-layout="editorial"]
+    .content.post.works-post
+    > .post-content.place-prose
+    > figure,
+  :root[data-layout="editorial"]
+    .content.post.works-post
+    > .post-content.place-prose
+    > .gallery {
+    --col: col-start 2 / span 10;
+    grid-column: col-start 2 / span 10;
+    margin-block: var(--spacing-32);
+  }
+}
+
+/* ============================================================================
+   Works cards (featured, listing, related) — editorial treatment
+
+   Full-width, one card per row, with centred title / date / tags and a larger
+   magazine-scale title, echoing the centred masthead. Column keeps the default
+   card grid; index turns cards into rows; editorial makes them big and centred.
+   ============================================================================ */
+
+/* Full-width: one card per row. Two container shapes carry works cards —
+   .content.startpage (home, terms) via the --works-span-* token, and
+   .content.list (/works, taxonomy) via the article's own grid placement. */
+@media (min-width: 48em) {
+  :root[data-layout="editorial"] {
+    --works-span-wide: span 12;
+    --works-span-compact: span 12;
+  }
+}
+
+:root[data-layout="editorial"] .content.list article {
+  grid-column: 1 / -1;
+}
+
+/* Related: 3-up → a single centred column. */
+:root[data-layout="editorial"] .content.post > .related-items__item {
+  grid-column: 1 / -1;
+}
+
+/* Centre the card text; the tag row is a flex container so it needs its own
+   centring. */
+:root[data-layout="editorial"] article:has(> .summary-card),
+:root[data-layout="editorial"] .related-items__item {
+  text-align: center;
+}
+
+:root[data-layout="editorial"] article:has(> .summary-card) .tag-list__items,
+:root[data-layout="editorial"] .related-items__item .tag-list__items {
+  justify-content: center;
+}
+
+/* Larger, magazine-scale title (a step up from the default card title). */
+:root[data-layout="editorial"] .summary-card__title,
+:root[data-layout="editorial"] .related-items__header .type-headline-4 {
+  font-size: clamp(var(--text-2xl), calc(1.5rem + 0.75vw), var(--text-4xl));
+}
+
+/* ============================================================================
+   The "bigger moves": section rules + drop caps
+
+   1. Thin rules between sections, riding the already-open editorial rhythm, so
+      the page reads as distinct magazine sections.
+   2. A drop cap (anfang) opening the works article body.
+   Structural / compositional only — colour (palette) and font face (typography)
+   stay untouched, so this remains orthogonal.
+   ============================================================================ */
+
+/* Home: a hairline between consecutive sections (never before the first). The
+   sections already carry --layout-section-rhythm padding, so the rule sits in
+   generous whitespace. */
+:root[data-layout="editorial"] .home-section + .home-section {
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Works article: a section rule opening the Related block. */
+:root[data-layout="editorial"] .content.post > .related-items__title {
+  margin-top: var(--layout-section-rhythm);
+  padding-top: var(--layout-heading-gap);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Drop cap: the first letter of the opening paragraph of the works body. The
+   body prose is left-aligned (only the masthead is centred), so a left float sits
+   correctly. Size/leading only — the initial keeps the body's own typeface,
+   weight and colour. (`:first-of-type` can't target the first .post-content since
+   masthead divs precede it, so apply to the body prose's first paragraph and
+   cancel it on the continuation block after .project-info.) */
+:root[data-layout="editorial"]
+  .content.post.works-post
+  .post-content.place-prose
+  > p:first-of-type::first-letter {
+  float: left;
+  margin-right: var(--dropcap-gap);
+  padding-top: var(--dropcap-shift);
+  font-size: var(--dropcap-size);
+  line-height: var(--dropcap-leading);
+}
+
+:root[data-layout="editorial"]
+  .content.post.works-post
+  .project-info
+  + .post-content.place-prose
+  > p:first-of-type::first-letter {
+  float: none;
+  margin-right: 0;
+  padding-top: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* ----------------------------------------------------------------------------
+   Writing / texter / post articles — editorial (magazine reading)
+
+   These use .content.post (NOT .works-post) with a .place-article masthead.
+   Centre the masthead — but not the body: prose stays left-aligned so it reads
+   well and the drop cap's left float sits correctly. Then open with a drop cap.
+   ---------------------------------------------------------------------------- */
+:root[data-layout="editorial"]
+  .content.post:not(.works-post)
+  > .place-article:not(.post-content) {
+  text-align: center;
+}
+
+:root[data-layout="editorial"]
+  .content.post:not(.works-post)
+  .post-tags-wrap
+  .tag-list__items {
+  justify-content: center;
+}
+
+:root[data-layout="editorial"]
+  .content.post:not(.works-post)
+  .post-content.prose
+  > p:first-of-type::first-letter {
+  float: left;
+  margin-right: var(--dropcap-gap);
+  padding-top: var(--dropcap-shift);
+  font-size: var(--dropcap-size);
+  line-height: var(--dropcap-leading);
+}
+
+/* Writing listing cards (.article-card — text only, no image): centred, with a
+   larger magazine-scale title to match the works cards. */
+:root[data-layout="editorial"] .article-card {
+  text-align: center;
+}
+
+:root[data-layout="editorial"] .article-card .tag-list__items {
+  justify-content: center;
+}
+
+:root[data-layout="editorial"] .article-card__title {
+  font-size: clamp(var(--text-2xl), calc(1.5rem + 0.75vw), var(--text-4xl));
+}

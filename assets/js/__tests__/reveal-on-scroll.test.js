@@ -78,30 +78,83 @@ describe("Reveal On Scroll", () => {
     expect(observerInstance.unobserve).toHaveBeenCalledWith(elements[0]);
   });
 
-  test("stagger-reveals elements already in view on load", () => {
+  test("applies a left→right stagger from position when revealed", () => {
     const elements = document.querySelectorAll(".reveal");
-    elements.forEach((element) => {
-      element.getBoundingClientRect = jest.fn(() => ({
-        top: 10,
-        bottom: 110,
-        height: 100,
-      }));
-    });
-
-    window.innerHeight = 800;
-    globalThis.IntersectionObserver = jest.fn(() => ({
-      observe: jest.fn(),
-      unobserve: jest.fn(),
-      disconnect: jest.fn(),
+    elements[0].getBoundingClientRect = jest.fn(() => ({
+      top: 10,
+      bottom: 110,
+      height: 100,
+      left: 0,
     }));
+    elements[1].getBoundingClientRect = jest.fn(() => ({
+      top: 10,
+      bottom: 110,
+      height: 100,
+      left: 400,
+    }));
+
+    window.innerWidth = 800;
+    let observerCallback;
+    let observerInstance;
+    globalThis.IntersectionObserver = jest.fn((callback) => {
+      observerCallback = callback;
+      observerInstance = {
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn(),
+      };
+      return observerInstance;
+    });
 
     require("../reveal-on-scroll");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
+    observerCallback(
+      [
+        { isIntersecting: true, target: elements[0] },
+        { isIntersecting: true, target: elements[1] },
+      ],
+      observerInstance
+    );
+
     expect(elements[0].classList.contains("is-revealed")).toBe(true);
     expect(elements[1].classList.contains("is-revealed")).toBe(true);
+    // left 0 → 0ms; left 400 of 800px viewport → 0.5 * 160ms = 80ms
     expect(elements[0].style.getPropertyValue("--reveal-delay")).toBe("0ms");
     expect(elements[1].style.getPropertyValue("--reveal-delay")).toBe("80ms");
+  });
+
+  test("fast-paths reveal--immediate elements without observing them", () => {
+    document.body.innerHTML = `
+      <h1 class="reveal reveal--immediate">Hero</h1>
+      <div class="reveal">Other</div>
+    `;
+    document.querySelectorAll(".reveal").forEach((element) => {
+      element.getBoundingClientRect = jest.fn(() => ({
+        top: 10,
+        bottom: 110,
+        height: 100,
+        left: 0,
+      }));
+    });
+
+    let observerInstance;
+    globalThis.IntersectionObserver = jest.fn(() => {
+      observerInstance = {
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn(),
+      };
+      return observerInstance;
+    });
+
+    require("../reveal-on-scroll");
+    document.dispatchEvent(new Event("DOMContentLoaded"));
+
+    const hero = document.querySelector(".reveal--immediate");
+    // Revealed immediately, and never handed to the observer.
+    expect(hero.classList.contains("is-revealed")).toBe(true);
+    expect(observerInstance.observe).toHaveBeenCalledTimes(1);
   });
 
   test("adds reveal class to post-content children", () => {
@@ -136,35 +189,47 @@ describe("Reveal On Scroll", () => {
     expect(document.querySelector(".post-content").classList.contains("reveal")).toBe(false);
   });
 
-  test("stagger-reveals post-content children independently", () => {
+  test("promoted post-content children are observed and revealed on intersect", () => {
     document.body.innerHTML = `
-      <h1 class="reveal">Title</h1>
       <div class="post-content">
         <p>Alpha</p>
         <p>Beta</p>
       </div>
     `;
 
-    document.querySelectorAll(".reveal, .post-content > *").forEach((element) => {
+    document.querySelectorAll(".post-content > *").forEach((element) => {
       element.getBoundingClientRect = jest.fn(() => ({
-        top: 10,
-        bottom: 110,
+        top: 2000,
+        bottom: 2100,
         height: 100,
+        left: 0,
       }));
     });
 
-    window.innerHeight = 800;
-    globalThis.IntersectionObserver = jest.fn(() => ({
-      observe: jest.fn(),
-      unobserve: jest.fn(),
-      disconnect: jest.fn(),
-    }));
+    let observerCallback;
+    let observerInstance;
+    globalThis.IntersectionObserver = jest.fn((callback) => {
+      observerCallback = callback;
+      observerInstance = {
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn(),
+      };
+      return observerInstance;
+    });
 
     require("../reveal-on-scroll");
     document.dispatchEvent(new Event("DOMContentLoaded"));
 
     const postChildren = document.querySelectorAll(".post-content > *");
-    expect(postChildren[0].style.getPropertyValue("--reveal-delay")).toBe("0ms");
-    expect(postChildren[1].style.getPropertyValue("--reveal-delay")).toBe("60ms");
+    // Both promoted to .reveal and observed (no DOM-order pre-stagger).
+    expect(observerInstance.observe).toHaveBeenCalledTimes(postChildren.length);
+
+    observerCallback(
+      [{ isIntersecting: true, target: postChildren[0] }],
+      observerInstance
+    );
+    expect(postChildren[0].classList.contains("is-revealed")).toBe(true);
+    expect(observerInstance.unobserve).toHaveBeenCalledWith(postChildren[0]);
   });
 });

@@ -69,7 +69,8 @@ html[data-grid-overlay] .top-menu {
 }
 
 .top-menu__item--settings {
-  display: none;
+  display: flex;
+  align-items: center;
 }
 
 /* ==========================================================================
@@ -314,14 +315,6 @@ html[data-grid-overlay] .top-menu {
 
 /* xs: <= 29.9375em */
 @media (max-width: 29.9375em) {
-  .top-menu__item--theme,
-  .top-menu__item--language {
-    display: none;
-  }
-
-  .top-menu__item--settings {
-    display: block;
-  }
 
   .top-menu__label--long {
     display: none;

@@ -131,3 +131,163 @@ article {
     --col: col-start 1 / span 4;
   }
 }
+
+/* ==========================================================================
+   Related Items — INDEX layout (rows)
+
+   Match the index "works as rows" treatment used for summary cards, so the
+   Related section under a works article reads the same. The markup differs
+   (grouped .related-items__header with title + date), so the header is flattened
+   with display:contents and its title/date join the article's row grid — the
+   rest mirrors components/summary-card.css exactly.
+   ========================================================================== */
+
+/* Each related item is a full-width row (any grid track count → 1 / -1). The
+   container (.content.post.use-subgrid) has no row-gap, so zeroing the article
+   margin makes the rows a flush divided list. */
+:root[data-layout="index"] .content.post > .related-items__item {
+  grid-column: 1 / -1;
+}
+
+:root[data-layout="index"] .related-items__header {
+  display: contents;
+}
+
+:root[data-layout="index"] .related-items__item {
+  /* --place-card-thumb inherited from the index layout (index.css). */
+  margin: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--place-card-thumb) minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--spacing-12);
+  row-gap: var(--spacing-4);
+  padding: var(--spacing-12) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* The clientpage / employerpage variants ("More from portfolio") toggle
+   visibility with an ID selector (#layout.clientpage … { display: block }) that
+   out-specifies the grid rule above — without matching that specificity the item
+   stays a plain block and the absolute thumbnail overlaps the title. Restore the
+   row grid for them. */
+:root[data-layout="index"]
+  #layout.clientpage
+  .related-items__item.show-on-client,
+:root[data-layout="index"]
+  #layout.employerpage
+  .related-items__item.show-on-employer {
+  display: grid;
+}
+
+/* Thumbnail: original ratio, top-aligned, positioned absolutely so it never
+   affects row height (see summary-card.css for the full rationale). */
+:root[data-layout="index"] .related-items__image {
+  position: absolute;
+  top: var(--spacing-12);
+  left: 0;
+  width: var(--place-card-thumb);
+  overflow: hidden;
+  border-radius: var(--radius-4);
+}
+
+:root[data-layout="index"] .related-items__image a {
+  display: block;
+}
+
+:root[data-layout="index"] .related-items__image :is(picture, img) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+:root[data-layout="index"] .related-items__header .type-headline-4 {
+  grid-column: 2;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-lg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:root[data-layout="index"] .related-items__header .type-headline-4 a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:root[data-layout="index"] .related-items__header .type-information {
+  grid-column: 2;
+  margin: 0;
+}
+
+:root[data-layout="index"] .related-items__item .tag-list {
+  grid-column: 2;
+  justify-self: start;
+}
+
+/* >= 48em: single-line row — thumb | title | date | tags. */
+@media (min-width: 48em) {
+  :root[data-layout="index"] .related-items__item {
+    grid-template-columns:
+      var(--place-card-thumb) minmax(0, 1fr) auto auto;
+    align-items: center;
+    column-gap: var(--layout-col-gap);
+    row-gap: 0;
+  }
+
+  :root[data-layout="index"] .related-items__image {
+    position: static;
+    grid-column: 1;
+    align-self: center;
+    aspect-ratio: 4 / 3;
+  }
+
+  :root[data-layout="index"] .related-items__image :is(picture, img) {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :root[data-layout="index"] .related-items__header .type-information {
+    grid-column: 3;
+    white-space: nowrap;
+  }
+
+  :root[data-layout="index"] .related-items__item .tag-list {
+    grid-column: 4;
+    justify-self: end;
+  }
+}
+
+/* ==========================================================================
+   Writing / texter / newsletter listing — INDEX layout
+
+   These cards (.article-card) are text-only (no image), so instead of the
+   thumbnail rows used for works they become a tight, full-width divided list:
+   compact title + description + date + tags, flush dividers. The listing wraps
+   each card in a .place-article div; index makes that wrapper full width. The
+   container's row-gap is already zeroed for index in summary-card.css.
+   ========================================================================== */
+:root[data-layout="index"] .content.list > .place-article {
+  grid-column: 1 / -1;
+}
+
+:root[data-layout="index"] .article-card {
+  margin: 0;
+  padding: var(--spacing-16) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+:root[data-layout="index"] .article-card__title {
+  margin: 0 0 var(--spacing-4);
+  font-size: var(--text-lg);
+}
+
+:root[data-layout="index"] .article-card__description {
+  margin: 0 0 var(--spacing-8);
+}
+
+:root[data-layout="index"] .article-card__meta {
+  margin: 0;
+}

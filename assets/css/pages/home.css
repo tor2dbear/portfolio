@@ -8,7 +8,7 @@
 .home-section {
   display: grid;
   grid-column: 1 / -1;
-  padding: var(--spacing-64) 0;
+  padding: var(--layout-section-rhythm) 0;
   scroll-margin-top: calc(var(--size-header-height) + var(--spacing-16));
 }
 
@@ -23,12 +23,12 @@
 @supports not (grid-template-columns: subgrid) {
   .home-page {
     grid-template-columns: repeat(12, [col-start] 1fr);
-    column-gap: var(--spacing-24);
+    column-gap: var(--layout-col-gap);
   }
 
   .home-section {
     grid-template-columns: repeat(12, [col-start] 1fr);
-    column-gap: var(--spacing-24);
+    column-gap: var(--layout-col-gap);
   }
 }
 
@@ -58,7 +58,7 @@
 }
 
 .section-heading {
-  margin-bottom: var(--spacing-32);
+  margin-bottom: var(--layout-heading-gap);
   text-align: left;
   color: var(--text-default);
   font-family: var(--font-ui);
@@ -71,7 +71,7 @@
 
 /* Hero Section */
 .hero-section {
-  padding: var(--spacing-96) 0;
+  padding: var(--layout-hero-rhythm) 0;
 }
 
 .hero-title {
@@ -80,32 +80,93 @@
   line-height: 1.4;
   font-size: calc(
     clamp(var(--text-5xl), calc(1.75rem + 0.625vw), var(--text-6xl)) *
-      var(--type-scale-display)
+      var(--type-scale-display) * var(--layout-scale-ratio)
   );
   letter-spacing: var(--display-tracking);
 }
 
+/* Index hero is utilitarian: dial the lead all the way down to near body-text
+   size (scoped to the hero only, so the global --layout-scale-ratio still governs
+   the rest of index's headings). */
+:root[data-layout="index"] .hero-section .hero-title {
+  font-size: var(--text-lg);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* Typewriter role (role-swapper.js types/deletes one char at a time). No
+   reserved width, so it grows/shrinks tight with no gap. Inline by default: on
+   larger screens the hero is capped to a narrow max-width, so even the longest
+   role fits on the lead's line and there's no re-wrap. */
 .role-swapper {
   color: var(--text-accent);
   font-weight: inherit;
+}
+
+/* Below ~680px the hero becomes viewport-constrained and the lead + role no
+   longer fit one line, so the growing/shrinking role would re-wrap the sentence
+   (the page jumps, the em dash hops between lines). Drop the role onto its own
+   line here: the lead above is then fixed text that wraps identically whatever
+   the role is, and only the role's own line changes. The break after the role
+   is hidden since the block already starts a new line for the following text. */
+@media (max-width: 42.5em) {
+  .role-swapper {
+    display: block;
+  }
+
+  .hero-role-br {
+    display: none;
+  }
+}
+
+/* Per-typeface tuning: the mono typeface (technical) is much wider, so the lead
+   + role stop fitting on one line well before the default breakpoint. Break the
+   role onto its own line up to 800px for it (combine the typography dimension
+   with the media query). The same pattern extends to a typeface+layout combo,
+   e.g. :root[data-typography="technical"][data-layout="editorial"], since
+   editorial scales the type up (1.15×) and wraps a little sooner still. */
+@media (max-width: 50em) {
+  :root[data-typography="technical"] .role-swapper {
+    display: block;
+  }
+
+  :root[data-typography="technical"] .hero-role-br {
+    display: none;
+  }
+}
+
+/* Caret — a CSS bar (tracks the type size), coloured with the normal text
+   colour, not the role accent. Solid while actively typing/deleting
+   (is-typing); blinking briefly just after a role completes and just before the
+   next one starts (is-blinking); hidden while a role is held. States toggled by
+   role-swapper.js. */
+.role-swapper.is-typing .role-swapper__text::after,
+.role-swapper.is-blinking .role-swapper__text::after {
+  content: "";
   display: inline-block;
-  min-width: 0;
-  position: relative;
-  white-space: nowrap;
-  transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
+  width: 0.06em;
+  height: 0.9em;
+  margin-left: 0.06em;
+  vertical-align: -0.08em;
+  background: var(--text-default);
 }
 
-.role-swapper__item {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  transition: opacity var(--motion-duration-slower) var(--motion-ease-standard);
+/* Blink a fixed number of whole cycles and stay off (forwards) — not infinite —
+   so it can't loop back to "on" at the boundary and leave a clipped flash.
+   Keep the iteration count in sync with BLINK_AFTER in role-swapper.js. */
+.role-swapper.is-blinking .role-swapper__text::after {
+  animation: role-caret-blink 1s 2 forwards;
 }
 
-.role-swapper__item.is-active {
-  position: relative;
-  opacity: 1;
+@keyframes role-caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .hero-emphasis {
@@ -144,6 +205,17 @@
   font-size: var(--text-xl);
 }
 
+/* Works grid responds to the layout dimension. The card spans are set inline as
+   var(--works-span-*, <column default>), so column (no override) keeps the
+   asymmetric 8+4 / 4+8 rhythm.
+
+   NOTE: the per-layout card treatments now live in global stylesheets so they
+   apply on every surface a works card appears (home featured + /works listing +
+   taxonomy + terms + related), not just the home bundle:
+   - index → components/summary-card.css (+ article-card.css for related)
+   - editorial → dimensions/layout/editorial.css
+   Both set --works-span-*: span 12 and their own card styling there. */
+
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
   .works-section .summary-card__title {
@@ -157,7 +229,7 @@
 }
 
 .about-content {
-  row-gap: var(--spacing-32);
+  row-gap: calc(var(--spacing-32) * var(--layout-prose-rhythm));
 }
 
 /* Placement now handled by .stepped-6-6 on parent (.about-content) */
@@ -198,9 +270,60 @@
 }
 
 .home-page .contact-info {
-  --col: col-start 1 / span 6;
+  --col: var(--contact-info-col, col-start 1 / span 6);
   grid-column: var(--col);
   grid-row: 1;
+}
+
+/* Column usage of the about + contact sections varies by layout (>= 48em;
+   mobile always stacks). Column keeps today's arrangement via the fallbacks. */
+@media (min-width: 48em) {
+  /* Contact split: column 6/6, editorial 4/8 (portrait-forward),
+     index 7/5 (info-forward). */
+  :root[data-layout="editorial"] {
+    --contact-info-col: col-start 1 / span 4;
+    --contact-portrait-col: col-start 5 / span 8;
+  }
+
+  :root[data-layout="index"] {
+    --contact-info-col: col-start 1 / span 7;
+    --contact-portrait-col: col-start 8 / span 5;
+  }
+
+  /* About: editorial stacks the three blocks full-width; index packs them
+     into a dense 3-up row. Column keeps the diagonal stepped-6-6 default.
+     --col-md/--col-lg are set too, otherwise stepped-6-6's own tablet
+     overrides (--col-md) would win between 48-64em. */
+  :root[data-layout="editorial"] .about-content > * {
+    --col: col-start 1 / span 12;
+    --col-lg: col-start 1 / span 12;
+    --col-md: col-start 1 / span 12;
+    --row: auto;
+  }
+
+  /* index: about text 2-up on row 1; the CV keeps full width on row 2 so its
+     own internal columns have room (a narrow cell made it break out and
+     overlap the about text). */
+  :root[data-layout="index"] .about-content > :nth-child(1) {
+    --col: col-start 1 / span 6;
+    --col-lg: col-start 1 / span 6;
+    --col-md: col-start 1 / span 6;
+    --row: 1;
+  }
+
+  :root[data-layout="index"] .about-content > :nth-child(2) {
+    --col: col-start 7 / span 6;
+    --col-lg: col-start 7 / span 6;
+    --col-md: col-start 7 / span 6;
+    --row: 1;
+  }
+
+  :root[data-layout="index"] .about-content > :nth-child(3) {
+    --col: col-start 1 / span 12;
+    --col-lg: col-start 1 / span 12;
+    --col-md: col-start 1 / span 12;
+    --row: 2;
+  }
 }
 
 /* sm: <= 47.9375em */

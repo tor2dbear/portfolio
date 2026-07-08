@@ -34,6 +34,9 @@
 
   --text-default: var(--coty-12);
   --surface-ink-strong: var(--coty-11);
+  /* Link colour must follow the Pantone family too — only the hover was set,
+     so the resting link fell back to the standard iris token. */
+  --text-link: var(--coty-11);
   --text-link-hover: var(--coty-11);
 
   --surface-page: var(--coty-role-surface, var(--coty-2));

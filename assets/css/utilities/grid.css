@@ -9,8 +9,8 @@
   display: grid;
   grid-template-columns:
     [full-start] var(--size-page-margins) [content-start] repeat(12, [col-start] 1fr) [content-end] var(--size-page-margins) [full-end];
-  column-gap: var(--spacing-24);
-  row-gap: var(--spacing-32);
+  column-gap: var(--layout-col-gap);
+  row-gap: var(--layout-row-gap);
 }
 
 /* --- Subgrid container -------------------------------------------------- */
@@ -23,7 +23,7 @@
 @supports not (grid-template-columns: subgrid) {
   .use-subgrid {
     grid-template-columns: repeat(12, [col-start] 1fr);
-    column-gap: var(--spacing-24);
+    column-gap: var(--layout-col-gap);
   }
 }
 
@@ -35,6 +35,14 @@
 
 /* sm: <= 47.9375em */
 @media (max-width: 47.9375em) {
+  /* The 12-track page grid (used by the footer) keeps full column-gap on
+     mobile from --layout-col-gap; with 13 inter-track gaps that overflows a
+     phone in editorial (spacing-32 -> ~416px). The gaps sit between unused
+     tracks, so shrinking them here is purely a width fix, no visual change. */
+  .page-grid {
+    column-gap: var(--spacing-16);
+  }
+
   @supports not (grid-template-columns: subgrid) {
     .use-subgrid {
       grid-template-columns: repeat(4, [col-start] 1fr);
@@ -72,6 +80,7 @@
 .use-subgrid > [style*="--col"],
 .use-subgrid > .place-full,
 .use-subgrid > .place-wide,
+.use-subgrid > .place-wide-center,
 .use-subgrid > .place-prose,
 .use-subgrid > .place-article,
 .use-subgrid > .place-narrow,
@@ -87,6 +96,7 @@
   .use-subgrid > [style*="--col"],
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
+  .use-subgrid > .place-wide-center,
   .use-subgrid > .place-prose,
   .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
@@ -102,6 +112,7 @@
   .use-subgrid > [style*="--col"],
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
+  .use-subgrid > .place-wide-center,
   .use-subgrid > .place-prose,
   .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
@@ -117,6 +128,7 @@
   .use-subgrid > [style*="--col"],
   .use-subgrid > .place-full,
   .use-subgrid > .place-wide,
+  .use-subgrid > .place-wide-center,
   .use-subgrid > .place-prose,
   .use-subgrid > .place-article,
   .use-subgrid > .place-narrow,
@@ -131,6 +143,7 @@
 
 .place-full       { --col: col-start 1  / span 12; }
 .place-wide       { --col: col-start 1  / span 10; }
+.place-wide-center { --col: col-start 2  / span 10; }
 .place-prose      { --col: col-start 1  / span 8;  }
 .place-article    { --col: col-start 3  / span 8;  --col-lg: col-start 2 / span 10; --col-md: col-start 1 / span 12; }
 .place-narrow     { --col: col-start 2  / span 8;  }

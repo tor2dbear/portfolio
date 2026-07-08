@@ -1,12 +1,24 @@
 /**
  * Reveal elements on scroll with a subtle fade + slide.
  * Opt-in via the `.reveal` class.
+ *
+ * Each element is revealed individually as it scrolls into view (one shared
+ * IntersectionObserver; revealed once, then unobserved). A subtle left→right
+ * stagger is derived from the element's horizontal position *at the moment it
+ * is revealed*, so elements entering together (a grid/column row) cascade
+ * left→right while rows cascade top-to-bottom with the scroll. Measuring live
+ * keeps it correct when the layout reflows (e.g. a grid going 2→3 columns) —
+ * unlike a DOM-order stagger, which mis-timed multi-column content. Elements
+ * with an explicit delay (reveal--delay / reveal--delay-2 / reveal--immediate
+ * / inline --reveal-delay) keep their authored timing.
  */
 (function () {
   "use strict";
 
   const REVEAL_SELECTOR = ".reveal";
   const REVEALED_CLASS = "is-revealed";
+  const LR_STAGGER_MAX = 160; // ms spread across the viewport width
+
   const scheduleReveal = (callback) => {
     if (window.requestAnimationFrame) {
       window.requestAnimationFrame(() => {
@@ -54,6 +66,49 @@
     }
   };
 
+  const hasCustomDelay = (element) =>
+    element.classList.contains("reveal--delay") ||
+    element.classList.contains("reveal--delay-2") ||
+    element.classList.contains("reveal--immediate") ||
+    element.style.getPropertyValue("--reveal-delay");
+
+  // Subtle left→right stagger from the element's horizontal position at the
+  // moment it is revealed. Full-width blocks sit near the left margin → ~0ms
+  // (a plain fade); grid/column rows spread left→right. Skipped when the
+  // element already carries an authored delay.
+  const applyLeftRightStagger = (element) => {
+    if (hasCustomDelay(element)) {
+      return;
+    }
+    const viewport =
+      window.innerWidth || document.documentElement.clientWidth || 0;
+    if (!viewport) {
+      return;
+    }
+    const left = element.getBoundingClientRect().left;
+    if (!Number.isFinite(left)) {
+      return;
+    }
+    const ratio = Math.min(Math.max(left / viewport, 0), 1);
+    element.style.setProperty(
+      "--reveal-delay",
+      `${Math.round(ratio * LR_STAGGER_MAX)}ms`
+    );
+  };
+
+  const triggerReveal = (element) => {
+    applyLeftRightStagger(element);
+    // Immediate / no-wait elements skip image waiting.
+    if (
+      element.classList.contains("reveal--immediate") ||
+      element.classList.contains("reveal--no-wait")
+    ) {
+      revealElement(element);
+    } else {
+      revealWhenReady(element);
+    }
+  };
+
   document.addEventListener("DOMContentLoaded", function () {
     const postContentChildren = document.querySelectorAll(".post-content > *");
     postContentChildren.forEach((child) => {
@@ -92,77 +147,18 @@
           if (!entry.isIntersecting) {
             return;
           }
-          // Immediate reveal elements skip image waiting for faster LCP
-          if (entry.target.classList.contains("reveal--immediate")) {
-            revealElement(entry.target);
-          } else if (entry.target.classList.contains("reveal--no-wait")) {
-            revealElement(entry.target);
-          } else {
-            revealWhenReady(entry.target);
-          }
+          triggerReveal(entry.target);
           obs.unobserve(entry.target);
         });
       },
-      {
-        root: null,
-        rootMargin: "0px 0px -10% 0px",
-        threshold: 0.15,
-      }
+      { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0 }
     );
 
-    const isInViewport = (element) => {
-      const rect = element.getBoundingClientRect();
-      return rect.top <= window.innerHeight && rect.bottom >= 0;
-    };
-
-    const isStaggerEligible = (element) => {
-      const rect = element.getBoundingClientRect();
-      return rect.height > 0;
-    };
-
-    const hasCustomDelay = (element) =>
-      element.classList.contains("reveal--delay") ||
-      element.classList.contains("reveal--delay-2") ||
-      element.classList.contains("reveal--immediate") ||
-      element.style.getPropertyValue("--reveal-delay");
-
-    const prefersNoStagger =
-      window.matchMedia &&
-      window.matchMedia("(max-width: 43.125em)").matches;
-    const inViewElements = elements.filter(isInViewport);
-    let staggerIndex = 0;
-    const postStaggerIndexByContainer = new WeakMap();
-
-    inViewElements.forEach((element) => {
-      if (!prefersNoStagger && !hasCustomDelay(element)) {
-        const postContainer = element.closest(".post-content");
-        if (postContainer) {
-          const currentPostIndex = postStaggerIndexByContainer.get(postContainer) || 0;
-          const postDelay = Math.min(currentPostIndex * 60, 320);
-          element.style.setProperty("--reveal-delay", `${postDelay}ms`);
-          if (isStaggerEligible(element)) {
-            postStaggerIndexByContainer.set(postContainer, currentPostIndex + 1);
-          }
-        } else {
-          const delay = Math.min(staggerIndex * 80, 320);
-          element.style.setProperty("--reveal-delay", `${delay}ms`);
-          if (isStaggerEligible(element)) {
-            staggerIndex += 1;
-          }
-        }
-      }
-      // Immediate reveal elements skip image waiting for faster LCP
+    elements.forEach((element) => {
+      // Fast-path immediate elements (e.g. the hero) so LCP isn't held for a
+      // frame waiting on the observer's first callback.
       if (element.classList.contains("reveal--immediate")) {
         revealElement(element);
-      } else if (element.classList.contains("reveal--no-wait")) {
-        revealElement(element);
-      } else {
-        revealWhenReady(element);
-      }
-    });
-
-    elements.forEach((element) => {
-      if (inViewElements.includes(element)) {
         return;
       }
       observer.observe(element);

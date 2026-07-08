@@ -8,9 +8,6 @@
   "use strict";
 
   // Theme dropdown selectors (will be initialized after DOM load)
-  let themeToggle;
-  let themePanel;
-  let themeOverlay;
   let themeIcon;
   let modeOptions;
   let paletteOptions;
@@ -25,6 +22,7 @@
   let cotyStopButtons;
   let cotyShuffleButtons;
   let typographyOptions;
+  let layoutOptions;
   let effectBlendButtons;
   let effectGrainButtons;
   let effectMotionButtons;
@@ -119,189 +117,6 @@
     return playerSpriteUrl;
   }
 
-  function isGridActive() {
-    const value = document.documentElement.getAttribute("data-grid-overlay");
-    return value !== null && value !== "closing";
-  }
-
-  function shouldUsePanelPortal(panel) {
-    if (!panel || panel.hasAttribute("hidden")) {
-      return false;
-    }
-    if (!window.matchMedia("(min-width: 30em)").matches) {
-      return false;
-    }
-    return isGridActive();
-  }
-
-  function ensurePanelPortalOrigin(panel) {
-    if (!panel || panel.__portalPlaceholder) {
-      return;
-    }
-    const placeholder = document.createComment("dropdown-portal-anchor");
-    panel.parentNode.insertBefore(placeholder, panel);
-    panel.__portalPlaceholder = placeholder;
-  }
-
-  function positionPanelAtToggle(panel, toggle) {
-    if (!panel || !toggle) {
-      return;
-    }
-
-    const toggleRect = toggle.getBoundingClientRect();
-    const panelRect = panel.getBoundingClientRect();
-    const panelWidth = panelRect.width;
-    const viewportWidth = window.innerWidth;
-    const gutter = 8;
-
-    let left = toggleRect.right - panelWidth;
-    if (left < gutter) {
-      left = gutter;
-    }
-    if (left + panelWidth > viewportWidth - gutter) {
-      left = viewportWidth - panelWidth - gutter;
-    }
-
-    panel.style.top = `${toggleRect.bottom + 8}px`;
-    panel.style.left = `${Math.max(left, gutter)}px`;
-    panel.style.width = `${panelWidth}px`;
-    panel.style.right = "auto";
-    panel.style.bottom = "auto";
-  }
-
-  function mountPanelPortal(panel, toggle) {
-    if (!panel) {
-      return;
-    }
-    ensurePanelPortalOrigin(panel);
-    if (panel.parentNode !== document.body) {
-      document.body.appendChild(panel);
-    }
-    panel.classList.add("dropdown-panel--portal");
-    panel.style.position = "fixed";
-    positionPanelAtToggle(panel, toggle);
-  }
-
-  function restorePanelPortal(panel) {
-    if (!panel || !panel.classList.contains("dropdown-panel--portal")) {
-      return;
-    }
-
-    const placeholder = panel.__portalPlaceholder;
-    if (placeholder && placeholder.parentNode) {
-      placeholder.parentNode.insertBefore(panel, placeholder);
-      placeholder.remove();
-    }
-
-    panel.__portalPlaceholder = null;
-    panel.classList.remove("dropdown-panel--portal");
-    panel.style.position = "";
-    panel.style.top = "";
-    panel.style.left = "";
-    panel.style.width = "";
-    panel.style.right = "";
-    panel.style.bottom = "";
-  }
-
-  function syncThemePanelPortal() {
-    if (!themePanel) {
-      return;
-    }
-    if (shouldUsePanelPortal(themePanel)) {
-      mountPanelPortal(themePanel, themeToggle);
-      return;
-    }
-    if (document.documentElement.hasAttribute("data-grid-overlay")) {
-      return;
-    }
-    restorePanelPortal(themePanel);
-  }
-
-  function setThemePanelOpenState(isOpen) {
-    if (isOpen) {
-      document.documentElement.setAttribute("data-theme-panel-open", "true");
-      return;
-    }
-    document.documentElement.removeAttribute("data-theme-panel-open");
-    window.dispatchEvent(new window.CustomEvent("theme:sheet-closed"));
-  }
-
-  function restoreExternalPanelPortal(panel) {
-    if (!panel) {
-      return;
-    }
-    if (!panel.classList.contains("dropdown-panel--portal")) {
-      return;
-    }
-
-    const placeholder = panel.__portalPlaceholder;
-    if (placeholder && placeholder.parentNode) {
-      placeholder.parentNode.insertBefore(panel, placeholder);
-      placeholder.remove();
-    }
-
-    panel.__portalPlaceholder = null;
-    panel.classList.remove("dropdown-panel--portal");
-    panel.style.position = "";
-    panel.style.top = "";
-    panel.style.left = "";
-    panel.style.width = "";
-    panel.style.right = "";
-    panel.style.bottom = "";
-  }
-
-  // ==========================================================================
-  // DROPDOWN TOGGLE
-  // ==========================================================================
-
-  function togglePanel(e) {
-    if (e) {
-      e.stopPropagation();
-    }
-    const isHidden = themePanel.hasAttribute("hidden");
-
-    if (isHidden) {
-      closeLanguagePanel();
-      themePanel.removeAttribute("hidden");
-      if (themeOverlay) {
-        themeOverlay.removeAttribute("hidden");
-      }
-      themeToggle.setAttribute("aria-expanded", "true");
-      setThemePanelOpenState(true);
-      syncThemePanelPortal();
-    } else {
-      closePanel();
-    }
-  }
-
-  function closePanel() {
-    if (themePanel && !themePanel.hasAttribute("hidden")) {
-      themePanel.setAttribute("hidden", "");
-      if (themeOverlay) {
-        themeOverlay.setAttribute("hidden", "");
-      }
-      themeToggle.setAttribute("aria-expanded", "false");
-      setThemePanelOpenState(false);
-      syncThemePanelPortal();
-    }
-  }
-
-  function closeLanguagePanel() {
-    const languagePanel = document.querySelector(".language-panel");
-    const languageToggle = document.querySelector(".language-toggle");
-    const languageOverlay = document.querySelector(".language-overlay");
-
-    if (languagePanel && !languagePanel.hasAttribute("hidden")) {
-      languagePanel.setAttribute("hidden", "");
-      if (languageOverlay) {
-        languageOverlay.setAttribute("hidden", "");
-      }
-      if (languageToggle) {
-        languageToggle.setAttribute("aria-expanded", "false");
-      }
-      restoreExternalPanelPortal(languagePanel);
-    }
-  }
 
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
@@ -882,6 +697,54 @@
     typographyOptions.forEach((option) => {
       const typography = option.getAttribute("data-typography");
       if (typography === currentTypography) {
+        option.classList.add("active");
+        option.setAttribute("aria-current", "true");
+      } else {
+        option.classList.remove("active");
+        option.removeAttribute("aria-current");
+      }
+    });
+  }
+
+  // Layout dimension (column/editorial/index). Simpler than typography — it
+  // only sets a data attribute, with no web fonts to preload.
+  function setLayout(layout) {
+    localStorage.setItem("theme-layout", layout);
+    updateLayoutUI(layout);
+    applyLayout(layout);
+
+    var clickedOpt = document.querySelector(
+      '[data-js="layout-option"][data-layout="' + layout + '"]'
+    );
+    var layoutLabel = clickedOpt
+      ? clickedOpt.getAttribute("aria-label")
+      : layout;
+    var layoutCategory = document.querySelector(
+      '[data-toast-category="layout"]'
+    );
+    var layoutCategoryLabel = layoutCategory
+      ? layoutCategory.getAttribute("data-toast-label")
+      : "";
+
+    if (window.Toast) {
+      window.Toast.show(layoutCategoryLabel, layoutLabel);
+    }
+  }
+
+  function applyLayout(layout) {
+    var root = document.documentElement;
+    root.setAttribute("data-layout", layout);
+    // The measure (max-width, a direct var()) repaints immediately, but some
+    // engines defer recomputing calc(var()) on the inherited font-size until a
+    // reflow is forced — so the type size would otherwise only update on the
+    // next scroll. Reading a layout property flushes that synchronously.
+    void root.offsetWidth;
+  }
+
+  function updateLayoutUI(currentLayout) {
+    layoutOptions.forEach((option) => {
+      const layout = option.getAttribute("data-layout");
+      if (layout === currentLayout) {
         option.classList.add("active");
         option.setAttribute("aria-current", "true");
       } else {
@@ -1800,9 +1663,6 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     // Initialize selectors
-    themeToggle = document.querySelector('[data-js="theme-toggle"]');
-    themePanel = document.querySelector('[data-js="theme-panel"]');
-    themeOverlay = document.querySelector('[data-js="theme-overlay"]');
     themeIcon = document.querySelector('[data-js="theme-icon"]');
     modeOptions = document.querySelectorAll('[data-js="mode-option"]');
     paletteOptions = document.querySelectorAll('[data-js="palette-option"]');
@@ -1825,6 +1685,7 @@
     typographyOptions = document.querySelectorAll(
       '[data-js="typography-option"]'
     );
+    layoutOptions = document.querySelectorAll('[data-js="layout-option"]');
     effectBlendButtons = document.querySelectorAll(
       '[data-js="effect-blend-toggle"]'
     );
@@ -1840,6 +1701,7 @@
     const storedPalette = localStorage.getItem("theme-palette") || "standard";
     const storedTypography =
       localStorage.getItem("theme-typography") || "editorial";
+    const storedLayout = localStorage.getItem("theme-layout") || "column";
     const normalizedStoredPalette =
       storedPalette === "coty" ? "pantone" : storedPalette;
     const storedCotyTransportUiState =
@@ -1882,6 +1744,7 @@
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
+    applyLayout(storedLayout);
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
     });
@@ -1896,6 +1759,7 @@
     updateModeUI(storedMode);
     updatePaletteUI(initialPalette);
     updateTypographyUI(storedTypography);
+    updateLayoutUI(storedLayout);
     syncCotyPlaybackTimer();
     setCotyTransportUiState(
       initialPantoneState !== "inactive"
@@ -1915,6 +1779,7 @@
       setMode: setMode,
       setPalette: setPalette,
       setTypography: setTypography,
+      setLayout: setLayout,
       togglePantone: togglePantoneMode,
       toggleBlend: function () {
         setBlendEnabled(
@@ -1979,93 +1844,6 @@
     );
 
     // Setup event listeners
-    if (themeToggle && themePanel) {
-      themeToggle.addEventListener("click", togglePanel);
-      syncThemePanelPortal();
-
-      // Close on overlay click
-      if (themeOverlay) {
-        themeOverlay.addEventListener("click", closePanel);
-      }
-
-      // Close on click outside
-      document.addEventListener("click", function (e) {
-        if (!themeToggle.contains(e.target) && !themePanel.contains(e.target)) {
-          closePanel();
-        }
-      });
-
-      const syncOnViewportChange = function () {
-        if (!themePanel.hasAttribute("hidden")) {
-          syncThemePanelPortal();
-        }
-      };
-      window.addEventListener("resize", syncOnViewportChange);
-      window.addEventListener("scroll", syncOnViewportChange, {
-        passive: true,
-      });
-
-      const gridObserver = new MutationObserver(function () {
-        syncOnViewportChange();
-      });
-      gridObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ["data-grid-overlay"],
-      });
-
-      // Close on Escape key
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          closePanel();
-        }
-      });
-
-      // Touch support for swipe-to-close on mobile bottom sheet
-      let touchStartY = 0;
-      let touchCurrentY = 0;
-
-      themePanel.addEventListener("touchstart", function (e) {
-        touchStartY = e.changedTouches[0].screenY;
-        themePanel.style.transition = "none";
-        themeOverlay.style.transition = "none";
-      });
-
-      themePanel.addEventListener("touchmove", function (e) {
-        touchCurrentY = e.changedTouches[0].screenY;
-        const deltaY = touchCurrentY - touchStartY;
-
-        // Only allow dragging downwards
-        if (deltaY > 0) {
-          e.preventDefault();
-          themePanel.style.transform = `translateY(${deltaY}px)`;
-
-          // Update overlay opacity based on drag distance
-          const panelHeight = themePanel.getBoundingClientRect().height;
-          const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
-          const opacity = 1 - deltaY / maxDeltaY;
-          themeOverlay.style.opacity = Math.max(opacity, 0);
-        }
-      });
-
-      themePanel.addEventListener("touchend", function () {
-        const deltaY = touchCurrentY - touchStartY;
-
-        themePanel.style.transition = "transform 0.3s ease-in-out";
-        themeOverlay.style.transition = "opacity 0.3s ease-in-out";
-
-        // Close if dragged down more than 50px
-        if (deltaY > 50) {
-          closePanel();
-        } else {
-          // Return to original position
-          themePanel.style.transform = "translateY(0)";
-          themeOverlay.style.opacity = "1";
-        }
-
-        touchStartY = 0;
-        touchCurrentY = 0;
-      });
-    }
 
     // Mode option listeners
     modeOptions.forEach((option) => {
@@ -2088,6 +1866,14 @@
       option.addEventListener("click", function () {
         const typography = this.getAttribute("data-typography");
         setTypography(typography);
+      });
+    });
+
+    // Layout option listeners
+    layoutOptions.forEach((option) => {
+      option.addEventListener("click", function () {
+        const layout = this.getAttribute("data-layout");
+        setLayout(layout);
       });
     });
 
