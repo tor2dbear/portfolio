@@ -1,9 +1,9 @@
 <header id="topmenu" class="top-menu" data-js="top-menu">
   <div class="grain-overlay grain-overlay--nav" aria-hidden="true"></div>
-  {{/* Terminal layout: boot banner. Only the ascii curl is framed (rune-counted padding so the box always closes) — the box width is fixed at ~26ch so it fits any phone. The host title and boot line print as wrapping rows below the frame; framing them would size the box to the longest line and blow it past a narrow viewport. Hidden in every other layout. */}}
+  {{/* Terminal layout: boot banner — a framed ascii lockup (the curl mark + the tor · björn wordmark on a baseline). Rune-counted padding closes the box; the art uses only monospace-safe glyphs (ö, ·) — never the IPA of the real wordmark, which isn't fixed-width. Kept to ~30ch so the frame fits a phone. The host title and boot line print as wrapping rows below the frame; framing them would size the box to the longest line and blow it past a narrow viewport. Hidden in every other layout. */}}
   {{- $bootHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
   {{- $bootTitle := printf "%s — terminal" $bootHost -}}
-  {{- $bootLines := slice "        ___" "       /   \\" "       \\   /" "  ______/ \\______________" -}}
+  {{- $bootLines := slice "     ___" "    /   \\   t o r · b j ö r n" "  _/ \\___/___________________" -}}
   {{- $bootInner := 0 -}}
   {{- range $bootLines -}}
     {{- $w := strings.RuneCount . -}}
