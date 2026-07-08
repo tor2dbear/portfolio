@@ -88,8 +88,8 @@
 :root[data-layout="index"] article:has(> .summary-card) {
   /* --place-card-thumb (thumbnail column width) is defined on the index layout
      in dimensions/layout/index.css and inherited here. */
-  /* Zero the global `article { margin-bottom: 3rem }` (which gives column/
-     editorial their inter-card rhythm) — index rows are a flush divided list. */
+  /* Zero the global `article` inter-card rhythm (--layout-card-gap, which gives
+     column/editorial their card spacing) — index rows are a flush divided list. */
   margin: 0;
   position: relative;
   display: grid;

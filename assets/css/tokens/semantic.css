@@ -248,6 +248,9 @@
   --layout-block-gap: calc(var(--spacing-32) * var(--layout-prose-rhythm));
   --layout-title-gap: calc(var(--spacing-24) * var(--layout-prose-rhythm));
   --layout-label-gap: calc(var(--spacing-16) * var(--layout-prose-rhythm));
+  /* Inter-card rhythm (the global `article` bottom margin). index + terminal
+     override to a flush list/row, so this feeds column + editorial. */
+  --layout-card-gap: calc(var(--spacing-48) * var(--layout-prose-rhythm));
 }
 
 :root[data-state-intensity="soft"] {

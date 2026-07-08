@@ -26,6 +26,7 @@ Definieras i `:root` (defaults) i `tokens/semantic.css`, åsidosätts per `:root
 | `--layout-block-gap`        | `calc(var(--spacing-32) * prose-rhythm)`      | mellan/inuti kompositionsblock (titlar, sektioner, kort) |
 | `--layout-title-gap`        | `calc(var(--spacing-24) * prose-rhythm)`      | under masthead-/hero-titel                               |
 | `--layout-label-gap`        | `calc(var(--spacing-16) * prose-rhythm)`      | under liten etikett/underrubrik                          |
+| `--layout-card-gap`         | `calc(var(--spacing-48) * prose-rhythm)`      | `article` inter-kort-marginal (index/terminal nollar)    |
 | `--layout-content-top`      | `var(--spacing-80)`                           | `.content` padding-top (innersidor)                      |
 | `--layout-hero-heading-top` | `var(--spacing-80)`                           | `.startpage-heading` padding-top (hem-hero)              |
 | `--layout-about-cv-gap`     | `var(--spacing-64)`                           | `.about-cv` margin-top                                   |
