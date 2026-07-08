@@ -225,6 +225,15 @@ describe("terminal command line", () => {
     );
   });
 
+  test("exit wipes the command scrollback (no leak into other layouts)", () => {
+    localStorage.setItem("theme-layout-previous", "column");
+    loadModule();
+    typeCommand("whoami");
+    expect(sessionText().length).toBeGreaterThan(0);
+    typeCommand("exit");
+    expect(sessionText()).toBe("");
+  });
+
   // ---- Interactive flows (contact / subscribe) --------------------------
 
   const flush = async () => {

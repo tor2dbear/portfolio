@@ -754,6 +754,12 @@
     if (document.documentElement.getAttribute("data-layout") !== "terminal") {
       return;
     }
+    // Wipe the command scrollback so it neither lingers on the way out nor
+    // greets the next terminal session (it is hidden in other layouts anyway).
+    var sessionLog = document.querySelector('[data-js="terminal-session"]');
+    if (sessionLog) {
+      sessionLog.textContent = "";
+    }
     var previousLayout =
       localStorage.getItem("theme-layout-previous") || "column";
     if (previousLayout === "terminal") {

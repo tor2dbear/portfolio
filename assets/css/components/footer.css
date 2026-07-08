@@ -7,9 +7,11 @@
   margin-top: calc(var(--spacing-64) * var(--layout-prose-rhythm));
 }
 
-/* Terminal-layout tail prompt: rendered only when data-layout="terminal"
-   (see dimensions/layout/terminal.css). */
-.terminal-tail {
+/* Terminal-layout prompt + command-output log: rendered only when
+   data-layout="terminal" (see dimensions/layout/terminal.css). Hidden
+   everywhere else so a session's scrollback never leaks into other layouts. */
+.terminal-tail,
+.terminal-session {
   display: none;
 }
 
