@@ -71,7 +71,12 @@
 
     // Only the mobile bottom sheet portals to <body>. At >= 30em the panel is
     // an anchored dropdown popover and must stay inside its relative container.
+    // The terminal layout prints the panel inline into the buffer at EVERY
+    // width (like desktop) — never the bottom sheet — so it opts out entirely.
     function isMobileSheet() {
+      if (document.documentElement.getAttribute("data-layout") === "terminal") {
+        return false;
+      }
       return !window.matchMedia("(min-width: 30em)").matches;
     }
 

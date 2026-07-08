@@ -1274,30 +1274,35 @@
 
 /* ============================================================================
    Settings panel → expanded command output
-   At >= 30em the panel is a normal in-flow block inside the header's flex
-   container (the li and wrapper are display:contents), so expanding really
-   pushes the page down — output printing into the buffer. Below 30em the
-   bottom sheet remains (portaled, working) with the same text-only content.
+   The panel is a normal in-flow block inside the header's flex container (the
+   li and wrapper are display:contents), so expanding really pushes the page
+   down — output printing into the buffer. This holds at EVERY width: the
+   terminal never uses the mobile bottom sheet (settings-dropdown.js opts out
+   of the portal in this layout), so the panel prints inline on phones too.
    ============================================================================ */
 
-@media (min-width: 30em) {
-  :root[data-layout="terminal"] .settings-panel {
-    order: 22;
-    flex: 1 0 100%;
-    position: static;
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-    max-height: none;
-    overflow: visible;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    padding: var(--spacing-8) 0 0;
-    transform: none;
-    transition: none;
-  }
+:root[data-layout="terminal"] .settings-panel {
+  order: 22;
+  flex: 1 0 100%;
+  position: static;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: var(--spacing-8) 0 0;
+  transform: none;
+  transition: none;
+}
+
+/* No dimming backdrop — inline output has nothing to sit over. (Below 30em
+   the component CSS makes this a full-screen fixed overlay.) */
+:root[data-layout="terminal"] .settings-overlay {
+  display: none;
 }
 
 /* --- Text-only panel content (all widths) --- */
