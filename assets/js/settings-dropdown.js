@@ -15,6 +15,23 @@
       return;
     }
 
+    // Keep the terminal collapsed marker ("… +N lines (click to expand)") honest:
+    // N is the number of settings the panel lists (mode, typography, layout,
+    // effects, share, language). Recomputed from the DOM so it can't drift when a
+    // section is added or removed. No-op off the terminal layout (the attribute is
+    // only rendered as text there); works for every locale by rewriting the digits.
+    (function syncTerminalExpandCount() {
+      const expandLabel = toggle.getAttribute("data-terminal-expand");
+      if (!expandLabel) {
+        return;
+      }
+      const count = panel.querySelectorAll(".theme-section").length;
+      toggle.setAttribute(
+        "data-terminal-expand",
+        expandLabel.replace(/\+\s*\d+/, "+" + count)
+      );
+    })();
+
     function setSettingsPanelOpenState(isOpen) {
       if (isOpen) {
         document.documentElement.setAttribute(

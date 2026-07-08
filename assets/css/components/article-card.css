@@ -8,7 +8,9 @@
    ========================================================================== */
 
 article {
-  margin-bottom: 3rem;
+  /* Inter-card rhythm, scaled to the layout (column ×1 = 3rem as before,
+     editorial airier). index + terminal zero this for their flush list/rows. */
+  margin-bottom: var(--layout-card-gap);
 }
 
 /* ==========================================================================
@@ -230,8 +232,7 @@ article {
 /* >= 48em: single-line row — thumb | title | date | tags. */
 @media (min-width: 48em) {
   :root[data-layout="index"] .related-items__item {
-    grid-template-columns:
-      var(--place-card-thumb) minmax(0, 1fr) auto auto;
+    grid-template-columns: var(--place-card-thumb) minmax(0, 1fr) auto auto;
     align-items: center;
     column-gap: var(--layout-col-gap);
     row-gap: 0;

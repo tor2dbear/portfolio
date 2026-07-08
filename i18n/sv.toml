@@ -370,6 +370,18 @@ other = "På"
 [toast_grid_off]
 other = "Av"
 
+[share_theme]
+other = "Dela den här looken"
+
+[toast_share_title]
+other = "Dela"
+
+[toast_share_copied]
+other = "Länk kopierad"
+
+[toast_share_failed]
+other = "Kopiering misslyckades"
+
 [no_posts_yet]
 other = "Inga inlägg ännu. Kom tillbaka snart!"
 

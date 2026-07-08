@@ -195,18 +195,18 @@ body.darkmodeTransition
 }
 
 .content {
-  padding-top: var(--spacing-80);
+  padding-top: var(--layout-content-top);
   grid-column: content-start / content-end;
   grid-auto-rows: -webkit-max-content;
   grid-auto-rows: max-content;
 }
 
 .startpage-heading {
-  padding-top: var(--spacing-80);
+  padding-top: var(--layout-hero-heading-top);
 }
 
 .startpage-heading h1 {
-  margin-bottom: var(--spacing-24);
+  margin-bottom: var(--layout-title-gap);
 }
 
 .content.thankyou h3,
@@ -298,7 +298,9 @@ footer > * {
     .place-prose
   ):not(.place-article):not(.place-narrow):not(.place-aside):not(
     .place-aside-left
-  ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
+  ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(
+    .project-info
+  ):not(.place-wide-center) {
   --col: col-start 1 / span 10;
   grid-column: var(--col);
   grid-row: var(--row, auto);
@@ -311,7 +313,9 @@ footer > * {
       .place-prose
     ):not(.place-article):not(.place-narrow):not(.place-aside):not(
       .place-aside-left
-    ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
+    ):not(.place-bleed):not(.related-items__title):not(
+      .related-items__item
+    ):not(.project-info):not(.place-wide-center) {
     --col: col-start 1 / span 12;
   }
 }
@@ -323,7 +327,9 @@ footer > * {
       .place-prose
     ):not(.place-article):not(.place-narrow):not(.place-aside):not(
       .place-aside-left
-    ):not(.place-bleed):not(.related-items__title):not(.related-items__item):not(.project-info):not(.place-wide-center) {
+    ):not(.place-bleed):not(.related-items__title):not(
+      .related-items__item
+    ):not(.project-info):not(.place-wide-center) {
     --col: col-start 1 / span 4;
   }
 }
@@ -791,15 +797,15 @@ p:empty {
 .content.post > .project-info {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  padding: 2rem 2rem;
-  margin-bottom: var(--spacing-32);
+  padding: var(--spacing-32);
+  margin-bottom: var(--layout-block-gap);
   background-color: var(--surface-default);
   /* Self-contained responsive placement (previously inherited from the
      .content.post AD-mapping fallback below): span 10 desktop, 12 tablet, 4
      mobile. Kept identical so column stays a no-op; layout overrides win above. */
   --col: col-start 1 / span 10;
   grid-column: var(--col);
-  grid-column-gap: 3rem;
+  grid-column-gap: var(--spacing-48);
   transition: background-color
       var(--theme-transition-duration, var(--motion-duration-xslow))
       var(--motion-ease-theme),
@@ -906,7 +912,7 @@ p:empty {
 @media (max-width: 63.9375em) {
   .content.post > .project-info {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-column-gap: 2rem;
+    grid-column-gap: var(--spacing-32);
   }
 
   .content.post > .project-info.project-info--cols-1 {
@@ -918,7 +924,7 @@ p:empty {
 @media (max-width: 47.9375em) {
   .content.post > .project-info {
     grid-template-columns: minmax(0, 1fr);
-    grid-column-gap: 1.5rem;
+    grid-column-gap: var(--spacing-24);
   }
 }
 
@@ -970,7 +976,7 @@ p:empty {
 /* || ========== About page ------------------------------------- */
 .about-cv {
   grid-column: content-start / content-end;
-  margin-top: var(--spacing-64);
+  margin-top: var(--layout-about-cv-gap);
 }
 
 .about-cv__icon,
@@ -989,11 +995,11 @@ p:empty {
 }
 
 .about-cv__title {
-  margin-bottom: var(--spacing-32);
+  margin-bottom: var(--layout-block-gap);
 }
 
 .about-main__headline {
-  margin-bottom: var(--spacing-32);
+  margin-bottom: var(--layout-block-gap);
 }
 
 .about-cv__section {
@@ -1002,7 +1008,7 @@ p:empty {
      which staggered the column tops. A block-level BFC keeps each section
      intact (break-inside: avoid) while the columns start flush at the top. */
   display: flow-root;
-  margin-bottom: var(--spacing-32);
+  margin-bottom: var(--layout-block-gap);
   /* The fade itself (opacity/transform/transition + reduced-motion) comes from
      the shared .reveal rules — each section carries .reveal and is revealed
      individually on scroll (reveal-on-scroll.js), with a left→right stagger. */
@@ -1017,11 +1023,11 @@ p:empty {
 }
 
 .about-cv__heading {
-  margin-bottom: var(--spacing-16);
+  margin-bottom: var(--layout-label-gap);
 }
 
 .about-cv__text {
-  margin-bottom: var(--spacing-32);
+  margin-bottom: var(--layout-block-gap);
 }
 
 /* md: <= 63.9375em */
@@ -1063,7 +1069,7 @@ p:empty {
 }
 
 .contact-info {
-  margin-bottom: var(--spacing-64);
+  margin-bottom: var(--layout-contact-info-gap);
 }
 
 /* || ========== Client page ------------------------------------- */

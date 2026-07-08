@@ -828,3 +828,62 @@
     z-index: 1000;
   }
 }
+
+/* ============================================================================
+   Share-this-look button (settings panel)
+
+   A full-width labelled action that copies a URL encoding the current layout /
+   typography / mode / palette / Pantone year / blend / grain, so a specific
+   composition can be shared by link. Styled to sit with the effect controls.
+   ============================================================================ */
+.settings-share {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--spacing-8) var(--spacing-12);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-4);
+  background: transparent;
+  color: var(--text-default);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--sans-weight-medium);
+  line-height: var(--line-height-normal);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--motion-duration-base) var(--motion-ease-standard),
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    color var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.settings-share__icon {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  transition: color var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.settings-share:hover {
+  background-image: linear-gradient(
+    var(--state-surface-hover),
+    var(--state-surface-hover)
+  );
+  border-color: var(--border-default);
+}
+
+.settings-share:hover .settings-share__icon {
+  color: var(--text-default);
+}
+
+.settings-share:active {
+  background-image: linear-gradient(
+    var(--state-surface-active),
+    var(--state-surface-active)
+  );
+}
+
+.settings-share:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-focus);
+}

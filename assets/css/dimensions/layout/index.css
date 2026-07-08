@@ -7,13 +7,34 @@
    ============================================================================ */
 
 :root[data-layout="index"] {
-  --layout-section-rhythm: var(--spacing-40);
-  --layout-hero-rhythm: var(--spacing-64);
+  --layout-section-rhythm: clamp(
+    var(--spacing-24),
+    calc(
+      var(--spacing-24) + 16 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-40)
+  ); /* 24 → 40 */
+  --layout-hero-rhythm: clamp(
+    var(--spacing-40),
+    calc(
+      var(--spacing-40) + 24 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-64)
+  ); /* 40 → 64 */
   --layout-heading-gap: var(--spacing-16);
   --layout-col-gap: var(--spacing-16);
   --layout-row-gap: var(--spacing-16);
   --layout-scale-ratio: 0.9;
   --layout-prose-rhythm: 0.8;
+
+  /* Dense: pull the page in tight. The hero heading's own top pad is nearly
+     removed (the hero section already supplies --layout-hero-rhythm), so the
+     lead sits close to the top instead of floating mid-screen; inner-page and
+     about/contact gaps tighten to match the packed rhythm. */
+  --layout-hero-heading-top: var(--spacing-8);
+  --layout-content-top: var(--spacing-40);
+  --layout-about-cv-gap: var(--spacing-40);
+  --layout-contact-info-gap: var(--spacing-40);
 
   /* Placement API: works/related card thumbnail column width. Defined once here
      so every consumer (summary rows + related rows) inherits it; overridable per

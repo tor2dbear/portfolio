@@ -17,39 +17,107 @@ Palett och typografi ligger kvar exakt som idag. Layout äger **spatial struktur
 Definieras i `:root` (defaults) i `tokens/semantic.css`, åsidosätts per `:root[data-layout="…"]`.
 
 ### A. Sektionsrytm (vertikal)
-| Token | Default (idag) | Konsument |
-|---|---|---|
-| `--layout-section-rhythm` | `var(--spacing-64)` | `.home-section` padding |
-| `--layout-hero-rhythm` | `var(--spacing-96)` | hero padding |
-| `--layout-heading-gap` | `var(--spacing-32)` | `.section-heading` margin-bottom |
-| `--layout-block-gap` | `var(--spacing-32)` | vertikalt mellanrum mellan content-block / row-gap |
+
+| Token                       | Default (kolumn)                        | Konsument                                                |
+| --------------------------- | --------------------------------------- | -------------------------------------------------------- |
+| `--layout-section-rhythm`   | fluid `clamp` 32→64 (se mönster nedan)  | `.home-section` padding                                  |
+| `--layout-hero-rhythm`      | fluid `clamp` 64→96                     | hero padding                                             |
+| `--layout-heading-gap`      | `var(--spacing-32)`                     | `.section-heading` margin-bottom                         |
+| `--layout-block-gap`        | `calc(var(--spacing-32) * block-scale)` | mellan/inuti kompositionsblock (titlar, sektioner, kort) |
+| `--layout-title-gap`        | `calc(var(--spacing-24) * block-scale)` | under masthead-/hero-titel                               |
+| `--layout-label-gap`        | `calc(var(--spacing-16) * block-scale)` | under liten etikett/underrubrik                          |
+| `--layout-card-gap`         | `calc(var(--spacing-48) * block-scale)` | `article` inter-kort-marginal (index/terminal nollar)    |
+| `--layout-content-top`      | `var(--spacing-80)`                     | `.content` padding-top (innersidor)                      |
+| `--layout-hero-heading-top` | `var(--spacing-80)`                     | `.startpage-heading` padding-top (hem-hero)              |
+| `--layout-about-cv-gap`     | `var(--spacing-64)`                     | `.about-cv` margin-top                                   |
+| `--layout-contact-info-gap` | `var(--spacing-64)`                     | `.contact-info` margin-bottom                            |
+
+> **Fluid rytm:** `section-rhythm` och `hero-rhythm` är `clamp()` — tokenen skalar
+> själv med viewporten (min på telefon → max på desktop), så små skärmar komprimeras
+> automatiskt utan egenskaps-overrides i media-queries. Varje layout re-klampar till
+> sina egna min/max; `.home-section` / `.hero-section` (och kritisk CSS i `head.html`)
+> läser bara tokenen. Detta ersatte de gamla `.home-section`/`.hero-section`
+> padding-överskrivningarna som ignorerade layoutens rytm på små skärmar.
+>
+> **Clamp-mönstret** (så ingen räknar lutning för hand): ändpunkterna är `--spacing-*`
+> och interpolationen härleds ur en delad range som definieras **en gång**:
+>
+> ```css
+> --fluid-floor: 360px; /* under detta: MIN */
+> --fluid-span: 664; /* 1024 − 360, unitless (px) — divisorn */
+> --layout-section-rhythm: clamp(
+>   var(--spacing-32),
+>   calc(
+>     var(--spacing-32) + 32 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+>   ),
+>   var(--spacing-64)
+> ); /* 32 → 64 */
+> ```
+>
+> `Δpx` (här 32) = `max − min` i px (`--spacing-N` = N px). Vid 360px = MIN, vid 1024px = MAX.
+
+> **Två täthetsspakar (medvetet separata):**
+>
+> - `--layout-prose-rhythm` skalar **prosarytm** (stycke-/rubrikavstånd i brödtext).
+> - `--layout-block-scale` skalar **kompositions-block/kort** (`block-gap`-familjen).
+>   Default `var(--layout-prose-rhythm)` → no-op idag, men en layout kan sätta den
+>   ensam (t.ex. tät text men luftiga kort). `block-gap` / `title-gap` / `label-gap`
+>   / `card-gap` läser `--layout-block-scale`; prosareglerna i `typography.css` läser
+>   `--layout-prose-rhythm`.
+
+> **Layout-knutet vs konstant** — principen för när en spacing ska skala med layouten:
+>
+> - **Layout-knutet** (skalar med täthet): kompositionsrytm — section, hero, block,
+>   kort, prosans stycke-/rubrikrytm. Läs en `--layout-*`-token.
+> - **Konstant** (typografisk närhet/läsbarhet, samma i alla layouter): mikro-avstånd
+>   som "rubrik hugger sin text" (`.content :is(h…)` 8px), etikett-/ikon-gap (4–12px),
+>   specialsidor, `type-display` 160. Lämnas på rå `--spacing-*` **med en kommentar**
+>   som säger att det är avsiktligt.
+>
+> Känd kvarleva att besluta: `.content.post .prose p` (rå 16px) skriver över den
+> layout-knutna `.prose p`-rytmen — se kommentar i `typography.css`.
+
+> **Blockrytm:** `block-gap` / `title-gap` / `label-gap` / `card-gap` skalas av
+> `--layout-block-scale` (kolumn ×1 = no-op; editorial 1.25 = luftigare; index 0.8
+> och terminal 0.9 = tätare). Kompositions-marginaler (about/works/contact-titlar,
+> kort, project-info) läser dessa i stället för rå `--spacing`, vilket knyter
+> blockrytmen till layouten.
+
+> **Hem-hero (index):** hero-sektionen bär redan `--layout-hero-rhythm`, så
+> `--layout-hero-heading-top` staplade dubbelt utrymme ovanför leden. Index drar ned den till
+> `var(--spacing-8)` (och editorial till `var(--spacing-24)`) så leden sitter nära toppen i stället
+> för att flyta mitt på skärmen.
 
 ### B. Grid (horisontell)
-| Token | Default (idag) | Konsument |
-|---|---|---|
-| `--layout-col-gap` | `var(--spacing-24)` | `.page-grid` / `.use-subgrid` / `.grid-cols-2` column-gap |
-| `--layout-row-gap` | `var(--spacing-32)` | `.page-grid` row-gap |
-| `--layout-default-place` | `8` (≈ `.place-prose`) | default kolumnspann för brödtext-block |
 
-> Kolumn­_antalet_ (12) lämnas oförändrat — variera **placering** via `.place-*` / `--col`,
+| Token                    | Default (idag)         | Konsument                                                 |
+| ------------------------ | ---------------------- | --------------------------------------------------------- |
+| `--layout-col-gap`       | `var(--spacing-24)`    | `.page-grid` / `.use-subgrid` / `.grid-cols-2` column-gap |
+| `--layout-row-gap`       | `var(--spacing-32)`    | `.page-grid` row-gap                                      |
+| `--layout-default-place` | `8` (≈ `.place-prose`) | default kolumnspann för brödtext-block                    |
+
+> Kolumn­*antalet* (12) lämnas oförändrat — variera **placering** via `.place-*` / `--col`,
 > inte rasterupplösningen. Att byta 12→ annat är invasivt och onödigt.
 
 ### C. Satsbredd (measure)
-| Token | Default (idag) | Konsument |
-|---|---|---|
+
+| Token              | Default (idag)                | Konsument                          |
+| ------------------ | ----------------------------- | ---------------------------------- |
 | `--layout-measure` | `var(--measure-prose)` (70ch) | `typography.css` prose `max-width` |
 
 ### D. Typskala
-| Token | Default (idag) | Konsument |
-|---|---|---|
-| `--layout-scale-ratio` | `1` | multiplikator på display/heading clamp (redan finns som `--type-scale-display` i `home.css:82`) |
+
+| Token                  | Default (idag) | Konsument                                                                                       |
+| ---------------------- | -------------- | ----------------------------------------------------------------------------------------------- |
+| `--layout-scale-ratio` | `1`            | multiplikator på display/heading clamp (redan finns som `--type-scale-display` i `home.css:82`) |
 
 ### E. Strukturella toggles (0/1, läses i selektorer)
-| Token | Default | Effekt |
-|---|---|---|
-| `--layout-pullquotes` | `0` | aktiverar pull-quote-utbrytning |
-| `--layout-dropcap` | `0` | anfang på första stycket |
-| `--layout-rule-style` | `none` | linjal/divider-behandling mellan block |
+
+| Token                 | Default | Effekt                                 |
+| --------------------- | ------- | -------------------------------------- |
+| `--layout-pullquotes` | `0`     | aktiverar pull-quote-utbrytning        |
+| `--layout-dropcap`    | `0`     | anfang på första stycket               |
+| `--layout-rule-style` | `none`  | linjal/divider-behandling mellan block |
 
 ---
 
@@ -57,22 +125,52 @@ Definieras i `:root` (defaults) i `tokens/semantic.css`, åsidosätts per `:root
 
 Varje rad: byt direkt primitiv-referens → `--layout-*`. Inga utseende­ändringar (defaults = dagens).
 
-| Fil:rad | Idag | Byt till |
-|---|---|---|
-| `assets/css/pages/home.css:11` | `padding: var(--spacing-64) 0;` | `padding: var(--layout-section-rhythm) 0;` |
-| `assets/css/pages/home.css:74` | hero `padding: var(--spacing-96) 0;` | `var(--layout-hero-rhythm) 0;` |
-| `assets/css/pages/home.css:61` | `.section-heading … margin-bottom: var(--spacing-32);` | `var(--layout-heading-gap);` |
-| `assets/css/pages/home.css:26,31` | `column-gap: var(--spacing-24);` | `var(--layout-col-gap);` |
-| `assets/css/pages/home.css:79` | `max-width: var(--content-max-width-narrow);` | (lämna — hero-specifik) |
-| `assets/css/pages/home.css:82` | `* var(--type-scale-display)` | `* var(--layout-scale-ratio)` (alias `--type-scale-display` → `--layout-scale-ratio`) |
-| `assets/css/utilities/grid.css:13` | `.page-grid column-gap: var(--spacing-24);` | `var(--layout-col-gap);` |
-| `assets/css/utilities/grid.css:14` | `.page-grid row-gap: var(--spacing-32);` | `var(--layout-row-gap);` |
-| `assets/css/utilities/grid.css:24,52` | subgrid `column-gap: var(--spacing-24/16);` | `var(--layout-col-gap);` (behåll sm-override) |
-| `assets/css/utilities/typography.css:425` | `max-width: var(--measure-prose);` | `var(--layout-measure);` |
-| `assets/css/utilities/_legacy-grid.css:5` | `column-gap: 1.5rem;` **(rått värde)** | `var(--layout-col-gap);` ← enda äkta värde-extraktionen |
+| Fil:rad                                     | Idag                                                   | Byt till                                                                              |
+| ------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| `assets/css/pages/home.css:11`              | `padding: var(--spacing-64) 0;`                        | `padding: var(--layout-section-rhythm) 0;`                                            |
+| `assets/css/pages/home.css:74`              | hero `padding: var(--spacing-96) 0;`                   | `var(--layout-hero-rhythm) 0;`                                                        |
+| `assets/css/pages/home.css:61`              | `.section-heading … margin-bottom: var(--spacing-32);` | `var(--layout-heading-gap);`                                                          |
+| `assets/css/pages/home.css:26,31`           | `column-gap: var(--spacing-24);`                       | `var(--layout-col-gap);`                                                              |
+| `assets/css/pages/home.css:79`              | `max-width: var(--content-max-width-narrow);`          | (lämna — hero-specifik)                                                               |
+| `assets/css/pages/home.css:82`              | `* var(--type-scale-display)`                          | `* var(--layout-scale-ratio)` (alias `--type-scale-display` → `--layout-scale-ratio`) |
+| `assets/css/utilities/grid.css:13`          | `.page-grid column-gap: var(--spacing-24);`            | `var(--layout-col-gap);`                                                              |
+| `assets/css/utilities/grid.css:14`          | `.page-grid row-gap: var(--spacing-32);`               | `var(--layout-row-gap);`                                                              |
+| `assets/css/utilities/grid.css:24,52`       | subgrid `column-gap: var(--spacing-24/16);`            | `var(--layout-col-gap);` (behåll sm-override)                                         |
+| `assets/css/utilities/typography.css:425`   | `max-width: var(--measure-prose);`                     | `var(--layout-measure);`                                                              |
+| `assets/css/utilities/_legacy-grid.css:5`   | `column-gap: 1.5rem;` **(rått värde)**                 | `var(--layout-col-gap);` ← enda äkta värde-extraktionen                               |
+| `assets/css/style.css` `.content`           | `padding-top: var(--spacing-80);`                      | `var(--layout-content-top);` ✅                                                       |
+| `assets/css/style.css` `.startpage-heading` | `padding-top: var(--spacing-80);`                      | `var(--layout-hero-heading-top);` ✅                                                  |
+| `assets/css/style.css` `.about-cv`          | `margin-top: var(--spacing-64);`                       | `var(--layout-about-cv-gap);` ✅                                                      |
+| `assets/css/style.css` `.contact-info`      | `margin-bottom: var(--spacing-64);`                    | `var(--layout-contact-info-gap);` ✅                                                  |
 
 **Lämna orört:** `utilities/layout.css` `.flex { gap: 1rem }`, `.gap-xs/.gap-*` — det är en
 generisk util-skala, inte komposition på sidnivå. Att koppla in dem ger brus utan vinst.
+
+---
+
+## 2b. Hero-radbrytning per layout × typografi (`pages/home.css`)
+
+Rollen (`role-swapper`) släpps till egen rad när led + längsta roll slutar rymmas på en rad. Den
+tidigare enda brytpunkten (`42.5em`) var kalibrerad för den stora hero-fonten och slog därför alltför
+tidigt för **index** (vars hero är nedskruvad till `~text-lg`). Brytpunkten skalar nu med hero-fontens
+storlek (layout) och typsnittets bredd (mono/technical bryter tidigast). Verifierat med Chrome-screenshots
+mot längsta rollen vid gränsvidderna:
+
+| Layout             | Bas (serif/sans/expressive) | + `technical` (mono) |
+| ------------------ | --------------------------- | -------------------- |
+| column (default)   | `≤ 38em`                    | `≤ 42em`             |
+| editorial (1.15×)  | `≤ 42em`                    | `≤ 46em`             |
+| index (`~text-lg`) | `≤ 26em`                    | `≤ 30em`             |
+
+---
+
+## 2c. Delbar komposition — `?theme=` (jfr §7 "seed")
+
+Den delbara/reproducerbara seed som §7 pekar ut finns nu: knappen **"Share this look"** i
+inställningspanelen kodar `layout, font (typography), mode, palette, pantone-år, blend, grain` till en
+`?theme=`-parameter (`theme-share.js`). Avkodaren ligger i det inline-script i `partials/head.html` som
+körs **före** första paint, så en delad länk målas rätt utan flash och persisteras till `localStorage`;
+paramen städas därefter bort från adressfältet. Custom-palett är enhetslokal och utelämnas.
 
 ---
 
@@ -92,14 +190,14 @@ medvetet **inte** typografi-namnen (signalerar oberoende).
 /* dimensions/layout/editorial.css — asymmetriskt, luftigt, redaktionellt */
 :root[data-layout="editorial"] {
   --layout-section-rhythm: var(--spacing-96);
-  --layout-heading-gap:    var(--spacing-48);
-  --layout-col-gap:        var(--spacing-32);
-  --layout-measure:        var(--measure-wide);   /* 45ch */
-  --layout-scale-ratio:    1.18;
-  --layout-default-place:  col-start 3 / span 8;  /* ≈ .place-article */
-  --layout-pullquotes:     1;
-  --layout-dropcap:        1;
-  --layout-rule-style:     hairline;
+  --layout-heading-gap: var(--spacing-48);
+  --layout-col-gap: var(--spacing-32);
+  --layout-measure: var(--measure-wide); /* 45ch */
+  --layout-scale-ratio: 1.18;
+  --layout-default-place: col-start 3 / span 8; /* ≈ .place-article */
+  --layout-pullquotes: 1;
+  --layout-dropcap: 1;
+  --layout-rule-style: hairline;
 }
 ```
 
@@ -107,12 +205,12 @@ medvetet **inte** typografi-namnen (signalerar oberoende).
 /* dimensions/layout/index.css — tätt, modulärt, bild-framåt */
 :root[data-layout="index"] {
   --layout-section-rhythm: var(--spacing-40);
-  --layout-heading-gap:    var(--spacing-16);
-  --layout-col-gap:        var(--spacing-16);
-  --layout-row-gap:        var(--spacing-16);
-  --layout-measure:        var(--measure-prose);
-  --layout-scale-ratio:    0.95;
-  --layout-default-place:  col-start 1 / span 12; /* ≈ .place-full */
+  --layout-heading-gap: var(--spacing-16);
+  --layout-col-gap: var(--spacing-16);
+  --layout-row-gap: var(--spacing-16);
+  --layout-measure: var(--measure-prose);
+  --layout-scale-ratio: 0.95;
+  --layout-default-place: col-start 1 / span 12; /* ≈ .place-full */
 }
 ```
 
@@ -121,14 +219,17 @@ medvetet **inte** typografi-namnen (signalerar oberoende).
 ## 4. Registrering & inkoppling (spegla typografi-dimensionen)
 
 1. **CSS-bundle** — `layouts/partials/head.html`, efter typografi-blocket (rad ~148):
+
    ```go-html-template
    {{ $dimensions_layout_column    := resources.Get "css/dimensions/layout/column.css" }}
    {{ $dimensions_layout_editorial := resources.Get "css/dimensions/layout/editorial.css" }}
    {{ $dimensions_layout_index     := resources.Get "css/dimensions/layout/index.css" }}
    ```
+
    Lägg dem i samma `slice … | resources.Concat`-lista som de andra dimensionerna.
 
 2. **Pre-paint (no-FOUC)** — `head.html:~541`, direkt efter typografi-raden:
+
    ```js
    var storedLayout = localStorage.getItem("theme-layout") || "column";
    document.documentElement.setAttribute("data-layout", storedLayout);
@@ -136,11 +237,12 @@ medvetet **inte** typografi-namnen (signalerar oberoende).
 
 3. **JS** — `assets/js/darkmode.js`: spegla `setTypography`/`applyTypography`/`updateTypographyUI`,
    **minus hela `TYPOGRAPHY_FONTS`-förladdningen** (layout har inga webbfonter → enklare):
+
    ```js
    function setLayout(layout) {
      localStorage.setItem("theme-layout", layout);
      updateLayoutUI(layout);
-     applyLayout(layout);                 // setAttribute("data-layout", layout)
+     applyLayout(layout); // setAttribute("data-layout", layout)
      if (window.Toast) window.Toast.show(layoutCategoryLabel, layoutLabel);
    }
    ```

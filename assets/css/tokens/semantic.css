@@ -210,8 +210,33 @@
      visual no-op. Overridden per document via
      html[data-layout="column|editorial|index"]. Same pattern as the
      --state-mix-* knobs above. */
-  --layout-section-rhythm: var(--spacing-64);
-  --layout-hero-rhythm: var(--spacing-96);
+  /* Section + hero rhythm are FLUID: the token itself scales with the viewport
+     (min on phones → max on desktop), so small screens compact automatically with
+     no per-breakpoint property overrides. Each layout re-clamps to its own min/max
+     (all on the --spacing-* scale); consumers only ever read the token.
+
+     The interpolation range is shared and defined ONCE (--fluid-floor/-span) so no
+     one hand-computes a slope. The pattern for a min→max token is:
+       clamp(MIN, calc(MIN + Δpx * (100vw - floor) / span), MAX)
+     where MIN/MAX are --spacing-* tokens, Δpx is (max − min) in px (the --spacing-N
+     scale is N px), floor = 360px, span = 664 (= 1024 − 360). At 360px it sits at
+     MIN, at 1024px at MAX, linear between. */
+  --fluid-floor: 360px; /* below this a fluid token sits at its MIN */
+  --fluid-span: 664; /* 1024px − 360px, unitless (px) — the divisor */
+  --layout-section-rhythm: clamp(
+    var(--spacing-32),
+    calc(
+      var(--spacing-32) + 32 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-64)
+  ); /* 32 → 64 */
+  --layout-hero-rhythm: clamp(
+    var(--spacing-64),
+    calc(
+      var(--spacing-64) + 32 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-96)
+  ); /* 64 → 96 */
   --layout-heading-gap: var(--spacing-32);
   --layout-col-gap: var(--spacing-24);
   --layout-row-gap: var(--spacing-32);
@@ -220,8 +245,40 @@
      fixed cap). */
   --layout-measure: none;
   --layout-scale-ratio: 1;
-  /* Multiplier on prose vertical rhythm (paragraph/heading spacing). 1 = today. */
+  /* Two density multipliers, deliberately separate:
+     - --layout-prose-rhythm scales PROSE vertical rhythm (paragraph/heading
+       spacing inside body text).
+     - --layout-block-scale scales COMPOSITION block/card rhythm (the block-gap
+       family below). It defaults to prose-rhythm so it is a no-op today, but a
+       layout can override it alone to be, say, tight in text yet airy in cards.
+     1 = today. */
   --layout-prose-rhythm: 1;
+  --layout-block-scale: var(--layout-prose-rhythm);
+
+  /* Page/section spacing knobs. These were hardcoded margins/paddings; lifting
+     them into the layout layer lets each composition tune its own breathing room.
+     Defaults equal today's hardcoded values, so column is a visual no-op. */
+  /* .content top padding (inner pages) */
+  --layout-content-top: var(--spacing-80);
+  /* .startpage-heading top pad (home hero) */
+  --layout-hero-heading-top: var(--spacing-80);
+  /* .about-cv margin-top */
+  --layout-about-cv-gap: var(--spacing-64);
+  /* .contact-info margin-bottom */
+  --layout-contact-info-gap: var(--spacing-64);
+
+  /* Block rhythm — the vertical gaps between and under composition blocks
+     (masthead titles, section blocks, cards). Scaled by --layout-block-scale so a
+     denser (index) or airier (editorial) layout carries this rhythm with it;
+     column is ×1 so these equal their raw spacing. Consumers read the token
+     instead of a bare --spacing-*, which is what ties block spacing to the layout
+     dimension. */
+  --layout-block-gap: calc(var(--spacing-32) * var(--layout-block-scale));
+  --layout-title-gap: calc(var(--spacing-24) * var(--layout-block-scale));
+  --layout-label-gap: calc(var(--spacing-16) * var(--layout-block-scale));
+  /* Inter-card rhythm (the global `article` bottom margin). index + terminal
+     override to a flush list/row, so this feeds column + editorial. */
+  --layout-card-gap: calc(var(--spacing-48) * var(--layout-block-scale));
 }
 
 :root[data-state-intensity="soft"] {

@@ -8,14 +8,35 @@
    ============================================================================ */
 
 :root[data-layout="editorial"] {
-  --layout-section-rhythm: var(--spacing-96);
-  --layout-hero-rhythm: var(--spacing-160);
+  --layout-section-rhythm: clamp(
+    var(--spacing-40),
+    calc(
+      var(--spacing-40) + 56 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-96)
+  ); /* 40 → 96 */
+  --layout-hero-rhythm: clamp(
+    var(--spacing-64),
+    calc(
+      var(--spacing-64) + 96 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-160)
+  ); /* 64 → 160 */
   --layout-heading-gap: var(--spacing-48);
   --layout-col-gap: var(--spacing-32);
   /* Body reading measure is set by grid columns (see body placement below),
      not a ch cap, so --layout-measure stays at the `none` default. */
   --layout-scale-ratio: 1.15;
   --layout-prose-rhythm: 1.25;
+
+  /* Airy page rhythm. The hero section already carries a generous
+     --layout-hero-rhythm (spacing-160), so the heading's own top pad is trimmed
+     to avoid an excessive double gap; inner-page and about/contact gaps open up
+     to match the magazine spacing. */
+  --layout-hero-heading-top: var(--spacing-24);
+  --layout-content-top: var(--spacing-96);
+  --layout-about-cv-gap: var(--spacing-96);
+  --layout-contact-info-gap: var(--spacing-96);
 
   /* Drop cap (anfang) — tune here in one place. Leading/offsets are relative to
      the cap's own font-size so they scale together; watch the mono typeface,
@@ -28,12 +49,11 @@
 
 /* sm: keep the editorial type bump but a touch gentler than desktop — a long
    single-word title at full 1.15 can nudge the edge on the narrowest phones.
-   Hero rhythm stays tamed (spacing-160 is excessive hero padding on a phone).
-   The earlier overflow was the footer grid gaps, not the type (now fixed). */
+   (Hero rhythm no longer needs a step here — the fluid clamp above already tames
+   it toward the phone floor.) */
 @media (max-width: 47.9375em) {
   :root[data-layout="editorial"] {
     --layout-scale-ratio: 1.1;
-    --layout-hero-rhythm: var(--spacing-96);
   }
 }
 

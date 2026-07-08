@@ -37,13 +37,33 @@
 
 :root[data-layout="terminal"] {
   /* Composition tokens */
-  --layout-section-rhythm: var(--spacing-40);
-  --layout-hero-rhythm: var(--spacing-24);
+  --layout-section-rhythm: clamp(
+    var(--spacing-24),
+    calc(
+      var(--spacing-24) + 16 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-40)
+  ); /* 24 → 40 */
+  --layout-hero-rhythm: clamp(
+    var(--spacing-16),
+    calc(
+      var(--spacing-16) + 8 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-24)
+  ); /* 16 → 24 */
   --layout-heading-gap: var(--spacing-16);
   --layout-col-gap: var(--spacing-16);
   --layout-row-gap: var(--spacing-16);
   --layout-scale-ratio: 1;
   --layout-prose-rhythm: 0.9;
+
+  /* Page/section spacing knobs — the whole stream sits on one tight gap so the
+     buffer reads as a continuous terminal session (replaces the old direct
+     .content / .startpage-heading padding override below). */
+  --layout-content-top: var(--spacing-24);
+  --layout-hero-heading-top: var(--spacing-24);
+  --layout-about-cv-gap: var(--spacing-24);
+  --layout-contact-info-gap: var(--spacing-24);
 
   /* The terminal window: the 12-col grid's side tracks absorb everything
      beyond ~48rem, so header, main and footer (which share the grid template
@@ -104,12 +124,9 @@
   transition: none !important;
 }
 
-/* Page containers carry a generous top padding; the stream starts right
-   under the statusbar. */
-:root[data-layout="terminal"] .content,
-:root[data-layout="terminal"] .startpage-heading {
-  padding-top: var(--spacing-24);
-}
+/* Page-container top padding (.content / .startpage-heading) now rides the
+   --layout-content-top / --layout-hero-heading-top tokens set above, so the
+   stream still starts right under the statusbar. */
 
 /* ============================================================================
    One type size
@@ -1467,6 +1484,42 @@
   height: auto;
   color: var(--text-muted, inherit);
   font-family: var(--font-mono);
+}
+
+/* Share action: a plain command line, not a boxed button (the base .settings-share
+   carries a border/pill that reads as chrome the terminal doesn't use). Strip it
+   to text and drop the icon like every other panel control; hover underlines like
+   the terminal's links. */
+:root[data-layout="terminal"] .settings-panel .settings-share {
+  display: inline-flex;
+  align-items: baseline;
+  width: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: var(--terminal-font-size);
+  font-weight: 400;
+  line-height: var(--terminal-line-height);
+  color: var(--text-default);
+}
+
+:root[data-layout="terminal"] .settings-panel .settings-share:hover,
+:root[data-layout="terminal"] .settings-panel .settings-share:focus-visible {
+  background: none;
+  box-shadow: none;
+  outline: none;
+  text-decoration: underline;
+}
+
+:root[data-layout="terminal"] .settings-panel .settings-share__icon {
+  display: none;
+}
+
+:root[data-layout="terminal"] .settings-panel .settings-share__label {
+  text-transform: lowercase;
 }
 
 /* ============================================================================
