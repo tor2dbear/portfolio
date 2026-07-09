@@ -2292,8 +2292,11 @@
         return terminalNavTargetsCache;
       }
       var map = {};
+      // Exclude the statusbar quick-toggles (:not(.terminal-quick)): the
+      // language toggle is an <a> to the *other* language's URL, whose slug
+      // collides with the current page's and would overwrite the real target.
       var links = document.querySelectorAll(
-        ".top-menu__nav a[href], .top-menu__link[href]"
+        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href]"
       );
       links.forEach(function (link) {
         var href = link.getAttribute("href");
@@ -3213,7 +3216,10 @@
       var link =
         e.target && e.target.closest
           ? e.target.closest(
-              ".top-menu__nav a[href], .terminal-prompt__host[href]"
+              // Skip the statusbar quick-toggles — the language toggle switches
+              // language, not directory, so it must not print a `cd` echo.
+              ".top-menu__nav a[href]:not(.terminal-quick), " +
+                ".terminal-prompt__host[href]"
             )
           : null;
       if (!link) {

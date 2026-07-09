@@ -95,6 +95,7 @@ describe("terminal command line", () => {
             <a class="terminal-prompt__host" href="/"></a>
             <a class="top-menu__link" href="/writing/">Writing</a>
             <a class="top-menu__link" href="/about/">About</a>
+            <a class="terminal-quick terminal-quick--lang" href="/sv/writing/" lang="sv">sv</a>
           </nav>
         </div>
         <div data-js="coty-transport" hidden>
@@ -526,6 +527,15 @@ describe("terminal command line", () => {
     document.querySelector('.top-menu__link[href="/writing/"]').click();
     const stashed = JSON.parse(sessionStorage.getItem("terminal-cd"));
     expect(stashed.cmd).toBe("cd ~/writing");
+  });
+
+  test("clicking the statusbar language toggle does NOT stash a cd echo", () => {
+    loadModule();
+    sessionStorage.removeItem("terminal-cd");
+    // A language switch changes language, not directory — no `cd` echo, and its
+    // /sv/writing/ href must not poison the "writing" cd target either.
+    document.querySelector(".terminal-quick--lang").click();
+    expect(sessionStorage.getItem("terminal-cd")).toBeNull();
   });
 
   test("a pending cd prints as scrollback above the page's first prompt", () => {
