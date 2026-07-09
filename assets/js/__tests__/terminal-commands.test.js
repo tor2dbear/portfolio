@@ -132,6 +132,13 @@ describe("terminal command line", () => {
           ><span class="terminal-tail__caret"></span
           ><input id="terminal-input" class="terminal-tail__input" data-js="terminal-input" type="text" size="1" />
         </p>
+        <div class="terminal-keybar" data-js="terminal-keybar">
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="prev" aria-label="Previous command">↑</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="next" aria-label="Next command">↓</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="tab" aria-label="Complete">Tab</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="cancel" aria-label="Cancel line">^C</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="bottom" aria-label="Jump to prompt">⌄</button>
+        </div>
       </body>
     `;
 
@@ -596,6 +603,57 @@ describe("terminal command line", () => {
     keydown({ key: "c", ctrlKey: true });
     expect(input.value).toBe("");
     expect(sessionText()).toContain("^C");
+  });
+
+  function tapKeybar(action) {
+    const button = document.querySelector('[data-keybar="' + action + '"]');
+    button.dispatchEvent(
+      new window.Event("pointerdown", { bubbles: true, cancelable: true })
+    );
+    button.dispatchEvent(new window.Event("click", { bubbles: true }));
+  }
+
+  test("key bar ↑ recalls the previous command (mobile has no arrow keys)", () => {
+    loadModule();
+    typeCommand("whoami");
+    tapKeybar("prev");
+    expect(document.querySelector('[data-js="terminal-input"]').value).toBe(
+      "whoami"
+    );
+  });
+
+  test("key bar Tab completes a command, ^C cancels the line", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "wea";
+    tapKeybar("tab");
+    expect(input.value).toBe("weather ");
+    input.value = "half typed";
+    tapKeybar("cancel");
+    expect(input.value).toBe("");
+    expect(sessionText()).toContain("^C");
+  });
+
+  test("key bar is shown only while the prompt is focused", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const bar = document.querySelector('[data-js="terminal-keybar"]');
+    expect(bar.classList.contains("is-visible")).toBe(false);
+    input.dispatchEvent(new window.Event("focus"));
+    expect(bar.classList.contains("is-visible")).toBe(true);
+    input.dispatchEvent(new window.Event("blur"));
+    expect(bar.classList.contains("is-visible")).toBe(false);
+  });
+
+  test("key bar pointerdown keeps focus on the input (keyboard stays up)", () => {
+    loadModule();
+    const button = document.querySelector('[data-keybar="prev"]');
+    const event = new window.Event("pointerdown", {
+      bubbles: true,
+      cancelable: true,
+    });
+    button.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
   });
 
   test("konami command toggles party mode", async () => {

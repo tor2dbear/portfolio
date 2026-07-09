@@ -13,7 +13,14 @@ Two follow-ups, in priority order:
 
 ---
 
-## 1. Mobile key bar (accessory row)
+## 1. Mobile key bar (accessory row) — ✅ shipped
+
+> Built as designed below: a `.terminal-keybar` in `footer.html`, styled in
+> `terminal.css` (coarse-pointer only, bracketed mono keys), wired in
+> `darkmode.js` (buttons reuse the existing handlers; `^C` factored into a
+> shared `terminalCancelLine()`; `visualViewport` tracks the keyboard;
+> `pointerdown` preventDefault keeps focus). Covered by four new Jest tests in
+> `terminal-commands.test.js`.
 
 ### Why
 
