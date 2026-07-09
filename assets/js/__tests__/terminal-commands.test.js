@@ -334,10 +334,29 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("hey");
   });
 
-  test("konami command toggles party mode", () => {
+  test("easteregg lists the hidden commands but stays out of help", () => {
+    loadModule();
+    typeCommand("easteregg");
+    const eggs = sessionText();
+    expect(eggs).toContain("easter eggs:");
+    expect(eggs).toContain("konami");
+    expect(eggs).toContain("fortune");
+    typeCommand("clear");
+    typeCommand("help");
+    const help = sessionText();
+    expect(help).toContain("commands:");
+    // The index itself is not advertised in help.
+    expect(help).not.toContain("easter eggs:");
+    expect(help).not.toContain("konami");
+  });
+
+  test("konami command toggles party mode", async () => {
     loadModule();
     typeCommand("konami");
     expect(document.documentElement.getAttribute("data-konami")).toBe("on");
+    // toggleKonami de-dupes a synchronous burst (see darkmode.js), so let the
+    // guard clear on the microtask queue before toggling back off.
+    await Promise.resolve();
     typeCommand("konami");
     expect(document.documentElement.getAttribute("data-konami")).toBeNull();
   });

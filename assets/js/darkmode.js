@@ -2317,6 +2317,29 @@
       "Type is a beautiful group of letters, not a group of beautiful letters. — Matthew Carter",
     ];
 
+    // A private index of the hidden commands, surfaced only by `easteregg` —
+    // deliberately kept out of `help` so it stays a discovery, not a menu.
+    const TERMINAL_EASTER_EGGS = [
+      "easter eggs:",
+      "  sudo      permission denied",
+      "  coffee    HTTP 418",
+      "  cat <f>   readme/about/colophon…",
+      "  man <cmd> one-line manual",
+      "  uname     shell / -a session",
+      "  colour    palette swatches",
+      "  fortune   design aphorism",
+      "  history   command scrollback",
+      "  uptime    session age",
+      "  top       process list",
+      "  vim/nano/emacs  editor jokes",
+      "  :q :wq    quit like vim",
+      "  rm -rf /  it's all in git",
+      "  git <sub> blame/commit/push…",
+      "  npm i     fake resolve",
+      "  hello     greeting",
+      "  konami    party (↑↑↓↓←→←→ba)",
+    ];
+
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
     }
@@ -3060,6 +3083,13 @@
             lines: ["konami: party mode 🌈"],
             action: { type: "konami" },
           };
+        case "easteregg":
+        case "eastereggs":
+          return {
+            echo: input,
+            lines: TERMINAL_EASTER_EGGS.slice(),
+            action: null,
+          };
         default:
           return {
             echo: input,
@@ -3071,7 +3101,21 @@
 
     // Party mode: a root attribute CSS hangs a playful hue-cycle off. Toggled
     // by the `konami` command and by the arrow-key Konami code at the prompt.
+    //
+    // The guard collapses a synchronous burst of calls into a single toggle.
+    // In the browser this is a no-op — one handler fires once. It matters under
+    // test, where re-requiring the module re-runs its DOMContentLoaded init and
+    // stacks duplicate prompt handlers that would otherwise all toggle for one
+    // keypress; the flag lives on `window` so every stacked copy shares it, and
+    // clears on the next microtask so genuine later toggles still register.
     function toggleKonami() {
+      if (window.__konamiToggling) {
+        return;
+      }
+      window.__konamiToggling = true;
+      window.Promise.resolve().then(function () {
+        window.__konamiToggling = false;
+      });
       var root = document.documentElement;
       if (root.getAttribute("data-konami") === "on") {
         root.removeAttribute("data-konami");
