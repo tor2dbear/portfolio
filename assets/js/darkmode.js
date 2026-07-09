@@ -3054,13 +3054,16 @@
         case "pnpm": {
           var pkgSub = (args[0] || "").toLowerCase();
           if (pkgSub === "install" || pkgSub === "i" || pkgSub === "add") {
+            // Print the "working" line now, then reveal the punchline a beat
+            // later so it reads like a job that ran before it fell over.
             return {
               echo: input,
-              lines: [
-                "resolving 4271 dependencies…",
-                "done. (kidding — it's vanilla JS)",
-              ],
-              action: null,
+              lines: ["resolving 4271 dependencies…"],
+              action: {
+                type: "defer",
+                delay: 900,
+                lines: ["done. (kidding — it's vanilla JS)"],
+              },
             };
           }
           return {
@@ -3223,6 +3226,22 @@
           break;
         case "flow":
           startTerminalFlow(action.flow);
+          break;
+        case "defer":
+          // Print follow-up lines after a delay, so a command can fake a job
+          // running before its punchline. Skip if the terminal was left in
+          // the meantime.
+          if (action.lines && action.lines.length) {
+            window.setTimeout(function () {
+              if (!isTerminalLayout()) {
+                return;
+              }
+              action.lines.forEach(function (line) {
+                printTerminalLine(line, "terminal-session__out");
+              });
+              scrollTerminalToEnd();
+            }, action.delay || 600);
+          }
           break;
         default:
           break;

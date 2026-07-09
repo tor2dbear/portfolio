@@ -322,9 +322,13 @@ describe("terminal command line", () => {
     expect(sessionText().toLowerCase()).toContain("working tree clean");
   });
 
-  test("npm install fakes a dependency resolve", () => {
+  test("npm install fakes a dependency resolve, then reveals the joke", () => {
     loadModule();
     typeCommand("npm install");
+    // The "working" line lands immediately; the punchline is held back.
+    expect(sessionText().toLowerCase()).toContain("resolving 4271");
+    expect(sessionText().toLowerCase()).not.toContain("vanilla js");
+    jest.advanceTimersByTime(1000);
     expect(sessionText().toLowerCase()).toContain("vanilla js");
   });
 
