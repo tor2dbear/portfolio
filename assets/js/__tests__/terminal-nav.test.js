@@ -110,6 +110,24 @@ describe("terminal in-place navigation", () => {
     );
   });
 
+  test("go() drops the boot theater so the swapped #main isn't held at opacity 0", async () => {
+    // The boot animation (.terminal-booting #main { animation: terminal-print
+    // both }) pins a freshly swapped #main at opacity 0 through its delay, so a
+    // swap mid-boot must clear the class and mark the session booted.
+    mockFetch(pageHtml());
+    loadModule();
+    document.documentElement.classList.add("terminal-booting");
+
+    await window.TerminalNav.go("/writing/", { cwd: "~/writing" });
+
+    expect(
+      document.documentElement.classList.contains("terminal-booting")
+    ).toBe(false);
+    expect(document.documentElement.getAttribute("data-terminal-booted")).toBe(
+      "1"
+    );
+  });
+
   test("go() patches SEO meta from the fetched head", async () => {
     mockFetch(pageHtml({ description: "all my posts" }));
     loadModule();

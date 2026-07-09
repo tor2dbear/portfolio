@@ -141,6 +141,28 @@
     });
   }
 
+  // Where to leave the viewport after a swap depends on what you navigated to.
+  // A LISTING (works/writing/tags — `.content.list` / `.content.startpage`) is
+  // read via `ls` at the prompt, so keep the prompt in view (the owner's
+  // continuous-session model). A READABLE page (a post or `about` —
+  // `.content.post` / `.content.page`) IS the destination, with no `ls` to
+  // surface it, so show it from the top like a full page load — otherwise the
+  // content sits above the prompt, unseen ("looks half-loaded").
+  function settleScroll() {
+    var content = document.querySelector("#main .content");
+    var isListing =
+      content &&
+      (content.classList.contains("list") ||
+        content.classList.contains("startpage"));
+    if (isListing) {
+      keepPromptInView();
+    } else {
+      window.requestAnimationFrame(function () {
+        window.scrollTo(0, 0);
+      });
+    }
+  }
+
   function parseDoc(html) {
     try {
       return new DOMParser().parseFromString(html, "text/html");
@@ -161,13 +183,12 @@
 
   // Apply a fetched document in place: swap #main (importNode carries its
   // attributes, so the surrounding terminal chrome — scrollback, prompt, nav —
-  // stays intact), then patch head + cwd, refresh the content-dependent init
-  // and keep the prompt in view. Returns false if the document can't be swapped
-  // (special page / no #main).
-  //
-  // The post-swap steps run AFTER the DOM actually updates. That matters under
-  // a view transition: startViewTransition defers its callback a frame, so
-  // running refreshContentInit() eagerly would re-init against the old figures.
+  // stays intact), then patch head + cwd, mark the session booted (so the swap
+  // drops the one-per-session boot banner like a full-reload nav would),
+  // refresh the content-dependent init and settle the scroll. Synchronous on
+  // purpose: a view-transition cross-fade animates from a snapshot and can flash
+  // a blank frame mid-swap ("looks half-loaded"), so the swap paints at once.
+  // Returns false if the document can't be swapped (special page / no #main).
   function render(doc, cwd) {
     if (!isSwappableDoc(doc)) {
       return false;
@@ -177,30 +198,21 @@
     if (!current || !incoming || !current.parentNode) {
       return false;
     }
-    var imported = document.importNode(incoming, true);
-    var swap = function () {
-      current.parentNode.replaceChild(imported, current);
-    };
-    var finish = function () {
-      patchHead(doc);
-      setCwd(cwd);
-      refreshContentInit();
-      keepPromptInView();
-    };
-    var transition =
-      typeof document.startViewTransition === "function"
-        ? document.startViewTransition(swap)
-        : null;
-    if (transition && transition.updateCallbackDone) {
-      transition.updateCallbackDone.then(finish, finish);
-    } else {
-      // No view-transition support: the swap ran synchronously above (or we
-      // run it now), so finish immediately.
-      if (!transition) {
-        swap();
-      }
-      finish();
-    }
+    current.parentNode.replaceChild(
+      document.importNode(incoming, true),
+      current
+    );
+    patchHead(doc);
+    setCwd(cwd);
+    // Subsequent pages skip the boot theater. Beyond hiding the banner
+    // (data-terminal-booted), we must clear the .terminal-booting class: its
+    // `#main { animation: terminal-print both 1.35s }` rule holds a freshly
+    // swapped #main at opacity 0 through the delay, so a swap mid-boot (fast
+    // navigation on the landing page) would paint blank until the animation ran.
+    document.documentElement.setAttribute("data-terminal-booted", "1");
+    document.documentElement.classList.remove("terminal-booting");
+    refreshContentInit();
+    settleScroll();
     return true;
   }
 
