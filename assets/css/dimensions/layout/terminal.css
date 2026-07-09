@@ -189,6 +189,17 @@
   color: var(--text-accent);
 }
 
+/* The hero is the first line of the login tour: `cat welcome.txt` prints the
+   intro. (Home-only — the hero section exists only there. Typeable: `welcome`
+   is a pseudo-file in darkmode.js.) */
+:root[data-layout="terminal"] .hero-section::before {
+  content: var(--terminal-ps1) "cat welcome.txt";
+  display: block;
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-bottom: var(--spacing-16);
+}
+
 /* ============================================================================
    Shared text chrome — the primitives every terminal component composes from.
    Individual sections below only pick content strings and layout on top.
@@ -358,6 +369,7 @@
    screen readers and every other layout; here font-size:0 hides it and the
    ::after prints the filename. */
 :root[data-layout="terminal"] .summary-card__title a[data-slug],
+:root[data-layout="terminal"] .summary-card__title a[data-dir],
 :root[data-layout="terminal"] .article-card__title a[data-slug],
 :root[data-layout="terminal"]
   .related-items__item
@@ -373,6 +385,13 @@
   .type-headline-4
   a[data-slug]::after {
   content: attr(data-slug) ".md";
+  font-size: var(--terminal-font-size);
+  font-family: var(--font-mono);
+}
+
+/* A taxonomy/section card (works' "tags") is a directory — slug/, not slug.md. */
+:root[data-layout="terminal"] .summary-card__title a[data-dir]::after {
+  content: attr(data-dir) "/";
   font-size: var(--terminal-font-size);
   font-family: var(--font-mono);
 }
@@ -417,6 +436,25 @@
   content: "'/";
 }
 
+/* Home's featured section is a filtered view, not a directory: print the exact
+   typeable command. The localized "Featured"/"Utvalda" heading text is hidden
+   (font-size:0) and the command injected, so it stays language-independent. */
+/* #main in the selector so it outweighs the id-specificity "one type size"
+   rule (#main :is(h1..h6)) — otherwise the localized heading text leaks in
+   after the injected command. */
+:root[data-layout="terminal"] #main .works-section .post-header h2 {
+  font-size: 0;
+}
+
+:root[data-layout="terminal"] #main .works-section .post-header h2::before {
+  content: var(--terminal-ps1) "ls works/ --featured";
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .works-section .post-header h2::after {
+  content: "";
+}
+
 /* ============================================================================
    Post pages are ONE file: a single cat on the title prints everything.
    Inner headings render as markdown inside the output, not as new commands.
@@ -459,18 +497,27 @@
   text-transform: lowercase;
 }
 
-:root[data-layout="terminal"] .content.post .related-items__title::before {
-  content: var(--terminal-ps1) "ls '";
+:root[data-layout="terminal"] #main .content.post .related-items__title {
+  font-size: 0;
+}
+
+:root[data-layout="terminal"]
+  #main
+  .content.post
+  .related-items__title::before {
+  content: var(--terminal-ps1) "ls --related";
+  font-size: var(--terminal-font-size);
 }
 
 :root[data-layout="terminal"] .content.post .related-items__title::after {
-  content: "'/";
+  content: "";
 }
 
-/* Project info is the directory next to the file: ls 'info'/, one column,
-   one size. */
+/* A post is a file; its info/related are the file's own sections, listed with
+   filter flags — `ls --info`, `ls --related` (relative to the post you're in),
+   the same commands you'd type. One column, one size. */
 :root[data-layout="terminal"] .content.post > .project-info::before {
-  content: var(--terminal-ps1) "ls 'info'/";
+  content: var(--terminal-ps1) "ls --info";
   display: block;
   margin-bottom: var(--spacing-8);
 }

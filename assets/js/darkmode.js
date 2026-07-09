@@ -2362,6 +2362,13 @@
     // stripped before lookup, so `cat colophon`, `cat colophon.txt` and
     // `cat .secret` all resolve.
     const TERMINAL_FILES = {
+      welcome: [
+        "Hi, Torbjörn here — a designer.",
+        "For over a decade I've worked across editorial design,",
+        "brand and digital product. Based in Gothenburg.",
+        "",
+        "you're in the terminal — try 'ls', 'cd works', 'help'.",
+      ],
       readme: [
         "it's a portfolio. poke around.",
         "type 'help' for the command list.",
@@ -4853,8 +4860,16 @@
         )
         .forEach(function (link) {
           var segs = terminalHrefSegments(link.getAttribute("href"));
-          if (segs && segs.length) {
-            link.setAttribute("data-slug", segs[segs.length - 1]);
+          if (!segs || !segs.length) {
+            return;
+          }
+          var slug = segs[segs.length - 1];
+          // A taxonomy/section card (e.g. works' "tags") is a directory, not a
+          // file — render it slug/ instead of slug.md.
+          if (slug === "tags" || TERMINAL_SECTION_DIRS[slug]) {
+            link.setAttribute("data-dir", slug);
+          } else {
+            link.setAttribute("data-slug", slug);
           }
         });
     }
