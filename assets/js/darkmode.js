@@ -3564,13 +3564,37 @@
             return {
               echo: input,
               lines: [],
-              action: { type: "remote-cat", url: catHref },
+              action: { type: "remote-cat", url: catHref, name: args[0] },
             };
           }
           // Otherwise a pseudo-file (readme, colophon, secret, config, …).
           var fileLines = terminalFile(args[0]);
           if (fileLines) {
             return { echo: input, lines: fileLines.slice(), action: null };
+          }
+          // cwd-relative fallback: a file in a section you've cd'd into but not
+          // loaded — its card lives on the remote section page, not this DOM, so
+          // the DOM lookups above miss it (the same file `ls` prints by fetching
+          // the section). Build the URL from the section base + slug, the way
+          // remote-ls does, and let remote-cat fetch it (a 404 → No such file).
+          var catSegs = terminalResolveSegments(catName);
+          if (catSegs.length >= 2) {
+            var catBase = resolveCdTarget(catSegs[0]);
+            if (catBase) {
+              return {
+                echo: input,
+                lines: [],
+                action: {
+                  type: "remote-cat",
+                  url:
+                    catBase.replace(/\/+$/, "") +
+                    "/" +
+                    catSegs.slice(1).join("/") +
+                    "/",
+                  name: args[0],
+                },
+              };
+            }
           }
           return {
             echo: input,
@@ -4317,10 +4341,11 @@
               scrollTerminalToEnd();
             });
           break;
-        case "remote-cat":
+        case "remote-cat": {
           // Append-only cat: fetch the post and print its readable text
           // (images as [image N] tokens) into the scrollback below — nothing
           // above the prompt changes. `open` is the escape hatch to the page.
+          var catLabel = action.name || action.url;
           if (typeof window.fetch !== "function") {
             printTerminalLine(
               "cat: cannot reach " + action.url,
@@ -4331,14 +4356,21 @@
           window
             .fetch(action.url, { credentials: "same-origin" })
             .then(function (res) {
-              return res.ok ? res.text() : Promise.reject();
+              // A 404 means the guessed cwd-relative path doesn't exist — a
+              // genuine "No such file", distinct from a network failure.
+              if (!res.ok) {
+                var notFound = new Error("not found");
+                notFound.notFound = true;
+                throw notFound;
+              }
+              return res.text();
             })
             .then(function (html) {
               var doc = new DOMParser().parseFromString(html, "text/html");
               var catLines = terminalExtractPostLines(doc);
               if (!catLines.length) {
                 printTerminalLine(
-                  "cat: " + action.url + ": (empty)",
+                  "cat: " + catLabel + ": (empty)",
                   "terminal-session__out"
                 );
               } else {
@@ -4348,14 +4380,17 @@
               }
               scrollTerminalToEnd();
             })
-            .catch(function () {
+            .catch(function (err) {
               printTerminalLine(
-                "cat: cannot reach " + action.url,
+                err && err.notFound
+                  ? "cat: " + catLabel + ": No such file or directory"
+                  : "cat: cannot reach " + action.url,
                 "terminal-session__out"
               );
               scrollTerminalToEnd();
             });
           break;
+        }
         case "flow":
           startTerminalFlow(action.flow);
           break;

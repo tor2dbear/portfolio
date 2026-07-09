@@ -870,7 +870,7 @@ describe("terminal command line", () => {
     );
   });
 
-  test("a post is a file: cd rejects it, cat opens it", () => {
+  test("a post is a file: cd rejects it, cat opens it", async () => {
     // The test DOM has an article-card link to /writing/the-grid-inherited/.
     // Posts are files, so `cd` into one is "not a directory" and points at cat;
     // `cat <post>.md` resolves to a remote-cat action (append-only: the post's
@@ -889,9 +889,19 @@ describe("terminal command line", () => {
       "No such file or directory"
     );
 
-    // A post that isn't on the page still errors.
+    // A post that isn't loaded resolves cwd-relatively and is fetched to
+    // verify — a 404 reports No such file (append-only cat's remote path, so
+    // a file `ls` printed from a fetched section can still be cat'd, and a
+    // typo still errors). Mock a 404 and let the async handler settle.
+    const before404 = sessionText();
+    window.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404 });
     typeCommand("cat writing/ghost-post.md");
-    expect(sessionText()).toContain(
+    // Fake timers are active, so flush the remote-cat promise chain by hand
+    // (fetch → then throws notFound → catch prints) via microtask ticks.
+    for (let i = 0; i < 5; i++) {
+      await Promise.resolve();
+    }
+    expect(sessionText().slice(before404.length)).toContain(
       "cat: writing/ghost-post.md: No such file or directory"
     );
   });
