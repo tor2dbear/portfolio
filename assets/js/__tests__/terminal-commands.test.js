@@ -873,7 +873,8 @@ describe("terminal command line", () => {
   test("a post is a file: cd rejects it, cat opens it", () => {
     // The test DOM has an article-card link to /writing/the-grid-inherited/.
     // Posts are files, so `cd` into one is "not a directory" and points at cat;
-    // `cat <post>.md` navigates (its page renders as the cat output).
+    // `cat <post>.md` resolves to a remote-cat action (append-only: the post's
+    // text prints into the scrollback — exercised for real in the browser check).
     loadModule();
     typeCommand("cd writing/the-grid-inherited");
     expect(sessionText()).toContain(
@@ -883,7 +884,7 @@ describe("terminal command line", () => {
 
     const before = sessionText();
     typeCommand("cat writing/the-grid-inherited.md");
-    // Resolves (produces a navigate action) — no cat error.
+    // Resolves (produces a remote-cat action) — no cat error line.
     expect(sessionText().slice(before.length)).not.toContain(
       "No such file or directory"
     );

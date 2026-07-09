@@ -2224,6 +2224,23 @@
       '[data-js="terminal-session"]'
     );
 
+    // Append-only history: the header's login prompts (`ls ~`, `ls settings/`)
+    // are the session's opening lines. Freeze them at the load-time cwd — pin
+    // each an inline --terminal-cwd — so a later append-only `cd` moves only the
+    // live prompt below, never this history above. The live input prompt keeps
+    // reading the global var, so it alone tracks the working directory.
+    if (isTerminalLayout()) {
+      var terminalLoadCwd = currentTerminalCwd();
+      document
+        .querySelectorAll("#topmenu .terminal-prompt:not(.terminal-prompt--cd)")
+        .forEach(function (headerPrompt) {
+          headerPrompt.style.setProperty(
+            "--terminal-cwd",
+            '"' + terminalLoadCwd + '"'
+          );
+        });
+    }
+
     // Session start, for `uptime` — captured when the command engine boots.
     var terminalSessionStart = Date.now();
 
@@ -2735,6 +2752,70 @@
           }
         });
       return out.length ? out : ["(no info here)"];
+    }
+
+    // Extract a cat'able rendering of a fetched post/page: the title, the
+    // preamble, then the body prose as text lines, with images collapsed to
+    // `[image N]` tokens (a terminal can't paint them). Walks the readable
+    // content root in document order and skips the chrome a `cat` shouldn't
+    // dump — breadcrumbs, tags, project-info (that's `ls --info`), related
+    // items. Returns [] if there's no content root to read.
+    function terminalExtractPostLines(doc) {
+      var root =
+        doc.querySelector("#main .content.post") ||
+        doc.querySelector("#main .content.page") ||
+        doc.querySelector("#main .content");
+      if (!root) {
+        return [];
+      }
+      // Related items and post tags have no wrapping container — they're
+      // BEM-classed siblings inside .content.post — so match by class prefix.
+      var SKIP =
+        ".application-breadcrumb, .project-info, [class*='related-'], " +
+        ".works-section, .works-post__tags, .post-tags-wrap, .lang-notice, nav";
+      var lines = [];
+      var imageN = 0;
+      var nodes = root.querySelectorAll(
+        "h1, h2, h3, h4, p, blockquote, li, figure, img"
+      );
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (el.closest(SKIP)) {
+          continue;
+        }
+        var tag = el.tagName.toLowerCase();
+        if (tag === "figure" || tag === "img") {
+          // A bare img inside a figure is already counted by the figure.
+          if (tag === "img" && el.closest("figure")) {
+            continue;
+          }
+          imageN += 1;
+          var img = tag === "img" ? el : el.querySelector("img");
+          var cap = el.querySelector && el.querySelector("figcaption");
+          var label =
+            (img && img.getAttribute("alt")) ||
+            (cap ? cap.textContent.trim() : "");
+          lines.push(
+            label
+              ? "[image " + imageN + ": " + label + "]"
+              : "[image " + imageN + "]"
+          );
+          continue;
+        }
+        // A caption's text is carried by its figure token above; a paragraph
+        // nested in a blockquote/li is carried by that container's text.
+        if (
+          el.closest("figure") ||
+          (tag === "p" && el.closest("blockquote, li"))
+        ) {
+          continue;
+        }
+        var text = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (text) {
+          lines.push(text);
+        }
+      }
+      return lines;
     }
 
     function terminalLsOne(pathArg, showHidden) {
@@ -3474,15 +3555,16 @@
             };
           }
           // Real page first: a content post, or a readable page (about.md,
-          // newsletter.md) the home tour prints as `cat`. The page IS the file's
-          // output, so navigating there prints it.
+          // newsletter.md). Append-only: cat PRINTS the file into the buffer
+          // (fetch + extract text) — nothing above changes. (`open` still loads
+          // the real page, as the escape hatch.)
           var catHref =
             terminalContentTargetHref(catName) || resolveCdTarget(catName);
           if (catHref) {
             return {
               echo: input,
               lines: [],
-              action: { type: "navigate", url: catHref },
+              action: { type: "remote-cat", url: catHref },
             };
           }
           // Otherwise a pseudo-file (readme, colophon, secret, config, …).
@@ -4235,6 +4317,45 @@
               scrollTerminalToEnd();
             });
           break;
+        case "remote-cat":
+          // Append-only cat: fetch the post and print its readable text
+          // (images as [image N] tokens) into the scrollback below — nothing
+          // above the prompt changes. `open` is the escape hatch to the page.
+          if (typeof window.fetch !== "function") {
+            printTerminalLine(
+              "cat: cannot reach " + action.url,
+              "terminal-session__out"
+            );
+            break;
+          }
+          window
+            .fetch(action.url, { credentials: "same-origin" })
+            .then(function (res) {
+              return res.ok ? res.text() : Promise.reject();
+            })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, "text/html");
+              var catLines = terminalExtractPostLines(doc);
+              if (!catLines.length) {
+                printTerminalLine(
+                  "cat: " + action.url + ": (empty)",
+                  "terminal-session__out"
+                );
+              } else {
+                catLines.forEach(function (line) {
+                  printTerminalLine(line, "terminal-session__out");
+                });
+              }
+              scrollTerminalToEnd();
+            })
+            .catch(function () {
+              printTerminalLine(
+                "cat: cannot reach " + action.url,
+                "terminal-session__out"
+              );
+              scrollTerminalToEnd();
+            });
+          break;
         case "flow":
           startTerminalFlow(action.flow);
           break;
@@ -4259,13 +4380,19 @@
       }
     }
 
-    function printTerminalLine(text, className) {
+    function printTerminalLine(text, className, frozenCwd) {
       if (!terminalSession) {
         return;
       }
       var line = document.createElement("span");
       line.className = "terminal-session__line " + className;
       line.textContent = text;
+      // Freeze the prompt's cwd on an echoed command so the scrollback keeps
+      // the directory it ran at — a later `cd` moves only the live prompt, not
+      // the history above (matching the pending-cd echo's own inline override).
+      if (frozenCwd) {
+        line.style.setProperty("--terminal-cwd", '"' + frozenCwd + '"');
+      }
       terminalSession.appendChild(line);
       // Remember the last *output* row, so `copy` with no argument grabs it.
       if (className.indexOf("terminal-session__out") !== -1) {
@@ -4323,7 +4450,14 @@
       }
       var result = runTerminalCommand(raw);
       if (result.echo) {
-        printTerminalLine(result.echo, "terminal-session__cmd");
+        // Freeze the echo at the cwd it ran at. applyTerminalAction (below)
+        // is what performs an append-only `cd`, so reading the cwd now — before
+        // it runs — captures where the command was actually typed.
+        printTerminalLine(
+          result.echo,
+          "terminal-session__cmd",
+          currentTerminalCwd()
+        );
       }
       var artLines =
         result.action && result.action.type === "art" ? terminalArtLines() : [];

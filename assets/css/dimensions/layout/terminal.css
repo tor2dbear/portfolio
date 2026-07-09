@@ -1454,7 +1454,23 @@
   display: block;
 }
 
-/* Echoed command lines carry the real prompt string, like scrollback. */
+/* Echoed command lines carry the real prompt string, like scrollback.
+   Append-only history: darkmode.js pins an inline --terminal-cwd on each echo
+   (the cwd it ran at). The :root --terminal-ps1 composite would resolve its
+   inner var(--terminal-cwd) back at :root (the LIVE cwd), so re-declare the
+   PS1 chain HERE — on the echo element — where the inner var resolves against
+   the element's frozen --terminal-cwd. The live input prompt keeps the :root
+   composite, so it alone tracks the working directory. */
+:root[data-layout="terminal"] .terminal-session__cmd {
+  --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
+  --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-short);
+}
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .terminal-session__cmd {
+    --terminal-ps1: var(--terminal-ps1-short);
+  }
+}
 :root[data-layout="terminal"] .terminal-session__cmd::before {
   content: var(--terminal-ps1);
   color: var(--text-muted, inherit);
