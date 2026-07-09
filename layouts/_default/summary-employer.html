@@ -2,9 +2,9 @@
   <header class="summary-card">
     <div class="summary-card__image header-image">
       <a
-        href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}
+        href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name -}}
           &ref={{ . }}
-        {{ end }}"
+        {{- end }}"
         aria-hidden="true"
         tabindex="-1"
         >{{ partial "headerimage.html" . }}</a
@@ -13,9 +13,9 @@
 
     <h2 class="summary-card__title">
       <a
-        href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name }}
+        href="{{ .Permalink }}?view=employer{{ with $.Parent.Params.company_name -}}
           &ref={{ . }}
-        {{ end }}"
+        {{- end }}"
         >{{ .Title }}{{ if isset .Params "subtitle" }}
           –
         {{ end }}{{ .Params.subtitle }}</a
