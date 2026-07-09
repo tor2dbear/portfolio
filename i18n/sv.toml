@@ -447,3 +447,6 @@ other = "[ ok ] palett · typografi · layout laddade"
 
 [terminal_exit_hint]
 other = "skriv exit eller tryck esc för att lämna terminalen"
+
+[terminal_input_label]
+other = "Terminalens kommandorad — skriv ett kommando och tryck Enter (testa 'help')"

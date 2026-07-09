@@ -453,3 +453,6 @@ other = "[ ok ] palette · typography · layout loaded"
 
 [terminal_exit_hint]
 other = "type exit or press esc to leave the terminal"
+
+[terminal_input_label]
+other = "Terminal command input — type a command and press Enter (try 'help')"

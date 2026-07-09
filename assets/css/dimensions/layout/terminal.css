@@ -552,6 +552,12 @@
   flex: none;
 }
 
+/* The `cd` echo carried in from a nav click (see darkmode.js): the command
+   that got you here, printed above this page's own prompt as scrollback. */
+:root[data-layout="terminal"] .terminal-prompt--cd {
+  margin-bottom: var(--spacing-4);
+}
+
 :root[data-layout="terminal"] .terminal-prompt__host-plain {
   font-weight: 700;
 }
@@ -1208,7 +1214,18 @@
   font-family: var(--font-mono);
 }
 
-/* The buffer ends with an empty prompt, waiting. */
+/* Subsequent pages in a session skip the login banner (ASCII art + status):
+   a MOTD prints once, not on every cd. The exit hint stays — it's navigation
+   help, not boot chrome. Flag is set pre-paint in head.html, so no flash. */
+:root[data-terminal-booted][data-layout="terminal"] .terminal-boot__art,
+:root[data-terminal-booted][data-layout="terminal"] .terminal-boot__meta {
+  display: none;
+}
+
+/* The buffer ends with a live prompt. Kept as a normal block so the prompt,
+   caret, input and hint all flow inline like one line of terminal text —
+   crucially NOT a flex row, which (with the input's native field box) pushed
+   the field onto its own line on mobile. */
 :root[data-layout="terminal"] .terminal-tail {
   display: block;
   grid-column: content-start / content-end;
@@ -1223,10 +1240,35 @@
   color: var(--text-muted, inherit);
 }
 
-/* Fish-style ghost suggestion after the caret: exit, with the hint. */
-:root[data-layout="terminal"] .terminal-tail__suggest {
-  color: var(--text-muted, inherit);
-  opacity: 0.7;
+/* The live command line: an inline field with all native chrome stripped
+   (-webkit-appearance:none kills the rounded box / focus ring iOS draws), so
+   it reads as raw prompt text with the themed caret. Auto-sized to its content
+   (JS keeps the size attribute in sync) so the trailing hint hugs the text. */
+:root[data-layout="terminal"] .terminal-tail__input {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline;
+  width: auto;
+  min-width: 1ch;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  caret-color: var(--text-accent, currentColor);
+  outline: none;
+}
+
+/* Belt-and-braces for iOS Safari, which still paints an inner box otherwise. */
+:root[data-layout="terminal"] .terminal-tail__input:focus,
+:root[data-layout="terminal"] .terminal-tail__input:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 :root[data-layout="terminal"] .terminal-tail::after {
@@ -1236,6 +1278,8 @@
   opacity: 0.7;
 }
 
+/* Idle block caret hugging the prompt — an invitation to tap. It gives way to
+   the native text caret the moment the input is focused or holds text. */
 :root[data-layout="terminal"] .terminal-tail__caret {
   display: inline-block;
   width: 0.55em;
@@ -1243,6 +1287,11 @@
   vertical-align: text-bottom;
   background: var(--text-accent, currentColor);
   animation: terminal-caret-blink 1.1s steps(1) infinite;
+}
+
+:root[data-layout="terminal"] .terminal-tail:focus-within .terminal-tail__caret,
+:root[data-layout="terminal"] .terminal-tail.is-typing .terminal-tail__caret {
+  display: none;
 }
 
 @keyframes terminal-caret-blink {
@@ -1259,6 +1308,67 @@
 
 :root[data-effect-reduced-motion="on"] .terminal-tail__caret {
   animation: none;
+}
+
+/* Command output: each executed line prints into the buffer above the live
+   prompt, so the page reads as one continuous session. Empty (and so invisible)
+   until a command runs. */
+:root[data-layout="terminal"] .terminal-session {
+  display: block;
+  grid-column: content-start / content-end;
+  justify-self: start;
+  margin-top: var(--spacing-24);
+  font-size: var(--terminal-font-size);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-layout="terminal"] .terminal-session:empty {
+  display: none;
+}
+
+/* First tail after a non-empty session log sits tight against it, not a full
+   buffer gap — the prompt follows its own output. */
+:root[data-layout="terminal"] .terminal-session:not(:empty) + .terminal-tail {
+  margin-top: var(--spacing-8);
+}
+
+:root[data-layout="terminal"] .terminal-session__line {
+  display: block;
+}
+
+/* Echoed command lines carry the real prompt string, like scrollback. */
+:root[data-layout="terminal"] .terminal-session__cmd::before {
+  content: var(--terminal-ps1);
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__out {
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__out--art {
+  color: inherit;
+}
+
+/* Echoed answers inside an interactive flow (contact / subscribe) read like
+   what the user typed at the field prompt. */
+:root[data-layout="terminal"] .terminal-session__flow {
+  display: block;
+  color: var(--text-default, inherit);
+}
+
+/* During a flow the prompt shows the current field name (email>, name>, …)
+   instead of the shell PS1, and the trailing hint offers the abort word. The
+   label is read from the prompt span's OWN attribute — attr() can't reach an
+   ancestor's — so darkmode.js sets data-flow-label on both. */
+:root[data-layout="terminal"] .terminal-tail__prompt[data-flow-label]::before {
+  content: attr(data-flow-label) " ";
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-tail[data-flow-label]::after {
+  content: "  # type cancel to abort";
 }
 
 :root[data-layout="terminal"] .footer-column {
@@ -1343,6 +1453,12 @@
 /* No dimming backdrop — inline output has nothing to sit over. (Below 30em
    the component CSS makes this a full-screen fixed overlay.) */
 :root[data-layout="terminal"] .settings-overlay {
+  display: none;
+}
+
+/* No mobile bottom-sheet drag handle — the panel is inline buffer text here,
+   not a sheet. (Below 30em the component CSS draws one via ::before.) */
+:root[data-layout="terminal"] .settings-panel::before {
   display: none;
 }
 
@@ -1530,19 +1646,50 @@
    ============================================================================ */
 
 :root[data-layout="terminal"] .coty-transport {
-  left: var(--size-page-margins);
-  right: var(--size-page-margins);
+  /* Inline job line inside the settings buffer, not a floating pill: JS moves
+     the node under the Effects toggles (see syncCotyTransportPlacement in
+     darkmode.js), and these overrides drop the fixed positioning so it lays
+     out in normal flow. */
+  position: static;
+  inset: auto;
+  z-index: auto;
+  left: auto;
+  right: auto;
+  margin: 0;
   width: auto;
   max-width: none;
+  flex-wrap: wrap;
   justify-content: flex-start;
-  padding: var(--spacing-4) 0;
-  background: var(--surface-page);
+  padding: var(--spacing-4) 0 0;
+  background: transparent;
   border: none;
   border-radius: 0;
   box-shadow: none;
+  transform: none;
+  /* Inline in the buffer the pill's clipping (for its collapse animation) just
+     truncates the job-line controls on a phone — let them wrap and show. */
+  overflow: visible;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   font-size: var(--terminal-font-size);
+}
+
+/* Drop the floating pill's rim-light border — the inline job line is plain
+   buffer text, not a raised surface. */
+:root[data-layout="terminal"] .coty-transport::after {
+  display: none;
+}
+
+/* The pill's mobile rule hides .coty-transport while a panel is open; inline in
+   the terminal that is exactly when we want it, so keep it visible. */
+@media (max-width: 29.9375em) {
+  html[data-layout="terminal"][data-settings-panel-open="true"] .coty-transport,
+  html[data-layout="terminal"][data-theme-panel-open="true"] .coty-transport {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
 }
 
 :root[data-layout="terminal"]
@@ -1573,11 +1720,17 @@
   border: none;
   box-shadow: none;
   padding: 0;
+  /* The pill caps its width and clips for the expand animation; inline we want
+     the full control row, wrapping onto more lines if the phone is narrow. */
+  max-width: none;
+  overflow: visible;
 }
 
 :root[data-layout="terminal"] .coty-player__controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
+  justify-content: flex-start;
   gap: 2ch;
   padding: 0;
 }

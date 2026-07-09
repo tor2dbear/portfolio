@@ -722,23 +722,27 @@
   var terminalBootTimer = null;
 
   function playTerminalBoot() {
-    if (
-      (typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
-      document.documentElement.getAttribute("data-effect-reduced-motion") ===
-        "on"
-    ) {
-      return;
-    }
     var root = document.documentElement;
-    root.classList.remove("terminal-booting");
-    void root.offsetWidth;
-    root.classList.add("terminal-booting");
+    // A boot means the banner is shown fresh: un-hide it (an earlier page this
+    // session may have set data-terminal-booted to hide it) and record that the
+    // session has now booted, so later pages skip the banner. Done regardless
+    // of reduced motion — only the staged animation below is motion-gated.
+    root.removeAttribute("data-terminal-booted");
     try {
       sessionStorage.setItem("terminal-boot-played", "1");
     } catch (e) {
       /* storage unavailable — the boot simply replays next load */
     }
+    if (
+      (typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+      root.getAttribute("data-effect-reduced-motion") === "on"
+    ) {
+      return; // banner shown, but skip the staged print
+    }
+    root.classList.remove("terminal-booting");
+    void root.offsetWidth;
+    root.classList.add("terminal-booting");
     if (terminalBootTimer) {
       window.clearTimeout(terminalBootTimer);
     }
@@ -747,12 +751,27 @@
     }, 2400);
   }
 
+  // Set by the command engine's init to its endTerminalFlow(), so exitTerminal
+  // (which lives out here, unable to reach the init closure) can abort any
+  // half-finished contact/subscribe flow on the way out.
+  var terminalFlowReset = null;
+
   // Leave the terminal: back to the snapshotted layout, and restore the
   // snapshotted typography if the pairing's choice (technical) is still
   // active — a manual typography change inside the terminal is respected.
   function exitTerminal() {
-    if (document.documentElement.getAttribute("data-layout") !== "terminal") {
+    if (!isTerminalLayout()) {
       return;
+    }
+    // Wipe the command scrollback so it neither lingers on the way out nor
+    // greets the next terminal session (it is hidden in other layouts anyway).
+    var sessionLog = document.querySelector('[data-js="terminal-session"]');
+    if (sessionLog) {
+      sessionLog.textContent = "";
+    }
+    // Reset any in-progress interactive flow so re-entering starts clean.
+    if (terminalFlowReset) {
+      terminalFlowReset();
     }
     var previousLayout =
       localStorage.getItem("theme-layout-previous") || "column";
@@ -1094,8 +1113,18 @@
     });
   }
 
+  function isTerminalLayout() {
+    return document.documentElement.getAttribute("data-layout") === "terminal";
+  }
+
   function collapseCotyTransport() {
-    if (!isPantoneModeActive() || isAnyBottomSheetOpen()) {
+    // Inline in the terminal the controls stay open — the collapse/hover
+    // choreography is only for the floating pill.
+    if (
+      !isPantoneModeActive() ||
+      isAnyBottomSheetOpen() ||
+      isTerminalLayout()
+    ) {
       return;
     }
     stopCotyTransportCollapseTimer();
@@ -1107,7 +1136,11 @@
 
   function scheduleCotyTransportCollapse() {
     stopCotyTransportCollapseTimer();
-    if (!isPantoneModeActive() || isAnyBottomSheetOpen()) {
+    if (
+      !isPantoneModeActive() ||
+      isAnyBottomSheetOpen() ||
+      isTerminalLayout()
+    ) {
       return;
     }
     cotyTransportCollapseTimer = window.setTimeout(function () {
@@ -1180,6 +1213,66 @@
       stopCotyTransportHoverEnterTimer();
       cotyTransportHasUserEngaged = false;
       setCotyTransportUiState("expanded");
+    }
+  }
+
+  // The Pantone controls are one node reused at every layout. In the terminal
+  // they belong inline inside the settings panel (under the Effects toggles),
+  // not floating over the page; everywhere else they float. Rather than
+  // duplicate the DOM, move the node and remember its home so it returns to
+  // exactly where it started when the user leaves the terminal.
+  let cotyTransportHome = null;
+
+  function rememberCotyTransportHome(node) {
+    if (cotyTransportHome || !node || !node.parentNode) {
+      return;
+    }
+    cotyTransportHome = { parent: node.parentNode, next: node.nextSibling };
+  }
+
+  function syncCotyTransportPlacement() {
+    const node = document.querySelector('[data-js="coty-transport"]');
+    if (!node) {
+      return;
+    }
+    rememberCotyTransportHome(node);
+    if (isTerminalLayout()) {
+      const panel = document.querySelector('[data-js="settings-panel"]');
+      const modeToggle = document.querySelector('[data-js="coty-mode-toggle"]');
+      const anchor = modeToggle ? modeToggle.closest(".theme-section") : null;
+      if (panel && anchor && anchor.parentNode === panel) {
+        if (anchor.nextSibling !== node) {
+          panel.insertBefore(node, anchor.nextSibling);
+        }
+      } else if (panel && node.parentNode !== panel) {
+        panel.appendChild(node);
+      }
+      // Inline, it is always expanded — but only touch (and persist) the
+      // ui-state when Pantone is actually active/visible, so entering the
+      // terminal with the effect off doesn't clobber the floating pill's
+      // collapsed preference.
+      if (isPantoneModeActive()) {
+        setCotyTransportUiState("expanded");
+      }
+    } else if (
+      cotyTransportHome &&
+      cotyTransportHome.parent &&
+      cotyTransportHome.parent.isConnected &&
+      node.parentNode !== cotyTransportHome.parent
+    ) {
+      // Only restore into a home that is still part of the live document, and
+      // never anchor to a detached reference node.
+      const ref =
+        cotyTransportHome.next && cotyTransportHome.next.isConnected
+          ? cotyTransportHome.next
+          : null;
+      cotyTransportHome.parent.insertBefore(node, ref);
+      // Back as the floating pill: land in the collapsed three-dot resting
+      // state right away rather than leaving the full player expanded (it was
+      // forced open while inline in the terminal settings).
+      if (isPantoneModeActive()) {
+        setCotyTransportUiState("collapsed");
+      }
     }
   }
 
@@ -1864,6 +1957,11 @@
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
+    // Record the Pantone controls' authored (floating) home before applyLayout
+    // can move them, so returning from the terminal restores them correctly.
+    rememberCotyTransportHome(
+      document.querySelector('[data-js="coty-transport"]')
+    );
     applyLayout(storedLayout);
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
@@ -1894,6 +1992,20 @@
         expandCotyTransport({ autoCollapse: true });
       }
     }
+
+    // Park the Pantone controls where the current layout wants them (inline in
+    // the terminal settings, floating otherwise), and keep them in sync as the
+    // user switches layouts. Deregister any handler from a previous init so the
+    // listener never accumulates if this ever runs more than once.
+    if (window.__cotyPlacementHandler) {
+      window.removeEventListener(
+        "theme:layout-changed",
+        window.__cotyPlacementHandler
+      );
+    }
+    window.__cotyPlacementHandler = syncCotyTransportPlacement;
+    window.addEventListener("theme:layout-changed", syncCotyTransportPlacement);
+    syncCotyTransportPlacement();
 
     window.ThemeActions = {
       setMode: setMode,
@@ -2066,6 +2178,1061 @@
         );
       }
     });
+
+    // ======================================================================
+    // Terminal command line
+    // The tail's <input> is a real prompt. Tapping it focuses the field and
+    // opens the on-screen keyboard (the fix that makes the terminal usable on
+    // touch devices), and Enter runs a small set of commands + easter eggs.
+    // Parsing is separated from side effects: runTerminalCommand() returns the
+    // text to print plus an optional action, and applyTerminalAction() carries
+    // it out by reusing the theme/layout functions already defined above.
+    // ======================================================================
+    const terminalInput = document.querySelector('[data-js="terminal-input"]');
+    const terminalTail = terminalInput
+      ? terminalInput.closest(".terminal-tail")
+      : null;
+    const terminalSession = document.querySelector(
+      '[data-js="terminal-session"]'
+    );
+
+    // Kept narrow (a ~12-char command column + short descriptions) so every
+    // line fits a phone's ~36-char terminal width without wrapping mid-column.
+    const TERMINAL_HELP = [
+      "commands:",
+      "  help      this list",
+      "  whoami    who's asking",
+      "  date      date & time",
+      "  pwd       working dir",
+      "  cd <page> change page",
+      "  lang [sv|en]  language",
+      "  echo      print text",
+      "  neofetch  session info",
+      "  dark|light|system  mode",
+      "  pantone   [on|off|YYYY]",
+      "  grain|blend|motion on/off",
+      "  grid      layout grid",
+      "  contact   message me",
+      "  subscribe newsletter",
+      "  clear     wipe the screen",
+      "  exit      leave the terminal",
+    ];
+
+    // Toggleable image effects, keyed by command word. `invert` flags that the
+    // command's sense is the opposite of its data-attribute: "motion on" means
+    // animation on, i.e. data-effect-reduced-motion OFF. Built once, not per
+    // command.
+    const TERMINAL_EFFECTS = {
+      grain: { attr: "data-effect-grain", set: setGrainEnabled, invert: false },
+      blend: { attr: "data-effect-blend", set: setBlendEnabled, invert: false },
+      motion: {
+        attr: "data-effect-reduced-motion",
+        set: setReducedMotionEnabled,
+        invert: true,
+      },
+    };
+
+    function terminalHost() {
+      return (window.location && window.location.hostname) || "tor-bjorn.com";
+    }
+
+    function resolvedModeLabel() {
+      return document.documentElement.getAttribute("data-mode") === "dark"
+        ? "dark"
+        : "light";
+    }
+
+    function paletteLabel() {
+      var palette =
+        document.documentElement.getAttribute("data-palette") || "standard";
+      if (palette === "pantone") {
+        return "pantone (" + getCurrentCotyYear() + ")";
+      }
+      return palette;
+    }
+
+    function neofetchLines() {
+      var host = terminalHost();
+      return [
+        "visitor@" + host,
+        "-----------------",
+        "host      " + host,
+        "layout    terminal",
+        "mode      " + resolvedModeLabel(),
+        "palette   " + paletteLabel(),
+        "lang      " + (document.documentElement.getAttribute("lang") || "en"),
+        "shell     tor-sh 1.0",
+      ];
+    }
+
+    // "on"/"off" from an argument, otherwise "toggle".
+    function onOffState(arg) {
+      var value = (arg || "").toLowerCase();
+      if (value === "on" || value === "enable" || value === "1") {
+        return "on";
+      }
+      if (value === "off" || value === "disable" || value === "0") {
+        return "off";
+      }
+      return "toggle";
+    }
+
+    // The home link the terminal prompt already points at (falls back to root).
+    function terminalHomeUrl() {
+      var host = document.querySelector(".terminal-prompt__host[href]");
+      return (host && host.getAttribute("href")) || "/";
+    }
+
+    // Map the nav's pages to `cd` targets, keyed by both URL slug and link text
+    // (so `cd writing` and `cd essays` both resolve if that's the label). Built
+    // once — the nav is static for the page's lifetime.
+    var terminalNavTargetsCache = null;
+    function terminalNavTargets() {
+      if (terminalNavTargetsCache) {
+        return terminalNavTargetsCache;
+      }
+      var map = {};
+      // Exclude the statusbar quick-toggles (:not(.terminal-quick)): the
+      // language toggle is an <a> to the *other* language's URL, whose slug
+      // collides with the current page's and would overwrite the real target.
+      var links = document.querySelectorAll(
+        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href]"
+      );
+      links.forEach(function (link) {
+        var href = link.getAttribute("href");
+        if (!href || href.charAt(0) === "#") {
+          return;
+        }
+        var path = href.replace(/[?#].*$/, "").replace(/\/+$/, "");
+        var slug = path.split("/").filter(Boolean).pop();
+        if (slug) {
+          map[slug.toLowerCase()] = href;
+        }
+        var text = (link.textContent || "").trim().toLowerCase();
+        if (text) {
+          map[text] = href;
+        }
+      });
+      terminalNavTargetsCache = map;
+      return map;
+    }
+
+    function resolveCdTarget(dest) {
+      var key = String(dest || "")
+        .replace(/^\/+|\/+$/g, "")
+        .toLowerCase();
+      if (!key) {
+        return terminalHomeUrl();
+      }
+      if (key === "home" || key === "~") {
+        return terminalHomeUrl();
+      }
+      var targets = terminalNavTargets();
+      return targets[key] || null;
+    }
+
+    // Languages from the settings language selector, keyed by code. The current
+    // language's radio has no data-language-href; every other one carries the
+    // translated page's URL (or a homepage fallback).
+    function terminalLanguages() {
+      var map = {};
+      document
+        .querySelectorAll(".language-option input[data-language-code]")
+        .forEach(function (input) {
+          var code = (
+            input.getAttribute("data-language-code") || ""
+          ).toLowerCase();
+          if (!code) {
+            return;
+          }
+          map[code] = {
+            href: input.getAttribute("data-language-href"),
+            name: (
+              input.getAttribute("data-language-name") || ""
+            ).toLowerCase(),
+          };
+        });
+      return map;
+    }
+
+    function currentLang() {
+      return (document.documentElement.getAttribute("lang") || "en")
+        .slice(0, 2)
+        .toLowerCase();
+    }
+
+    var LANG_ALIASES = {
+      en: "en",
+      english: "en",
+      sv: "sv",
+      svenska: "sv",
+      swedish: "sv",
+    };
+
+    // Returns { echo, lines, action }. `echo` is the command as typed (printed
+    // with the prompt), `lines` are output rows, `action` (or null) is applied
+    // separately. Kept free of DOM mutation so it is straightforward to test.
+    function runTerminalCommand(raw) {
+      var input = String(raw === null || raw === undefined ? "" : raw).trim();
+      if (!input) {
+        return { echo: "", lines: [], action: null };
+      }
+      var parts = input.split(/\s+/);
+      var cmd = parts[0].toLowerCase();
+      var args = parts.slice(1);
+      var rest = input.slice(parts[0].length).trim();
+
+      switch (cmd) {
+        case "help":
+        case "?":
+          return { echo: input, lines: TERMINAL_HELP.slice(), action: null };
+        case "exit":
+        case "quit":
+        case "logout":
+          return { echo: input, lines: [], action: { type: "exit" } };
+        case "clear":
+          return { echo: "", lines: [], action: { type: "clear" } };
+        case "dark":
+        case "light":
+        case "system":
+          return {
+            echo: input,
+            lines: ["mode → " + cmd],
+            action: { type: "mode", mode: cmd },
+          };
+        case "pantone": {
+          var sub = (args[0] || "").toLowerCase();
+          if (sub === "off" || sub === "stop") {
+            return {
+              echo: input,
+              lines: ["pantone: colour-of-the-year off"],
+              action: { type: "pantone", state: "off" },
+            };
+          }
+          if (sub === "on" || sub === "start") {
+            return {
+              echo: input,
+              lines: [
+                "pantone: colour-of-the-year on (" + getCurrentCotyYear() + ")",
+              ],
+              action: { type: "pantone", state: "on" },
+            };
+          }
+          if (sub === "next" || sub === "prev" || sub === "previous") {
+            var step = sub === "next" ? 1 : -1;
+            return {
+              echo: input,
+              lines: ["pantone: " + (step > 0 ? "next" : "previous") + " year"],
+              action: { type: "pantone", state: "step", step: step },
+            };
+          }
+          if (/^\d{4}$/.test(sub)) {
+            var wanted = parseInt(sub, 10);
+            var actions = getCotyActions();
+            var entries =
+              actions && typeof actions.getEntries === "function"
+                ? actions.getEntries()
+                : null;
+            if (
+              entries &&
+              entries.length &&
+              !entries.some(function (entry) {
+                return Number(entry.year) === wanted;
+              })
+            ) {
+              var years = entries
+                .map(function (entry) {
+                  return entry.year;
+                })
+                .join(", ");
+              return {
+                echo: input,
+                lines: ["pantone: no year " + wanted + " — try: " + years],
+                action: null,
+              };
+            }
+            return {
+              echo: input,
+              lines: ["pantone: year → " + wanted],
+              action: { type: "pantone", state: "year", year: wanted },
+            };
+          }
+          if (sub) {
+            return {
+              echo: input,
+              lines: [
+                "pantone: unknown option '" +
+                  sub +
+                  "' — try on, off, next, prev, or a year",
+              ],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: ["pantone: colour-of-the-year toggled"],
+            action: { type: "pantone", state: "toggle" },
+          };
+        }
+        case "grid": {
+          var gridState = onOffState(args[0]);
+          return {
+            echo: input,
+            lines: ["grid: " + gridState],
+            action: { type: "grid", state: gridState },
+          };
+        }
+        case "grain":
+        case "blend":
+        case "motion": {
+          var effectState = onOffState(args[0]);
+          return {
+            echo: input,
+            lines: [cmd + ": " + effectState],
+            action: { type: "effect", effect: cmd, state: effectState },
+          };
+        }
+        case "cd": {
+          var dest = args[0] || "~";
+          if (dest === "~" || dest === "/" || dest === "..") {
+            return {
+              echo: input,
+              lines: [],
+              action: { type: "navigate", url: terminalHomeUrl() },
+            };
+          }
+          var target = resolveCdTarget(dest);
+          if (!target) {
+            return {
+              echo: input,
+              lines: ["cd: no such file or directory: " + dest],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "navigate", url: target },
+          };
+        }
+        case "lang":
+        case "language": {
+          var languages = terminalLanguages();
+          var available = Object.keys(languages);
+          var here = currentLang();
+          var wanted = (args[0] || "").toLowerCase();
+          if (!wanted) {
+            return {
+              echo: input,
+              lines: [
+                "language: " + here,
+                "available: " + (available.join(", ") || here),
+              ],
+              action: null,
+            };
+          }
+          var langTarget = LANG_ALIASES[wanted] || wanted;
+          if (!languages[langTarget]) {
+            return {
+              echo: input,
+              lines: [
+                "lang: unknown language '" +
+                  wanted +
+                  "' — try: " +
+                  (available.join(", ") || here),
+              ],
+              action: null,
+            };
+          }
+          if (langTarget === here) {
+            return {
+              echo: input,
+              lines: ["language: already " + here],
+              action: null,
+            };
+          }
+          if (!languages[langTarget].href) {
+            return {
+              echo: input,
+              lines: ["lang: " + langTarget + " unavailable for this page"],
+              action: null,
+            };
+          }
+          // Switch language by loading the translated page. cd:false so the
+          // navigation doesn't print a spurious `cd` echo (same directory,
+          // different language).
+          return {
+            echo: input,
+            lines: [],
+            action: {
+              type: "navigate",
+              url: languages[langTarget].href,
+              cd: false,
+            },
+          };
+        }
+        case "contact":
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "flow", flow: "contact" },
+          };
+        case "subscribe":
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "flow", flow: "subscribe" },
+          };
+        case "echo":
+          return { echo: input, lines: [rest], action: null };
+        case "whoami":
+          return {
+            echo: input,
+            lines: ["visitor", "(not logged in — but welcome anyway)"],
+            action: null,
+          };
+        case "date":
+          return {
+            echo: input,
+            lines: [new Date().toString()],
+            action: null,
+          };
+        case "pwd":
+          return {
+            echo: input,
+            lines: [(window.location && window.location.pathname) || "/"],
+            action: null,
+          };
+        case "neofetch":
+        case "screenfetch":
+          return {
+            echo: input,
+            lines: neofetchLines(),
+            action: { type: "art" },
+          };
+        case "sudo":
+          return {
+            echo: input,
+            lines: [
+              "permission denied: nice try 😏",
+              "(this incident has been reported)",
+            ],
+            action: null,
+          };
+        case "coffee":
+        case "brew":
+          return {
+            echo: input,
+            lines: ["HTTP 418 — I'm a teapot ☕"],
+            action: null,
+          };
+        case "make":
+          if ((args[0] || "").toLowerCase() === "coffee") {
+            return {
+              echo: input,
+              lines: ["HTTP 418 — I'm a teapot ☕"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [
+              "make: *** no rule to make target '" + (args[0] || "") + "'.",
+            ],
+            action: null,
+          };
+        default:
+          return {
+            echo: input,
+            lines: [cmd + ": command not found — try 'help'"],
+            action: null,
+          };
+      }
+    }
+
+    function applyTerminalAction(action) {
+      if (!action) {
+        return;
+      }
+      switch (action.type) {
+        case "exit":
+          exitTerminal();
+          break;
+        case "clear":
+          if (terminalSession) {
+            terminalSession.textContent = "";
+          }
+          break;
+        case "mode":
+          setMode(action.mode);
+          break;
+        case "pantone":
+          if (action.state === "off") {
+            stopPantone();
+          } else if (action.state === "on") {
+            if (!isPantoneModeActive()) {
+              activatePantone({ playing: false, resetYear: true });
+            }
+          } else if (action.state === "year") {
+            if (!isPantoneModeActive()) {
+              activatePantone({ playing: false, resetYear: false });
+            }
+            setCotyYear(action.year, {
+              fromUser: true,
+              transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+            });
+          } else if (action.state === "step") {
+            if (!isPantoneModeActive()) {
+              activatePantone({ playing: false, resetYear: false });
+            }
+            advanceCotyYear(action.step, {
+              fromUser: true,
+              transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+            });
+          } else {
+            togglePantoneMode();
+          }
+          break;
+        case "grid": {
+          var gridBtn = document.querySelector('[data-js="grid-toggle"]');
+          if (!gridBtn) {
+            break;
+          }
+          // "closing" means the overlay is animating out — treat it as off, the
+          // same as grid-overlay.js's own open() guard, so a mid-close toggle
+          // isn't misread as on.
+          var gridAttr =
+            document.documentElement.getAttribute("data-grid-overlay");
+          var gridOn = gridAttr !== null && gridAttr !== "closing";
+          if (action.state === "toggle" || (action.state === "on") !== gridOn) {
+            gridBtn.click();
+          }
+          break;
+        }
+        case "effect": {
+          var effect = TERMINAL_EFFECTS[action.effect];
+          if (!effect) {
+            break;
+          }
+          // `feature` is what the command word means (grain/blend present, or
+          // motion playing). For motion that is the inverse of the underlying
+          // data-effect-reduced-motion attribute, so `motion on` restores
+          // animation rather than suppressing it.
+          var attrOn =
+            document.documentElement.getAttribute(effect.attr) === "on";
+          var featureOn = effect.invert ? !attrOn : attrOn;
+          var targetFeature =
+            action.state === "on"
+              ? true
+              : action.state === "off"
+              ? false
+              : !featureOn;
+          effect.set(effect.invert ? !targetFeature : targetFeature);
+          break;
+        }
+        case "navigate":
+          if (action.url) {
+            // Carry a `cd` echo to the destination, same as a nav click —
+            // unless the caller opts out (e.g. a language switch).
+            if (action.cd !== false) {
+              stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
+            }
+            try {
+              window.location.assign(action.url);
+            } catch (err) {
+              window.location.href = action.url;
+            }
+          }
+          break;
+        case "flow":
+          startTerminalFlow(action.flow);
+          break;
+        default:
+          break;
+      }
+    }
+
+    function printTerminalLine(text, className) {
+      if (!terminalSession) {
+        return;
+      }
+      var line = document.createElement("span");
+      line.className = "terminal-session__line " + className;
+      line.textContent = text;
+      terminalSession.appendChild(line);
+    }
+
+    function runTerminalInput(raw) {
+      var result = runTerminalCommand(raw);
+      if (result.echo) {
+        printTerminalLine(result.echo, "terminal-session__cmd");
+      }
+      var artLines =
+        result.action && result.action.type === "art" ? terminalArtLines() : [];
+      artLines.forEach(function (line) {
+        printTerminalLine(
+          line,
+          "terminal-session__out terminal-session__out--art"
+        );
+      });
+      (result.lines || []).forEach(function (line) {
+        printTerminalLine(line, "terminal-session__out");
+      });
+      applyTerminalAction(result.action);
+      // Keep the newest output and the prompt in view; refocus so the mobile
+      // keyboard stays up for the next command.
+      scrollTerminalToEnd();
+    }
+
+    // The boot banner's small block-curl, reused as neofetch art when present.
+    function terminalArtLines() {
+      var art = document.querySelector(".terminal-boot__art--sm");
+      if (!art || !art.textContent) {
+        return [];
+      }
+      return art.textContent.replace(/^\n+|\n+$/g, "").split("\n");
+    }
+
+    function scrollTerminalToEnd() {
+      if (terminalInput && isTerminalLayout()) {
+        window.requestAnimationFrame(function () {
+          window.scrollTo(0, document.body.scrollHeight);
+          terminalInput.focus();
+        });
+      }
+    }
+
+    // ----------------------------------------------------------------------
+    // Interactive prompt flows (contact, subscribe)
+    // Some commands aren't one-shot: they collect a few fields one prompt at a
+    // time, like a CLI wizard, then POST to the very same backend the on-page
+    // forms use. While a flow runs, Enter feeds the current step (not the
+    // command parser), the prompt shows the field name, and `cancel`/Escape
+    // aborts. Contact posts to the Netlify form endpoint; subscribe reuses the
+    // footer newsletter form's action and hidden fields.
+    // ----------------------------------------------------------------------
+    let terminalFlow = null;
+
+    function isEmailish(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    function nonEmpty(value) {
+      return value.length > 0;
+    }
+
+    function submitContactFlow(data) {
+      printTerminalLine("sending…", "terminal-session__out");
+      var body = new window.URLSearchParams({
+        "form-name": "contact",
+        "bot-field": "",
+        name: data.name || "",
+        email: data.email || "",
+        message: data.message || "",
+      }).toString();
+      window
+        .fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body,
+        })
+        .then(function (response) {
+          printTerminalLine(
+            response && response.ok
+              ? "message sent — thanks, I'll be in touch."
+              : "send failed — try the contact page instead.",
+            "terminal-session__out"
+          );
+        })
+        .catch(function () {
+          printTerminalLine(
+            "send failed — you may be offline.",
+            "terminal-session__out"
+          );
+        })
+        .then(scrollTerminalToEnd);
+    }
+
+    function submitSubscribeFlow(data) {
+      var form = document.querySelector("form[data-mc-form]");
+      if (!form) {
+        printTerminalLine(
+          "subscribe: the newsletter isn't available here.",
+          "terminal-session__out"
+        );
+        scrollTerminalToEnd();
+        return;
+      }
+      var emailField = form.querySelector('input[type="email"]');
+      var formData = new window.FormData(form);
+      if (emailField && emailField.name) {
+        formData.set(emailField.name, data.email);
+      }
+      printTerminalLine("subscribing…", "terminal-session__out");
+      window
+        .fetch(form.action, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new window.URLSearchParams(formData).toString(),
+        })
+        .then(function (response) {
+          // A non-OK status returns HTML, not JSON — surface it as a server
+          // error rather than letting response.json() reject into the generic
+          // "offline" catch.
+          if (!response || !response.ok) {
+            printTerminalLine(
+              "couldn't subscribe — the server rejected it.",
+              "terminal-session__out"
+            );
+            return null;
+          }
+          return response.json();
+        })
+        .then(function (result) {
+          if (!result) {
+            return; // non-OK already reported
+          }
+          if (result.success) {
+            printTerminalLine(
+              "subscribed — check your inbox to confirm.",
+              "terminal-session__out"
+            );
+          } else if (result.error === "already_subscribed") {
+            printTerminalLine(
+              "you're already subscribed.",
+              "terminal-session__out"
+            );
+          } else {
+            printTerminalLine(
+              "couldn't subscribe — try the footer form.",
+              "terminal-session__out"
+            );
+          }
+        })
+        .catch(function () {
+          printTerminalLine(
+            "couldn't subscribe — you may be offline.",
+            "terminal-session__out"
+          );
+        })
+        .then(scrollTerminalToEnd);
+    }
+
+    var TERMINAL_FLOWS = {
+      contact: {
+        intro: "contact — send me a message. type 'cancel' to abort.",
+        steps: [
+          {
+            key: "email",
+            label: "email",
+            validate: isEmailish,
+            error: "that doesn't look like an email — try again",
+          },
+          {
+            key: "name",
+            label: "name",
+            validate: nonEmpty,
+            error: "name can't be empty",
+          },
+          {
+            key: "message",
+            label: "message",
+            validate: nonEmpty,
+            error: "message can't be empty",
+          },
+        ],
+        confirm: "send this? [Y/n]",
+        submit: submitContactFlow,
+      },
+      subscribe: {
+        intro:
+          "subscribe — the occasional note, no spam. type 'cancel' to abort.",
+        steps: [
+          {
+            key: "email",
+            label: "email",
+            validate: isEmailish,
+            error: "that doesn't look like an email — try again",
+          },
+        ],
+        confirm: "subscribe with this address? [Y/n]",
+        submit: submitSubscribeFlow,
+      },
+    };
+
+    // The prompt is shown verbatim; field steps pass "email>", the confirm step
+    // passes its full question. Pass null to restore the shell PS1. The label is
+    // set on BOTH the tail (so the hint's ::after can switch) and the prompt
+    // span (so its ::before can read the label via attr() — attr() only sees the
+    // pseudo-element's own element, not an ancestor).
+    function setFlowPrompt(prompt) {
+      if (!terminalTail) {
+        return;
+      }
+      var promptEl = terminalTail.querySelector(".terminal-tail__prompt");
+      if (prompt) {
+        terminalTail.setAttribute("data-flow-label", prompt);
+        if (promptEl) {
+          promptEl.setAttribute("data-flow-label", prompt);
+        }
+      } else {
+        terminalTail.removeAttribute("data-flow-label");
+        if (promptEl) {
+          promptEl.removeAttribute("data-flow-label");
+        }
+      }
+    }
+
+    function startTerminalFlow(name) {
+      var def = TERMINAL_FLOWS[name];
+      if (!def) {
+        return;
+      }
+      terminalFlow = { def: def, step: 0, data: {}, confirming: false };
+      printTerminalLine(def.intro, "terminal-session__out");
+      setFlowPrompt(def.steps[0].label + ">");
+    }
+
+    function endTerminalFlow() {
+      terminalFlow = null;
+      setFlowPrompt(null);
+    }
+
+    // Let the top-level exitTerminal() abort a flow when leaving the terminal.
+    terminalFlowReset = endTerminalFlow;
+
+    function handleTerminalFlowInput(raw) {
+      var flow = terminalFlow;
+      var value = String(raw === null || raw === undefined ? "" : raw).trim();
+
+      if (value.toLowerCase() === "cancel") {
+        printTerminalLine("^C", "terminal-session__out");
+        endTerminalFlow();
+        return;
+      }
+
+      if (!flow.confirming) {
+        var stepDef = flow.def.steps[flow.step];
+        printTerminalLine(
+          stepDef.label + "> " + value,
+          "terminal-session__flow"
+        );
+        if (stepDef.validate && !stepDef.validate(value)) {
+          printTerminalLine(stepDef.error, "terminal-session__out");
+          return; // stay on this step
+        }
+        flow.data[stepDef.key] = value;
+        flow.step += 1;
+        if (flow.step < flow.def.steps.length) {
+          setFlowPrompt(flow.def.steps[flow.step].label + ">");
+        } else {
+          flow.confirming = true;
+          setFlowPrompt(flow.def.confirm);
+        }
+        return;
+      }
+
+      // Confirmation step: empty / y / yes sends; n / no aborts.
+      printTerminalLine(
+        flow.def.confirm + " " + value,
+        "terminal-session__flow"
+      );
+      var answer = value.toLowerCase();
+      if (answer === "" || answer === "y" || answer === "yes") {
+        var submit = flow.def.submit;
+        var data = flow.data;
+        endTerminalFlow();
+        submit(data);
+      } else if (answer === "n" || answer === "no") {
+        printTerminalLine("cancelled", "terminal-session__out");
+        endTerminalFlow();
+      } else {
+        printTerminalLine("please answer y or n", "terminal-session__out");
+      }
+    }
+
+    function syncTerminalInputSize() {
+      if (!terminalInput) {
+        return;
+      }
+      terminalInput.size = Math.max(1, terminalInput.value.length);
+      if (terminalTail) {
+        terminalTail.classList.toggle("is-typing", terminalInput.value !== "");
+      }
+    }
+
+    if (terminalInput) {
+      terminalInput.addEventListener("input", syncTerminalInputSize);
+      terminalInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var value = terminalInput.value;
+          terminalInput.value = "";
+          syncTerminalInputSize();
+          if (terminalFlow) {
+            handleTerminalFlowInput(value);
+            scrollTerminalToEnd();
+          } else {
+            runTerminalInput(value);
+          }
+        } else if (e.key === "Escape") {
+          if (terminalFlow) {
+            // Escape aborts an in-progress flow rather than leaving — clear the
+            // half-typed value too, so it isn't run as a command on next Enter.
+            e.preventDefault();
+            terminalInput.value = "";
+            syncTerminalInputSize();
+            printTerminalLine("^C", "terminal-session__out");
+            endTerminalFlow();
+            scrollTerminalToEnd();
+          } else if (
+            e.defaultPrevented ||
+            document.documentElement.classList.contains("lightbox-open") ||
+            document.documentElement.hasAttribute("data-settings-panel-open")
+          ) {
+            // An open overlay owns this Escape — let it close first, exactly as
+            // the global handler defers.
+            return;
+          } else if (terminalInput.value === "") {
+            // Empty prompt + Escape leaves the terminal, matching the global
+            // handler (which ignores events targeting inputs).
+            terminalInput.blur();
+            exitTerminal();
+          }
+        }
+      });
+      syncTerminalInputSize();
+    }
+
+    // ----------------------------------------------------------------------
+    // Nav "cd" feedback
+    // A full page load gives almost no signal that navigation happened. So a
+    // nav click (or a typed `cd`) reads like running `cd <page>`: we stash the
+    // command, and the destination page prints it as the first scrollback line
+    // above its own `~/cwd$ ls nav/` prompt — the real cd→ls sequence, with no
+    // scroll and no boot theater. Purely additive; navigation is never delayed.
+    // ----------------------------------------------------------------------
+    const TERMINAL_CD_KEY = "terminal-cd";
+
+    function currentTerminalCwd() {
+      var value = window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue("--terminal-cwd")
+        .trim()
+        .replace(/^["']|["']$/g, "");
+      return value || "~";
+    }
+
+    // Derive a page's cwd (~ or ~/segment) from a link href, mirroring the
+    // per-page logic in head.html (strip origin, query/hash, and lang prefix).
+    function hrefToCwd(href) {
+      var path = String(href || "")
+        .replace(/^[a-z]+:\/\/[^/]+/i, "")
+        .replace(/[?#].*$/, "")
+        .replace(/^\/+|\/+$/g, "");
+      var lang = (
+        document.documentElement.getAttribute("lang") || ""
+      ).toLowerCase();
+      var parts = path.split("/").filter(Boolean);
+      if (parts.length && parts[0].toLowerCase() === lang) {
+        parts.shift();
+      }
+      return parts.length ? "~/" + parts[0] : "~";
+    }
+
+    function stashTerminalCd(fromCwd, targetCwd) {
+      if (fromCwd === targetCwd) {
+        return; // same directory — nothing to echo
+      }
+      try {
+        sessionStorage.setItem(
+          TERMINAL_CD_KEY,
+          JSON.stringify({ from: fromCwd, cmd: "cd " + targetCwd })
+        );
+      } catch (e) {
+        /* sessionStorage unavailable — skip the echo */
+      }
+    }
+
+    // Print any pending `cd` as scrollback above this page's first prompt.
+    function printPendingTerminalCd() {
+      if (!isTerminalLayout()) {
+        return;
+      }
+      var raw;
+      try {
+        raw = sessionStorage.getItem(TERMINAL_CD_KEY);
+        sessionStorage.removeItem(TERMINAL_CD_KEY);
+      } catch (e) {
+        return;
+      }
+      if (!raw) {
+        return;
+      }
+      var data;
+      try {
+        data = JSON.parse(raw);
+      } catch (e) {
+        return;
+      }
+      if (!data || !data.cmd) {
+        return;
+      }
+      var container = document.querySelector(".top-menu__container");
+      var anchor = container
+        ? container.querySelector(":scope > .terminal-prompt")
+        : null;
+      if (!container || !anchor) {
+        return;
+      }
+      var line = document.createElement("span");
+      line.className = "terminal-prompt terminal-prompt--cd";
+      line.setAttribute("aria-hidden", "true");
+      // Override the prompt's cwd to where we came from, so CSS renders the
+      // exact PS1 (responsive compact form included) for that directory.
+      line.style.setProperty("--terminal-cwd", '"' + data.from + '"');
+      line.innerHTML =
+        '<span class="terminal-prompt__user"></span>' +
+        '<span class="terminal-prompt__host-plain"></span>' +
+        '<span class="terminal-prompt__cwd"></span>' +
+        '<span class="terminal-prompt__cmd"></span>';
+      line.querySelector(".terminal-prompt__cmd").textContent = data.cmd;
+      container.insertBefore(line, anchor);
+    }
+
+    // Nav clicks that change page read as `cd <page>` on the next screen.
+    document.addEventListener("click", function (e) {
+      if (
+        !isTerminalLayout() ||
+        e.defaultPrevented ||
+        e.button !== 0 ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey
+      ) {
+        return;
+      }
+      var link =
+        e.target && e.target.closest
+          ? e.target.closest(
+              // Skip the statusbar quick-toggles — the language toggle switches
+              // language, not directory, so it must not print a `cd` echo.
+              ".top-menu__nav a[href]:not(.terminal-quick), " +
+                ".terminal-prompt__host[href]"
+            )
+          : null;
+      if (!link) {
+        return;
+      }
+      var href = link.getAttribute("href");
+      if (!href || href.charAt(0) === "#") {
+        return;
+      }
+      stashTerminalCd(currentTerminalCwd(), hrefToCwd(href));
+    });
+
+    printPendingTerminalCd();
 
     // Terminal layout: statusbar quick toggle that shows the resolved mode as
     // a bracketed word; clicking flips light/dark (an explicit choice, so it
