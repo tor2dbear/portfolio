@@ -2205,6 +2205,7 @@
       "  date      date & time",
       "  pwd       working dir",
       "  cd <page> change page",
+      "  lang [sv|en]  language",
       "  echo      print text",
       "  neofetch  session info",
       "  dark|light|system  mode",
@@ -2326,6 +2327,44 @@
       var targets = terminalNavTargets();
       return targets[key] || null;
     }
+
+    // Languages from the settings language selector, keyed by code. The current
+    // language's radio has no data-language-href; every other one carries the
+    // translated page's URL (or a homepage fallback).
+    function terminalLanguages() {
+      var map = {};
+      document
+        .querySelectorAll(".language-option input[data-language-code]")
+        .forEach(function (input) {
+          var code = (
+            input.getAttribute("data-language-code") || ""
+          ).toLowerCase();
+          if (!code) {
+            return;
+          }
+          map[code] = {
+            href: input.getAttribute("data-language-href"),
+            name: (
+              input.getAttribute("data-language-name") || ""
+            ).toLowerCase(),
+          };
+        });
+      return map;
+    }
+
+    function currentLang() {
+      return (document.documentElement.getAttribute("lang") || "en")
+        .slice(0, 2)
+        .toLowerCase();
+    }
+
+    var LANG_ALIASES = {
+      en: "en",
+      english: "en",
+      sv: "sv",
+      svenska: "sv",
+      swedish: "sv",
+    };
 
     // Returns { echo, lines, action }. `echo` is the command as typed (printed
     // with the prompt), `lines` are output rows, `action` (or null) is applied
@@ -2471,6 +2510,62 @@
             echo: input,
             lines: [],
             action: { type: "navigate", url: target },
+          };
+        }
+        case "lang":
+        case "language": {
+          var languages = terminalLanguages();
+          var available = Object.keys(languages);
+          var here = currentLang();
+          var wanted = (args[0] || "").toLowerCase();
+          if (!wanted) {
+            return {
+              echo: input,
+              lines: [
+                "language: " + here,
+                "available: " + (available.join(", ") || here),
+              ],
+              action: null,
+            };
+          }
+          var langTarget = LANG_ALIASES[wanted] || wanted;
+          if (!languages[langTarget]) {
+            return {
+              echo: input,
+              lines: [
+                "lang: unknown language '" +
+                  wanted +
+                  "' — try: " +
+                  (available.join(", ") || here),
+              ],
+              action: null,
+            };
+          }
+          if (langTarget === here) {
+            return {
+              echo: input,
+              lines: ["language: already " + here],
+              action: null,
+            };
+          }
+          if (!languages[langTarget].href) {
+            return {
+              echo: input,
+              lines: ["lang: " + langTarget + " unavailable for this page"],
+              action: null,
+            };
+          }
+          // Switch language by loading the translated page. cd:false so the
+          // navigation doesn't print a spurious `cd` echo (same directory,
+          // different language).
+          return {
+            echo: input,
+            lines: [],
+            action: {
+              type: "navigate",
+              url: languages[langTarget].href,
+              cd: false,
+            },
           };
         }
         case "contact":
@@ -2634,8 +2729,11 @@
         }
         case "navigate":
           if (action.url) {
-            // Carry a `cd` echo to the destination, same as a nav click.
-            stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
+            // Carry a `cd` echo to the destination, same as a nav click —
+            // unless the caller opts out (e.g. a language switch).
+            if (action.cd !== false) {
+              stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
+            }
             try {
               window.location.assign(action.url);
             } catch (err) {

@@ -76,6 +76,17 @@ describe("terminal command line", () => {
         </div>
         <button data-js="grid-toggle" aria-pressed="false"></button>
         <button data-js="terminal-exit">[exit]</button>
+        <div class="language-list">
+          <label class="language-option"
+            ><input data-language-code="en" data-language-name="English" checked
+          /></label>
+          <label class="language-option"
+            ><input
+              data-language-code="sv"
+              data-language-name="Svenska"
+              data-language-href="/sv/"
+          /></label>
+        </div>
         <div class="top-menu__container">
           <span class="terminal-prompt terminal-prompt--nav"
             ><span class="terminal-prompt__cmd">ls nav/</span></span
@@ -473,6 +484,38 @@ describe("terminal command line", () => {
     expect(document.documentElement.hasAttribute("data-terminal-booted")).toBe(
       false
     );
+  });
+
+  // ---- language command -------------------------------------------------
+
+  test("lang lists the current and available languages", () => {
+    loadModule();
+    typeCommand("lang");
+    expect(sessionText()).toContain("language: en");
+    expect(sessionText()).toContain("sv");
+  });
+
+  test("lang <current> reports it's already active", () => {
+    loadModule();
+    typeCommand("lang en");
+    expect(sessionText().toLowerCase()).toContain("already");
+  });
+
+  test("lang rejects an unknown language", () => {
+    loadModule();
+    typeCommand("lang xx");
+    expect(sessionText()).toContain("unknown language 'xx'");
+  });
+
+  test("lang sv switches without a spurious cd echo", () => {
+    sessionStorage.removeItem("terminal-cd");
+    loadModule();
+    typeCommand("lang sv");
+    const txt = sessionText().toLowerCase();
+    expect(txt).not.toContain("unknown");
+    expect(txt).not.toContain("already");
+    // A language switch is the same directory — no cd echo may be stashed.
+    expect(sessionStorage.getItem("terminal-cd")).toBeNull();
   });
 
   // ---- Nav "cd" feedback ------------------------------------------------
