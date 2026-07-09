@@ -1,0 +1,24 @@
+# Minimal, self-contained Hugo site used only by hugo-render.test.js.
+#
+# It exists to render two real project templates in isolation:
+#   * layouts/_default/summary-employer.html  (employer-view href)
+#   * layouts/partials/settings-dropdown.html (language switcher)
+#
+# The test injects those two real templates plus the real i18n/ dir into a
+# throwaway copy of this site at run time, so the fixture never processes the
+# production site's images or CSS — the build stays in the tens-of-ms range.
+baseURL = "https://example.test/"
+defaultContentLanguage = "en"
+disableKinds = ["sitemap", "rss", "robotsTXT", "404", "taxonomy", "term"]
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    languageCode = "en"
+    weight = 1
+    contentDir = "content/en"
+  [languages.sv]
+    languageName = "Svenska"
+    languageCode = "sv-SE"
+    weight = 2
+    contentDir = "content/sv"

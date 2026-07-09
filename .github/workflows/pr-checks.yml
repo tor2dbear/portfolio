@@ -44,6 +44,9 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Run coverage (exercises the instrumentation toolchain)
+        run: npm run test:coverage
+
       - name: Build
         run: hugo --minify
 
@@ -86,6 +89,9 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Run coverage (exercises the instrumentation toolchain)
+        run: npm run test:coverage
 
       - name: Build (local baseURL)
         run: hugo --minify --baseURL "http://127.0.0.1:4173/"

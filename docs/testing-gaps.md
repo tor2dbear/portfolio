@@ -68,16 +68,29 @@ palette/pantone/year state between tests. Now cleared (plus `sessionStorage`).
 - [x] Add the Pantone lazy-load regression test (C) — done on `codex-fixes`.
 - [x] Make `darkmode-pantone.test.js` `beforeEach` hermetic (strip `<html>`
       data-attrs + `sessionStorage`) — done on `codex-fixes`.
+- [x] **Run coverage in CI** — done. Added both guards for the D-class bug:
+      `__tests__/toolchain-instrumentation.test.js` drives `test-exclude`'s
+      `shouldInstrument` directly (fast, hugo-independent, part of `npm test`),
+      and a `npm run test:coverage` step now runs in both the `quick` and
+      `quality` CI jobs so the full istanbul/test-exclude pipeline is exercised.
+- [x] **Build a Hugo template-render harness** — done. `layouts/__tests__/`
+      holds a tiny self-contained Hugo fixture site (`fixture/`) plus
+      `hugo-render.test.js`, which injects the real `summary-employer.html` and
+      `settings-dropdown.html` (and real `i18n/`) into a throwaway copy, runs
+      `hugo`, and asserts on the emitted HTML. Covers both original cases
+      (employer href has no whitespace; hidden-translation stubs are not linked)
+      plus a visible-translation control. Skips gracefully when Hugo is absent
+      (set `HUGO_PATH` or install Hugo to run it locally). Verified it fails
+      against the pre-fix templates. Grow it by adding fixture pages + probe
+      layouts for the next template under test.
 - [ ] **Decide CI audit policy** — raise the existing `npm audit` step to
       `--audit-level=moderate` and/or drop `continue-on-error`, and add it to the
       PR (`quality`) job, not just the push (`quick`) job. Left undone because
       moderate + blocking can block unrelated PRs on new transitive advisories —
-      a policy call to make together.
-- [ ] **Run coverage in CI** — add `npm run test:coverage` (or a direct
-      `test-exclude` smoke test) so a broken instrumentation path can't pass
-      silently again (the class of bug behind D).
-- [ ] **Build a Hugo template-render harness** — the missing capability behind
-      A and B. Start with the two cases above (employer href, hidden-translation
-      language links) and grow from there.
+      a policy call to make together. **Leaning: `moderate`, non-blocking**
+      (keep `continue-on-error: true`, add to the `quality` job) so advisories
+      are surfaced without gating unrelated PRs.
 - [ ] Consider a lint/format guard for template query-string construction so the
-      A-class whitespace bug can't recur (trim markers are easy to forget).
+      A-class whitespace bug can't recur (trim markers are easy to forget). Now
+      partly mitigated by the render harness, which catches the A case directly;
+      a static guard would still add cheap defence-in-depth.
