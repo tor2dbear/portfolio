@@ -2640,10 +2640,12 @@
       return out;
     }
 
-    // `ls [path]`: list a directory's children. Structural children come from
-    // the nav/footer tree; for the current directory, the page's own content
-    // links are merged in. Unknown path → an ls-style error.
-    function terminalLsLines(pathArg, showHidden) {
+    // List a single directory. Structural children come from the nav/footer
+    // tree; for the current directory, the page's own content links are merged
+    // in. Unknown path → an ls-style error; a real page whose contents can't
+    // be listed from here (a different section) → a `cd` hint rather than a
+    // bare empty result.
+    function terminalLsOne(pathArg, showHidden) {
       var targetSegs = terminalResolveSegments(pathArg);
       var node = terminalNodeAt(targetSegs);
       if (!node) {
@@ -2651,12 +2653,13 @@
           "ls: cannot access '" + pathArg + "': No such file or directory",
         ];
       }
+      var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
       var entries = Object.keys(node.children)
         .sort()
         .map(function (k) {
           return node.children[k].name + "/";
         });
-      if (targetSegs.join("/") === terminalCwdSegments().join("/")) {
+      if (isCwd) {
         terminalPageContentSlugs(targetSegs).forEach(function (slug) {
           var entry = slug + "/";
           if (entries.indexOf(entry) === -1) {
@@ -2668,7 +2671,12 @@
         entries = [".secret", ".config"].concat(entries);
       }
       if (!entries.length) {
-        return []; // empty directory — real `ls` prints nothing
+        // A real page (has an href) that we're not currently on: its contents
+        // live on that page, so point there instead of printing nothing.
+        if (node.href && !isCwd && node.name !== "~") {
+          return ["(cd " + node.name + " to list it)"];
+        }
+        return []; // genuinely empty — real `ls` prints nothing
       }
       var MAX = 40;
       var lines = [entries.slice(0, MAX).join("  ")];
@@ -2676,6 +2684,26 @@
         lines.push("… (" + (entries.length - MAX) + " more)");
       }
       return lines;
+    }
+
+    // `ls [path...]`: with 0 or 1 paths, list that directory. With several,
+    // print a `path:`-headed block per directory, blank-line separated, like
+    // real `ls`. Flags (e.g. -a) apply to every path.
+    function terminalLsLines(paths, showHidden) {
+      if (paths.length <= 1) {
+        return terminalLsOne(paths[0] || "", showHidden);
+      }
+      var out = [];
+      paths.forEach(function (path, i) {
+        if (i > 0) {
+          out.push("");
+        }
+        out.push(path + ":");
+        terminalLsOne(path, showHidden).forEach(function (line) {
+          out.push(line);
+        });
+      });
+      return out;
     }
 
     // Whole-tree view for `tree`, drawn with ├──/└── connectors.
@@ -3164,13 +3192,12 @@
           var lsShowHidden = args.some(function (a) {
             return a.charAt(0) === "-" && /a/.test(a);
           });
-          var lsPath =
-            args.filter(function (a) {
-              return a.charAt(0) !== "-";
-            })[0] || "";
+          var lsPaths = args.filter(function (a) {
+            return a.charAt(0) !== "-";
+          });
           return {
             echo: input,
-            lines: terminalLsLines(lsPath, lsShowHidden),
+            lines: terminalLsLines(lsPaths, lsShowHidden),
             action: null,
           };
         }

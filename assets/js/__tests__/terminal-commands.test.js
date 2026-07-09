@@ -417,6 +417,27 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("the-grid-inherited/");
   });
 
+  test("ls of another section hints at cd instead of printing nothing", () => {
+    loadModule();
+    // Sitting on /works/, ask for a different section's contents.
+    window.getComputedStyle = jest.fn(() => ({
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-cwd" ? "~/works" : "#ffffff"
+      ),
+    }));
+    typeCommand("ls ~/writing");
+    expect(sessionText()).toContain("cd writing");
+  });
+
+  test("ls lists several paths with per-directory headers", () => {
+    loadModule();
+    typeCommand("ls works writing");
+    const text = sessionText();
+    expect(text).toContain("works:");
+    expect(text).toContain("writing:");
+    expect(text).toContain("tags/");
+  });
+
   test("tree draws the site map", () => {
     loadModule();
     typeCommand("tree");
