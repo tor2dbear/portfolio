@@ -3407,6 +3407,16 @@
           if (lsLong.indexOf("--info") !== -1) {
             return { echo: input, lines: terminalInfoLines(), action: null };
           }
+          if (lsLong.indexOf("--images") !== -1) {
+            var figs = document.querySelectorAll(
+              ".content figure[data-lightbox]"
+            ).length;
+            return {
+              echo: input,
+              lines: [figs ? figs + " images" : "(no images here)"],
+              action: null,
+            };
+          }
           return {
             echo: input,
             lines: terminalLsLines(lsPaths, lsShowHidden),

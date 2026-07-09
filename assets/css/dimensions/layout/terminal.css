@@ -556,7 +556,7 @@
   .content.post
   .project-info
   + .post-content:has(figure)::before {
-  content: var(--terminal-ps1) "ls " var(--terminal-gallery-arg) "/";
+  content: var(--terminal-ps1) "ls --images";
   display: block;
   font-size: var(--terminal-font-size);
   margin-top: var(--spacing-16);
