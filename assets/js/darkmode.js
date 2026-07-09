@@ -722,23 +722,27 @@
   var terminalBootTimer = null;
 
   function playTerminalBoot() {
-    if (
-      (typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
-      document.documentElement.getAttribute("data-effect-reduced-motion") ===
-        "on"
-    ) {
-      return;
-    }
     var root = document.documentElement;
-    root.classList.remove("terminal-booting");
-    void root.offsetWidth;
-    root.classList.add("terminal-booting");
+    // A boot means the banner is shown fresh: un-hide it (an earlier page this
+    // session may have set data-terminal-booted to hide it) and record that the
+    // session has now booted, so later pages skip the banner. Done regardless
+    // of reduced motion — only the staged animation below is motion-gated.
+    root.removeAttribute("data-terminal-booted");
     try {
       sessionStorage.setItem("terminal-boot-played", "1");
     } catch (e) {
       /* storage unavailable — the boot simply replays next load */
     }
+    if (
+      (typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+      root.getAttribute("data-effect-reduced-motion") === "on"
+    ) {
+      return; // banner shown, but skip the staged print
+    }
+    root.classList.remove("terminal-booting");
+    void root.offsetWidth;
+    root.classList.add("terminal-booting");
     if (terminalBootTimer) {
       window.clearTimeout(terminalBootTimer);
     }

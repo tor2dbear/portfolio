@@ -119,6 +119,14 @@ describe("terminal command line", () => {
     window.Toast = { show: jest.fn() };
     window.requestAnimationFrame = jest.fn();
     window.scrollTo = jest.fn();
+    Object.defineProperty(document, "fonts", {
+      configurable: true,
+      value: {
+        load: jest.fn(() => Promise.resolve()),
+        ready: Promise.resolve(),
+        check: jest.fn(() => true),
+      },
+    });
     setupCotyActions();
   });
 
@@ -453,6 +461,18 @@ describe("terminal command line", () => {
     expect(url).toBe("https://example.test/subscribe");
     expect(opts.body).toContain("EMAIL=me%40example.com");
     expect(sessionText().toLowerCase()).toContain("subscribed");
+  });
+
+  test("re-entering the terminal un-hides the boot banner", () => {
+    // A subsequent page hides the banner via data-terminal-booted; starting the
+    // terminal again (a fresh boot) must reveal it.
+    document.documentElement.setAttribute("data-terminal-booted", "1");
+    loadModule();
+    window.ThemeActions.setLayout("column");
+    window.ThemeActions.setLayout("terminal");
+    expect(document.documentElement.hasAttribute("data-terminal-booted")).toBe(
+      false
+    );
   });
 
   // ---- Nav "cd" feedback ------------------------------------------------
