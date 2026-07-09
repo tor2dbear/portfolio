@@ -414,7 +414,9 @@ describe("terminal command line", () => {
       ),
     }));
     typeCommand("ls");
-    expect(sessionText()).toContain("the-grid-inherited/");
+    // Posts are files, not directories: listed as .md (no trailing slash).
+    expect(sessionText()).toContain("the-grid-inherited.md");
+    expect(sessionText()).not.toContain("the-grid-inherited/");
   });
 
   test("ls of another section hints at cd instead of printing nothing", () => {
@@ -868,21 +870,55 @@ describe("terminal command line", () => {
     );
   });
 
-  test("cd resolves a content-card post, same as ls lists it", () => {
-    // ls harvests the page's article/summary cards, so cd must reach them too
-    // (else ls lists a post that cd then rejects). The test DOM has an
-    // article-card link to /writing/the-grid-inherited/.
+  test("a post is a file: cd rejects it, cat opens it", () => {
+    // The test DOM has an article-card link to /writing/the-grid-inherited/.
+    // Posts are files, so `cd` into one is "not a directory" and points at cat;
+    // `cat <post>.md` navigates (its page renders as the cat output).
     loadModule();
-    const before = sessionText();
     typeCommand("cd writing/the-grid-inherited");
+    expect(sessionText()).toContain(
+      "not a directory: writing/the-grid-inherited"
+    );
+    expect(sessionText()).toContain("cat writing/the-grid-inherited.md");
+
+    const before = sessionText();
+    typeCommand("cat writing/the-grid-inherited.md");
+    // Resolves (produces a navigate action) — no cat error.
     expect(sessionText().slice(before.length)).not.toContain(
-      "no such file or directory"
+      "No such file or directory"
     );
 
     // A post that isn't on the page still errors.
-    typeCommand("cd writing/ghost-post");
+    typeCommand("cat writing/ghost-post.md");
     expect(sessionText()).toContain(
-      "no such file or directory: writing/ghost-post"
+      "cat: writing/ghost-post.md: No such file or directory"
+    );
+  });
+
+  test("ls nav/ and ls settings/ list the menus (as the header prints them)", () => {
+    loadModule();
+    typeCommand("ls nav/");
+    expect(sessionText()).toContain("works/"); // a section is a directory
+    expect(sessionText()).toContain("about"); // a standalone page is a leaf
+    const before = sessionText();
+    typeCommand("ls settings/");
+    const added = sessionText().slice(before.length);
+    expect(added).toContain("theme");
+    expect(added).toContain("language");
+  });
+
+  test("nav and settings are menus, not places: cd lists instead of entering", () => {
+    loadModule();
+    typeCommand("cd settings");
+    expect(sessionText()).toContain("menu, not a directory");
+  });
+
+  test("open navigates to a post file", () => {
+    loadModule();
+    const before = sessionText();
+    typeCommand("open writing/the-grid-inherited.md");
+    expect(sessionText().slice(before.length)).not.toContain(
+      "no such file or directory"
     );
   });
 

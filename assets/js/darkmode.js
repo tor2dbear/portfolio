@@ -2317,6 +2317,7 @@
       "cv",
       "copy",
       "cat",
+      "open",
       "man",
       "uname",
       "colour",
@@ -2645,7 +2646,64 @@
     // in. Unknown path → an ls-style error; a real page whose contents can't
     // be listed from here (a different section) → a `cd` hint rather than a
     // bare empty result.
+    // The statusbar renders the loaded page as history: `~$ ls nav/` and
+    // `~$ ls settings/`. Make those real so typing them reproduces the header —
+    // the navigation and the settings toggles, listed. Both are menus, not
+    // places, so you `ls` them but don't `cd` into them (see the cd handler).
+    var TERMINAL_SECTION_DIRS = {
+      works: 1,
+      arbeten: 1,
+      writing: 1,
+      texter: 1,
+    };
+
+    function terminalNavEntries() {
+      var seen = {};
+      var out = [];
+      document
+        .querySelectorAll(
+          ".top-menu__nav a[href]:not(.terminal-quick), .terminal-prompt__host[href]"
+        )
+        .forEach(function (a) {
+          var href = a.getAttribute("href");
+          if (!href || href.charAt(0) === "#") {
+            return;
+          }
+          var segs = terminalHrefSegments(href);
+          var name = segs && segs.length ? segs[0] : "home";
+          if (seen[name]) {
+            return;
+          }
+          seen[name] = true;
+          out.push(TERMINAL_SECTION_DIRS[name] ? name + "/" : name);
+        });
+      return out;
+    }
+
+    function terminalSettingsEntries() {
+      return [
+        "theme",
+        "palette",
+        "typography",
+        "layout",
+        "effects",
+        "language",
+      ];
+    }
+
     function terminalLsOne(pathArg, showHidden) {
+      // nav/ and settings/ are global menus, reachable from any cwd — match the
+      // raw argument (~/nav, nav/, nav) before resolving relative to the cwd.
+      var rawArg = String(pathArg || "")
+        .replace(/^~\/?/, "")
+        .replace(/^\/+|\/+$/g, "")
+        .toLowerCase();
+      if (rawArg === "nav") {
+        return [terminalNavEntries().join("  ")];
+      }
+      if (rawArg === "settings") {
+        return [terminalSettingsEntries().join("  ")];
+      }
       var targetSegs = terminalResolveSegments(pathArg);
       var node = terminalNodeAt(targetSegs);
       if (!node) {
@@ -2654,15 +2712,22 @@
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
+      // Structural children (sections, tags) are directories — trailing slash.
       var entries = Object.keys(node.children)
         .sort()
         .map(function (k) {
           return node.children[k].name + "/";
         });
       if (isCwd) {
+        // The page's own content (posts) are FILES: a post is a .md you `cat`,
+        // not a directory you `cd` into — so it reads like real `ls` and the
+        // prompt stays in the section when you open one.
         terminalPageContentSlugs(targetSegs).forEach(function (slug) {
-          var entry = slug + "/";
-          if (entries.indexOf(entry) === -1) {
+          var entry = slug + ".md";
+          if (
+            entries.indexOf(entry) === -1 &&
+            entries.indexOf(slug + "/") === -1
+          ) {
             entries.push(entry);
           }
         });
@@ -3057,25 +3122,61 @@
         }
         case "cd": {
           var dest = args[0] || "~";
-          if (dest === "~" || dest === "/" || dest === "..") {
+          var destKey = dest.replace(/\/+$/, "").toLowerCase();
+          if (
+            dest === "~" ||
+            dest === "/" ||
+            dest === ".." ||
+            destKey === "home"
+          ) {
             return {
               echo: input,
               lines: [],
               action: { type: "navigate", url: terminalHomeUrl() },
             };
           }
-          var target = resolveCdTarget(dest);
-          if (!target) {
+          // nav/ and settings/ are menus, not places — list them, don't enter.
+          if (destKey === "nav" || destKey === "settings") {
             return {
               echo: input,
-              lines: ["cd: no such file or directory: " + dest],
+              lines: [
+                "cd: " +
+                  destKey +
+                  " is a menu, not a directory — try: ls " +
+                  destKey +
+                  "/",
+              ],
+              action: null,
+            };
+          }
+          // Sections are directories — cd enters them.
+          var sectionTarget = terminalNavTargets()[destKey];
+          if (sectionTarget) {
+            return {
+              echo: input,
+              lines: [],
+              action: { type: "navigate", url: sectionTarget },
+            };
+          }
+          // A post is a file — you cat it, you don't cd into it.
+          var postKey = destKey.replace(/\.(md|txt)$/i, "");
+          if (terminalContentTargetHref(postKey)) {
+            return {
+              echo: input,
+              lines: [
+                "cd: not a directory: " +
+                  dest +
+                  " — try: cat " +
+                  postKey +
+                  ".md",
+              ],
               action: null,
             };
           }
           return {
             echo: input,
-            lines: [],
-            action: { type: "navigate", url: target },
+            lines: ["cd: no such file or directory: " + dest],
+            action: null,
           };
         }
         case "lang":
@@ -3239,14 +3340,52 @@
             };
           }
           var fileLines = terminalFile(args[0]);
-          if (!fileLines) {
+          if (fileLines) {
+            return { echo: input, lines: fileLines.slice(), action: null };
+          }
+          // Not a pseudo-file — maybe a content post. `cat`-ing a post opens its
+          // page: the post renders as the cat output (`cat 'title.md'` + body),
+          // so navigating there IS printing the file. Strip the .md first.
+          var catHref = terminalContentTargetHref(
+            args[0].replace(/\.(md|txt)$/i, "")
+          );
+          if (catHref) {
             return {
               echo: input,
-              lines: ["cat: " + args[0] + ": No such file or directory"],
+              lines: [],
+              action: { type: "navigate", url: catHref },
+            };
+          }
+          return {
+            echo: input,
+            lines: ["cat: " + args[0] + ": No such file or directory"],
+            action: null,
+          };
+        }
+        case "open": {
+          if (!args.length) {
+            return {
+              echo: input,
+              lines: ["usage: open <name> — a section or a post"],
               action: null,
             };
           }
-          return { echo: input, lines: fileLines.slice(), action: null };
+          // A general "go there": resolves a section OR a post (resolveCdTarget
+          // already falls through to content files) and navigates.
+          var openName = args[0].replace(/\/$/, "").replace(/\.(md|txt)$/i, "");
+          var openHref = resolveCdTarget(openName);
+          if (!openHref) {
+            return {
+              echo: input,
+              lines: ["open: no such file or directory: " + args[0]],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "navigate", url: openHref },
+          };
         }
         case "man": {
           var topic = (args[0] || "").toLowerCase();
@@ -4352,16 +4491,31 @@
         });
       } else {
         var verb = parts[0].toLowerCase();
-        if (verb !== "cd" && verb !== "ls" && verb !== "open") {
+        if (
+          verb !== "cd" &&
+          verb !== "ls" &&
+          verb !== "open" &&
+          verb !== "cat"
+        ) {
           return;
         }
         frag = (parts[parts.length - 1] || "").toLowerCase();
-        var node = terminalNodeAt(terminalCwdSegments());
+        var cwdSegs = terminalCwdSegments();
+        var node = terminalNodeAt(cwdSegs);
         candidates = node
           ? Object.keys(node.children).filter(function (name) {
               return name.indexOf(frag) === 0;
             })
           : [];
+        // cat/open reach the page's posts too — complete them as .md files.
+        if (verb === "cat" || verb === "open") {
+          terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
+            var file = slug + ".md";
+            if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
+              candidates.push(file);
+            }
+          });
+        }
       }
       if (candidates.length === 1) {
         parts[parts.length - 1] = candidates[0];
