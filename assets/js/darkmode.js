@@ -2691,6 +2691,45 @@
       ];
     }
 
+    // Filtered `ls` views — the same tool, different lens. `--featured` lists
+    // the curated cards on the current page (home's featured works); `--related`
+    // lists a post's sibling projects; `--info` prints a post's role/details.
+    // All harvested from the current page's DOM — a page's own sequence.
+    function terminalHarvestFiles(selector, emptyMsg) {
+      var out = [];
+      document.querySelectorAll(selector).forEach(function (a) {
+        var segs = terminalHrefSegments(a.getAttribute("href"));
+        if (!segs || segs.length < 2) {
+          return;
+        }
+        var file = segs[segs.length - 1] + ".md";
+        if (out.indexOf(file) === -1) {
+          out.push(file);
+        }
+      });
+      return out.length ? [out.join("  ")] : [emptyMsg];
+    }
+
+    function terminalInfoLines() {
+      var out = [];
+      document
+        .querySelectorAll(".project-info__section")
+        .forEach(function (sec) {
+          var title = sec.querySelector(".project-info__title");
+          var val = sec.querySelector(
+            ".project-info__text, .project-info__value"
+          );
+          if (title && val) {
+            out.push(
+              title.textContent.trim().toLowerCase() +
+                ": " +
+                val.textContent.trim()
+            );
+          }
+        });
+      return out.length ? out : ["(no info here)"];
+    }
+
     function terminalLsOne(pathArg, showHidden) {
       // nav/ and settings/ are global menus, reachable from any cwd — match the
       // raw argument (~/nav, nav/, nav) before resolving relative to the cwd.
@@ -3317,12 +3356,41 @@
           };
         case "ls":
         case "dir": {
+          // Long filter flags (--featured/--related/--info) are separate lenses;
+          // short flags (-a) reveal hidden entries. Keep them apart so "--featured"
+          // (which contains an "a") isn't misread as -a.
+          var lsLong = args.filter(function (a) {
+            return a.indexOf("--") === 0;
+          });
           var lsShowHidden = args.some(function (a) {
-            return a.charAt(0) === "-" && /a/.test(a);
+            return a.charAt(0) === "-" && a.charAt(1) !== "-" && /a/.test(a);
           });
           var lsPaths = args.filter(function (a) {
             return a.charAt(0) !== "-";
           });
+          if (lsLong.indexOf("--featured") !== -1) {
+            return {
+              echo: input,
+              lines: terminalHarvestFiles(
+                ".summary-card a[href], .article-card a[href]",
+                "(nothing featured here)"
+              ),
+              action: null,
+            };
+          }
+          if (lsLong.indexOf("--related") !== -1) {
+            return {
+              echo: input,
+              lines: terminalHarvestFiles(
+                ".related-items__item .type-headline-4 a[href]",
+                "(no related files)"
+              ),
+              action: null,
+            };
+          }
+          if (lsLong.indexOf("--info") !== -1) {
+            return { echo: input, lines: terminalInfoLines(), action: null };
+          }
           return {
             echo: input,
             lines: terminalLsLines(lsPaths, lsShowHidden),

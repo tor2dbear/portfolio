@@ -922,6 +922,14 @@ describe("terminal command line", () => {
     );
   });
 
+  test("ls --featured lists the page's cards as files (not misread as -a)", () => {
+    loadModule();
+    typeCommand("ls works/ --featured");
+    // The article-card link → a .md file; the long flag must not trip -a.
+    expect(sessionText()).toContain("the-grid-inherited.md");
+    expect(sessionText()).not.toContain(".secret");
+  });
+
   test("subscribe reuses the newsletter form action", async () => {
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
