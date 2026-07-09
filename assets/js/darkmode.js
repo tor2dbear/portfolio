@@ -2224,6 +2224,30 @@
       '[data-js="terminal-session"]'
     );
 
+    // Session start, for `uptime` — captured when the command engine boots.
+    var terminalSessionStart = Date.now();
+
+    // Command scrollback for `history`, oldest first. Capped so a long-lived
+    // tab can't grow it without bound.
+    var terminalHistory = [];
+    var TERMINAL_HISTORY_MAX = 100;
+
+    // The Konami code (typed while the prompt is focused) toggles party mode.
+    // Keys are compared lowercased, so ArrowUp → "arrowup", B → "b".
+    var KONAMI_SEQUENCE = [
+      "arrowup",
+      "arrowup",
+      "arrowdown",
+      "arrowdown",
+      "arrowleft",
+      "arrowright",
+      "arrowleft",
+      "arrowright",
+      "b",
+      "a",
+    ];
+    var konamiProgress = 0;
+
     // Kept narrow (a ~12-char command column + short descriptions) so every
     // line fits a phone's ~36-char terminal width without wrapping mid-column.
     const TERMINAL_HELP = [
@@ -2232,6 +2256,7 @@
       "  whoami    who's asking",
       "  date      date & time",
       "  pwd       working dir",
+      "  ls        list pages",
       "  cd <page> change page",
       "  lang [sv|en]  language",
       "  echo      print text",
@@ -2259,6 +2284,38 @@
         invert: true,
       },
     };
+
+    // `cat`-able pseudo-files. A leading dot and a trailing .txt/.md are
+    // stripped before lookup, so `cat colophon`, `cat colophon.txt` and
+    // `cat .secret` all resolve.
+    const TERMINAL_FILES = {
+      readme: [
+        "it's a portfolio. poke around.",
+        "type 'help' for the command list.",
+      ],
+      about: ["designer & developer.", "type 'cd about' for the long version."],
+      colophon: [
+        "Hugo · vanilla JS · no frameworks.",
+        "hand-rolled design tokens.",
+        "no trackers, no cookies.",
+      ],
+      secret: [
+        "there are no secrets here.",
+        "(the source is right there — view-source:)",
+      ],
+    };
+
+    // `fortune` cookies — design & typography aphorisms, printed at random.
+    const TERMINAL_FORTUNES = [
+      "Less, but better. — Dieter Rams",
+      "Good design is as little design as possible. — Dieter Rams",
+      "Design is not just what it looks like — design is how it works. — Steve Jobs",
+      "The details are not the details. They make the design. — Charles Eames",
+      "White space is to be regarded as an active element. — Jan Tschichold",
+      "Simplicity is the ultimate sophistication. — Leonardo da Vinci",
+      "Perfection is reached when there is nothing left to take away. — Antoine de Saint-Exupéry",
+      "Type is a beautiful group of letters, not a group of beautiful letters. — Matthew Carter",
+    ];
 
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
@@ -2303,6 +2360,126 @@
         return "off";
       }
       return "toggle";
+    }
+
+    // "1h 2m 3s", dropping leading zero units, for `uptime`.
+    function formatUptime(totalSeconds) {
+      var s = Math.max(0, Math.floor(totalSeconds));
+      var h = Math.floor(s / 3600);
+      var m = Math.floor((s % 3600) / 60);
+      s = s % 60;
+      var parts = [];
+      if (h) {
+        parts.push(h + "h");
+      }
+      if (h || m) {
+        parts.push(m + "m");
+      }
+      parts.push(s + "s");
+      return parts.join(" ");
+    }
+
+    function uptimeLine() {
+      var secs = (Date.now() - terminalSessionStart) / 1000;
+      return "up " + formatUptime(secs) + " · load 0.00 (it's a static site)";
+    }
+
+    function historyLines() {
+      if (!terminalHistory.length) {
+        return ["(no history yet)"];
+      }
+      return terminalHistory.map(function (entry, i) {
+        var n = String(i + 1);
+        while (n.length < 3) {
+          n = " " + n;
+        }
+        return n + "  " + entry;
+      });
+    }
+
+    // The nav's page slugs, de-duplicated in nav order — the real directories
+    // `cd` understands, listed by `ls`.
+    function terminalPageSlugs() {
+      var links = document.querySelectorAll(
+        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href]"
+      );
+      var seen = {};
+      var slugs = [];
+      links.forEach(function (link) {
+        var href = link.getAttribute("href");
+        if (!href || href.charAt(0) === "#") {
+          return;
+        }
+        var path = href.replace(/[?#].*$/, "").replace(/\/+$/, "");
+        var slug = (path.split("/").filter(Boolean).pop() || "").toLowerCase();
+        if (!slug || seen[slug]) {
+          return;
+        }
+        seen[slug] = true;
+        slugs.push(slug);
+      });
+      return slugs;
+    }
+
+    function terminalLsLines() {
+      var slugs = terminalPageSlugs();
+      if (!slugs.length) {
+        return ["(empty)"];
+      }
+      return [
+        slugs
+          .map(function (slug) {
+            return slug + "/";
+          })
+          .join("  "),
+      ];
+    }
+
+    // Resolve a `cat` target to its pseudo-file lines, or null if there's no
+    // such "file".
+    function terminalFile(name) {
+      var key = String(name || "")
+        .toLowerCase()
+        .replace(/^\.+/, "")
+        .replace(/\.(txt|md)$/, "");
+      if (key === "secrets") {
+        key = "secret";
+      }
+      return TERMINAL_FILES[key] || null;
+    }
+
+    // One-line man description, pulled from the help table so the two never
+    // drift apart. Matches the first word of each "  cmd   desc" help row.
+    function terminalManPage(topic) {
+      var want = String(topic || "").toLowerCase();
+      var found = null;
+      TERMINAL_HELP.forEach(function (row) {
+        if (found) {
+          return;
+        }
+        var trimmed = row.trim();
+        var word = trimmed.split(/\s+/)[0];
+        if (word === want) {
+          found = trimmed.slice(word.length).trim() || null;
+        }
+      });
+      return found;
+    }
+
+    // Resolved hex/colour values for a few key palette tokens, for `colour`.
+    function terminalColourLines() {
+      var styles = window.getComputedStyle(document.documentElement);
+      var swatches = [
+        ["paper", "--surface-page"],
+        ["ink", "--surface-ink-strong"],
+        ["accent", "--surface-accent"],
+      ];
+      var lines = ["palette: " + paletteLabel()];
+      swatches.forEach(function (pair) {
+        var value = (styles.getPropertyValue(pair[1]) || "").trim();
+        lines.push("  " + pair[0] + "  " + (value || "—"));
+      });
+      return lines;
     }
 
     // The home link the terminal prompt already points at (falls back to root).
@@ -2669,6 +2846,220 @@
             ],
             action: null,
           };
+        case "ls":
+        case "dir":
+          return { echo: input, lines: terminalLsLines(), action: null };
+        case "cat": {
+          if (!args.length) {
+            return {
+              echo: input,
+              lines: ["usage: cat <file> — try 'cat readme'"],
+              action: null,
+            };
+          }
+          var fileLines = terminalFile(args[0]);
+          if (!fileLines) {
+            return {
+              echo: input,
+              lines: ["cat: " + args[0] + ": No such file or directory"],
+              action: null,
+            };
+          }
+          return { echo: input, lines: fileLines.slice(), action: null };
+        }
+        case "man": {
+          var topic = (args[0] || "").toLowerCase();
+          if (!topic) {
+            return {
+              echo: input,
+              lines: ["what manual page do you want?", "try: man help"],
+              action: null,
+            };
+          }
+          var page = terminalManPage(topic);
+          if (!page) {
+            return {
+              echo: input,
+              lines: ["No manual entry for " + topic],
+              action: null,
+            };
+          }
+          return { echo: input, lines: [topic + " — " + page], action: null };
+        }
+        case "uname":
+          if (args.indexOf("-a") !== -1) {
+            return {
+              echo: input,
+              lines: [
+                "tor-sh 1.0 " +
+                  terminalHost() +
+                  " terminal " +
+                  resolvedModeLabel() +
+                  " " +
+                  currentLang(),
+              ],
+              action: null,
+            };
+          }
+          return { echo: input, lines: ["tor-sh"], action: null };
+        case "colour":
+        case "color":
+          return { echo: input, lines: terminalColourLines(), action: null };
+        case "fortune": {
+          var pick = Math.floor(Math.random() * TERMINAL_FORTUNES.length);
+          return {
+            echo: input,
+            lines: [TERMINAL_FORTUNES[pick]],
+            action: null,
+          };
+        }
+        case "history":
+          return { echo: input, lines: historyLines(), action: null };
+        case "uptime":
+          return { echo: input, lines: [uptimeLine()], action: null };
+        case "top":
+        case "htop":
+          return {
+            echo: input,
+            lines: [
+              "  PID  CPU  MEM  CMD",
+              "    1   0%   ok  tor-sh",
+              "   42   0%   ok  curiosity",
+              "  418   0%    —  coffee (defunct)",
+            ],
+            action: null,
+          };
+        case "vim":
+        case "vi":
+          return {
+            echo: input,
+            lines: [
+              "entering vim… only kidding.",
+              "to leave, type 'exit' — you're safe here.",
+            ],
+            action: null,
+          };
+        case "nano":
+          return {
+            echo: input,
+            lines: ["nano: nothing to edit here.", "type 'exit' to leave."],
+            action: null,
+          };
+        case "emacs":
+          return {
+            echo: input,
+            lines: [
+              "emacs: a fine OS, missing an editor.",
+              "type 'exit' to leave.",
+            ],
+            action: null,
+          };
+        case ":q":
+        case ":q!":
+        case ":wq":
+        case ":wq!":
+        case ":x":
+          return {
+            echo: input,
+            lines: ["(you can just type 'exit')"],
+            action: { type: "exit" },
+          };
+        case "rm": {
+          var rmArgs = args.join(" ");
+          if (
+            /-[a-z]*r/i.test(rmArgs) &&
+            /(^|\s)(\/|~|\*|\/\*|\.)(\s|$)/.test(rmArgs)
+          ) {
+            return {
+              echo: input,
+              lines: ["nice try — it's all in git 😏"],
+              action: null,
+            };
+          }
+          if (!args.length) {
+            return {
+              echo: input,
+              lines: ["rm: missing operand"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [
+              "rm: cannot remove '" +
+                args[args.length - 1] +
+                "': read-only site",
+            ],
+            action: null,
+          };
+        }
+        case "git": {
+          var gitSub = (args[0] || "").toLowerCase();
+          var gitReplies = {
+            blame: ["git blame: you — last touched just now 😄"],
+            commit: ["nothing to commit, working tree clean ✨"],
+            push: ["Everything up-to-date."],
+            pull: ["Already up to date."],
+            status: [
+              "On branch main.",
+              "nothing to commit, working tree clean",
+            ],
+            log: ["read the real log: type 'cd writing'"],
+          };
+          if (!gitSub) {
+            return {
+              echo: input,
+              lines: ["usage: git <command> — try 'git status'"],
+              action: null,
+            };
+          }
+          if (gitReplies[gitSub]) {
+            return {
+              echo: input,
+              lines: gitReplies[gitSub].slice(),
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: ["git: '" + gitSub + "' is not a git command."],
+            action: null,
+          };
+        }
+        case "npm":
+        case "yarn":
+        case "pnpm": {
+          var pkgSub = (args[0] || "").toLowerCase();
+          if (pkgSub === "install" || pkgSub === "i" || pkgSub === "add") {
+            return {
+              echo: input,
+              lines: [
+                "resolving 4271 dependencies…",
+                "done. (kidding — it's vanilla JS)",
+              ],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [cmd + ": this site ships no node_modules."],
+            action: null,
+          };
+        }
+        case "hello":
+        case "hi":
+        case "hey":
+          return {
+            echo: input,
+            lines: ["hey 👋", "type 'help' to see what I can do."],
+            action: null,
+          };
+        case "konami":
+          return {
+            echo: input,
+            lines: ["konami: party mode 🌈"],
+            action: { type: "konami" },
+          };
         default:
           return {
             echo: input,
@@ -2678,11 +3069,25 @@
       }
     }
 
+    // Party mode: a root attribute CSS hangs a playful hue-cycle off. Toggled
+    // by the `konami` command and by the arrow-key Konami code at the prompt.
+    function toggleKonami() {
+      var root = document.documentElement;
+      if (root.getAttribute("data-konami") === "on") {
+        root.removeAttribute("data-konami");
+      } else {
+        root.setAttribute("data-konami", "on");
+      }
+    }
+
     function applyTerminalAction(action) {
       if (!action) {
         return;
       }
       switch (action.type) {
+        case "konami":
+          toggleKonami();
+          break;
         case "exit":
           exitTerminal();
           break;
@@ -2791,6 +3196,15 @@
     }
 
     function runTerminalInput(raw) {
+      // Record the command before running it, so `history` includes itself —
+      // matching a real shell.
+      var trimmed = String(raw === null || raw === undefined ? "" : raw).trim();
+      if (trimmed) {
+        terminalHistory.push(trimmed);
+        if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
+          terminalHistory.shift();
+        }
+      }
       var result = runTerminalCommand(raw);
       if (result.echo) {
         printTerminalLine(result.echo, "terminal-session__cmd");
@@ -3089,9 +3503,32 @@
       }
     }
 
+    // Track the Konami code as it's typed into the prompt. Non-destructive:
+    // it only watches keys, then tidies the stray "b"/"a" once it completes.
+    function advanceKonami(e) {
+      var key = String(e.key || "").toLowerCase();
+      if (key === KONAMI_SEQUENCE[konamiProgress]) {
+        konamiProgress += 1;
+        if (konamiProgress === KONAMI_SEQUENCE.length) {
+          konamiProgress = 0;
+          if (terminalInput) {
+            terminalInput.value = "";
+            syncTerminalInputSize();
+          }
+          toggleKonami();
+          printTerminalLine("konami: party mode 🌈", "terminal-session__out");
+          scrollTerminalToEnd();
+        }
+      } else {
+        // Let a mistyped key restart the sequence if it's the first step.
+        konamiProgress = key === KONAMI_SEQUENCE[0] ? 1 : 0;
+      }
+    }
+
     if (terminalInput) {
       terminalInput.addEventListener("input", syncTerminalInputSize);
       terminalInput.addEventListener("keydown", function (e) {
+        advanceKonami(e);
         if (e.key === "Enter") {
           e.preventDefault();
           var value = terminalInput.value;

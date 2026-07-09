@@ -216,6 +216,154 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("frobnicate: command not found");
   });
 
+  // ---- Additional commands & easter eggs --------------------------------
+
+  test("ls lists the nav pages as directories", () => {
+    loadModule();
+    typeCommand("ls");
+    expect(sessionText()).toContain("writing/");
+    expect(sessionText()).toContain("about/");
+  });
+
+  test("cat prints a known pseudo-file and 404s unknown ones", () => {
+    loadModule();
+    typeCommand("cat readme");
+    expect(sessionText().toLowerCase()).toContain("portfolio");
+    typeCommand("cat nope");
+    expect(sessionText()).toContain("No such file or directory");
+  });
+
+  test("cat strips a leading dot and extension", () => {
+    loadModule();
+    typeCommand("cat .secret");
+    expect(sessionText().toLowerCase()).toContain("no secrets");
+  });
+
+  test("man pulls a one-line description from help", () => {
+    loadModule();
+    typeCommand("man whoami");
+    expect(sessionText()).toContain("who's asking");
+    typeCommand("man nope");
+    expect(sessionText()).toContain("No manual entry for nope");
+  });
+
+  test("uname -a reports the session, plain uname the shell", () => {
+    loadModule();
+    typeCommand("uname");
+    expect(sessionText()).toContain("tor-sh");
+    typeCommand("uname -a");
+    expect(sessionText()).toContain("terminal");
+  });
+
+  test("colour prints the active palette swatches", () => {
+    loadModule();
+    typeCommand("colour");
+    expect(sessionText().toLowerCase()).toContain("paper");
+    expect(sessionText()).toContain("#ffffff");
+  });
+
+  test("fortune prints one of the aphorisms", () => {
+    loadModule();
+    typeCommand("fortune");
+    // Every fortune carries an em-dash attribution.
+    expect(sessionText()).toContain("—");
+  });
+
+  test("history records commands, newest last, including itself", () => {
+    loadModule();
+    typeCommand("whoami");
+    typeCommand("date");
+    typeCommand("history");
+    const text = sessionText();
+    expect(text).toContain("1  whoami");
+    expect(text).toContain("2  date");
+    expect(text).toContain("3  history");
+  });
+
+  test("uptime reports an 'up' line", () => {
+    loadModule();
+    typeCommand("uptime");
+    expect(sessionText()).toContain("up ");
+  });
+
+  test("top prints a tongue-in-cheek process list", () => {
+    loadModule();
+    typeCommand("top");
+    expect(sessionText()).toContain("tor-sh");
+    expect(sessionText().toLowerCase()).toContain("coffee");
+  });
+
+  test("editor jokes point back at exit", () => {
+    loadModule();
+    typeCommand("vim");
+    expect(sessionText().toLowerCase()).toContain("exit");
+  });
+
+  test(":wq leaves the terminal like exit", () => {
+    localStorage.setItem("theme-layout-previous", "column");
+    loadModule();
+    typeCommand(":wq");
+    expect(document.documentElement.getAttribute("data-layout")).not.toBe(
+      "terminal"
+    );
+  });
+
+  test("rm -rf / refuses with the git joke", () => {
+    loadModule();
+    typeCommand("rm -rf /");
+    expect(sessionText().toLowerCase()).toContain("it's all in git");
+  });
+
+  test("git subcommands answer in character", () => {
+    loadModule();
+    typeCommand("git blame");
+    expect(sessionText().toLowerCase()).toContain("you");
+    typeCommand("git commit");
+    expect(sessionText().toLowerCase()).toContain("working tree clean");
+  });
+
+  test("npm install fakes a dependency resolve", () => {
+    loadModule();
+    typeCommand("npm install");
+    expect(sessionText().toLowerCase()).toContain("vanilla js");
+  });
+
+  test("hello greets back", () => {
+    loadModule();
+    typeCommand("hello");
+    expect(sessionText()).toContain("hey");
+  });
+
+  test("konami command toggles party mode", () => {
+    loadModule();
+    typeCommand("konami");
+    expect(document.documentElement.getAttribute("data-konami")).toBe("on");
+    typeCommand("konami");
+    expect(document.documentElement.getAttribute("data-konami")).toBeNull();
+  });
+
+  test("the Konami key sequence at the prompt enables party mode", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const press = (key) =>
+      input.dispatchEvent(
+        new window.KeyboardEvent("keydown", { key, bubbles: true })
+      );
+    [
+      "ArrowUp",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowRight",
+      "b",
+      "a",
+    ].forEach(press);
+    expect(document.documentElement.getAttribute("data-konami")).toBe("on");
+  });
+
   test("clear empties the session log", () => {
     loadModule();
     typeCommand("whoami");

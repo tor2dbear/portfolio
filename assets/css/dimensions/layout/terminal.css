@@ -1333,6 +1333,43 @@
   margin-top: var(--spacing-8);
 }
 
+/* Party mode — the Konami code (or `konami`) sets data-konami, and the whole
+   terminal cycles hue. Motion-gated: reduced-motion visitors get a single
+   colourful tint instead of the animation. */
+:root[data-konami="on"][data-layout="terminal"] .top-menu__container,
+:root[data-konami="on"][data-layout="terminal"] .terminal-session,
+:root[data-konami="on"][data-layout="terminal"] .terminal-tail {
+  animation: terminal-konami-hue 6s linear infinite;
+}
+
+@keyframes terminal-konami-hue {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-konami="on"][data-layout="terminal"] .top-menu__container,
+  :root[data-konami="on"][data-layout="terminal"] .terminal-session,
+  :root[data-konami="on"][data-layout="terminal"] .terminal-tail {
+    animation: none;
+    filter: hue-rotate(150deg) saturate(1.4);
+  }
+}
+
+:root[data-effect-reduced-motion="on"][data-konami="on"][data-layout="terminal"]
+  .top-menu__container,
+:root[data-effect-reduced-motion="on"][data-konami="on"][data-layout="terminal"]
+  .terminal-session,
+:root[data-effect-reduced-motion="on"][data-konami="on"][data-layout="terminal"]
+  .terminal-tail {
+  animation: none;
+  filter: hue-rotate(150deg) saturate(1.4);
+}
+
 :root[data-layout="terminal"] .terminal-session__line {
   display: block;
 }
