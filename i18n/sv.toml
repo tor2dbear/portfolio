@@ -450,3 +450,18 @@ other = "skriv exit eller tryck esc för att lämna terminalen"
 
 [terminal_input_label]
 other = "Terminalens kommandorad — skriv ett kommando och tryck Enter (testa 'help')"
+
+[terminal_key_prev]
+other = "Föregående kommando"
+
+[terminal_key_next]
+other = "Nästa kommando"
+
+[terminal_key_tab]
+other = "Komplettera"
+
+[terminal_key_cancel]
+other = "Avbryt raden"
+
+[terminal_key_bottom]
+other = "Hoppa till prompten"

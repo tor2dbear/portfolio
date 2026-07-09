@@ -1478,6 +1478,70 @@
   margin-top: var(--spacing-8);
 }
 
+/* ============================================================================
+   Mobile key bar (accessory row)
+   The round-4 keyboard fundamentals (↑/↓ history recall, Tab completion, ^C)
+   ride keys the on-screen keyboard lacks, plus a ⌄ jump-to-prompt. This bar
+   surfaces them just above the keyboard while the prompt is focused. It's a
+   coarse-pointer affordance only — desktop has the real keys, so the bar stays
+   display:none there. darkmode.js toggles .is-visible on focus and translates
+   the bar up over the keyboard via the visualViewport API (plain fixed sits
+   behind it on iOS Safari); the fixed bottom anchor here is the base it starts
+   from. The keys read as bracketed mono words, matching the terminal's chrome.
+   ============================================================================ */
+
+.terminal-keybar {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  :root[data-layout="terminal"] .terminal-keybar.is-visible {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4) var(--size-page-margins);
+    background: var(--surface-page);
+    border-top: 1px solid var(--border-subtle);
+    /* darkmode.js sets translateY to clear the keyboard; hint the compositor. */
+    will-change: transform;
+  }
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 2.75em;
+  padding: 0 var(--spacing-8);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 1;
+  color: var(--text-link, var(--text-default));
+  cursor: pointer;
+  /* No tap flash / double-tap zoom — this is a key, not a link. */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Bracketed like every other actionable word in the buffer. */
+:root[data-layout="terminal"] .terminal-keybar__key::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key:active {
+  color: var(--text-accent, currentColor);
+}
+
 /* Party mode — the Konami code (or `konami`) sets data-konami, and the whole
    terminal cycles hue. Motion-gated: reduced-motion visitors get a single
    colourful tint instead of the animation. */

@@ -5478,6 +5478,23 @@
       }
     }
 
+    // ^C: abort the current line — echo the caret marker, end any running flow,
+    // clear the input and the history cursor. Shared by the keydown handler and
+    // the mobile key bar (the on-screen keyboard has no Ctrl key).
+    function terminalCancelLine() {
+      if (!terminalInput) {
+        return;
+      }
+      printTerminalLine("^C", "terminal-session__out");
+      if (terminalFlow) {
+        endTerminalFlow();
+      }
+      terminalInput.value = "";
+      terminalHistoryCursor = null;
+      syncTerminalInputSize();
+      scrollTerminalToEnd();
+    }
+
     if (terminalInput) {
       // Typing invalidates the history-recall position.
       terminalInput.addEventListener("input", function () {
@@ -5505,14 +5522,7 @@
           }
           if (ctrlKey === "c") {
             e.preventDefault();
-            printTerminalLine("^C", "terminal-session__out");
-            if (terminalFlow) {
-              endTerminalFlow();
-            }
-            terminalInput.value = "";
-            terminalHistoryCursor = null;
-            syncTerminalInputSize();
-            scrollTerminalToEnd();
+            terminalCancelLine();
             return;
           }
         }
@@ -5568,6 +5578,91 @@
         }
       });
       syncTerminalInputSize();
+    }
+
+    // ----------------------------------------------------------------------
+    // Mobile key bar (accessory row)
+    // The round-4 keyboard fundamentals — ↑/↓ history recall, Tab completion,
+    // ^C — ride keys the on-screen keyboard doesn't have, so on touch (the
+    // primary context) they're unreachable. This bar surfaces them as tappable
+    // buttons while the prompt is focused, pinned just above the keyboard, plus
+    // a ⌄ jump-to-prompt. Purely additive: with no bar (or no JS) the terminal
+    // works exactly as before, just without recall/completion on mobile.
+    // ----------------------------------------------------------------------
+    var terminalKeybar = document.querySelector('[data-js="terminal-keybar"]');
+    if (terminalKeybar && terminalInput) {
+      // Each button reuses a handler already built above — the bar is only a
+      // touch surface for them, never a second implementation.
+      var KEYBAR_ACTIONS = {
+        prev: function () {
+          terminalRecallHistory(-1);
+        },
+        next: function () {
+          terminalRecallHistory(1);
+        },
+        tab: function () {
+          if (!terminalFlow) {
+            terminalCompleteInput();
+          }
+        },
+        cancel: terminalCancelLine,
+        bottom: scrollTerminalToEnd,
+      };
+
+      // Track the on-screen keyboard: with position:fixed;bottom:0 the bar sits
+      // BEHIND the keyboard on iOS Safari (plain fixed positions against the
+      // layout viewport, which the keyboard doesn't shrink). Translate it up by
+      // the overlap — layout viewport minus the visual viewport — so it rides on
+      // top of the keyboard. No visualViewport API → leave it pinned to the
+      // bottom (still usable, just possibly overlapped).
+      function positionKeybar() {
+        var vv = window.visualViewport;
+        if (!vv) {
+          return;
+        }
+        var overlap = window.innerHeight - vv.height - vv.offsetTop;
+        terminalKeybar.style.transform =
+          "translateY(" + -Math.max(0, overlap) + "px)";
+      }
+
+      // Keep focus on the input: a button that stole focus would close the
+      // keyboard. preventDefault on pointerdown stops the field from blurring,
+      // so the tap runs its action with the keyboard still up (and the bar,
+      // which hides on blur, still on screen to receive the click).
+      terminalKeybar.addEventListener("pointerdown", function (e) {
+        if (e.target.closest("[data-keybar]")) {
+          e.preventDefault();
+        }
+      });
+
+      terminalKeybar.addEventListener("click", function (e) {
+        var button = e.target.closest("[data-keybar]");
+        if (!button) {
+          return;
+        }
+        var action = KEYBAR_ACTIONS[button.getAttribute("data-keybar")];
+        if (action) {
+          action();
+          // Belt-and-braces: keep the keyboard up even if a browser dropped
+          // focus despite the pointerdown guard above.
+          terminalInput.focus();
+        }
+      });
+
+      // Shown only while the prompt is focused; CSS gates it to coarse pointers
+      // so desktop (which has the real keys) never sees it.
+      terminalInput.addEventListener("focus", function () {
+        terminalKeybar.classList.add("is-visible");
+        positionKeybar();
+      });
+      terminalInput.addEventListener("blur", function () {
+        terminalKeybar.classList.remove("is-visible");
+      });
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", positionKeybar);
+        window.visualViewport.addEventListener("scroll", positionKeybar);
+      }
     }
 
     // ----------------------------------------------------------------------
