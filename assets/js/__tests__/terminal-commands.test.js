@@ -868,6 +868,24 @@ describe("terminal command line", () => {
     );
   });
 
+  test("cd resolves a content-card post, same as ls lists it", () => {
+    // ls harvests the page's article/summary cards, so cd must reach them too
+    // (else ls lists a post that cd then rejects). The test DOM has an
+    // article-card link to /writing/the-grid-inherited/.
+    loadModule();
+    const before = sessionText();
+    typeCommand("cd writing/the-grid-inherited");
+    expect(sessionText().slice(before.length)).not.toContain(
+      "no such file or directory"
+    );
+
+    // A post that isn't on the page still errors.
+    typeCommand("cd writing/ghost-post");
+    expect(sessionText()).toContain(
+      "no such file or directory: writing/ghost-post"
+    );
+  });
+
   test("subscribe reuses the newsletter form action", async () => {
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,

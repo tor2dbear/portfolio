@@ -2853,6 +2853,31 @@
       return map;
     }
 
+    // A typed `cd <post>` should reach the same pages `ls` lists — the content
+    // cards (works/writing posts) the nav tree can't know about. Resolve the
+    // path to absolute segments (relative to cwd), then match a content-card
+    // link by its full segments, so cd and ls agree on what exists.
+    function terminalContentTargetHref(dest) {
+      var wanted = terminalResolveSegments(dest);
+      if (wanted.length < 2) {
+        return null;
+      }
+      var wantedKey = wanted.join("/");
+      var match = null;
+      document
+        .querySelectorAll(".article-card a[href], .summary-card a[href]")
+        .forEach(function (link) {
+          if (match) {
+            return;
+          }
+          var segs = terminalHrefSegments(link.getAttribute("href"));
+          if (segs && segs.join("/") === wantedKey) {
+            match = link.getAttribute("href");
+          }
+        });
+      return match;
+    }
+
     function resolveCdTarget(dest) {
       var key = String(dest || "")
         .replace(/^\/+|\/+$/g, "")
@@ -2864,7 +2889,9 @@
         return terminalHomeUrl();
       }
       var targets = terminalNavTargets();
-      return targets[key] || null;
+      // Nav/footer directories first; then the current page's own content
+      // cards, so `cd` reaches any post `ls` just listed.
+      return targets[key] || terminalContentTargetHref(dest) || null;
     }
 
     // Languages from the settings language selector, keyed by code. The current
