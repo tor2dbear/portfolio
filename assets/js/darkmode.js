@@ -2743,6 +2743,15 @@
       if (rawArg === "settings") {
         return [terminalSettingsEntries().join("  ")];
       }
+      // `ls featured` — the curated selection the home page prints — is a view,
+      // harvested from the page's cards (so the header's `ls 'featured'` line is
+      // reproducible by typing it).
+      if (rawArg === "featured") {
+        return terminalHarvestFiles(
+          ".summary-card a[href], .article-card a[href]",
+          "(nothing featured here)"
+        );
+      }
       var targetSegs = terminalResolveSegments(pathArg);
       var node = terminalNodeAt(targetSegs);
       if (!node) {
@@ -3407,22 +3416,37 @@
               action: null,
             };
           }
-          var fileLines = terminalFile(args[0]);
-          if (fileLines) {
-            return { echo: input, lines: fileLines.slice(), action: null };
+          var catName = args[0].replace(/\.(md|txt)$/i, "").toLowerCase();
+          // A section is a directory — you ls it, you don't cat it.
+          if (TERMINAL_SECTION_DIRS[catName]) {
+            return {
+              echo: input,
+              lines: [
+                "cat: " +
+                  catName +
+                  ": Is a directory — try: ls " +
+                  catName +
+                  "/",
+              ],
+              action: null,
+            };
           }
-          // Not a pseudo-file — maybe a content post. `cat`-ing a post opens its
-          // page: the post renders as the cat output (`cat 'title.md'` + body),
-          // so navigating there IS printing the file. Strip the .md first.
-          var catHref = terminalContentTargetHref(
-            args[0].replace(/\.(md|txt)$/i, "")
-          );
+          // Real page first: a content post, or a readable page (about.md,
+          // newsletter.md) the home tour prints as `cat`. The page IS the file's
+          // output, so navigating there prints it.
+          var catHref =
+            terminalContentTargetHref(catName) || resolveCdTarget(catName);
           if (catHref) {
             return {
               echo: input,
               lines: [],
               action: { type: "navigate", url: catHref },
             };
+          }
+          // Otherwise a pseudo-file (readme, colophon, secret, config, …).
+          var fileLines = terminalFile(args[0]);
+          if (fileLines) {
+            return { echo: input, lines: fileLines.slice(), action: null };
           }
           return {
             echo: input,
