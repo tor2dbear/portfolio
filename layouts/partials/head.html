@@ -704,6 +704,7 @@
   {{ $js20 := resources.Get "js/tabs.js" }}
   {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
+  {{ $js_terminal_nav := resources.Get "js/terminal-nav.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -750,9 +751,10 @@
       <script src="{{ $js21.RelPermalink }}" defer></script>
     {{ end }}
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
+    <script src="{{ $js_terminal_nav.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

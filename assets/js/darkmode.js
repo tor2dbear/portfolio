@@ -3693,6 +3693,60 @@
       }
     }
 
+    // A typed cd can only swap in place for a same-origin target.
+    function isSameOriginUrl(href) {
+      try {
+        return (
+          new URL(href, window.location.href).origin === window.location.origin
+        );
+      } catch (err) {
+        return false;
+      }
+    }
+
+    // Full-reload navigation — the click-path behaviour: stash the `cd` echo so
+    // the destination prints it above its first prompt, then load. The fallback
+    // for every typed nav that can't (or shouldn't) swap in place.
+    function fullReloadNavigate(action) {
+      if (action.cd !== false) {
+        stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
+      }
+      try {
+        window.location.assign(action.url);
+      } catch (err) {
+        window.location.href = action.url;
+      }
+    }
+
+    // Typed navigation. Clicks still full-reload (see the click handler below);
+    // only typed cd/resume/home reach here. Swap in place when we can — terminal
+    // layout, same-origin, a real directory (home stays a full reload, it's a
+    // CSS-bundled page), not a language switch (cd:false) — and hand off to
+    // terminal-nav.js, which makes the final call after fetching (it declines
+    // special pages it can only detect from the response). If it declines, isn't
+    // present, or nothing qualifies, fall back to a full reload. The command
+    // echo already printed to the scrollback, so an in-place swap needs no extra
+    // output; on fallback the reload wipes it and the stash reprints it on top.
+    function navigateTerminal(action) {
+      var cwd = hrefToCwd(action.url);
+      var canSwap =
+        action.cd !== false &&
+        isTerminalLayout() &&
+        cwd !== "~" &&
+        isSameOriginUrl(action.url) &&
+        window.TerminalNav &&
+        typeof window.TerminalNav.go === "function";
+      if (!canSwap) {
+        fullReloadNavigate(action);
+        return;
+      }
+      window.TerminalNav.go(action.url, { cwd: cwd }).then(function (swapped) {
+        if (!swapped) {
+          fullReloadNavigate(action);
+        }
+      });
+    }
+
     function applyTerminalAction(action) {
       if (!action) {
         return;
@@ -3821,16 +3875,7 @@
         }
         case "navigate":
           if (action.url) {
-            // Carry a `cd` echo to the destination, same as a nav click —
-            // unless the caller opts out (e.g. a language switch).
-            if (action.cd !== false) {
-              stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
-            }
-            try {
-              window.location.assign(action.url);
-            } catch (err) {
-              window.location.href = action.url;
-            }
+            navigateTerminal(action);
           }
           break;
         case "flow":

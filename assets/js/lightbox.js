@@ -101,6 +101,13 @@
     makeFiguresFocusable();
   }
 
+  // Terminal in-place navigation swaps #main, bringing in fresh figures that
+  // need tabindex/role to stay keyboard-reachable. Expose the (idempotent)
+  // focusability init so terminal-nav.js can re-run it after a swap. Everything
+  // else in this module is bound once to `document`/the overlay and the gallery
+  // is collected at open time, so swapped-in figures are already covered.
+  window.TerminalLightbox = { refresh: makeFiguresFocusable };
+
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Enter" && e.key !== " ") {
       return;
