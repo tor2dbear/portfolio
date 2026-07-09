@@ -1456,6 +1456,12 @@
   display: none;
 }
 
+/* No mobile bottom-sheet drag handle — the panel is inline buffer text here,
+   not a sheet. (Below 30em the component CSS draws one via ::before.) */
+:root[data-layout="terminal"] .settings-panel::before {
+  display: none;
+}
+
 /* --- Text-only panel content (all widths) --- */
 
 :root[data-layout="terminal"] .settings-panel .theme-section,
@@ -1652,6 +1658,7 @@
   margin: 0;
   width: auto;
   max-width: none;
+  flex-wrap: wrap;
   justify-content: flex-start;
   padding: var(--spacing-4) 0 0;
   background: transparent;
@@ -1659,9 +1666,18 @@
   border-radius: 0;
   box-shadow: none;
   transform: none;
+  /* Inline in the buffer the pill's clipping (for its collapse animation) just
+     truncates the job-line controls on a phone — let them wrap and show. */
+  overflow: visible;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   font-size: var(--terminal-font-size);
+}
+
+/* Drop the floating pill's rim-light border — the inline job line is plain
+   buffer text, not a raised surface. */
+:root[data-layout="terminal"] .coty-transport::after {
+  display: none;
 }
 
 /* The pill's mobile rule hides .coty-transport while a panel is open; inline in
@@ -1704,11 +1720,17 @@
   border: none;
   box-shadow: none;
   padding: 0;
+  /* The pill caps its width and clips for the expand animation; inline we want
+     the full control row, wrapping onto more lines if the phone is narrow. */
+  max-width: none;
+  overflow: visible;
 }
 
 :root[data-layout="terminal"] .coty-player__controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
+  justify-content: flex-start;
   gap: 2ch;
   padding: 0;
 }
