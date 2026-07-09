@@ -4841,6 +4841,26 @@
 
     printPendingTerminalCd();
 
+    // Posts are files: stamp each content card's title link with its slug so the
+    // terminal CSS can render it as `slug.md` (an ls-row filename) instead of the
+    // human title. The title stays in the DOM for screen readers + other layouts;
+    // terminal.css just hides it and shows the slug. Re-run after an in-place nav.
+    function terminalStampSlugs() {
+      document
+        .querySelectorAll(
+          ".summary-card__title a[href], .article-card__title a[href], " +
+            ".related-items__item .type-headline-4 a[href]"
+        )
+        .forEach(function (link) {
+          var segs = terminalHrefSegments(link.getAttribute("href"));
+          if (segs && segs.length) {
+            link.setAttribute("data-slug", segs[segs.length - 1]);
+          }
+        });
+    }
+    terminalStampSlugs();
+    window.TerminalSlugs = { refresh: terminalStampSlugs };
+
     // Terminal layout: statusbar quick toggle that shows the resolved mode as
     // a bracketed word; clicking flips light/dark (an explicit choice, so it
     // replaces "system"). The label tracks every mode change via the

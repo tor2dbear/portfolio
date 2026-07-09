@@ -346,12 +346,34 @@
   font-family: var(--font-mono);
 }
 
-/* Links that are directories carry the trailing slash. */
+/* Links that are directories carry the trailing slash — the nav sections. */
 :root[data-layout="terminal"] .top-menu__item--nav .top-menu__link::after,
-:root[data-layout="terminal"] .top-menu__label--long::after,
-:root[data-layout="terminal"] .summary-card__title a::after,
-:root[data-layout="terminal"] .related-items__item .type-headline-4 a::after {
+:root[data-layout="terminal"] .top-menu__label--long::after {
   content: "/";
+  font-family: var(--font-mono);
+}
+
+/* Posts are files: an ls-row shows the slug as a .md filename (stamped onto the
+   link by darkmode.js), not the human title. The title stays in the DOM for
+   screen readers and every other layout; here font-size:0 hides it and the
+   ::after prints the filename. */
+:root[data-layout="terminal"] .summary-card__title a[data-slug],
+:root[data-layout="terminal"] .article-card__title a[data-slug],
+:root[data-layout="terminal"]
+  .related-items__item
+  .type-headline-4
+  a[data-slug] {
+  font-size: 0;
+}
+
+:root[data-layout="terminal"] .summary-card__title a[data-slug]::after,
+:root[data-layout="terminal"] .article-card__title a[data-slug]::after,
+:root[data-layout="terminal"]
+  .related-items__item
+  .type-headline-4
+  a[data-slug]::after {
+  content: attr(data-slug) ".md";
+  font-size: var(--terminal-font-size);
   font-family: var(--font-mono);
 }
 

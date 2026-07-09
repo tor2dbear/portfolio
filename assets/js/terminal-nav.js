@@ -131,6 +131,13 @@
     ) {
       window.CotyScaleActions.init();
     }
+    // Stamp the swapped-in cards' slugs so they render as .md filenames.
+    if (
+      window.TerminalSlugs &&
+      typeof window.TerminalSlugs.refresh === "function"
+    ) {
+      window.TerminalSlugs.refresh();
+    }
   }
 
   // The prompt sits below #main, so a taller/shorter page shifts it — pin the
