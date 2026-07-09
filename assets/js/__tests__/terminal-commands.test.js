@@ -93,11 +93,26 @@ describe("terminal command line", () => {
           >
           <nav class="top-menu__nav">
             <a class="terminal-prompt__host" href="/"></a>
+            <a class="top-menu__link" href="/works/">Works</a>
+            <a class="top-menu__link" href="/works/tags/">Tags</a>
             <a class="top-menu__link" href="/writing/">Writing</a>
             <a class="top-menu__link" href="/about/">About</a>
             <a class="terminal-quick terminal-quick--lang" href="/sv/writing/" lang="sv">sv</a>
           </nav>
         </div>
+        <div class="article-card"><a href="/writing/the-grid-inherited/">The grid</a></div>
+        <footer>
+          <nav class="footer-nav">
+            <a href="/ui-library/">UI Library</a>
+            <a href="/palette-generator/">Palette</a>
+          </nav>
+          <address class="footer-contact">
+            <ul class="footer-menu">
+              <li><a href="mailto:hej@tor-bjorn.com">hej@tor-bjorn.com</a></li>
+              <li><a href="https://www.linkedin.com/in/tbhedberg/">LinkedIn</a></li>
+            </ul>
+          </address>
+        </footer>
         <div data-js="coty-transport" hidden>
           <button data-js="coty-transport-trigger" aria-label="Show"></button>
           <button
@@ -126,7 +141,9 @@ describe("terminal command line", () => {
       removeEventListener: jest.fn(),
     }));
     window.getComputedStyle = jest.fn(() => ({
-      getPropertyValue: jest.fn(() => "#ffffff"),
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-cwd" ? "~" : "#ffffff"
+      ),
     }));
     window.Toast = { show: jest.fn() };
     window.requestAnimationFrame = jest.fn();
@@ -214,6 +231,404 @@ describe("terminal command line", () => {
     loadModule();
     typeCommand("frobnicate");
     expect(sessionText()).toContain("frobnicate: command not found");
+  });
+
+  // ---- Additional commands & easter eggs --------------------------------
+
+  test("ls lists the nav pages as directories", () => {
+    loadModule();
+    typeCommand("ls");
+    expect(sessionText()).toContain("writing/");
+    expect(sessionText()).toContain("about/");
+  });
+
+  test("cat prints a known pseudo-file and 404s unknown ones", () => {
+    loadModule();
+    typeCommand("cat readme");
+    expect(sessionText().toLowerCase()).toContain("portfolio");
+    typeCommand("cat nope");
+    expect(sessionText()).toContain("No such file or directory");
+  });
+
+  test("cat strips a leading dot and extension", () => {
+    loadModule();
+    typeCommand("cat .secret");
+    expect(sessionText().toLowerCase()).toContain("no secrets");
+  });
+
+  test("man pulls a one-line description from help", () => {
+    loadModule();
+    typeCommand("man whoami");
+    expect(sessionText()).toContain("who's asking");
+    typeCommand("man nope");
+    expect(sessionText()).toContain("No manual entry for nope");
+  });
+
+  test("uname -a reports the session, plain uname the shell", () => {
+    loadModule();
+    typeCommand("uname");
+    expect(sessionText()).toContain("tor-sh");
+    typeCommand("uname -a");
+    expect(sessionText()).toContain("terminal");
+  });
+
+  test("colour prints the active palette swatches", () => {
+    loadModule();
+    typeCommand("colour");
+    expect(sessionText().toLowerCase()).toContain("paper");
+    expect(sessionText()).toContain("#ffffff");
+  });
+
+  test("fortune prints one of the aphorisms", () => {
+    loadModule();
+    typeCommand("fortune");
+    // Every fortune carries an em-dash attribution.
+    expect(sessionText()).toContain("—");
+  });
+
+  test("history records commands, newest last, including itself", () => {
+    loadModule();
+    typeCommand("whoami");
+    typeCommand("date");
+    typeCommand("history");
+    const text = sessionText();
+    expect(text).toContain("1  whoami");
+    expect(text).toContain("2  date");
+    expect(text).toContain("3  history");
+  });
+
+  test("uptime reports an 'up' line", () => {
+    loadModule();
+    typeCommand("uptime");
+    expect(sessionText()).toContain("up ");
+  });
+
+  test("top prints a tongue-in-cheek process list", () => {
+    loadModule();
+    typeCommand("top");
+    expect(sessionText()).toContain("tor-sh");
+    expect(sessionText().toLowerCase()).toContain("coffee");
+  });
+
+  test("editor jokes point back at exit", () => {
+    loadModule();
+    typeCommand("vim");
+    expect(sessionText().toLowerCase()).toContain("exit");
+  });
+
+  test(":wq leaves the terminal like exit", () => {
+    localStorage.setItem("theme-layout-previous", "column");
+    loadModule();
+    typeCommand(":wq");
+    expect(document.documentElement.getAttribute("data-layout")).not.toBe(
+      "terminal"
+    );
+  });
+
+  test("rm -rf / refuses with the git joke", () => {
+    loadModule();
+    typeCommand("rm -rf /");
+    expect(sessionText().toLowerCase()).toContain("it's all in git");
+  });
+
+  test("git subcommands answer in character", () => {
+    loadModule();
+    typeCommand("git blame");
+    expect(sessionText().toLowerCase()).toContain("you");
+    typeCommand("git commit");
+    expect(sessionText().toLowerCase()).toContain("working tree clean");
+  });
+
+  test("npm install fakes a dependency resolve, then reveals the joke", () => {
+    loadModule();
+    typeCommand("npm install");
+    // The "working" line lands immediately; the punchline is held back.
+    expect(sessionText().toLowerCase()).toContain("resolving 4271");
+    expect(sessionText().toLowerCase()).not.toContain("vanilla js");
+    jest.advanceTimersByTime(1000);
+    expect(sessionText().toLowerCase()).toContain("vanilla js");
+  });
+
+  test("hello greets back", () => {
+    loadModule();
+    typeCommand("hello");
+    expect(sessionText()).toContain("hey");
+  });
+
+  test("easteregg lists the hidden commands but stays out of help", () => {
+    loadModule();
+    typeCommand("easteregg");
+    const eggs = sessionText();
+    expect(eggs).toContain("easter eggs:");
+    expect(eggs).toContain("konami");
+    expect(eggs).toContain("fortune");
+    typeCommand("clear");
+    typeCommand("help");
+    const help = sessionText();
+    expect(help).toContain("commands:");
+    // The index itself is not advertised in help.
+    expect(help).not.toContain("easter eggs:");
+    expect(help).not.toContain("konami");
+  });
+
+  // ---- Round 4: directory tree, utilities, fundamentals -----------------
+
+  function keydown(opts) {
+    document
+      .querySelector('[data-js="terminal-input"]')
+      .dispatchEvent(
+        new window.KeyboardEvent("keydown", { bubbles: true, ...opts })
+      );
+  }
+
+  test("ls lists the current directory's sections", () => {
+    loadModule();
+    typeCommand("ls");
+    expect(sessionText()).toContain("works/");
+    expect(sessionText()).toContain("writing/");
+  });
+
+  test("ls <path> lists that directory; unknown paths error", () => {
+    loadModule();
+    typeCommand("ls works");
+    expect(sessionText()).toContain("tags/");
+    typeCommand("ls nope");
+    expect(sessionText()).toContain(
+      "cannot access 'nope': No such file or directory"
+    );
+  });
+
+  test("ls -a reveals hidden entries", () => {
+    loadModule();
+    typeCommand("ls -a");
+    expect(sessionText()).toContain(".secret");
+    expect(sessionText()).toContain(".config");
+  });
+
+  test("ls inside a section lists the page's own content links", () => {
+    loadModule();
+    // Pretend the page is /writing/ so the cwd is ~/writing.
+    window.getComputedStyle = jest.fn(() => ({
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-cwd" ? "~/writing" : "#ffffff"
+      ),
+    }));
+    typeCommand("ls");
+    expect(sessionText()).toContain("the-grid-inherited/");
+  });
+
+  test("ls of another section hints at cd instead of printing nothing", () => {
+    loadModule();
+    // Sitting on /works/, ask for a different section's contents.
+    window.getComputedStyle = jest.fn(() => ({
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-cwd" ? "~/works" : "#ffffff"
+      ),
+    }));
+    typeCommand("ls ~/writing");
+    expect(sessionText()).toContain("cd writing");
+  });
+
+  test("ls lists several paths with per-directory headers", () => {
+    loadModule();
+    typeCommand("ls works writing");
+    const text = sessionText();
+    expect(text).toContain("works:");
+    expect(text).toContain("writing:");
+    expect(text).toContain("tags/");
+  });
+
+  test("tree draws the site map", () => {
+    loadModule();
+    typeCommand("tree");
+    const text = sessionText();
+    expect(text).toContain("works/");
+    expect(text).toContain("tags/");
+    expect(text).toMatch(/[├└]/);
+  });
+
+  test("hire starts the contact flow", () => {
+    loadModule();
+    typeCommand("hire");
+    expect(tailPrompt()).toBe("email>");
+  });
+
+  test("social lists the real footer links", () => {
+    loadModule();
+    typeCommand("social");
+    const text = sessionText();
+    expect(text).toContain("hej@tor-bjorn.com");
+    expect(text.toLowerCase()).toContain("linkedin");
+  });
+
+  test("email prints the contact address", () => {
+    loadModule();
+    typeCommand("email");
+    expect(sessionText()).toContain("hej@tor-bjorn.com");
+  });
+
+  test("resume heads to the about page", () => {
+    loadModule();
+    typeCommand("resume");
+    expect(sessionText().toLowerCase()).toContain("about");
+  });
+
+  test("layout switches the layout and lists options with no arg", () => {
+    loadModule();
+    typeCommand("layout");
+    expect(sessionText()).toContain("available:");
+    typeCommand("layout editorial");
+    expect(document.documentElement.getAttribute("data-layout")).toBe(
+      "editorial"
+    );
+  });
+
+  test("debug prints the theme state", () => {
+    loadModule();
+    typeCommand("debug");
+    const text = sessionText();
+    expect(text).toContain("layout");
+    expect(text).toContain("palette");
+  });
+
+  test("reset restores theme defaults", () => {
+    localStorage.setItem("theme-mode", "dark");
+    localStorage.setItem("theme-palette", "custom");
+    loadModule();
+    typeCommand("reset");
+    expect(sessionText()).toContain("reset:");
+    expect(localStorage.getItem("theme-mode")).toBe("system");
+    expect(localStorage.getItem("theme-palette")).toBe("standard");
+  });
+
+  test("copy writes to the clipboard and confirms", () => {
+    const writeText = jest.fn();
+    Object.defineProperty(window.navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    loadModule();
+    typeCommand("copy email");
+    expect(sessionText()).toContain("copied:");
+    expect(writeText).toHaveBeenCalledWith("hej@tor-bjorn.com");
+  });
+
+  test("classic eggs respond", () => {
+    loadModule();
+    typeCommand("xyzzy");
+    expect(sessionText()).toContain("Nothing happens.");
+    typeCommand("42");
+    expect(sessionText()).toContain("42");
+    typeCommand("ping");
+    expect(sessionText().toLowerCase()).toContain("pong");
+    typeCommand("sl");
+    expect(sessionText().toLowerCase()).toContain("choo");
+  });
+
+  test("cowsay speaks the argument", () => {
+    loadModule();
+    typeCommand("cowsay hello");
+    const text = sessionText();
+    expect(text).toContain("hello");
+    expect(text).toContain("^__^");
+  });
+
+  test("logo prints the boot art", () => {
+    loadModule();
+    typeCommand("logo");
+    expect(sessionText()).toContain("██");
+  });
+
+  test("weather prints a fake forecast", () => {
+    loadModule();
+    typeCommand("weather");
+    expect(sessionText().toLowerCase()).toContain("breeze");
+  });
+
+  test("matrix rains, then wakes up", () => {
+    loadModule();
+    typeCommand("matrix");
+    jest.advanceTimersByTime(1500);
+    expect(sessionText()).toContain("wake up");
+  });
+
+  test("sudo make me a sandwich vs make me a sandwich", () => {
+    loadModule();
+    typeCommand("sudo make me a sandwich");
+    expect(sessionText()).toContain("okay.");
+    typeCommand("make me a sandwich");
+    expect(sessionText()).toContain("make it yourself");
+  });
+
+  test("↑ recalls the previous command", () => {
+    loadModule();
+    typeCommand("whoami");
+    keydown({ key: "ArrowUp" });
+    expect(document.querySelector('[data-js="terminal-input"]').value).toBe(
+      "whoami"
+    );
+  });
+
+  test("Tab completes a command name", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "wea";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("weather ");
+  });
+
+  test("Tab completes a cd path from the tree", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "cd wri";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cd writing");
+  });
+
+  test("Ctrl+L clears the screen, Ctrl+C cancels the line", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    typeCommand("whoami");
+    expect(sessionText().length).toBeGreaterThan(0);
+    keydown({ key: "l", ctrlKey: true });
+    expect(sessionText()).toBe("");
+    input.value = "half typed";
+    keydown({ key: "c", ctrlKey: true });
+    expect(input.value).toBe("");
+    expect(sessionText()).toContain("^C");
+  });
+
+  test("konami command toggles party mode", async () => {
+    loadModule();
+    typeCommand("konami");
+    expect(document.documentElement.getAttribute("data-konami")).toBe("on");
+    // toggleKonami de-dupes a synchronous burst (see darkmode.js), so let the
+    // guard clear on the microtask queue before toggling back off.
+    await Promise.resolve();
+    typeCommand("konami");
+    expect(document.documentElement.getAttribute("data-konami")).toBeNull();
+  });
+
+  test("the Konami key sequence at the prompt enables party mode", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const press = (key) =>
+      input.dispatchEvent(
+        new window.KeyboardEvent("keydown", { key, bubbles: true })
+      );
+    [
+      "ArrowUp",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowRight",
+      "b",
+      "a",
+    ].forEach(press);
+    expect(document.documentElement.getAttribute("data-konami")).toBe("on");
   });
 
   test("clear empties the session log", () => {

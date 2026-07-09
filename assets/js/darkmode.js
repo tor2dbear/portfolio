@@ -2224,6 +2224,40 @@
       '[data-js="terminal-session"]'
     );
 
+    // Session start, for `uptime` — captured when the command engine boots.
+    var terminalSessionStart = Date.now();
+
+    // Command scrollback for `history`, oldest first. Capped so a long-lived
+    // tab can't grow it without bound.
+    var terminalHistory = [];
+    var TERMINAL_HISTORY_MAX = 100;
+
+    // The Konami code (typed while the prompt is focused) toggles party mode.
+    // Keys are compared lowercased, so ArrowUp → "arrowup", B → "b".
+    var KONAMI_SEQUENCE = [
+      "arrowup",
+      "arrowup",
+      "arrowdown",
+      "arrowdown",
+      "arrowleft",
+      "arrowright",
+      "arrowleft",
+      "arrowright",
+      "b",
+      "a",
+    ];
+    var konamiProgress = 0;
+
+    // Where ↑/↓ history recall currently sits (null = the live line). Reset
+    // whenever the user types or runs a command.
+    var terminalHistoryCursor = null;
+
+    // The last printed output line, for `copy` with no argument.
+    var lastTerminalOutput = "";
+
+    // The four selectable layouts, for the `layout`/`theme` command.
+    var TERMINAL_LAYOUTS = ["column", "editorial", "index", "terminal"];
+
     // Kept narrow (a ~12-char command column + short descriptions) so every
     // line fits a phone's ~36-char terminal width without wrapping mid-column.
     const TERMINAL_HELP = [
@@ -2232,7 +2266,9 @@
       "  whoami    who's asking",
       "  date      date & time",
       "  pwd       working dir",
+      "  ls        list dir",
       "  cd <page> change page",
+      "  tree      site map",
       "  lang [sv|en]  language",
       "  echo      print text",
       "  neofetch  session info",
@@ -2240,10 +2276,71 @@
       "  pantone   [on|off|YYYY]",
       "  grain|blend|motion on/off",
       "  grid      layout grid",
+      "  layout <name>  switch layout",
+      "  hire      let's work together",
+      "  social    my links",
+      "  copy <x>  to clipboard",
       "  contact   message me",
       "  subscribe newsletter",
       "  clear     wipe the screen",
       "  exit      leave the terminal",
+      "keys: ↑↓ history · Tab complete · ^L/^C/^U",
+    ];
+
+    // Command words offered by Tab completion (primary spellings only).
+    const TERMINAL_COMMAND_NAMES = [
+      "help",
+      "whoami",
+      "date",
+      "pwd",
+      "ls",
+      "cd",
+      "tree",
+      "lang",
+      "echo",
+      "neofetch",
+      "dark",
+      "light",
+      "system",
+      "pantone",
+      "grain",
+      "blend",
+      "motion",
+      "grid",
+      "layout",
+      "theme",
+      "hire",
+      "social",
+      "links",
+      "email",
+      "resume",
+      "cv",
+      "copy",
+      "cat",
+      "man",
+      "uname",
+      "colour",
+      "fortune",
+      "history",
+      "uptime",
+      "top",
+      "debug",
+      "env",
+      "reset",
+      "contact",
+      "subscribe",
+      "clear",
+      "exit",
+      "sl",
+      "cowsay",
+      "logo",
+      "ascii",
+      "weather",
+      "matrix",
+      "ping",
+      "moo",
+      "xyzzy",
+      "easteregg",
     ];
 
     // Toggleable image effects, keyed by command word. `invert` flags that the
@@ -2259,6 +2356,77 @@
         invert: true,
       },
     };
+
+    // `cat`-able pseudo-files. A leading dot and a trailing .txt/.md are
+    // stripped before lookup, so `cat colophon`, `cat colophon.txt` and
+    // `cat .secret` all resolve.
+    const TERMINAL_FILES = {
+      readme: [
+        "it's a portfolio. poke around.",
+        "type 'help' for the command list.",
+      ],
+      about: ["designer & developer.", "type 'cd about' for the long version."],
+      colophon: [
+        "Hugo · vanilla JS · no frameworks.",
+        "hand-rolled design tokens.",
+        "no trackers, no cookies.",
+      ],
+      secret: [
+        "there are no secrets here.",
+        "(the source is right there — view-source:)",
+      ],
+      config: [
+        "# ~/.config — terminal preferences",
+        "shell   tor-sh 1.0",
+        "prompt  ~$ (edit via the settings panel)",
+      ],
+    };
+
+    // `fortune` cookies — design & typography aphorisms, printed at random.
+    const TERMINAL_FORTUNES = [
+      "Less, but better. — Dieter Rams",
+      "Good design is as little design as possible. — Dieter Rams",
+      "Design is not just what it looks like — design is how it works. — Steve Jobs",
+      "The details are not the details. They make the design. — Charles Eames",
+      "White space is to be regarded as an active element. — Jan Tschichold",
+      "Simplicity is the ultimate sophistication. — Leonardo da Vinci",
+      "Perfection is reached when there is nothing left to take away. — Antoine de Saint-Exupéry",
+      "Type is a beautiful group of letters, not a group of beautiful letters. — Matthew Carter",
+    ];
+
+    // A private index of the hidden commands, surfaced only by `easteregg` —
+    // deliberately kept out of `help` so it stays a discovery, not a menu.
+    const TERMINAL_EASTER_EGGS = [
+      "easter eggs:",
+      "  sudo      permission denied",
+      "  coffee    HTTP 418",
+      "  cat <f>   readme/about/colophon…",
+      "  man <cmd> one-line manual",
+      "  uname     shell / -a session",
+      "  colour    palette swatches",
+      "  fortune   design aphorism",
+      "  history   command scrollback",
+      "  uptime    session age",
+      "  top       process list",
+      "  vim/nano/emacs  editor jokes",
+      "  :q :wq    quit like vim",
+      "  rm -rf /  it's all in git",
+      "  git <sub> blame/commit/push…",
+      "  npm i     fake resolve",
+      "  hello     greeting",
+      "  konami    party (↑↑↓↓←→←→ba)",
+      "  sl        choo choo",
+      "  cowsay <x> talking cow",
+      "  moo       super cow powers",
+      "  xyzzy     nothing happens",
+      "  42        the answer",
+      "  ping      pong",
+      "  weather   fake forecast",
+      "  logo      brand curl",
+      "  matrix    digital rain",
+      "  debug/env theme state",
+      "  reset     restore defaults",
+    ];
 
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
@@ -2303,6 +2471,346 @@
         return "off";
       }
       return "toggle";
+    }
+
+    // "1h 2m 3s", dropping leading zero units, for `uptime`.
+    function formatUptime(totalSeconds) {
+      var s = Math.max(0, Math.floor(totalSeconds));
+      var h = Math.floor(s / 3600);
+      var m = Math.floor((s % 3600) / 60);
+      s = s % 60;
+      var parts = [];
+      if (h) {
+        parts.push(h + "h");
+      }
+      if (h || m) {
+        parts.push(m + "m");
+      }
+      parts.push(s + "s");
+      return parts.join(" ");
+    }
+
+    function uptimeLine() {
+      var secs = (Date.now() - terminalSessionStart) / 1000;
+      return "up " + formatUptime(secs) + " · load 0.00 (it's a static site)";
+    }
+
+    function historyLines() {
+      if (!terminalHistory.length) {
+        return ["(no history yet)"];
+      }
+      return terminalHistory.map(function (entry, i) {
+        var n = String(i + 1);
+        while (n.length < 3) {
+          n = " " + n;
+        }
+        return n + "  " + entry;
+      });
+    }
+
+    // Full path segments for an internal href, lang prefix stripped (like
+    // hrefToCwd but keeping every segment). Only root-relative "/..." links
+    // count — that cleanly drops mailto:, tel:, external, and hash links.
+    function terminalHrefSegments(href) {
+      var raw = String(href || "");
+      if (raw.charAt(0) !== "/") {
+        return null;
+      }
+      var path = raw.replace(/[?#].*$/, "").replace(/^\/+|\/+$/g, "");
+      var lang = (
+        document.documentElement.getAttribute("lang") || ""
+      ).toLowerCase();
+      var parts = path.split("/").filter(Boolean);
+      if (parts.length && parts[0].toLowerCase() === lang) {
+        parts.shift();
+      }
+      return parts.map(function (p) {
+        return p.toLowerCase();
+      });
+    }
+
+    // A small nested directory tree built from every nav + footer link path,
+    // so `ls`, `tree`, `cd` and Tab completion share one data-driven model of
+    // the "filesystem". Cached like terminalNavTargets — the links are static.
+    var terminalDirTreeCache = null;
+    function terminalDirTree() {
+      if (terminalDirTreeCache) {
+        return terminalDirTreeCache;
+      }
+      var root = { name: "~", href: terminalHomeUrl(), children: {} };
+      var links = document.querySelectorAll(
+        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href], footer a[href]"
+      );
+      links.forEach(function (link) {
+        var segs = terminalHrefSegments(link.getAttribute("href"));
+        if (!segs || !segs.length) {
+          return;
+        }
+        var node = root;
+        segs.forEach(function (seg) {
+          if (!node.children[seg]) {
+            node.children[seg] = { name: seg, href: null, children: {} };
+          }
+          node = node.children[seg];
+        });
+        if (!node.href) {
+          node.href = link.getAttribute("href");
+        }
+      });
+      terminalDirTreeCache = root;
+      return root;
+    }
+
+    // The current working directory as lowercased path segments ("~" → []).
+    function terminalCwdSegments() {
+      var rest = currentTerminalCwd().replace(/^~\/?/, "");
+      return rest
+        ? rest
+            .split("/")
+            .filter(Boolean)
+            .map(function (s) {
+              return s.toLowerCase();
+            })
+        : [];
+    }
+
+    // Resolve a path argument to absolute segments, relative to the cwd unless
+    // it starts with "~" or "/". Supports "." and "..".
+    function terminalResolveSegments(pathArg) {
+      var arg = String(pathArg || "").trim();
+      var segs;
+      if (arg.charAt(0) === "~" || arg.charAt(0) === "/") {
+        segs = [];
+        arg = arg.replace(/^~/, "").replace(/^\/+/, "");
+      } else {
+        segs = terminalCwdSegments();
+      }
+      arg
+        .split("/")
+        .filter(Boolean)
+        .forEach(function (part) {
+          var p = part.toLowerCase();
+          if (p === ".") {
+            return;
+          }
+          if (p === "..") {
+            segs.pop();
+            return;
+          }
+          segs.push(p);
+        });
+      return segs;
+    }
+
+    function terminalNodeAt(segments) {
+      var node = terminalDirTree();
+      for (var i = 0; i < segments.length; i++) {
+        node = node.children[segments[i]];
+        if (!node) {
+          return null;
+        }
+      }
+      return node;
+    }
+
+    // Slugs of the current page's own content links (article / summary cards)
+    // that live under the given section — so `ls` inside e.g. ~/writing lists
+    // the actual posts, which the nav tree can't know about.
+    function terminalPageContentSlugs(sectionSegments) {
+      if (!sectionSegments.length) {
+        return [];
+      }
+      var section = sectionSegments[0];
+      var out = [];
+      var seen = {};
+      document
+        .querySelectorAll(".article-card a[href], .summary-card a[href]")
+        .forEach(function (link) {
+          var segs = terminalHrefSegments(link.getAttribute("href"));
+          if (!segs || segs.length < 2 || segs[0] !== section) {
+            return;
+          }
+          var slug = segs[segs.length - 1];
+          if (seen[slug]) {
+            return;
+          }
+          seen[slug] = true;
+          out.push(slug);
+        });
+      return out;
+    }
+
+    // List a single directory. Structural children come from the nav/footer
+    // tree; for the current directory, the page's own content links are merged
+    // in. Unknown path → an ls-style error; a real page whose contents can't
+    // be listed from here (a different section) → a `cd` hint rather than a
+    // bare empty result.
+    function terminalLsOne(pathArg, showHidden) {
+      var targetSegs = terminalResolveSegments(pathArg);
+      var node = terminalNodeAt(targetSegs);
+      if (!node) {
+        return [
+          "ls: cannot access '" + pathArg + "': No such file or directory",
+        ];
+      }
+      var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
+      var entries = Object.keys(node.children)
+        .sort()
+        .map(function (k) {
+          return node.children[k].name + "/";
+        });
+      if (isCwd) {
+        terminalPageContentSlugs(targetSegs).forEach(function (slug) {
+          var entry = slug + "/";
+          if (entries.indexOf(entry) === -1) {
+            entries.push(entry);
+          }
+        });
+      }
+      if (showHidden) {
+        entries = [".secret", ".config"].concat(entries);
+      }
+      if (!entries.length) {
+        // A real page (has an href) that we're not currently on: its contents
+        // live on that page, so point there instead of printing nothing.
+        if (node.href && !isCwd && node.name !== "~") {
+          return ["(cd " + node.name + " to list it)"];
+        }
+        return []; // genuinely empty — real `ls` prints nothing
+      }
+      var MAX = 40;
+      var lines = [entries.slice(0, MAX).join("  ")];
+      if (entries.length > MAX) {
+        lines.push("… (" + (entries.length - MAX) + " more)");
+      }
+      return lines;
+    }
+
+    // `ls [path...]`: with 0 or 1 paths, list that directory. With several,
+    // print a `path:`-headed block per directory, blank-line separated, like
+    // real `ls`. Flags (e.g. -a) apply to every path.
+    function terminalLsLines(paths, showHidden) {
+      if (paths.length <= 1) {
+        return terminalLsOne(paths[0] || "", showHidden);
+      }
+      var out = [];
+      paths.forEach(function (path, i) {
+        if (i > 0) {
+          out.push("");
+        }
+        out.push(path + ":");
+        terminalLsOne(path, showHidden).forEach(function (line) {
+          out.push(line);
+        });
+      });
+      return out;
+    }
+
+    // Whole-tree view for `tree`, drawn with ├──/└── connectors.
+    function terminalTreeLines() {
+      var root = terminalDirTree();
+      var lines = ["~"];
+      function walk(node, prefix) {
+        var keys = Object.keys(node.children).sort();
+        keys.forEach(function (key, i) {
+          var last = i === keys.length - 1;
+          lines.push(
+            prefix + (last ? "└── " : "├── ") + node.children[key].name + "/"
+          );
+          walk(node.children[key], prefix + (last ? "    " : "│   "));
+        });
+      }
+      walk(root, "");
+      return lines;
+    }
+
+    // Contact links harvested from the footer (mailto + LinkedIn), so the
+    // `social`/`email`/`copy email` commands always match the real footer and
+    // the current language.
+    function terminalContactLinks() {
+      var out = [];
+      document
+        .querySelectorAll(".footer-contact a[href]")
+        .forEach(function (link) {
+          var href = link.getAttribute("href");
+          if (!href) {
+            return;
+          }
+          var kind =
+            href.indexOf("mailto:") === 0
+              ? "email"
+              : /linkedin/i.test(href)
+              ? "linkedin"
+              : "link";
+          out.push({ kind: kind, href: href });
+        });
+      return out;
+    }
+
+    // A speech bubble + cow for `cowsay`, text clamped to the phone width.
+    function terminalCowsay(text) {
+      var msg = String(text || "").trim() || "moo";
+      if (msg.length > 30) {
+        msg = msg.slice(0, 29) + "…";
+      }
+      var bar = new Array(msg.length + 3).join("-");
+      return [
+        " " + bar,
+        "< " + msg + " >",
+        " " + bar,
+        "        \\   ^__^",
+        "         \\  (oo)\\_______",
+        "            (__)\\       )\\/\\",
+        "                ||----w |",
+        "                ||     ||",
+      ];
+    }
+
+    // Resolve a `cat` target to its pseudo-file lines, or null if there's no
+    // such "file".
+    function terminalFile(name) {
+      var key = String(name || "")
+        .toLowerCase()
+        .replace(/^\.+/, "")
+        .replace(/\.(txt|md)$/, "");
+      if (key === "secrets") {
+        key = "secret";
+      }
+      return TERMINAL_FILES[key] || null;
+    }
+
+    // One-line man description, pulled from the help table so the two never
+    // drift apart. Matches the first word of each "  cmd   desc" help row.
+    function terminalManPage(topic) {
+      var want = String(topic || "").toLowerCase();
+      var found = null;
+      TERMINAL_HELP.forEach(function (row) {
+        if (found) {
+          return;
+        }
+        var trimmed = row.trim();
+        var word = trimmed.split(/\s+/)[0];
+        if (word === want) {
+          found = trimmed.slice(word.length).trim() || null;
+        }
+      });
+      return found;
+    }
+
+    // Resolved hex/colour values for a few key palette tokens, for `colour`.
+    function terminalColourLines() {
+      var styles = window.getComputedStyle(document.documentElement);
+      var swatches = [
+        ["paper", "--surface-page"],
+        ["ink", "--surface-ink-strong"],
+        ["accent", "--surface-accent"],
+      ];
+      var lines = ["palette: " + paletteLabel()];
+      swatches.forEach(function (pair) {
+        var value = (styles.getPropertyValue(pair[1]) || "").trim();
+        lines.push("  " + pair[0] + "  " + (value || "—"));
+      });
+      return lines;
     }
 
     // The home link the terminal prompt already points at (falls back to root).
@@ -2639,6 +3147,9 @@
             action: { type: "art" },
           };
         case "sudo":
+          if (args.join(" ").toLowerCase() === "make me a sandwich") {
+            return { echo: input, lines: ["okay. 🥪"], action: null };
+          }
           return {
             echo: input,
             lines: [
@@ -2662,11 +3173,490 @@
               action: null,
             };
           }
+          if (args.join(" ").toLowerCase() === "me a sandwich") {
+            return {
+              echo: input,
+              lines: ["what? make it yourself."],
+              action: null,
+            };
+          }
           return {
             echo: input,
             lines: [
               "make: *** no rule to make target '" + (args[0] || "") + "'.",
             ],
+            action: null,
+          };
+        case "ls":
+        case "dir": {
+          var lsShowHidden = args.some(function (a) {
+            return a.charAt(0) === "-" && /a/.test(a);
+          });
+          var lsPaths = args.filter(function (a) {
+            return a.charAt(0) !== "-";
+          });
+          return {
+            echo: input,
+            lines: terminalLsLines(lsPaths, lsShowHidden),
+            action: null,
+          };
+        }
+        case "tree":
+          return { echo: input, lines: terminalTreeLines(), action: null };
+        case "cat": {
+          if (!args.length) {
+            return {
+              echo: input,
+              lines: ["usage: cat <file> — try 'cat readme'"],
+              action: null,
+            };
+          }
+          var fileLines = terminalFile(args[0]);
+          if (!fileLines) {
+            return {
+              echo: input,
+              lines: ["cat: " + args[0] + ": No such file or directory"],
+              action: null,
+            };
+          }
+          return { echo: input, lines: fileLines.slice(), action: null };
+        }
+        case "man": {
+          var topic = (args[0] || "").toLowerCase();
+          if (!topic) {
+            return {
+              echo: input,
+              lines: ["what manual page do you want?", "try: man help"],
+              action: null,
+            };
+          }
+          var page = terminalManPage(topic);
+          if (!page) {
+            return {
+              echo: input,
+              lines: ["No manual entry for " + topic],
+              action: null,
+            };
+          }
+          return { echo: input, lines: [topic + " — " + page], action: null };
+        }
+        case "uname":
+          if (args.indexOf("-a") !== -1) {
+            return {
+              echo: input,
+              lines: [
+                "tor-sh 1.0 " +
+                  terminalHost() +
+                  " terminal " +
+                  resolvedModeLabel() +
+                  " " +
+                  currentLang(),
+              ],
+              action: null,
+            };
+          }
+          return { echo: input, lines: ["tor-sh"], action: null };
+        case "colour":
+        case "color":
+          return { echo: input, lines: terminalColourLines(), action: null };
+        case "fortune": {
+          var pick = Math.floor(Math.random() * TERMINAL_FORTUNES.length);
+          return {
+            echo: input,
+            lines: [TERMINAL_FORTUNES[pick]],
+            action: null,
+          };
+        }
+        case "history":
+          return { echo: input, lines: historyLines(), action: null };
+        case "uptime":
+          return { echo: input, lines: [uptimeLine()], action: null };
+        case "top":
+        case "htop":
+          return {
+            echo: input,
+            lines: [
+              "  PID  CPU  MEM  CMD",
+              "    1   0%   ok  tor-sh",
+              "   42   0%   ok  curiosity",
+              "  418   0%    —  coffee (defunct)",
+            ],
+            action: null,
+          };
+        case "vim":
+        case "vi":
+          return {
+            echo: input,
+            lines: [
+              "entering vim… only kidding.",
+              "to leave, type 'exit' — you're safe here.",
+            ],
+            action: null,
+          };
+        case "nano":
+          return {
+            echo: input,
+            lines: ["nano: nothing to edit here.", "type 'exit' to leave."],
+            action: null,
+          };
+        case "emacs":
+          return {
+            echo: input,
+            lines: [
+              "emacs: a fine OS, missing an editor.",
+              "type 'exit' to leave.",
+            ],
+            action: null,
+          };
+        case ":q":
+        case ":q!":
+        case ":wq":
+        case ":wq!":
+        case ":x":
+          return {
+            echo: input,
+            lines: ["(you can just type 'exit')"],
+            action: { type: "exit" },
+          };
+        case "rm": {
+          var rmArgs = args.join(" ");
+          if (
+            /-[a-z]*r/i.test(rmArgs) &&
+            /(^|\s)(\/|~|\*|\/\*|\.)(\s|$)/.test(rmArgs)
+          ) {
+            return {
+              echo: input,
+              lines: ["nice try — it's all in git 😏"],
+              action: null,
+            };
+          }
+          if (!args.length) {
+            return {
+              echo: input,
+              lines: ["rm: missing operand"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [
+              "rm: cannot remove '" +
+                args[args.length - 1] +
+                "': read-only site",
+            ],
+            action: null,
+          };
+        }
+        case "git": {
+          var gitSub = (args[0] || "").toLowerCase();
+          var gitReplies = {
+            blame: ["git blame: you — last touched just now 😄"],
+            commit: ["nothing to commit, working tree clean ✨"],
+            push: ["Everything up-to-date."],
+            pull: ["Already up to date."],
+            status: [
+              "On branch main.",
+              "nothing to commit, working tree clean",
+            ],
+            log: ["read the real log: type 'cd writing'"],
+          };
+          if (!gitSub) {
+            return {
+              echo: input,
+              lines: ["usage: git <command> — try 'git status'"],
+              action: null,
+            };
+          }
+          if (gitReplies[gitSub]) {
+            return {
+              echo: input,
+              lines: gitReplies[gitSub].slice(),
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: ["git: '" + gitSub + "' is not a git command."],
+            action: null,
+          };
+        }
+        case "npm":
+        case "yarn":
+        case "pnpm": {
+          var pkgSub = (args[0] || "").toLowerCase();
+          if (pkgSub === "install" || pkgSub === "i" || pkgSub === "add") {
+            // Print the "working" line now, then reveal the punchline a beat
+            // later so it reads like a job that ran before it fell over.
+            return {
+              echo: input,
+              lines: ["resolving 4271 dependencies…"],
+              action: {
+                type: "defer",
+                delay: 900,
+                lines: ["done. (kidding — it's vanilla JS)"],
+              },
+            };
+          }
+          return {
+            echo: input,
+            lines: [cmd + ": this site ships no node_modules."],
+            action: null,
+          };
+        }
+        case "hello":
+        case "hi":
+        case "hey":
+          return {
+            echo: input,
+            lines: ["hey 👋", "type 'help' to see what I can do."],
+            action: null,
+          };
+        case "konami":
+          return {
+            echo: input,
+            lines: ["konami: party mode 🌈"],
+            action: { type: "konami" },
+          };
+        // ---- Group A: visitor utilities ----------------------------------
+        case "hire":
+          return {
+            echo: input,
+            lines: ["let's build something. starting a message…"],
+            action: { type: "flow", flow: "contact" },
+          };
+        case "social":
+        case "links": {
+          var contacts = terminalContactLinks();
+          if (!contacts.length) {
+            return {
+              echo: input,
+              lines: ["no links here — try 'contact'"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: contacts.map(function (c) {
+              return c.kind + ": " + c.href.replace(/^mailto:/, "");
+            }),
+            action: null,
+          };
+        }
+        case "email": {
+          var mail = terminalContactLinks().filter(function (c) {
+            return c.kind === "email";
+          })[0];
+          return {
+            echo: input,
+            lines: [
+              mail
+                ? mail.href.replace(/^mailto:/, "")
+                : "no email on file — try 'contact'",
+            ],
+            action: null,
+          };
+        }
+        case "resume":
+        case "cv": {
+          var aboutUrl = resolveCdTarget("about");
+          if (!aboutUrl) {
+            return {
+              echo: input,
+              lines: ["resume: about page not found"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: ["opening about → CV…"],
+            action: { type: "navigate", url: aboutUrl },
+          };
+        }
+        // ---- Group B: builder tools --------------------------------------
+        case "layout":
+        case "theme": {
+          var wantedLayout = (args[0] || "").toLowerCase();
+          var nowLayout =
+            document.documentElement.getAttribute("data-layout") || "column";
+          if (!wantedLayout) {
+            return {
+              echo: input,
+              lines: [
+                "layout: " + nowLayout,
+                "available: " + TERMINAL_LAYOUTS.join(", "),
+              ],
+              action: null,
+            };
+          }
+          if (TERMINAL_LAYOUTS.indexOf(wantedLayout) === -1) {
+            return {
+              echo: input,
+              lines: [
+                "layout: unknown '" +
+                  wantedLayout +
+                  "' — try: " +
+                  TERMINAL_LAYOUTS.join(", "),
+              ],
+              action: null,
+            };
+          }
+          if (wantedLayout === nowLayout) {
+            return {
+              echo: input,
+              lines: ["layout: already " + wantedLayout],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: ["layout → " + wantedLayout],
+            action: { type: "layout", layout: wantedLayout },
+          };
+        }
+        case "debug":
+        case "env": {
+          var root = document.documentElement;
+          var effectState = function (attr) {
+            return root.getAttribute(attr) === "on" ? "on" : "off";
+          };
+          return {
+            echo: input,
+            lines: [
+              "mode       " +
+                (localStorage.getItem("theme-mode") || "system") +
+                " (" +
+                resolvedModeLabel() +
+                ")",
+              "palette    " + paletteLabel(),
+              "layout     " + (root.getAttribute("data-layout") || "column"),
+              "typography " +
+                (localStorage.getItem("theme-typography") || "editorial"),
+              "grain      " + effectState("data-effect-grain"),
+              "blend      " + effectState("data-effect-blend"),
+              "motion     " +
+                (effectState("data-effect-reduced-motion") === "on"
+                  ? "reduced"
+                  : "full"),
+              "lang       " + currentLang(),
+              "pantone    " + getCurrentCotyYear(),
+            ],
+            action: null,
+          };
+        }
+        case "reset":
+          return {
+            echo: input,
+            lines: ["reset: theme restored to defaults"],
+            action: { type: "reset" },
+          };
+        case "copy": {
+          var copyWhat = (args[0] || "").toLowerCase();
+          var copyText = "";
+          if (copyWhat === "email") {
+            var copyMail = terminalContactLinks().filter(function (c) {
+              return c.kind === "email";
+            })[0];
+            copyText = copyMail ? copyMail.href.replace(/^mailto:/, "") : "";
+          } else if (copyWhat === "url" || copyWhat === "link") {
+            copyText = (window.location && window.location.href) || "";
+          } else if (copyWhat) {
+            copyText = rest;
+          } else {
+            copyText = lastTerminalOutput || "";
+          }
+          if (!copyText) {
+            return {
+              echo: input,
+              lines: ["copy: nothing to copy — try 'copy email' or 'copy url'"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [
+              "copied: " +
+                (copyText.length > 30 ? copyText.slice(0, 29) + "…" : copyText),
+            ],
+            action: { type: "copy", text: copyText },
+          };
+        }
+        // ---- Group C: classic unix eggs ----------------------------------
+        case "sl":
+          return {
+            echo: input,
+            lines: [
+              "        _____      . . .",
+              "   ____/ tor \\_______________",
+              "  |___________________________|",
+              "   (O)   (O)   (O)   (O)   (O) ",
+              "  choo choo — you typed ls wrong",
+            ],
+            action: null,
+          };
+        case "xyzzy":
+          return { echo: input, lines: ["Nothing happens."], action: null };
+        case "42":
+        case "answer":
+          return {
+            echo: input,
+            lines: ["the answer to life, the universe & everything: 42"],
+            action: null,
+          };
+        case "moo":
+          return {
+            echo: input,
+            lines: [
+              "         (__)",
+              "         (oo)",
+              "   /------\\/ ",
+              "  / |    ||  ",
+              " *  /\\---/\\  ",
+              "    ~~   ~~  ",
+              "…has this terminal mooed today?",
+            ],
+            action: null,
+          };
+        case "ping": {
+          var pingHost = args[0] || terminalHost();
+          return {
+            echo: input,
+            lines: [
+              "PING " + pingHost + " — pong 🏓",
+              "1 packet transmitted, 1 received, 0.42 ms",
+            ],
+            action: null,
+          };
+        }
+        // ---- Group D: design / ASCII eggs --------------------------------
+        case "cowsay":
+          return { echo: input, lines: terminalCowsay(rest), action: null };
+        case "logo":
+        case "ascii": {
+          var logoLines = terminalArtLines();
+          return {
+            echo: input,
+            lines: logoLines.length ? logoLines : ["(no logo art here)"],
+            action: null,
+          };
+        }
+        case "weather": {
+          var weatherLoc = rest || "Göteborg";
+          return {
+            echo: input,
+            lines: [
+              weatherLoc + ": ⛅ +17°C, light breeze",
+              "(source: vibes, not a real API)",
+            ],
+            action: null,
+          };
+        }
+        case "matrix":
+          return { echo: input, lines: [], action: { type: "matrix" } };
+        case "easteregg":
+        case "eastereggs":
+          return {
+            echo: input,
+            lines: TERMINAL_EASTER_EGGS.slice(),
             action: null,
           };
         default:
@@ -2678,11 +3668,82 @@
       }
     }
 
+    // Party mode: a root attribute CSS hangs a playful hue-cycle off. Toggled
+    // by the `konami` command and by the arrow-key Konami code at the prompt.
+    //
+    // The guard collapses a synchronous burst of calls into a single toggle.
+    // In the browser this is a no-op — one handler fires once. It matters under
+    // test, where re-requiring the module re-runs its DOMContentLoaded init and
+    // stacks duplicate prompt handlers that would otherwise all toggle for one
+    // keypress; the flag lives on `window` so every stacked copy shares it, and
+    // clears on the next microtask so genuine later toggles still register.
+    function toggleKonami() {
+      if (window.__konamiToggling) {
+        return;
+      }
+      window.__konamiToggling = true;
+      window.Promise.resolve().then(function () {
+        window.__konamiToggling = false;
+      });
+      var root = document.documentElement;
+      if (root.getAttribute("data-konami") === "on") {
+        root.removeAttribute("data-konami");
+      } else {
+        root.setAttribute("data-konami", "on");
+      }
+    }
+
     function applyTerminalAction(action) {
       if (!action) {
         return;
       }
       switch (action.type) {
+        case "konami":
+          toggleKonami();
+          break;
+        case "layout":
+          // Leaving the terminal for another layout wipes the scrollback so it
+          // doesn't leak into the destination (same as exitTerminal).
+          if (
+            action.layout &&
+            action.layout !== "terminal" &&
+            isTerminalLayout() &&
+            terminalSession
+          ) {
+            terminalSession.textContent = "";
+          }
+          setLayout(action.layout);
+          break;
+        case "reset":
+          if (
+            typeof isPantoneModeActive === "function" &&
+            isPantoneModeActive()
+          ) {
+            stopPantone();
+          }
+          setMode("system");
+          commitPaletteSelection("standard", { toast: false });
+          setTypography("editorial");
+          setGrainEnabled(false, { silent: true });
+          setBlendEnabled(false, { silent: true });
+          setReducedMotionEnabled(false, { silent: true });
+          break;
+        case "copy":
+          try {
+            if (
+              window.navigator &&
+              window.navigator.clipboard &&
+              typeof window.navigator.clipboard.writeText === "function"
+            ) {
+              window.navigator.clipboard.writeText(action.text);
+            }
+          } catch (err) {
+            /* clipboard unavailable — the confirmation line already printed */
+          }
+          break;
+        case "matrix":
+          runTerminalMatrix();
+          break;
         case "exit":
           exitTerminal();
           break;
@@ -2775,6 +3836,22 @@
         case "flow":
           startTerminalFlow(action.flow);
           break;
+        case "defer":
+          // Print follow-up lines after a delay, so a command can fake a job
+          // running before its punchline. Skip if the terminal was left in
+          // the meantime.
+          if (action.lines && action.lines.length) {
+            window.setTimeout(function () {
+              if (!isTerminalLayout()) {
+                return;
+              }
+              action.lines.forEach(function (line) {
+                printTerminalLine(line, "terminal-session__out");
+              });
+              scrollTerminalToEnd();
+            }, action.delay || 600);
+          }
+          break;
         default:
           break;
       }
@@ -2788,9 +3865,60 @@
       line.className = "terminal-session__line " + className;
       line.textContent = text;
       terminalSession.appendChild(line);
+      // Remember the last *output* row, so `copy` with no argument grabs it.
+      if (className.indexOf("terminal-session__out") !== -1) {
+        lastTerminalOutput = text;
+      }
+    }
+
+    // A short, bounded "digital rain" burst for `matrix` — a few deferred
+    // frames of random glyph rows, then it stops. No persistent interval, so
+    // nothing outlives the terminal or fights reduced motion.
+    function runTerminalMatrix() {
+      var GLYPHS = "01ﾊﾋﾎｱｲｳｴｵｶｷｸ日ﾘｦ";
+      var FRAMES = 3;
+      var step = 0;
+      function row() {
+        var s = "";
+        for (var i = 0; i < 30; i++) {
+          s += GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
+        }
+        return s;
+      }
+      function frame() {
+        if (!isTerminalLayout()) {
+          return;
+        }
+        for (var r = 0; r < 4; r++) {
+          printTerminalLine(row(), "terminal-session__out");
+        }
+        scrollTerminalToEnd();
+        step += 1;
+        if (step < FRAMES) {
+          window.setTimeout(frame, 220);
+        } else {
+          window.setTimeout(function () {
+            if (isTerminalLayout()) {
+              printTerminalLine("wake up… 🟢", "terminal-session__out");
+              scrollTerminalToEnd();
+            }
+          }, 220);
+        }
+      }
+      frame();
     }
 
     function runTerminalInput(raw) {
+      // Record the command before running it, so `history` includes itself —
+      // matching a real shell. Reset the ↑/↓ recall cursor to the live line.
+      terminalHistoryCursor = null;
+      var trimmed = String(raw === null || raw === undefined ? "" : raw).trim();
+      if (trimmed) {
+        terminalHistory.push(trimmed);
+        if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
+          terminalHistory.shift();
+        }
+      }
       var result = runTerminalCommand(raw);
       if (result.echo) {
         printTerminalLine(result.echo, "terminal-session__cmd");
@@ -3089,9 +4217,142 @@
       }
     }
 
+    // Track the Konami code as it's typed into the prompt. Non-destructive:
+    // it only watches keys, then tidies the stray "b"/"a" once it completes.
+    function advanceKonami(e) {
+      var key = String(e.key || "").toLowerCase();
+      if (key === KONAMI_SEQUENCE[konamiProgress]) {
+        konamiProgress += 1;
+        if (konamiProgress === KONAMI_SEQUENCE.length) {
+          konamiProgress = 0;
+          if (terminalInput) {
+            terminalInput.value = "";
+            syncTerminalInputSize();
+          }
+          toggleKonami();
+          printTerminalLine("konami: party mode 🌈", "terminal-session__out");
+          scrollTerminalToEnd();
+        }
+      } else {
+        // Let a mistyped key restart the sequence if it's the first step.
+        konamiProgress = key === KONAMI_SEQUENCE[0] ? 1 : 0;
+      }
+    }
+
+    // ↑/↓ history recall: walk terminalHistory, oldest→newest, restoring an
+    // empty line past the newest entry. `dir` is -1 for ↑ (older), +1 for ↓.
+    function terminalRecallHistory(dir) {
+      if (!terminalInput || !terminalHistory.length) {
+        return;
+      }
+      if (terminalHistoryCursor === null) {
+        terminalHistoryCursor = terminalHistory.length;
+      }
+      terminalHistoryCursor = Math.max(
+        0,
+        Math.min(terminalHistory.length, terminalHistoryCursor + dir)
+      );
+      terminalInput.value = terminalHistory[terminalHistoryCursor] || "";
+      syncTerminalInputSize();
+      var end = terminalInput.value.length;
+      try {
+        terminalInput.setSelectionRange(end, end);
+      } catch (err) {
+        /* selection API unavailable — value is still set */
+      }
+    }
+
+    // Tab completion: complete the command word, or a cd/ls/open path fragment
+    // against the current directory's children. Single match fills; multiple
+    // print the candidates.
+    function terminalCompleteInput() {
+      if (!terminalInput) {
+        return;
+      }
+      var value = terminalInput.value;
+      var parts = value.split(/\s+/);
+      var candidates;
+      var frag;
+      if (parts.length <= 1) {
+        frag = (parts[0] || "").toLowerCase();
+        candidates = TERMINAL_COMMAND_NAMES.filter(function (name) {
+          return name.indexOf(frag) === 0;
+        });
+      } else {
+        var verb = parts[0].toLowerCase();
+        if (verb !== "cd" && verb !== "ls" && verb !== "open") {
+          return;
+        }
+        frag = (parts[parts.length - 1] || "").toLowerCase();
+        var node = terminalNodeAt(terminalCwdSegments());
+        candidates = node
+          ? Object.keys(node.children).filter(function (name) {
+              return name.indexOf(frag) === 0;
+            })
+          : [];
+      }
+      if (candidates.length === 1) {
+        parts[parts.length - 1] = candidates[0];
+        terminalInput.value = parts.join(" ") + (parts.length === 1 ? " " : "");
+        syncTerminalInputSize();
+      } else if (candidates.length > 1) {
+        printTerminalLine(candidates.join("  "), "terminal-session__out");
+        scrollTerminalToEnd();
+      }
+    }
+
     if (terminalInput) {
-      terminalInput.addEventListener("input", syncTerminalInputSize);
+      // Typing invalidates the history-recall position.
+      terminalInput.addEventListener("input", function () {
+        terminalHistoryCursor = null;
+        syncTerminalInputSize();
+      });
       terminalInput.addEventListener("keydown", function (e) {
+        advanceKonami(e);
+        // Ctrl shortcuts: ^L clear screen, ^U clear line, ^C cancel line.
+        if (e.ctrlKey && !e.altKey && !e.metaKey) {
+          var ctrlKey = (e.key || "").toLowerCase();
+          if (ctrlKey === "l") {
+            e.preventDefault();
+            if (terminalSession) {
+              terminalSession.textContent = "";
+            }
+            return;
+          }
+          if (ctrlKey === "u") {
+            e.preventDefault();
+            terminalInput.value = "";
+            terminalHistoryCursor = null;
+            syncTerminalInputSize();
+            return;
+          }
+          if (ctrlKey === "c") {
+            e.preventDefault();
+            printTerminalLine("^C", "terminal-session__out");
+            if (terminalFlow) {
+              endTerminalFlow();
+            }
+            terminalInput.value = "";
+            terminalHistoryCursor = null;
+            syncTerminalInputSize();
+            scrollTerminalToEnd();
+            return;
+          }
+        }
+        if (e.key === "Tab") {
+          e.preventDefault();
+          if (!terminalFlow) {
+            terminalCompleteInput();
+          }
+          return;
+        }
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+          if (!terminalFlow && terminalHistory.length) {
+            e.preventDefault();
+            terminalRecallHistory(e.key === "ArrowUp" ? -1 : 1);
+          }
+          return;
+        }
         if (e.key === "Enter") {
           e.preventDefault();
           var value = terminalInput.value;
