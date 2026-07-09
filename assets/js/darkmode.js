@@ -58,6 +58,10 @@
   let cotyTransportLastCollapsedAt = 0;
   let playerSpriteUrl = "";
   let prePantoneBlendEnabled = null;
+  // Set when Pantone is activated before the CotyScale engine has lazy-loaded:
+  // getLatestCotyYear() can't see the real entries yet, so the true latest year
+  // is applied once the engine finishes loading (see applyPalette / setPantoneState).
+  let pantoneNeedsLatestYear = false;
 
   function getUseHref(use) {
     return (
@@ -231,6 +235,16 @@
       // Pantone needs the lazily-loaded CotyScale engine; load it on demand.
       ensureCotyLoaded(function (cotyActions) {
         if (cotyActions && typeof cotyActions.applyForMode === "function") {
+          // A fresh activation before the engine loaded picked a fallback year;
+          // now that the real entries exist, correct to the actual latest year
+          // before applying so the scale matches "activation starts on latest".
+          if (pantoneNeedsLatestYear) {
+            pantoneNeedsLatestYear = false;
+            setCotyYear(getLatestCotyYear(), {
+              silent: true,
+              activatePantone: false,
+            });
+          }
           cotyActions.applyForMode(
             document.documentElement.getAttribute("data-mode") || "light"
           );
@@ -1500,6 +1514,20 @@
         sessionYear = stored ? Number(stored) || null : null;
       } catch {
         // Ignore storage failures.
+      }
+      // If there's no session-selected year and the engine isn't loaded yet,
+      // getLatestCotyYear() falls back to the stored/last year rather than the
+      // real latest entry — flag a correction once CotyScale loads.
+      if (!sessionYear) {
+        const actions = getCotyActions();
+        let entriesReady = false;
+        if (actions && typeof actions.getEntries === "function") {
+          const entries = actions.getEntries();
+          entriesReady = !!(entries && entries.length);
+        }
+        if (!entriesReady) {
+          pantoneNeedsLatestYear = true;
+        }
       }
       setCotyYear(sessionYear || getLatestCotyYear(), {
         silent: true,

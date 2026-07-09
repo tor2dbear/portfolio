@@ -14,8 +14,9 @@ describe("darkmode pantone transport", () => {
       clearRuntime: jest.fn(),
       getEntries: jest.fn(() => entries),
       getCurrentYear: jest.fn(() => currentYear),
-      getEntry: jest.fn((year) =>
-        entries.find((entry) => Number(entry.year) === Number(year)) || null
+      getEntry: jest.fn(
+        (year) =>
+          entries.find((entry) => Number(entry.year) === Number(year)) || null
       ),
       setYear: jest.fn((year) => {
         currentYear = Number(year);
@@ -41,6 +42,13 @@ describe("darkmode pantone transport", () => {
     jest.resetModules();
     jest.useFakeTimers();
     localStorage.clear();
+    sessionStorage.clear();
+    // innerHTML only replaces <head>/<body>; data-* attributes set on <html> by
+    // a previous test survive and leak state (palette, pantone-state, coty-year)
+    // into the next module load. Strip them so each test starts hermetic.
+    Array.from(document.documentElement.attributes).forEach((attr) => {
+      document.documentElement.removeAttribute(attr.name);
+    });
     document.documentElement.innerHTML = `
       <head>
         <meta name="theme-color" content="#ffffff">
@@ -221,9 +229,14 @@ describe("darkmode pantone transport", () => {
     document.querySelector('[data-js="coty-mode-toggle"]').click();
     jest.advanceTimersByTime(4000);
 
-    const trigger = document.querySelector('[data-js="coty-transport-trigger"]');
+    const trigger = document.querySelector(
+      '[data-js="coty-transport-trigger"]'
+    );
     trigger.dispatchEvent(
-      new window.MouseEvent("mouseenter", { bubbles: true, relatedTarget: null })
+      new window.MouseEvent("mouseenter", {
+        bubbles: true,
+        relatedTarget: null,
+      })
     );
 
     jest.advanceTimersByTime(220);
@@ -235,7 +248,10 @@ describe("darkmode pantone transport", () => {
     ).toBe("collapsed");
 
     trigger.dispatchEvent(
-      new window.MouseEvent("mouseenter", { bubbles: true, relatedTarget: null })
+      new window.MouseEvent("mouseenter", {
+        bubbles: true,
+        relatedTarget: null,
+      })
     );
 
     jest.advanceTimersByTime(119);
@@ -261,7 +277,9 @@ describe("darkmode pantone transport", () => {
     document.querySelector('[data-js="coty-mode-toggle"]').click();
     jest.advanceTimersByTime(4000);
 
-    const trigger = document.querySelector('[data-js="coty-transport-trigger"]');
+    const trigger = document.querySelector(
+      '[data-js="coty-transport-trigger"]'
+    );
     trigger.dispatchEvent(new window.Event("touchend", { bubbles: true }));
 
     expect(
@@ -269,5 +287,41 @@ describe("darkmode pantone transport", () => {
         .querySelector('[data-js="coty-transport"]')
         .getAttribute("data-ui-state")
     ).toBe("expanded");
+  });
+
+  test("activating pantone before CotyScale loads snaps to the latest year once it does", () => {
+    // Regression for the lazy-load race: the ~52KB CotyScale engine is loaded
+    // on demand. If Pantone is activated before it finishes, getLatestCotyYear()
+    // can only see the stored fallback year, not the real entries — so the true
+    // latest year has to be re-applied once the engine's script fires "load".
+    const lateActions = window.CotyScaleActions;
+    delete window.CotyScaleActions; // engine not loaded yet at activation time
+    window.__cotyScaleSrc = "coty-scale.js"; // let ensureCotyLoaded inject a script
+    localStorage.setItem("theme-coty-year", "2024"); // stale fallback, not latest (2026)
+
+    loadModule();
+
+    document.querySelector('[data-js="coty-mode-toggle"]').click();
+
+    // Only the stale fallback year is known while the engine is still loading.
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+    expect(document.documentElement.getAttribute("data-coty-year")).toBe(
+      "2024"
+    );
+
+    // Engine finishes loading -> its script fires "load" -> queued callbacks run.
+    const script = document.querySelector("script[data-coty-scale]");
+    expect(script).not.toBeNull();
+    window.CotyScaleActions = lateActions;
+    script.dispatchEvent(new window.Event("load"));
+
+    // Activation now corrects to the real latest COTY year, not the stale 2024.
+    expect(document.documentElement.getAttribute("data-coty-year")).toBe(
+      "2026"
+    );
+
+    delete window.__cotyScaleSrc;
   });
 });

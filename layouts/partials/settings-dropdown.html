@@ -1,7 +1,18 @@
-{{- $translations := .Translations -}}
-{{- $languageCount := add (len $translations) 1 -}}
+{{/* Only count real, visible translations. Hidden/noindex placeholder stubs
+  (hidden = true) don't count as a translation: an English-only article
+  whose Swedish counterpart is a hidden stub must show no language switcher
+  at all — not a misleading link to the /sv/ homepage. Filtering before
+  $languageCount keeps the whole language section hidden for such pages.
+*/}}
+{{- $visibleTranslations := slice -}}
+{{- range .Translations -}}
+  {{- if not .Params.hidden -}}
+    {{- $visibleTranslations = $visibleTranslations | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- $languageCount := add (len $visibleTranslations) 1 -}}
 {{- $translationsByLang := dict -}}
-{{- range $translations -}}
+{{- range $visibleTranslations -}}
   {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
 {{- end -}}
 
@@ -562,11 +573,17 @@
                 {{- end -}}
               </label>
             {{- else -}}
+              {{/* No usable translation of this page in this language: link to
+                that language's home page. relLangURL only resolves against
+                the current language, so look up the target language's own
+                site and use its home permalink.
+              */}}
+              {{- $langHome := (index (where $.Site.Sites "Language.Lang" .Lang) 0).Home.RelPermalink -}}
               <label
                 class="language-option radio language-option--fallback"
                 lang="{{ .Lang }}"
                 title="{{ i18n "also_on_homepage" }}"
-                data-language-href="{{ "/" | relLangURL . }}"
+                data-language-href="{{ $langHome }}"
               >
                 <input
                   type="radio"
@@ -574,7 +591,7 @@
                   value="{{ .Lang }}"
                   data-language-code="{{ .Lang }}"
                   data-language-name="{{ .LanguageName }}"
-                  data-language-href="{{ "/" | relLangURL . }}"
+                  data-language-href="{{ $langHome }}"
                 />
                 <span class="radio__visual" aria-hidden="true"></span>
                 <span class="radio__label language-name"
