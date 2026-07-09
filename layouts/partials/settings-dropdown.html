@@ -2,7 +2,14 @@
 {{- $languageCount := add (len $translations) 1 -}}
 {{- $translationsByLang := dict -}}
 {{- range $translations -}}
-  {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+  {{/* Skip hidden/noindex placeholder translations (e.g. untranslated stubs
+    with hidden = true): the language radio must not link visitors to a
+    noindex placeholder. A skipped language falls through to the homepage
+    fallback branch below.
+  */}}
+  {{- if not .Params.hidden -}}
+    {{- $translationsByLang = merge $translationsByLang (dict .Language.Lang .) -}}
+  {{- end -}}
 {{- end -}}
 
 
