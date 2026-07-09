@@ -3184,10 +3184,13 @@
             dest === ".." ||
             destKey === "home"
           ) {
+            // Append-only: cd just moves you (changes the prompt). It doesn't
+            // load a page or print anything — like a real shell. You `ls`/`cat`
+            // to see things, and nothing above the prompt ever changes.
             return {
               echo: input,
               lines: [],
-              action: { type: "navigate", url: terminalHomeUrl() },
+              action: { type: "chdir", cwd: "~" },
             };
           }
           // nav/ and settings/ are menus, not places — list them, don't enter.
@@ -3204,13 +3207,13 @@
               action: null,
             };
           }
-          // Sections are directories — cd enters them.
+          // Sections are directories — cd moves you into them (prompt only).
           var sectionTarget = terminalNavTargets()[destKey];
           if (sectionTarget) {
             return {
               echo: input,
               lines: [],
-              action: { type: "navigate", url: sectionTarget },
+              action: { type: "chdir", cwd: hrefToCwd(sectionTarget) },
             };
           }
           // A post is a file — you cat it, you don't cd into it.
@@ -3416,6 +3419,28 @@
               lines: [figs ? figs + " images" : "(no images here)"],
               action: null,
             };
+          }
+          // Append-only: listing the section you've cd'd into but haven't
+          // loaded (cd only moved the prompt) — fetch it and print the files
+          // below, without touching anything above.
+          if (!lsPaths.length && !lsLong.length) {
+            var lsSegs = terminalCwdSegments();
+            // The current page's DOM has no cards for this cwd (you cd'd here
+            // but haven't loaded it) → fetch the section and print it below.
+            if (lsSegs.length && !terminalPageContentSlugs(lsSegs).length) {
+              var lsUrl = resolveCdTarget(lsSegs[0]);
+              if (lsUrl) {
+                return {
+                  echo: input,
+                  lines: [],
+                  action: {
+                    type: "remote-ls",
+                    url: lsUrl,
+                    cwd: "~/" + lsSegs[0],
+                  },
+                };
+              }
+            }
           }
           return {
             echo: input,
@@ -4152,6 +4177,63 @@
           if (action.url) {
             navigateTerminal(action);
           }
+          break;
+        case "chdir":
+          // Append-only cd: move the prompt only. --terminal-cwd drives the
+          // PS1, so setting it (inline, wins over head.html's :root rule) is the
+          // whole move. No fetch, no swap, no scroll jump — nothing above the
+          // prompt changes.
+          document.documentElement.style.setProperty(
+            "--terminal-cwd",
+            '"' + (action.cwd || "~") + '"'
+          );
+          break;
+        case "remote-ls":
+          // Append-only ls: fetch the section you've cd'd into and print its
+          // files into the scrollback below — nothing above moves.
+          if (typeof window.fetch !== "function") {
+            printTerminalLine(
+              "ls: cannot reach " + action.url,
+              "terminal-session__out"
+            );
+            break;
+          }
+          window
+            .fetch(action.url, { credentials: "same-origin" })
+            .then(function (res) {
+              return res.ok ? res.text() : Promise.reject();
+            })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, "text/html");
+              var files = [];
+              doc
+                .querySelectorAll(
+                  ".summary-card a[href], .article-card a[href]"
+                )
+                .forEach(function (a) {
+                  var segs = terminalHrefSegments(a.getAttribute("href"));
+                  if (!segs || segs.length < 2) {
+                    return;
+                  }
+                  var slug = segs[segs.length - 1];
+                  var entry = slug === "tags" ? "tags/" : slug + ".md";
+                  if (files.indexOf(entry) === -1) {
+                    files.push(entry);
+                  }
+                });
+              printTerminalLine(
+                files.length ? files.join("  ") : "(empty)",
+                "terminal-session__out"
+              );
+              scrollTerminalToEnd();
+            })
+            .catch(function () {
+              printTerminalLine(
+                "ls: cannot reach " + action.url,
+                "terminal-session__out"
+              );
+              scrollTerminalToEnd();
+            });
           break;
         case "flow":
           startTerminalFlow(action.flow);
