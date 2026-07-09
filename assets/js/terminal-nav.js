@@ -218,6 +218,15 @@
     // navigation on the landing page) would paint blank until the animation ran.
     document.documentElement.setAttribute("data-terminal-booted", "1");
     document.documentElement.classList.remove("terminal-booting");
+    // The home-only footer (login-tour blocks) is gated on data-terminal-home,
+    // a server-set flag on <html>. A swap doesn't reload <html>, so sync it from
+    // the fetched page — otherwise leaving home would keep the flag and show the
+    // footer on a content page (and vice versa).
+    if (doc.documentElement.hasAttribute("data-terminal-home")) {
+      document.documentElement.setAttribute("data-terminal-home", "true");
+    } else {
+      document.documentElement.removeAttribute("data-terminal-home");
+    }
     refreshContentInit();
     settleScroll();
     return true;

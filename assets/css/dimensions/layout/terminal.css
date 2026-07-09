@@ -1099,6 +1099,17 @@
    Footer: stacked text rows inside the same window
    ============================================================================ */
 
+/* The footer's command blocks (ls -R ~/, cat 'newsletter.txt', subscribe
+   --email, env) belong to the home login tour — otherwise they repeat under
+   every content page as if run from ~/writing, ~/works, … On any non-home page
+   they're hidden; the scrollback and live prompt (also in the footer) stay.
+   The home flag is server-set on <html> and synced across in-place nav. */
+:root[data-layout="terminal"]:not([data-terminal-home]) .footer-grid--primary,
+:root[data-layout="terminal"]:not([data-terminal-home]) .footer-newsletter,
+:root[data-layout="terminal"]:not([data-terminal-home]) .footer-meta {
+  display: none;
+}
+
 :root[data-layout="terminal"] .footer-grid--primary {
   display: flex;
   flex-direction: column;
