@@ -2259,6 +2259,13 @@
           "terminal-session__cmd",
           currentTerminalCwd()
         );
+        // Opening a fullscreen image should dismiss the mobile keyboard, so
+        // blur the prompt and DON'T call scrollTerminalToEnd (it would refocus
+        // the input and pop the keyboard straight back up). Scroll without
+        // refocusing; the lightbox itself moves focus to its close button.
+        if (terminalInput) {
+          terminalInput.blur();
+        }
         if (
           src &&
           window.TerminalLightbox &&
@@ -2266,7 +2273,9 @@
         ) {
           window.TerminalLightbox.openSrc(src, alt);
         }
-        scrollTerminalToEnd();
+        window.requestAnimationFrame(function () {
+          window.scrollTo(0, document.body.scrollHeight);
+        });
       });
     }
 
