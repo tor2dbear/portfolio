@@ -4471,10 +4471,27 @@
                     files.push(entry);
                   }
                 });
-              printTerminalLine(
-                files.length ? files.join("  ") : "(empty)",
-                "terminal-session__out"
-              );
+              if (files.length) {
+                printTerminalLine(files.join("  "), "terminal-session__out");
+              } else if (doc.querySelector(".content.post, .content.page")) {
+                // A readable page (about, a post) is a FILE, not a listing —
+                // point at cat instead of a bare "(empty)" that hides how to
+                // reach it.
+                var lsSlug = String(action.cwd || "")
+                  .split("/")
+                  .filter(Boolean)
+                  .pop();
+                printTerminalLine(
+                  "ls: " +
+                    (lsSlug || "this") +
+                    " is a file, not a directory — try: cat " +
+                    (lsSlug || "it") +
+                    ".md",
+                  "terminal-session__out"
+                );
+              } else {
+                printTerminalLine("(empty)", "terminal-session__out");
+              }
               scrollTerminalToEnd();
             })
             .catch(function () {
