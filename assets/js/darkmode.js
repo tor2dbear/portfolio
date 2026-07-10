@@ -2898,10 +2898,18 @@
         ) {
           continue;
         }
-        var text = (el.textContent || "").replace(/\s+/g, " ").trim();
-        if (text) {
-          tokens.push({ text: text });
-        }
+        // Split on <br> so a paragraph of <br>-separated lines (e.g. the CV's
+        // dates / roles / bullets, all one <p>) prints one line each instead of
+        // running together — textContent alone would drop the breaks.
+        var ownerDoc = el.ownerDocument || document;
+        (el.innerHTML || "").split(/<br\s*\/?>/i).forEach(function (part) {
+          var holder = ownerDoc.createElement("div");
+          holder.innerHTML = part;
+          var text = (holder.textContent || "").replace(/\s+/g, " ").trim();
+          if (text) {
+            tokens.push({ text: text });
+          }
+        });
       }
       // Append the project meta as its own trailing block — cat shows the whole
       // file, so the role/details/client you set in front matter come along.
