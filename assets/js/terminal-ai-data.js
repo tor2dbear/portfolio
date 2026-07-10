@@ -308,6 +308,8 @@
           en: [
             "where do you work now",
             "where do you work",
+            "where does he work",
+            "work",
             "product owner",
             "lokalguiden",
             "current job",
@@ -539,9 +541,10 @@
             "projects",
             "portfolio",
             "case",
-            "work",
+            "your work",
             "what have you made",
             "show work",
+            "show me your",
           ],
         },
         reply: {
@@ -726,7 +729,9 @@
           en: [
             "hire",
             "available",
+            "available for work",
             "freelance",
+            "freelance work",
             "work together",
             "can you help us",
             "collaborate",

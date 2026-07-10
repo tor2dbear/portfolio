@@ -5948,6 +5948,22 @@
       applyAction: function (action) {
         applyTerminalAction(action);
       },
+      // Run a raw command line through the shell (echo + parse + apply), for a
+      // real command typed inside the `ai` assistant. isCommand lets the caller
+      // gate on the engine's own command vocabulary so ordinary sentences that
+      // merely start with a command-like word aren't forwarded.
+      run: function (raw) {
+        runTerminalInput(String(raw === null || raw === undefined ? "" : raw));
+      },
+      isCommand: function (word) {
+        return (
+          TERMINAL_COMMAND_NAMES.indexOf(
+            String(word === null || word === undefined ? "" : word)
+              .trim()
+              .toLowerCase()
+          ) !== -1
+        );
+      },
       captureInput: captureTerminalInput,
       releaseInput: releaseTerminalInput,
       setPrompt: function (label, opts) {

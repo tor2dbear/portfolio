@@ -47,6 +47,13 @@ function mockTerminal() {
     cwd: jest.fn(() => "~"),
     scrollToEnd: jest.fn(),
     isActive: jest.fn(() => true),
+    // A stand-in for the engine's command vocabulary.
+    isCommand: jest.fn((word) =>
+      ["cv", "cd", "ls", "cat", "open", "help", "clear", "pantone"].includes(
+        String(word || "").toLowerCase()
+      )
+    ),
+    run: jest.fn(),
   };
   return {
     t: t,
@@ -100,6 +107,18 @@ describe("classify", () => {
     expect(ai.classify("jag vill prenumerera på nyhetsbrevet").intent.id).toBe(
       "newsletter"
     );
+  });
+
+  test("routes 'work' questions by context, not to projects", () => {
+    const ai = loadAi();
+    expect(ai.classify("is torbjörn available for work?").intent.id).toBe(
+      "hire"
+    );
+    expect(ai.classify("where do torbjörn work?").intent.id).toBe(
+      "current-job"
+    );
+    // But portfolio phrasing still reaches projects.
+    expect(ai.classify("show me your work").intent.id).toBe("projects");
   });
 
   test("answers bio questions", () => {
@@ -219,6 +238,59 @@ describe("start / handleLine loop", () => {
     m.feed("har du skrivit något om css?");
 
     expect(m.text()).not.toContain("du frågade nyss");
+  });
+
+  test("forwards a real command to the shell instead of chatting", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("cd works");
+
+    expect(m.t.run).toHaveBeenCalledWith("cd works");
+    expect(m.t.releaseInput).toHaveBeenCalled();
+    expect(ai.isActive()).toBe(false);
+    // Not echoed as a chat line, and no fallback/answer printed for it.
+    expect(m.text()).not.toContain("you> cd works");
+  });
+
+  test("bare 'cv' opens the résumé instead of looping", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("cv");
+
+    expect(m.t.run).toHaveBeenCalledWith("cv");
+    expect(ai.isActive()).toBe(false);
+  });
+
+  test("does not forward 'help' or a plain sentence", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("help");
+    m.feed("what do you do?");
+
+    expect(m.t.run).not.toHaveBeenCalled();
+    expect(ai.isActive()).toBe(true);
+  });
+
+  test("'exit' leaves the assistant rather than forwarding", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("exit");
+
+    expect(m.t.run).not.toHaveBeenCalled();
+    expect(m.text()).toContain("hej då");
+    expect(ai.isActive()).toBe(false);
   });
 
   test("exit prints the farewell and releases the prompt", () => {

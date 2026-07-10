@@ -341,15 +341,53 @@
     })();
   }
 
-  // Handle one submitted line while the assistant owns the prompt. Echo it in
-  // the "you>" flow style (the engine bypassed its own echo for delegates),
-  // then either leave or answer.
+  // The first whitespace-delimited word, lower-cased — used to spot a real
+  // command typed into the chat.
+  function firstWord(raw) {
+    var s = String(raw === null || raw === undefined ? "" : raw).trim();
+    var sp = s.indexOf(" ");
+    return (sp === -1 ? s : s.slice(0, sp)).toLowerCase();
+  }
+
+  // Words the assistant answers better itself than the shell would — "help"
+  // lists the assistant's topics (capabilities intent), not the command set.
+  var NEVER_FORWARD = { help: true, "?": true };
+
+  // A real command typed inside the assistant should DO the thing, not be
+  // chatted at ("cv" opens the résumé; "cd works" navigates). Gate on the
+  // engine's own command list so ordinary sentences stay chat, exclude the exit
+  // words (handled by the assistant) and the few words it answers itself.
+  function isForwardableCommand(value) {
+    var t = term();
+    if (!t || !value || typeof t.isCommand !== "function") {
+      return false;
+    }
+    var word = firstWord(value);
+    if (NEVER_FORWARD[word] || isExit(value)) {
+      return false;
+    }
+    return t.isCommand(word) && typeof t.run === "function";
+  }
+
+  // Handle one submitted line while the assistant owns the prompt. A real
+  // command is handed to the shell; otherwise echo it in the "you>" flow style
+  // (the engine bypassed its own echo for delegates) and leave or answer.
   function handleLine(raw) {
     if (!active) {
       return;
     }
     var t = term();
     var value = String(raw === null || raw === undefined ? "" : raw).trim();
+
+    if (isForwardableCommand(value)) {
+      // Leave the assistant first, so the shell — not clanker — echoes and runs
+      // the command at the restored PS1.
+      t.releaseInput();
+      active = false;
+      t.run(value);
+      return;
+    }
+
     if (t) {
       t.print("you> " + value, { className: "terminal-session__flow" });
     }
