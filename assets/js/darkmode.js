@@ -3076,6 +3076,41 @@
 
     // Resolve a `cat` target to its pseudo-file lines, or null if there's no
     // such "file".
+    // The footer-meta row (©, status, legal links) is the site's colophon — it
+    // prints on the home tour under a `cat colophon` prompt, so typing it must
+    // reproduce it. Harvest the live footer (status items → KEY=value like the
+    // footer's own CSS; everything else → its visible text, sans the sr-only
+    // labels). Falls back to the static colophon when no footer is in the DOM.
+    function terminalColophonLines() {
+      var list = document.querySelector(".footer-meta__list");
+      if (!list) {
+        return TERMINAL_FILES.colophon.slice();
+      }
+      var out = [];
+      list.querySelectorAll(".footer-meta__item").forEach(function (item) {
+        var cat = item.querySelector("[data-category]");
+        if (cat) {
+          out.push(
+            cat.getAttribute("data-category").toUpperCase() +
+              "=" +
+              cat.textContent.replace(/\s+/g, " ").trim()
+          );
+          return;
+        }
+        var clone = item.cloneNode(true);
+        clone
+          .querySelectorAll(".sr-only, .footer-meta__label")
+          .forEach(function (n) {
+            n.parentNode.removeChild(n);
+          });
+        var text = clone.textContent.replace(/\s+/g, " ").trim();
+        if (text) {
+          out.push(text);
+        }
+      });
+      return out.length ? out : TERMINAL_FILES.colophon.slice();
+    }
+
     function terminalFile(name) {
       var key = String(name || "")
         .toLowerCase()
@@ -3083,6 +3118,10 @@
         .replace(/\.(txt|md)$/, "");
       if (key === "secrets") {
         key = "secret";
+      }
+      // colophon is the live footer, reproduced (see terminalColophonLines).
+      if (key === "colophon") {
+        return terminalColophonLines();
       }
       return TERMINAL_FILES[key] || null;
     }

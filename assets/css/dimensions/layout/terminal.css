@@ -27,7 +27,8 @@
      themselves via data-toast-title/aria-label.
    - summary templates: .summary-card__year spans (hidden in other layouts)
      become the ls-row year column.
-   - footer.html: .footer-meta__item [data-category] becomes the env var name.
+   - footer.html: .footer-meta__item [data-category] becomes the colophon's
+     KEY=value status name.
    - DOM order on work posts: the gallery prompt needs .project-info followed
      by .gallery / .post-content containing figures.
    - Pages that cannot adapt opt out with data-terminal-exempt on <html>
@@ -1181,7 +1182,9 @@
   content: ".txt'";
 }
 
-/* The legal/status row is an executed env — flat rows, never centred.
+/* The legal/status row is the site's colophon (©, status, legal links) — an
+   executed `cat colophon`, reproduced verbatim when typed (see darkmode.js's
+   terminalColophonLines). `env` is the separate live state-dump command.
    display:block kills the subgrid so the prompt doesn't wrap in a track. */
 :root[data-layout="terminal"] .footer-meta {
   display: block;
@@ -1189,7 +1192,7 @@
 }
 
 :root[data-layout="terminal"] .footer-meta::before {
-  content: var(--terminal-ps1-short) "env";
+  content: var(--terminal-ps1-short) "cat colophon";
   display: block;
 }
 
@@ -1209,7 +1212,7 @@
 }
 
 /* The label spans hold icons only — gone; the value spans carry their
-   category name, which becomes the env variable: LÄGE=Mörkt. */
+   category name, rendered as a KEY=value status pair: LÄGE=Mörkt. */
 :root[data-layout="terminal"] .footer-meta__label {
   display: none;
 }
