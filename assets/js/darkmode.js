@@ -2332,6 +2332,7 @@
       "  hire      let's work together",
       "  social    my links",
       "  copy <x>  to clipboard",
+      "  ai        chat with tbh",
       "  contact   message me",
       "  subscribe newsletter",
       "  clear     wipe the screen",
@@ -2381,6 +2382,7 @@
       "debug",
       "env",
       "reset",
+      "ai",
       "contact",
       "subscribe",
       "clear",
@@ -3766,6 +3768,14 @@
             },
           };
         }
+        case "ai":
+          // The free-text assistant lives in terminal-ai.js; applyTerminalAction
+          // starts it (and reports if the module didn't load).
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "ai-start" },
+          };
         case "contact":
           return {
             echo: input,
@@ -4963,6 +4973,16 @@
         case "flow":
           startTerminalFlow(action.flow);
           break;
+        case "ai-start":
+          if (
+            window.TerminalAI &&
+            typeof window.TerminalAI.start === "function"
+          ) {
+            window.TerminalAI.start();
+          } else {
+            printTerminalLine("ai: not available", "terminal-session__out");
+          }
+          break;
         case "defer":
           // Print follow-up lines after a delay, so a command can fake a job
           // running before its punchline. Skip if the terminal was left in
@@ -5130,6 +5150,33 @@
     // footer newsletter form's action and hidden fields.
     // ----------------------------------------------------------------------
     let terminalFlow = null;
+
+    // ----------------------------------------------------------------------
+    // Input delegate (the `ai` assistant)
+    // A registered delegate takes over Enter the way a flow does, but for an
+    // open-ended chat rather than a fixed wizard. Checked AFTER terminalFlow in
+    // the key handler, so a flow the assistant hands off to (contact/subscribe)
+    // still owns input until it finishes. Published to terminal-ai.js via the
+    // window.Terminal seam below; leaving the terminal releases it (exit reset).
+    // ----------------------------------------------------------------------
+    var terminalInputDelegate = null;
+    var terminalInputDelegateRelease = null;
+
+    function captureTerminalInput(handler, onRelease) {
+      terminalInputDelegate = typeof handler === "function" ? handler : null;
+      terminalInputDelegateRelease =
+        typeof onRelease === "function" ? onRelease : null;
+    }
+
+    function releaseTerminalInput() {
+      var onRelease = terminalInputDelegateRelease;
+      terminalInputDelegate = null;
+      terminalInputDelegateRelease = null;
+      setFlowPrompt(null);
+      if (onRelease) {
+        onRelease();
+      }
+    }
 
     function isEmailish(value) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -5316,8 +5363,13 @@
       setFlowPrompt(null);
     }
 
-    // Let the top-level exitTerminal() abort a flow when leaving the terminal.
-    terminalFlowReset = endTerminalFlow;
+    // Let the top-level exitTerminal() abort a flow AND release the `ai`
+    // delegate when leaving the terminal, so re-entering starts clean and the
+    // assistant's own state (via its onRelease) can't get stuck active.
+    terminalFlowReset = function () {
+      endTerminalFlow();
+      releaseTerminalInput();
+    };
 
     function handleTerminalFlowInput(raw) {
       var flow = terminalFlow;
@@ -5548,6 +5600,11 @@
           if (terminalFlow) {
             handleTerminalFlowInput(value);
             scrollTerminalToEnd();
+          } else if (terminalInputDelegate) {
+            // The `ai` assistant owns the prompt: hand it the line (it echoes
+            // and answers itself), then keep the newest output in view.
+            terminalInputDelegate(value);
+            scrollTerminalToEnd();
           } else {
             runTerminalInput(value);
           }
@@ -5560,6 +5617,15 @@
             syncTerminalInputSize();
             printTerminalLine("^C", "terminal-session__out");
             endTerminalFlow();
+            scrollTerminalToEnd();
+          } else if (terminalInputDelegate) {
+            // Escape leaves the assistant (like ^C on a flow), back to the shell
+            // prompt — without leaving the terminal itself.
+            e.preventDefault();
+            terminalInput.value = "";
+            syncTerminalInputSize();
+            printTerminalLine("^C", "terminal-session__out");
+            releaseTerminalInput();
             scrollTerminalToEnd();
           } else if (
             e.defaultPrevented ||
@@ -5829,6 +5895,43 @@
     }
     terminalStampSlugs();
     window.TerminalSlugs = { refresh: terminalStampSlugs };
+
+    // ----------------------------------------------------------------------
+    // Public terminal seam (window.Terminal)
+    // The minimal surface an external module needs to live inside the terminal
+    // without reaching into this closure: write to the scrollback, run one of
+    // the actions applyTerminalAction already understands, take/release the
+    // prompt, and read the cwd. terminal-ai.js is the first consumer; this is
+    // also the export surface a future terminal.js extraction would expose.
+    // ----------------------------------------------------------------------
+    window.Terminal = {
+      print: function (text, opts) {
+        opts = opts || {};
+        printTerminalLine(
+          String(text === null || text === undefined ? "" : text),
+          opts.className || "terminal-session__out",
+          opts.cwd
+        );
+      },
+      echo: function (command) {
+        printTerminalLine(
+          String(command === null || command === undefined ? "" : command),
+          "terminal-session__cmd",
+          currentTerminalCwd()
+        );
+      },
+      applyAction: function (action) {
+        applyTerminalAction(action);
+      },
+      captureInput: captureTerminalInput,
+      releaseInput: releaseTerminalInput,
+      setPrompt: function (label) {
+        setFlowPrompt(label || null);
+      },
+      cwd: currentTerminalCwd,
+      scrollToEnd: scrollTerminalToEnd,
+      isActive: isTerminalLayout,
+    };
 
     // Publish the exit target for the top-level exitTerminal(): if you've cd'd
     // away (live cwd ≠ the loaded page's cwd), exit navigates to that page in
