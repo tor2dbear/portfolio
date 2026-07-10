@@ -175,29 +175,71 @@
     return bestScore > 0 ? best : null;
   }
 
+  // Score every intent and return { hay, scored } sorted best-first. Ties keep
+  // declaration order (Array.sort is stable), matching the original "first max
+  // wins" behaviour. Zero-scoring intents are dropped.
+  function rank(raw) {
+    var d = data();
+    var hay = normalize(raw);
+    if (!d || !d.intents || !hay) {
+      return { hay: "", scored: [] };
+    }
+    var scored = [];
+    for (var i = 0; i < d.intents.length; i++) {
+      var score = scoreIntent(hay, d.intents[i]);
+      if (score > 0) {
+        scored.push({ intent: d.intents[i], score: score });
+      }
+    }
+    scored.sort(function (a, b) {
+      return b.score - a.score;
+    });
+    return { hay: hay, scored: scored };
+  }
+
+  function resultFromRank(r) {
+    var top = r.scored[0];
+    if (!top || top.score < 1) {
+      return { intent: null, entity: null, score: top ? top.score : 0 };
+    }
+    var entity = top.intent.entity
+      ? matchEntity(r.hay, top.intent.entity)
+      : null;
+    return { intent: top.intent, entity: entity, score: top.score };
+  }
+
   // Classify an input into { intent, entity, score }. Exposed for tests. A null
   // intent means "fall back". Entity is resolved only for intents that declare
   // a slot and only when the input actually names one.
   function classify(raw) {
-    var d = data();
-    var hay = normalize(raw);
-    if (!d || !d.intents || !hay) {
-      return { intent: null, entity: null, score: 0 };
+    return resultFromRank(rank(raw));
+  }
+
+  // A terse input that's a near-tie between two intents is ambiguous — better to
+  // ask than to guess (e.g. "css?" → does he know it, or has he written about
+  // it?). Only fires for short inputs where both contenders carry a `clarify`
+  // label, so it degrades to a normal answer otherwise.
+  function ambiguity(r) {
+    var scored = r.scored;
+    if (scored.length < 2) {
+      return null;
     }
-    var best = null;
-    var bestScore = 0;
-    for (var i = 0; i < d.intents.length; i++) {
-      var score = scoreIntent(hay, d.intents[i]);
-      if (score > bestScore) {
-        bestScore = score;
-        best = d.intents[i];
-      }
+    var top = scored[0];
+    var second = scored[1];
+    if (top.score < 1 || top.score - second.score > 1) {
+      return null;
     }
-    if (!best || bestScore < 1) {
-      return { intent: null, entity: null, score: bestScore };
+    if (r.hay.split(" ").filter(Boolean).length > 2) {
+      return null;
     }
-    var entity = best.entity ? matchEntity(hay, best.entity) : null;
-    return { intent: best, entity: entity, score: bestScore };
+    if (
+      !top.intent.clarify ||
+      !second.intent.clarify ||
+      top.intent.id === second.intent.id
+    ) {
+      return null;
+    }
+    return { a: top.intent, b: second.intent };
   }
 
   function pickLang(obj, lg) {
@@ -224,7 +266,25 @@
   function respond(raw) {
     var lg = lang();
     var d = data();
-    var result = classify(raw);
+    var r = rank(raw);
+
+    // Near-tie on a terse input → ask which sense they meant, don't guess.
+    var amb = ambiguity(r);
+    if (amb) {
+      var tmpl = pickLang(d && d.clarifyPrompt, lg) || "{a} / {b}?";
+      printLines(
+        [
+          tmpl
+            .replace("{a}", pickLang(amb.a.clarify, lg))
+            .replace("{b}", pickLang(amb.b.clarify, lg)),
+        ],
+        "terminal-session__out"
+      );
+      lastKey = null;
+      return;
+    }
+
+    var result = resultFromRank(r);
 
     if (!result.intent) {
       lastKey = null;
@@ -349,9 +409,18 @@
     return (sp === -1 ? s : s.slice(0, sp)).toLowerCase();
   }
 
-  // Words the assistant answers better itself than the shell would — "help"
-  // lists the assistant's topics (capabilities intent), not the command set.
-  var NEVER_FORWARD = { help: true, "?": true };
+  // Words the assistant answers better itself than the shell would: "help"
+  // lists the assistant's topics (capabilities intent) rather than the command
+  // set, and contact/subscribe/hire go through the assistant's own intents so
+  // the flow hand-off releases the prompt cleanly (a forwarded flow would leave
+  // the assistant active behind it, desyncing the prompt label).
+  var NEVER_FORWARD = {
+    help: true,
+    "?": true,
+    contact: true,
+    subscribe: true,
+    hire: true,
+  };
 
   // A real command typed inside the assistant should DO the thing, not be
   // chatted at ("cv" opens the résumé; "cd works" navigates). Gate on the
@@ -380,11 +449,18 @@
     var value = String(raw === null || raw === undefined ? "" : raw).trim();
 
     if (isForwardableCommand(value)) {
-      // Leave the assistant first, so the shell — not clanker — echoes and runs
-      // the command at the restored PS1.
-      t.releaseInput();
-      active = false;
+      // Acknowledge, then run it — WITHOUT leaving the assistant. Staying is the
+      // assistant-like behaviour ("I did that for you, still here"); when the
+      // command navigates away (open/cv/lang), the page reload ends the session
+      // on its own, so there's no jarring hand-off to the shell.
+      var ack = pickLang((data() || {}).commandAck, lang());
+      if (ack) {
+        t.print(ack, { className: "terminal-session__out" });
+      }
       t.run(value);
+      if (t.scrollToEnd) {
+        t.scrollToEnd();
+      }
       return;
     }
 

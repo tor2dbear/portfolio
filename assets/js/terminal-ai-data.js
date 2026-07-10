@@ -72,6 +72,22 @@
       en: "type exit to leave",
     },
 
+    // Printed before a real command the assistant forwards to the shell, so it
+    // reads as "clanker did that for you" rather than a silent hand-off. It
+    // stays in the assistant afterwards (the page lifecycle ends it if the
+    // command navigates away).
+    commandAck: {
+      sv: "visst — kör det åt dig:",
+      en: "sure — running that for you:",
+    },
+
+    // When a terse input is a near-tie between two intents, the assistant asks
+    // instead of guessing. {a}/{b} are filled from each intent's `clarify`.
+    clarifyPrompt: {
+      sv: "Menar du {a} eller {b}? Säg vilket.",
+      en: "Do you mean {a} or {b}? Say which.",
+    },
+
     // Printed before the reply when the same question is asked twice in a row,
     // so a repeat reads as noticed rather than as a stuck record. The engine
     // rotates through these (see terminal-ai.js respond()).
@@ -400,6 +416,7 @@
       },
       {
         id: "skills",
+        clarify: { sv: "vad han är bra på", en: "what he's good at" },
         keywords: {
           sv: [
             "vad ar du bra pa",
@@ -430,6 +447,10 @@
       },
       {
         id: "tools",
+        clarify: {
+          sv: "vilka verktyg han använder",
+          en: "which tools he uses",
+        },
         keywords: {
           sv: [
             "vilka program",
@@ -465,6 +486,7 @@
       },
       {
         id: "code",
+        clarify: { sv: "om han kan det", en: "whether he knows it" },
         keywords: {
           sv: [
             "kan du koda",
@@ -527,6 +549,7 @@
       {
         id: "projects",
         entity: "category",
+        clarify: { sv: "projekt inom det", en: "projects in that" },
         keywords: {
           sv: [
             "projekt",
@@ -645,6 +668,10 @@
       {
         id: "writing",
         entity: "topic",
+        clarify: {
+          sv: "vad han skrivit om det",
+          en: "what he's written about it",
+        },
         keywords: {
           sv: [
             "texter",

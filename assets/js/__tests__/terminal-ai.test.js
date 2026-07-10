@@ -240,7 +240,7 @@ describe("start / handleLine loop", () => {
     expect(m.text()).not.toContain("du frågade nyss");
   });
 
-  test("forwards a real command to the shell instead of chatting", () => {
+  test("runs a real command and stays in the assistant", () => {
     const ai = loadAi();
     const m = mockTerminal();
     window.Terminal = m.t;
@@ -249,10 +249,11 @@ describe("start / handleLine loop", () => {
     m.feed("cd works");
 
     expect(m.t.run).toHaveBeenCalledWith("cd works");
-    expect(m.t.releaseInput).toHaveBeenCalled();
-    expect(ai.isActive()).toBe(false);
-    // Not echoed as a chat line, and no fallback/answer printed for it.
+    // Acknowledged, not chatted at, and the assistant stays put (no hand-off).
+    expect(m.text()).toContain("visst");
     expect(m.text()).not.toContain("you> cd works");
+    expect(m.t.releaseInput).not.toHaveBeenCalled();
+    expect(ai.isActive()).toBe(true);
   });
 
   test("bare 'cv' opens the résumé instead of looping", () => {
@@ -264,7 +265,6 @@ describe("start / handleLine loop", () => {
     m.feed("cv");
 
     expect(m.t.run).toHaveBeenCalledWith("cv");
-    expect(ai.isActive()).toBe(false);
   });
 
   test("does not forward 'help' or a plain sentence", () => {
@@ -317,6 +317,23 @@ describe("start / handleLine loop", () => {
     expect(m.text()).not.toContain("Fastighetsgalan");
     expect(m.text()).not.toContain("Nylokal");
     expect(m.text().toLowerCase()).toContain("arbetsgivarsidorna");
+  });
+
+  test("asks for clarification on an ambiguous terse input", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("css?");
+
+    // "css" ties code (does he know it) and writing (has he written about it).
+    expect(m.text()).toContain("Menar du");
+    expect(m.text()).toContain("om han kan det");
+    expect(m.text()).toContain("vad han skrivit om det");
+    // A follow-up that disambiguates gets a real answer, no clarify.
+    m.feed("skrivit om css");
+    expect(m.text()).toContain("The Grid, Inherited");
   });
 
   test("prints an English reply when the document is in English", () => {
