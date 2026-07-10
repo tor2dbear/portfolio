@@ -142,7 +142,9 @@ describe("terminal command line", () => {
     }));
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
-        prop === "--terminal-cwd" ? "~" : "#ffffff"
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~"
+          : "#ffffff"
       ),
     }));
     window.Toast = { show: jest.fn() };
@@ -410,7 +412,9 @@ describe("terminal command line", () => {
     // Pretend the page is /writing/ so the cwd is ~/writing.
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
-        prop === "--terminal-cwd" ? "~/writing" : "#ffffff"
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : "#ffffff"
       ),
     }));
     typeCommand("ls");
@@ -424,7 +428,9 @@ describe("terminal command line", () => {
     // Sitting on /works/, ask for a different section's contents.
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
-        prop === "--terminal-cwd" ? "~/works" : "#ffffff"
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/works"
+          : "#ffffff"
       ),
     }));
     typeCommand("ls ~/writing");

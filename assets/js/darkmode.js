@@ -2224,23 +2224,6 @@
       '[data-js="terminal-session"]'
     );
 
-    // Append-only history: the header's login prompts (`ls ~`, `ls settings/`)
-    // are the session's opening lines. Freeze them at the load-time cwd — pin
-    // each an inline --terminal-cwd — so a later append-only `cd` moves only the
-    // live prompt below, never this history above. The live input prompt keeps
-    // reading the global var, so it alone tracks the working directory.
-    if (isTerminalLayout()) {
-      var terminalLoadCwd = currentTerminalCwd();
-      document
-        .querySelectorAll("#topmenu .terminal-prompt:not(.terminal-prompt--cd)")
-        .forEach(function (headerPrompt) {
-          headerPrompt.style.setProperty(
-            "--terminal-cwd",
-            '"' + terminalLoadCwd + '"'
-          );
-        });
-    }
-
     // Clicking a cat'd [image N] token is a shortcut for a command you could
     // have typed: it echoes `open <file>` into the scrollback (frozen at the
     // current cwd, like any command) and opens the picture in the lightbox.
@@ -4446,12 +4429,12 @@
           }
           break;
         case "chdir":
-          // Append-only cd: move the prompt only. --terminal-cwd drives the
-          // PS1, so setting it (inline, wins over head.html's :root rule) is the
-          // whole move. No fetch, no swap, no scroll jump — nothing above the
-          // prompt changes.
+          // Append-only cd: move the LIVE prompt only. --terminal-live-cwd
+          // drives the bottom input's PS1; --terminal-cwd (the frozen page cwd)
+          // is left untouched, so every history prompt above — header, tour
+          // lines, scrollback — stays where it ran. No fetch, no swap, no jump.
           document.documentElement.style.setProperty(
-            "--terminal-cwd",
+            "--terminal-live-cwd",
             '"' + (action.cwd || "~") + '"'
           );
           break;
@@ -5177,9 +5160,14 @@
     const TERMINAL_CD_KEY = "terminal-cd";
 
     function currentTerminalCwd() {
-      var value = window
-        .getComputedStyle(document.documentElement)
-        .getPropertyValue("--terminal-cwd")
+      // The LIVE working directory drives the bottom prompt and command
+      // resolution. It falls back to --terminal-cwd (the frozen page cwd) until
+      // the first append-only `cd` sets --terminal-live-cwd.
+      var style = window.getComputedStyle(document.documentElement);
+      var value = (
+        style.getPropertyValue("--terminal-live-cwd") ||
+        style.getPropertyValue("--terminal-cwd")
+      )
         .trim()
         .replace(/^["']|["']$/g, "");
       return value || "~";

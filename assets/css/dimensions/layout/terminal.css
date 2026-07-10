@@ -80,10 +80,22 @@
   --terminal-line-height: 1.7;
 
   /* The PS1 strings — every prompt in the buffer composes from these.
-     The short form (cwd only) is what small screens collapse to. */
+     The short form (cwd only) is what small screens collapse to.
+
+     --terminal-cwd is the page's FROZEN load cwd (server-set, never changed by
+     an append-only `cd`), so every server-rendered history prompt — the header
+     nav, the hero/featured/footer tour lines, a post's `cat` header — stays put
+     as scrollback. Only the live input prompt tracks the working directory, via
+     the parallel --terminal-live-cwd chain below (darkmode.js's `chdir` moves
+     that one alone). Scrollback echoes freeze their own inline --terminal-cwd. */
   --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
   --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
     var(--terminal-ps1-short);
+
+  --terminal-live-cwd: var(--terminal-cwd, "~");
+  --terminal-ps1-live-short: var(--terminal-live-cwd, "~") "$ ";
+  --terminal-ps1-live: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-live-short);
 
   /* Figure tokens and the gallery listing argument. */
   --terminal-image-label: "[image ";
@@ -103,6 +115,7 @@
 @media (max-width: 47.9375em) {
   :root[data-layout="terminal"] {
     --terminal-ps1: var(--terminal-ps1-short);
+    --terminal-ps1-live: var(--terminal-ps1-live-short);
   }
 }
 
@@ -1319,7 +1332,7 @@
 }
 
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
-  content: var(--terminal-ps1);
+  content: var(--terminal-ps1-live);
   color: var(--text-muted, inherit);
 }
 

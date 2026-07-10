@@ -108,9 +108,15 @@
 
   // The prompt reads its working directory from --terminal-cwd. Set it inline
   // on <html> (wins over head.html's :root rule) so the PS1 tracks the new page.
+  // A real navigation is a fresh page, so reset BOTH the frozen page cwd and the
+  // live cwd (an append-only `cd` only moved the latter) to the new page.
   function setCwd(cwd) {
     document.documentElement.style.setProperty(
       "--terminal-cwd",
+      '"' + cwd + '"'
+    );
+    document.documentElement.style.setProperty(
+      "--terminal-live-cwd",
       '"' + cwd + '"'
     );
   }
