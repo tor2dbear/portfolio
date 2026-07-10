@@ -363,7 +363,7 @@
     t.captureInput(handleLine, function () {
       active = false;
     });
-    t.setPrompt("you>");
+    t.setPrompt("you>", { hint: pickLang(d.promptHint, lang()) });
     playBoot();
   }
 

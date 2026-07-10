@@ -1665,7 +1665,10 @@
 }
 
 :root[data-layout="terminal"] .terminal-tail[data-flow-label]::after {
-  content: "  # type cancel to abort";
+  /* Hint text is per-mode: a flow offers its abort word, the `ai` assistant
+     offers its exit word. darkmode.js sets data-flow-hint alongside the label
+     (defaulting to the flow abort hint). */
+  content: "  # " attr(data-flow-hint);
 }
 
 :root[data-layout="terminal"] .footer-column {

@@ -65,6 +65,13 @@
       en: ["bye — off to go rust 👋"],
     },
 
+    // Trailing hint on the prompt while the assistant owns it (the `# …` after
+    // "you>"). Its own exit word, not a flow's "cancel".
+    promptHint: {
+      sv: "skriv exit för att lämna",
+      en: "type exit to leave",
+    },
+
     exitWords: [
       "exit",
       "quit",

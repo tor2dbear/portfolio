@@ -135,7 +135,10 @@ describe("start / handleLine loop", () => {
     ai.start();
 
     expect(m.t.captureInput).toHaveBeenCalled();
-    expect(m.t.setPrompt).toHaveBeenCalledWith("you>");
+    expect(m.t.setPrompt).toHaveBeenCalledWith(
+      "you>",
+      expect.objectContaining({ hint: expect.any(String) })
+    );
     expect(ai.isActive()).toBe(true);
     // The last boot line mentions it's rule-based, not an LLM (Swedish default).
     expect(m.text()).toContain("ingen LLM");

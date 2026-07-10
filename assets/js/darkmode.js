@@ -5330,18 +5330,25 @@
     // set on BOTH the tail (so the hint's ::after can switch) and the prompt
     // span (so its ::before can read the label via attr() — attr() only sees the
     // pseudo-element's own element, not an ancestor).
-    function setFlowPrompt(prompt) {
+    function setFlowPrompt(prompt, hint) {
       if (!terminalTail) {
         return;
       }
       var promptEl = terminalTail.querySelector(".terminal-tail__prompt");
       if (prompt) {
         terminalTail.setAttribute("data-flow-label", prompt);
+        // The trailing hint defaults to a flow's abort word; the `ai` assistant
+        // passes its own ("type exit to leave") through the seam.
+        terminalTail.setAttribute(
+          "data-flow-hint",
+          hint || "type cancel to abort"
+        );
         if (promptEl) {
           promptEl.setAttribute("data-flow-label", prompt);
         }
       } else {
         terminalTail.removeAttribute("data-flow-label");
+        terminalTail.removeAttribute("data-flow-hint");
         if (promptEl) {
           promptEl.removeAttribute("data-flow-label");
         }
@@ -5943,8 +5950,8 @@
       },
       captureInput: captureTerminalInput,
       releaseInput: releaseTerminalInput,
-      setPrompt: function (label) {
-        setFlowPrompt(label || null);
+      setPrompt: function (label, opts) {
+        setFlowPrompt(label || null, opts && opts.hint);
       },
       cwd: currentTerminalCwd,
       scrollToEnd: scrollTerminalToEnd,
