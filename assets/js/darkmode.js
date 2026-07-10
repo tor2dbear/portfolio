@@ -3008,6 +3008,36 @@
       return out;
     }
 
+    // Recursive `ls -R`: per-directory blocks (a `path:` header, then that
+    // directory's children), walked depth-first from the given node. This is
+    // what the footer sitemap prints under its `ls -R ~/` prompt, so typing it
+    // reproduces the map (the flat, single-level `ls` only ever shows one dir).
+    function terminalLsRecursiveLines(node, path) {
+      var out = [];
+      function walk(n, p) {
+        var keys = Object.keys(n.children).sort();
+        out.push(p + ":");
+        if (keys.length) {
+          out.push(
+            keys
+              .map(function (k) {
+                return n.children[k].name + "/";
+              })
+              .join("  ")
+          );
+        }
+        out.push("");
+        keys.forEach(function (k) {
+          walk(n.children[k], p + "/" + n.children[k].name);
+        });
+      }
+      walk(node, path);
+      if (out.length && out[out.length - 1] === "") {
+        out.pop();
+      }
+      return out;
+    }
+
     // Whole-tree view for `tree`, drawn with ├──/└── connectors.
     function terminalTreeLines() {
       var root = terminalDirTree();
@@ -3636,9 +3666,39 @@
           var lsShowHidden = args.some(function (a) {
             return a.charAt(0) === "-" && a.charAt(1) !== "-" && /a/.test(a);
           });
+          var lsRecursive = args.some(function (a) {
+            return a.charAt(0) === "-" && a.charAt(1) !== "-" && /R/.test(a);
+          });
           var lsPaths = args.filter(function (a) {
             return a.charAt(0) !== "-";
           });
+          // `ls -R` walks the whole tree from the given dir (default ~), the
+          // recursive listing the footer sitemap is labelled with.
+          if (lsRecursive) {
+            var lsRSegs = lsPaths.length
+              ? terminalResolveSegments(lsPaths[0])
+              : [];
+            var lsRNode = terminalNodeAt(lsRSegs);
+            if (!lsRNode) {
+              return {
+                echo: input,
+                lines: [
+                  "ls: cannot access '" +
+                    lsPaths[0] +
+                    "': No such file or directory",
+                ],
+                action: null,
+              };
+            }
+            return {
+              echo: input,
+              lines: terminalLsRecursiveLines(
+                lsRNode,
+                lsRSegs.length ? "~/" + lsRSegs.join("/") : "~"
+              ),
+              action: null,
+            };
+          }
           if (lsLong.indexOf("--featured") !== -1) {
             return {
               echo: input,

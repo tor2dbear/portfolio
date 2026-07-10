@@ -475,6 +475,16 @@ describe("terminal command line", () => {
     expect(text).toMatch(/[├└]/);
   });
 
+  test("ls -R is recursive — per-directory blocks, not a flat list", () => {
+    loadModule();
+    typeCommand("ls -R ~/");
+    const text = sessionText();
+    // A recursive listing has sub-directory headers (e.g. "~/works:"), which a
+    // flat single-level ls never prints.
+    expect(text).toContain("~/works:");
+    expect(text).toContain("~/works/tags:");
+  });
+
   test("hire starts the contact flow", () => {
     loadModule();
     typeCommand("hire");
