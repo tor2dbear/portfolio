@@ -529,11 +529,22 @@
        as CSS string vars by dimensions/layout/terminal.css; harmless (unused)
        in every other layout. */}}
   {{- $terminalHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
-  {{- $terminalPath := strings.TrimPrefix "/" .RelPermalink -}}
+  {{- $terminalPath := strings.Trim .RelPermalink "/" -}}
   {{- $terminalPath = strings.TrimPrefix (printf "%s/" .Language.Lang) $terminalPath -}}
-  {{- $terminalSeg := index (split $terminalPath "/") 0 -}}
+  {{- $terminalPath = strings.Trim $terminalPath "/" -}}
+  {{- $terminalSegs := split $terminalPath "/" -}}
+  {{- $terminalSeg := index $terminalSegs 0 -}}
   {{- $terminalCwd := "~" -}}
-  {{- if $terminalSeg -}}{{- $terminalCwd = printf "~/%s" $terminalSeg -}}{{- end -}}
+  {{- if $terminalSeg -}}
+    {{- /* A standalone leaf page (about, a legal page) is a FILE that lives in
+           ~ — you `cat about.md` from home — so its cwd is ~, not ~/about. A
+           section listing or a post keeps its section segment as the cwd. */ -}}
+    {{- if and (eq .Kind "page") (eq (len $terminalSegs) 1) -}}
+      {{- $terminalCwd = "~" -}}
+    {{- else -}}
+      {{- $terminalCwd = printf "~/%s" $terminalSeg -}}
+    {{- end -}}
+  {{- end -}}
   <style>
     :root {
       --terminal-host: {{ printf "%q" $terminalHost | safeCSS }};

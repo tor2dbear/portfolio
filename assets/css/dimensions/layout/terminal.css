@@ -506,6 +506,55 @@
   content: none;
 }
 
+/* ============================================================================
+   The about page is ONE file too — like a post. A single `cat about.md` prints
+   it; its inner headings render as markdown inside that output, not as their
+   own `cat '…'` commands (which read as many prompts you can't actually type).
+   The page has no h1 title to carry the command, so a top ::before does.
+   ============================================================================ */
+:root[data-layout="terminal"] .content.page.about::before {
+  content: var(--terminal-ps1) "cat about.md";
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+  margin-bottom: var(--spacing-16);
+}
+
+:root[data-layout="terminal"] .content.page.about h2::before,
+:root[data-layout="terminal"] .content.page.about .section-heading::before {
+  content: "## ";
+}
+
+:root[data-layout="terminal"] .content.page.about h3::before,
+:root[data-layout="terminal"] .content.page.about .about-main__headline::before,
+:root[data-layout="terminal"] .content.page.about .about-cv__title::before {
+  content: "### ";
+}
+
+:root[data-layout="terminal"] .content.page.about .about-cv__heading::before {
+  content: "#### ";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .content.page.about h2::after,
+:root[data-layout="terminal"] .content.page.about h3::after,
+:root[data-layout="terminal"] .content.page.about .section-heading::after,
+:root[data-layout="terminal"] .content.page.about .about-main__headline::after,
+:root[data-layout="terminal"] .content.page.about .about-cv__title::after {
+  content: none;
+}
+
+:root[data-layout="terminal"] .content.page.about h2,
+:root[data-layout="terminal"] .content.page.about h3,
+:root[data-layout="terminal"] .content.page.about .section-heading,
+:root[data-layout="terminal"] .content.page.about .about-main__headline,
+:root[data-layout="terminal"] .content.page.about .about-cv__title {
+  text-transform: none;
+}
+
 /* Related is a section after the file — it keeps its ls command. */
 :root[data-layout="terminal"] .content.post .related-items__title {
   text-transform: lowercase;
