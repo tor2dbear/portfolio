@@ -1,5 +1,6 @@
 ---
 title: Tack för ditt meddelande
+terminal_kind: hidden
 description: Tack för ditt meddelande
 layout: thankyou
 linktitle: Tack för ditt meddelande

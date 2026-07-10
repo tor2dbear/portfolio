@@ -1,5 +1,6 @@
 ---
 title: Säg hej
+terminal_kind: action
 linktitle: Kontakt
 slug: kontakt
 url: "/sv/kontakt"

@@ -56,7 +56,9 @@ describe("terminal command line", () => {
     document.documentElement.setAttribute("data-layout", "terminal");
 
     document.documentElement.innerHTML = `
-      <head><meta name="theme-color" content="#ffffff"></head>
+      <head><meta name="theme-color" content="#ffffff">
+        <script type="application/json" data-js="terminal-manifest">{"works":{"kind":"dir","url":"/works/"},"writing":{"kind":"dir","url":"/writing/"},"about":{"kind":"file","url":"/about/"},"contact":{"kind":"action","url":"/contact/"},"legal":{"kind":"dir","url":"/legal/"},"ui-library":{"kind":"exempt","url":"/ui-library/"},"palette-generator":{"kind":"exempt","url":"/palette-generator/"}}</script>
+      </head>
       <body>
         <div class="terminal-boot">
           <pre class="terminal-boot__art terminal-boot__art--sm">  ██\n ████</pre>
@@ -132,6 +134,13 @@ describe("terminal command line", () => {
           ><span class="terminal-tail__caret"></span
           ><input id="terminal-input" class="terminal-tail__input" data-js="terminal-input" type="text" size="1" />
         </p>
+        <div class="terminal-keybar" data-js="terminal-keybar">
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="prev" aria-label="Previous command">↑</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="next" aria-label="Next command">↓</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="tab" aria-label="Complete">Tab</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="cancel" aria-label="Cancel line">^C</button>
+          <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="bottom" aria-label="Jump to prompt">⌄</button>
+        </div>
       </body>
     `;
 
@@ -142,7 +151,9 @@ describe("terminal command line", () => {
     }));
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
-        prop === "--terminal-cwd" ? "~" : "#ffffff"
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~"
+          : "#ffffff"
       ),
     }));
     window.Toast = { show: jest.fn() };
@@ -235,11 +246,39 @@ describe("terminal command line", () => {
 
   // ---- Additional commands & easter eggs --------------------------------
 
-  test("ls lists the nav pages as directories", () => {
+  test("ls renders entries by kind: sections as dirs, pages as files", () => {
     loadModule();
     typeCommand("ls");
+    // From the manifest: works/writing are dirs, about is a file, contact an
+    // action — so the top level reads honestly, no hardcoded guess.
     expect(sessionText()).toContain("writing/");
-    expect(sessionText()).toContain("about/");
+    expect(sessionText()).toContain("about.md");
+    expect(sessionText()).not.toContain("about/");
+  });
+
+  test("cd classifies by kind: file → cat, action → run", () => {
+    loadModule();
+    typeCommand("cd about");
+    expect(sessionText()).toContain(
+      "not a directory: about — try: cat about.md"
+    );
+    typeCommand("cd contact");
+    expect(sessionText()).toContain(
+      "contact is a command, not a directory — just run: contact"
+    );
+  });
+
+  test("cd walks a section's tags/ hierarchy; a tagged post is a file", () => {
+    loadModule();
+    // works is a dir in the manifest, so its tags index and a term are dirs you
+    // cd into (no error); a post reached through a tag is a file → cat it.
+    typeCommand("cd works/tags");
+    typeCommand("cd works/tags/experimental");
+    expect(sessionText()).not.toContain("no such file");
+    typeCommand("cd works/tags/experimental/a-cut-up-world");
+    expect(sessionText()).toContain(
+      "not a directory: works/tags/experimental/a-cut-up-world — try: cat a-cut-up-world.md"
+    );
   });
 
   test("cat prints a known pseudo-file and 404s unknown ones", () => {
@@ -254,6 +293,26 @@ describe("terminal command line", () => {
     loadModule();
     typeCommand("cat .secret");
     expect(sessionText().toLowerCase()).toContain("no secrets");
+  });
+
+  test("a quoted argument parses as one token (spaces and all)", () => {
+    loadModule();
+    // The chrome prints `cat 'name.txt'`; typed verbatim it must not split on
+    // the quotes or an inner space into "'name" — the whole quoted string is one
+    // argument, quotes stripped.
+    typeCommand("cat 'no such thing.md'");
+    // The error names the whole filename with quotes stripped — proof it was
+    // one token, not split on the space into "'no".
+    expect(sessionText()).toContain(
+      "cat: no such thing.md: No such file or directory"
+    );
+  });
+
+  test("cat 'newsletter.txt' prints the newsletter blurb, not a parse error", () => {
+    loadModule();
+    typeCommand("cat 'newsletter.txt'");
+    expect(sessionText()).not.toContain("No such file");
+    expect(sessionText().toLowerCase()).toContain("subscribe");
   });
 
   test("man pulls a one-line description from help", () => {
@@ -410,11 +469,15 @@ describe("terminal command line", () => {
     // Pretend the page is /writing/ so the cwd is ~/writing.
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
-        prop === "--terminal-cwd" ? "~/writing" : "#ffffff"
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : "#ffffff"
       ),
     }));
     typeCommand("ls");
-    expect(sessionText()).toContain("the-grid-inherited/");
+    // Posts are files, not directories: listed as .md (no trailing slash).
+    expect(sessionText()).toContain("the-grid-inherited.md");
+    expect(sessionText()).not.toContain("the-grid-inherited/");
   });
 
   test("ls of another section hints at cd instead of printing nothing", () => {
@@ -422,7 +485,9 @@ describe("terminal command line", () => {
     // Sitting on /works/, ask for a different section's contents.
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
-        prop === "--terminal-cwd" ? "~/works" : "#ffffff"
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/works"
+          : "#ffffff"
       ),
     }));
     typeCommand("ls ~/writing");
@@ -445,6 +510,16 @@ describe("terminal command line", () => {
     expect(text).toContain("works/");
     expect(text).toContain("tags/");
     expect(text).toMatch(/[├└]/);
+  });
+
+  test("ls -R is recursive — per-directory blocks, not a flat list", () => {
+    loadModule();
+    typeCommand("ls -R ~/");
+    const text = sessionText();
+    // A recursive listing has sub-directory headers (e.g. "~/works:"), which a
+    // flat single-level ls never prints.
+    expect(text).toContain("~/works:");
+    expect(text).toContain("~/works/tags:");
   });
 
   test("hire starts the contact flow", () => {
@@ -596,6 +671,57 @@ describe("terminal command line", () => {
     keydown({ key: "c", ctrlKey: true });
     expect(input.value).toBe("");
     expect(sessionText()).toContain("^C");
+  });
+
+  function tapKeybar(action) {
+    const button = document.querySelector('[data-keybar="' + action + '"]');
+    button.dispatchEvent(
+      new window.Event("pointerdown", { bubbles: true, cancelable: true })
+    );
+    button.dispatchEvent(new window.Event("click", { bubbles: true }));
+  }
+
+  test("key bar ↑ recalls the previous command (mobile has no arrow keys)", () => {
+    loadModule();
+    typeCommand("whoami");
+    tapKeybar("prev");
+    expect(document.querySelector('[data-js="terminal-input"]').value).toBe(
+      "whoami"
+    );
+  });
+
+  test("key bar Tab completes a command, ^C cancels the line", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "wea";
+    tapKeybar("tab");
+    expect(input.value).toBe("weather ");
+    input.value = "half typed";
+    tapKeybar("cancel");
+    expect(input.value).toBe("");
+    expect(sessionText()).toContain("^C");
+  });
+
+  test("key bar is shown only while the prompt is focused", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const bar = document.querySelector('[data-js="terminal-keybar"]');
+    expect(bar.classList.contains("is-visible")).toBe(false);
+    input.dispatchEvent(new window.Event("focus"));
+    expect(bar.classList.contains("is-visible")).toBe(true);
+    input.dispatchEvent(new window.Event("blur"));
+    expect(bar.classList.contains("is-visible")).toBe(false);
+  });
+
+  test("key bar pointerdown keeps focus on the input (keyboard stays up)", () => {
+    loadModule();
+    const button = document.querySelector('[data-keybar="prev"]');
+    const event = new window.Event("pointerdown", {
+      bubbles: true,
+      cancelable: true,
+    });
+    button.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
   });
 
   test("konami command toggles party mode", async () => {
@@ -866,6 +992,84 @@ describe("terminal command line", () => {
     expect(sessionText().slice(before.length)).not.toContain(
       "no such file or directory"
     );
+  });
+
+  test("a post is a file: cd rejects it, cat opens it", async () => {
+    // The test DOM has an article-card link to /writing/the-grid-inherited/.
+    // Posts are files, so `cd` into one is "not a directory" and points at cat;
+    // `cat <post>.md` resolves to a remote-cat action (append-only: the post's
+    // text prints into the scrollback — exercised for real in the browser check).
+    loadModule();
+    typeCommand("cd writing/the-grid-inherited");
+    expect(sessionText()).toContain(
+      "not a directory: writing/the-grid-inherited"
+    );
+    expect(sessionText()).toContain("cat writing/the-grid-inherited.md");
+
+    const before = sessionText();
+    typeCommand("cat writing/the-grid-inherited.md");
+    // Resolves (produces a remote-cat action) — no cat error line.
+    expect(sessionText().slice(before.length)).not.toContain(
+      "No such file or directory"
+    );
+
+    // A post that isn't loaded resolves cwd-relatively and is fetched to
+    // verify — a 404 reports No such file (append-only cat's remote path, so
+    // a file `ls` printed from a fetched section can still be cat'd, and a
+    // typo still errors). Mock a 404 and let the async handler settle.
+    const before404 = sessionText();
+    window.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404 });
+    typeCommand("cat writing/ghost-post.md");
+    // Fake timers are active, so flush the remote-cat promise chain by hand
+    // (fetch → then throws notFound → catch prints) via microtask ticks.
+    for (let i = 0; i < 5; i++) {
+      await Promise.resolve();
+    }
+    expect(sessionText().slice(before404.length)).toContain(
+      "cat: writing/ghost-post.md: No such file or directory"
+    );
+  });
+
+  test("ls nav/ and ls settings/ list the menus (as the header prints them)", () => {
+    loadModule();
+    typeCommand("ls nav/");
+    expect(sessionText()).toContain("works/"); // a section is a directory
+    expect(sessionText()).toContain("about"); // a standalone page is a leaf
+    const before = sessionText();
+    typeCommand("ls settings/");
+    const added = sessionText().slice(before.length);
+    expect(added).toContain("theme");
+    expect(added).toContain("language");
+  });
+
+  test("nav and settings are menus, not places: cd lists instead of entering", () => {
+    loadModule();
+    typeCommand("cd settings");
+    expect(sessionText()).toContain("menu, not a directory");
+  });
+
+  test("open navigates to a post file", () => {
+    loadModule();
+    const before = sessionText();
+    typeCommand("open writing/the-grid-inherited.md");
+    expect(sessionText().slice(before.length)).not.toContain(
+      "no such file or directory"
+    );
+  });
+
+  test("ls <file> --info points at cat (a post's info lives in the file)", () => {
+    loadModule();
+    typeCommand("ls a-cut-up-world.md --info");
+    // --info is a lens on the loaded page; for an unopened post it hints at cat.
+    expect(sessionText()).toContain("try: cat a-cut-up-world.md");
+  });
+
+  test("ls --featured lists the page's cards as files (not misread as -a)", () => {
+    loadModule();
+    typeCommand("ls works/ --featured");
+    // The article-card link → a .md file; the long flag must not trip -a.
+    expect(sessionText()).toContain("the-grid-inherited.md");
+    expect(sessionText()).not.toContain(".secret");
   });
 
   test("subscribe reuses the newsletter form action", async () => {

@@ -1,5 +1,6 @@
 ---
 title: "UI-bibliotek"
+terminal_kind: exempt
 date: 2026-01-07
 draft: false
 type: "ui-library"

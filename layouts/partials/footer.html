@@ -187,6 +187,21 @@
         enterkeyhint="go"
       />
     </p>
+    {{/* Mobile key bar: the round-4 keyboard fundamentals (history recall, Tab
+         completion, ^C) ride keys the on-screen keyboard lacks. This accessory
+         row — shown only in terminal layout while the prompt is focused and
+         pinned above the keyboard via the visualViewport API in darkmode.js —
+         surfaces them on touch, plus a ⌄ jump-to-prompt. Buttons carry the
+         glyph for sighted users and an i18n label for assistive tech; the wiring
+         (which preventDefaults so a tap never drops the keyboard) is in
+         darkmode.js. Hidden on desktop via a coarse-pointer media query. */}}
+    <div class="terminal-keybar" data-js="terminal-keybar">
+      <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="prev" aria-label="{{ i18n "terminal_key_prev" }}">↑</button>
+      <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="next" aria-label="{{ i18n "terminal_key_next" }}">↓</button>
+      <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="tab" aria-label="{{ i18n "terminal_key_tab" }}">Tab</button>
+      <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="cancel" aria-label="{{ i18n "terminal_key_cancel" }}">^C</button>
+      <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="bottom" aria-label="{{ i18n "terminal_key_bottom" }}">⌄</button>
+    </div>
   </div>
 </footer>
 <!-- Toast category labels (read by toast.js for title line) -->

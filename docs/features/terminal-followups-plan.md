@@ -13,7 +13,14 @@ Two follow-ups, in priority order:
 
 ---
 
-## 1. Mobile key bar (accessory row)
+## 1. Mobile key bar (accessory row) — ✅ shipped
+
+> Built as designed below: a `.terminal-keybar` in `footer.html`, styled in
+> `terminal.css` (coarse-pointer only, bracketed mono keys), wired in
+> `darkmode.js` (buttons reuse the existing handlers; `^C` factored into a
+> shared `terminalCancelLine()`; `visualViewport` tracks the keyboard;
+> `pointerdown` preventDefault keeps focus). Covered by four new Jest tests in
+> `terminal-commands.test.js`.
 
 ### Why
 
@@ -50,7 +57,22 @@ a small on-screen accessory row of keys pinned above the keyboard.
 
 ---
 
-## 2. Terminal in-place navigation (SPA-style, typed-only)
+## 2. Terminal in-place navigation (SPA-style, typed-only) — ✅ shipped
+
+> Built as designed below. New IIFE `assets/js/terminal-nav.js` owns the swap
+> (fetch → swap `#main` → patch head + `--terminal-cwd` → `pushState` → refresh
+> hooks → keep prompt in view), exposing `window.TerminalNav.go()`. darkmode.js's
+> `navigate` action routes typed cd/resume/home here (same-origin, not home, not
+> a language switch) and full-reloads otherwise; `^`-echo already prints to the
+> scrollback so the swap needs no extra output. Special pages are recognised
+> generically post-fetch — the four CSS-bundled pages (home, contact,
+> ui-library, palette-generator) are exactly those carrying a `css/pages/*` /
+> `css-page-*` stylesheet — plus `data-terminal-exempt`. Content re-init
+> collapsed to lightbox figure focusability (exposed via `window.TerminalLightbox`)
+> once we noted reveal is a CSS no-op in terminal and role-swapper is home-only.
+> `popstate` restores in place. Covered by nine Jest tests (`terminal-nav.test.js`)
+> and a Playwright run (typed cd swaps, `cd ~`/click full-reload, back restores,
+> `ls` synergy, no page errors).
 
 ### Goal
 

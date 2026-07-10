@@ -27,7 +27,8 @@
      themselves via data-toast-title/aria-label.
    - summary templates: .summary-card__year spans (hidden in other layouts)
      become the ls-row year column.
-   - footer.html: .footer-meta__item [data-category] becomes the env var name.
+   - footer.html: .footer-meta__item [data-category] becomes the colophon's
+     KEY=value status name.
    - DOM order on work posts: the gallery prompt needs .project-info followed
      by .gallery / .post-content containing figures.
    - Pages that cannot adapt opt out with data-terminal-exempt on <html>
@@ -79,10 +80,22 @@
   --terminal-line-height: 1.7;
 
   /* The PS1 strings — every prompt in the buffer composes from these.
-     The short form (cwd only) is what small screens collapse to. */
+     The short form (cwd only) is what small screens collapse to.
+
+     --terminal-cwd is the page's FROZEN load cwd (server-set, never changed by
+     an append-only `cd`), so every server-rendered history prompt — the header
+     nav, the hero/featured/footer tour lines, a post's `cat` header — stays put
+     as scrollback. Only the live input prompt tracks the working directory, via
+     the parallel --terminal-live-cwd chain below (darkmode.js's `chdir` moves
+     that one alone). Scrollback echoes freeze their own inline --terminal-cwd. */
   --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
   --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
     var(--terminal-ps1-short);
+
+  --terminal-live-cwd: var(--terminal-cwd, "~");
+  --terminal-ps1-live-short: var(--terminal-live-cwd, "~") "$ ";
+  --terminal-ps1-live: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-live-short);
 
   /* Figure tokens and the gallery listing argument. */
   --terminal-image-label: "[image ";
@@ -102,6 +115,7 @@
 @media (max-width: 47.9375em) {
   :root[data-layout="terminal"] {
     --terminal-ps1: var(--terminal-ps1-short);
+    --terminal-ps1-live: var(--terminal-ps1-live-short);
   }
 }
 
@@ -187,6 +201,17 @@
   padding: 0;
   border-radius: 0;
   color: var(--text-accent);
+}
+
+/* The hero is the first line of the login tour: `cat welcome.txt` prints the
+   intro. (Home-only — the hero section exists only there. Typeable: `welcome`
+   is a pseudo-file in darkmode.js.) */
+:root[data-layout="terminal"] .hero-section::before {
+  content: var(--terminal-ps1) "cat welcome.txt";
+  display: block;
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-bottom: var(--spacing-16);
 }
 
 /* ============================================================================
@@ -346,12 +371,42 @@
   font-family: var(--font-mono);
 }
 
-/* Links that are directories carry the trailing slash. */
+/* Links that are directories carry the trailing slash — the nav sections. */
 :root[data-layout="terminal"] .top-menu__item--nav .top-menu__link::after,
-:root[data-layout="terminal"] .top-menu__label--long::after,
-:root[data-layout="terminal"] .summary-card__title a::after,
-:root[data-layout="terminal"] .related-items__item .type-headline-4 a::after {
+:root[data-layout="terminal"] .top-menu__label--long::after {
   content: "/";
+  font-family: var(--font-mono);
+}
+
+/* Posts are files: an ls-row shows the slug as a .md filename (stamped onto the
+   link by darkmode.js), not the human title. The title stays in the DOM for
+   screen readers and every other layout; here font-size:0 hides it and the
+   ::after prints the filename. */
+:root[data-layout="terminal"] .summary-card__title a[data-slug],
+:root[data-layout="terminal"] .summary-card__title a[data-dir],
+:root[data-layout="terminal"] .article-card__title a[data-slug],
+:root[data-layout="terminal"]
+  .related-items__item
+  .type-headline-4
+  a[data-slug] {
+  font-size: 0;
+}
+
+:root[data-layout="terminal"] .summary-card__title a[data-slug]::after,
+:root[data-layout="terminal"] .article-card__title a[data-slug]::after,
+:root[data-layout="terminal"]
+  .related-items__item
+  .type-headline-4
+  a[data-slug]::after {
+  content: attr(data-slug) ".md";
+  font-size: var(--terminal-font-size);
+  font-family: var(--font-mono);
+}
+
+/* A taxonomy/section card (works' "tags") is a directory — slug/, not slug.md. */
+:root[data-layout="terminal"] .summary-card__title a[data-dir]::after {
+  content: attr(data-dir) "/";
+  font-size: var(--terminal-font-size);
   font-family: var(--font-mono);
 }
 
@@ -395,6 +450,25 @@
   content: "'/";
 }
 
+/* Home's featured section is a filtered view, not a directory: print the exact
+   typeable command. The localized "Featured"/"Utvalda" heading text is hidden
+   (font-size:0) and the command injected, so it stays language-independent. */
+/* #main in the selector so it outweighs the id-specificity "one type size"
+   rule (#main :is(h1..h6)) — otherwise the localized heading text leaks in
+   after the injected command. */
+:root[data-layout="terminal"] #main .works-section .post-header h2 {
+  font-size: 0;
+}
+
+:root[data-layout="terminal"] #main .works-section .post-header h2::before {
+  content: var(--terminal-ps1) "ls works/ --featured";
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .works-section .post-header h2::after {
+  content: "";
+}
+
 /* ============================================================================
    Post pages are ONE file: a single cat on the title prints everything.
    Inner headings render as markdown inside the output, not as new commands.
@@ -432,23 +506,81 @@
   content: none;
 }
 
+/* ============================================================================
+   The about page is ONE file too — like a post. A single `cat about.md` prints
+   it; its inner headings render as markdown inside that output, not as their
+   own `cat '…'` commands (which read as many prompts you can't actually type).
+   The page has no h1 title to carry the command, so a top ::before does.
+   ============================================================================ */
+:root[data-layout="terminal"] .content.page.about::before {
+  content: var(--terminal-ps1) "cat about.md";
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+  margin-bottom: var(--spacing-16);
+}
+
+:root[data-layout="terminal"] .content.page.about h2::before,
+:root[data-layout="terminal"] .content.page.about .section-heading::before {
+  content: "## ";
+}
+
+:root[data-layout="terminal"] .content.page.about h3::before,
+:root[data-layout="terminal"] .content.page.about .about-main__headline::before,
+:root[data-layout="terminal"] .content.page.about .about-cv__title::before {
+  content: "### ";
+}
+
+:root[data-layout="terminal"] .content.page.about .about-cv__heading::before {
+  content: "#### ";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .content.page.about h2::after,
+:root[data-layout="terminal"] .content.page.about h3::after,
+:root[data-layout="terminal"] .content.page.about .section-heading::after,
+:root[data-layout="terminal"] .content.page.about .about-main__headline::after,
+:root[data-layout="terminal"] .content.page.about .about-cv__title::after {
+  content: none;
+}
+
+:root[data-layout="terminal"] .content.page.about h2,
+:root[data-layout="terminal"] .content.page.about h3,
+:root[data-layout="terminal"] .content.page.about .section-heading,
+:root[data-layout="terminal"] .content.page.about .about-main__headline,
+:root[data-layout="terminal"] .content.page.about .about-cv__title {
+  text-transform: none;
+}
+
 /* Related is a section after the file — it keeps its ls command. */
 :root[data-layout="terminal"] .content.post .related-items__title {
   text-transform: lowercase;
 }
 
-:root[data-layout="terminal"] .content.post .related-items__title::before {
-  content: var(--terminal-ps1) "ls '";
+:root[data-layout="terminal"] #main .content.post .related-items__title {
+  font-size: 0;
+}
+
+:root[data-layout="terminal"]
+  #main
+  .content.post
+  .related-items__title::before {
+  content: var(--terminal-ps1) "ls --related";
+  font-size: var(--terminal-font-size);
 }
 
 :root[data-layout="terminal"] .content.post .related-items__title::after {
-  content: "'/";
+  content: "";
 }
 
-/* Project info is the directory next to the file: ls 'info'/, one column,
-   one size. */
+/* A post is a file; its info/related are the file's own sections, listed with
+   filter flags — `ls --info`, `ls --related` (relative to the post you're in),
+   the same commands you'd type. One column, one size. */
 :root[data-layout="terminal"] .content.post > .project-info::before {
-  content: var(--terminal-ps1) "ls 'info'/";
+  content: var(--terminal-ps1) "ls --info";
   display: block;
   margin-bottom: var(--spacing-8);
 }
@@ -487,7 +619,7 @@
   .content.post
   .project-info
   + .post-content:has(figure)::before {
-  content: var(--terminal-ps1) "ls " var(--terminal-gallery-arg) "/";
+  content: var(--terminal-ps1) "ls --images";
   display: block;
   font-size: var(--terminal-font-size);
   margin-top: var(--spacing-16);
@@ -1077,6 +1209,17 @@
    Footer: stacked text rows inside the same window
    ============================================================================ */
 
+/* The footer's command blocks (ls -R ~/, cat 'newsletter.txt', subscribe
+   --email, env) belong to the home login tour — otherwise they repeat under
+   every content page as if run from ~/writing, ~/works, … On any non-home page
+   they're hidden; the scrollback and live prompt (also in the footer) stay.
+   The home flag is server-set on <html> and synced across in-place nav. */
+:root[data-layout="terminal"]:not([data-terminal-home]) .footer-grid--primary,
+:root[data-layout="terminal"]:not([data-terminal-home]) .footer-newsletter,
+:root[data-layout="terminal"]:not([data-terminal-home]) .footer-meta {
+  display: none;
+}
+
 :root[data-layout="terminal"] .footer-grid--primary {
   display: flex;
   flex-direction: column;
@@ -1101,7 +1244,9 @@
   content: ".txt'";
 }
 
-/* The legal/status row is an executed env — flat rows, never centred.
+/* The legal/status row is the site's colophon (©, status, legal links) — an
+   executed `cat colophon`, reproduced verbatim when typed (see darkmode.js's
+   terminalColophonLines). `env` is the separate live state-dump command.
    display:block kills the subgrid so the prompt doesn't wrap in a track. */
 :root[data-layout="terminal"] .footer-meta {
   display: block;
@@ -1109,7 +1254,7 @@
 }
 
 :root[data-layout="terminal"] .footer-meta::before {
-  content: var(--terminal-ps1-short) "env";
+  content: var(--terminal-ps1-short) "cat colophon";
   display: block;
 }
 
@@ -1129,7 +1274,7 @@
 }
 
 /* The label spans hold icons only — gone; the value spans carry their
-   category name, which becomes the env variable: LÄGE=Mörkt. */
+   category name, rendered as a KEY=value status pair: LÄGE=Mörkt. */
 :root[data-layout="terminal"] .footer-meta__label {
   display: none;
 }
@@ -1236,7 +1381,7 @@
 }
 
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
-  content: var(--terminal-ps1);
+  content: var(--terminal-ps1-live);
   color: var(--text-muted, inherit);
 }
 
@@ -1333,6 +1478,70 @@
   margin-top: var(--spacing-8);
 }
 
+/* ============================================================================
+   Mobile key bar (accessory row)
+   The round-4 keyboard fundamentals (↑/↓ history recall, Tab completion, ^C)
+   ride keys the on-screen keyboard lacks, plus a ⌄ jump-to-prompt. This bar
+   surfaces them just above the keyboard while the prompt is focused. It's a
+   coarse-pointer affordance only — desktop has the real keys, so the bar stays
+   display:none there. darkmode.js toggles .is-visible on focus and translates
+   the bar up over the keyboard via the visualViewport API (plain fixed sits
+   behind it on iOS Safari); the fixed bottom anchor here is the base it starts
+   from. The keys read as bracketed mono words, matching the terminal's chrome.
+   ============================================================================ */
+
+.terminal-keybar {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  :root[data-layout="terminal"] .terminal-keybar.is-visible {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4) var(--size-page-margins);
+    background: var(--surface-page);
+    border-top: 1px solid var(--border-subtle);
+    /* darkmode.js sets translateY to clear the keyboard; hint the compositor. */
+    will-change: transform;
+  }
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 2.75em;
+  padding: 0 var(--spacing-8);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 1;
+  color: var(--text-link, var(--text-default));
+  cursor: pointer;
+  /* No tap flash / double-tap zoom — this is a key, not a link. */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Bracketed like every other actionable word in the buffer. */
+:root[data-layout="terminal"] .terminal-keybar__key::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key:active {
+  color: var(--text-accent, currentColor);
+}
+
 /* Party mode — the Konami code (or `konami`) sets data-konami, and the whole
    terminal cycles hue. Motion-gated: reduced-motion visitors get a single
    colourful tint instead of the animation. */
@@ -1374,7 +1583,23 @@
   display: block;
 }
 
-/* Echoed command lines carry the real prompt string, like scrollback. */
+/* Echoed command lines carry the real prompt string, like scrollback.
+   Append-only history: darkmode.js pins an inline --terminal-cwd on each echo
+   (the cwd it ran at). The :root --terminal-ps1 composite would resolve its
+   inner var(--terminal-cwd) back at :root (the LIVE cwd), so re-declare the
+   PS1 chain HERE — on the echo element — where the inner var resolves against
+   the element's frozen --terminal-cwd. The live input prompt keeps the :root
+   composite, so it alone tracks the working directory. */
+:root[data-layout="terminal"] .terminal-session__cmd {
+  --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
+  --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-short);
+}
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .terminal-session__cmd {
+    --terminal-ps1: var(--terminal-ps1-short);
+  }
+}
 :root[data-layout="terminal"] .terminal-session__cmd::before {
   content: var(--terminal-ps1);
   color: var(--text-muted, inherit);
@@ -1386,6 +1611,31 @@
 
 :root[data-layout="terminal"] .terminal-session__out--art {
   color: inherit;
+}
+
+/* A cat'd [image N] token is a real button (opens the picture in the lightbox)
+   but must read as inline terminal text: strip the native chrome, inherit the
+   font, and mark it interactive with an underline + pointer. */
+:root[data-layout="terminal"] .terminal-session__image {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-muted, inherit);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  cursor: pointer;
+}
+
+:root[data-layout="terminal"] .terminal-session__image:hover,
+:root[data-layout="terminal"] .terminal-session__image:focus-visible {
+  color: var(--text-default, inherit);
+  text-decoration-color: currentColor;
+  outline: none;
 }
 
 /* Echoed answers inside an interactive flow (contact / subscribe) read like

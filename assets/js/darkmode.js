@@ -770,6 +770,10 @@
   // half-finished contact/subscribe flow on the way out.
   var terminalFlowReset = null;
 
+  // Bridge to the command engine (nested in a later scope): it publishes an
+  // `exitTargetUrl()` here so exit can land you where you cd'd to.
+  var terminalNavApi = null;
+
   // Leave the terminal: back to the snapshotted layout, and restore the
   // snapshotted typography if the pairing's choice (technical) is still
   // active — a manual typography change inside the terminal is respected.
@@ -802,6 +806,15 @@
         // storage was cleared): fall back to the site default rather than
         // leaving the pairing's mono behind.
         setTypography("editorial");
+      }
+    }
+    // Exit lands you where you cd'd to: if the live cwd points at a page other
+    // than the one loaded, navigate there in the now-restored layout. (An
+    // append-only `cd` only moved the prompt, so the URL never followed.)
+    if (terminalNavApi && typeof terminalNavApi.exitTargetUrl === "function") {
+      var exitUrl = terminalNavApi.exitTargetUrl();
+      if (exitUrl) {
+        window.location.href = exitUrl;
       }
     }
   }
@@ -2224,6 +2237,44 @@
       '[data-js="terminal-session"]'
     );
 
+    // Clicking a cat'd [image N] token is a shortcut for a command you could
+    // have typed: it echoes `open <file>` into the scrollback (frozen at the
+    // current cwd, like any command) and opens the picture in the lightbox.
+    // Delegated, so it covers every image printed into the append-only buffer.
+    if (terminalSession) {
+      terminalSession.addEventListener("click", function (e) {
+        var btn = e.target.closest(".terminal-session__image");
+        if (!btn) {
+          return;
+        }
+        var file = btn.getAttribute("data-image-file") || "image";
+        var src = btn.getAttribute("data-image-src");
+        var alt = btn.getAttribute("data-image-alt");
+        printTerminalLine(
+          "open " + file,
+          "terminal-session__cmd",
+          currentTerminalCwd()
+        );
+        // Opening a fullscreen image should dismiss the mobile keyboard, so
+        // blur the prompt and DON'T call scrollTerminalToEnd (it would refocus
+        // the input and pop the keyboard straight back up). Scroll without
+        // refocusing; the lightbox itself moves focus to its close button.
+        if (terminalInput) {
+          terminalInput.blur();
+        }
+        if (
+          src &&
+          window.TerminalLightbox &&
+          typeof window.TerminalLightbox.openSrc === "function"
+        ) {
+          window.TerminalLightbox.openSrc(src, alt);
+        }
+        window.requestAnimationFrame(function () {
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    }
+
     // Session start, for `uptime` — captured when the command engine boots.
     var terminalSessionStart = Date.now();
 
@@ -2268,6 +2319,7 @@
       "  pwd       working dir",
       "  ls        list dir",
       "  cd <page> change page",
+      "  cv        résumé (about)",
       "  tree      site map",
       "  lang [sv|en]  language",
       "  echo      print text",
@@ -2295,6 +2347,7 @@
       "pwd",
       "ls",
       "cd",
+      "cv",
       "tree",
       "lang",
       "echo",
@@ -2317,6 +2370,7 @@
       "cv",
       "copy",
       "cat",
+      "open",
       "man",
       "uname",
       "colour",
@@ -2361,6 +2415,13 @@
     // stripped before lookup, so `cat colophon`, `cat colophon.txt` and
     // `cat .secret` all resolve.
     const TERMINAL_FILES = {
+      welcome: [
+        "Hi, Torbjörn here — a designer.",
+        "For over a decade I've worked across editorial design,",
+        "brand and digital product. Based in Gothenburg.",
+        "",
+        "you're in the terminal — try 'ls', 'cd works', 'help'.",
+      ],
       readme: [
         "it's a portfolio. poke around.",
         "type 'help' for the command list.",
@@ -2538,8 +2599,21 @@
         return terminalDirTreeCache;
       }
       var root = { name: "~", href: terminalHomeUrl(), children: {} };
+      // Seed the top level from the manifest — the authoritative list of what's
+      // in ~ (including footer-only sections like legal that carry no nav link,
+      // and without the noise of harvesting every footer href e.g. index.xml).
+      var manifest = terminalManifest();
+      Object.keys(manifest).forEach(function (seg) {
+        root.children[seg] = {
+          name: seg,
+          href: manifest[seg].url || null,
+          children: {},
+        };
+      });
+      // Then harvest the (relative) nav links for deeper structure — a section's
+      // tags/ and the like.
       var links = document.querySelectorAll(
-        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href], footer a[href]"
+        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href]"
       );
       links.forEach(function (link) {
         var segs = terminalHrefSegments(link.getAttribute("href"));
@@ -2561,9 +2635,25 @@
       return root;
     }
 
-    // The current working directory as lowercased path segments ("~" → []).
+    // The current (live) working directory as lowercased path segments.
     function terminalCwdSegments() {
-      var rest = currentTerminalCwd().replace(/^~\/?/, "");
+      return terminalSegmentsOf(currentTerminalCwd());
+    }
+
+    // The LOADED page's cwd (the frozen --terminal-cwd the server set), as
+    // segments. It differs from the live cwd once you've cd'd away — which is
+    // how `ls` knows the current DOM can't list here and it must fetch.
+    function terminalPageCwdSegments() {
+      var v = window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue("--terminal-cwd")
+        .trim()
+        .replace(/^["']|["']$/g, "");
+      return terminalSegmentsOf(v || "~");
+    }
+
+    function terminalSegmentsOf(cwd) {
+      var rest = String(cwd || "").replace(/^~\/?/, "");
       return rest
         ? rest
             .split("/")
@@ -2645,7 +2735,293 @@
     // in. Unknown path → an ls-style error; a real page whose contents can't
     // be listed from here (a different section) → a `cd` hint rather than a
     // bare empty result.
+    // The terminal presents the site as a filesystem, and Hugo tells it what
+    // each top-level thing IS via the manifest emitted in head.html: a section
+    // is a `dir`, a standalone page a `file`, the contact form an `action`, a
+    // visual tool `exempt`. Parsed once; the client no longer guesses.
+    var terminalManifestCache = null;
+    function terminalManifest() {
+      if (terminalManifestCache) {
+        return terminalManifestCache;
+      }
+      terminalManifestCache = {};
+      var el = document.querySelector('[data-js="terminal-manifest"]');
+      if (el && el.textContent) {
+        try {
+          terminalManifestCache = JSON.parse(el.textContent) || {};
+        } catch (e) {
+          /* malformed manifest — fall back to the dir default below */
+        }
+      }
+      return terminalManifestCache;
+    }
+
+    // A top-level segment's kind. Deeper structural nodes (e.g. a section's
+    // `tags/`) aren't in the manifest and default to `dir` — they list children.
+    function terminalNodeKind(name) {
+      var e = terminalManifest()[String(name || "").toLowerCase()];
+      return (e && e.kind) || "dir";
+    }
+
+    // A top-level segment's URL from the manifest — lets the terminal reach a
+    // footer-only section (legal) that has no nav link to resolve against.
+    function terminalManifestUrl(name) {
+      var e = terminalManifest()[String(name || "").toLowerCase()];
+      return (e && e.url) || null;
+    }
+
+    // How an entry renders in a listing: dir → `name/`, file → `name.md`,
+    // action → `name` (a command), exempt → `name*` (a tool you `open`).
+    function terminalEntryLabel(name) {
+      switch (terminalNodeKind(name)) {
+        case "file":
+          return name + ".md";
+        case "action":
+          return name;
+        case "exempt":
+          return name + "*";
+        default:
+          return name + "/";
+      }
+    }
+
+    function terminalNavEntries() {
+      var seen = {};
+      var out = [];
+      document
+        .querySelectorAll(
+          ".top-menu__nav a[href]:not(.terminal-quick), .terminal-prompt__host[href]"
+        )
+        .forEach(function (a) {
+          var href = a.getAttribute("href");
+          if (!href || href.charAt(0) === "#") {
+            return;
+          }
+          var segs = terminalHrefSegments(href);
+          var name = segs && segs.length ? segs[0] : "home";
+          if (seen[name]) {
+            return;
+          }
+          seen[name] = true;
+          out.push(name === "home" ? "home" : terminalEntryLabel(name));
+        });
+      return out;
+    }
+
+    function terminalSettingsEntries() {
+      return [
+        "theme",
+        "palette",
+        "typography",
+        "layout",
+        "effects",
+        "language",
+      ];
+    }
+
+    // Filtered `ls` views — the same tool, different lens. `--featured` lists
+    // the curated cards on the current page (home's featured works); `--related`
+    // lists a post's sibling projects; `--info` prints a post's role/details.
+    // All harvested from the current page's DOM — a page's own sequence.
+    function terminalHarvestFiles(selector, emptyMsg) {
+      var out = [];
+      document.querySelectorAll(selector).forEach(function (a) {
+        var segs = terminalHrefSegments(a.getAttribute("href"));
+        if (!segs || segs.length < 2) {
+          return;
+        }
+        var file = segs[segs.length - 1] + ".md";
+        if (out.indexOf(file) === -1) {
+          out.push(file);
+        }
+      });
+      return out.length ? [out.join("  ")] : [emptyMsg];
+    }
+
+    // The project meta (role / details / client) as "label: value" lines,
+    // read from any root (the live page for `ls --info`, or a fetched post for
+    // `cat`). Details is a <dl> of pairs → one line each ("year: 2016"); role
+    // and client are text paragraphs → joined onto their section's line.
+    function terminalInfoLinesFrom(root) {
+      var out = [];
+      (root || document)
+        .querySelectorAll(".project-info__section")
+        .forEach(function (sec) {
+          var title = sec.querySelector(".project-info__title");
+          if (!title) {
+            return;
+          }
+          var label = title.textContent.trim().toLowerCase();
+          var items = sec.querySelectorAll(".project-info__item");
+          if (items.length) {
+            items.forEach(function (item) {
+              var dt = item.querySelector(".project-info__label");
+              var dd = item.querySelector(".project-info__value");
+              if (dt && dd) {
+                out.push(
+                  dt.textContent.trim().toLowerCase() +
+                    ": " +
+                    dd.textContent.trim().replace(/\s+/g, " ")
+                );
+              }
+            });
+            return;
+          }
+          var texts = sec.querySelectorAll(".project-info__text");
+          if (texts.length) {
+            var joined = Array.prototype.map
+              .call(texts, function (t) {
+                return t.textContent.trim().replace(/\s+/g, " ");
+              })
+              .filter(Boolean)
+              .join(" — ");
+            if (joined) {
+              out.push(label + ": " + joined);
+            }
+          }
+        });
+      return out;
+    }
+
+    function terminalInfoLines() {
+      var out = terminalInfoLinesFrom(document);
+      return out.length ? out : ["(no info here)"];
+    }
+
+    // Extract a cat'able rendering of a fetched post/page as an ordered list of
+    // TOKENS — {text} for a prose line, {image, n, file, src, alt} for a figure
+    // (a terminal can't paint an image, so it prints a clickable [image N] token
+    // that opens the real picture). Walks the readable content root in document
+    // order, skipping the chrome a `cat` shouldn't dump (breadcrumbs, tags,
+    // related), then appends the project meta (role/details/client) so `cat`
+    // shows the whole file — the info you can't otherwise reach once a post is a
+    // file you never `cd` into. `base` resolves relative image URLs (the fetch
+    // URL). Returns [] if there's no content root.
+    function terminalExtractPostLines(doc, base, rootSelector) {
+      var root = rootSelector
+        ? doc.querySelector(rootSelector)
+        : doc.querySelector("#main .content.post") ||
+          doc.querySelector("#main .content.page") ||
+          doc.querySelector("#main .content");
+      if (!root) {
+        return [];
+      }
+      var baseUrl;
+      try {
+        baseUrl = new URL(base || "/", window.location.href);
+      } catch (e) {
+        baseUrl = window.location.href;
+      }
+      // Related items and post tags have no wrapping container — they're
+      // BEM-classed siblings inside .content.post — so match by class prefix.
+      var SKIP =
+        ".application-breadcrumb, .project-info, [class*='related-'], " +
+        ".works-section, .works-post__tags, .post-tags-wrap, .lang-notice, nav";
+      var tokens = [];
+      var imageN = 0;
+      var nodes = root.querySelectorAll(
+        "h1, h2, h3, h4, p, blockquote, li, figure, img"
+      );
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (el.closest(SKIP)) {
+          continue;
+        }
+        var tag = el.tagName.toLowerCase();
+        if (tag === "figure" || tag === "img") {
+          // A bare img inside a figure is already counted by the figure.
+          if (tag === "img" && el.closest("figure")) {
+            continue;
+          }
+          imageN += 1;
+          var img = tag === "img" ? el : el.querySelector("img");
+          var cap = el.querySelector && el.querySelector("figcaption");
+          var label =
+            (img && img.getAttribute("alt")) ||
+            (cap ? cap.textContent.trim() : "");
+          // Prefer the figure's data-lightbox (the full-res URL the on-page
+          // lightbox uses); fall back to the <img> src. The filename (for the
+          // `open <file>` echo) comes from the img src.
+          var fileSrc = img ? img.getAttribute("src") || "" : "";
+          var lbSrc =
+            (tag === "figure" && el.getAttribute("data-lightbox")) || fileSrc;
+          var file =
+            (fileSrc || lbSrc || "")
+              .split("?")[0]
+              .split("/")
+              .filter(Boolean)
+              .pop() || "image-" + imageN;
+          // Strip Hugo's image-processing suffix (foo_hu_<hash>.jpg → foo.jpg)
+          // so the echoed `open <file>` reads like the source filename.
+          file = file.replace(/_hu[_a-f0-9]*(\.[a-z0-9]+)$/i, "$1");
+          var src = "";
+          if (lbSrc) {
+            try {
+              src = new URL(lbSrc, baseUrl).href;
+            } catch (e) {
+              src = lbSrc;
+            }
+          }
+          tokens.push({
+            image: true,
+            n: imageN,
+            file: file,
+            src: src,
+            alt: label,
+          });
+          continue;
+        }
+        // A caption's text is carried by its figure token above; a paragraph
+        // nested in a blockquote/li is carried by that container's text.
+        if (
+          el.closest("figure") ||
+          (tag === "p" && el.closest("blockquote, li"))
+        ) {
+          continue;
+        }
+        // Split on <br> so a paragraph of <br>-separated lines (e.g. the CV's
+        // dates / roles / bullets, all one <p>) prints one line each instead of
+        // running together — textContent alone would drop the breaks.
+        var ownerDoc = el.ownerDocument || document;
+        (el.innerHTML || "").split(/<br\s*\/?>/i).forEach(function (part) {
+          var holder = ownerDoc.createElement("div");
+          holder.innerHTML = part;
+          var text = (holder.textContent || "").replace(/\s+/g, " ").trim();
+          if (text) {
+            tokens.push({ text: text });
+          }
+        });
+      }
+      // Append the project meta as its own trailing block — cat shows the whole
+      // file, so the role/details/client you set in front matter come along.
+      terminalInfoLinesFrom(root).forEach(function (line) {
+        tokens.push({ text: line });
+      });
+      return tokens;
+    }
+
     function terminalLsOne(pathArg, showHidden) {
+      // nav/ and settings/ are global menus, reachable from any cwd — match the
+      // raw argument (~/nav, nav/, nav) before resolving relative to the cwd.
+      var rawArg = String(pathArg || "")
+        .replace(/^~\/?/, "")
+        .replace(/^\/+|\/+$/g, "")
+        .toLowerCase();
+      if (rawArg === "nav") {
+        return [terminalNavEntries().join("  ")];
+      }
+      if (rawArg === "settings") {
+        return [terminalSettingsEntries().join("  ")];
+      }
+      // `ls featured` — the curated selection the home page prints — is a view,
+      // harvested from the page's cards (so the header's `ls 'featured'` line is
+      // reproducible by typing it).
+      if (rawArg === "featured") {
+        return terminalHarvestFiles(
+          ".summary-card a[href], .article-card a[href]",
+          "(nothing featured here)"
+        );
+      }
       var targetSegs = terminalResolveSegments(pathArg);
       var node = terminalNodeAt(targetSegs);
       if (!node) {
@@ -2654,15 +3030,24 @@
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
+      // Structural children render by kind (dir → `name/`, file → `name.md`,
+      // action → `name`, exempt → `name*`) — the manifest drives the top level;
+      // deeper nodes (a section's tags/) default to dir.
       var entries = Object.keys(node.children)
         .sort()
         .map(function (k) {
-          return node.children[k].name + "/";
+          return terminalEntryLabel(node.children[k].name);
         });
       if (isCwd) {
+        // The page's own content (posts) are FILES: a post is a .md you `cat`,
+        // not a directory you `cd` into — so it reads like real `ls` and the
+        // prompt stays in the section when you open one.
         terminalPageContentSlugs(targetSegs).forEach(function (slug) {
-          var entry = slug + "/";
-          if (entries.indexOf(entry) === -1) {
+          var entry = slug + ".md";
+          if (
+            entries.indexOf(entry) === -1 &&
+            entries.indexOf(slug + "/") === -1
+          ) {
             entries.push(entry);
           }
         });
@@ -2706,6 +3091,36 @@
       return out;
     }
 
+    // Recursive `ls -R`: per-directory blocks (a `path:` header, then that
+    // directory's children), walked depth-first from the given node. This is
+    // what the footer sitemap prints under its `ls -R ~/` prompt, so typing it
+    // reproduces the map (the flat, single-level `ls` only ever shows one dir).
+    function terminalLsRecursiveLines(node, path) {
+      var out = [];
+      function walk(n, p) {
+        var keys = Object.keys(n.children).sort();
+        out.push(p + ":");
+        if (keys.length) {
+          out.push(
+            keys
+              .map(function (k) {
+                return n.children[k].name + "/";
+              })
+              .join("  ")
+          );
+        }
+        out.push("");
+        keys.forEach(function (k) {
+          walk(n.children[k], p + "/" + n.children[k].name);
+        });
+      }
+      walk(node, path);
+      if (out.length && out[out.length - 1] === "") {
+        out.pop();
+      }
+      return out;
+    }
+
     // Whole-tree view for `tree`, drawn with ├──/└── connectors.
     function terminalTreeLines() {
       var root = terminalDirTree();
@@ -2715,7 +3130,9 @@
         keys.forEach(function (key, i) {
           var last = i === keys.length - 1;
           lines.push(
-            prefix + (last ? "└── " : "├── ") + node.children[key].name + "/"
+            prefix +
+              (last ? "└── " : "├── ") +
+              terminalEntryLabel(node.children[key].name)
           );
           walk(node.children[key], prefix + (last ? "    " : "│   "));
         });
@@ -2768,6 +3185,54 @@
 
     // Resolve a `cat` target to its pseudo-file lines, or null if there's no
     // such "file".
+    // The footer-meta row (©, status, legal links) is the site's colophon — it
+    // prints on the home tour under a `cat colophon` prompt, so typing it must
+    // reproduce it. Harvest the live footer (status items → KEY=value like the
+    // footer's own CSS; everything else → its visible text, sans the sr-only
+    // labels). Falls back to the static colophon when no footer is in the DOM.
+    function terminalColophonLines() {
+      var list = document.querySelector(".footer-meta__list");
+      if (!list) {
+        return TERMINAL_FILES.colophon.slice();
+      }
+      var out = [];
+      list.querySelectorAll(".footer-meta__item").forEach(function (item) {
+        var cat = item.querySelector("[data-category]");
+        if (cat) {
+          out.push(
+            cat.getAttribute("data-category").toUpperCase() +
+              "=" +
+              cat.textContent.replace(/\s+/g, " ").trim()
+          );
+          return;
+        }
+        var clone = item.cloneNode(true);
+        clone
+          .querySelectorAll(".sr-only, .footer-meta__label")
+          .forEach(function (n) {
+            n.parentNode.removeChild(n);
+          });
+        var text = clone.textContent.replace(/\s+/g, " ").trim();
+        if (text) {
+          out.push(text);
+        }
+      });
+      return out.length ? out : TERMINAL_FILES.colophon.slice();
+    }
+
+    // The newsletter blurb the footer prints under `cat 'newsletter.txt'` —
+    // harvested from the live footer so typing it reproduces what's shown.
+    function terminalNewsletterLines() {
+      var desc = document.querySelector(".footer-newsletter__description");
+      if (desc) {
+        var text = desc.textContent.replace(/\s+/g, " ").trim();
+        if (text) {
+          return [text, "", "subscribe with: subscribe"];
+        }
+      }
+      return ["a short, occasional newsletter.", "subscribe with: subscribe"];
+    }
+
     function terminalFile(name) {
       var key = String(name || "")
         .toLowerCase()
@@ -2775,6 +3240,14 @@
         .replace(/\.(txt|md)$/, "");
       if (key === "secrets") {
         key = "secret";
+      }
+      // colophon and newsletter are live footer blocks, reproduced so typing
+      // the `cat …` the chrome prints shows exactly what's on the page.
+      if (key === "colophon") {
+        return terminalColophonLines();
+      }
+      if (key === "newsletter") {
+        return terminalNewsletterLines();
       }
       return TERMINAL_FILES[key] || null;
     }
@@ -2853,6 +3326,31 @@
       return map;
     }
 
+    // A typed `cd <post>` should reach the same pages `ls` lists — the content
+    // cards (works/writing posts) the nav tree can't know about. Resolve the
+    // path to absolute segments (relative to cwd), then match a content-card
+    // link by its full segments, so cd and ls agree on what exists.
+    function terminalContentTargetHref(dest) {
+      var wanted = terminalResolveSegments(dest);
+      if (wanted.length < 2) {
+        return null;
+      }
+      var wantedKey = wanted.join("/");
+      var match = null;
+      document
+        .querySelectorAll(".article-card a[href], .summary-card a[href]")
+        .forEach(function (link) {
+          if (match) {
+            return;
+          }
+          var segs = terminalHrefSegments(link.getAttribute("href"));
+          if (segs && segs.join("/") === wantedKey) {
+            match = link.getAttribute("href");
+          }
+        });
+      return match;
+    }
+
     function resolveCdTarget(dest) {
       var key = String(dest || "")
         .replace(/^\/+|\/+$/g, "")
@@ -2864,7 +3362,34 @@
         return terminalHomeUrl();
       }
       var targets = terminalNavTargets();
-      return targets[key] || null;
+      // Nav/footer directories first; then the current page's own content
+      // cards (so `cd` reaches any post `ls` just listed); then the manifest URL
+      // (so a footer-only section like legal resolves even without a nav link).
+      return (
+        targets[key] ||
+        terminalContentTargetHref(dest) ||
+        terminalManifestUrl(key) ||
+        null
+      );
+    }
+
+    // The URL for a cwd's segments — the section's nav href as the base, then
+    // the deeper path appended (so ~/works/tags/experimental → /works/tags/
+    // experimental/). Language prefix rides along in the base. Used to fetch a
+    // nested directory the append-only prompt sits in but hasn't loaded.
+    function terminalCwdUrl(segs) {
+      if (!segs || !segs.length) {
+        return terminalHomeUrl();
+      }
+      var base = resolveCdTarget(segs[0]);
+      if (!base) {
+        return null;
+      }
+      return (
+        base.replace(/\/+$/, "") +
+        (segs.length > 1 ? "/" + segs.slice(1).join("/") : "") +
+        "/"
+      );
     }
 
     // Languages from the settings language selector, keyed by code. The current
@@ -2908,12 +3433,26 @@
     // Returns { echo, lines, action }. `echo` is the command as typed (printed
     // with the prompt), `lines` are output rows, `action` (or null) is applied
     // separately. Kept free of DOM mutation so it is straightforward to test.
+    // Split a command line into words, honouring single/double quotes so a
+    // quoted filename with spaces (or one the chrome prints as `cat 'x.txt'`)
+    // parses as one argument — surrounding quotes stripped, like a real shell.
+    function terminalTokenize(input) {
+      var raw = input.match(/'[^']*'|"[^"]*"|\S+/g) || [];
+      return raw.map(function (tok) {
+        var q = tok.charAt(0);
+        if ((q === "'" || q === '"') && tok.charAt(tok.length - 1) === q) {
+          return tok.slice(1, -1);
+        }
+        return tok;
+      });
+    }
+
     function runTerminalCommand(raw) {
       var input = String(raw === null || raw === undefined ? "" : raw).trim();
       if (!input) {
         return { echo: "", lines: [], action: null };
       }
-      var parts = input.split(/\s+/);
+      var parts = terminalTokenize(input);
       var cmd = parts[0].toLowerCase();
       var args = parts.slice(1);
       var rest = input.slice(parts[0].length).trim();
@@ -3030,25 +3569,145 @@
         }
         case "cd": {
           var dest = args[0] || "~";
-          if (dest === "~" || dest === "/" || dest === "..") {
+          var destKey = dest.replace(/\/+$/, "").toLowerCase();
+          if (
+            dest === "~" ||
+            dest === "/" ||
+            dest === ".." ||
+            destKey === "home"
+          ) {
+            // Append-only: cd just moves you (changes the prompt). It doesn't
+            // load a page or print anything — like a real shell. You `ls`/`cat`
+            // to see things, and nothing above the prompt ever changes.
             return {
               echo: input,
               lines: [],
-              action: { type: "navigate", url: terminalHomeUrl() },
+              action: { type: "chdir", cwd: "~" },
             };
           }
-          var target = resolveCdTarget(dest);
-          if (!target) {
+          // nav/ and settings/ are menus, not places — list them, don't enter.
+          if (destKey === "nav" || destKey === "settings") {
             return {
               echo: input,
-              lines: ["cd: no such file or directory: " + dest],
+              lines: [
+                "cd: " +
+                  destKey +
+                  " is a menu, not a directory — try: ls " +
+                  destKey +
+                  "/",
+              ],
+              action: null,
+            };
+          }
+          // A path into a section's tags/ hierarchy. `<section>/tags` (the
+          // index) and `<section>/tags/<tag>` (a term) are directories you cd
+          // into; a post reached through a tag (`…/tags/<tag>/<slug>`) is a file
+          // whose real home is the section — cat it.
+          var cdSegs = terminalResolveSegments(dest);
+          if (
+            cdSegs.length >= 2 &&
+            cdSegs[1] === "tags" &&
+            terminalNodeKind(cdSegs[0]) === "dir"
+          ) {
+            if (cdSegs.length <= 3) {
+              return {
+                echo: input,
+                lines: [],
+                action: { type: "chdir", cwd: "~/" + cdSegs.join("/") },
+              };
+            }
+            var cdTagSlug = cdSegs[cdSegs.length - 1].replace(
+              /\.(md|txt)$/i,
+              ""
+            );
+            return {
+              echo: input,
+              lines: [
+                "cd: not a directory: " +
+                  dest +
+                  " — try: cat " +
+                  cdTagSlug +
+                  ".md",
+              ],
+              action: null,
+            };
+          }
+          // A known top-level thing — classify by its manifest kind. Only a
+          // `dir` (a section) is somewhere you cd into; a file/action/tool is
+          // reached by cat/run/open, so point there instead of pretending.
+          var navHref = terminalNavTargets()[destKey];
+          var inManifest = Object.prototype.hasOwnProperty.call(
+            terminalManifest(),
+            destKey
+          );
+          if (navHref || inManifest) {
+            var destKind = terminalNodeKind(destKey);
+            if (destKind === "file") {
+              return {
+                echo: input,
+                lines: [
+                  "cd: not a directory: " +
+                    dest +
+                    " — try: cat " +
+                    destKey +
+                    ".md",
+                ],
+                action: null,
+              };
+            }
+            if (destKind === "action") {
+              return {
+                echo: input,
+                lines: [
+                  "cd: " +
+                    destKey +
+                    " is a command, not a directory — just run: " +
+                    destKey,
+                ],
+                action: null,
+              };
+            }
+            if (destKind === "exempt") {
+              return {
+                echo: input,
+                lines: [
+                  "cd: " +
+                    destKey +
+                    " is a visual tool — open it: open " +
+                    destKey,
+                ],
+                action: null,
+              };
+            }
+            // A directory — cd moves you into it (prompt only).
+            return {
+              echo: input,
+              lines: [],
+              action: {
+                type: "chdir",
+                cwd: hrefToCwd(navHref || "/" + destKey),
+              },
+            };
+          }
+          // A post is a file — you cat it, you don't cd into it.
+          var postKey = destKey.replace(/\.(md|txt)$/i, "");
+          if (terminalContentTargetHref(postKey)) {
+            return {
+              echo: input,
+              lines: [
+                "cd: not a directory: " +
+                  dest +
+                  " — try: cat " +
+                  postKey +
+                  ".md",
+              ],
               action: null,
             };
           }
           return {
             echo: input,
-            lines: [],
-            action: { type: "navigate", url: target },
+            lines: ["cd: no such file or directory: " + dest],
+            action: null,
           };
         }
         case "lang":
@@ -3189,16 +3848,148 @@
           };
         case "ls":
         case "dir": {
+          // Long filter flags (--featured/--related/--info) are separate lenses;
+          // short flags (-a) reveal hidden entries. Keep them apart so "--featured"
+          // (which contains an "a") isn't misread as -a.
+          var lsLong = args.filter(function (a) {
+            return a.indexOf("--") === 0;
+          });
           var lsShowHidden = args.some(function (a) {
-            return a.charAt(0) === "-" && /a/.test(a);
+            return a.charAt(0) === "-" && a.charAt(1) !== "-" && /a/.test(a);
+          });
+          var lsRecursive = args.some(function (a) {
+            return a.charAt(0) === "-" && a.charAt(1) !== "-" && /R/.test(a);
           });
           var lsPaths = args.filter(function (a) {
             return a.charAt(0) !== "-";
           });
+          // `ls -R` walks the whole tree from the given dir (default ~), the
+          // recursive listing the footer sitemap is labelled with.
+          if (lsRecursive) {
+            var lsRSegs = lsPaths.length
+              ? terminalResolveSegments(lsPaths[0])
+              : [];
+            var lsRNode = terminalNodeAt(lsRSegs);
+            if (!lsRNode) {
+              return {
+                echo: input,
+                lines: [
+                  "ls: cannot access '" +
+                    lsPaths[0] +
+                    "': No such file or directory",
+                ],
+                action: null,
+              };
+            }
+            return {
+              echo: input,
+              lines: terminalLsRecursiveLines(
+                lsRNode,
+                lsRSegs.length ? "~/" + lsRSegs.join("/") : "~"
+              ),
+              action: null,
+            };
+          }
+          if (lsLong.indexOf("--featured") !== -1) {
+            return {
+              echo: input,
+              lines: terminalHarvestFiles(
+                ".summary-card a[href], .article-card a[href]",
+                "(nothing featured here)"
+              ),
+              action: null,
+            };
+          }
+          if (lsLong.indexOf("--related") !== -1) {
+            return {
+              echo: input,
+              lines: terminalHarvestFiles(
+                ".related-items__item .type-headline-4 a[href]",
+                "(no related files)"
+              ),
+              action: null,
+            };
+          }
+          if (lsLong.indexOf("--info") !== -1) {
+            // `--info` is a lens on the page you're viewing. For a post you
+            // haven't opened, its meta now lives in the file — point at cat
+            // rather than the misleading "(no info here)".
+            if (lsPaths.length) {
+              return {
+                echo: input,
+                lines: [
+                  "ls: --info reads the current page — for " +
+                    lsPaths[0] +
+                    " try: cat " +
+                    lsPaths[0],
+                ],
+                action: null,
+              };
+            }
+            return { echo: input, lines: terminalInfoLines(), action: null };
+          }
+          if (lsLong.indexOf("--images") !== -1) {
+            var figs = document.querySelectorAll(
+              ".content figure[data-lightbox]"
+            ).length;
+            return {
+              echo: input,
+              lines: [figs ? figs + " images" : "(no images here)"],
+              action: null,
+            };
+          }
+          // Append-only: listing the section (or a nested tags dir) you've cd'd
+          // into but haven't loaded (cd only moved the prompt) — fetch it and
+          // print below, without touching anything above.
+          if (!lsPaths.length && !lsLong.length) {
+            var lsSegs = terminalCwdSegments();
+            // You've cd'd away from the loaded page (live cwd ≠ page cwd), so the
+            // current DOM can't list here → fetch that path and print it below.
+            if (
+              lsSegs.length &&
+              lsSegs.join("/") !== terminalPageCwdSegments().join("/")
+            ) {
+              var lsUrl = terminalCwdUrl(lsSegs);
+              if (lsUrl) {
+                return {
+                  echo: input,
+                  lines: [],
+                  action: {
+                    type: "remote-ls",
+                    url: lsUrl,
+                    cwd: "~/" + lsSegs.join("/"),
+                  },
+                };
+              }
+            }
+          }
           return {
             echo: input,
             lines: terminalLsLines(lsPaths, lsShowHidden),
             action: null,
+          };
+        }
+        case "cv": {
+          // A shortcut that prints just the résumé section of the about page —
+          // "part of about" (it's inside about.md), but reachable on its own.
+          // Append-only, like cat: fetch about and print only its .about-cv.
+          var cvUrl = resolveCdTarget("about");
+          if (!cvUrl) {
+            return {
+              echo: input,
+              lines: ["cv: about page not found"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [],
+            action: {
+              type: "remote-cat",
+              url: cvUrl,
+              name: "cv.md",
+              root: ".about-cv",
+            },
           };
         }
         case "tree":
@@ -3211,15 +4002,115 @@
               action: null,
             };
           }
-          var fileLines = terminalFile(args[0]);
-          if (!fileLines) {
+          // A trailing @ is the symlink marker `ls` prints in a tag dir — not
+          // part of the name, so drop it before resolving.
+          var catName = args[0]
+            .replace(/@$/, "")
+            .replace(/\.(md|txt)$/i, "")
+            .toLowerCase();
+          // An explicit `.txt` is a text blurb (readme, the newsletter/colophon
+          // footer blocks) — resolve it as a pseudo-file BEFORE a same-named
+          // page (e.g. `cat newsletter.txt` is the blurb; `cat newsletter.md`
+          // is the page). Bare/`.md` names fall through to the page resolver.
+          if (/\.txt$/i.test(args[0])) {
+            var txtLines = terminalFile(args[0]);
+            if (txtLines) {
+              return { echo: input, lines: txtLines.slice(), action: null };
+            }
+          }
+          // A section is a directory — you ls it, you don't cat it.
+          if (
+            terminalNodeKind(catName) === "dir" &&
+            terminalManifest()[catName]
+          ) {
             return {
               echo: input,
-              lines: ["cat: " + args[0] + ": No such file or directory"],
+              lines: [
+                "cat: " +
+                  catName +
+                  ": Is a directory — try: ls " +
+                  catName +
+                  "/",
+              ],
               action: null,
             };
           }
-          return { echo: input, lines: fileLines.slice(), action: null };
+          // Real page first: a content post, or a readable page (about.md,
+          // newsletter.md). Append-only: cat PRINTS the file into the buffer
+          // (fetch + extract text) — nothing above changes. (`open` still loads
+          // the real page, as the escape hatch.)
+          var catHref =
+            terminalContentTargetHref(catName) || resolveCdTarget(catName);
+          if (catHref) {
+            return {
+              echo: input,
+              lines: [],
+              action: { type: "remote-cat", url: catHref, name: args[0] },
+            };
+          }
+          // Otherwise a pseudo-file (readme, colophon, secret, config, …).
+          var fileLines = terminalFile(args[0]);
+          if (fileLines) {
+            return { echo: input, lines: fileLines.slice(), action: null };
+          }
+          // cwd-relative fallback: a file in a section you've cd'd into but not
+          // loaded — its card lives on the remote section page, not this DOM, so
+          // the DOM lookups above miss it (the same file `ls` prints by fetching
+          // the section). Build the URL from the section base + slug, the way
+          // remote-ls does, and let remote-cat fetch it (a 404 → No such file).
+          var catSegs = terminalResolveSegments(catName);
+          if (catSegs.length >= 2) {
+            var catBase = resolveCdTarget(catSegs[0]);
+            if (catBase) {
+              // A post reached through a tag path is a symlink — its real file
+              // lives in the section, so cat resolves to <section>/<slug>, not
+              // the literal .../tags/<tag>/<slug> (which 404s).
+              var catRest =
+                catSegs.indexOf("tags") !== -1
+                  ? [catSegs[catSegs.length - 1]]
+                  : catSegs.slice(1);
+              return {
+                echo: input,
+                lines: [],
+                action: {
+                  type: "remote-cat",
+                  url:
+                    catBase.replace(/\/+$/, "") + "/" + catRest.join("/") + "/",
+                  name: args[0],
+                },
+              };
+            }
+          }
+          return {
+            echo: input,
+            lines: ["cat: " + args[0] + ": No such file or directory"],
+            action: null,
+          };
+        }
+        case "open": {
+          if (!args.length) {
+            return {
+              echo: input,
+              lines: ["usage: open <name> — a section or a post"],
+              action: null,
+            };
+          }
+          // A general "go there": resolves a section OR a post (resolveCdTarget
+          // already falls through to content files) and navigates.
+          var openName = args[0].replace(/\/$/, "").replace(/\.(md|txt)$/i, "");
+          var openHref = resolveCdTarget(openName);
+          if (!openHref) {
+            return {
+              echo: input,
+              lines: ["open: no such file or directory: " + args[0]],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "navigate", url: openHref },
+          };
         }
         case "man": {
           var topic = (args[0] || "").toLowerCase();
@@ -3693,6 +4584,134 @@
       }
     }
 
+    // A typed cd can only swap in place for a same-origin target.
+    function isSameOriginUrl(href) {
+      try {
+        return (
+          new URL(href, window.location.href).origin === window.location.origin
+        );
+      } catch (err) {
+        return false;
+      }
+    }
+
+    // Full-reload navigation — the click-path behaviour: stash the `cd` echo so
+    // the destination prints it above its first prompt, then load. The fallback
+    // for every typed nav that can't (or shouldn't) swap in place.
+    function fullReloadNavigate(action) {
+      if (action.cd !== false) {
+        stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
+      }
+      try {
+        window.location.assign(action.url);
+      } catch (err) {
+        window.location.href = action.url;
+      }
+    }
+
+    // Typed navigation. Clicks still full-reload (see the click handler below);
+    // only typed cd/resume/home reach here. Swap in place when we can — terminal
+    // layout, same-origin, a real directory (home stays a full reload, it's a
+    // CSS-bundled page), not a language switch (cd:false) — and hand off to
+    // terminal-nav.js, which makes the final call after fetching (it declines
+    // special pages it can only detect from the response). If it declines, isn't
+    // present, or nothing qualifies, fall back to a full reload. The command
+    // echo already printed to the scrollback, so an in-place swap needs no extra
+    // output; on fallback the reload wipes it and the stash reprints it on top.
+    function navigateTerminal(action) {
+      var cwd = hrefToCwd(action.url);
+      var canSwap =
+        action.cd !== false &&
+        isTerminalLayout() &&
+        cwd !== "~" &&
+        isSameOriginUrl(action.url) &&
+        window.TerminalNav &&
+        typeof window.TerminalNav.go === "function";
+      if (!canSwap) {
+        fullReloadNavigate(action);
+        return;
+      }
+      window.TerminalNav.go(action.url, { cwd: cwd }).then(function (swapped) {
+        if (!swapped) {
+          fullReloadNavigate(action);
+        }
+      });
+    }
+
+    // Render a fetched directory listing by what the cwd IS:
+    //  - a tags index (~/works/tags)     → the tags, as `<tag>/` dirs
+    //  - a tag term (~/works/tags/<tag>)  → the posts, as `<slug>.md@` symlinks
+    //    (their canonical file lives up in the section, not here)
+    //  - a section (~/works)              → the posts as `<slug>.md`, plus a
+    //    `tags/` entry when the page links to a tag index
+    function terminalRemoteLsEntries(doc, cwd) {
+      var segs = String(cwd || "")
+        .replace(/^~\/?/, "")
+        .split("/")
+        .filter(Boolean);
+      var tagsIdx = segs.indexOf("tags");
+      var isTagsIndex = segs.length > 0 && segs[segs.length - 1] === "tags";
+      var isTerm = tagsIdx !== -1 && tagsIdx < segs.length - 1;
+      var out = [];
+      var seen = {};
+      var add = function (entry, key) {
+        if (!seen[key]) {
+          seen[key] = 1;
+          out.push(entry);
+        }
+      };
+
+      if (isTagsIndex) {
+        doc.querySelectorAll('a[href*="/tags/"]').forEach(function (a) {
+          var hs = terminalHrefSegments(a.getAttribute("href"));
+          var ti = hs ? hs.indexOf("tags") : -1;
+          // Only a term link tags/<tag> (the tag the last segment).
+          if (ti === -1 || ti !== hs.length - 2) {
+            return;
+          }
+          var tag = hs[hs.length - 1];
+          if (tag && tag !== "index" && tag !== "page") {
+            add(tag + "/", tag);
+          }
+        });
+        return out;
+      }
+
+      doc
+        .querySelectorAll(".summary-card a[href], .article-card a[href]")
+        .forEach(function (a) {
+          var hs = terminalHrefSegments(a.getAttribute("href"));
+          if (!hs || hs.length < 2) {
+            return;
+          }
+          var slug = hs[hs.length - 1];
+          if (slug === "tags") {
+            return;
+          }
+          // In a tag term the post's real file is up in the section, so it's a
+          // symlink (marked with @), not a copy. In the section it's the file.
+          add(isTerm ? slug + ".md@" : slug + ".md", slug);
+        });
+
+      // A section lists its own `tags/` directory only when it actually has
+      // one — i.e. the page links to `<section>/tags/`. Works has real tag term
+      // pages; writing uses `?tag=` filters, so it correctly gets no tags/.
+      if (!isTerm && segs.length) {
+        var section = segs[0];
+        var hasTags = false;
+        doc.querySelectorAll('a[href*="/tags"]').forEach(function (a) {
+          var hs = terminalHrefSegments(a.getAttribute("href"));
+          if (hs && hs.length === 2 && hs[0] === section && hs[1] === "tags") {
+            hasTags = true;
+          }
+        });
+        if (hasTags) {
+          add("tags/", "tags");
+        }
+      }
+      return out;
+    }
+
     function applyTerminalAction(action) {
       if (!action) {
         return;
@@ -3821,18 +4840,126 @@
         }
         case "navigate":
           if (action.url) {
-            // Carry a `cd` echo to the destination, same as a nav click —
-            // unless the caller opts out (e.g. a language switch).
-            if (action.cd !== false) {
-              stashTerminalCd(currentTerminalCwd(), hrefToCwd(action.url));
-            }
-            try {
-              window.location.assign(action.url);
-            } catch (err) {
-              window.location.href = action.url;
-            }
+            navigateTerminal(action);
           }
           break;
+        case "chdir":
+          // Append-only cd: move the LIVE prompt only. --terminal-live-cwd
+          // drives the bottom input's PS1; --terminal-cwd (the frozen page cwd)
+          // is left untouched, so every history prompt above — header, tour
+          // lines, scrollback — stays where it ran. No fetch, no swap, no jump.
+          document.documentElement.style.setProperty(
+            "--terminal-live-cwd",
+            '"' + (action.cwd || "~") + '"'
+          );
+          break;
+        case "remote-ls":
+          // Append-only ls: fetch the section you've cd'd into and print its
+          // files into the scrollback below — nothing above moves.
+          if (typeof window.fetch !== "function") {
+            printTerminalLine(
+              "ls: cannot reach " + action.url,
+              "terminal-session__out"
+            );
+            break;
+          }
+          window
+            .fetch(action.url, { credentials: "same-origin" })
+            .then(function (res) {
+              return res.ok ? res.text() : Promise.reject();
+            })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, "text/html");
+              var files = terminalRemoteLsEntries(doc, action.cwd);
+              if (files.length) {
+                printTerminalLine(files.join("  "), "terminal-session__out");
+              } else if (doc.querySelector(".content.post, .content.page")) {
+                // A readable page (about, a post) is a FILE, not a listing —
+                // point at cat instead of a bare "(empty)" that hides how to
+                // reach it.
+                var lsSlug = String(action.cwd || "")
+                  .split("/")
+                  .filter(Boolean)
+                  .pop();
+                printTerminalLine(
+                  "ls: " +
+                    (lsSlug || "this") +
+                    " is a file, not a directory — try: cat " +
+                    (lsSlug || "it") +
+                    ".md",
+                  "terminal-session__out"
+                );
+              } else {
+                printTerminalLine("(empty)", "terminal-session__out");
+              }
+              scrollTerminalToEnd();
+            })
+            .catch(function () {
+              printTerminalLine(
+                "ls: cannot reach " + action.url,
+                "terminal-session__out"
+              );
+              scrollTerminalToEnd();
+            });
+          break;
+        case "remote-cat": {
+          // Append-only cat: fetch the post and print its readable text
+          // (images as [image N] tokens) into the scrollback below — nothing
+          // above the prompt changes. `open` is the escape hatch to the page.
+          var catLabel = action.name || action.url;
+          if (typeof window.fetch !== "function") {
+            printTerminalLine(
+              "cat: cannot reach " + action.url,
+              "terminal-session__out"
+            );
+            break;
+          }
+          window
+            .fetch(action.url, { credentials: "same-origin" })
+            .then(function (res) {
+              // A 404 means the guessed cwd-relative path doesn't exist — a
+              // genuine "No such file", distinct from a network failure.
+              if (!res.ok) {
+                var notFound = new Error("not found");
+                notFound.notFound = true;
+                throw notFound;
+              }
+              return res.text();
+            })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, "text/html");
+              var catTokens = terminalExtractPostLines(
+                doc,
+                action.url,
+                action.root
+              );
+              if (!catTokens.length) {
+                printTerminalLine(
+                  "cat: " + catLabel + ": (empty)",
+                  "terminal-session__out"
+                );
+              } else {
+                catTokens.forEach(function (tok) {
+                  if (tok.image) {
+                    printTerminalImageLine(tok);
+                  } else {
+                    printTerminalLine(tok.text, "terminal-session__out");
+                  }
+                });
+              }
+              scrollTerminalToEnd();
+            })
+            .catch(function (err) {
+              printTerminalLine(
+                err && err.notFound
+                  ? "cat: " + catLabel + ": No such file or directory"
+                  : "cat: cannot reach " + action.url,
+                "terminal-session__out"
+              );
+              scrollTerminalToEnd();
+            });
+          break;
+        }
         case "flow":
           startTerminalFlow(action.flow);
           break;
@@ -3857,18 +4984,46 @@
       }
     }
 
-    function printTerminalLine(text, className) {
+    function printTerminalLine(text, className, frozenCwd) {
       if (!terminalSession) {
         return;
       }
       var line = document.createElement("span");
       line.className = "terminal-session__line " + className;
       line.textContent = text;
+      // Freeze the prompt's cwd on an echoed command so the scrollback keeps
+      // the directory it ran at — a later `cd` moves only the live prompt, not
+      // the history above (matching the pending-cd echo's own inline override).
+      if (frozenCwd) {
+        line.style.setProperty("--terminal-cwd", '"' + frozenCwd + '"');
+      }
       terminalSession.appendChild(line);
       // Remember the last *output* row, so `copy` with no argument grabs it.
       if (className.indexOf("terminal-session__out") !== -1) {
         lastTerminalOutput = text;
       }
+    }
+
+    // A cat'd image prints as a clickable [image N] token: a terminal can't
+    // paint the picture, but the token carries the real image URL and filename,
+    // so clicking it echoes `open <file>` and opens the picture in the lightbox
+    // (see the terminalSession click handler). Keyboard-reachable as a button.
+    function printTerminalImageLine(tok) {
+      if (!terminalSession) {
+        return;
+      }
+      var line = document.createElement("span");
+      line.className = "terminal-session__line terminal-session__out";
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "terminal-session__image";
+      btn.textContent =
+        "[image " + tok.n + (tok.alt ? ": " + tok.alt : "") + "]";
+      btn.setAttribute("data-image-src", tok.src || "");
+      btn.setAttribute("data-image-file", tok.file || "");
+      btn.setAttribute("data-image-alt", tok.alt || "");
+      line.appendChild(btn);
+      terminalSession.appendChild(line);
     }
 
     // A short, bounded "digital rain" burst for `matrix` — a few deferred
@@ -3921,7 +5076,14 @@
       }
       var result = runTerminalCommand(raw);
       if (result.echo) {
-        printTerminalLine(result.echo, "terminal-session__cmd");
+        // Freeze the echo at the cwd it ran at. applyTerminalAction (below)
+        // is what performs an append-only `cd`, so reading the cwd now — before
+        // it runs — captures where the command was actually typed.
+        printTerminalLine(
+          result.echo,
+          "terminal-session__cmd",
+          currentTerminalCwd()
+        );
       }
       var artLines =
         result.action && result.action.type === "art" ? terminalArtLines() : [];
@@ -4280,16 +5442,31 @@
         });
       } else {
         var verb = parts[0].toLowerCase();
-        if (verb !== "cd" && verb !== "ls" && verb !== "open") {
+        if (
+          verb !== "cd" &&
+          verb !== "ls" &&
+          verb !== "open" &&
+          verb !== "cat"
+        ) {
           return;
         }
         frag = (parts[parts.length - 1] || "").toLowerCase();
-        var node = terminalNodeAt(terminalCwdSegments());
+        var cwdSegs = terminalCwdSegments();
+        var node = terminalNodeAt(cwdSegs);
         candidates = node
           ? Object.keys(node.children).filter(function (name) {
               return name.indexOf(frag) === 0;
             })
           : [];
+        // cat/open reach the page's posts too — complete them as .md files.
+        if (verb === "cat" || verb === "open") {
+          terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
+            var file = slug + ".md";
+            if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
+              candidates.push(file);
+            }
+          });
+        }
       }
       if (candidates.length === 1) {
         parts[parts.length - 1] = candidates[0];
@@ -4299,6 +5476,23 @@
         printTerminalLine(candidates.join("  "), "terminal-session__out");
         scrollTerminalToEnd();
       }
+    }
+
+    // ^C: abort the current line — echo the caret marker, end any running flow,
+    // clear the input and the history cursor. Shared by the keydown handler and
+    // the mobile key bar (the on-screen keyboard has no Ctrl key).
+    function terminalCancelLine() {
+      if (!terminalInput) {
+        return;
+      }
+      printTerminalLine("^C", "terminal-session__out");
+      if (terminalFlow) {
+        endTerminalFlow();
+      }
+      terminalInput.value = "";
+      terminalHistoryCursor = null;
+      syncTerminalInputSize();
+      scrollTerminalToEnd();
     }
 
     if (terminalInput) {
@@ -4328,14 +5522,7 @@
           }
           if (ctrlKey === "c") {
             e.preventDefault();
-            printTerminalLine("^C", "terminal-session__out");
-            if (terminalFlow) {
-              endTerminalFlow();
-            }
-            terminalInput.value = "";
-            terminalHistoryCursor = null;
-            syncTerminalInputSize();
-            scrollTerminalToEnd();
+            terminalCancelLine();
             return;
           }
         }
@@ -4394,6 +5581,91 @@
     }
 
     // ----------------------------------------------------------------------
+    // Mobile key bar (accessory row)
+    // The round-4 keyboard fundamentals — ↑/↓ history recall, Tab completion,
+    // ^C — ride keys the on-screen keyboard doesn't have, so on touch (the
+    // primary context) they're unreachable. This bar surfaces them as tappable
+    // buttons while the prompt is focused, pinned just above the keyboard, plus
+    // a ⌄ jump-to-prompt. Purely additive: with no bar (or no JS) the terminal
+    // works exactly as before, just without recall/completion on mobile.
+    // ----------------------------------------------------------------------
+    var terminalKeybar = document.querySelector('[data-js="terminal-keybar"]');
+    if (terminalKeybar && terminalInput) {
+      // Each button reuses a handler already built above — the bar is only a
+      // touch surface for them, never a second implementation.
+      var KEYBAR_ACTIONS = {
+        prev: function () {
+          terminalRecallHistory(-1);
+        },
+        next: function () {
+          terminalRecallHistory(1);
+        },
+        tab: function () {
+          if (!terminalFlow) {
+            terminalCompleteInput();
+          }
+        },
+        cancel: terminalCancelLine,
+        bottom: scrollTerminalToEnd,
+      };
+
+      // Track the on-screen keyboard: with position:fixed;bottom:0 the bar sits
+      // BEHIND the keyboard on iOS Safari (plain fixed positions against the
+      // layout viewport, which the keyboard doesn't shrink). Translate it up by
+      // the overlap — layout viewport minus the visual viewport — so it rides on
+      // top of the keyboard. No visualViewport API → leave it pinned to the
+      // bottom (still usable, just possibly overlapped).
+      function positionKeybar() {
+        var vv = window.visualViewport;
+        if (!vv) {
+          return;
+        }
+        var overlap = window.innerHeight - vv.height - vv.offsetTop;
+        terminalKeybar.style.transform =
+          "translateY(" + -Math.max(0, overlap) + "px)";
+      }
+
+      // Keep focus on the input: a button that stole focus would close the
+      // keyboard. preventDefault on pointerdown stops the field from blurring,
+      // so the tap runs its action with the keyboard still up (and the bar,
+      // which hides on blur, still on screen to receive the click).
+      terminalKeybar.addEventListener("pointerdown", function (e) {
+        if (e.target.closest("[data-keybar]")) {
+          e.preventDefault();
+        }
+      });
+
+      terminalKeybar.addEventListener("click", function (e) {
+        var button = e.target.closest("[data-keybar]");
+        if (!button) {
+          return;
+        }
+        var action = KEYBAR_ACTIONS[button.getAttribute("data-keybar")];
+        if (action) {
+          action();
+          // Belt-and-braces: keep the keyboard up even if a browser dropped
+          // focus despite the pointerdown guard above.
+          terminalInput.focus();
+        }
+      });
+
+      // Shown only while the prompt is focused; CSS gates it to coarse pointers
+      // so desktop (which has the real keys) never sees it.
+      terminalInput.addEventListener("focus", function () {
+        terminalKeybar.classList.add("is-visible");
+        positionKeybar();
+      });
+      terminalInput.addEventListener("blur", function () {
+        terminalKeybar.classList.remove("is-visible");
+      });
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", positionKeybar);
+        window.visualViewport.addEventListener("scroll", positionKeybar);
+      }
+    }
+
+    // ----------------------------------------------------------------------
     // Nav "cd" feedback
     // A full page load gives almost no signal that navigation happened. So a
     // nav click (or a typed `cd`) reads like running `cd <page>`: we stash the
@@ -4404,9 +5676,14 @@
     const TERMINAL_CD_KEY = "terminal-cd";
 
     function currentTerminalCwd() {
-      var value = window
-        .getComputedStyle(document.documentElement)
-        .getPropertyValue("--terminal-cwd")
+      // The LIVE working directory drives the bottom prompt and command
+      // resolution. It falls back to --terminal-cwd (the frozen page cwd) until
+      // the first append-only `cd` sets --terminal-live-cwd.
+      var style = window.getComputedStyle(document.documentElement);
+      var value = (
+        style.getPropertyValue("--terminal-live-cwd") ||
+        style.getPropertyValue("--terminal-cwd")
+      )
         .trim()
         .replace(/^["']|["']$/g, "");
       return value || "~";
@@ -4522,6 +5799,51 @@
     });
 
     printPendingTerminalCd();
+
+    // Posts are files: stamp each content card's title link with its slug so the
+    // terminal CSS can render it as `slug.md` (an ls-row filename) instead of the
+    // human title. The title stays in the DOM for screen readers + other layouts;
+    // terminal.css just hides it and shows the slug. Re-run after an in-place nav.
+    function terminalStampSlugs() {
+      document
+        .querySelectorAll(
+          ".summary-card__title a[href], .article-card__title a[href], " +
+            ".related-items__item .type-headline-4 a[href]"
+        )
+        .forEach(function (link) {
+          var segs = terminalHrefSegments(link.getAttribute("href"));
+          if (!segs || !segs.length) {
+            return;
+          }
+          var slug = segs[segs.length - 1];
+          // A taxonomy/section card (e.g. works' "tags") is a directory, not a
+          // file — render it slug/ instead of slug.md. A post isn't in the
+          // manifest, so it correctly falls through to a .md file.
+          var slugEntry = terminalManifest()[slug];
+          if (slug === "tags" || (slugEntry && slugEntry.kind === "dir")) {
+            link.setAttribute("data-dir", slug);
+          } else {
+            link.setAttribute("data-slug", slug);
+          }
+        });
+    }
+    terminalStampSlugs();
+    window.TerminalSlugs = { refresh: terminalStampSlugs };
+
+    // Publish the exit target for the top-level exitTerminal(): if you've cd'd
+    // away (live cwd ≠ the loaded page's cwd), exit navigates to that page in
+    // the restored layout. An in-place action (open) leaves live === page, so
+    // this returns null and exit just drops back to the current URL.
+    terminalNavApi = {
+      exitTargetUrl: function () {
+        var live = terminalCwdSegments();
+        var page = terminalPageCwdSegments();
+        if (!live.length || live.join("/") === page.join("/")) {
+          return null;
+        }
+        return terminalCwdUrl(live);
+      },
+    };
 
     // Terminal layout: statusbar quick toggle that shows the resolved mode as
     // a bracketed word; clicking flips light/dark (an explicit choice, so it

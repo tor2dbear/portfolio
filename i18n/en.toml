@@ -290,10 +290,10 @@ other = "Privacy"
 other = "License"
 
 [privacy_url]
-other = "privacy"
+other = "legal/privacy"
 
 [license_url]
-other = "license"
+other = "legal/license"
 
 [footer_meta_label]
 other = "Footer metadata"
@@ -456,3 +456,18 @@ other = "type exit or press esc to leave the terminal"
 
 [terminal_input_label]
 other = "Terminal command input — type a command and press Enter (try 'help')"
+
+[terminal_key_prev]
+other = "Previous command"
+
+[terminal_key_next]
+other = "Next command"
+
+[terminal_key_tab]
+other = "Complete"
+
+[terminal_key_cancel]
+other = "Cancel line"
+
+[terminal_key_bottom]
+other = "Jump to prompt"
