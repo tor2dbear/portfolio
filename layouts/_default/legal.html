@@ -1,17 +1,34 @@
 {{ partial "header.html" . }}
 
-  <div class="content page use-subgrid">
-    <h1 class="type-headline-1 legal-page__title place-full">
-      {{ .Title }}
-    </h1>
-    {{ with .Description }}
-      <p class="type-preamble is-muted legal-page__description place-prose">
-        {{ . }}
-      </p>
-    {{ end }}
-    <div class="legal-content prose place-prose">
-      {{ .Content }}
-    </div>
+
+<div class="content page use-subgrid">
+  <h1 class="type-headline-1 legal-page__title place-full">
+    {{ .Title }}
+  </h1>
+  {{ with .Description }}
+    <p class="type-preamble is-muted legal-page__description place-prose">
+      {{ . }}
+    </p>
+  {{ end }}
+  <div class="legal-content prose place-prose">
+    {{ .Content }}
   </div>
+  {{ if .IsSection }}
+    {{/* The legal/ section index lists its pages as cards — plain links in
+      most layouts, harvested as `license.md`/`privacy.md` files in the
+      terminal (see darkmode.js's remote-ls).
+    */}}
+    {{ range .Pages }}
+      <article class="summary-card place-prose">
+        <h2 class="summary-card__title type-headline-4">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h2>
+        {{ with .Description }}
+          <p class="summary-card__excerpt type-body">{{ . }}</p>
+        {{ end }}
+      </article>
+    {{ end }}
+  {{ end }}
+</div>
 
 {{ partial "footer.html" . }}

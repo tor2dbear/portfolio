@@ -57,7 +57,7 @@ describe("terminal command line", () => {
 
     document.documentElement.innerHTML = `
       <head><meta name="theme-color" content="#ffffff">
-        <script type="application/json" data-js="terminal-manifest">{"works":"dir","writing":"dir","about":"file","contact":"action","ui-library":"exempt","palette-generator":"exempt"}</script>
+        <script type="application/json" data-js="terminal-manifest">{"works":{"kind":"dir","url":"/works/"},"writing":{"kind":"dir","url":"/writing/"},"about":{"kind":"file","url":"/about/"},"contact":{"kind":"action","url":"/contact/"},"legal":{"kind":"dir","url":"/legal/"},"ui-library":{"kind":"exempt","url":"/ui-library/"},"palette-generator":{"kind":"exempt","url":"/palette-generator/"}}</script>
       </head>
       <body>
         <div class="terminal-boot">

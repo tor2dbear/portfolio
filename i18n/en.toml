@@ -290,10 +290,10 @@ other = "Privacy"
 other = "License"
 
 [privacy_url]
-other = "privacy"
+other = "legal/privacy"
 
 [license_url]
-other = "license"
+other = "legal/license"
 
 [footer_meta_label]
 other = "Footer metadata"

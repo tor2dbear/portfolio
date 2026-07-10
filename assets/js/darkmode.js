@@ -2586,8 +2586,21 @@
         return terminalDirTreeCache;
       }
       var root = { name: "~", href: terminalHomeUrl(), children: {} };
+      // Seed the top level from the manifest — the authoritative list of what's
+      // in ~ (including footer-only sections like legal that carry no nav link,
+      // and without the noise of harvesting every footer href e.g. index.xml).
+      var manifest = terminalManifest();
+      Object.keys(manifest).forEach(function (seg) {
+        root.children[seg] = {
+          name: seg,
+          href: manifest[seg].url || null,
+          children: {},
+        };
+      });
+      // Then harvest the (relative) nav links for deeper structure — a section's
+      // tags/ and the like.
       var links = document.querySelectorAll(
-        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href], footer a[href]"
+        ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href]"
       );
       links.forEach(function (link) {
         var segs = terminalHrefSegments(link.getAttribute("href"));
@@ -2733,7 +2746,15 @@
     // A top-level segment's kind. Deeper structural nodes (e.g. a section's
     // `tags/`) aren't in the manifest and default to `dir` — they list children.
     function terminalNodeKind(name) {
-      return terminalManifest()[String(name || "").toLowerCase()] || "dir";
+      var e = terminalManifest()[String(name || "").toLowerCase()];
+      return (e && e.kind) || "dir";
+    }
+
+    // A top-level segment's URL from the manifest — lets the terminal reach a
+    // footer-only section (legal) that has no nav link to resolve against.
+    function terminalManifestUrl(name) {
+      var e = terminalManifest()[String(name || "").toLowerCase()];
+      return (e && e.url) || null;
     }
 
     // How an entry renders in a listing: dir → `name/`, file → `name.md`,
@@ -3329,8 +3350,14 @@
       }
       var targets = terminalNavTargets();
       // Nav/footer directories first; then the current page's own content
-      // cards, so `cd` reaches any post `ls` just listed.
-      return targets[key] || terminalContentTargetHref(dest) || null;
+      // cards (so `cd` reaches any post `ls` just listed); then the manifest URL
+      // (so a footer-only section like legal resolves even without a nav link).
+      return (
+        targets[key] ||
+        terminalContentTargetHref(dest) ||
+        terminalManifestUrl(key) ||
+        null
+      );
     }
 
     // The URL for a cwd's segments — the section's nav href as the base, then
@@ -5684,7 +5711,8 @@
           // A taxonomy/section card (e.g. works' "tags") is a directory, not a
           // file — render it slug/ instead of slug.md. A post isn't in the
           // manifest, so it correctly falls through to a .md file.
-          if (slug === "tags" || terminalManifest()[slug] === "dir") {
+          var slugEntry = terminalManifest()[slug];
+          if (slug === "tags" || (slugEntry && slugEntry.kind === "dir")) {
             link.setAttribute("data-dir", slug);
           } else {
             link.setAttribute("data-slug", slug);

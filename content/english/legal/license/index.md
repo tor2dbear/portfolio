@@ -1,5 +1,7 @@
 ---
 title: License
+aliases:
+  - /license/
 description: Licensing terms for content on tor-bjorn.com.
 layout: legal
 ---
@@ -9,10 +11,12 @@ layout: legal
 All of the content on this site is produced under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY‑NC‑SA 4.0) license. The footer uses the short form “CC BY‑NC‑SA 4.0”. This means:
 
 ## You are free to
+
 - Share — copy and redistribute the material in any medium or format.
 - Adapt — remix, transform, and build upon the material.
 
 ## Under the following terms
+
 - Attribution — provide a clearly visible backlink to tor-bjorn.com.
 - Non‑Commercial — you may not use the material for commercial purposes.
 - Share‑Alike — if you remix, transform, or build upon the material, you must distribute your contributions under the same license.

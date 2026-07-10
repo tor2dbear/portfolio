@@ -290,10 +290,10 @@ other = "Integritet"
 other = "Licens"
 
 [privacy_url]
-other = "integritet"
+other = "legal/integritet"
 
 [license_url]
-other = "licens"
+other = "legal/licens"
 
 [footer_meta_label]
 other = "Sidfotsmetadata"
