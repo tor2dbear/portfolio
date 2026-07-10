@@ -91,22 +91,33 @@ Everything else (posts as files, `cat`, `cv`, `colophon`, quote parsing, the
 prompt-freeze) already fits this model — this change just makes the _top level_
 honest and deletes the guesswork.
 
-## 6. Open decisions (need your call)
+## 6. Decisions (settled)
 
-1. **Contact** — action command only (recommended), or also a readable
-   `contact.md`?
-2. **Newsletter** — treat as an **action** (`subscribe`, plus the
-   `newsletter.txt` blurb), and drop it as a "place"? Or keep a `newsletter/`
-   directory listing past issues (if you ever publish any)?
-3. **Legal pages** (`license`, `privacy`) — surface as files in `~`, tuck them
-   under a `legal/` directory, or leave them footer-only?
-4. **`works` nav target** — point it at `/works/` (the section) instead of
-   `/works/tags/`, so `cd works` and the nav agree?
+1. **Contact** → **action**. `contact` runs the form; `ls ~` shows `contact`
+   (no slash, no `.md`), not a directory. No `contact.md` document.
+2. **Newsletter** → **directory + action**. Issues are planned, so keep
+   `newsletter/` as a section (`cd newsletter; ls` lists issues — empty for
+   now), and `subscribe` / `cat 'newsletter.txt'` stay as the action + blurb.
+3. **Legal pages** → a **`legal/` directory**. Move `license` and `privacy`
+   under it so `cd legal; ls` → `license.md privacy.md`, keeping `~` uncluttered.
+   (They stay reachable from `cat colophon` too.)
+4. **Tags / taxonomies** → **directories**. A tag lists its tagged posts, so
+   it's a dir like any section: `cd tags/<tag>; ls` → the posts as `.md` files.
+   Hugo already renders each tag as a term list page, so no content work.
+5. **`works` nav target** → point at `/works/` (the section), so `cd works` and
+   the nav agree. The by-tag browse stays reachable via `cd works/tags`.
 
 ## 7. Scope / cost
 
-Small–medium. The server stamp is a few lines in a partial; the client change
-swaps a hardcoded lookup for an attribute read and adjusts three render sites
-(`ls`, `tree`, `cd`). No content restructuring required (unlike making `about/`
-a real directory, which we explicitly rejected — it would degrade the non-terminal
-`/about/` page). Fully reversible.
+Small–medium, in two parts:
+
+- **Client + server stamp** (the bulk): emit `data-terminal-kind` from Hugo,
+  swap the hardcoded `TERMINAL_SECTION_DIRS` lookup for it, and adjust three
+  render sites (`ls`, `tree`, `cd`). Fully reversible.
+- **Small content moves**: relocate `license`/`privacy` under `legal/`, and
+  retarget the `works` nav to `/works/`. (Hugo structure isn't sacred — these
+  are cheap.) Add `aliases` on the moved legal pages so old URLs still resolve.
+
+Still off the table: making `about/` a real directory — it would turn the
+non-terminal `/about/` into a listing, and the terminal is an opt-in layer that
+shouldn't degrade the base site.
