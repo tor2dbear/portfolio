@@ -120,6 +120,21 @@ describe("classify", () => {
     expect(ai.classify("qwertyuiop zxcvbnm").intent).toBeNull();
   });
 
+  test("routes a favourite question to the favourite intent", () => {
+    const ai = loadAi();
+    expect(ai.classify("any favourit essay?").intent.id).toBe("favourite");
+    expect(ai.classify("vilket är ditt bästa jobb?").intent.id).toBe(
+      "favourite"
+    );
+  });
+
+  test("routes 'open one' to open-help, not the writing blurb", () => {
+    const ai = loadAi();
+    expect(ai.classify("can you open one of the text?").intent.id).toBe(
+      "open-help"
+    );
+  });
+
   test("normalize folds Swedish diacritics and punctuation", () => {
     const ai = loadAi();
     expect(ai.normalize("Vänner, Öländska!")).toBe("vanner olandska");
@@ -171,6 +186,33 @@ describe("start / handleLine loop", () => {
     });
     expect(m.t.releaseInput).toHaveBeenCalled();
     expect(ai.isActive()).toBe(false);
+  });
+
+  test("prefaces a verbatim repeat instead of echoing silently", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("vad finns det för projekt?");
+    m.feed("vad finns det för projekt?");
+
+    // The generic projects reply appears both times...
+    expect(m.text().match(/11 projekt/g)).toHaveLength(2);
+    // ...but the second is prefaced as a noticed repeat.
+    expect(m.text()).toContain("du frågade nyss");
+  });
+
+  test("does not treat a different entity as a repeat", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("har du skrivit något?");
+    m.feed("har du skrivit något om css?");
+
+    expect(m.text()).not.toContain("du frågade nyss");
   });
 
   test("exit prints the farewell and releases the prompt", () => {

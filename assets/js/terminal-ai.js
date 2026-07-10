@@ -28,6 +28,11 @@
   // tells handleLine it is live.
   var active = false;
 
+  // The last answer's identity (intent + entity), so a verbatim repeat can be
+  // prefaced rather than echoed silently. repeatIndex rotates the prefaces.
+  var lastKey = null;
+  var repeatIndex = 0;
+
   function data() {
     return window.TerminalAIData || null;
   }
@@ -218,15 +223,34 @@
   // — not the assistant — owns the next inputs; the assistant is done.
   function respond(raw) {
     var lg = lang();
+    var d = data();
     var result = classify(raw);
 
     if (!result.intent) {
-      var d = data();
+      lastKey = null;
       printLines(pickLang(d && d.fallback, lg), "terminal-session__out");
       return;
     }
 
     var entity = result.entity;
+    // Key the repeat check on the exact answer (intent + entity), so asking
+    // "writing" then "writing about css" isn't mistaken for a repeat.
+    var key =
+      result.intent.id + (entity ? ":" + (entity.id || entity.slug || "") : "");
+    if (key === lastKey) {
+      var prefaces = pickLang(d && d.repeatPrefaces, lg) || [];
+      if (prefaces.length) {
+        printLines(
+          [prefaces[repeatIndex % prefaces.length]],
+          "terminal-session__out"
+        );
+        repeatIndex += 1;
+      }
+    } else {
+      repeatIndex = 0;
+    }
+    lastKey = key;
+
     var replyObj = entity && entity.reply ? entity.reply : result.intent.reply;
     printLines(pickLang(replyObj, lg), "terminal-session__out");
 
@@ -357,6 +381,8 @@
       return;
     }
     active = true;
+    lastKey = null;
+    repeatIndex = 0;
     // onRelease fires whether the user typed 'exit' or left the terminal
     // entirely (exitTerminal releases every delegate) — so state can't get
     // stuck "active" after the prompt is handed back.

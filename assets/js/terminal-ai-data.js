@@ -72,6 +72,22 @@
       en: "type exit to leave",
     },
 
+    // Printed before the reply when the same question is asked twice in a row,
+    // so a repeat reads as noticed rather than as a stuck record. The engine
+    // rotates through these (see terminal-ai.js respond()).
+    repeatPrefaces: {
+      sv: [
+        "du frågade nyss — men visst:",
+        "samma fråga, samma clanker:",
+        "igen? okej:",
+      ],
+      en: [
+        "you just asked that — but sure:",
+        "same question, same clanker:",
+        "again? fine:",
+      ],
+    },
+
     exitWords: [
       "exit",
       "quit",
@@ -538,6 +554,88 @@
             "11 projects across five threads: brand & identity, editorial,",
             "print, experimental and digital product.",
             "Type 'cd works' to browse, or ask about a category.",
+          ],
+        },
+      },
+      {
+        id: "favourite",
+        keywords: {
+          sv: [
+            "favorit",
+            "favoriter",
+            "basta",
+            "bast",
+            "rekommendera",
+            "rekommendation",
+            "vilken gillar du",
+            "basta text",
+            "basta jobb",
+            "basta projekt",
+            "favorit text",
+            "favorit projekt",
+          ],
+          en: [
+            "favourite",
+            "favorite",
+            "favourit",
+            "best",
+            "recommend",
+            "recommendation",
+            "which do you like",
+            "favourite essay",
+            "favourit essay",
+            "favorite essay",
+            "best work",
+            "best project",
+          ],
+        },
+        reply: {
+          sv: [
+            "Clankers spelar inte favoriter. Men om du tvingar mig:",
+            "  text → 'The Spec Was Never the Point'",
+            "  projekt → rebranden av Lokalguiden (2020)",
+            "Skriv 'cd writing' eller 'cd works' för resten.",
+          ],
+          en: [
+            "Clankers don't play favourites. But if you twist my arm:",
+            "  writing → 'The Spec Was Never the Point'",
+            "  project → the Lokalguiden rebrand (2020)",
+            "Type 'cd writing' or 'cd works' for the rest.",
+          ],
+        },
+      },
+      {
+        id: "open-help",
+        keywords: {
+          sv: [
+            "oppna",
+            "kan du oppna",
+            "hur oppnar jag",
+            "las en",
+            "lasa en",
+            "visa en",
+            "oppna en",
+          ],
+          en: [
+            "open one",
+            "open a",
+            "open the",
+            "can you open",
+            "how do i open",
+            "read one",
+            "read a",
+          ],
+        },
+        reply: {
+          sv: [
+            "Jag öppnar inget åt dig, men du gör det lätt själv:",
+            "bläddra med 'cd writing' (eller 'cd works'),",
+            "öppna sen med 'open <namn>' — t.ex. 'open the-grid-inherited'.",
+          ],
+          en: [
+            "I don't open things for you, but it's easy:",
+            "browse with 'cd writing' (or 'cd works'),",
+            "then 'open <name>' — e.g. 'open the-grid-inherited'.",
           ],
         },
       },
