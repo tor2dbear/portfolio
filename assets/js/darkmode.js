@@ -3097,6 +3097,19 @@
       return out.length ? out : TERMINAL_FILES.colophon.slice();
     }
 
+    // The newsletter blurb the footer prints under `cat 'newsletter.txt'` —
+    // harvested from the live footer so typing it reproduces what's shown.
+    function terminalNewsletterLines() {
+      var desc = document.querySelector(".footer-newsletter__description");
+      if (desc) {
+        var text = desc.textContent.replace(/\s+/g, " ").trim();
+        if (text) {
+          return [text, "", "subscribe with: subscribe"];
+        }
+      }
+      return ["a short, occasional newsletter.", "subscribe with: subscribe"];
+    }
+
     function terminalFile(name) {
       var key = String(name || "")
         .toLowerCase()
@@ -3105,9 +3118,13 @@
       if (key === "secrets") {
         key = "secret";
       }
-      // colophon is the live footer, reproduced (see terminalColophonLines).
+      // colophon and newsletter are live footer blocks, reproduced so typing
+      // the `cat …` the chrome prints shows exactly what's on the page.
       if (key === "colophon") {
         return terminalColophonLines();
+      }
+      if (key === "newsletter") {
+        return terminalNewsletterLines();
       }
       return TERMINAL_FILES[key] || null;
     }
@@ -3268,12 +3285,26 @@
     // Returns { echo, lines, action }. `echo` is the command as typed (printed
     // with the prompt), `lines` are output rows, `action` (or null) is applied
     // separately. Kept free of DOM mutation so it is straightforward to test.
+    // Split a command line into words, honouring single/double quotes so a
+    // quoted filename with spaces (or one the chrome prints as `cat 'x.txt'`)
+    // parses as one argument — surrounding quotes stripped, like a real shell.
+    function terminalTokenize(input) {
+      var raw = input.match(/'[^']*'|"[^"]*"|\S+/g) || [];
+      return raw.map(function (tok) {
+        var q = tok.charAt(0);
+        if ((q === "'" || q === '"') && tok.charAt(tok.length - 1) === q) {
+          return tok.slice(1, -1);
+        }
+        return tok;
+      });
+    }
+
     function runTerminalCommand(raw) {
       var input = String(raw === null || raw === undefined ? "" : raw).trim();
       if (!input) {
         return { echo: "", lines: [], action: null };
       }
-      var parts = input.split(/\s+/);
+      var parts = terminalTokenize(input);
       var cmd = parts[0].toLowerCase();
       var args = parts.slice(1);
       var rest = input.slice(parts[0].length).trim();
@@ -3710,6 +3741,16 @@
             };
           }
           var catName = args[0].replace(/\.(md|txt)$/i, "").toLowerCase();
+          // An explicit `.txt` is a text blurb (readme, the newsletter/colophon
+          // footer blocks) — resolve it as a pseudo-file BEFORE a same-named
+          // page (e.g. `cat newsletter.txt` is the blurb; `cat newsletter.md`
+          // is the page). Bare/`.md` names fall through to the page resolver.
+          if (/\.txt$/i.test(args[0])) {
+            var txtLines = terminalFile(args[0]);
+            if (txtLines) {
+              return { echo: input, lines: txtLines.slice(), action: null };
+            }
+          }
           // A section is a directory — you ls it, you don't cat it.
           if (TERMINAL_SECTION_DIRS[catName]) {
             return {

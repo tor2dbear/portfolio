@@ -258,6 +258,26 @@ describe("terminal command line", () => {
     expect(sessionText().toLowerCase()).toContain("no secrets");
   });
 
+  test("a quoted argument parses as one token (spaces and all)", () => {
+    loadModule();
+    // The chrome prints `cat 'name.txt'`; typed verbatim it must not split on
+    // the quotes or an inner space into "'name" — the whole quoted string is one
+    // argument, quotes stripped.
+    typeCommand("cat 'no such thing.md'");
+    // The error names the whole filename with quotes stripped — proof it was
+    // one token, not split on the space into "'no".
+    expect(sessionText()).toContain(
+      "cat: no such thing.md: No such file or directory"
+    );
+  });
+
+  test("cat 'newsletter.txt' prints the newsletter blurb, not a parse error", () => {
+    loadModule();
+    typeCommand("cat 'newsletter.txt'");
+    expect(sessionText()).not.toContain("No such file");
+    expect(sessionText().toLowerCase()).toContain("subscribe");
+  });
+
   test("man pulls a one-line description from help", () => {
     loadModule();
     typeCommand("man whoami");
