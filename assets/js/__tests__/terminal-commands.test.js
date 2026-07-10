@@ -56,7 +56,9 @@ describe("terminal command line", () => {
     document.documentElement.setAttribute("data-layout", "terminal");
 
     document.documentElement.innerHTML = `
-      <head><meta name="theme-color" content="#ffffff"></head>
+      <head><meta name="theme-color" content="#ffffff">
+        <script type="application/json" data-js="terminal-manifest">{"works":"dir","writing":"dir","about":"file","contact":"action","ui-library":"exempt","palette-generator":"exempt"}</script>
+      </head>
       <body>
         <div class="terminal-boot">
           <pre class="terminal-boot__art terminal-boot__art--sm">  ██\n ████</pre>
@@ -237,11 +239,26 @@ describe("terminal command line", () => {
 
   // ---- Additional commands & easter eggs --------------------------------
 
-  test("ls lists the nav pages as directories", () => {
+  test("ls renders entries by kind: sections as dirs, pages as files", () => {
     loadModule();
     typeCommand("ls");
+    // From the manifest: works/writing are dirs, about is a file, contact an
+    // action — so the top level reads honestly, no hardcoded guess.
     expect(sessionText()).toContain("writing/");
-    expect(sessionText()).toContain("about/");
+    expect(sessionText()).toContain("about.md");
+    expect(sessionText()).not.toContain("about/");
+  });
+
+  test("cd classifies by kind: file → cat, action → run", () => {
+    loadModule();
+    typeCommand("cd about");
+    expect(sessionText()).toContain(
+      "not a directory: about — try: cat about.md"
+    );
+    typeCommand("cd contact");
+    expect(sessionText()).toContain(
+      "contact is a command, not a directory — just run: contact"
+    );
   });
 
   test("cat prints a known pseudo-file and 404s unknown ones", () => {

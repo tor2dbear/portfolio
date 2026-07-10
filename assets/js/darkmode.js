@@ -2693,16 +2693,47 @@
     // in. Unknown path → an ls-style error; a real page whose contents can't
     // be listed from here (a different section) → a `cd` hint rather than a
     // bare empty result.
-    // The statusbar renders the loaded page as history: `~$ ls nav/` and
-    // `~$ ls settings/`. Make those real so typing them reproduces the header —
-    // the navigation and the settings toggles, listed. Both are menus, not
-    // places, so you `ls` them but don't `cd` into them (see the cd handler).
-    var TERMINAL_SECTION_DIRS = {
-      works: 1,
-      arbeten: 1,
-      writing: 1,
-      texter: 1,
-    };
+    // The terminal presents the site as a filesystem, and Hugo tells it what
+    // each top-level thing IS via the manifest emitted in head.html: a section
+    // is a `dir`, a standalone page a `file`, the contact form an `action`, a
+    // visual tool `exempt`. Parsed once; the client no longer guesses.
+    var terminalManifestCache = null;
+    function terminalManifest() {
+      if (terminalManifestCache) {
+        return terminalManifestCache;
+      }
+      terminalManifestCache = {};
+      var el = document.querySelector('[data-js="terminal-manifest"]');
+      if (el && el.textContent) {
+        try {
+          terminalManifestCache = JSON.parse(el.textContent) || {};
+        } catch (e) {
+          /* malformed manifest — fall back to the dir default below */
+        }
+      }
+      return terminalManifestCache;
+    }
+
+    // A top-level segment's kind. Deeper structural nodes (e.g. a section's
+    // `tags/`) aren't in the manifest and default to `dir` — they list children.
+    function terminalNodeKind(name) {
+      return terminalManifest()[String(name || "").toLowerCase()] || "dir";
+    }
+
+    // How an entry renders in a listing: dir → `name/`, file → `name.md`,
+    // action → `name` (a command), exempt → `name*` (a tool you `open`).
+    function terminalEntryLabel(name) {
+      switch (terminalNodeKind(name)) {
+        case "file":
+          return name + ".md";
+        case "action":
+          return name;
+        case "exempt":
+          return name + "*";
+        default:
+          return name + "/";
+      }
+    }
 
     function terminalNavEntries() {
       var seen = {};
@@ -2722,7 +2753,7 @@
             return;
           }
           seen[name] = true;
-          out.push(TERMINAL_SECTION_DIRS[name] ? name + "/" : name);
+          out.push(name === "home" ? "home" : terminalEntryLabel(name));
         });
       return out;
     }
@@ -2949,11 +2980,13 @@
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
-      // Structural children (sections, tags) are directories — trailing slash.
+      // Structural children render by kind (dir → `name/`, file → `name.md`,
+      // action → `name`, exempt → `name*`) — the manifest drives the top level;
+      // deeper nodes (a section's tags/) default to dir.
       var entries = Object.keys(node.children)
         .sort()
         .map(function (k) {
-          return node.children[k].name + "/";
+          return terminalEntryLabel(node.children[k].name);
         });
       if (isCwd) {
         // The page's own content (posts) are FILES: a post is a .md you `cat`,
@@ -3047,7 +3080,9 @@
         keys.forEach(function (key, i) {
           var last = i === keys.length - 1;
           lines.push(
-            prefix + (last ? "└── " : "├── ") + node.children[key].name + "/"
+            prefix +
+              (last ? "└── " : "├── ") +
+              terminalEntryLabel(node.children[key].name)
           );
           walk(node.children[key], prefix + (last ? "    " : "│   "));
         });
@@ -3489,13 +3524,61 @@
               action: null,
             };
           }
-          // Sections are directories — cd moves you into them (prompt only).
-          var sectionTarget = terminalNavTargets()[destKey];
-          if (sectionTarget) {
+          // A known top-level thing — classify by its manifest kind. Only a
+          // `dir` (a section) is somewhere you cd into; a file/action/tool is
+          // reached by cat/run/open, so point there instead of pretending.
+          var navHref = terminalNavTargets()[destKey];
+          var inManifest = Object.prototype.hasOwnProperty.call(
+            terminalManifest(),
+            destKey
+          );
+          if (navHref || inManifest) {
+            var destKind = terminalNodeKind(destKey);
+            if (destKind === "file") {
+              return {
+                echo: input,
+                lines: [
+                  "cd: not a directory: " +
+                    dest +
+                    " — try: cat " +
+                    destKey +
+                    ".md",
+                ],
+                action: null,
+              };
+            }
+            if (destKind === "action") {
+              return {
+                echo: input,
+                lines: [
+                  "cd: " +
+                    destKey +
+                    " is a command, not a directory — just run: " +
+                    destKey,
+                ],
+                action: null,
+              };
+            }
+            if (destKind === "exempt") {
+              return {
+                echo: input,
+                lines: [
+                  "cd: " +
+                    destKey +
+                    " is a visual tool — open it: open " +
+                    destKey,
+                ],
+                action: null,
+              };
+            }
+            // A directory — cd moves you into it (prompt only).
             return {
               echo: input,
               lines: [],
-              action: { type: "chdir", cwd: hrefToCwd(sectionTarget) },
+              action: {
+                type: "chdir",
+                cwd: hrefToCwd(navHref || "/" + destKey),
+              },
             };
           }
           // A post is a file — you cat it, you don't cd into it.
@@ -3820,7 +3903,10 @@
             }
           }
           // A section is a directory — you ls it, you don't cat it.
-          if (TERMINAL_SECTION_DIRS[catName]) {
+          if (
+            terminalNodeKind(catName) === "dir" &&
+            terminalManifest()[catName]
+          ) {
             return {
               echo: input,
               lines: [
@@ -5457,8 +5543,9 @@
           }
           var slug = segs[segs.length - 1];
           // A taxonomy/section card (e.g. works' "tags") is a directory, not a
-          // file — render it slug/ instead of slug.md.
-          if (slug === "tags" || TERMINAL_SECTION_DIRS[slug]) {
+          // file — render it slug/ instead of slug.md. A post isn't in the
+          // manifest, so it correctly falls through to a .md file.
+          if (slug === "tags" || terminalManifest()[slug] === "dir") {
             link.setAttribute("data-dir", slug);
           } else {
             link.setAttribute("data-slug", slug);
