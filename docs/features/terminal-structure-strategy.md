@@ -101,11 +101,20 @@ honest and deletes the guesswork.
 3. **Legal pages** → a **`legal/` directory**. Move `license` and `privacy`
    under it so `cd legal; ls` → `license.md privacy.md`, keeping `~` uncluttered.
    (They stay reachable from `cat colophon` too.)
-4. **Tags / taxonomies** → **directories**. A tag lists its tagged posts, so
-   it's a dir like any section: `cd tags/<tag>; ls` → the posts as `.md` files.
-   Hugo already renders each tag as a term list page, so no content work.
+4. **Tags** → **directories, scoped per section** (not a shared global `tags/`).
+   Works and writing each keep their own tags (permalink `/:slug/tags/:title/`),
+   so a tag lives under its section: `works/tags/`, `writing/tags/`. Each tag is
+   a dir listing that section's posts as **symlinks** to their canonical file:
+   `cd works/tags/experimental; ls` → `projekt1.md@ -> ../../projekt1.md`. `cat`
+   follows the link to the same post. A section listing (`ls works`) includes a
+   `tags/` entry alongside the posts. Hugo already renders these term pages, so
+   no content work.
 5. **`works` nav target** → point at `/works/` (the section), so `cd works` and
    the nav agree. The by-tag browse stays reachable via `cd works/tags`.
+
+**One file, many references.** A post has one canonical home (its section);
+tag dirs list it as a symlink, never a copy — matching how the real site lists
+the same post under works and under each of its tags.
 
 ## 7. Scope / cost
 
