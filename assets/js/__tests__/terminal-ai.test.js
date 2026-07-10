@@ -135,6 +135,12 @@ describe("classify", () => {
     );
   });
 
+  test("does not resolve a hidden project by name", () => {
+    const ai = loadAi();
+    // Fastighetsgalan is hidden: true — the assistant shouldn't confirm it.
+    expect(ai.classify("fastighetsgalan").intent).toBeNull();
+  });
+
   test("normalize folds Swedish diacritics and punctuation", () => {
     const ai = loadAi();
     expect(ai.normalize("Vänner, Öländska!")).toBe("vanner olandska");
@@ -226,6 +232,19 @@ describe("start / handleLine loop", () => {
     expect(m.t.releaseInput).toHaveBeenCalled();
     expect(ai.isActive()).toBe(false);
     expect(m.text()).toContain("hej då");
+  });
+
+  test("brand category doesn't volunteer hidden project names", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("har du gjort något branding?");
+
+    expect(m.text()).not.toContain("Fastighetsgalan");
+    expect(m.text()).not.toContain("Nylokal");
+    expect(m.text().toLowerCase()).toContain("arbetsgivarsidorna");
   });
 
   test("prints an English reply when the document is in English", () => {

@@ -593,13 +593,13 @@
           sv: [
             "Clankers spelar inte favoriter. Men om du tvingar mig:",
             "  text → 'The Spec Was Never the Point'",
-            "  projekt → rebranden av Lokalguiden (2020)",
+            "  projekt → 'A Cut up World' (av det jag får visa)",
             "Skriv 'cd writing' eller 'cd works' för resten.",
           ],
           en: [
             "Clankers don't play favourites. But if you twist my arm:",
             "  writing → 'The Spec Was Never the Point'",
-            "  project → the Lokalguiden rebrand (2020)",
+            "  project → 'A Cut up World' (of what I'm allowed to show)",
             "Type 'cd writing' or 'cd works' for the rest.",
           ],
         },
@@ -1036,12 +1036,14 @@
           ],
           reply: {
             sv: [
-              "Varumärke & identitet (3): rebranden av Lokalguiden 2020,",
-              "samt identiteterna för Fastighetsgalan och Nylokal.",
+              "Varumärkesarbetet är mest klientarbete för Lokalguiden —",
+              "det bor på arbetsgivarsidorna, inte i den publika portföljen.",
+              "Fråga honom direkt om du vill se det (skriv 'contact').",
             ],
             en: [
-              "Brand & identity (3): the 2020 Lokalguiden rebrand,",
-              "plus the identities for Fastighetsgalan and Nylokal.",
+              "The brand work is mostly client work for Lokalguiden — it lives",
+              "on the employer pages, not the public portfolio.",
+              "Ask him directly if you'd like to see it (type 'contact').",
             ],
           },
         },
@@ -1180,30 +1182,11 @@
             ],
           },
         },
-        {
-          slug: "fastighetsgalan",
-          match: ["fastighetsgalan", "galan"],
-          reply: {
-            sv: [
-              "Fastighetsgalan (2021) — varumärke och webbplats för en fastighetsgala. Skriv 'cd works'.",
-            ],
-            en: [
-              "Fastighetsgalan (2021) — brand and website for a real-estate awards event. Type 'cd works'.",
-            ],
-          },
-        },
-        {
-          slug: "nylokal",
-          match: ["nylokal"],
-          reply: {
-            sv: [
-              "Nylokal (2022) — delvarumärke för en nystartstjänst hos Lokalguiden. Skriv 'cd works'.",
-            ],
-            en: [
-              "Nylokal (2022) — a sub-brand for a new-business launch service at Lokalguiden. Type 'cd works'.",
-            ],
-          },
-        },
+        // Note: the Lokalguiden works (rebrand, Fastighetsgalan, Nylokal,
+        // admin) are hidden: true — kept off the public portfolio, surfaced
+        // only on employer pages. The assistant respects that and doesn't
+        // volunteer or confirm them by name, so they're deliberately absent
+        // from this list (an ask for them falls through to the fallback).
       ],
 
       // Writing topics — matched inside the `writing` intent.
