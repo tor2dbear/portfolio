@@ -2241,6 +2241,35 @@
         });
     }
 
+    // Clicking a cat'd [image N] token is a shortcut for a command you could
+    // have typed: it echoes `open <file>` into the scrollback (frozen at the
+    // current cwd, like any command) and opens the picture in the lightbox.
+    // Delegated, so it covers every image printed into the append-only buffer.
+    if (terminalSession) {
+      terminalSession.addEventListener("click", function (e) {
+        var btn = e.target.closest(".terminal-session__image");
+        if (!btn) {
+          return;
+        }
+        var file = btn.getAttribute("data-image-file") || "image";
+        var src = btn.getAttribute("data-image-src");
+        var alt = btn.getAttribute("data-image-alt");
+        printTerminalLine(
+          "open " + file,
+          "terminal-session__cmd",
+          currentTerminalCwd()
+        );
+        if (
+          src &&
+          window.TerminalLightbox &&
+          typeof window.TerminalLightbox.openSrc === "function"
+        ) {
+          window.TerminalLightbox.openSrc(src, alt);
+        }
+        scrollTerminalToEnd();
+      });
+    }
+
     // Session start, for `uptime` — captured when the command engine boots.
     var terminalSessionStart = Date.now();
 
@@ -2734,33 +2763,66 @@
       return out.length ? [out.join("  ")] : [emptyMsg];
     }
 
-    function terminalInfoLines() {
+    // The project meta (role / details / client) as "label: value" lines,
+    // read from any root (the live page for `ls --info`, or a fetched post for
+    // `cat`). Details is a <dl> of pairs → one line each ("year: 2016"); role
+    // and client are text paragraphs → joined onto their section's line.
+    function terminalInfoLinesFrom(root) {
       var out = [];
-      document
+      (root || document)
         .querySelectorAll(".project-info__section")
         .forEach(function (sec) {
           var title = sec.querySelector(".project-info__title");
-          var val = sec.querySelector(
-            ".project-info__text, .project-info__value"
-          );
-          if (title && val) {
-            out.push(
-              title.textContent.trim().toLowerCase() +
-                ": " +
-                val.textContent.trim()
-            );
+          if (!title) {
+            return;
+          }
+          var label = title.textContent.trim().toLowerCase();
+          var items = sec.querySelectorAll(".project-info__item");
+          if (items.length) {
+            items.forEach(function (item) {
+              var dt = item.querySelector(".project-info__label");
+              var dd = item.querySelector(".project-info__value");
+              if (dt && dd) {
+                out.push(
+                  dt.textContent.trim().toLowerCase() +
+                    ": " +
+                    dd.textContent.trim().replace(/\s+/g, " ")
+                );
+              }
+            });
+            return;
+          }
+          var texts = sec.querySelectorAll(".project-info__text");
+          if (texts.length) {
+            var joined = Array.prototype.map
+              .call(texts, function (t) {
+                return t.textContent.trim().replace(/\s+/g, " ");
+              })
+              .filter(Boolean)
+              .join(" — ");
+            if (joined) {
+              out.push(label + ": " + joined);
+            }
           }
         });
+      return out;
+    }
+
+    function terminalInfoLines() {
+      var out = terminalInfoLinesFrom(document);
       return out.length ? out : ["(no info here)"];
     }
 
-    // Extract a cat'able rendering of a fetched post/page: the title, the
-    // preamble, then the body prose as text lines, with images collapsed to
-    // `[image N]` tokens (a terminal can't paint them). Walks the readable
-    // content root in document order and skips the chrome a `cat` shouldn't
-    // dump — breadcrumbs, tags, project-info (that's `ls --info`), related
-    // items. Returns [] if there's no content root to read.
-    function terminalExtractPostLines(doc) {
+    // Extract a cat'able rendering of a fetched post/page as an ordered list of
+    // TOKENS — {text} for a prose line, {image, n, file, src, alt} for a figure
+    // (a terminal can't paint an image, so it prints a clickable [image N] token
+    // that opens the real picture). Walks the readable content root in document
+    // order, skipping the chrome a `cat` shouldn't dump (breadcrumbs, tags,
+    // related), then appends the project meta (role/details/client) so `cat`
+    // shows the whole file — the info you can't otherwise reach once a post is a
+    // file you never `cd` into. `base` resolves relative image URLs (the fetch
+    // URL). Returns [] if there's no content root.
+    function terminalExtractPostLines(doc, base) {
       var root =
         doc.querySelector("#main .content.post") ||
         doc.querySelector("#main .content.page") ||
@@ -2768,12 +2830,18 @@
       if (!root) {
         return [];
       }
+      var baseUrl;
+      try {
+        baseUrl = new URL(base || "/", window.location.href);
+      } catch (e) {
+        baseUrl = window.location.href;
+      }
       // Related items and post tags have no wrapping container — they're
       // BEM-classed siblings inside .content.post — so match by class prefix.
       var SKIP =
         ".application-breadcrumb, .project-info, [class*='related-'], " +
         ".works-section, .works-post__tags, .post-tags-wrap, .lang-notice, nav";
-      var lines = [];
+      var tokens = [];
       var imageN = 0;
       var nodes = root.querySelectorAll(
         "h1, h2, h3, h4, p, blockquote, li, figure, img"
@@ -2795,11 +2863,36 @@
           var label =
             (img && img.getAttribute("alt")) ||
             (cap ? cap.textContent.trim() : "");
-          lines.push(
-            label
-              ? "[image " + imageN + ": " + label + "]"
-              : "[image " + imageN + "]"
-          );
+          // Prefer the figure's data-lightbox (the full-res URL the on-page
+          // lightbox uses); fall back to the <img> src. The filename (for the
+          // `open <file>` echo) comes from the img src.
+          var fileSrc = img ? img.getAttribute("src") || "" : "";
+          var lbSrc =
+            (tag === "figure" && el.getAttribute("data-lightbox")) || fileSrc;
+          var file =
+            (fileSrc || lbSrc || "")
+              .split("?")[0]
+              .split("/")
+              .filter(Boolean)
+              .pop() || "image-" + imageN;
+          // Strip Hugo's image-processing suffix (foo_hu_<hash>.jpg → foo.jpg)
+          // so the echoed `open <file>` reads like the source filename.
+          file = file.replace(/_hu[_a-f0-9]*(\.[a-z0-9]+)$/i, "$1");
+          var src = "";
+          if (lbSrc) {
+            try {
+              src = new URL(lbSrc, baseUrl).href;
+            } catch (e) {
+              src = lbSrc;
+            }
+          }
+          tokens.push({
+            image: true,
+            n: imageN,
+            file: file,
+            src: src,
+            alt: label,
+          });
           continue;
         }
         // A caption's text is carried by its figure token above; a paragraph
@@ -2812,10 +2905,15 @@
         }
         var text = (el.textContent || "").replace(/\s+/g, " ").trim();
         if (text) {
-          lines.push(text);
+          tokens.push({ text: text });
         }
       }
-      return lines;
+      // Append the project meta as its own trailing block — cat shows the whole
+      // file, so the role/details/client you set in front matter come along.
+      terminalInfoLinesFrom(root).forEach(function (line) {
+        tokens.push({ text: line });
+      });
+      return tokens;
     }
 
     function terminalLsOne(pathArg, showHidden) {
@@ -3489,6 +3587,21 @@
             };
           }
           if (lsLong.indexOf("--info") !== -1) {
+            // `--info` is a lens on the page you're viewing. For a post you
+            // haven't opened, its meta now lives in the file — point at cat
+            // rather than the misleading "(no info here)".
+            if (lsPaths.length) {
+              return {
+                echo: input,
+                lines: [
+                  "ls: --info reads the current page — for " +
+                    lsPaths[0] +
+                    " try: cat " +
+                    lsPaths[0],
+                ],
+                action: null,
+              };
+            }
             return { echo: input, lines: terminalInfoLines(), action: null };
           }
           if (lsLong.indexOf("--images") !== -1) {
@@ -4367,15 +4480,19 @@
             })
             .then(function (html) {
               var doc = new DOMParser().parseFromString(html, "text/html");
-              var catLines = terminalExtractPostLines(doc);
-              if (!catLines.length) {
+              var catTokens = terminalExtractPostLines(doc, action.url);
+              if (!catTokens.length) {
                 printTerminalLine(
                   "cat: " + catLabel + ": (empty)",
                   "terminal-session__out"
                 );
               } else {
-                catLines.forEach(function (line) {
-                  printTerminalLine(line, "terminal-session__out");
+                catTokens.forEach(function (tok) {
+                  if (tok.image) {
+                    printTerminalImageLine(tok);
+                  } else {
+                    printTerminalLine(tok.text, "terminal-session__out");
+                  }
                 });
               }
               scrollTerminalToEnd();
@@ -4433,6 +4550,28 @@
       if (className.indexOf("terminal-session__out") !== -1) {
         lastTerminalOutput = text;
       }
+    }
+
+    // A cat'd image prints as a clickable [image N] token: a terminal can't
+    // paint the picture, but the token carries the real image URL and filename,
+    // so clicking it echoes `open <file>` and opens the picture in the lightbox
+    // (see the terminalSession click handler). Keyboard-reachable as a button.
+    function printTerminalImageLine(tok) {
+      if (!terminalSession) {
+        return;
+      }
+      var line = document.createElement("span");
+      line.className = "terminal-session__line terminal-session__out";
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "terminal-session__image";
+      btn.textContent =
+        "[image " + tok.n + (tok.alt ? ": " + tok.alt : "") + "]";
+      btn.setAttribute("data-image-src", tok.src || "");
+      btn.setAttribute("data-image-file", tok.file || "");
+      btn.setAttribute("data-image-alt", tok.alt || "");
+      line.appendChild(btn);
+      terminalSession.appendChild(line);
     }
 
     // A short, bounded "digital rain" burst for `matrix` — a few deferred

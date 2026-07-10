@@ -933,6 +933,13 @@ describe("terminal command line", () => {
     );
   });
 
+  test("ls <file> --info points at cat (a post's info lives in the file)", () => {
+    loadModule();
+    typeCommand("ls a-cut-up-world.md --info");
+    // --info is a lens on the loaded page; for an unopened post it hints at cat.
+    expect(sessionText()).toContain("try: cat a-cut-up-world.md");
+  });
+
   test("ls --featured lists the page's cards as files (not misread as -a)", () => {
     loadModule();
     typeCommand("ls works/ --featured");

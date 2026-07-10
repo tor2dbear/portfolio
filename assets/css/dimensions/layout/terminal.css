@@ -1484,6 +1484,31 @@
   color: inherit;
 }
 
+/* A cat'd [image N] token is a real button (opens the picture in the lightbox)
+   but must read as inline terminal text: strip the native chrome, inherit the
+   font, and mark it interactive with an underline + pointer. */
+:root[data-layout="terminal"] .terminal-session__image {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-muted, inherit);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  cursor: pointer;
+}
+
+:root[data-layout="terminal"] .terminal-session__image:hover,
+:root[data-layout="terminal"] .terminal-session__image:focus-visible {
+  color: var(--text-default, inherit);
+  text-decoration-color: currentColor;
+  outline: none;
+}
+
 /* Echoed answers inside an interactive flow (contact / subscribe) read like
    what the user typed at the field prompt. */
 :root[data-layout="terminal"] .terminal-session__flow {

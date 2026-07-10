@@ -63,6 +63,24 @@
     closeBtn.focus();
   }
 
+  // Open a single image by URL, with no gallery — used by the terminal layout
+  // when a cat'd post's `[image N]` token (whose figure isn't in the DOM) is
+  // clicked. No prev/next, since there's no on-page gallery to step through.
+  function openSrc(src, alt) {
+    if (!src) {
+      return;
+    }
+    previousFocus = document.activeElement;
+    gallery = [];
+    galleryIndex = -1;
+    img.src = src;
+    img.alt = alt || "";
+    nav.hidden = true;
+    overlay.classList.add("is-open");
+    document.documentElement.classList.add("lightbox-open");
+    closeBtn.focus();
+  }
+
   function close() {
     overlay.classList.remove("is-open");
     document.documentElement.classList.remove("lightbox-open");
@@ -106,7 +124,7 @@
   // focusability init so terminal-nav.js can re-run it after a swap. Everything
   // else in this module is bound once to `document`/the overlay and the gallery
   // is collected at open time, so swapped-in figures are already covered.
-  window.TerminalLightbox = { refresh: makeFiguresFocusable };
+  window.TerminalLightbox = { refresh: makeFiguresFocusable, openSrc: openSrc };
 
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Enter" && e.key !== " ") {
