@@ -770,6 +770,10 @@
   // half-finished contact/subscribe flow on the way out.
   var terminalFlowReset = null;
 
+  // Bridge to the command engine (nested in a later scope): it publishes an
+  // `exitTargetUrl()` here so exit can land you where you cd'd to.
+  var terminalNavApi = null;
+
   // Leave the terminal: back to the snapshotted layout, and restore the
   // snapshotted typography if the pairing's choice (technical) is still
   // active — a manual typography change inside the terminal is respected.
@@ -802,6 +806,15 @@
         // storage was cleared): fall back to the site default rather than
         // leaving the pairing's mono behind.
         setTypography("editorial");
+      }
+    }
+    // Exit lands you where you cd'd to: if the live cwd points at a page other
+    // than the one loaded, navigate there in the now-restored layout. (An
+    // append-only `cd` only moved the prompt, so the URL never followed.)
+    if (terminalNavApi && typeof terminalNavApi.exitTargetUrl === "function") {
+      var exitUrl = terminalNavApi.exitTargetUrl();
+      if (exitUrl) {
+        window.location.href = exitUrl;
       }
     }
   }
@@ -5721,6 +5734,21 @@
     }
     terminalStampSlugs();
     window.TerminalSlugs = { refresh: terminalStampSlugs };
+
+    // Publish the exit target for the top-level exitTerminal(): if you've cd'd
+    // away (live cwd ≠ the loaded page's cwd), exit navigates to that page in
+    // the restored layout. An in-place action (open) leaves live === page, so
+    // this returns null and exit just drops back to the current URL.
+    terminalNavApi = {
+      exitTargetUrl: function () {
+        var live = terminalCwdSegments();
+        var page = terminalPageCwdSegments();
+        if (!live.length || live.join("/") === page.join("/")) {
+          return null;
+        }
+        return terminalCwdUrl(live);
+      },
+    };
 
     // Terminal layout: statusbar quick toggle that shows the resolved mode as
     // a bracketed word; clicking flips light/dark (an explicit choice, so it
