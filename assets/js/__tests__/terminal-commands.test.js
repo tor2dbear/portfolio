@@ -261,6 +261,19 @@ describe("terminal command line", () => {
     );
   });
 
+  test("cd walks a section's tags/ hierarchy; a tagged post is a file", () => {
+    loadModule();
+    // works is a dir in the manifest, so its tags index and a term are dirs you
+    // cd into (no error); a post reached through a tag is a file → cat it.
+    typeCommand("cd works/tags");
+    typeCommand("cd works/tags/experimental");
+    expect(sessionText()).not.toContain("no such file");
+    typeCommand("cd works/tags/experimental/a-cut-up-world");
+    expect(sessionText()).toContain(
+      "not a directory: works/tags/experimental/a-cut-up-world — try: cat a-cut-up-world.md"
+    );
+  });
+
   test("cat prints a known pseudo-file and 404s unknown ones", () => {
     loadModule();
     typeCommand("cat readme");

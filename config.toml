@@ -67,7 +67,7 @@ DefaultContentLanguage = "en"
       name = "Works"
       weight = 2
       identifier = "works"
-      url = "/works/tags/"
+      url = "/works/"
     [[languages.en.menu.top]]
       name = "Writing"
       weight = 3
@@ -106,7 +106,7 @@ DefaultContentLanguage = "en"
       name = "Arbeten"
       weight = 2
       identifier = "works"
-      url = "/sv/arbeten/tags/"
+      url = "/sv/arbeten/"
     [[languages.sv.menu.top]]
       name = "Texter"
       weight = 3

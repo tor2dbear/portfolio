@@ -2609,9 +2609,25 @@
       return root;
     }
 
-    // The current working directory as lowercased path segments ("~" → []).
+    // The current (live) working directory as lowercased path segments.
     function terminalCwdSegments() {
-      var rest = currentTerminalCwd().replace(/^~\/?/, "");
+      return terminalSegmentsOf(currentTerminalCwd());
+    }
+
+    // The LOADED page's cwd (the frozen --terminal-cwd the server set), as
+    // segments. It differs from the live cwd once you've cd'd away — which is
+    // how `ls` knows the current DOM can't list here and it must fetch.
+    function terminalPageCwdSegments() {
+      var v = window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue("--terminal-cwd")
+        .trim()
+        .replace(/^["']|["']$/g, "");
+      return terminalSegmentsOf(v || "~");
+    }
+
+    function terminalSegmentsOf(cwd) {
+      var rest = String(cwd || "").replace(/^~\/?/, "");
       return rest
         ? rest
             .split("/")
@@ -3317,6 +3333,25 @@
       return targets[key] || terminalContentTargetHref(dest) || null;
     }
 
+    // The URL for a cwd's segments — the section's nav href as the base, then
+    // the deeper path appended (so ~/works/tags/experimental → /works/tags/
+    // experimental/). Language prefix rides along in the base. Used to fetch a
+    // nested directory the append-only prompt sits in but hasn't loaded.
+    function terminalCwdUrl(segs) {
+      if (!segs || !segs.length) {
+        return terminalHomeUrl();
+      }
+      var base = resolveCdTarget(segs[0]);
+      if (!base) {
+        return null;
+      }
+      return (
+        base.replace(/\/+$/, "") +
+        (segs.length > 1 ? "/" + segs.slice(1).join("/") : "") +
+        "/"
+      );
+    }
+
     // Languages from the settings language selector, keyed by code. The current
     // language's radio has no data-language-href; every other one carries the
     // translated page's URL (or a homepage fallback).
@@ -3520,6 +3555,39 @@
                   " is a menu, not a directory — try: ls " +
                   destKey +
                   "/",
+              ],
+              action: null,
+            };
+          }
+          // A path into a section's tags/ hierarchy. `<section>/tags` (the
+          // index) and `<section>/tags/<tag>` (a term) are directories you cd
+          // into; a post reached through a tag (`…/tags/<tag>/<slug>`) is a file
+          // whose real home is the section — cat it.
+          var cdSegs = terminalResolveSegments(dest);
+          if (
+            cdSegs.length >= 2 &&
+            cdSegs[1] === "tags" &&
+            terminalNodeKind(cdSegs[0]) === "dir"
+          ) {
+            if (cdSegs.length <= 3) {
+              return {
+                echo: input,
+                lines: [],
+                action: { type: "chdir", cwd: "~/" + cdSegs.join("/") },
+              };
+            }
+            var cdTagSlug = cdSegs[cdSegs.length - 1].replace(
+              /\.(md|txt)$/i,
+              ""
+            );
+            return {
+              echo: input,
+              lines: [
+                "cd: not a directory: " +
+                  dest +
+                  " — try: cat " +
+                  cdTagSlug +
+                  ".md",
               ],
               action: null,
             };
@@ -3830,15 +3898,18 @@
               action: null,
             };
           }
-          // Append-only: listing the section you've cd'd into but haven't
-          // loaded (cd only moved the prompt) — fetch it and print the files
-          // below, without touching anything above.
+          // Append-only: listing the section (or a nested tags dir) you've cd'd
+          // into but haven't loaded (cd only moved the prompt) — fetch it and
+          // print below, without touching anything above.
           if (!lsPaths.length && !lsLong.length) {
             var lsSegs = terminalCwdSegments();
-            // The current page's DOM has no cards for this cwd (you cd'd here
-            // but haven't loaded it) → fetch the section and print it below.
-            if (lsSegs.length && !terminalPageContentSlugs(lsSegs).length) {
-              var lsUrl = resolveCdTarget(lsSegs[0]);
+            // You've cd'd away from the loaded page (live cwd ≠ page cwd), so the
+            // current DOM can't list here → fetch that path and print it below.
+            if (
+              lsSegs.length &&
+              lsSegs.join("/") !== terminalPageCwdSegments().join("/")
+            ) {
+              var lsUrl = terminalCwdUrl(lsSegs);
               if (lsUrl) {
                 return {
                   echo: input,
@@ -3846,7 +3917,7 @@
                   action: {
                     type: "remote-ls",
                     url: lsUrl,
-                    cwd: "~/" + lsSegs[0],
+                    cwd: "~/" + lsSegs.join("/"),
                   },
                 };
               }
@@ -3891,7 +3962,12 @@
               action: null,
             };
           }
-          var catName = args[0].replace(/\.(md|txt)$/i, "").toLowerCase();
+          // A trailing @ is the symlink marker `ls` prints in a tag dir — not
+          // part of the name, so drop it before resolving.
+          var catName = args[0]
+            .replace(/@$/, "")
+            .replace(/\.(md|txt)$/i, "")
+            .toLowerCase();
           // An explicit `.txt` is a text blurb (readme, the newsletter/colophon
           // footer blocks) — resolve it as a pseudo-file BEFORE a same-named
           // page (e.g. `cat newsletter.txt` is the blurb; `cat newsletter.md`
@@ -3946,16 +4022,20 @@
           if (catSegs.length >= 2) {
             var catBase = resolveCdTarget(catSegs[0]);
             if (catBase) {
+              // A post reached through a tag path is a symlink — its real file
+              // lives in the section, so cat resolves to <section>/<slug>, not
+              // the literal .../tags/<tag>/<slug> (which 404s).
+              var catRest =
+                catSegs.indexOf("tags") !== -1
+                  ? [catSegs[catSegs.length - 1]]
+                  : catSegs.slice(1);
               return {
                 echo: input,
                 lines: [],
                 action: {
                   type: "remote-cat",
                   url:
-                    catBase.replace(/\/+$/, "") +
-                    "/" +
-                    catSegs.slice(1).join("/") +
-                    "/",
+                    catBase.replace(/\/+$/, "") + "/" + catRest.join("/") + "/",
                   name: args[0],
                 },
               };
@@ -4518,6 +4598,80 @@
       });
     }
 
+    // Render a fetched directory listing by what the cwd IS:
+    //  - a tags index (~/works/tags)     → the tags, as `<tag>/` dirs
+    //  - a tag term (~/works/tags/<tag>)  → the posts, as `<slug>.md@` symlinks
+    //    (their canonical file lives up in the section, not here)
+    //  - a section (~/works)              → the posts as `<slug>.md`, plus a
+    //    `tags/` entry when the page links to a tag index
+    function terminalRemoteLsEntries(doc, cwd) {
+      var segs = String(cwd || "")
+        .replace(/^~\/?/, "")
+        .split("/")
+        .filter(Boolean);
+      var tagsIdx = segs.indexOf("tags");
+      var isTagsIndex = segs.length > 0 && segs[segs.length - 1] === "tags";
+      var isTerm = tagsIdx !== -1 && tagsIdx < segs.length - 1;
+      var out = [];
+      var seen = {};
+      var add = function (entry, key) {
+        if (!seen[key]) {
+          seen[key] = 1;
+          out.push(entry);
+        }
+      };
+
+      if (isTagsIndex) {
+        doc.querySelectorAll('a[href*="/tags/"]').forEach(function (a) {
+          var hs = terminalHrefSegments(a.getAttribute("href"));
+          var ti = hs ? hs.indexOf("tags") : -1;
+          // Only a term link tags/<tag> (the tag the last segment).
+          if (ti === -1 || ti !== hs.length - 2) {
+            return;
+          }
+          var tag = hs[hs.length - 1];
+          if (tag && tag !== "index" && tag !== "page") {
+            add(tag + "/", tag);
+          }
+        });
+        return out;
+      }
+
+      doc
+        .querySelectorAll(".summary-card a[href], .article-card a[href]")
+        .forEach(function (a) {
+          var hs = terminalHrefSegments(a.getAttribute("href"));
+          if (!hs || hs.length < 2) {
+            return;
+          }
+          var slug = hs[hs.length - 1];
+          if (slug === "tags") {
+            return;
+          }
+          // In a tag term the post's real file is up in the section, so it's a
+          // symlink (marked with @), not a copy. In the section it's the file.
+          add(isTerm ? slug + ".md@" : slug + ".md", slug);
+        });
+
+      // A section lists its own `tags/` directory only when it actually has
+      // one — i.e. the page links to `<section>/tags/`. Works has real tag term
+      // pages; writing uses `?tag=` filters, so it correctly gets no tags/.
+      if (!isTerm && segs.length) {
+        var section = segs[0];
+        var hasTags = false;
+        doc.querySelectorAll('a[href*="/tags"]').forEach(function (a) {
+          var hs = terminalHrefSegments(a.getAttribute("href"));
+          if (hs && hs.length === 2 && hs[0] === section && hs[1] === "tags") {
+            hasTags = true;
+          }
+        });
+        if (hasTags) {
+          add("tags/", "tags");
+        }
+      }
+      return out;
+    }
+
     function applyTerminalAction(action) {
       if (!action) {
         return;
@@ -4676,22 +4830,7 @@
             })
             .then(function (html) {
               var doc = new DOMParser().parseFromString(html, "text/html");
-              var files = [];
-              doc
-                .querySelectorAll(
-                  ".summary-card a[href], .article-card a[href]"
-                )
-                .forEach(function (a) {
-                  var segs = terminalHrefSegments(a.getAttribute("href"));
-                  if (!segs || segs.length < 2) {
-                    return;
-                  }
-                  var slug = segs[segs.length - 1];
-                  var entry = slug === "tags" ? "tags/" : slug + ".md";
-                  if (files.indexOf(entry) === -1) {
-                    files.push(entry);
-                  }
-                });
+              var files = terminalRemoteLsEntries(doc, action.cwd);
               if (files.length) {
                 printTerminalLine(files.join("  "), "terminal-session__out");
               } else if (doc.querySelector(".content.post, .content.page")) {
