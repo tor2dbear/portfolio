@@ -569,7 +569,7 @@
     {{- $rel = strings.TrimPrefix (printf "%s/" .Language.Lang) $rel -}}
     {{- $rel = strings.Trim $rel "/" -}}
     {{- $segs := split $rel "/" -}}
-    {{- if eq (len $segs) 1 -}}
+    {{- if and (eq (len $segs) 1) (ne (.Params.terminal_kind | default "") "hidden") -}}
       {{- $k := "file" -}}
       {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
       {{- $kinds = merge $kinds (dict (index $segs 0) (dict "kind" $k "url" .RelPermalink)) -}}

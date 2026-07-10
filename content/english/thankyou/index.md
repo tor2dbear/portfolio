@@ -1,5 +1,6 @@
 +++
 title = "Thank you"
+terminal_kind = "hidden"
 sidemenu = "true"
 description = "Thank you for getting in touch"
 layout = "thankyou"
