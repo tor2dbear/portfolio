@@ -2306,6 +2306,7 @@
       "  pwd       working dir",
       "  ls        list dir",
       "  cd <page> change page",
+      "  cv        résumé (about)",
       "  tree      site map",
       "  lang [sv|en]  language",
       "  echo      print text",
@@ -2333,6 +2334,7 @@
       "pwd",
       "ls",
       "cd",
+      "cv",
       "tree",
       "lang",
       "echo",
@@ -2814,11 +2816,12 @@
     // shows the whole file — the info you can't otherwise reach once a post is a
     // file you never `cd` into. `base` resolves relative image URLs (the fetch
     // URL). Returns [] if there's no content root.
-    function terminalExtractPostLines(doc, base) {
-      var root =
-        doc.querySelector("#main .content.post") ||
-        doc.querySelector("#main .content.page") ||
-        doc.querySelector("#main .content");
+    function terminalExtractPostLines(doc, base, rootSelector) {
+      var root = rootSelector
+        ? doc.querySelector(rootSelector)
+        : doc.querySelector("#main .content.post") ||
+          doc.querySelector("#main .content.page") ||
+          doc.querySelector("#main .content");
       if (!root) {
         return [];
       }
@@ -3671,6 +3674,29 @@
             echo: input,
             lines: terminalLsLines(lsPaths, lsShowHidden),
             action: null,
+          };
+        }
+        case "cv": {
+          // A shortcut that prints just the résumé section of the about page —
+          // "part of about" (it's inside about.md), but reachable on its own.
+          // Append-only, like cat: fetch about and print only its .about-cv.
+          var cvUrl = resolveCdTarget("about");
+          if (!cvUrl) {
+            return {
+              echo: input,
+              lines: ["cv: about page not found"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: [],
+            action: {
+              type: "remote-cat",
+              url: cvUrl,
+              name: "cv.md",
+              root: ".about-cv",
+            },
           };
         }
         case "tree":
@@ -4528,7 +4554,11 @@
             })
             .then(function (html) {
               var doc = new DOMParser().parseFromString(html, "text/html");
-              var catTokens = terminalExtractPostLines(doc, action.url);
+              var catTokens = terminalExtractPostLines(
+                doc,
+                action.url,
+                action.root
+              );
               if (!catTokens.length) {
                 printTerminalLine(
                   "cat: " + catLabel + ": (empty)",
