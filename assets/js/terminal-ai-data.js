@@ -32,37 +32,37 @@
 
   var DATA = {
     persona: {
-      name: "tbh",
+      name: "clanker",
       version: "0.1",
       tagline: {
-        sv: "en liten lokal assistent — ingen molnmodell, bara den här sajten.",
-        en: "a small local assistant — no cloud model, just this site.",
+        sv: "en clanker — regelbaserad, självmedveten, helt utan moln.",
+        en: "a clanker — rule-based, self-aware, entirely cloud-free.",
       },
     },
 
-    // The "loading" theatre. Kept short and self-aware; the engine staggers
+    // The "loading" theatre. Self-aware and lightly ironic; the engine staggers
     // these unless reduced motion is on, then prints them at once.
     boot: {
       sv: [
-        "startar tbh…",
-        "laddar Torbjörns portfolio i minnet…",
-        "redo. (jag är regelbaserad, ingen LLM — men jag kan sajten utantill)",
+        "startar clanker…",
+        "laddar en hel portfolio i en liten hög med if-satser…",
+        "redo. ingen LLM, ingen intelligens att tala om — bara en clanker som kan sajten utantill.",
       ],
       en: [
-        "starting tbh…",
-        "loading Torbjörn's portfolio into memory…",
-        "ready. (I'm rule-based, no LLM — but I know this site by heart)",
+        "starting clanker…",
+        "loading a whole portfolio into a small heap of if-statements…",
+        "ready. no LLM, no intelligence to speak of — just a clanker that knows this site by heart.",
       ],
     },
 
     greeting: {
-      sv: "Fråga mig om Torbjörn, projekten, texterna eller hur du når honom. Skriv 'exit' för att lämna.",
-      en: "Ask me about Torbjörn, the projects, the writing, or how to reach him. Type 'exit' to leave.",
+      sv: "Fråga på. Jag kan Torbjörn, projekten, texterna och kontaktvägarna — utanför det är jag rätt värdelös. Skriv 'exit' för att slippa mig.",
+      en: "Go on, ask. I know Torbjörn, the projects, the writing and how to reach him — beyond that I'm fairly useless. Type 'exit' to be rid of me.",
     },
 
     farewell: {
-      sv: ["hej då 👋"],
-      en: ["bye 👋"],
+      sv: ["hej då — jag går och rostar 👋"],
+      en: ["bye — off to go rust 👋"],
     },
 
     exitWords: [
@@ -81,11 +81,11 @@
 
     fallback: {
       sv: [
-        "Det kan jag inte svara på — jag kan bara den här sajten.",
+        "Det ligger utanför min lilla värld — jag är trots allt bara en clanker.",
         "Prova t.ex.: projekt · texter · vad gör du · kontakt · nyhetsbrev",
       ],
       en: [
-        "I can't answer that — I only know this site.",
+        "That's outside my little world — I'm just a clanker, after all.",
         "Try e.g.: projects · writing · what do you do · contact · newsletter",
       ],
     },
@@ -870,14 +870,14 @@
         },
         reply: {
           sv: [
-            "Ärligt talat, nej. 😄 Ingen LLM, ingen molnmodell — bara lite",
-            "regelbaserad JavaScript som känner den här sajten utantill.",
-            "Snabb, privat, och helt off-line. tbh = 'to be honest'.",
+            "Nej. 😄 Ingen LLM, ingen molnmodell, ingen 'intelligens'.",
+            "Bara en clanker — regelbaserad JavaScript som låtsas vara smart.",
+            "Snabb, privat och helt off-line. Lägre förväntningar, färre besvikelser.",
           ],
           en: [
-            "Honestly, no. 😄 No LLM, no cloud model — just some rule-based",
-            "JavaScript that knows this site by heart.",
-            "Fast, private, entirely offline. tbh = 'to be honest'.",
+            "No. 😄 No LLM, no cloud model, no 'intelligence' to speak of.",
+            "Just a clanker — rule-based JavaScript pretending to be clever.",
+            "Fast, private, entirely offline. Lower expectations, fewer letdowns.",
           ],
         },
       },

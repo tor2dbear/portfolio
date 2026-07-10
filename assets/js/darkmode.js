@@ -2332,7 +2332,7 @@
       "  hire      let's work together",
       "  social    my links",
       "  copy <x>  to clipboard",
-      "  ai        chat with tbh",
+      "  ai        chat with clanker",
       "  contact   message me",
       "  subscribe newsletter",
       "  clear     wipe the screen",
@@ -5691,6 +5691,16 @@
           "translateY(" + -Math.max(0, overlap) + "px)";
       }
 
+      // Publish the bar's height so the prompt can reserve space for this fixed
+      // overlay (terminal.css: --terminal-keybar-h). offsetHeight is 0 when the
+      // bar is display:none (desktop / blurred), which zeroes the reservation.
+      function updateKeybarSpace() {
+        document.documentElement.style.setProperty(
+          "--terminal-keybar-h",
+          (terminalKeybar.offsetHeight || 0) + "px"
+        );
+      }
+
       // Keep focus on the input: a button that stole focus would close the
       // keyboard. preventDefault on pointerdown stops the field from blurring,
       // so the tap runs its action with the keyboard still up (and the bar,
@@ -5720,13 +5730,21 @@
       terminalInput.addEventListener("focus", function () {
         terminalKeybar.classList.add("is-visible");
         positionKeybar();
+        updateKeybarSpace();
       });
       terminalInput.addEventListener("blur", function () {
         terminalKeybar.classList.remove("is-visible");
+        document.documentElement.style.setProperty(
+          "--terminal-keybar-h",
+          "0px"
+        );
       });
 
       if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", positionKeybar);
+        window.visualViewport.addEventListener("resize", function () {
+          positionKeybar();
+          updateKeybarSpace();
+        });
         window.visualViewport.addEventListener("scroll", positionKeybar);
       }
     }

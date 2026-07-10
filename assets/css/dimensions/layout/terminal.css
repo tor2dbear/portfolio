@@ -1378,6 +1378,12 @@
   text-align: left;
   margin-top: var(--spacing-24);
   font-size: var(--terminal-font-size);
+  /* Reserve room under the live prompt for the mobile key bar, which is a
+     fixed overlay (see .terminal-keybar) and so takes no layout space of its
+     own. darkmode.js measures the bar and sets --terminal-keybar-h while it is
+     visible; 0 otherwise (desktop, blurred), so this is a no-op there. Without
+     it the prompt scrolls to the very bottom and hides behind the bar. */
+  padding-bottom: var(--terminal-keybar-h, 0px);
 }
 
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
@@ -1407,6 +1413,10 @@
   vertical-align: baseline;
   caret-color: var(--text-accent, currentColor);
   outline: none;
+  /* Focus scroll-into-view leaves the same key-bar gap below the field, so
+     tapping the prompt never lands it behind the bar (pairs with the tail's
+     padding-bottom above). */
+  scroll-margin-bottom: var(--terminal-keybar-h, 0px);
 }
 
 /* Belt-and-braces for iOS Safari, which still paints an inner box otherwise. */
