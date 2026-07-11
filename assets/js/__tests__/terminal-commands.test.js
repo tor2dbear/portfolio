@@ -1312,6 +1312,36 @@ describe("terminal command line", () => {
     ).toBe(true);
   });
 
+  test("entering terminal via the toggle replays the transcript (no reload)", () => {
+    // Loaded in column, so init doesn't run the transcript; the sequence is
+    // still published on <html>. Toggling terminal on must replay it, matching a
+    // reload — otherwise the toggle showed old chrome and a reload the session.
+    localStorage.setItem("theme-layout", "column");
+    document.documentElement.setAttribute("data-layout", "column");
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    expect(sessionText().trim()).toBe(""); // nothing yet — not in terminal
+    window.ThemeActions.setLayout("terminal");
+    jest.runOnlyPendingTimers(); // the runner is deferred a tick past applyLayout
+    expect(sessionText()).toContain("mode"); // `set` output rendered
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(true);
+  });
+
+  test("a layout toggle mid-session keeps the existing scrollback (no re-replay)", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    typeCommand("help");
+    const before = sessionText();
+    // Leave to column and back — the session persists, transcript doesn't stack.
+    window.ThemeActions.setLayout("column");
+    window.ThemeActions.setLayout("terminal");
+    jest.runOnlyPendingTimers();
+    // No second `set` block appended; the typed `help` is still there.
+    expect(sessionText()).toBe(before);
+  });
+
   test("boot transcript commands land in ↑ history", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();

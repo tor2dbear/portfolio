@@ -774,6 +774,12 @@
   // `exitTargetUrl()` here so exit can land you where you cd'd to.
   var terminalNavApi = null;
 
+  // Set by init to the boot-transcript runner, so entering the terminal via the
+  // layout toggle (no page reload) replays the transcript just like loading a
+  // page already in terminal does — otherwise the toggle showed the old styled
+  // chrome while a reload showed the transcript.
+  var terminalBootRunner = null;
+
   // Leave the terminal: back to the snapshotted layout, and restore the
   // snapshotted typography if the pairing's choice (technical) is still
   // active — a manual typography change inside the terminal is respected.
@@ -854,6 +860,13 @@
       // it. Instant (not smooth) so it lands before the layout reflows.
       window.scrollTo(0, 0);
       playTerminalBoot();
+      // Replay the boot transcript into the (empty) scrollback, so toggling
+      // terminal on matches loading a page already in terminal. Deferred a tick
+      // so applyLayout below has flipped data-layout first (the runner checks
+      // it). No-op when the page declares no sequence.
+      if (terminalBootRunner) {
+        window.setTimeout(terminalBootRunner, 0);
+      }
     }
     localStorage.setItem("theme-layout", layout);
     updateLayoutUI(layout);
@@ -5522,8 +5535,6 @@
     // to having typed them, and recallable with ↑. The sequence is declared per
     // page by Hugo (data-terminal-boot on <html>); each entry runs through the
     // same emitTerminalCommand path as a typed line. Runs once per load.
-    var terminalTranscriptPlayed = false;
-
     function terminalBootCommands() {
       var raw = document.documentElement.getAttribute("data-terminal-boot");
       if (!raw) {
@@ -5539,8 +5550,11 @@
 
     function runTerminalBootTranscript() {
       if (
-        terminalTranscriptPlayed ||
         !terminalSession ||
+        // Only into an empty scrollback — so a load-in-terminal and a
+        // toggle-to-terminal each replay once, but never on top of an existing
+        // session (a layout toggle mid-session keeps what you'd typed).
+        terminalSession.childNodes.length ||
         !isTerminalLayout() ||
         document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
@@ -5550,7 +5564,6 @@
       if (!commands.length) {
         return;
       }
-      terminalTranscriptPlayed = true;
       // Signal the CSS that the transcript owns the view: the server-rendered
       // header chrome, page content (now the transcript's data source) and
       // footer sitemap hide, leaving the banner + scrollback + live prompt.
@@ -6391,6 +6404,8 @@
     // Replay the page's boot transcript into the scrollback (after slugs are
     // stamped, so any card-derived output is ready). This is what fills the
     // terminal on load now — the server chrome/content it reads from is hidden.
+    // Publish it so entering terminal via the toggle (no reload) replays it too.
+    terminalBootRunner = runTerminalBootTranscript;
     runTerminalBootTranscript();
 
     // ----------------------------------------------------------------------

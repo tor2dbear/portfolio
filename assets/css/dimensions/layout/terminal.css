@@ -1361,8 +1361,14 @@
 
 /* Subsequent pages in a session skip the login banner (ASCII art + status):
    a MOTD prints once, not on every cd. The exit hint stays — it's navigation
-   help, not boot chrome. Flag is set pre-paint in head.html, so no flash. */
-:root[data-terminal-booted][data-layout="terminal"] .terminal-boot__art,
+   help, not boot chrome. Flag is set pre-paint in head.html, so no flash.
+   Exception: transcript mode, where every boot is a fresh session start — the
+   art stays as the splash (its own breakpoint rules pick the sm/lg size), so
+   the top never collapses to an empty band on a returning reload. */
+:root[data-terminal-booted][data-layout="terminal"]:not(
+    [data-terminal-transcript]
+  )
+  .terminal-boot__art,
 :root[data-terminal-booted][data-layout="terminal"] .terminal-boot__meta {
   display: none;
 }
@@ -1389,6 +1395,15 @@
 :root[data-terminal-transcript][data-layout="terminal"] .footer-meta,
 :root[data-terminal-transcript][data-layout="terminal"] .terminal-boot__meta {
   display: none;
+}
+
+/* #layout is a min-height:100vh grid whose middle (main) row is 1fr — it fills
+   the viewport. With #main hidden that row still stretched, dropping the footer
+   (scrollback + prompt) to the bottom and opening a tall empty band under the
+   banner. Collapse the rows to content height so the transcript stacks right
+   under the banner; any viewport slack falls harmlessly below the prompt. */
+:root[data-terminal-transcript][data-layout="terminal"] #layout {
+  grid-template-rows: auto auto auto;
 }
 
 /* The buffer ends with a live prompt. Kept as a normal block so the prompt,

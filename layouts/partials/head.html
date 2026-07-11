@@ -682,18 +682,21 @@
       }
 
       // Boot transcript: pages that declare a command sequence replay it into
-      // the terminal on load (darkmode.js runs it; the page reads as a real
-      // session). Set the sequence and the content-hiding gate pre-paint so the
-      // server chrome/content the transcript reproduces is hidden with no flash.
-      // Terminal + JS only: no-JS never runs this, so it keeps the plain page.
+      // the terminal (darkmode.js runs it; the page reads as a real session).
+      // Publish the sequence regardless of the current layout so toggling
+      // terminal on (no reload) can replay it too; only gate the content-hiding
+      // flag on already being in terminal, so a reload hides the reproduced
+      // chrome pre-paint (no flash). Terminal + JS only — no-JS keeps the plain
+      // page, and the flag is CSS-scoped to terminal so it's inert elsewhere.
       var terminalBoot = {{ $terminalBoot | jsonify | safeJS }};
       if (
-        storedLayout === "terminal" &&
         terminalBoot &&
         !document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
         document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
-        document.documentElement.setAttribute("data-terminal-transcript", "1");
+        if (storedLayout === "terminal") {
+          document.documentElement.setAttribute("data-terminal-transcript", "1");
+        }
       }
 
       // Image blend + grain effects up front too, so a shared look (or a returning
