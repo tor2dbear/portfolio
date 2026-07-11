@@ -3120,8 +3120,9 @@
       if (l.charAt(l.length - 1) === "/") {
         return "cd " + l.slice(0, -1);
       }
-      if (/\.md$/.test(l)) {
-        return "cat " + l;
+      // A post file, possibly a tag-term symlink (`slug.md@`) — cat the real .md.
+      if (/\.md@?$/.test(l)) {
+        return "cat " + l.replace(/@$/, "");
       }
       if (l.charAt(l.length - 1) === "*") {
         return "open " + l.slice(0, -1);
@@ -5126,7 +5127,13 @@
               var doc = new DOMParser().parseFromString(html, "text/html");
               var files = terminalRemoteLsEntries(doc, action.cwd);
               if (files.length) {
-                printTerminalLine(files.join("  "), "terminal-session__out");
+                // Clickable, like the local `ls` — each post cats itself, each
+                // tag dir cds into it.
+                printTerminalLsList(
+                  files.map(function (label) {
+                    return { label: label, cmd: terminalEntryCmd(label) };
+                  })
+                );
               } else if (doc.querySelector(".content.post, .content.page")) {
                 // A readable page (about, a post) is a FILE, not a listing —
                 // point at cat instead of a bare "(empty)" that hides how to

@@ -1098,6 +1098,53 @@ describe("terminal command line", () => {
     );
   });
 
+  test("append-only ls renders the fetched section's posts as clickable files", async () => {
+    // After `cd writing` (append-only: the live cwd moves, the loaded page
+    // doesn't), a bare `ls` can't read the DOM — it fetches /writing/ and lists
+    // it below. Those posts must be clickable too, just like a local `ls`.
+    loadModule();
+    // Page cwd is home (~); the live cwd has moved into ~/writing.
+    window.getComputedStyle = jest.fn(() => ({
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : prop === "--terminal-cwd"
+          ? "~"
+          : "#ffffff"
+      ),
+    }));
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve(
+          '<div class="summary-card"><a href="/writing/the-grid-inherited/">The grid</a></div>' +
+            '<div class="summary-card"><a href="/writing/another-post/">Another</a></div>'
+        ),
+    });
+    typeCommand("ls");
+    // The remote-ls handler is async (fetch → parse → print); flush its chain.
+    for (let i = 0; i < 6; i++) {
+      await Promise.resolve();
+    }
+
+    const post = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat the-grid-inherited.md"]'
+    );
+    expect(post).not.toBeNull();
+    expect(
+      document.querySelector(
+        '.terminal-session__ls-entry[data-cmd="cat another-post.md"]'
+      )
+    ).not.toBeNull();
+
+    const before = sessionText();
+    post.dispatchEvent(new window.Event("click", { bubbles: true }));
+    // Clicking cats the post cwd-relatively (resolves under ~/writing).
+    expect(sessionText().slice(before.length)).toContain(
+      "cat the-grid-inherited.md"
+    );
+  });
+
   test("ls nav/ and ls settings/ list the menus (as the header prints them)", () => {
     loadModule();
     typeCommand("ls nav/");
