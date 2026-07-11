@@ -671,7 +671,7 @@
   white-space: nowrap;
 }
 
-/* Second executed command: ls settings/ — placed after the nav rows. */
+/* Second executed command: `set` — placed after the nav rows. */
 :root[data-layout="terminal"] .top-menu__item--terminal-prompt {
   display: block;
   order: 20;
@@ -698,7 +698,7 @@
   content: var(--terminal-host, "tor-bjorn.com");
 }
 
-/* The quick toggles and the expander are the ls settings/ output row. */
+/* The quick toggles and the expander are the `set` output row. */
 :root[data-layout="terminal"] .top-menu__item--terminal-quick {
   order: 21;
 }

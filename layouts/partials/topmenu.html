@@ -71,7 +71,11 @@
           {{- end -}}
         {{- end -}}
 
-        {{/* Terminal layout: second executed command — settings print as its collapsed output. Hidden in every other layout. */}}
+        {{/* Terminal layout: second executed command — the settings panel prints
+          as its collapsed output. Shown as `set` (the real settings command,
+          re-runnable from the prompt), not a faux `ls settings/`. Hidden in
+          every other layout.
+        */}}
         <li
           class="top-menu__item top-menu__item--terminal-prompt"
           aria-hidden="true"
@@ -80,7 +84,7 @@
             <span class="terminal-prompt__user"></span
             ><span class="terminal-prompt__host-plain"></span
             ><span class="terminal-prompt__cwd"></span
-            ><span class="terminal-prompt__cmd">ls settings/</span>
+            ><span class="terminal-prompt__cmd">set</span>
           </span>
         </li>
 
