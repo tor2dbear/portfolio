@@ -6888,4 +6888,38 @@
 
   // Global function for backwards compatibility (if needed elsewhere)
   window.setTheme = setMode;
+
+  // ==========================================================================
+  // PUBLIC THEME SEAM (window.Theme)
+  // The high-level theme/layout API a terminal (or any other module living in
+  // its own file) needs to drive appearance without reaching into this closure.
+  // This is the inward counterpart to the window.Terminal seam: terminal.js
+  // consumes these to run `set`/`pantone`/`reset`/exit, and never touches the
+  // low-level apply*/Toast layer. Published synchronously at module eval so it
+  // is ready before any later-loaded module's IIFE runs. Keep the shape stable
+  // — it is a contract, and its members are unit-test seams.
+  // ==========================================================================
+  window.Theme = {
+    // Setters
+    setMode: setMode,
+    setTypography: setTypography,
+    setLayout: setLayout,
+    commitPaletteSelection: commitPaletteSelection,
+    setGrainEnabled: setGrainEnabled,
+    setBlendEnabled: setBlendEnabled,
+    setReducedMotionEnabled: setReducedMotionEnabled,
+    // Pantone / Colour-of-the-Year controls
+    stopPantone: stopPantone,
+    activatePantone: activatePantone,
+    setCotyYear: setCotyYear,
+    advanceCotyYear: advanceCotyYear,
+    togglePantoneMode: togglePantoneMode,
+    // Read-only state queries
+    isTerminalLayout: isTerminalLayout,
+    isPantoneModeActive: isPantoneModeActive,
+    getCurrentCotyYear: getCurrentCotyYear,
+    getCotyActions: getCotyActions,
+    // Timing constant used by manual pantone transitions from the terminal
+    PANTONE_MANUAL_TRANSITION_MS: PANTONE_MANUAL_TRANSITION_MS,
+  };
 })();
