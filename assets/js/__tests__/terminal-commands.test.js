@@ -217,6 +217,17 @@ describe("terminal command line", () => {
     expect(out).toContain("set <name> <value>");
   });
 
+  test("set renders clickable chips that run the command on click", () => {
+    loadModule();
+    typeCommand("set");
+    const chip = document.querySelector(
+      '.terminal-session__setting[data-cmd="set mode dark"]'
+    );
+    expect(chip).not.toBeNull();
+    chip.dispatchEvent(new window.Event("click", { bubbles: true }));
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+  });
+
   test("set rejects an unknown setting and a bad value", () => {
     loadModule();
     typeCommand("set bogus x");

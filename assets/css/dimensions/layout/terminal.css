@@ -1648,6 +1648,57 @@
   outline: none;
 }
 
+/* `set` (no args) prints one row per setting: a fixed key column, then the
+   options as clickable chips (each runs its own `set <key> <value>`). Flex-wrap
+   so long option rows (typography) reflow on a phone instead of overflowing. */
+:root[data-layout="terminal"] .terminal-session__settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75ch;
+}
+
+:root[data-layout="terminal"] .terminal-session__settings-key {
+  min-width: 11ch;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__setting {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-link, var(--text-default, inherit));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* The current value is bracketed and accented, mirroring the settings panel's
+   [System] convention. */
+:root[data-layout="terminal"] .terminal-session__setting.is-current {
+  color: var(--text-accent, currentColor);
+}
+
+:root[data-layout="terminal"] .terminal-session__setting.is-current::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .terminal-session__setting.is-current::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .terminal-session__setting:hover,
+:root[data-layout="terminal"] .terminal-session__setting:focus-visible {
+  color: var(--text-default, inherit);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  outline: none;
+}
+
 /* Echoed answers inside an interactive flow (contact / subscribe) read like
    what the user typed at the field prompt. */
 :root[data-layout="terminal"] .terminal-session__flow {

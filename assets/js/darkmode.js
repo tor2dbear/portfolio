@@ -2273,6 +2273,19 @@
           window.scrollTo(0, document.body.scrollHeight);
         });
       });
+
+      // Clicking a `set` chip runs the very command it carries — clicking is
+      // identical to typing "set <key> <value>" (echoes and applies).
+      terminalSession.addEventListener("click", function (e) {
+        var chip = e.target.closest(".terminal-session__setting");
+        if (!chip) {
+          return;
+        }
+        var cmd = chip.getAttribute("data-cmd");
+        if (cmd) {
+          runTerminalInput(cmd);
+        }
+      });
     }
 
     // Session start, for `uptime` — captured when the command engine boots.
@@ -2822,33 +2835,61 @@
       return ["mode", "typography", "layout", "effects", "share", "language"];
     }
 
-    // Current settings as `key = value`, git-config style, for `set` with no
-    // args. Keys are exactly what `set <key> <value>` accepts (effects are the
-    // individual toggles). Motion is shown as its feature state (on = animated)
-    // to match `set motion on/off`, not the underlying reduced-motion attribute.
-    function terminalSettingsList() {
+    // The settable keys, their options, and the current value — the model both
+    // `set` (no args, rendered as clickable chips) and `set <key> <value>` work
+    // from. Motion reads as its feature state (on = animated) to match
+    // `set motion on/off`, not the underlying reduced-motion attribute.
+    function terminalSettingsSpec() {
       var root = document.documentElement;
-      var eff = function (attr) {
-        return root.getAttribute(attr) === "on" ? "on" : "off";
+      var effOn = function (attr) {
+        return root.getAttribute(attr) === "on";
       };
       var gridAttr = root.getAttribute("data-grid-overlay");
-      var gridOn = gridAttr !== null && gridAttr !== "closing";
-      var pantoneOn =
-        typeof isPantoneModeActive === "function" && isPantoneModeActive();
       return [
-        "mode        = " + (localStorage.getItem("theme-mode") || "system"),
-        "typography  = " +
-          (localStorage.getItem("theme-typography") || "editorial"),
-        "layout      = " + (root.getAttribute("data-layout") || "column"),
-        "language    = " + currentLang(),
-        "pantone     = " + (pantoneOn ? "on" : "off"),
-        "grid        = " + (gridOn ? "on" : "off"),
-        "blend       = " + eff("data-effect-blend"),
-        "grain       = " + eff("data-effect-grain"),
-        "motion      = " +
-          (eff("data-effect-reduced-motion") === "on" ? "off" : "on"),
-        "",
-        "change: set <name> <value>   e.g. set mode dark",
+        {
+          key: "mode",
+          options: ["light", "dark", "system"],
+          current: localStorage.getItem("theme-mode") || "system",
+        },
+        {
+          key: "typography",
+          options: TERMINAL_TYPOGRAPHY,
+          current: localStorage.getItem("theme-typography") || "editorial",
+        },
+        {
+          key: "layout",
+          options: TERMINAL_LAYOUTS,
+          current: root.getAttribute("data-layout") || "column",
+        },
+        { key: "language", options: ["sv", "en"], current: currentLang() },
+        {
+          key: "pantone",
+          options: ["on", "off"],
+          current:
+            typeof isPantoneModeActive === "function" && isPantoneModeActive()
+              ? "on"
+              : "off",
+        },
+        {
+          key: "grid",
+          options: ["on", "off"],
+          current: gridAttr !== null && gridAttr !== "closing" ? "on" : "off",
+        },
+        {
+          key: "blend",
+          options: ["on", "off"],
+          current: effOn("data-effect-blend") ? "on" : "off",
+        },
+        {
+          key: "grain",
+          options: ["on", "off"],
+          current: effOn("data-effect-grain") ? "on" : "off",
+        },
+        {
+          key: "motion",
+          options: ["on", "off"],
+          current: effOn("data-effect-reduced-motion") ? "off" : "on",
+        },
       ];
     }
 
@@ -4467,8 +4508,8 @@
           if (!setKey) {
             return {
               echo: input,
-              lines: terminalSettingsList(),
-              action: null,
+              lines: [],
+              action: { type: "settings-list" },
             };
           }
           // Delegate to the equivalent command, keeping the `set …` echo so the
@@ -4917,6 +4958,9 @@
         case "typography":
           setTypography(action.typography);
           break;
+        case "settings-list":
+          printTerminalSettingsList();
+          break;
         case "pantone":
           if (action.state === "off") {
             stopPantone();
@@ -5177,6 +5221,44 @@
       btn.setAttribute("data-image-alt", tok.alt || "");
       line.appendChild(btn);
       terminalSession.appendChild(line);
+    }
+
+    // `set` (no args) prints the settings as clickable chip rows — the settings
+    // panel rendered as terminal output. Each option is a button carrying the
+    // exact `set <key> <value>` it runs (see the terminalSession click handler),
+    // so clicking is the same as typing it; the current value is marked. This is
+    // the OSC-8-style clickable-output convention (`ls --hyperlink`), and it is
+    // what unifies the panel with the command — one truth, click or type.
+    function printTerminalSettingsList() {
+      if (!terminalSession) {
+        return;
+      }
+      terminalSettingsSpec().forEach(function (setting) {
+        var line = document.createElement("span");
+        line.className =
+          "terminal-session__line terminal-session__out terminal-session__settings-row";
+        var label = document.createElement("span");
+        label.className = "terminal-session__settings-key";
+        label.textContent = setting.key;
+        line.appendChild(label);
+        setting.options.forEach(function (opt) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "terminal-session__setting";
+          if (opt === setting.current) {
+            btn.classList.add("is-current");
+            btn.setAttribute("aria-current", "true");
+          }
+          btn.textContent = opt;
+          btn.setAttribute("data-cmd", "set " + setting.key + " " + opt);
+          line.appendChild(btn);
+        });
+        terminalSession.appendChild(line);
+      });
+      var hint = document.createElement("span");
+      hint.className = "terminal-session__line terminal-session__out";
+      hint.textContent = "click a value or type: set <name> <value>";
+      terminalSession.appendChild(hint);
     }
 
     // A short, bounded "digital rain" burst for `matrix` — a few deferred
