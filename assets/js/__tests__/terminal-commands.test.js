@@ -1038,7 +1038,7 @@ describe("terminal command line", () => {
     const before = sessionText();
     typeCommand("ls settings/");
     const added = sessionText().slice(before.length);
-    expect(added).toContain("theme");
+    expect(added).toContain("mode");
     expect(added).toContain("language");
   });
 

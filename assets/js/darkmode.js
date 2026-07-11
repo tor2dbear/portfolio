@@ -2810,15 +2810,12 @@
       return out;
     }
 
+    // Mirror the settings menu's actual sections (settings-dropdown.html's
+    // theme-section-title headings), so `ls settings` names things the panel
+    // really has: "mode" (not "theme"), no standalone "palette" (pantone lives
+    // under effects), and "share".
     function terminalSettingsEntries() {
-      return [
-        "theme",
-        "palette",
-        "typography",
-        "layout",
-        "effects",
-        "language",
-      ];
+      return ["mode", "typography", "layout", "effects", "share", "language"];
     }
 
     // Filtered `ls` views — the same tool, different lens. `--featured` lists
