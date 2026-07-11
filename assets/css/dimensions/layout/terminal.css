@@ -1367,6 +1367,30 @@
   display: none;
 }
 
+/* ============================================================================
+   Boot transcript mode
+
+   When a page replays a real command sequence on load (data-terminal-transcript,
+   set pre-paint in head.html + by darkmode.js), the terminal IS that transcript:
+   the server-rendered header chrome (the `ls nav/` prompt, the nav-as-ls list,
+   the `set` block, the quick-toggles), the page content (#main) and the footer
+   blocks (sitemap, newsletter, colophon) are all things the transcript now
+   reproduces as genuine command output — so they hide, leaving just the banner
+   art, the scrollback and the live prompt. The hidden markup stays in the DOM as
+   the transcript's data source (ls/cat read it) and as the no-JS / crawler
+   fallback: this mode is JS-only, so without JS none of it hides. The banner's
+   fabricated meta (host title + "boot ok") goes too — the curl art stays as the
+   one login splash, everything else is a command you could have typed.
+   ============================================================================ */
+:root[data-terminal-transcript][data-layout="terminal"] .top-menu__container,
+:root[data-terminal-transcript][data-layout="terminal"] #main,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-grid--primary,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-newsletter,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-meta,
+:root[data-terminal-transcript][data-layout="terminal"] .terminal-boot__meta {
+  display: none;
+}
+
 /* The buffer ends with a live prompt. Kept as a normal block so the prompt,
    caret, input and hint all flow inline like one line of terminal text —
    crucially NOT a flex row, which (with the input's native field box) pushed

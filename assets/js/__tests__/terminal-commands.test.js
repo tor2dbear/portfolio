@@ -54,6 +54,14 @@ describe("terminal command line", () => {
     localStorage.clear();
     localStorage.setItem("theme-layout", "terminal");
     document.documentElement.setAttribute("data-layout", "terminal");
+    // These live on <html>, which innerHTML below doesn't reset — clear the
+    // ones individual tests set so state can't leak between cases.
+    [
+      "data-terminal-boot",
+      "data-terminal-transcript",
+      "data-terminal-exempt",
+      "data-terminal-booted",
+    ].forEach((attr) => document.documentElement.removeAttribute(attr));
 
     document.documentElement.innerHTML = `
       <head><meta name="theme-color" content="#ffffff">
@@ -1219,6 +1227,61 @@ describe("terminal command line", () => {
     expect(document.documentElement.hasAttribute("data-terminal-booted")).toBe(
       false
     );
+  });
+
+  // ---- boot transcript --------------------------------------------------
+
+  test("boot replays the page's declared command sequence into the scrollback", () => {
+    // The home page declares its transcript on <html>; on load each command
+    // runs through the same path as typing it, so the session reads as a real
+    // session (and each lands in ↑ history).
+    document.documentElement.setAttribute(
+      "data-terminal-boot",
+      "ls; set; cat welcome.txt; ls works/ --featured"
+    );
+    loadModule();
+    const text = sessionText();
+    // Echoes of each command (the __cmd lines carry the raw command text).
+    expect(text).toContain("ls");
+    expect(text).toContain("set");
+    expect(text).toContain("cat welcome.txt");
+    // Output of the commands: the welcome blurb, a settings row, a featured card.
+    expect(text.toLowerCase()).toContain("torbjörn");
+    expect(text).toContain("mode");
+    expect(text).toContain("the-grid-inherited.md");
+    // The transcript owns the view — the CSS gate is set so chrome/content hide.
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(true);
+  });
+
+  test("boot transcript commands land in ↑ history", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.dispatchEvent(
+      new window.KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true })
+    );
+    // Most recent boot command is recalled first.
+    expect(input.value).toBe("set");
+  });
+
+  test("no boot attr → no transcript, empty session, no CSS gate", () => {
+    loadModule();
+    expect(sessionText().trim()).toBe("");
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(false);
+  });
+
+  test("boot transcript does not run on an exempt page", () => {
+    document.documentElement.setAttribute("data-terminal-exempt", "");
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    expect(sessionText().trim()).toBe("");
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(false);
   });
 
   // ---- language command -------------------------------------------------

@@ -4866,7 +4866,12 @@
     // output; on fallback the reload wipes it and the stash reprints it on top.
     function navigateTerminal(action) {
       var cwd = hrefToCwd(action.url);
+      // In transcript mode the page content (#main) is hidden — it's just the
+      // boot transcript's data source — so an in-place #main swap would paint
+      // nothing. A `navigate` (open/lang) instead does a full load; the
+      // destination re-runs its own boot transcript, keeping the session model.
       var canSwap =
+        !document.documentElement.hasAttribute("data-terminal-transcript") &&
         action.cd !== false &&
         isTerminalLayout() &&
         cwd !== "~" &&
@@ -5399,15 +5404,27 @@
       frame();
     }
 
-    function runTerminalInput(raw) {
-      // Record the command before running it, so `history` includes itself —
-      // matching a real shell. Reset the ↑/↓ recall cursor to the live line.
-      terminalHistoryCursor = null;
-      var trimmed = String(raw === null || raw === undefined ? "" : raw).trim();
-      if (trimmed) {
-        terminalHistory.push(trimmed);
-        if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
-          terminalHistory.shift();
+    // Run one command through the engine and print it into the scrollback
+    // exactly as a typed line would look: the frozen echo, then the output /
+    // side effects. Factored out of runTerminalInput so the boot transcript can
+    // replay the same path (opts.focus:false — a fresh page load must not steal
+    // focus and pop the mobile keyboard; opts.scroll:false — leave the viewport
+    // at the top so the banner and the start of the transcript are what you see,
+    // not the bottom prompt).
+    function emitTerminalCommand(raw, opts) {
+      opts = opts || {};
+      if (opts.history !== false) {
+        // Record the command before running it, so `history` includes itself —
+        // matching a real shell. Reset the ↑/↓ recall cursor to the live line.
+        terminalHistoryCursor = null;
+        var trimmed = String(
+          raw === null || raw === undefined ? "" : raw
+        ).trim();
+        if (trimmed) {
+          terminalHistory.push(trimmed);
+          if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
+            terminalHistory.shift();
+          }
         }
       }
       var result = runTerminalCommand(raw);
@@ -5433,9 +5450,62 @@
         printTerminalLine(line, "terminal-session__out");
       });
       applyTerminalAction(result.action);
-      // Keep the newest output and the prompt in view; refocus so the mobile
-      // keyboard stays up for the next command.
-      scrollTerminalToEnd();
+      if (opts.focus !== false) {
+        // Keep the newest output and the prompt in view; refocus so the mobile
+        // keyboard stays up for the next command.
+        scrollTerminalToEnd();
+      }
+    }
+
+    function runTerminalInput(raw) {
+      emitTerminalCommand(raw, { focus: true });
+    }
+
+    // Boot transcript: on a terminal page load, replay a curated sequence of
+    // REAL commands into the scrollback (home: `ls`, `set`, `cat welcome.txt`,
+    // `ls works/ --featured`) so the page reads as a genuine session — identical
+    // to having typed them, and recallable with ↑. The sequence is declared per
+    // page by Hugo (data-terminal-boot on <html>); each entry runs through the
+    // same emitTerminalCommand path as a typed line. Runs once per load.
+    var terminalTranscriptPlayed = false;
+
+    function terminalBootCommands() {
+      var raw = document.documentElement.getAttribute("data-terminal-boot");
+      if (!raw) {
+        return [];
+      }
+      return raw
+        .split(";")
+        .map(function (cmd) {
+          return cmd.trim();
+        })
+        .filter(Boolean);
+    }
+
+    function runTerminalBootTranscript() {
+      if (
+        terminalTranscriptPlayed ||
+        !terminalSession ||
+        !isTerminalLayout() ||
+        document.documentElement.hasAttribute("data-terminal-exempt")
+      ) {
+        return;
+      }
+      var commands = terminalBootCommands();
+      if (!commands.length) {
+        return;
+      }
+      terminalTranscriptPlayed = true;
+      // Signal the CSS that the transcript owns the view: the server-rendered
+      // header chrome, page content (now the transcript's data source) and
+      // footer sitemap hide, leaving the banner + scrollback + live prompt.
+      // Gated on this attr so a JS failure that never reaches here leaves the
+      // plain readable page visible rather than a blank screen. (head.html sets
+      // it pre-paint too, to avoid a flash of the un-hidden page.)
+      document.documentElement.setAttribute("data-terminal-transcript", "1");
+      commands.forEach(function (cmd) {
+        emitTerminalCommand(cmd, { focus: false });
+      });
     }
 
     // The boot banner's small block-curl, reused as neofetch art when present.
@@ -6262,6 +6332,11 @@
     }
     terminalStampSlugs();
     window.TerminalSlugs = { refresh: terminalStampSlugs };
+
+    // Replay the page's boot transcript into the scrollback (after slugs are
+    // stamped, so any card-derived output is ready). This is what fills the
+    // terminal on load now — the server chrome/content it reads from is hidden.
+    runTerminalBootTranscript();
 
     // ----------------------------------------------------------------------
     // Public terminal seam (window.Terminal)

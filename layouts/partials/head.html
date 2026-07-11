@@ -545,6 +545,14 @@
       {{- $terminalCwd = printf "~/%s" $terminalSeg -}}
     {{- end -}}
   {{- end -}}
+  {{/* Boot transcript: the curated command sequence a page replays into the
+       terminal on load, so the page reads as a real session (see the runner in
+       darkmode.js). Home only for now; other page types keep the styled layout.
+       Empty string ⇒ no transcript, page renders normally. */}}
+  {{- $terminalBoot := "" -}}
+  {{- if .IsHome -}}
+    {{- $terminalBoot = "ls; set; cat welcome.txt; ls works/ --featured" -}}
+  {{- end -}}
   <style>
     :root {
       --terminal-host: {{ printf "%q" $terminalHost | safeCSS }};
@@ -671,6 +679,21 @@
         }
       } catch (e) {
         /* sessionStorage unavailable — banner simply shows */
+      }
+
+      // Boot transcript: pages that declare a command sequence replay it into
+      // the terminal on load (darkmode.js runs it; the page reads as a real
+      // session). Set the sequence and the content-hiding gate pre-paint so the
+      // server chrome/content the transcript reproduces is hidden with no flash.
+      // Terminal + JS only: no-JS never runs this, so it keeps the plain page.
+      var terminalBoot = {{ $terminalBoot | jsonify }};
+      if (
+        storedLayout === "terminal" &&
+        terminalBoot &&
+        !document.documentElement.hasAttribute("data-terminal-exempt")
+      ) {
+        document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
+        document.documentElement.setAttribute("data-terminal-transcript", "1");
       }
 
       // Image blend + grain effects up front too, so a shared look (or a returning
