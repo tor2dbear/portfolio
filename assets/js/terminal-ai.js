@@ -143,35 +143,47 @@
     return uniq;
   }
 
-  // An intent with a slot also inherits its entity vocabulary's score, so
-  // naming a category/topic routes to the right intent. Output language is
+  // An intent's `entity` slot is one kind or a list of kinds (e.g. projects owns
+  // both "category" and "title"). Normalize to an array.
+  function entityKinds(intent) {
+    var e = intent.entity;
+    if (!e) {
+      return [];
+    }
+    return Array.isArray(e) ? e : [e];
+  }
+
+  // An intent with a slot also inherits its entity vocabularies' score, so
+  // naming a category/topic/title routes to the right intent. Output language is
   // chosen separately (see lang()).
   function scoreIntent(hay, intent) {
     var score = scoreKeywords(hay, mergedKeywords(intent));
-    if (intent.entity) {
-      score += entityVocabScore(hay, intent.entity);
-    }
+    entityKinds(intent).forEach(function (kind) {
+      score += entityVocabScore(hay, kind);
+    });
     return score;
   }
 
-  // Find the best entity in a slot vocabulary (category/title/topic). Entities
-  // carry a flat `match` array; highest keyword score wins, ties break to the
-  // first declared. Returns null below threshold.
-  function matchEntity(hay, kind) {
+  // Best entity across all of the intent's slot vocabularies. Entities carry a
+  // flat `match` array; highest keyword score wins, ties break to the first
+  // declared (in kind order, then declaration order within each list).
+  function matchEntity(hay, intent) {
     var d = data();
-    if (!d || !d.entities || !d.entities[kind]) {
+    if (!d || !d.entities) {
       return null;
     }
-    var list = d.entities[kind];
     var best = null;
     var bestScore = 0;
-    for (var i = 0; i < list.length; i++) {
-      var score = scoreKeywords(hay, list[i].match || []);
-      if (score > bestScore) {
-        bestScore = score;
-        best = list[i];
+    entityKinds(intent).forEach(function (kind) {
+      var list = d.entities[kind] || [];
+      for (var i = 0; i < list.length; i++) {
+        var score = scoreKeywords(hay, list[i].match || []);
+        if (score > bestScore) {
+          bestScore = score;
+          best = list[i];
+        }
       }
-    }
+    });
     return bestScore > 0 ? best : null;
   }
 
@@ -202,9 +214,7 @@
     if (!top || top.score < 1) {
       return { intent: null, entity: null, score: top ? top.score : 0 };
     }
-    var entity = top.intent.entity
-      ? matchEntity(r.hay, top.intent.entity)
-      : null;
+    var entity = top.intent.entity ? matchEntity(r.hay, top.intent) : null;
     return { intent: top.intent, entity: entity, score: top.score };
   }
 
@@ -422,20 +432,49 @@
     hire: true,
   };
 
+  // Article/pronoun arguments that mark a natural sentence, not a command:
+  // "open a project", "cd the works" read as questions, not `open <slug>`.
+  var STOPWORD_ARGS = {
+    a: true,
+    an: true,
+    the: true,
+    some: true,
+    any: true,
+    me: true,
+    us: true,
+    them: true,
+    my: true,
+    your: true,
+    his: true,
+    it: true,
+  };
+
   // A real command typed inside the assistant should DO the thing, not be
-  // chatted at ("cv" opens the résumé; "cd works" navigates). Gate on the
-  // engine's own command list so ordinary sentences stay chat, exclude the exit
-  // words (handled by the assistant) and the few words it answers itself.
+  // chatted at ("cv" opens the résumé; "cd works" navigates). Real commands are
+  // TERSE — a verb plus at most one slug/flag — so gate on that shape as well as
+  // the engine's command list. This keeps natural questions that merely start
+  // with a command word ("open a project", "open things in a conversation?") in
+  // chat, where the assistant can actually help.
   function isForwardableCommand(value) {
     var t = term();
     if (!t || !value || typeof t.isCommand !== "function") {
       return false;
     }
-    var word = firstWord(value);
-    if (NEVER_FORWARD[word] || isExit(value)) {
+    if (value.indexOf("?") !== -1) {
       return false;
     }
-    return t.isCommand(word) && typeof t.run === "function";
+    var word = firstWord(value);
+    if (NEVER_FORWARD[word] || isExit(value) || !t.isCommand(word)) {
+      return false;
+    }
+    var parts = value.trim().split(/\s+/);
+    if (parts.length > 2) {
+      return false;
+    }
+    if (parts.length === 2 && STOPWORD_ARGS[parts[1].toLowerCase()]) {
+      return false;
+    }
+    return typeof t.run === "function";
   }
 
   // Handle one submitted line while the assistant owns the prompt. A real

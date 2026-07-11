@@ -548,7 +548,7 @@
       },
       {
         id: "projects",
-        entity: "category",
+        entity: ["category", "title"],
         clarify: { sv: "projekt inom det", en: "projects in that" },
         keywords: {
           sv: [
@@ -559,6 +559,8 @@
             "vad har du gjort",
             "visa jobb",
             "vad finns det for projekt",
+            "lista dem",
+            "lista projekt",
           ],
           en: [
             "projects",
@@ -568,6 +570,9 @@
             "what have you made",
             "show work",
             "show me your",
+            "list them",
+            "list projects",
+            "list your",
           ],
         },
         reply: {

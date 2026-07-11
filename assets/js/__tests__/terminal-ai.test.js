@@ -154,6 +154,23 @@ describe("classify", () => {
     );
   });
 
+  test("resolves a public project by name via the title slot", () => {
+    const ai = loadAi();
+    const utblick = ai.classify("utblick");
+    expect(utblick.intent.id).toBe("projects");
+    expect(utblick.entity && utblick.entity.slug).toBe("utblick-no2");
+
+    const things = ai.classify("things in a conversation");
+    expect(things.entity && things.entity.slug).toBe(
+      "things-in-a-conversation"
+    );
+  });
+
+  test("routes 'list them' to projects", () => {
+    const ai = loadAi();
+    expect(ai.classify("can you list them?").intent.id).toBe("projects");
+  });
+
   test("does not resolve a hidden project by name", () => {
     const ai = loadAi();
     // Fastighetsgalan is hidden: true — the assistant shouldn't confirm it.
@@ -265,6 +282,21 @@ describe("start / handleLine loop", () => {
     m.feed("cv");
 
     expect(m.t.run).toHaveBeenCalledWith("cv");
+  });
+
+  test("does not forward a natural sentence that starts with a command word", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("open a project"); // a request, not `open <slug>`
+    m.feed("open things in a conversation?"); // a question about a project
+
+    expect(m.t.run).not.toHaveBeenCalled();
+    // The first is guided by open-help; the second resolves the project (sv).
+    expect(m.text()).toContain("bläddra med");
+    expect(m.text()).toContain("Things in a Conversation");
   });
 
   test("does not forward 'help' or a plain sentence", () => {
