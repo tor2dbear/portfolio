@@ -2274,14 +2274,14 @@
         });
       });
 
-      // Clicking a `set` chip runs the very command it carries — clicking is
-      // identical to typing "set <key> <value>" (echoes and applies).
+      // Clicking any command token — a `set` chip or an `ls` entry — runs the
+      // command it carries, identical to typing it (echoes and applies).
       terminalSession.addEventListener("click", function (e) {
-        var chip = e.target.closest(".terminal-session__setting");
-        if (!chip) {
+        var token = e.target.closest("[data-cmd]");
+        if (!token || !terminalSession.contains(token)) {
           return;
         }
-        var cmd = chip.getAttribute("data-cmd");
+        var cmd = token.getAttribute("data-cmd");
         if (cmd) {
           runTerminalInput(cmd);
         }
@@ -3083,6 +3083,55 @@
       return tokens;
     }
 
+    // A directory's entry labels, kind-formatted (dir → `name/`, file →
+    // `name.md`, action → `name`, exempt → `name*`). Shared by the text `ls`
+    // and the clickable `ls` so the two can never list different things.
+    function terminalLsEntryLabels(node, targetSegs, isCwd, showHidden) {
+      var entries = Object.keys(node.children)
+        .sort()
+        .map(function (k) {
+          return terminalEntryLabel(node.children[k].name);
+        });
+      if (isCwd) {
+        // The page's own content (posts) are FILES: a post is a .md you `cat`,
+        // not a directory you `cd` into — so it reads like real `ls` and the
+        // prompt stays in the section when you open one.
+        terminalPageContentSlugs(targetSegs).forEach(function (slug) {
+          var entry = slug + ".md";
+          if (
+            entries.indexOf(entry) === -1 &&
+            entries.indexOf(slug + "/") === -1
+          ) {
+            entries.push(entry);
+          }
+        });
+      }
+      if (showHidden) {
+        entries = [".secret", ".config"].concat(entries);
+      }
+      return entries;
+    }
+
+    // The command a clicked `ls` entry runs, derived from its label's kind
+    // suffix: `name/` → cd, `name.md` → cat, `name*` (exempt tool) → open,
+    // `.hidden` → cat the pseudo-file, a bare word (action) → run it.
+    function terminalEntryCmd(label) {
+      var l = String(label || "");
+      if (l.charAt(l.length - 1) === "/") {
+        return "cd " + l.slice(0, -1);
+      }
+      if (/\.md$/.test(l)) {
+        return "cat " + l;
+      }
+      if (l.charAt(l.length - 1) === "*") {
+        return "open " + l.slice(0, -1);
+      }
+      if (l.charAt(0) === ".") {
+        return "cat " + l.slice(1);
+      }
+      return l;
+    }
+
     function terminalLsOne(pathArg, showHidden) {
       // nav/ and settings/ are global menus, reachable from any cwd — match the
       // raw argument (~/nav, nav/, nav) before resolving relative to the cwd.
@@ -3116,31 +3165,7 @@
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
-      // Structural children render by kind (dir → `name/`, file → `name.md`,
-      // action → `name`, exempt → `name*`) — the manifest drives the top level;
-      // deeper nodes (a section's tags/) default to dir.
-      var entries = Object.keys(node.children)
-        .sort()
-        .map(function (k) {
-          return terminalEntryLabel(node.children[k].name);
-        });
-      if (isCwd) {
-        // The page's own content (posts) are FILES: a post is a .md you `cat`,
-        // not a directory you `cd` into — so it reads like real `ls` and the
-        // prompt stays in the section when you open one.
-        terminalPageContentSlugs(targetSegs).forEach(function (slug) {
-          var entry = slug + ".md";
-          if (
-            entries.indexOf(entry) === -1 &&
-            entries.indexOf(slug + "/") === -1
-          ) {
-            entries.push(entry);
-          }
-        });
-      }
-      if (showHidden) {
-        entries = [".secret", ".config"].concat(entries);
-      }
+      var entries = terminalLsEntryLabels(node, targetSegs, isCwd, showHidden);
       if (!entries.length) {
         // A real page (has an href) that we're not currently on: its contents
         // live on that page, so point there instead of printing nothing.
@@ -4057,6 +4082,45 @@
               }
             }
           }
+          // A plain single-directory listing renders as clickable entries (dir
+          // → cd, file → cat, tool → open). Scoped to this common case; the
+          // special views (nav/settings/featured), multi-path blocks, hidden and
+          // recursive listings stay as text above.
+          if (lsPaths.length <= 1 && !lsLong.length && !lsShowHidden) {
+            var lsTokRaw = String(lsPaths[0] || "")
+              .replace(/^~\/?/, "")
+              .replace(/^\/+|\/+$/g, "")
+              .toLowerCase();
+            if (
+              lsTokRaw !== "nav" &&
+              lsTokRaw !== "settings" &&
+              lsTokRaw !== "featured"
+            ) {
+              var lsTokSegs = terminalResolveSegments(lsPaths[0] || "");
+              var lsTokNode = terminalNodeAt(lsTokSegs);
+              if (lsTokNode) {
+                var lsTokLabels = terminalLsEntryLabels(
+                  lsTokNode,
+                  lsTokSegs,
+                  lsTokSegs.join("/") === terminalCwdSegments().join("/"),
+                  false
+                );
+                if (lsTokLabels.length) {
+                  return {
+                    echo: input,
+                    lines: [],
+                    action: {
+                      type: "ls-list",
+                      tokens: lsTokLabels.slice(0, 40).map(function (label) {
+                        return { label: label, cmd: terminalEntryCmd(label) };
+                      }),
+                      more: Math.max(0, lsTokLabels.length - 40),
+                    },
+                  };
+                }
+              }
+            }
+          }
           return {
             echo: input,
             lines: terminalLsLines(lsPaths, lsShowHidden),
@@ -4961,6 +5025,9 @@
         case "settings-list":
           printTerminalSettingsList();
           break;
+        case "ls-list":
+          printTerminalLsList(action.tokens, action.more);
+          break;
         case "pantone":
           if (action.state === "off") {
             stopPantone();
@@ -5259,6 +5326,33 @@
       hint.className = "terminal-session__line terminal-session__out";
       hint.textContent = "click a value or type: set <name> <value>";
       terminalSession.appendChild(hint);
+    }
+
+    // A plain `ls` listing as clickable entries — clicking runs the entry's
+    // command (cd/cat/open). Same clickable-output convention as the settings
+    // chips (OSC-8 / `ls --hyperlink`); the entries flow-wrap on a phone.
+    function printTerminalLsList(tokens, more) {
+      if (!terminalSession) {
+        return;
+      }
+      var line = document.createElement("span");
+      line.className =
+        "terminal-session__line terminal-session__out terminal-session__settings-row";
+      (tokens || []).forEach(function (tok) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "terminal-session__setting terminal-session__ls-entry";
+        btn.textContent = tok.label;
+        btn.setAttribute("data-cmd", tok.cmd);
+        line.appendChild(btn);
+      });
+      terminalSession.appendChild(line);
+      if (more) {
+        var moreLine = document.createElement("span");
+        moreLine.className = "terminal-session__line terminal-session__out";
+        moreLine.textContent = "… (" + more + " more)";
+        terminalSession.appendChild(moreLine);
+      }
     }
 
     // A short, bounded "digital rain" burst for `matrix` — a few deferred

@@ -489,6 +489,21 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("writing/");
   });
 
+  test("ls renders clickable entries that run cd/cat/open", () => {
+    loadModule();
+    typeCommand("ls");
+    const dir = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cd works"]'
+    );
+    const file = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat about.md"]'
+    );
+    expect(dir).not.toBeNull();
+    expect(file).not.toBeNull();
+    dir.dispatchEvent(new window.Event("click", { bubbles: true }));
+    expect(sessionText()).toContain("cd works");
+  });
+
   test("ls <path> lists that directory; unknown paths error", () => {
     loadModule();
     typeCommand("ls works");
