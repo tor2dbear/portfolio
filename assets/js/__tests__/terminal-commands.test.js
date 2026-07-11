@@ -702,6 +702,17 @@ describe("terminal command line", () => {
     expect(input.value).toBe("cd writing");
   });
 
+  test("Tab completes a set key and then its value", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "set ty";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("set typography");
+    input.value = "set mode d";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("set mode dark");
+  });
+
   test("Ctrl+L clears the screen, Ctrl+C cancels the line", () => {
     loadModule();
     const input = document.querySelector('[data-js="terminal-input"]');

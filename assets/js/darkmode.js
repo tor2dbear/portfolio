@@ -5716,30 +5716,56 @@
         });
       } else {
         var verb = parts[0].toLowerCase();
-        if (
+        frag = (parts[parts.length - 1] || "").toLowerCase();
+        if (verb === "set") {
+          // `set ⇥` completes the setting keys; `set <key> ⇥` completes that
+          // key's values — Tab is the terminal-true way to discover what `set`
+          // can do (alongside `set` with no args and `man set`).
+          var spec = terminalSettingsSpec();
+          if (parts.length === 2) {
+            candidates = spec
+              .map(function (s) {
+                return s.key;
+              })
+              .filter(function (k) {
+                return k.indexOf(frag) === 0;
+              });
+          } else if (parts.length === 3) {
+            var setEntry = spec.filter(function (s) {
+              return s.key === parts[1].toLowerCase();
+            })[0];
+            candidates = setEntry
+              ? setEntry.options.filter(function (o) {
+                  return o.indexOf(frag) === 0;
+                })
+              : [];
+          } else {
+            return;
+          }
+        } else if (
           verb !== "cd" &&
           verb !== "ls" &&
           verb !== "open" &&
           verb !== "cat"
         ) {
           return;
-        }
-        frag = (parts[parts.length - 1] || "").toLowerCase();
-        var cwdSegs = terminalCwdSegments();
-        var node = terminalNodeAt(cwdSegs);
-        candidates = node
-          ? Object.keys(node.children).filter(function (name) {
-              return name.indexOf(frag) === 0;
-            })
-          : [];
-        // cat/open reach the page's posts too — complete them as .md files.
-        if (verb === "cat" || verb === "open") {
-          terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
-            var file = slug + ".md";
-            if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
-              candidates.push(file);
-            }
-          });
+        } else {
+          var cwdSegs = terminalCwdSegments();
+          var node = terminalNodeAt(cwdSegs);
+          candidates = node
+            ? Object.keys(node.children).filter(function (name) {
+                return name.indexOf(frag) === 0;
+              })
+            : [];
+          // cat/open reach the page's posts too — complete them as .md files.
+          if (verb === "cat" || verb === "open") {
+            terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
+              var file = slug + ".md";
+              if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
+                candidates.push(file);
+              }
+            });
+          }
         }
       }
       if (candidates.length === 1) {
