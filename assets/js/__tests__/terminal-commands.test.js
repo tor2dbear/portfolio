@@ -1204,6 +1204,27 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("menu, not a directory");
   });
 
+  test("cat of a bare featured slug resolves to its card href (not 'No such file')", async () => {
+    // `ls works/ --featured` lists posts as bare `slug.md`, but their real home
+    // is /writing|works/slug/. Catting the bare slug must match the card on the
+    // page and fetch its href — not 404 as an unknown top-level file.
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve('<div class="content post"><p>Body.</p></div>'),
+    });
+    loadModule();
+    typeCommand("cat the-grid-inherited.md");
+    for (let i = 0; i < 6; i++) {
+      await Promise.resolve();
+    }
+    expect(window.fetch).toHaveBeenCalled();
+    expect(window.fetch.mock.calls[0][0]).toContain(
+      "/writing/the-grid-inherited/"
+    );
+    expect(sessionText()).not.toContain("No such file or directory");
+  });
+
   test("open navigates to a post file", () => {
     loadModule();
     const before = sessionText();

@@ -3518,10 +3518,15 @@
     // link by its full segments, so cd and ls agree on what exists.
     function terminalContentTargetHref(dest) {
       var wanted = terminalResolveSegments(dest);
-      if (wanted.length < 2) {
+      if (!wanted.length) {
         return null;
       }
       var wantedKey = wanted.join("/");
+      // A bare slug (length 1) — e.g. a featured card the home page lists as
+      // `slug.md`, whose real home is `/works/slug/` — matches a card by its
+      // last path segment: the visitor named the file, not its section path. A
+      // qualified path (~/works/slug) still matches in full.
+      var bare = wanted.length === 1;
       var match = null;
       document
         .querySelectorAll(".article-card a[href], .summary-card a[href]")
@@ -3530,7 +3535,13 @@
             return;
           }
           var segs = terminalHrefSegments(link.getAttribute("href"));
-          if (segs && segs.join("/") === wantedKey) {
+          if (!segs || !segs.length) {
+            return;
+          }
+          var hit = bare
+            ? segs[segs.length - 1] === wantedKey
+            : segs.join("/") === wantedKey;
+          if (hit) {
             match = link.getAttribute("href");
           }
         });
