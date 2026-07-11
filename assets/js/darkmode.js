@@ -780,6 +780,12 @@
   // chrome while a reload showed the transcript.
   var terminalBootRunner = null;
 
+  // The last remote page `cat` printed into the scrollback (a post/page you're
+  // not on). On this site cat IS how you visit a page, so exit should land on
+  // what you last read — mirroring how `cd` lands you where the cwd points.
+  // Cleared by an append-only `cd`, which hands the exit target back to the cwd.
+  var terminalLastViewedUrl = null;
+
   // Leave the terminal: back to the snapshotted layout, and restore the
   // snapshotted typography if the pairing's choice (technical) is still
   // active — a manual typography change inside the terminal is respected.
@@ -814,14 +820,33 @@
         setTypography("editorial");
       }
     }
-    // Exit lands you where you cd'd to: if the live cwd points at a page other
-    // than the one loaded, navigate there in the now-restored layout. (An
-    // append-only `cd` only moved the prompt, so the URL never followed.)
-    if (terminalNavApi && typeof terminalNavApi.exitTargetUrl === "function") {
-      var exitUrl = terminalNavApi.exitTargetUrl();
-      if (exitUrl) {
-        window.location.href = exitUrl;
-      }
+    // Exit lands you where you were: the last remote page you `cat`'d (read),
+    // or — if you only `cd`'d — where the live cwd points. Either way, if that's
+    // a page other than the one loaded, navigate there in the restored layout
+    // (append-only cat/cd moved the scrollback/prompt, not the URL).
+    var exitUrl = terminalLastViewedUrl;
+    if (
+      !exitUrl &&
+      terminalNavApi &&
+      typeof terminalNavApi.exitTargetUrl === "function"
+    ) {
+      exitUrl = terminalNavApi.exitTargetUrl();
+    }
+    terminalLastViewedUrl = null;
+    if (exitUrl && !terminalIsCurrentUrl(exitUrl)) {
+      window.location.href = exitUrl;
+    }
+  }
+
+  // Same-path test (ignoring trailing slash / query / hash) so exit doesn't
+  // reload the page you're already on.
+  function terminalIsCurrentUrl(url) {
+    try {
+      var target = new URL(url, window.location.href);
+      var here = window.location.pathname.replace(/\/+$/, "");
+      return target.pathname.replace(/\/+$/, "") === here;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -5221,6 +5246,9 @@
             "--terminal-live-cwd",
             '"' + (action.cwd || "~") + '"'
           );
+          // cd hands the exit target back to the cwd (see exitTerminal): a move
+          // supersedes whatever page you last read.
+          terminalLastViewedUrl = null;
           break;
         case "remote-ls":
           // Append-only ls: fetch the section you've cd'd into and print its
@@ -5307,6 +5335,8 @@
                 terminalExtractPostLines(doc, action.url, action.root),
                 catLabel
               );
+              // Reading a page IS visiting it here — so exit lands on it.
+              terminalLastViewedUrl = action.url;
               scrollTerminalToEnd();
             })
             .catch(function (err) {
