@@ -2451,6 +2451,7 @@
       "env",
       "reset",
       "ai",
+      "report",
       "contact",
       "subscribe",
       "clear",
@@ -4071,6 +4072,15 @@
             lines: [],
             action: { type: "ai-start" },
           };
+        case "report":
+          // Flag the assistant's last answer (typed `report`, or the [report]
+          // chip) so a bad reply becomes a GitHub issue to improve the intents.
+          // The assistant owns the last exchange, so hand it the optional note.
+          return {
+            echo: input,
+            lines: [],
+            action: { type: "ai-report", note: args.join(" ") },
+          };
         case "contact":
           return {
             echo: input,
@@ -5455,6 +5465,22 @@
             printTerminalLine("ai: not available", "terminal-session__out");
           }
           break;
+        case "ai-report":
+          // The assistant owns the last exchange and prints its own bilingual
+          // confirmation; `report` outside a chat (nothing to flag) is handled
+          // there too.
+          if (
+            window.TerminalAI &&
+            typeof window.TerminalAI.report === "function"
+          ) {
+            window.TerminalAI.report(action.note || "");
+          } else {
+            printTerminalLine(
+              "report: nothing to report",
+              "terminal-session__out"
+            );
+          }
+          break;
         case "defer":
           // Print follow-up lines after a delay, so a command can fake a job
           // running before its punchline. Skip if the terminal was left in
@@ -6694,6 +6720,32 @@
           "terminal-session__cmd",
           currentTerminalCwd()
         );
+      },
+      // Print a single clickable chip (bracketed), carrying the command it runs
+      // on click via the delegated [data-cmd] handler. Used by terminal-ai.js
+      // for the [report] affordance; same convention as the ls/set chips.
+      printChip: function (label, cmd, opts) {
+        opts = opts || {};
+        if (!terminalSession) {
+          return;
+        }
+        var line = document.createElement("span");
+        line.className = "terminal-session__line terminal-session__out";
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "terminal-session__link" +
+          (opts.className ? " " + opts.className : "");
+        btn.textContent =
+          "[" +
+          String(label === null || label === undefined ? "" : label) +
+          "]";
+        btn.setAttribute(
+          "data-cmd",
+          String(cmd === null || cmd === undefined ? "" : cmd)
+        );
+        line.appendChild(btn);
+        terminalSession.appendChild(line);
       },
       applyAction: function (action) {
         applyTerminalAction(action);

@@ -33,6 +33,124 @@
   var lastKey = null;
   var repeatIndex = 0;
 
+  // Report state: the last exchange (so `report` / the [report] chip can flag
+  // it), a short ring of recent turns for context, and a per-session set of
+  // already-auto-logged misses so an unmatched question is reported once, not
+  // on every repeat. Reports POST to a Netlify function that files GitHub issues.
+  var REPORT_ENDPOINT = "/.netlify/functions/clanker-report";
+  var lastExchange = null;
+  var exchangeLog = [];
+  var loggedMisses = {};
+
+  function captureExchange(query, reply, result, kind) {
+    lastExchange = {
+      query: query,
+      answer: (reply || []).join(" ").slice(0, 500),
+      intent: result && result.intent ? result.intent.id : null,
+      entity:
+        result && result.entity
+          ? result.entity.id || result.entity.slug || null
+          : null,
+      score: result ? result.score : 0,
+      kind: kind,
+      lang: lang(),
+    };
+    exchangeLog.push({ q: String(query).slice(0, 200), kind: kind });
+    if (exchangeLog.length > 12) {
+      exchangeLog.shift();
+    }
+  }
+
+  // Fire-and-forget POST — a report must never block the chat or throw at the
+  // visitor. In dev (no function running) it just fails silently.
+  function sendReport(payload) {
+    if (typeof window.fetch !== "function") {
+      return;
+    }
+    try {
+      window
+        .fetch(REPORT_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          keepalive: true,
+        })
+        .catch(function () {});
+    } catch (e) {
+      /* offline / blocked — nothing to do */
+    }
+  }
+
+  function reportBase() {
+    return {
+      bot_field: "",
+      context: exchangeLog.slice(),
+      page: (window.location && window.location.pathname) || "",
+      lang: lang(),
+    };
+  }
+
+  // Auto-log an unmatched question (a fallback) so the misses accrue without the
+  // visitor doing anything — deduped per session by normalized form.
+  function autoLogMiss(raw) {
+    var key = normalize(raw);
+    if (!key || loggedMisses[key]) {
+      return;
+    }
+    loggedMisses[key] = true;
+    var payload = reportBase();
+    payload.type = "miss";
+    payload.kind = "fallback";
+    payload.query = String(raw).slice(0, 200);
+    sendReport(payload);
+  }
+
+  // Explicit report of the last exchange (typed `report`, or the [report] chip).
+  function report(note) {
+    var t = term();
+    var d = data();
+    var lg = lang();
+    if (!lastExchange) {
+      printLines(
+        pickLang(d && d.reportEmpty, lg) || ["nothing to report yet."],
+        "terminal-session__out"
+      );
+      if (t && t.scrollToEnd) {
+        t.scrollToEnd();
+      }
+      return;
+    }
+    var payload = reportBase();
+    payload.type = "report";
+    payload.note = String(note || "").slice(0, 500);
+    payload.query = lastExchange.query;
+    payload.answer = lastExchange.answer;
+    payload.intent = lastExchange.intent;
+    payload.entity = lastExchange.entity;
+    payload.score = lastExchange.score;
+    payload.kind = lastExchange.kind;
+    sendReport(payload);
+    printLines(
+      pickLang(d && d.reportAck, lg) || ["reported — thanks."],
+      "terminal-session__out"
+    );
+    if (t && t.scrollToEnd) {
+      t.scrollToEnd();
+    }
+  }
+
+  // Print the subtle [report] chip after a reply, if the seam supports clickable
+  // chips (progressive: an older seam just omits it — `report` still works typed).
+  function printReportChip() {
+    var t = term();
+    var d = data();
+    if (t && typeof t.printChip === "function") {
+      t.printChip(pickLang(d && d.reportLabel, lang()) || "report", "report", {
+        className: "terminal-session__report",
+      });
+    }
+  }
+
   function data() {
     return window.TerminalAIData || null;
   }
@@ -282,14 +400,11 @@
     var amb = ambiguity(r);
     if (amb) {
       var tmpl = pickLang(d && d.clarifyPrompt, lg) || "{a} / {b}?";
-      printLines(
-        [
-          tmpl
-            .replace("{a}", pickLang(amb.a.clarify, lg))
-            .replace("{b}", pickLang(amb.b.clarify, lg)),
-        ],
-        "terminal-session__out"
-      );
+      var clarifyLine = tmpl
+        .replace("{a}", pickLang(amb.a.clarify, lg))
+        .replace("{b}", pickLang(amb.b.clarify, lg));
+      printLines([clarifyLine], "terminal-session__out");
+      captureExchange(raw, [clarifyLine], null, "clarify");
       lastKey = null;
       return;
     }
@@ -298,7 +413,11 @@
 
     if (!result.intent) {
       lastKey = null;
-      printLines(pickLang(d && d.fallback, lg), "terminal-session__out");
+      var fbLines = pickLang(d && d.fallback, lg);
+      printLines(fbLines, "terminal-session__out");
+      captureExchange(raw, fbLines, result, "fallback");
+      autoLogMiss(raw);
+      printReportChip();
       return;
     }
 
@@ -322,7 +441,10 @@
     lastKey = key;
 
     var replyObj = entity && entity.reply ? entity.reply : result.intent.reply;
-    printLines(pickLang(replyObj, lg), "terminal-session__out");
+    var replyLines = pickLang(replyObj, lg);
+    printLines(replyLines, "terminal-session__out");
+    captureExchange(raw, replyLines, result, "answer");
+    printReportChip();
 
     var action = result.intent.action || null;
     if (action && action.type === "flow") {
@@ -567,6 +689,7 @@
     handleLine: handleLine,
     classify: classify,
     normalize: normalize,
+    report: report,
     isActive: function () {
       return active;
     },

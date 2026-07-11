@@ -1807,6 +1807,14 @@
   outline: none;
 }
 
+/* The [report] chip the assistant prints after a reply: a muted, unshouting
+   affordance to flag a bad answer. No underline at rest (it's not a link into
+   content); it accents on hover like the other clickable tokens. */
+:root[data-layout="terminal"] .terminal-session__report {
+  color: var(--text-muted, inherit);
+  text-decoration: none;
+}
+
 /* Echoed answers inside an interactive flow (contact / subscribe) read like
    what the user typed at the field prompt. */
 :root[data-layout="terminal"] .terminal-session__flow {

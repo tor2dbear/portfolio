@@ -44,6 +44,14 @@ function mockTerminal() {
       }
     }),
     setPrompt: jest.fn(),
+    printChip: jest.fn((label, cmd, opts) => {
+      prints.push({
+        text: "[" + label + "]",
+        cmd: cmd,
+        chip: true,
+        opts: opts,
+      });
+    }),
     cwd: jest.fn(() => "~"),
     scrollToEnd: jest.fn(),
     isActive: jest.fn(() => true),
@@ -384,5 +392,71 @@ describe("start / handleLine loop", () => {
     const ai = loadAi();
     expect(() => ai.start()).not.toThrow();
     expect(ai.isActive()).toBe(false);
+  });
+
+  test("prints a [report] chip after an answer", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+    m.feed("vad finns det för projekt?");
+    // A clickable chip carrying the `report` command follows the reply.
+    expect(m.t.printChip).toHaveBeenCalledWith(
+      expect.any(String),
+      "report",
+      expect.any(Object)
+    );
+  });
+
+  test("report() POSTs the last exchange and confirms", () => {
+    const fetchMock = jest.fn(() => Promise.resolve({ ok: true }));
+    window.fetch = fetchMock;
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+    m.feed("vad finns det för projekt?");
+    ai.report("borde nämna X");
+
+    expect(fetchMock).toHaveBeenCalled();
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.type).toBe("report");
+    expect(body.query).toBe("vad finns det för projekt?");
+    expect(body.note).toBe("borde nämna X");
+    expect(body.intent).toBe("projects");
+    // Confirmation printed (Swedish default).
+    expect(m.text().toLowerCase()).toContain("tack");
+    delete window.fetch;
+  });
+
+  test("report() with nothing asked yet says so and does not POST", () => {
+    const fetchMock = jest.fn(() => Promise.resolve({ ok: true }));
+    window.fetch = fetchMock;
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+    ai.report("");
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(m.text().toLowerCase()).toContain("inget att rapportera");
+    delete window.fetch;
+  });
+
+  test("auto-logs an unmatched question as a miss, deduped per session", () => {
+    const fetchMock = jest.fn(() => Promise.resolve({ ok: true }));
+    window.fetch = fetchMock;
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("what is the meaning of life?");
+    m.feed("what is the meaning of life?"); // same miss again → not re-sent
+    const misses = fetchMock.mock.calls.filter(
+      (c) => JSON.parse(c[1].body).type === "miss"
+    );
+    expect(misses).toHaveLength(1);
+    expect(JSON.parse(misses[0][1].body).kind).toBe("fallback");
+    delete window.fetch;
   });
 });

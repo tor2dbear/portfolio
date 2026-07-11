@@ -1404,6 +1404,15 @@ describe("terminal command line", () => {
     delete window.IntersectionObserver;
   });
 
+  test("report command hands the last exchange to the assistant", () => {
+    const reportSpy = jest.fn();
+    window.TerminalAI = { report: reportSpy };
+    loadModule();
+    typeCommand("report needs more detail");
+    expect(reportSpy).toHaveBeenCalledWith("needs more detail");
+    delete window.TerminalAI;
+  });
+
   // ---- boot transcript --------------------------------------------------
 
   test("boot replays the page's declared command sequence into the scrollback", () => {

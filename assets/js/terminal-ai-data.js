@@ -104,6 +104,23 @@
       ],
     },
 
+    // Report flow: the visitor flags a bad answer (typed `report`, or the
+    // `[report]` chip after a reply) so the misses can be turned into better
+    // intents. reportLabel is the chip text; reportAck confirms a sent report;
+    // reportEmpty covers `report` with nothing to flag yet.
+    reportLabel: {
+      sv: "dåligt svar?",
+      en: "bad answer?",
+    },
+    reportAck: {
+      sv: ["tack — skickat vidare så clanker kan bli bättre."],
+      en: ["thanks — passed on so clanker can get better."],
+    },
+    reportEmpty: {
+      sv: ["inget att rapportera än — fråga något först."],
+      en: ["nothing to report yet — ask something first."],
+    },
+
     exitWords: [
       "exit",
       "quit",
