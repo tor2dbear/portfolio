@@ -1404,6 +1404,20 @@ describe("terminal command line", () => {
     delete window.IntersectionObserver;
   });
 
+  test("picking terminal on an exempt tool stores it and heads home", () => {
+    // Visual tools can't be a terminal; choosing it there stores the preference
+    // and navigates home (jsdom no-ops the navigation, so assert the storage).
+    localStorage.setItem("theme-layout", "column");
+    document.documentElement.setAttribute("data-layout", "column");
+    document.documentElement.setAttribute("data-terminal-exempt", "true");
+    document.documentElement.setAttribute("data-home-url", "/");
+    loadModule();
+    window.ThemeActions.setLayout("terminal");
+    expect(localStorage.getItem("theme-layout")).toBe("terminal");
+    // It did NOT apply terminal in place (this page can't render it).
+    expect(document.documentElement.getAttribute("data-layout")).toBe("column");
+  });
+
   test("report command hands the last exchange to the assistant", () => {
     const reportSpy = jest.fn();
     window.TerminalAI = { report: reportSpy };

@@ -577,20 +577,25 @@
        URL so the terminal classifies ls/cd/tree and can fetch a dir without a
        hardcoded guess. Sections are directories, standalone top-level pages are
        files; a page overrides its kind via a `terminal_kind` param (contact =
-       action, the visual tools = exempt). The URL lets the terminal reach
+       action). The visual tools (terminal_kind = exempt) can't render as a
+       terminal, so they're left OUT of the filesystem entirely — not listed by
+       `ls`, not reachable by cd/open. The URL lets the terminal reach
        footer-only sections (legal) that aren't in the nav. */}}
   {{- $kinds := dict -}}
   {{- range site.Sections -}}
     {{- $k := "dir" -}}
     {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
-    {{- $kinds = merge $kinds (dict .Section (dict "kind" $k "url" .RelPermalink)) -}}
+    {{- if ne $k "exempt" -}}
+      {{- $kinds = merge $kinds (dict .Section (dict "kind" $k "url" .RelPermalink)) -}}
+    {{- end -}}
   {{- end -}}
   {{- range where site.RegularPages "Kind" "page" -}}
     {{- $rel := strings.Trim .RelPermalink "/" -}}
     {{- $rel = strings.TrimPrefix (printf "%s/" .Language.Lang) $rel -}}
     {{- $rel = strings.Trim $rel "/" -}}
     {{- $segs := split $rel "/" -}}
-    {{- if and (eq (len $segs) 1) (ne (.Params.terminal_kind | default "") "hidden") -}}
+    {{- $tk := .Params.terminal_kind | default "" -}}
+    {{- if and (eq (len $segs) 1) (ne $tk "hidden") (ne $tk "exempt") -}}
       {{- $k := "file" -}}
       {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
       {{- $kinds = merge $kinds (dict (index $segs 0) (dict "kind" $k "url" .RelPermalink)) -}}

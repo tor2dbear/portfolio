@@ -870,6 +870,25 @@
   }
 
   function setLayout(layout) {
+    // A visual tool (ui-library, palette generator) can't be a terminal, and it
+    // isn't part of the terminal filesystem. Picking terminal here honours the
+    // choice by storing it and going to the home terminal — this page has none
+    // to show. (Exit from there drops back to column.)
+    if (
+      layout === "terminal" &&
+      document.documentElement.hasAttribute("data-terminal-exempt")
+    ) {
+      localStorage.setItem("theme-layout-previous", "column");
+      localStorage.setItem("theme-layout", "terminal");
+      var homeUrl =
+        document.documentElement.getAttribute("data-home-url") || "/";
+      try {
+        window.location.href = homeUrl;
+      } catch (e) {
+        window.location.assign(homeUrl);
+      }
+      return;
+    }
     // Entering terminal snapshots where the user came from, so exit (ESC,
     // typing "exit", the boot [exit] button) can return there — including
     // the typography the pairing is about to replace.
