@@ -2282,8 +2282,21 @@
           return;
         }
         var cmd = token.getAttribute("data-cmd");
-        if (cmd) {
-          runTerminalInput(cmd);
+        if (!cmd) {
+          return;
+        }
+        runTerminalInput(cmd);
+        // A clicked directory entry "opens" the folder: follow the cd with an
+        // `ls` so its listing appends right below — no reload, the scrollback
+        // just grows. (A typed `cd` stays a silent move, matching a real shell;
+        // the click is the navigation gesture.) Transcript mode only, where the
+        // append-only session IS the page.
+        if (
+          document.documentElement.hasAttribute("data-terminal-transcript") &&
+          token.classList.contains("terminal-session__ls-entry") &&
+          /^cd\s+\S/.test(cmd)
+        ) {
+          runTerminalInput("ls");
         }
       });
     }

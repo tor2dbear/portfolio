@@ -1153,6 +1153,39 @@ describe("terminal command line", () => {
     );
   });
 
+  test("clicking a directory entry in transcript mode opens it (cd then ls)", () => {
+    // In the append-only transcript, a clicked folder navigates by listing
+    // itself right below — cd (move) then ls (show) — with no page reload.
+    document.documentElement.setAttribute("data-terminal-transcript", "1");
+    loadModule();
+    typeCommand("ls");
+    const dir = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cd works"]'
+    );
+    expect(dir).not.toBeNull();
+    dir.dispatchEvent(new window.Event("click", { bubbles: true }));
+    const cmds = [...document.querySelectorAll(".terminal-session__cmd")].map(
+      (n) => n.textContent
+    );
+    // The last two echoes are the cd and its follow-up ls.
+    expect(cmds[cmds.length - 2]).toBe("cd works");
+    expect(cmds[cmds.length - 1]).toBe("ls");
+  });
+
+  test("clicking a directory entry outside transcript mode just cds (no ls)", () => {
+    loadModule();
+    typeCommand("ls");
+    const dir = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cd works"]'
+    );
+    dir.dispatchEvent(new window.Event("click", { bubbles: true }));
+    const cmds = [...document.querySelectorAll(".terminal-session__cmd")].map(
+      (n) => n.textContent
+    );
+    // No auto-ls appended — the plain layout keeps shell-literal cd.
+    expect(cmds[cmds.length - 1]).toBe("cd works");
+  });
+
   test("ls nav/ and ls settings/ list the menus (as the header prints them)", () => {
     loadModule();
     typeCommand("ls nav/");
