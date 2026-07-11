@@ -1632,6 +1632,12 @@
   display: block;
 }
 
+/* Blank separator lines (the markdown block gaps a cat'd .md prints) carry no
+   text, so a block box would collapse to zero height — give them a line box. */
+:root[data-layout="terminal"] .terminal-session__line:empty::before {
+  content: "\00a0";
+}
+
 /* Echoed command lines carry the real prompt string, like scrollback.
    Append-only history: darkmode.js pins an inline --terminal-cwd on each echo
    (the cwd it ran at). The :root --terminal-ps1 composite would resolve its

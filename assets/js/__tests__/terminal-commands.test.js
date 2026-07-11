@@ -1222,6 +1222,38 @@ describe("terminal command line", () => {
     expect(window.fetch).not.toHaveBeenCalled();
   });
 
+  test("cat renders a post's markdown structure (headings, quote, list, emphasis)", () => {
+    window.history.pushState({}, "", "/works/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      "<h1>Title</h1>" +
+      "<p>Lead with <strong>bold</strong> and <em>italic</em>.</p>" +
+      "<h2>About</h2>" +
+      "<p>Body para.</p>" +
+      "<blockquote>A quote.</blockquote>" +
+      "<ul><li>One</li><li>Two</li></ul>" +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat demo.md");
+    const lines = [...document.querySelectorAll(".terminal-session__out")].map(
+      (n) => n.textContent
+    );
+    expect(lines).toContain("# Title");
+    expect(lines).toContain("## About");
+    expect(lines).toContain("Lead with **bold** and *italic*.");
+    expect(lines).toContain("> A quote.");
+    expect(lines).toContain("- One");
+    expect(lines).toContain("- Two");
+    // A blank line separates blocks (the terminal's markdown margin).
+    expect(lines).toContain("");
+    // Consecutive list items stay tight — no blank between One and Two.
+    const one = lines.indexOf("- One");
+    expect(lines[one + 1]).toBe("- Two");
+  });
+
   test("cat of a bare featured slug resolves to its card href (not 'No such file')", async () => {
     // `ls works/ --featured` lists posts as bare `slug.md`, but their real home
     // is /writing|works/slug/. Catting the bare slug must match the card on the

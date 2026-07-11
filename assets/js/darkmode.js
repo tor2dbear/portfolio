@@ -3048,6 +3048,34 @@
       return out.length ? out : ["(no info here)"];
     }
 
+    // Serialize an element's inline content back to markdown source: emphasis
+    // keeps **/*, code keeps backticks, <br> becomes a newline, everything else
+    // is its text. So a cat'd .md reads like the file you'd actually open.
+    function terminalInlineMarkdown(node) {
+      var out = "";
+      var kids = node.childNodes;
+      for (var i = 0; i < kids.length; i++) {
+        var n = kids[i];
+        if (n.nodeType === 3) {
+          out += n.nodeValue;
+        } else if (n.nodeType === 1) {
+          var t = n.tagName.toLowerCase();
+          if (t === "br") {
+            out += "\n";
+          } else if (t === "strong" || t === "b") {
+            out += "**" + terminalInlineMarkdown(n).trim() + "**";
+          } else if (t === "em" || t === "i") {
+            out += "*" + terminalInlineMarkdown(n).trim() + "*";
+          } else if (t === "code") {
+            out += "`" + terminalInlineMarkdown(n).trim() + "`";
+          } else {
+            out += terminalInlineMarkdown(n);
+          }
+        }
+      }
+      return out;
+    }
+
     // Extract a cat'able rendering of a fetched post/page as an ordered list of
     // TOKENS — {text} for a prose line, {image, n, file, src, alt} for a figure
     // (a terminal can't paint an image, so it prints a clickable [image N] token
@@ -3079,6 +3107,17 @@
         ".works-section, .works-post__tags, .post-tags-wrap, .lang-notice, nav";
       var tokens = [];
       var imageN = 0;
+      var prevBlock = null;
+      // A blank line separates blocks — the terminal's version of a margin, and
+      // exactly how the blocks sit in the .md source. Consecutive list items
+      // stay tight (a real list has no blank between rows).
+      var blockBreak = function (kind) {
+        var tight = kind === "li" && prevBlock === "li";
+        if (tokens.length && !tight) {
+          tokens.push({ text: "" });
+        }
+        prevBlock = kind;
+      };
       var nodes = root.querySelectorAll(
         "h1, h2, h3, h4, p, blockquote, li, figure, img"
       );
@@ -3093,6 +3132,7 @@
           if (tag === "img" && el.closest("figure")) {
             continue;
           }
+          blockBreak("figure");
           imageN += 1;
           var img = tag === "img" ? el : el.querySelector("img");
           var cap = el.querySelector && el.querySelector("figcaption");
@@ -3139,22 +3179,36 @@
         ) {
           continue;
         }
-        // Split on <br> so a paragraph of <br>-separated lines (e.g. the CV's
-        // dates / roles / bullets, all one <p>) prints one line each instead of
-        // running together — textContent alone would drop the breaks.
-        var ownerDoc = el.ownerDocument || document;
-        (el.innerHTML || "").split(/<br\s*\/?>/i).forEach(function (part) {
-          var holder = ownerDoc.createElement("div");
-          holder.innerHTML = part;
-          var text = (holder.textContent || "").replace(/\s+/g, " ").trim();
-          if (text) {
-            tokens.push({ text: text });
-          }
-        });
+        // Map the block back to its markdown syntax: headings get their #'s,
+        // blockquotes a >, list items a -. Inline emphasis/code is preserved by
+        // the serializer; <br>-separated lines (e.g. the CV's one-<p> rows)
+        // print one per line, the quote's > repeating on each.
+        var headingLevel = { h1: 1, h2: 2, h3: 3, h4: 4 }[tag] || 0;
+        var prefix = "";
+        if (headingLevel) {
+          prefix = new Array(headingLevel + 1).join("#") + " ";
+        } else if (tag === "blockquote") {
+          prefix = "> ";
+        } else if (tag === "li") {
+          prefix = "- ";
+        }
+        blockBreak(tag);
+        terminalInlineMarkdown(el)
+          .split("\n")
+          .forEach(function (part) {
+            var text = part.replace(/[ \t]+/g, " ").trim();
+            if (text) {
+              tokens.push({ text: prefix + text });
+            }
+          });
       }
       // Append the project meta as its own trailing block — cat shows the whole
       // file, so the role/details/client you set in front matter come along.
-      terminalInfoLinesFrom(root).forEach(function (line) {
+      var meta = terminalInfoLinesFrom(root);
+      if (meta.length && tokens.length) {
+        tokens.push({ text: "" });
+      }
+      meta.forEach(function (line) {
         tokens.push({ text: line });
       });
       return tokens;
