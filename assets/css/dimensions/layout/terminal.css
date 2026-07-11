@@ -1539,6 +1539,44 @@
    from. The keys read as bracketed mono words, matching the terminal's chrome.
    ============================================================================ */
 
+/* Floating jump-to-prompt button: hidden until the live prompt scrolls out of
+   view (darkmode.js toggles .is-visible), then a small bracketed ⌄ pinned
+   bottom-right that drops you back to the prompt. Terminal chrome — mono, a thin
+   border and the page surface so it stays legible over scrollback, no app-style
+   pill. Hidden entirely outside terminal layout and when the prompt is in view. */
+.terminal-jump {
+  display: none;
+}
+
+:root[data-layout="terminal"] .terminal-jump.is-visible {
+  display: block;
+  position: fixed;
+  right: var(--size-page-margins);
+  bottom: var(--spacing-16);
+  z-index: 50;
+  min-width: 2.5em;
+  min-height: 2.5em;
+  padding: 0 var(--spacing-8);
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 2.4;
+  text-align: center;
+  color: var(--text-link, var(--text-default));
+  background: var(--surface-page);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-jump.is-visible:hover,
+:root[data-layout="terminal"] .terminal-jump.is-visible:focus-visible {
+  color: var(--text-default);
+  border-color: var(--text-default);
+  outline: none;
+}
+
 .terminal-keybar {
   display: none;
 }

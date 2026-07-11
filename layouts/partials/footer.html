@@ -206,6 +206,12 @@
       <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="cancel" aria-label="{{ i18n "terminal_key_cancel" }}">^C</button>
       <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="bottom" aria-label="{{ i18n "terminal_key_bottom" }}">⌄</button>
     </div>
+    {{/* Terminal layout: a floating jump-to-prompt button. Unlike the mobile key
+         bar's ⌄ (which only rides the keyboard while the prompt is focused), this
+         appears on any device once the live prompt scrolls out of view — reading
+         a long cat output, you can drop straight back to the prompt. darkmode.js
+         toggles .is-visible via an IntersectionObserver on the prompt. */}}
+    <button class="terminal-jump" type="button" data-js="terminal-jump" aria-label="{{ i18n "terminal_key_bottom" }}">⌄</button>
   </div>
 </footer>
 <!-- Toast category labels (read by toast.js for title line) -->

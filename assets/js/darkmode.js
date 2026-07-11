@@ -6465,6 +6465,40 @@
       }
     }
 
+    // Floating jump-to-prompt button: appears (on any device) once the live
+    // prompt scrolls out of view, so a long cat output doesn't strand you far
+    // from the input. Clicking drops back to the prompt (scroll + focus). Driven
+    // by an IntersectionObserver on the prompt; a scroll-listener fallback keeps
+    // it working where IntersectionObserver is missing.
+    var terminalJump = document.querySelector('[data-js="terminal-jump"]');
+    if (terminalJump && terminalTail) {
+      terminalJump.addEventListener("click", function () {
+        scrollTerminalToEnd();
+      });
+      var setJumpVisible = function (promptInView) {
+        if (isTerminalLayout() && !promptInView) {
+          terminalJump.classList.add("is-visible");
+        } else {
+          terminalJump.classList.remove("is-visible");
+        }
+      };
+      if (typeof window.IntersectionObserver === "function") {
+        new window.IntersectionObserver(
+          function (entries) {
+            setJumpVisible(entries[entries.length - 1].isIntersecting);
+          },
+          { root: null, threshold: 0 }
+        ).observe(terminalTail);
+      } else {
+        window.addEventListener("scroll", function () {
+          var rect = terminalTail.getBoundingClientRect();
+          setJumpVisible(
+            rect.top < (window.innerHeight || 0) && rect.bottom > 0
+          );
+        });
+      }
+    }
+
     // ----------------------------------------------------------------------
     // Nav "cd" feedback
     // A full page load gives almost no signal that navigation happened. So a

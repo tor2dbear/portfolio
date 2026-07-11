@@ -152,6 +152,7 @@ describe("terminal command line", () => {
           <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="cancel" aria-label="Cancel line">^C</button>
           <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="bottom" aria-label="Jump to prompt">⌄</button>
         </div>
+        <button class="terminal-jump" type="button" data-js="terminal-jump" aria-label="Jump to prompt">⌄</button>
       </body>
     `;
 
@@ -1381,6 +1382,26 @@ describe("terminal command line", () => {
     expect(document.documentElement.hasAttribute("data-terminal-booted")).toBe(
       false
     );
+  });
+
+  test("jump-to-prompt button shows when the live prompt scrolls out of view", () => {
+    let ioCallback;
+    window.IntersectionObserver = class {
+      constructor(cb) {
+        ioCallback = cb;
+      }
+      observe() {}
+      disconnect() {}
+    };
+    loadModule();
+    const jump = document.querySelector('[data-js="terminal-jump"]');
+    expect(jump).not.toBeNull();
+    // Prompt out of view → button appears; back in view → it hides.
+    ioCallback([{ isIntersecting: false }]);
+    expect(jump.classList.contains("is-visible")).toBe(true);
+    ioCallback([{ isIntersecting: true }]);
+    expect(jump.classList.contains("is-visible")).toBe(false);
+    delete window.IntersectionObserver;
   });
 
   // ---- boot transcript --------------------------------------------------
