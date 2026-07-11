@@ -3516,6 +3516,21 @@
     // cards (works/writing posts) the nav tree can't know about. Resolve the
     // path to absolute segments (relative to cwd), then match a content-card
     // link by its full segments, so cd and ls agree on what exists.
+    // The slug of the page currently loaded (last path segment, language prefix
+    // stripped) — so the boot transcript's `cat <slug>.md` on a post/about reads
+    // the live #main instead of re-fetching the page it's already on.
+    function terminalCurrentPageSlug() {
+      var path = window.location.pathname.replace(/[?#].*$/, "");
+      var segs = path.split("/").filter(Boolean);
+      var lang = (
+        document.documentElement.getAttribute("lang") || ""
+      ).toLowerCase();
+      if (segs.length && segs[0].toLowerCase() === lang) {
+        segs.shift();
+      }
+      return segs.length ? segs[segs.length - 1].toLowerCase() : "";
+    }
+
     function terminalContentTargetHref(dest) {
       var wanted = terminalResolveSegments(dest);
       if (!wanted.length) {
@@ -4271,6 +4286,21 @@
                   "/",
               ],
               action: null,
+            };
+          }
+          // The page you're already on: read its #main straight from the live
+          // DOM rather than re-fetching it (the boot transcript's `cat <slug>.md`
+          // on a post/about). Synchronous, so the content is there at once — no
+          // blank flash while a fetch round-trips.
+          if (
+            catName &&
+            catName === terminalCurrentPageSlug() &&
+            document.querySelector("#main .content.post, #main .content.page")
+          ) {
+            return {
+              echo: input,
+              lines: [],
+              action: { type: "cat-local", name: args[0] },
             };
           }
           // Real page first: a content post, or a readable page (about.md,
@@ -5273,25 +5303,10 @@
             })
             .then(function (html) {
               var doc = new DOMParser().parseFromString(html, "text/html");
-              var catTokens = terminalExtractPostLines(
-                doc,
-                action.url,
-                action.root
+              printTerminalCatTokens(
+                terminalExtractPostLines(doc, action.url, action.root),
+                catLabel
               );
-              if (!catTokens.length) {
-                printTerminalLine(
-                  "cat: " + catLabel + ": (empty)",
-                  "terminal-session__out"
-                );
-              } else {
-                catTokens.forEach(function (tok) {
-                  if (tok.image) {
-                    printTerminalImageLine(tok);
-                  } else {
-                    printTerminalLine(tok.text, "terminal-session__out");
-                  }
-                });
-              }
               scrollTerminalToEnd();
             })
             .catch(function (err) {
@@ -5305,6 +5320,16 @@
             });
           break;
         }
+        case "cat-local":
+          // The current page's own file: read #main directly instead of
+          // re-fetching the page you're already on (the boot transcript's
+          // `cat <slug>.md` on a post/about). Synchronous, so no blank flash
+          // while a fetch round-trips.
+          printTerminalCatTokens(
+            terminalExtractPostLines(document, window.location.href, null),
+            action.name
+          );
+          break;
         case "flow":
           startTerminalFlow(action.flow);
           break;
@@ -5379,6 +5404,26 @@
       btn.setAttribute("data-image-alt", tok.alt || "");
       line.appendChild(btn);
       terminalSession.appendChild(line);
+    }
+
+    // Print a cat'd file's extracted tokens (text lines + [image N] tokens),
+    // or an "(empty)" note. Shared by remote-cat (fetched) and cat-local (the
+    // current page read straight from #main).
+    function printTerminalCatTokens(tokens, label) {
+      if (!tokens || !tokens.length) {
+        printTerminalLine(
+          "cat: " + (label || "file") + ": (empty)",
+          "terminal-session__out"
+        );
+        return;
+      }
+      tokens.forEach(function (tok) {
+        if (tok.image) {
+          printTerminalImageLine(tok);
+        } else {
+          printTerminalLine(tok.text, "terminal-session__out");
+        }
+      });
     }
 
     // `set` (no args) prints the settings as clickable chip rows — the settings

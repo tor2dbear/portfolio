@@ -62,6 +62,9 @@ describe("terminal command line", () => {
       "data-terminal-exempt",
       "data-terminal-booted",
     ].forEach((attr) => document.documentElement.removeAttribute(attr));
+    // A test may pushState to a deeper path; reset so location-derived logic
+    // (the current-page slug) starts from home each case.
+    window.history.pushState({}, "", "/");
 
     document.documentElement.innerHTML = `
       <head><meta name="theme-color" content="#ffffff">
@@ -1202,6 +1205,21 @@ describe("terminal command line", () => {
     loadModule();
     typeCommand("cd settings");
     expect(sessionText()).toContain("menu, not a directory");
+  });
+
+  test("cat of the current page reads #main locally (no self-fetch)", () => {
+    // On a post's own page, the boot's `cat <slug>.md` must print the live
+    // #main synchronously, not re-fetch the page it's already on.
+    window.history.pushState({}, "", "/works/utblick-no.2/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML = '<div class="content post"><p>Local body line.</p></div>';
+    document.body.appendChild(main);
+    window.fetch = jest.fn();
+    loadModule();
+    typeCommand("cat utblick-no.2.md");
+    expect(sessionText()).toContain("Local body line.");
+    expect(window.fetch).not.toHaveBeenCalled();
   });
 
   test("cat of a bare featured slug resolves to its card href (not 'No such file')", async () => {

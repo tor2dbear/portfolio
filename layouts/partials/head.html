@@ -547,11 +547,24 @@
   {{- end -}}
   {{/* Boot transcript: the curated command sequence a page replays into the
        terminal on load, so the page reads as a real session (see the runner in
-       darkmode.js). Home only for now; other page types keep the styled layout.
-       Empty string ⇒ no transcript, page renders normally. */}}
+       darkmode.js). One per page type; empty string ⇒ no transcript, page
+       renders in the plain styled layout (contact's form, the exempt tools).
+        - home     → the intro tour
+        - section/tag listing → `ls` (its posts, read from the page's cards)
+        - a post / standalone page → `cat <slug>.md` (its own #main, read live) */}}
   {{- $terminalBoot := "" -}}
+  {{- $tkind := .Params.terminal_kind | default "" -}}
   {{- if .IsHome -}}
     {{- $terminalBoot = "ls; set; cat welcome.txt; ls works/ --featured" -}}
+  {{- else if or (eq $tkind "action") (eq $tkind "exempt") (eq $tkind "hidden") -}}
+    {{- $terminalBoot = "" -}}
+  {{- else if or .IsSection (eq .Kind "term") (eq .Kind "taxonomy") -}}
+    {{- $terminalBoot = "ls" -}}
+  {{- else if eq .Kind "page" -}}
+    {{- $slug := index (last 1 $terminalSegs) 0 -}}
+    {{- with $slug -}}
+      {{- $terminalBoot = printf "cat %s.md" . -}}
+    {{- end -}}
   {{- end -}}
   <style>
     :root {
