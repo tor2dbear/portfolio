@@ -451,6 +451,14 @@ other = "(collapse)"
 [terminal_boot_ok]
 other = "[ ok ] palette · typography · layout loaded"
 
+[terminal_welcome]
+other = """
+Hi, Torbjörn here — a designer.
+For over a decade I've worked across editorial design, brand and digital product — sometimes closer to strategy, sometimes closer to the craft. Based in Gothenburg.
+
+You're in the terminal. Try `ls`, `cat`, or `help`.
+"""
+
 [terminal_exit_hint]
 other = "type exit or press esc to leave the terminal"
 

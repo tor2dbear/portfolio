@@ -445,6 +445,14 @@ other = "(dölj)"
 [terminal_boot_ok]
 other = "[ ok ] palett · typografi · layout laddade"
 
+[terminal_welcome]
+other = """
+Hej, Torbjörn här — designer.
+Under drygt ett decennium har jag rört mig mellan redaktionell design, varumärken och digitala produkter — ibland närmare strategin, ibland närmare hantverket. Baserad i Göteborg.
+
+Du är i terminalen. Prova `ls`, `cat` eller `help`.
+"""
+
 [terminal_exit_hint]
 other = "skriv exit eller tryck esc för att lämna terminalen"
 

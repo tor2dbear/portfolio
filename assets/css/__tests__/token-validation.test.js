@@ -24,6 +24,7 @@ const JS_SET_PREFIXES = [
 const JS_SET_EXACT = new Set([
   "--reveal-delay", // set per-element by reveal-on-scroll.js
   "--theme-transition-duration", // set/removed by darkmode.js
+  "--terminal-keybar-h", // mobile key-bar height, measured by darkmode.js
 ]);
 
 // "API vars" — intentionally overridable by context; have CSS fallbacks defined inline

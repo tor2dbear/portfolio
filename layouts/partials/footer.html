@@ -164,6 +164,10 @@
       </ul>
     </div>
 
+    {{/* Terminal layout: the localized home intro (the hero, in prose) that the
+         boot transcript prints via `cat welcome.txt`. Hidden data source only —
+         darkmode.js reads its text; falls back to a hardcoded blurb if absent. */}}
+    <pre hidden data-js="terminal-welcome">{{ i18n "terminal_welcome" }}</pre>
     {{/* Terminal layout: the buffer ends with a live prompt. A real <input> so
          mobile keyboards open on tap and commands / easter eggs can be typed —
          see the command engine in darkmode.js. The session log above it holds
@@ -202,6 +206,12 @@
       <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="cancel" aria-label="{{ i18n "terminal_key_cancel" }}">^C</button>
       <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="bottom" aria-label="{{ i18n "terminal_key_bottom" }}">⌄</button>
     </div>
+    {{/* Terminal layout: a floating jump-to-prompt button. Unlike the mobile key
+         bar's ⌄ (which only rides the keyboard while the prompt is focused), this
+         appears on any device once the live prompt scrolls out of view — reading
+         a long cat output, you can drop straight back to the prompt. darkmode.js
+         toggles .is-visible via an IntersectionObserver on the prompt. */}}
+    <button class="terminal-jump" type="button" data-js="terminal-jump" aria-label="{{ i18n "terminal_key_bottom" }}">⌄</button>
   </div>
 </footer>
 <!-- Toast category labels (read by toast.js for title line) -->

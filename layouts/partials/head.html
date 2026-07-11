@@ -545,6 +545,27 @@
       {{- $terminalCwd = printf "~/%s" $terminalSeg -}}
     {{- end -}}
   {{- end -}}
+  {{/* Boot transcript: the curated command sequence a page replays into the
+       terminal on load, so the page reads as a real session (see the runner in
+       darkmode.js). One per page type; empty string ⇒ no transcript, page
+       renders in the plain styled layout (contact's form, the exempt tools).
+        - home     → the intro tour
+        - section/tag listing → `ls` (its posts, read from the page's cards)
+        - a post / standalone page → `cat <slug>.md` (its own #main, read live) */}}
+  {{- $terminalBoot := "" -}}
+  {{- $tkind := .Params.terminal_kind | default "" -}}
+  {{- if .IsHome -}}
+    {{- $terminalBoot = "ls; set; cat welcome.txt; ls works/ --featured" -}}
+  {{- else if or (eq $tkind "action") (eq $tkind "exempt") (eq $tkind "hidden") -}}
+    {{- $terminalBoot = "" -}}
+  {{- else if or .IsSection (eq .Kind "term") (eq .Kind "taxonomy") -}}
+    {{- $terminalBoot = "ls" -}}
+  {{- else if eq .Kind "page" -}}
+    {{- $slug := index (last 1 $terminalSegs) 0 -}}
+    {{- with $slug -}}
+      {{- $terminalBoot = printf "cat %s.md" . -}}
+    {{- end -}}
+  {{- end -}}
   <style>
     :root {
       --terminal-host: {{ printf "%q" $terminalHost | safeCSS }};
@@ -556,20 +577,25 @@
        URL so the terminal classifies ls/cd/tree and can fetch a dir without a
        hardcoded guess. Sections are directories, standalone top-level pages are
        files; a page overrides its kind via a `terminal_kind` param (contact =
-       action, the visual tools = exempt). The URL lets the terminal reach
+       action). The visual tools (terminal_kind = exempt) can't render as a
+       terminal, so they're left OUT of the filesystem entirely — not listed by
+       `ls`, not reachable by cd/open. The URL lets the terminal reach
        footer-only sections (legal) that aren't in the nav. */}}
   {{- $kinds := dict -}}
   {{- range site.Sections -}}
     {{- $k := "dir" -}}
     {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
-    {{- $kinds = merge $kinds (dict .Section (dict "kind" $k "url" .RelPermalink)) -}}
+    {{- if ne $k "exempt" -}}
+      {{- $kinds = merge $kinds (dict .Section (dict "kind" $k "url" .RelPermalink)) -}}
+    {{- end -}}
   {{- end -}}
   {{- range where site.RegularPages "Kind" "page" -}}
     {{- $rel := strings.Trim .RelPermalink "/" -}}
     {{- $rel = strings.TrimPrefix (printf "%s/" .Language.Lang) $rel -}}
     {{- $rel = strings.Trim $rel "/" -}}
     {{- $segs := split $rel "/" -}}
-    {{- if and (eq (len $segs) 1) (ne (.Params.terminal_kind | default "") "hidden") -}}
+    {{- $tk := .Params.terminal_kind | default "" -}}
+    {{- if and (eq (len $segs) 1) (ne $tk "hidden") (ne $tk "exempt") -}}
       {{- $k := "file" -}}
       {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
       {{- $kinds = merge $kinds (dict (index $segs 0) (dict "kind" $k "url" .RelPermalink)) -}}
@@ -673,6 +699,24 @@
         /* sessionStorage unavailable — banner simply shows */
       }
 
+      // Boot transcript: pages that declare a command sequence replay it into
+      // the terminal (darkmode.js runs it; the page reads as a real session).
+      // Publish the sequence regardless of the current layout so toggling
+      // terminal on (no reload) can replay it too; only gate the content-hiding
+      // flag on already being in terminal, so a reload hides the reproduced
+      // chrome pre-paint (no flash). Terminal + JS only — no-JS keeps the plain
+      // page, and the flag is CSS-scoped to terminal so it's inert elsewhere.
+      var terminalBoot = {{ $terminalBoot | jsonify | safeJS }};
+      if (
+        terminalBoot &&
+        !document.documentElement.hasAttribute("data-terminal-exempt")
+      ) {
+        document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
+        if (storedLayout === "terminal") {
+          document.documentElement.setAttribute("data-terminal-transcript", "1");
+        }
+      }
+
       // Image blend + grain effects up front too, so a shared look (or a returning
       // visitor) paints with the correct treatment instead of flashing the default.
       var storedBlend = localStorage.getItem("theme-effect-blend");
@@ -743,6 +787,8 @@
   {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
   {{ $js_terminal_nav := resources.Get "js/terminal-nav.js" }}
+  {{ $js_terminal_ai_data := resources.Get "js/terminal-ai-data.js" }}
+  {{ $js_terminal_ai := resources.Get "js/terminal-ai.js" }}
   {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
 
   <!-- JavaScript loading -->
@@ -790,9 +836,11 @@
     {{ end }}
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_nav.RelPermalink }}" defer></script>
+    <script src="{{ $js_terminal_ai_data.RelPermalink }}" defer></script>
+    <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

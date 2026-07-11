@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {{- /* Visual tool pages (component library, palette generator) can't collapse to text — they opt out of the terminal layout. The pre-hydration script and darkmode.js fall back to column here without touching the stored preference. */ -}}
 {{- $terminalExempt := or (eq .Type "ui-library") (eq .Type "palette-generator") -}}
-<html lang="{{ .Language.Lang }}" data-brand-ready="false"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}>
+<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}>
   {{ partial "head.html" . }}
 
 

@@ -671,7 +671,7 @@
   white-space: nowrap;
 }
 
-/* Second executed command: ls settings/ — placed after the nav rows. */
+/* Second executed command: `set` — placed after the nav rows. */
 :root[data-layout="terminal"] .top-menu__item--terminal-prompt {
   display: block;
   order: 20;
@@ -698,7 +698,7 @@
   content: var(--terminal-host, "tor-bjorn.com");
 }
 
-/* The quick toggles and the expander are the ls settings/ output row. */
+/* The quick toggles and the expander are the `set` output row. */
 :root[data-layout="terminal"] .top-menu__item--terminal-quick {
   order: 21;
 }
@@ -1361,10 +1361,49 @@
 
 /* Subsequent pages in a session skip the login banner (ASCII art + status):
    a MOTD prints once, not on every cd. The exit hint stays — it's navigation
-   help, not boot chrome. Flag is set pre-paint in head.html, so no flash. */
-:root[data-terminal-booted][data-layout="terminal"] .terminal-boot__art,
+   help, not boot chrome. Flag is set pre-paint in head.html, so no flash.
+   Exception: transcript mode, where every boot is a fresh session start — the
+   art stays as the splash (its own breakpoint rules pick the sm/lg size), so
+   the top never collapses to an empty band on a returning reload. */
+:root[data-terminal-booted][data-layout="terminal"]:not(
+    [data-terminal-transcript]
+  )
+  .terminal-boot__art,
 :root[data-terminal-booted][data-layout="terminal"] .terminal-boot__meta {
   display: none;
+}
+
+/* ============================================================================
+   Boot transcript mode
+
+   When a page replays a real command sequence on load (data-terminal-transcript,
+   set pre-paint in head.html + by darkmode.js), the terminal IS that transcript:
+   the server-rendered header chrome (the `ls nav/` prompt, the nav-as-ls list,
+   the `set` block, the quick-toggles), the page content (#main) and the footer
+   blocks (sitemap, newsletter, colophon) are all things the transcript now
+   reproduces as genuine command output — so they hide, leaving just the banner
+   art, the scrollback and the live prompt. The hidden markup stays in the DOM as
+   the transcript's data source (ls/cat read it) and as the no-JS / crawler
+   fallback: this mode is JS-only, so without JS none of it hides. The banner's
+   fabricated meta (host title + "boot ok") goes too — the curl art stays as the
+   one login splash, everything else is a command you could have typed.
+   ============================================================================ */
+:root[data-terminal-transcript][data-layout="terminal"] .top-menu__container,
+:root[data-terminal-transcript][data-layout="terminal"] #main,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-grid--primary,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-newsletter,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-meta,
+:root[data-terminal-transcript][data-layout="terminal"] .terminal-boot__meta {
+  display: none;
+}
+
+/* #layout is a min-height:100vh grid whose middle (main) row is 1fr — it fills
+   the viewport. With #main hidden that row still stretched, dropping the footer
+   (scrollback + prompt) to the bottom and opening a tall empty band under the
+   banner. Collapse the rows to content height so the transcript stacks right
+   under the banner; any viewport slack falls harmlessly below the prompt. */
+:root[data-terminal-transcript][data-layout="terminal"] #layout {
+  grid-template-rows: auto auto auto;
 }
 
 /* The buffer ends with a live prompt. Kept as a normal block so the prompt,
@@ -1378,6 +1417,12 @@
   text-align: left;
   margin-top: var(--spacing-24);
   font-size: var(--terminal-font-size);
+  /* Reserve room under the live prompt for the mobile key bar, which is a
+     fixed overlay (see .terminal-keybar) and so takes no layout space of its
+     own. darkmode.js measures the bar and sets --terminal-keybar-h while it is
+     visible; 0 otherwise (desktop, blurred), so this is a no-op there. Without
+     it the prompt scrolls to the very bottom and hides behind the bar. */
+  padding-bottom: var(--terminal-keybar-h, 0px);
 }
 
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
@@ -1407,6 +1452,10 @@
   vertical-align: baseline;
   caret-color: var(--text-accent, currentColor);
   outline: none;
+  /* Focus scroll-into-view leaves the same key-bar gap below the field, so
+     tapping the prompt never lands it behind the bar (pairs with the tail's
+     padding-bottom above). */
+  scroll-margin-bottom: var(--terminal-keybar-h, 0px);
 }
 
 /* Belt-and-braces for iOS Safari, which still paints an inner box otherwise. */
@@ -1489,6 +1538,44 @@
    behind it on iOS Safari); the fixed bottom anchor here is the base it starts
    from. The keys read as bracketed mono words, matching the terminal's chrome.
    ============================================================================ */
+
+/* Floating jump-to-prompt button: hidden until the live prompt scrolls out of
+   view (darkmode.js toggles .is-visible), then a small bracketed ⌄ pinned
+   bottom-right that drops you back to the prompt. Terminal chrome — mono, a thin
+   border and the page surface so it stays legible over scrollback, no app-style
+   pill. Hidden entirely outside terminal layout and when the prompt is in view. */
+.terminal-jump {
+  display: none;
+}
+
+:root[data-layout="terminal"] .terminal-jump.is-visible {
+  display: block;
+  position: fixed;
+  right: var(--size-page-margins);
+  bottom: var(--spacing-16);
+  z-index: 50;
+  min-width: 2.5em;
+  min-height: 2.5em;
+  padding: 0 var(--spacing-8);
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 2.4;
+  text-align: center;
+  color: var(--text-link, var(--text-default));
+  background: var(--surface-page);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-jump.is-visible:hover,
+:root[data-layout="terminal"] .terminal-jump.is-visible:focus-visible {
+  color: var(--text-default);
+  border-color: var(--text-default);
+  outline: none;
+}
 
 .terminal-keybar {
   display: none;
@@ -1583,6 +1670,12 @@
   display: block;
 }
 
+/* Blank separator lines (the markdown block gaps a cat'd .md prints) carry no
+   text, so a block box would collapse to zero height — give them a line box. */
+:root[data-layout="terminal"] .terminal-session__line:empty::before {
+  content: "\00a0";
+}
+
 /* Echoed command lines carry the real prompt string, like scrollback.
    Append-only history: darkmode.js pins an inline --terminal-cwd on each echo
    (the cwd it ran at). The :root --terminal-ps1 composite would resolve its
@@ -1638,6 +1731,90 @@
   outline: none;
 }
 
+/* `set` (no args) prints one row per setting: a fixed key column, then the
+   options as clickable chips (each runs its own `set <key> <value>`). Flex-wrap
+   so long option rows (typography) reflow on a phone instead of overflowing. */
+:root[data-layout="terminal"] .terminal-session__settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75ch;
+}
+
+:root[data-layout="terminal"] .terminal-session__settings-key {
+  min-width: 11ch;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__setting {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-link, var(--text-default, inherit));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* The current value is bracketed and accented, mirroring the settings panel's
+   [System] convention. */
+:root[data-layout="terminal"] .terminal-session__setting.is-current {
+  color: var(--text-accent, currentColor);
+}
+
+:root[data-layout="terminal"] .terminal-session__setting.is-current::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .terminal-session__setting.is-current::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .terminal-session__setting:hover,
+:root[data-layout="terminal"] .terminal-session__setting:focus-visible {
+  color: var(--text-default, inherit);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  outline: none;
+}
+
+/* Inline links inside a cat'd page: clickable link text (the URL is hidden, the
+   click cats/opens it) — underlined like a terminal's derived hyperlink, sitting
+   in the prose flow. Reset the button chrome so it reads as a word, not a chip. */
+:root[data-layout="terminal"] .terminal-session__link {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-link, var(--text-accent, inherit));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-session__link:hover,
+:root[data-layout="terminal"] .terminal-session__link:focus-visible {
+  color: var(--text-default, inherit);
+  outline: none;
+}
+
+/* The [report] chip the assistant prints after a reply: a muted, unshouting
+   affordance to flag a bad answer. No underline at rest (it's not a link into
+   content); it accents on hover like the other clickable tokens. */
+:root[data-layout="terminal"] .terminal-session__report {
+  color: var(--text-muted, inherit);
+  text-decoration: none;
+}
+
 /* Echoed answers inside an interactive flow (contact / subscribe) read like
    what the user typed at the field prompt. */
 :root[data-layout="terminal"] .terminal-session__flow {
@@ -1655,7 +1832,10 @@
 }
 
 :root[data-layout="terminal"] .terminal-tail[data-flow-label]::after {
-  content: "  # type cancel to abort";
+  /* Hint text is per-mode: a flow offers its abort word, the `ai` assistant
+     offers its exit word. darkmode.js sets data-flow-hint alongside the label
+     (defaulting to the flow abort hint). */
+  content: "  # " attr(data-flow-hint);
 }
 
 :root[data-layout="terminal"] .footer-column {

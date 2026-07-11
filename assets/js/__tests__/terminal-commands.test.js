@@ -54,6 +54,17 @@ describe("terminal command line", () => {
     localStorage.clear();
     localStorage.setItem("theme-layout", "terminal");
     document.documentElement.setAttribute("data-layout", "terminal");
+    // These live on <html>, which innerHTML below doesn't reset — clear the
+    // ones individual tests set so state can't leak between cases.
+    [
+      "data-terminal-boot",
+      "data-terminal-transcript",
+      "data-terminal-exempt",
+      "data-terminal-booted",
+    ].forEach((attr) => document.documentElement.removeAttribute(attr));
+    // A test may pushState to a deeper path; reset so location-derived logic
+    // (the current-page slug) starts from home each case.
+    window.history.pushState({}, "", "/");
 
     document.documentElement.innerHTML = `
       <head><meta name="theme-color" content="#ffffff">
@@ -141,6 +152,7 @@ describe("terminal command line", () => {
           <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="cancel" aria-label="Cancel line">^C</button>
           <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="bottom" aria-label="Jump to prompt">⌄</button>
         </div>
+        <button class="terminal-jump" type="button" data-js="terminal-jump" aria-label="Jump to prompt">⌄</button>
       </body>
     `;
 
@@ -198,6 +210,48 @@ describe("terminal command line", () => {
     expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
     typeCommand("light");
     expect(document.documentElement.getAttribute("data-mode")).toBe("light");
+  });
+
+  test("set <key> <value> changes a setting via the shared grammar", () => {
+    loadModule();
+    typeCommand("set mode dark");
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+    typeCommand("set typography technical");
+    expect(localStorage.getItem("theme-typography")).toBe("technical");
+  });
+
+  test("set with no args lists current values", () => {
+    loadModule();
+    typeCommand("set");
+    const out = sessionText();
+    expect(out).toContain("mode");
+    expect(out).toContain("typography");
+    expect(out).toContain("set <name> <value>");
+  });
+
+  test("set renders clickable chips that run the command on click", () => {
+    loadModule();
+    typeCommand("set");
+    const chip = document.querySelector(
+      '.terminal-session__setting[data-cmd="set mode dark"]'
+    );
+    expect(chip).not.toBeNull();
+    chip.dispatchEvent(new window.Event("click", { bubbles: true }));
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+  });
+
+  test("set rejects an unknown setting and a bad value", () => {
+    loadModule();
+    typeCommand("set bogus x");
+    expect(sessionText()).toContain("unknown setting");
+    typeCommand("set typography wingdings");
+    expect(sessionText()).toContain("set typography: try");
+  });
+
+  test("share copies a themed link", () => {
+    loadModule();
+    typeCommand("share");
+    expect(sessionText()).toContain("copied a link to this exact look");
   });
 
   test("pantone on activates the colour-of-the-year effect", () => {
@@ -447,6 +501,21 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("writing/");
   });
 
+  test("ls renders clickable entries that run cd/cat/open", () => {
+    loadModule();
+    typeCommand("ls");
+    const dir = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cd works"]'
+    );
+    const file = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat about.md"]'
+    );
+    expect(dir).not.toBeNull();
+    expect(file).not.toBeNull();
+    dir.dispatchEvent(new window.Event("click", { bubbles: true }));
+    expect(sessionText()).toContain("cd works");
+  });
+
   test("ls <path> lists that directory; unknown paths error", () => {
     loadModule();
     typeCommand("ls works");
@@ -658,6 +727,17 @@ describe("terminal command line", () => {
     input.value = "cd wri";
     keydown({ key: "Tab" });
     expect(input.value).toBe("cd writing");
+  });
+
+  test("Tab completes a set key and then its value", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "set ty";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("set typography");
+    input.value = "set mode d";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("set mode dark");
   });
 
   test("Ctrl+L clears the screen, Ctrl+C cancels the line", () => {
@@ -1030,6 +1110,86 @@ describe("terminal command line", () => {
     );
   });
 
+  test("append-only ls renders the fetched section's posts as clickable files", async () => {
+    // After `cd writing` (append-only: the live cwd moves, the loaded page
+    // doesn't), a bare `ls` can't read the DOM — it fetches /writing/ and lists
+    // it below. Those posts must be clickable too, just like a local `ls`.
+    loadModule();
+    // Page cwd is home (~); the live cwd has moved into ~/writing.
+    window.getComputedStyle = jest.fn(() => ({
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : prop === "--terminal-cwd"
+          ? "~"
+          : "#ffffff"
+      ),
+    }));
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve(
+          '<div class="summary-card"><a href="/writing/the-grid-inherited/">The grid</a></div>' +
+            '<div class="summary-card"><a href="/writing/another-post/">Another</a></div>'
+        ),
+    });
+    typeCommand("ls");
+    // The remote-ls handler is async (fetch → parse → print); flush its chain.
+    for (let i = 0; i < 6; i++) {
+      await Promise.resolve();
+    }
+
+    const post = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat the-grid-inherited.md"]'
+    );
+    expect(post).not.toBeNull();
+    expect(
+      document.querySelector(
+        '.terminal-session__ls-entry[data-cmd="cat another-post.md"]'
+      )
+    ).not.toBeNull();
+
+    const before = sessionText();
+    post.dispatchEvent(new window.Event("click", { bubbles: true }));
+    // Clicking cats the post cwd-relatively (resolves under ~/writing).
+    expect(sessionText().slice(before.length)).toContain(
+      "cat the-grid-inherited.md"
+    );
+  });
+
+  test("clicking a directory entry in transcript mode opens it (cd then ls)", () => {
+    // In the append-only transcript, a clicked folder navigates by listing
+    // itself right below — cd (move) then ls (show) — with no page reload.
+    document.documentElement.setAttribute("data-terminal-transcript", "1");
+    loadModule();
+    typeCommand("ls");
+    const dir = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cd works"]'
+    );
+    expect(dir).not.toBeNull();
+    dir.dispatchEvent(new window.Event("click", { bubbles: true }));
+    const cmds = [...document.querySelectorAll(".terminal-session__cmd")].map(
+      (n) => n.textContent
+    );
+    // The last two echoes are the cd and its follow-up ls.
+    expect(cmds[cmds.length - 2]).toBe("cd works");
+    expect(cmds[cmds.length - 1]).toBe("ls");
+  });
+
+  test("clicking a directory entry outside transcript mode just cds (no ls)", () => {
+    loadModule();
+    typeCommand("ls");
+    const dir = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cd works"]'
+    );
+    dir.dispatchEvent(new window.Event("click", { bubbles: true }));
+    const cmds = [...document.querySelectorAll(".terminal-session__cmd")].map(
+      (n) => n.textContent
+    );
+    // No auto-ls appended — the plain layout keeps shell-literal cd.
+    expect(cmds[cmds.length - 1]).toBe("cd works");
+  });
+
   test("ls nav/ and ls settings/ list the menus (as the header prints them)", () => {
     loadModule();
     typeCommand("ls nav/");
@@ -1038,7 +1198,7 @@ describe("terminal command line", () => {
     const before = sessionText();
     typeCommand("ls settings/");
     const added = sessionText().slice(before.length);
-    expect(added).toContain("theme");
+    expect(added).toContain("mode");
     expect(added).toContain("language");
   });
 
@@ -1046,6 +1206,100 @@ describe("terminal command line", () => {
     loadModule();
     typeCommand("cd settings");
     expect(sessionText()).toContain("menu, not a directory");
+  });
+
+  test("cat of the current page reads #main locally (no self-fetch)", () => {
+    // On a post's own page, the boot's `cat <slug>.md` must print the live
+    // #main synchronously, not re-fetch the page it's already on.
+    window.history.pushState({}, "", "/works/utblick-no.2/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML = '<div class="content post"><p>Local body line.</p></div>';
+    document.body.appendChild(main);
+    window.fetch = jest.fn();
+    loadModule();
+    typeCommand("cat utblick-no.2.md");
+    expect(sessionText()).toContain("Local body line.");
+    expect(window.fetch).not.toHaveBeenCalled();
+  });
+
+  test("cat renders a post's markdown structure (headings, quote, list, emphasis)", () => {
+    window.history.pushState({}, "", "/works/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      "<h1>Title</h1>" +
+      "<p>Lead with <strong>bold</strong> and <em>italic</em>.</p>" +
+      "<h2>About</h2>" +
+      "<p>Body para.</p>" +
+      "<blockquote>A quote.</blockquote>" +
+      "<ul><li>One</li><li>Two</li></ul>" +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat demo.md");
+    const lines = [...document.querySelectorAll(".terminal-session__out")].map(
+      (n) => n.textContent
+    );
+    expect(lines).toContain("# Title");
+    expect(lines).toContain("## About");
+    expect(lines).toContain("Lead with **bold** and *italic*.");
+    expect(lines).toContain("> A quote.");
+    expect(lines).toContain("- One");
+    expect(lines).toContain("- Two");
+    // A blank line separates blocks (the terminal's markdown margin).
+    expect(lines).toContain("");
+    // Consecutive list items stay tight — no blank between One and Two.
+    const one = lines.indexOf("- One");
+    expect(lines[one + 1]).toBe("- Two");
+  });
+
+  test("cat turns markdown links into clickable tokens (internal cats, external opens)", () => {
+    window.history.pushState({}, "", "/writing/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post"><p>See ' +
+      '<a href="/writing/the-grid-inherited/">The Grid</a> and ' +
+      '<a href="https://example.com/x">the source</a>.</p></div>';
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat demo.md");
+    // Internal link → cats the post's slug; external → opens the URL.
+    const internal = document.querySelector(
+      '.terminal-session__link[data-cmd="cat the-grid-inherited.md"]'
+    );
+    const external = document.querySelector(
+      '.terminal-session__link[data-cmd="open https://example.com/x"]'
+    );
+    expect(internal).not.toBeNull();
+    expect(internal.textContent).toBe("The Grid");
+    expect(external).not.toBeNull();
+    // URL is hidden — only the link text shows in the prose.
+    expect(sessionText()).toContain("See The Grid and the source.");
+    expect(sessionText()).not.toContain("example.com/x");
+  });
+
+  test("cat of a bare featured slug resolves to its card href (not 'No such file')", async () => {
+    // `ls works/ --featured` lists posts as bare `slug.md`, but their real home
+    // is /writing|works/slug/. Catting the bare slug must match the card on the
+    // page and fetch its href — not 404 as an unknown top-level file.
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve('<div class="content post"><p>Body.</p></div>'),
+    });
+    loadModule();
+    typeCommand("cat the-grid-inherited.md");
+    for (let i = 0; i < 6; i++) {
+      await Promise.resolve();
+    }
+    expect(window.fetch).toHaveBeenCalled();
+    expect(window.fetch.mock.calls[0][0]).toContain(
+      "/writing/the-grid-inherited/"
+    );
+    expect(sessionText()).not.toContain("No such file or directory");
   });
 
   test("open navigates to a post file", () => {
@@ -1064,12 +1318,36 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("try: cat a-cut-up-world.md");
   });
 
-  test("ls --featured lists the page's cards as files (not misread as -a)", () => {
+  test("ls --featured lists the page's cards as clickable files (not misread as -a)", () => {
     loadModule();
     typeCommand("ls works/ --featured");
     // The article-card link → a .md file; the long flag must not trip -a.
     expect(sessionText()).toContain("the-grid-inherited.md");
     expect(sessionText()).not.toContain(".secret");
+    // Featured entries are clickable, like a plain ls — each cats itself.
+    const entry = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat the-grid-inherited.md"]'
+    );
+    expect(entry).not.toBeNull();
+    const before = sessionText();
+    entry.dispatchEvent(new window.Event("click", { bubbles: true }));
+    expect(sessionText().slice(before.length)).toContain(
+      "cat the-grid-inherited.md"
+    );
+  });
+
+  test("cat welcome.txt prints the localized hero prose from the DOM", () => {
+    const pre = document.createElement("pre");
+    pre.setAttribute("hidden", "");
+    pre.setAttribute("data-js", "terminal-welcome");
+    pre.textContent = "\nHej, Torbjörn här — designer.\nBaserad i Göteborg.\n";
+    document.body.appendChild(pre);
+    loadModule();
+    typeCommand("cat welcome.txt");
+    // The localized copy wins over the hardcoded English fallback.
+    expect(sessionText()).toContain("Hej, Torbjörn här — designer.");
+    expect(sessionText()).toContain("Baserad i Göteborg.");
+    expect(sessionText()).not.toContain("Hi, Torbjörn here");
   });
 
   test("subscribe reuses the newsletter form action", async () => {
@@ -1104,6 +1382,134 @@ describe("terminal command line", () => {
     expect(document.documentElement.hasAttribute("data-terminal-booted")).toBe(
       false
     );
+  });
+
+  test("jump-to-prompt button shows when the live prompt scrolls out of view", () => {
+    let ioCallback;
+    window.IntersectionObserver = class {
+      constructor(cb) {
+        ioCallback = cb;
+      }
+      observe() {}
+      disconnect() {}
+    };
+    loadModule();
+    const jump = document.querySelector('[data-js="terminal-jump"]');
+    expect(jump).not.toBeNull();
+    // Prompt out of view → button appears; back in view → it hides.
+    ioCallback([{ isIntersecting: false }]);
+    expect(jump.classList.contains("is-visible")).toBe(true);
+    ioCallback([{ isIntersecting: true }]);
+    expect(jump.classList.contains("is-visible")).toBe(false);
+    delete window.IntersectionObserver;
+  });
+
+  test("picking terminal on an exempt tool stores it and heads home", () => {
+    // Visual tools can't be a terminal; choosing it there stores the preference
+    // and navigates home (jsdom no-ops the navigation, so assert the storage).
+    localStorage.setItem("theme-layout", "column");
+    document.documentElement.setAttribute("data-layout", "column");
+    document.documentElement.setAttribute("data-terminal-exempt", "true");
+    document.documentElement.setAttribute("data-home-url", "/");
+    loadModule();
+    window.ThemeActions.setLayout("terminal");
+    expect(localStorage.getItem("theme-layout")).toBe("terminal");
+    // It did NOT apply terminal in place (this page can't render it).
+    expect(document.documentElement.getAttribute("data-layout")).toBe("column");
+  });
+
+  test("report command hands the last exchange to the assistant", () => {
+    const reportSpy = jest.fn();
+    window.TerminalAI = { report: reportSpy };
+    loadModule();
+    typeCommand("report needs more detail");
+    expect(reportSpy).toHaveBeenCalledWith("needs more detail");
+    delete window.TerminalAI;
+  });
+
+  // ---- boot transcript --------------------------------------------------
+
+  test("boot replays the page's declared command sequence into the scrollback", () => {
+    // The home page declares its transcript on <html>; on load each command
+    // runs through the same path as typing it, so the session reads as a real
+    // session (and each lands in ↑ history).
+    document.documentElement.setAttribute(
+      "data-terminal-boot",
+      "ls; set; cat welcome.txt; ls works/ --featured"
+    );
+    loadModule();
+    const text = sessionText();
+    // Echoes of each command (the __cmd lines carry the raw command text).
+    expect(text).toContain("ls");
+    expect(text).toContain("set");
+    expect(text).toContain("cat welcome.txt");
+    // Output of the commands: the welcome blurb, a settings row, a featured card.
+    expect(text.toLowerCase()).toContain("torbjörn");
+    expect(text).toContain("mode");
+    expect(text).toContain("the-grid-inherited.md");
+    // The transcript owns the view — the CSS gate is set so chrome/content hide.
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(true);
+  });
+
+  test("entering terminal via the toggle replays the transcript (no reload)", () => {
+    // Loaded in column, so init doesn't run the transcript; the sequence is
+    // still published on <html>. Toggling terminal on must replay it, matching a
+    // reload — otherwise the toggle showed old chrome and a reload the session.
+    localStorage.setItem("theme-layout", "column");
+    document.documentElement.setAttribute("data-layout", "column");
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    expect(sessionText().trim()).toBe(""); // nothing yet — not in terminal
+    window.ThemeActions.setLayout("terminal");
+    jest.runOnlyPendingTimers(); // the runner is deferred a tick past applyLayout
+    expect(sessionText()).toContain("mode"); // `set` output rendered
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(true);
+  });
+
+  test("a layout toggle mid-session keeps the existing scrollback (no re-replay)", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    typeCommand("help");
+    const before = sessionText();
+    // Leave to column and back — the session persists, transcript doesn't stack.
+    window.ThemeActions.setLayout("column");
+    window.ThemeActions.setLayout("terminal");
+    jest.runOnlyPendingTimers();
+    // No second `set` block appended; the typed `help` is still there.
+    expect(sessionText()).toBe(before);
+  });
+
+  test("boot transcript commands land in ↑ history", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.dispatchEvent(
+      new window.KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true })
+    );
+    // Most recent boot command is recalled first.
+    expect(input.value).toBe("set");
+  });
+
+  test("no boot attr → no transcript, empty session, no CSS gate", () => {
+    loadModule();
+    expect(sessionText().trim()).toBe("");
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(false);
+  });
+
+  test("boot transcript does not run on an exempt page", () => {
+    document.documentElement.setAttribute("data-terminal-exempt", "");
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    expect(sessionText().trim()).toBe("");
+    expect(
+      document.documentElement.hasAttribute("data-terminal-transcript")
+    ).toBe(false);
   });
 
   // ---- language command -------------------------------------------------
