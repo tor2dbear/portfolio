@@ -686,7 +686,7 @@
       // session). Set the sequence and the content-hiding gate pre-paint so the
       // server chrome/content the transcript reproduces is hidden with no flash.
       // Terminal + JS only: no-JS never runs this, so it keeps the plain page.
-      var terminalBoot = {{ $terminalBoot | jsonify }};
+      var terminalBoot = {{ $terminalBoot | jsonify | safeJS }};
       if (
         storedLayout === "terminal" &&
         terminalBoot &&
