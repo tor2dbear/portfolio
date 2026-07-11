@@ -164,6 +164,10 @@
       </ul>
     </div>
 
+    {{/* Terminal layout: the localized home intro (the hero, in prose) that the
+         boot transcript prints via `cat welcome.txt`. Hidden data source only —
+         darkmode.js reads its text; falls back to a hardcoded blurb if absent. */}}
+    <pre hidden data-js="terminal-welcome">{{ i18n "terminal_welcome" }}</pre>
     {{/* Terminal layout: the buffer ends with a live prompt. A real <input> so
          mobile keyboards open on tap and commands / easter eggs can be typed —
          see the command engine in darkmode.js. The session log above it holds

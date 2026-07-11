@@ -1187,12 +1187,36 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("try: cat a-cut-up-world.md");
   });
 
-  test("ls --featured lists the page's cards as files (not misread as -a)", () => {
+  test("ls --featured lists the page's cards as clickable files (not misread as -a)", () => {
     loadModule();
     typeCommand("ls works/ --featured");
     // The article-card link → a .md file; the long flag must not trip -a.
     expect(sessionText()).toContain("the-grid-inherited.md");
     expect(sessionText()).not.toContain(".secret");
+    // Featured entries are clickable, like a plain ls — each cats itself.
+    const entry = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat the-grid-inherited.md"]'
+    );
+    expect(entry).not.toBeNull();
+    const before = sessionText();
+    entry.dispatchEvent(new window.Event("click", { bubbles: true }));
+    expect(sessionText().slice(before.length)).toContain(
+      "cat the-grid-inherited.md"
+    );
+  });
+
+  test("cat welcome.txt prints the localized hero prose from the DOM", () => {
+    const pre = document.createElement("pre");
+    pre.setAttribute("hidden", "");
+    pre.setAttribute("data-js", "terminal-welcome");
+    pre.textContent = "\nHej, Torbjörn här — designer.\nBaserad i Göteborg.\n";
+    document.body.appendChild(pre);
+    loadModule();
+    typeCommand("cat welcome.txt");
+    // The localized copy wins over the hardcoded English fallback.
+    expect(sessionText()).toContain("Hej, Torbjörn här — designer.");
+    expect(sessionText()).toContain("Baserad i Göteborg.");
+    expect(sessionText()).not.toContain("Hi, Torbjörn here");
   });
 
   test("subscribe reuses the newsletter form action", async () => {

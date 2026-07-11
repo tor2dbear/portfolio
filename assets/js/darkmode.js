@@ -2906,7 +2906,7 @@
     // the curated cards on the current page (home's featured works); `--related`
     // lists a post's sibling projects; `--info` prints a post's role/details.
     // All harvested from the current page's DOM — a page's own sequence.
-    function terminalHarvestFiles(selector, emptyMsg) {
+    function terminalHarvestFileLabels(selector) {
       var out = [];
       document.querySelectorAll(selector).forEach(function (a) {
         var segs = terminalHrefSegments(a.getAttribute("href"));
@@ -2918,7 +2918,33 @@
           out.push(file);
         }
       });
+      return out;
+    }
+
+    function terminalHarvestFiles(selector, emptyMsg) {
+      var out = terminalHarvestFileLabels(selector);
       return out.length ? [out.join("  ")] : [emptyMsg];
+    }
+
+    // A harvested file view (`ls --featured` / `--related`) as a clickable
+    // ls-list result — each entry cats itself, same as a plain `ls`. Falls back
+    // to a plain "(empty)" line when nothing matched.
+    function terminalHarvestResult(input, selector, emptyMsg) {
+      var labels = terminalHarvestFileLabels(selector);
+      if (!labels.length) {
+        return { echo: input, lines: [emptyMsg], action: null };
+      }
+      return {
+        echo: input,
+        lines: [],
+        action: {
+          type: "ls-list",
+          tokens: labels.slice(0, 40).map(function (label) {
+            return { label: label, cmd: terminalEntryCmd(label) };
+          }),
+          more: Math.max(0, labels.length - 40),
+        },
+      };
     }
 
     // The project meta (role / details / client) as "label: value" lines,
@@ -3345,6 +3371,25 @@
       return ["a short, occasional newsletter.", "subscribe with: subscribe"];
     }
 
+    // welcome.txt is the home intro (the hero, in prose). Read the localized
+    // copy Hugo emits into a hidden element so the boot's `cat welcome.txt`
+    // prints it in the visitor's language, not the hardcoded English fallback.
+    function terminalWelcomeLines() {
+      var el = document.querySelector('[data-js="terminal-welcome"]');
+      if (el) {
+        var lines = el.textContent
+          .replace(/^\n+|\n+$/g, "")
+          .split("\n")
+          .map(function (line) {
+            return line.replace(/\s+$/, "");
+          });
+        if (lines.length && lines.join("").trim()) {
+          return lines;
+        }
+      }
+      return TERMINAL_FILES.welcome.slice();
+    }
+
     function terminalFile(name) {
       var key = String(name || "")
         .toLowerCase()
@@ -3353,13 +3398,16 @@
       if (key === "secrets") {
         key = "secret";
       }
-      // colophon and newsletter are live footer blocks, reproduced so typing
+      // colophon, newsletter and welcome are live blocks, reproduced so typing
       // the `cat …` the chrome prints shows exactly what's on the page.
       if (key === "colophon") {
         return terminalColophonLines();
       }
       if (key === "newsletter") {
         return terminalNewsletterLines();
+      }
+      if (key === "welcome") {
+        return terminalWelcomeLines();
       }
       return TERMINAL_FILES[key] || null;
     }
@@ -4011,24 +4059,18 @@
             };
           }
           if (lsLong.indexOf("--featured") !== -1) {
-            return {
-              echo: input,
-              lines: terminalHarvestFiles(
-                ".summary-card a[href], .article-card a[href]",
-                "(nothing featured here)"
-              ),
-              action: null,
-            };
+            return terminalHarvestResult(
+              input,
+              ".summary-card a[href], .article-card a[href]",
+              "(nothing featured here)"
+            );
           }
           if (lsLong.indexOf("--related") !== -1) {
-            return {
-              echo: input,
-              lines: terminalHarvestFiles(
-                ".related-items__item .type-headline-4 a[href]",
-                "(no related files)"
-              ),
-              action: null,
-            };
+            return terminalHarvestResult(
+              input,
+              ".related-items__item .type-headline-4 a[href]",
+              "(no related files)"
+            );
           }
           if (lsLong.indexOf("--info") !== -1) {
             // `--info` is a lens on the page you're viewing. For a post you
