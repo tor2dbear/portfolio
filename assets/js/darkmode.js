@@ -2328,6 +2328,8 @@
       "  pantone   [on|off|YYYY]",
       "  grain|blend|motion on/off",
       "  grid      layout grid",
+      "  set [k v] view/set settings",
+      "  share     copy this look",
       "  layout <name>  switch layout",
       "  hire      let's work together",
       "  social    my links",
@@ -2361,6 +2363,8 @@
       "blend",
       "motion",
       "grid",
+      "set",
+      "share",
       "layout",
       "theme",
       "hire",
@@ -2818,6 +2822,45 @@
       return ["mode", "typography", "layout", "effects", "share", "language"];
     }
 
+    // Current settings as `key = value`, git-config style, for `set` with no
+    // args. Keys are exactly what `set <key> <value>` accepts (effects are the
+    // individual toggles). Motion is shown as its feature state (on = animated)
+    // to match `set motion on/off`, not the underlying reduced-motion attribute.
+    function terminalSettingsList() {
+      var root = document.documentElement;
+      var eff = function (attr) {
+        return root.getAttribute(attr) === "on" ? "on" : "off";
+      };
+      var gridAttr = root.getAttribute("data-grid-overlay");
+      var gridOn = gridAttr !== null && gridAttr !== "closing";
+      var pantoneOn =
+        typeof isPantoneModeActive === "function" && isPantoneModeActive();
+      return [
+        "mode        = " + (localStorage.getItem("theme-mode") || "system"),
+        "typography  = " +
+          (localStorage.getItem("theme-typography") || "editorial"),
+        "layout      = " + (root.getAttribute("data-layout") || "column"),
+        "language    = " + currentLang(),
+        "pantone     = " + (pantoneOn ? "on" : "off"),
+        "grid        = " + (gridOn ? "on" : "off"),
+        "blend       = " + eff("data-effect-blend"),
+        "grain       = " + eff("data-effect-grain"),
+        "motion      = " +
+          (eff("data-effect-reduced-motion") === "on" ? "off" : "on"),
+        "",
+        "change: set <name> <value>   e.g. set mode dark",
+      ];
+    }
+
+    // Typography values `set typography <value>` accepts (mirrors the menu).
+    var TERMINAL_TYPOGRAPHY = [
+      "editorial",
+      "refined",
+      "expressive",
+      "technical",
+      "system",
+    ];
+
     // Filtered `ls` views — the same tool, different lens. `--featured` lists
     // the curated cards on the current page (home's featured works); `--related`
     // lists a post's sibling projects; `--info` prints a post's role/details.
@@ -3010,7 +3053,10 @@
         return [terminalNavEntries().join("  ")];
       }
       if (rawArg === "settings") {
-        return [terminalSettingsEntries().join("  ")];
+        return [
+          terminalSettingsEntries().join("  "),
+          "→ view/change with 'set' · share this look with 'share'",
+        ];
       }
       // `ls featured` — the curated selection the home page prints — is a view,
       // harvested from the page's cards (so the header's `ls 'featured'` line is
@@ -4411,6 +4457,93 @@
             action: { type: "layout", layout: wantedLayout },
           };
         }
+        case "set": {
+          // A git-config-style settings verb: `set` lists current values, `set
+          // <key> <value>` changes one. Mostly a thin dispatcher onto the
+          // existing command grammar (so validation lives in one place); only
+          // typography needs its own handling (no standalone command for it).
+          var setKey = (args[0] || "").toLowerCase();
+          var setVal = args.slice(1).join(" ").toLowerCase();
+          if (!setKey) {
+            return {
+              echo: input,
+              lines: terminalSettingsList(),
+              action: null,
+            };
+          }
+          // Delegate to the equivalent command, keeping the `set …` echo so the
+          // scrollback shows what was actually typed.
+          var setDelegate = function (cmd) {
+            var res = runTerminalCommand(cmd);
+            res.echo = input;
+            return res;
+          };
+          switch (setKey) {
+            case "mode":
+              if (["dark", "light", "system"].indexOf(setVal) === -1) {
+                return {
+                  echo: input,
+                  lines: ["set mode: try dark, light or system"],
+                  action: null,
+                };
+              }
+              return setDelegate(setVal);
+            case "layout":
+              return setDelegate("layout " + setVal);
+            case "lang":
+            case "language":
+              return setDelegate("lang " + setVal);
+            case "pantone":
+            case "grid":
+            case "blend":
+            case "grain":
+            case "motion":
+              return setDelegate(setKey + " " + setVal);
+            case "type":
+            case "typography":
+              if (TERMINAL_TYPOGRAPHY.indexOf(setVal) === -1) {
+                return {
+                  echo: input,
+                  lines: [
+                    "set typography: try " + TERMINAL_TYPOGRAPHY.join(", "),
+                  ],
+                  action: null,
+                };
+              }
+              return {
+                echo: input,
+                lines: ["typography → " + setVal],
+                action: { type: "typography", typography: setVal },
+              };
+            default:
+              return {
+                echo: input,
+                lines: [
+                  "set: unknown setting '" + setKey + "' — run 'set' to list",
+                ],
+                action: null,
+              };
+          }
+        }
+        case "share": {
+          var shareUrl =
+            window.ThemeShare &&
+            typeof window.ThemeShare.buildUrl === "function"
+              ? window.ThemeShare.buildUrl()
+              : (window.location && window.location.href) || "";
+          if (!shareUrl) {
+            return {
+              echo: input,
+              lines: ["share: nothing to share here"],
+              action: null,
+            };
+          }
+          return {
+            echo: input,
+            lines: ["copied a link to this exact look — paste it anywhere"],
+            action: { type: "copy", text: shareUrl },
+          };
+        }
         case "debug":
         case "env": {
           var root = document.documentElement;
@@ -4780,6 +4913,9 @@
           break;
         case "mode":
           setMode(action.mode);
+          break;
+        case "typography":
+          setTypography(action.typography);
           break;
         case "pantone":
           if (action.state === "off") {

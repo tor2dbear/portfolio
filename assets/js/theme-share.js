@@ -153,4 +153,8 @@
       );
     });
   });
+
+  // Exposed so the terminal's `share` command can copy the same "share this
+  // look" URL the button builds (encodes the current theme as ?theme=).
+  window.ThemeShare = { buildUrl: buildUrl };
 })();

@@ -200,6 +200,37 @@ describe("terminal command line", () => {
     expect(document.documentElement.getAttribute("data-mode")).toBe("light");
   });
 
+  test("set <key> <value> changes a setting via the shared grammar", () => {
+    loadModule();
+    typeCommand("set mode dark");
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+    typeCommand("set typography technical");
+    expect(localStorage.getItem("theme-typography")).toBe("technical");
+  });
+
+  test("set with no args lists current values", () => {
+    loadModule();
+    typeCommand("set");
+    const out = sessionText();
+    expect(out).toContain("mode");
+    expect(out).toContain("typography");
+    expect(out).toContain("set <name> <value>");
+  });
+
+  test("set rejects an unknown setting and a bad value", () => {
+    loadModule();
+    typeCommand("set bogus x");
+    expect(sessionText()).toContain("unknown setting");
+    typeCommand("set typography wingdings");
+    expect(sessionText()).toContain("set typography: try");
+  });
+
+  test("share copies a themed link", () => {
+    loadModule();
+    typeCommand("share");
+    expect(sessionText()).toContain("copied a link to this exact look");
+  });
+
   test("pantone on activates the colour-of-the-year effect", () => {
     loadModule();
     typeCommand("pantone on");
