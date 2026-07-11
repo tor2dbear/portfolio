@@ -3068,6 +3068,12 @@
             out += "*" + terminalInlineMarkdown(n).trim() + "*";
           } else if (t === "code") {
             out += "`" + terminalInlineMarkdown(n).trim() + "`";
+          } else if (t === "a") {
+            // Keep links as markdown [text](href); the cat printer turns them
+            // into clickable tokens (the printer needs the href to route them).
+            var href = n.getAttribute("href") || "";
+            var label = terminalInlineMarkdown(n).trim();
+            out += href && label ? "[" + label + "](" + href + ")" : label;
           } else {
             out += terminalInlineMarkdown(n);
           }
@@ -4442,6 +4448,15 @@
               action: null,
             };
           }
+          // An absolute URL (an external link clicked in a cat'd page) opens
+          // directly — a new tab for http(s), the handler app for mailto:/tel:.
+          if (/^(https?:|mailto:|tel:)/i.test(args[0])) {
+            return {
+              echo: input,
+              lines: [],
+              action: { type: "open-external", url: args[0] },
+            };
+          }
           // A general "go there": resolves a section OR a post (resolveCdTarget
           // already falls through to content files) and navigates.
           var openName = args[0].replace(/\/$/, "").replace(/\.(md|txt)$/i, "");
@@ -5291,6 +5306,19 @@
             navigateTerminal(action);
           }
           break;
+        case "open-external":
+          // http(s) opens in a new tab so the terminal session survives;
+          // mailto:/tel: hand off to the OS handler via a same-tab assignment.
+          try {
+            if (/^https?:/i.test(action.url)) {
+              window.open(action.url, "_blank", "noopener");
+            } else {
+              window.location.href = action.url;
+            }
+          } catch (e) {
+            /* popup blocked or unsupported scheme — nothing to do */
+          }
+          break;
         case "chdir":
           // Append-only cd: move the LIVE prompt only. --terminal-live-cwd
           // drives the bottom input's PS1; --terminal-cwd (the frozen page cwd)
@@ -5490,6 +5518,67 @@
       terminalSession.appendChild(line);
     }
 
+    // The command a clicked markdown link runs: an internal link cats the post
+    // it points at (its last path segment, .md) — you read it inline, like
+    // clicking a featured card; an external link (or mailto/tel) opens directly.
+    function terminalLinkCmd(url) {
+      var u;
+      try {
+        u = new URL(url, window.location.href);
+      } catch (e) {
+        return "open " + url;
+      }
+      if (u.origin === window.location.origin) {
+        var segs = u.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
+        var lang = (
+          document.documentElement.getAttribute("lang") || ""
+        ).toLowerCase();
+        if (segs.length && segs[0].toLowerCase() === lang) {
+          segs.shift();
+        }
+        var slug = segs.length ? segs[segs.length - 1] : "";
+        return slug ? "cat " + slug + ".md" : "open " + u.pathname;
+      }
+      return "open " + url;
+    }
+
+    // Print a prose line, turning any markdown [text](url) into a clickable
+    // token (URL hidden, like the ls/set chips) that runs terminalLinkCmd on
+    // click. Plain lines take the fast textContent path.
+    var TERMINAL_LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
+    function printTerminalProseLine(text) {
+      if (!terminalSession) {
+        return;
+      }
+      TERMINAL_LINK_RE.lastIndex = 0;
+      if (!TERMINAL_LINK_RE.test(text)) {
+        printTerminalLine(text, "terminal-session__out");
+        return;
+      }
+      var line = document.createElement("span");
+      line.className = "terminal-session__line terminal-session__out";
+      TERMINAL_LINK_RE.lastIndex = 0;
+      var last = 0;
+      var m;
+      while ((m = TERMINAL_LINK_RE.exec(text))) {
+        if (m.index > last) {
+          line.appendChild(document.createTextNode(text.slice(last, m.index)));
+        }
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "terminal-session__link";
+        btn.textContent = m[1];
+        btn.setAttribute("data-cmd", terminalLinkCmd(m[2]));
+        line.appendChild(btn);
+        last = m.index + m[0].length;
+      }
+      if (last < text.length) {
+        line.appendChild(document.createTextNode(text.slice(last)));
+      }
+      terminalSession.appendChild(line);
+      lastTerminalOutput = text;
+    }
+
     // Print a cat'd file's extracted tokens (text lines + [image N] tokens),
     // or an "(empty)" note. Shared by remote-cat (fetched) and cat-local (the
     // current page read straight from #main).
@@ -5505,7 +5594,7 @@
         if (tok.image) {
           printTerminalImageLine(tok);
         } else {
-          printTerminalLine(tok.text, "terminal-session__out");
+          printTerminalProseLine(tok.text);
         }
       });
     }

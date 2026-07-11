@@ -1744,6 +1744,31 @@
   outline: none;
 }
 
+/* Inline links inside a cat'd page: clickable link text (the URL is hidden, the
+   click cats/opens it) — underlined like a terminal's derived hyperlink, sitting
+   in the prose flow. Reset the button chrome so it reads as a word, not a chip. */
+:root[data-layout="terminal"] .terminal-session__link {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-link, var(--text-accent, inherit));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-session__link:hover,
+:root[data-layout="terminal"] .terminal-session__link:focus-visible {
+  color: var(--text-default, inherit);
+  outline: none;
+}
+
 /* Echoed answers inside an interactive flow (contact / subscribe) read like
    what the user typed at the field prompt. */
 :root[data-layout="terminal"] .terminal-session__flow {

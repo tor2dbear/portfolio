@@ -1254,6 +1254,32 @@ describe("terminal command line", () => {
     expect(lines[one + 1]).toBe("- Two");
   });
 
+  test("cat turns markdown links into clickable tokens (internal cats, external opens)", () => {
+    window.history.pushState({}, "", "/writing/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post"><p>See ' +
+      '<a href="/writing/the-grid-inherited/">The Grid</a> and ' +
+      '<a href="https://example.com/x">the source</a>.</p></div>';
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat demo.md");
+    // Internal link → cats the post's slug; external → opens the URL.
+    const internal = document.querySelector(
+      '.terminal-session__link[data-cmd="cat the-grid-inherited.md"]'
+    );
+    const external = document.querySelector(
+      '.terminal-session__link[data-cmd="open https://example.com/x"]'
+    );
+    expect(internal).not.toBeNull();
+    expect(internal.textContent).toBe("The Grid");
+    expect(external).not.toBeNull();
+    // URL is hidden — only the link text shows in the prose.
+    expect(sessionText()).toContain("See The Grid and the source.");
+    expect(sessionText()).not.toContain("example.com/x");
+  });
+
   test("cat of a bare featured slug resolves to its card href (not 'No such file')", async () => {
     // `ls works/ --featured` lists posts as bare `slug.md`, but their real home
     // is /writing|works/slug/. Catting the bare slug must match the card on the
