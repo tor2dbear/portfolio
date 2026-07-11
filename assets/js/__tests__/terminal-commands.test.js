@@ -30,7 +30,10 @@ describe("terminal command line", () => {
 
   function loadModule() {
     jest.isolateModules(() => {
+      // darkmode.js first (publishes window.Theme synchronously), then the
+      // terminal engine, which aliases window.Theme at IIFE eval.
       require("../darkmode.js");
+      require("../terminal.js");
     });
     document.dispatchEvent(new window.Event("DOMContentLoaded"));
   }
