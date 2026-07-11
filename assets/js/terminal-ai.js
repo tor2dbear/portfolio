@@ -139,8 +139,10 @@
     }
   }
 
-  // Print the subtle [report] chip after a reply, if the seam supports clickable
-  // chips (progressive: an older seam just omits it — `report` still works typed).
+  // Print the subtle [report] chip — only after a fallback, where clanker knows
+  // it couldn't answer (a real answer doesn't get one; type `report` to flag a
+  // wrong-but-matched reply). Progressive: an older seam without printChip just
+  // omits it, and `report` still works typed.
   function printReportChip() {
     var t = term();
     var d = data();
@@ -443,8 +445,10 @@
     var replyObj = entity && entity.reply ? entity.reply : result.intent.reply;
     var replyLines = pickLang(replyObj, lg);
     printLines(replyLines, "terminal-session__out");
+    // No [report] chip on a real answer — it gave one. Reporting a wrong-but-
+    // matched reply is still possible by typing `report` (surfaced in the hint);
+    // the chip is reserved for the fallback, where clanker knows it whiffed.
     captureExchange(raw, replyLines, result, "answer");
-    printReportChip();
 
     var action = result.intent.action || null;
     if (action && action.type === "flow") {

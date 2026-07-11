@@ -394,13 +394,18 @@ describe("start / handleLine loop", () => {
     expect(ai.isActive()).toBe(false);
   });
 
-  test("prints a [report] chip after an answer", () => {
+  test("prints a [report] chip on a fallback, not on a real answer", () => {
     const ai = loadAi();
     const m = mockTerminal();
     window.Terminal = m.t;
     ai.start();
+
+    // A confident answer gets no chip (it answered) …
     m.feed("vad finns det för projekt?");
-    // A clickable chip carrying the `report` command follows the reply.
+    expect(m.t.printChip).not.toHaveBeenCalled();
+
+    // … but a fallback (clanker couldn't answer) does — carrying `report`.
+    m.feed("qwertyuiop zxcvbnm");
     expect(m.t.printChip).toHaveBeenCalledWith(
       expect.any(String),
       "report",

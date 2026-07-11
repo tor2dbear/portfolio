@@ -68,8 +68,8 @@
     // Trailing hint on the prompt while the assistant owns it (the `# …` after
     // "you>"). Its own exit word, not a flow's "cancel".
     promptHint: {
-      sv: "skriv exit för att lämna",
-      en: "type exit to leave",
+      sv: "exit för att lämna · report om jag svarar fel",
+      en: "exit to leave · report if I'm off",
     },
 
     // Printed before a real command the assistant forwards to the shell, so it
