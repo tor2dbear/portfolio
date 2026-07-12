@@ -2,7 +2,7 @@
 title = "What Wouldn't Collapse"
 date = "2026-07-12"
 author = "Torbjörn Hedberg"
-draft = true
+draft = false
 hidden = false
 description = "A graphic designer lets AI agents rebuild his portfolio as a terminal — notes on directing work you never draw"
 tags = ["design", "process", "ai"]
