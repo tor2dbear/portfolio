@@ -1,0 +1,81 @@
+name: codex-review-surface
+
+# Pin Codex's PR review into a sticky comment so it isn't missed.
+#
+# Codex (the chatgpt-codex-connector app) only *submits a review* when it has
+# feedback — otherwise it just reacts 👍. So this workflow firing already means
+# "Codex found something", and it surfaces that in the PR conversation where the
+# work happens, the same way the CI quality + npm audit summary do.
+#
+# Note: pull_request_review workflows run from the repository's DEFAULT branch,
+# so this takes effect once merged to master (it won't run on its own PR).
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  surface:
+    if: github.event.review.user.login == 'chatgpt-codex-connector[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pin Codex review into a sticky comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            const review = context.payload.review;
+            const marker = '<!-- CODEX_REVIEW_STATUS -->';
+
+            // Number of inline suggestions Codex attached to this review.
+            let count = null;
+            try {
+              const comments = await github.paginate(
+                github.rest.pulls.listCommentsForReview,
+                { owner, repo, pull_number: prNumber, review_id: review.id }
+              );
+              count = comments.length;
+            } catch (e) {
+              core.info(`Could not count review comments: ${e.message}`);
+            }
+
+            const sha = (review.commit_id || '').slice(0, 9);
+            const n = count === null ? 'some' : count;
+            const plural = count === 1 ? '' : 's';
+            const body = [
+              marker,
+              '## 🔎 Codex review',
+              '',
+              `Codex left feedback on \`${sha}\` — **${n} inline suggestion${plural}**.`,
+              '',
+              `[View the review](${review.html_url}) · reply \`@codex address that feedback\` to have it revise, or add the **codex-review** label after changes for a fresh pass.`,
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number: prNumber,
+            });
+            const existing = comments.find(
+              (c) => c.body && c.body.includes(marker)
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body,
+              });
+            }
