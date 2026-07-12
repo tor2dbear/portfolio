@@ -1,0 +1,415 @@
+/* Terminal layout 1/5: contract, one type size, shared text chrome.
+   Part of the terminal layout dimension — split from terminal.css along its
+   original section order. The five files concatenate in sequence (see
+   head.html); do not reorder them, the cascade depends on it. */
+/* ============================================================================
+   LAYOUT: Terminal
+
+   Text all the way down. One type size, a fixed ~terminal-window measure that
+   header, content stream and footer all align to, no images in the flow
+   (figures collapse to numbered [image n] tokens that open the lightbox),
+   no icons, no button chrome, dividers drawn with box-drawing characters.
+
+   Colour stays owned by palette/mode and the text face by typography — this
+   file only draws its decorative glyphs (prompts, rules, brackets) in mono so
+   they hold up under any typeface. Pairs with typography: technical via the
+   layout-pairing map in theme.js.
+
+   Structure: the tokens and the "Shared text chrome" section below carry the
+   primitives (PS1 strings, the text-button reset, hover underline, bracket
+   and slash glyphs); the sections after them mostly just pick content strings
+   and layout. New components get the right look by joining a shared group.
+
+   CONTRACT — what this layout relies on outside this file:
+   - --terminal-host / --terminal-cwd: per-page CSS string vars emitted by
+     head.html. The fallbacks here only cover pages that miss that block.
+   - topmenu.html: .terminal-boot banner, .terminal-prompt rows and the
+     quick-toggle/home li's exist only for this layout (hidden elsewhere by
+     navigation.css); footer.html: .terminal-tail with data-exit-hint.
+   - settings-dropdown.html: data-terminal-expand/-collapse on
+     .settings-toggle carry the expander labels; effect buttons label
+     themselves via data-toast-title/aria-label.
+   - summary templates: .summary-card__year spans (hidden in other layouts)
+     become the ls-row year column.
+   - footer.html: .footer-meta__item [data-category] becomes the colophon's
+     KEY=value status name.
+   - DOM order on work posts: the gallery prompt needs .project-info followed
+     by .gallery / .post-content containing figures.
+   - Pages that cannot adapt opt out with data-terminal-exempt on <html>
+     (header.html); theme.js and the pre-hydration script fall back to
+     column there without touching the stored preference.
+   ============================================================================ */
+
+:root[data-layout="terminal"] {
+  /* Composition tokens */
+  --layout-section-rhythm: clamp(
+    var(--spacing-24),
+    calc(
+      var(--spacing-24) + 16 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-40)
+  ); /* 24 → 40 */
+  --layout-hero-rhythm: clamp(
+    var(--spacing-16),
+    calc(
+      var(--spacing-16) + 8 * (100vw - var(--fluid-floor)) / var(--fluid-span)
+    ),
+    var(--spacing-24)
+  ); /* 16 → 24 */
+  --layout-heading-gap: var(--spacing-16);
+  --layout-col-gap: var(--spacing-16);
+  --layout-row-gap: var(--spacing-16);
+  --layout-scale-ratio: 1;
+  --layout-prose-rhythm: 0.9;
+
+  /* Page/section spacing knobs — the whole stream sits on one tight gap so the
+     buffer reads as a continuous terminal session (replaces the old direct
+     .content / .startpage-heading padding override below). */
+  --layout-content-top: var(--spacing-24);
+  --layout-hero-heading-top: var(--spacing-24);
+  --layout-about-cv-gap: var(--spacing-24);
+  --layout-contact-info-gap: var(--spacing-24);
+
+  /* The terminal window: the 12-col grid's side tracks absorb everything
+     beyond ~48rem, so header, main and footer (which share the grid template
+     in style.css) all narrow to the same centred stream. */
+  --terminal-window: 48rem;
+  --size-page-margins: max(
+    var(--spacing-16),
+    calc((100vw - var(--terminal-window)) / 2)
+  );
+
+  /* One text size everywhere; hierarchy is weight + colour + indent. */
+  --terminal-font-size: var(--text-base);
+  --terminal-line-height: 1.7;
+
+  /* The PS1 strings — every prompt in the buffer composes from these.
+     The short form (cwd only) is what small screens collapse to.
+
+     --terminal-cwd is the page's FROZEN load cwd (server-set, never changed by
+     an append-only `cd`), so every server-rendered history prompt — the header
+     nav, the hero/featured/footer tour lines, a post's `cat` header — stays put
+     as scrollback. Only the live input prompt tracks the working directory, via
+     the parallel --terminal-live-cwd chain below (terminal.js's `chdir` moves
+     that one alone). Scrollback echoes freeze their own inline --terminal-cwd. */
+  --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
+  --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-short);
+
+  --terminal-live-cwd: var(--terminal-cwd, "~");
+  --terminal-ps1-live-short: var(--terminal-live-cwd, "~") "$ ";
+  --terminal-ps1-live: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-live-short);
+
+  /* Figure tokens and the gallery listing argument. */
+  --terminal-image-label: "[image ";
+  --terminal-gallery-arg: "'images'";
+
+  /* The header is static (scrolls away) and multi-row, so anchor scroll
+     padding needs no header offset. */
+  --size-header-height: 0rem;
+}
+
+:root:lang(sv)[data-layout="terminal"] {
+  --terminal-image-label: "[bild ";
+  --terminal-gallery-arg: "'bilder'";
+}
+
+/* Compact PS1 on small screens — one redefinition trims every prompt. */
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] {
+    --terminal-ps1: var(--terminal-ps1-short);
+    --terminal-ps1-live: var(--terminal-ps1-live-short);
+  }
+}
+
+/* #main and .footer-container are capped at --content-max-width (1280px)
+   while the margin tracks are computed from 100vw — on screens wider than
+   the cap their content edge drifts from the header's. Uncap both so all
+   three regions share the same math. */
+:root[data-layout="terminal"] #main,
+:root[data-layout="terminal"] .footer-container {
+  max-width: none;
+}
+
+/* Reveal-on-scroll waits for images to load before showing an element, and
+   the summary-card images are display:none here (lazy imgs that never load),
+   so the reveal would never fire. A terminal doesn't fade anyway — everything
+   is just there. */
+:root[data-layout="terminal"] .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Page-container top padding (.content / .startpage-heading) now rides the
+   --layout-content-top / --layout-hero-heading-top tokens set above, so the
+   stream still starts right under the statusbar. */
+
+/* ============================================================================
+   One type size
+   The type classes multiply distinct clamp() bases by --layout-scale-ratio,
+   so a ratio alone can't flatten the scale — override the sizes directly.
+   Bold is the only size axis left.
+   ============================================================================ */
+
+:root[data-layout="terminal"] body {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+}
+
+:root[data-layout="terminal"] h1,
+:root[data-layout="terminal"] h2,
+:root[data-layout="terminal"] h3,
+:root[data-layout="terminal"] h4,
+:root[data-layout="terminal"] h5,
+:root[data-layout="terminal"] h6,
+:root[data-layout="terminal"] .type-display-1,
+:root[data-layout="terminal"] .type-display-2,
+:root[data-layout="terminal"] .type-headline-1,
+:root[data-layout="terminal"] .type-headline-2,
+:root[data-layout="terminal"] .type-headline-3,
+:root[data-layout="terminal"] .type-headline-4,
+:root[data-layout="terminal"] .type-headline-5,
+:root[data-layout="terminal"] .type-headline-small,
+:root[data-layout="terminal"] .type-preamble,
+:root[data-layout="terminal"] .type-lead,
+:root[data-layout="terminal"] .type-body,
+:root[data-layout="terminal"] .startpage-heading__cta,
+:root[data-layout="terminal"] #main :is(h1, h2, h3, h4, h5, h6) {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+  font-weight: 700;
+  letter-spacing: normal;
+}
+
+:root[data-layout="terminal"] .type-preamble,
+:root[data-layout="terminal"] .type-lead,
+:root[data-layout="terminal"] .type-body {
+  font-weight: inherit;
+}
+
+/* Prose bodies carry their own --text-lg sizing — same size as everything. */
+:root[data-layout="terminal"] .prose :is(p, ul, ol, li, blockquote, table) {
+  font-size: var(--terminal-font-size);
+  line-height: var(--terminal-line-height);
+}
+
+:root[data-layout="terminal"] .type-headline-small {
+  text-transform: none;
+}
+
+/* Hero emphasis marks drop their highlight pill — colour only. */
+:root[data-layout="terminal"] .hero-emphasis {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: var(--text-accent);
+}
+
+/* The hero is the first line of the login tour: `cat welcome.txt` prints the
+   intro. (Home-only — the hero section exists only there. Typeable: `welcome`
+   is a pseudo-file in terminal.js.) */
+:root[data-layout="terminal"] .hero-section::before {
+  content: var(--terminal-ps1) "cat welcome.txt";
+  display: block;
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  margin-bottom: var(--spacing-16);
+}
+
+/* ============================================================================
+   Shared text chrome — the primitives every terminal component composes from.
+   Individual sections below only pick content strings and layout on top.
+   ============================================================================ */
+
+/* Prompt/command pseudos: dimmed mono, never bold — the PS1s, the cat/ls
+   verbs and the md heading markers all read as chrome around the content. */
+:root[data-layout="terminal"] .content h2::before,
+:root[data-layout="terminal"] .content h3::before,
+:root[data-layout="terminal"] .section-heading::before,
+:root[data-layout="terminal"] .about-cv__title::before,
+:root[data-layout="terminal"] .works-section .post-header h2::before,
+:root[data-layout="terminal"] .content h2::after,
+:root[data-layout="terminal"] .content h3::after,
+:root[data-layout="terminal"] .section-heading::after,
+:root[data-layout="terminal"] .about-cv__title::after,
+:root[data-layout="terminal"] .works-section .post-header h2::after,
+:root[data-layout="terminal"] .content.post h1::before,
+:root[data-layout="terminal"] .content.post h1::after,
+:root[data-layout="terminal"] .content.post h2::before,
+:root[data-layout="terminal"] .content.post h3::before,
+:root[data-layout="terminal"] .footer-heading--newsletter::before,
+:root[data-layout="terminal"] .footer-heading--newsletter::after {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+}
+
+/* Block prompts: commands that print on their own line above their output. */
+:root[data-layout="terminal"] .content.post > .project-info::before,
+:root[data-layout="terminal"] .content.post .project-info + .gallery::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content
+  > .gallery:first-child::before,
+:root[data-layout="terminal"]
+  .content.post
+  .project-info
+  + .post-content:has(figure)::before,
+:root[data-layout="terminal"] .footer-grid--primary::before,
+:root[data-layout="terminal"] .footer-meta::before,
+:root[data-layout="terminal"] .footer-newsletter__fields::before,
+:root[data-layout="terminal"] .contact-form__form::before {
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+}
+
+/* Text-button reset: every control in the buffer is a bare word. Colour
+   defaults to link; muted controls override below where they're styled. */
+:root[data-layout="terminal"] .settings-toggle,
+:root[data-layout="terminal"] .terminal-quick,
+:root[data-layout="terminal"] .terminal-boot__exit,
+:root[data-layout="terminal"] .footer-newsletter__submit,
+:root[data-layout="terminal"] #main .button,
+:root[data-layout="terminal"] .settings-panel .theme-option,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button,
+:root[data-layout="terminal"] .settings-panel .language-option,
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button,
+:root[data-layout="terminal"] .contact-form__submit {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  font-size: var(--terminal-font-size);
+  font-family: inherit;
+  color: var(--text-link, var(--text-default));
+  cursor: pointer;
+}
+
+:root[data-layout="terminal"] .settings-panel .theme-option,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button,
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button {
+  width: auto;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+/* Text inputs join the stream: borderless, inheriting the buffer's face. */
+:root[data-layout="terminal"] .footer-newsletter__input,
+:root[data-layout="terminal"] .contact-form .form-input {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--terminal-font-size);
+  caret-color: var(--text-accent, currentColor);
+}
+
+:root[data-layout="terminal"] .footer-newsletter__input:focus,
+:root[data-layout="terminal"] .contact-form .form-input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Hover: underline is the terminal's only hover effect — no surfaces. */
+:root[data-layout="terminal"] .terminal-prompt__host:hover,
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link:hover,
+:root[data-layout="terminal"]
+  .top-menu__item--nav
+  .top-menu__link:focus-visible,
+:root[data-layout="terminal"]
+  .top-menu__item--contact
+  .top-menu__link--button:hover,
+:root[data-layout="terminal"] .settings-toggle:hover,
+:root[data-layout="terminal"] .terminal-quick:hover,
+:root[data-layout="terminal"] .terminal-boot__exit:hover,
+:root[data-layout="terminal"] .tag:hover,
+:root[data-layout="terminal"] .footer-newsletter__submit:hover,
+:root[data-layout="terminal"] #main .button:hover,
+:root[data-layout="terminal"] .settings-panel .theme-option:hover,
+:root[data-layout="terminal"] .settings-panel .theme-effect-button:hover,
+:root[data-layout="terminal"] .coty-transport__trigger:hover,
+:root[data-layout="terminal"] .coty-player__button:hover,
+:root[data-layout="terminal"] .contact-form__submit:hover {
+  background: transparent;
+  background-image: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Bracketed controls: [word] marks the actionable/active thing. */
+:root[data-layout="terminal"] .terminal-quick--lang::before,
+:root[data-layout="terminal"] .footer-newsletter__submit::before,
+:root[data-layout="terminal"] #main .button::before,
+:root[data-layout="terminal"] .settings-panel .theme-option.active::before,
+:root[data-layout="terminal"]
+  .settings-panel
+  .language-option--current
+  .language-name::before,
+:root[data-layout="terminal"] .contact-form__submit::before {
+  content: "[";
+  font-family: var(--font-mono);
+}
+
+:root[data-layout="terminal"] .terminal-quick--lang::after,
+:root[data-layout="terminal"] .footer-newsletter__submit::after,
+:root[data-layout="terminal"] #main .button::after,
+:root[data-layout="terminal"] .settings-panel .theme-option.active::after,
+:root[data-layout="terminal"]
+  .settings-panel
+  .language-option--current
+  .language-name::after,
+:root[data-layout="terminal"] .contact-form__submit::after {
+  content: "]";
+  font-family: var(--font-mono);
+}
+
+/* Links that are directories carry the trailing slash — the nav sections. */
+:root[data-layout="terminal"] .top-menu__item--nav .top-menu__link::after,
+:root[data-layout="terminal"] .top-menu__label--long::after {
+  content: "/";
+  font-family: var(--font-mono);
+}
+
+/* Posts are files: an ls-row shows the slug as a .md filename (stamped onto the
+   link by terminal.js), not the human title. The title stays in the DOM for
+   screen readers and every other layout; here font-size:0 hides it and the
+   ::after prints the filename. */
+:root[data-layout="terminal"] .summary-card__title a[data-slug],
+:root[data-layout="terminal"] .summary-card__title a[data-dir],
+:root[data-layout="terminal"] .article-card__title a[data-slug],
+:root[data-layout="terminal"]
+  .related-items__item
+  .type-headline-4
+  a[data-slug] {
+  font-size: 0;
+}
+
+:root[data-layout="terminal"] .summary-card__title a[data-slug]::after,
+:root[data-layout="terminal"] .article-card__title a[data-slug]::after,
+:root[data-layout="terminal"]
+  .related-items__item
+  .type-headline-4
+  a[data-slug]::after {
+  content: attr(data-slug) ".md";
+  font-size: var(--terminal-font-size);
+  font-family: var(--font-mono);
+}
+
+/* A taxonomy/section card (works' "tags") is a directory — slug/, not slug.md. */
+:root[data-layout="terminal"] .summary-card__title a[data-dir]::after {
+  content: attr(data-dir) "/";
+  font-size: var(--terminal-font-size);
+  font-family: var(--font-mono);
+}

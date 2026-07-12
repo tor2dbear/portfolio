@@ -151,7 +151,11 @@
   {{ $dimensions_layout_column := resources.Get "css/dimensions/layout/column.css" }}
   {{ $dimensions_layout_editorial := resources.Get "css/dimensions/layout/editorial.css" }}
   {{ $dimensions_layout_index := resources.Get "css/dimensions/layout/index.css" }}
-  {{ $dimensions_layout_terminal := resources.Get "css/dimensions/layout/terminal.css" }}
+  {{ $terminal_core := resources.Get "css/dimensions/layout/terminal/core.css" }}
+  {{ $terminal_content := resources.Get "css/dimensions/layout/terminal/content.css" }}
+  {{ $terminal_boot := resources.Get "css/dimensions/layout/terminal/boot.css" }}
+  {{ $terminal_input := resources.Get "css/dimensions/layout/terminal/input.css" }}
+  {{ $terminal_panels := resources.Get "css/dimensions/layout/terminal/panels.css" }}
 
   <!-- CSS utilities -->
   {{ $utilities_typography := resources.Get "css/utilities/typography.css" }}
@@ -417,7 +421,11 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_column.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_editorial.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_index.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_terminal.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_core.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_content.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_boot.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_input.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_panels.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_grid.RelPermalink }}" />
@@ -467,7 +475,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $dimensions_layout_terminal $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -526,7 +534,7 @@
 
   {{/* Terminal layout prompt strings: host from the site URL, cwd from the
        current page's first path segment (language prefix stripped). Consumed
-       as CSS string vars by dimensions/layout/terminal.css; harmless (unused)
+       as CSS string vars by dimensions/layout/terminal/ (core.css); harmless (unused)
        in every other layout. */}}
   {{- $terminalHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
   {{- $terminalPath := strings.Trim .RelPermalink "/" -}}
@@ -783,11 +791,13 @@
   {{ $js15 := resources.Get "js/brand-curl-random.js" }}
   {{ $js16 := resources.Get "js/grid-overlay.js" }}
   {{ $js17 := resources.Get "js/keyboard-chords.js" }}
+  {{ $js_toml_highlight := resources.Get "js/toml-highlight.js" }}
   {{ $js18 := resources.Get "js/palette-generator.js" }}
   {{ $js19 := resources.Get "js/writing-tag-filter.js" }}
   {{ $js20 := resources.Get "js/tabs.js" }}
   {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
+  {{ $js_terminal_data := resources.Get "js/terminal-data.js" }}
   {{ $js_terminal := resources.Get "js/terminal.js" }}
   {{ $js_terminal_flows := resources.Get "js/terminal-flows.js" }}
   {{ $js_terminal_nav := resources.Get "js/terminal-nav.js" }}
@@ -815,6 +825,7 @@
     <script src="{{ $js_custom_palette.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js_theme_pantone.RelPermalink }}" defer></script>
+    <script src="{{ $js_terminal_data.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_flows.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
@@ -835,6 +846,7 @@
     <script src="{{ $js16.RelPermalink }}" defer></script>
     <script src="{{ $js17.RelPermalink }}" defer></script>
     {{ if $isPaletteGeneratorPage }}
+      <script src="{{ $js_toml_highlight.RelPermalink }}" defer></script>
       <script src="{{ $js18.RelPermalink }}" defer></script>
     {{ end }}
     {{ if $isWritingListPage }}
@@ -850,7 +862,7 @@
     <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal_data $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}
@@ -861,7 +873,7 @@
       {{ $pageJs = $pageJs | append $js10 $js21 }}
     {{ end }}
     {{ if $isPaletteGeneratorPage }}
-      {{ $pageJs = $pageJs | append $js18 }}
+      {{ $pageJs = $pageJs | append $js_toml_highlight $js18 }}
     {{ end }}
     {{ if $isWritingListPage }}
       {{ $pageJs = $pageJs | append $js19 }}

@@ -1,0 +1,244 @@
+/* Terminal layout 3/5: boot banner and boot-transcript mode.
+   Part of the terminal layout dimension — split from terminal.css along its
+   original section order. The five files concatenate in sequence (see
+   head.html); do not reorder them, the cascade depends on it. */
+/* ============================================================================
+   Boot banner — ascii curl, fake boot lines, exit hint
+   ============================================================================ */
+
+:root[data-layout="terminal"] .terminal-boot {
+  display: block;
+  padding-top: var(--spacing-16);
+  font-size: var(--terminal-font-size);
+}
+
+:root[data-layout="terminal"] .terminal-boot__art {
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  /* Block glyphs (█) fill the full em box; line-height 1 makes stacked rows
+     tile into one solid shape with no seams between lines. */
+  line-height: 1;
+  color: var(--text-accent, currentColor);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-8);
+  white-space: pre;
+  max-width: 100%;
+  /* Not overflow-x:auto — that makes overflow-y compute to auto too, and the
+     block glyphs sit a hair taller than the line box, so a stray vertical
+     scrollbar appears. The art is sized per breakpoint to fit; clip both axes
+     so no scroll container is ever created. */
+  overflow: clip;
+}
+
+/* Two curl sizes, swapped by breakpoint so each viewport gets art that fits:
+   the compact ~26-col one on phones, the detailed ~40-col one from 40em up
+   (where it clears the viewport comfortably). */
+:root[data-layout="terminal"] .terminal-boot__art--lg {
+  display: none;
+}
+
+@media (min-width: 40em) {
+  :root[data-layout="terminal"] .terminal-boot__art--sm {
+    display: none;
+  }
+
+  :root[data-layout="terminal"] .terminal-boot__art--lg {
+    display: block;
+  }
+}
+
+/* Host title + boot-ok line: the banner's text rows, printed under the frame
+   so they wrap on a narrow screen instead of forcing the box wide. Accent
+   like the art they sit under; each on its own line. */
+:root[data-layout="terminal"] .terminal-boot__meta {
+  margin: 0 0 var(--spacing-8);
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 1.4;
+  color: var(--text-accent, currentColor);
+  overflow-wrap: anywhere;
+}
+
+:root[data-layout="terminal"] .terminal-boot__title,
+:root[data-layout="terminal"] .terminal-boot__status {
+  display: block;
+}
+
+:root[data-layout="terminal"] .terminal-boot__line {
+  color: var(--text-muted, inherit);
+  margin: 0;
+}
+
+:root[data-layout="terminal"] .terminal-boot__exit {
+  font-family: var(--font-mono);
+}
+
+/* Subsequent pages in a session skip the login banner (ASCII art + status):
+   a MOTD prints once, not on every cd. The exit hint stays — it's navigation
+   help, not boot chrome. Flag is set pre-paint in head.html, so no flash.
+   Exception: transcript mode, where every boot is a fresh session start — the
+   art stays as the splash (its own breakpoint rules pick the sm/lg size), so
+   the top never collapses to an empty band on a returning reload. */
+:root[data-terminal-booted][data-layout="terminal"]:not(
+    [data-terminal-transcript]
+  )
+  .terminal-boot__art,
+:root[data-terminal-booted][data-layout="terminal"] .terminal-boot__meta {
+  display: none;
+}
+
+/* ============================================================================
+   Boot transcript mode
+
+   When a page replays a real command sequence on load (data-terminal-transcript,
+   set pre-paint in head.html + by terminal.js), the terminal IS that transcript:
+   the server-rendered header chrome (the `ls nav/` prompt, the nav-as-ls list,
+   the `set` block, the quick-toggles), the page content (#main) and the footer
+   blocks (sitemap, newsletter, colophon) are all things the transcript now
+   reproduces as genuine command output — so they hide, leaving just the banner
+   art, the scrollback and the live prompt. The hidden markup stays in the DOM as
+   the transcript's data source (ls/cat read it) and as the no-JS / crawler
+   fallback: this mode is JS-only, so without JS none of it hides. The banner's
+   fabricated meta (host title + "boot ok") goes too — the curl art stays as the
+   one login splash, everything else is a command you could have typed.
+   ============================================================================ */
+:root[data-terminal-transcript][data-layout="terminal"] .top-menu__container,
+:root[data-terminal-transcript][data-layout="terminal"] #main,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-grid--primary,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-newsletter,
+:root[data-terminal-transcript][data-layout="terminal"] .footer-meta,
+:root[data-terminal-transcript][data-layout="terminal"] .terminal-boot__meta {
+  display: none;
+}
+
+/* #layout is a min-height:100vh grid whose middle (main) row is 1fr — it fills
+   the viewport. With #main hidden that row still stretched, dropping the footer
+   (scrollback + prompt) to the bottom and opening a tall empty band under the
+   banner. Collapse the rows to content height so the transcript stacks right
+   under the banner; any viewport slack falls harmlessly below the prompt. */
+:root[data-terminal-transcript][data-layout="terminal"] #layout {
+  grid-template-rows: auto auto auto;
+}
+
+/* The buffer ends with a live prompt. Kept as a normal block so the prompt,
+   caret, input and hint all flow inline like one line of terminal text —
+   crucially NOT a flex row, which (with the input's native field box) pushed
+   the field onto its own line on mobile. */
+:root[data-layout="terminal"] .terminal-tail {
+  display: block;
+  grid-column: content-start / content-end;
+  justify-self: start;
+  text-align: left;
+  margin-top: var(--spacing-24);
+  font-size: var(--terminal-font-size);
+  /* Reserve room under the live prompt for the mobile key bar, which is a
+     fixed overlay (see .terminal-keybar) and so takes no layout space of its
+     own. terminal.js measures the bar and sets --terminal-keybar-h while it is
+     visible; 0 otherwise (desktop, blurred), so this is a no-op there. Without
+     it the prompt scrolls to the very bottom and hides behind the bar. */
+  padding-bottom: var(--terminal-keybar-h, 0px);
+}
+
+:root[data-layout="terminal"] .terminal-tail__prompt::before {
+  content: var(--terminal-ps1-live);
+  color: var(--text-muted, inherit);
+}
+
+/* The live command line: an inline field with all native chrome stripped
+   (-webkit-appearance:none kills the rounded box / focus ring iOS draws), so
+   it reads as raw prompt text with the themed caret. Auto-sized to its content
+   (JS keeps the size attribute in sync) so the trailing hint hugs the text. */
+:root[data-layout="terminal"] .terminal-tail__input {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline;
+  width: auto;
+  min-width: 1ch;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  caret-color: var(--text-accent, currentColor);
+  outline: none;
+  /* Focus scroll-into-view leaves the same key-bar gap below the field, so
+     tapping the prompt never lands it behind the bar (pairs with the tail's
+     padding-bottom above). */
+  scroll-margin-bottom: var(--terminal-keybar-h, 0px);
+}
+
+/* Belt-and-braces for iOS Safari, which still paints an inner box otherwise. */
+:root[data-layout="terminal"] .terminal-tail__input:focus,
+:root[data-layout="terminal"] .terminal-tail__input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+:root[data-layout="terminal"] .terminal-tail::after {
+  content: "  # " attr(data-exit-hint);
+  font-family: var(--font-mono);
+  color: var(--text-muted, inherit);
+  opacity: 0.7;
+}
+
+/* Idle block caret hugging the prompt — an invitation to tap. It gives way to
+   the native text caret the moment the input is focused or holds text. */
+:root[data-layout="terminal"] .terminal-tail__caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  vertical-align: text-bottom;
+  background: var(--text-accent, currentColor);
+  animation: terminal-caret-blink 1.1s steps(1) infinite;
+}
+
+:root[data-layout="terminal"] .terminal-tail:focus-within .terminal-tail__caret,
+:root[data-layout="terminal"] .terminal-tail.is-typing .terminal-tail__caret {
+  display: none;
+}
+
+@keyframes terminal-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-layout="terminal"] .terminal-tail__caret {
+    animation: none;
+  }
+}
+
+:root[data-effect-reduced-motion="on"] .terminal-tail__caret {
+  animation: none;
+}
+
+/* Command output: each executed line prints into the buffer above the live
+   prompt, so the page reads as one continuous session. Empty (and so invisible)
+   until a command runs. */
+:root[data-layout="terminal"] .terminal-session {
+  display: block;
+  grid-column: content-start / content-end;
+  justify-self: start;
+  margin-top: var(--spacing-24);
+  font-size: var(--terminal-font-size);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-layout="terminal"] .terminal-session:empty {
+  display: none;
+}
+
+/* First tail after a non-empty session log sits tight against it, not a full
+   buffer gap — the prompt follows its own output. */
+:root[data-layout="terminal"] .terminal-session:not(:empty) + .terminal-tail {
+  margin-top: var(--spacing-8);
+}

@@ -56,7 +56,7 @@ describe("layout spacing contract", () => {
       "tokens/semantic.css", // column default
       "dimensions/layout/editorial.css",
       "dimensions/layout/index.css",
-      "dimensions/layout/terminal.css",
+      "dimensions/layout/terminal/core.css", // terminal split: tokens live in core
     ];
     for (const file of files) {
       const css = read(file);

@@ -231,9 +231,21 @@
         id: "tritone",
         label: "Tritone",
         fields: [
-          { key: "tritone_shadow_step", token: "--tritone-shadow-step", kind: "step" },
-          { key: "tritone_mid_step", token: "--tritone-mid-step", kind: "step" },
-          { key: "tritone_highlight_step", token: "--tritone-highlight-step", kind: "step" },
+          {
+            key: "tritone_shadow_step",
+            token: "--tritone-shadow-step",
+            kind: "step",
+          },
+          {
+            key: "tritone_mid_step",
+            token: "--tritone-mid-step",
+            kind: "step",
+          },
+          {
+            key: "tritone_highlight_step",
+            token: "--tritone-highlight-step",
+            kind: "step",
+          },
         ],
       },
       {
@@ -827,7 +839,9 @@
       }
 
       function resolveColorOf(varName) {
-        if (!probe) {return "";}
+        if (!probe) {
+          return "";
+        }
         probe.style.color = "var(" + varName + ")";
         return getComputedStyle(probe).color || "";
       }
@@ -862,8 +876,7 @@
               const color = resolveColorOf(field.token);
               autoResolvesTo =
                 (color &&
-                  (primaryColorToStep[color] ||
-                    secondaryColorToStep[color])) ||
+                  (primaryColorToStep[color] || secondaryColorToStep[color])) ||
                 "";
             }
           }
@@ -1364,19 +1377,25 @@
           tagName === "TEXTAREA";
         const isAnyEditable = isTextEditable || tagName === "SELECT";
         if (evt.key === "ArrowLeft") {
-          if (isAnyEditable) {return;}
+          if (isAnyEditable) {
+            return;
+          }
           evt.preventDefault();
           shiftYear(-1);
           return;
         }
         if (evt.key === "ArrowRight") {
-          if (isAnyEditable) {return;}
+          if (isAnyEditable) {
+            return;
+          }
           evt.preventDefault();
           shiftYear(1);
           return;
         }
         if (evt.key === "Enter" && cotyApplyDraftButton) {
-          if (isTextEditable) {return;}
+          if (isTextEditable) {
+            return;
+          }
           evt.preventDefault();
           cotyApplyDraftButton.click();
         }
@@ -1734,7 +1753,6 @@
       setDerivedToken("--component-form-bg", formBg);
       setToken("--component-form-placeholder", formPlaceholder);
 
-
       Object.keys(presetOverrides).forEach((key) => {
         const tokenName = "--" + key.replace(/_/g, "-");
         const tokenValue = normalizeOverrideValue(presetOverrides[key], ctx);
@@ -1749,65 +1767,13 @@
       });
     }
 
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function highlightTomlLine(line) {
-      if (!line.trim()) {
-        return "";
-      }
-
-      if (/^\s*#/.test(line)) {
-        return '<span class="toml-comment">' + escapeHtml(line) + "</span>";
-      }
-
-      var sectionMatch = line.match(/^\s*\[([^\]]+)\]\s*$/);
-      if (sectionMatch) {
-        return (
-          '<span class="toml-section-bracket">[</span><span class="toml-section">' +
-          escapeHtml(sectionMatch[1]) +
-          '</span><span class="toml-section-bracket">]</span>'
-        );
-      }
-
-      var kvMatch = line.match(/^(\s*)([A-Za-z0-9_.-]+)(\s*=\s*)(.*)$/);
-      if (kvMatch) {
-        var indent = escapeHtml(kvMatch[1] || "");
-        var key =
-          '<span class="toml-key">' + escapeHtml(kvMatch[2]) + "</span>";
-        var eq =
-          '<span class="toml-equals">' + escapeHtml(kvMatch[3]) + "</span>";
-        var rawValue = kvMatch[4] || "";
-        var valueClass = "toml-value";
-        if (/^".*"$/.test(rawValue)) {
-          valueClass = "toml-string";
-        }
-        if (/^(true|false)$/.test(rawValue)) {
-          valueClass = "toml-bool";
-        }
-        if (/^-?\d+(\.\d+)?$/.test(rawValue)) {
-          valueClass = "toml-number";
-        }
-        var value =
-          '<span class="' +
-          valueClass +
-          '">' +
-          escapeHtml(rawValue) +
-          "</span>";
-        return indent + key + eq + value;
-      }
-
-      return escapeHtml(line);
-    }
-
+    // TOML syntax highlighting lives in toml-highlight.js (window.TomlHighlight,
+    // loaded before this file on the generator page) — pure helpers, unit-tested
+    // there. Falls back to plain text if the module is absent.
     function renderHighlightedToml(source) {
-      return source.split("\n").map(highlightTomlLine).join("\n");
+      return window.TomlHighlight
+        ? window.TomlHighlight.renderHighlightedToml(source)
+        : source;
     }
 
     function updateExport(roles, policies) {
