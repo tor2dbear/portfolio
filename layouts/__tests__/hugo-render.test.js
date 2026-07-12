@@ -77,6 +77,10 @@ describeOrSkip("Hugo template rendering", () => {
       path.join(REPO_ROOT, "layouts/partials/settings-dropdown.html"),
       path.join(buildDir, "layouts/partials/settings-dropdown.html")
     );
+    fs.cpSync(
+      path.join(REPO_ROOT, "layouts/partials/terminal-manifest.html"),
+      path.join(buildDir, "layouts/partials/terminal-manifest.html")
+    );
 
     // 3. Inject the real i18n/ dir — settings-dropdown.html calls i18n on many
     //    keys and we want the real ones, not a drifting duplicate.
@@ -147,6 +151,35 @@ describeOrSkip("Hugo template rendering", () => {
       expect(svOption).not.toBeNull();
       // A real translation link, not the "also on homepage" fallback.
       expect(list.querySelector(".language-option--fallback")).toBeNull();
+    });
+  });
+
+  describe("terminal-manifest.html section/page classification", () => {
+    // The manifest is site-global; read it off any rendered page.
+    function manifest() {
+      const doc = parse(readOutput("lang-visible/index.html"));
+      const el = doc.querySelector('[data-js="terminal-manifest"]');
+      return JSON.parse(el.textContent);
+    }
+
+    test("emits valid JSON mapping segments to {kind, url}", () => {
+      const m = manifest();
+      expect(m["employer-fixture"]).toMatchObject({
+        kind: "dir",
+        url: "/employer-fixture/",
+      });
+      expect(m["lang-visible"]).toMatchObject({ kind: "file" });
+      expect(m["lang-visible"].url).toBe("/lang-visible/");
+    });
+
+    test("a section's terminal_kind param overrides the default 'dir'", () => {
+      expect(manifest()["docs"]).toMatchObject({ kind: "action" });
+    });
+
+    test("exempt sections and hidden pages are left out entirely", () => {
+      const m = manifest();
+      expect(m).not.toHaveProperty("tools"); // terminal_kind: exempt
+      expect(m).not.toHaveProperty("hidden-page"); // terminal_kind: hidden
     });
   });
 });

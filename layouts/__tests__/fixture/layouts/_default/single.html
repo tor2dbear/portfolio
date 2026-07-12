@@ -1,5 +1,10 @@
-{{/* Probe layout for the language-switcher test (gap B).
-  Renders the real settings-dropdown.html partial so we can assert how it
-  treats hidden vs. visible translations.
+{{/* Probe layout for two tests:
+  - gap B: renders the real settings-dropdown.html partial so we can assert how
+  it treats hidden vs. visible translations.
+  - terminal manifest: emits the real terminal-manifest.html partial exactly as
+  head.html does, so we can assert its section/page classification.
 */}}
 <div id="settings">{{ partial "settings-dropdown.html" . }}</div>
+<script type="application/json" data-js="terminal-manifest">
+  {{- partial "terminal-manifest.html" . | jsonify | safeJS -}}
+</script>
