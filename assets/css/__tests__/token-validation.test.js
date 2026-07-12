@@ -13,7 +13,7 @@ const CSS_ROOT = path.resolve(__dirname, "../");
 
 // ─── Allowlisted vars — not defined in CSS files, but legitimately unresolved ─
 
-// Set by JavaScript at runtime (coty-scale.js, darkmode.js, etc.)
+// Set by JavaScript at runtime (coty-scale.js, theme.js, etc.)
 const JS_SET_PREFIXES = [
   "--coty-",
   "--palette-coty-",
@@ -23,8 +23,8 @@ const JS_SET_PREFIXES = [
 ];
 const JS_SET_EXACT = new Set([
   "--reveal-delay", // set per-element by reveal-on-scroll.js
-  "--theme-transition-duration", // set/removed by darkmode.js
-  "--terminal-keybar-h", // mobile key-bar height, measured by darkmode.js
+  "--theme-transition-duration", // set/removed by theme.js
+  "--terminal-keybar-h", // mobile key-bar height, measured by terminal.js
 ]);
 
 // "API vars" — intentionally overridable by context; have CSS fallbacks defined inline

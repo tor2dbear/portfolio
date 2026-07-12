@@ -1,5 +1,5 @@
 /**
- * Tests for darkmode.js
+ * Tests for theme.js
  * Theme management system with touch gestures and SVG loading
  */
 
@@ -56,9 +56,13 @@ describe("Dark Mode - Theme Management", () => {
     test("should show menu when visible is true", () => {
       // Create a global toggleMenu function for testing
       window.toggleMenu = function (visible, _duration = 0.3) {
-        const menuContainer = document.querySelector('[data-js="theme-switcher"]');
+        const menuContainer = document.querySelector(
+          '[data-js="theme-switcher"]'
+        );
         const menu = document.querySelector('[data-js="theme-switcher-panel"]');
-        const overlay = document.querySelector('[data-js="theme-switcher-overlay"]');
+        const overlay = document.querySelector(
+          '[data-js="theme-switcher-overlay"]'
+        );
 
         menuContainer.setAttribute("data-visible", visible);
         overlay.setAttribute("data-visible", visible);

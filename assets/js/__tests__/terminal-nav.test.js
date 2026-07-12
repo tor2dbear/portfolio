@@ -1,7 +1,7 @@
 /**
  * Terminal in-place navigation (terminal-nav.js): the typed-cd SPA swap.
  * Drives window.TerminalNav.go() against fetched-HTML fixtures and asserts the
- * swap / skip / head-patch / cwd logic. The darkmode.js side (routing a
+ * swap / skip / head-patch / cwd logic. The terminal.js side (routing a
  * `navigate` action here vs falling back to a full reload) stays covered by
  * terminal-commands.test.js.
  */

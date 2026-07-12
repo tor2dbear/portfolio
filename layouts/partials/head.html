@@ -390,7 +390,7 @@
        globally; it loads only where Pantone can actually be shown: pages where
        Pantone is already the active palette (injected by the inline script
        below), the palette generator, the ui-library, or on demand when a
-       visitor switches to Pantone (see darkmode.js ensureCotyLoaded()). */}}
+       visitor switches to Pantone (see theme.js ensureCotyLoaded()). */}}
   {{ $cotyScaleJs := resources.Get "js/coty-scale.js" }}
   {{ if not $isDevBuild }}
     {{ $cotyScaleJs = $cotyScaleJs | minify | fingerprint }}
@@ -547,7 +547,7 @@
   {{- end -}}
   {{/* Boot transcript: the curated command sequence a page replays into the
        terminal on load, so the page reads as a real session (see the runner in
-       darkmode.js). One per page type; empty string ⇒ no transcript, page
+       terminal.js). One per page type; empty string ⇒ no transcript, page
        renders in the plain styled layout (contact's form, the exempt tools).
         - home     → the intro tour
         - section/tag listing → `ls` (its posts, read from the page's cards)
@@ -700,7 +700,7 @@
       }
 
       // Boot transcript: pages that declare a command sequence replay it into
-      // the terminal (darkmode.js runs it; the page reads as a real session).
+      // the terminal (terminal.js runs it; the page reads as a real session).
       // Publish the sequence regardless of the current layout so toggling
       // terminal on (no reload) can replay it too; only gate the content-hiding
       // flag on already being in terminal, so a reload hides the reproduced
@@ -731,7 +731,7 @@
       );
 
       // CotyScale (Pantone engine) is lazy-loaded. Expose its URL for
-      // darkmode.js, and when Pantone is already active inject it now — before
+      // theme.js, and when Pantone is already active inject it now — before
       // the deferred bundle — so returning Pantone users get their scale with
       // no flash (the cached --coty-role-surface above bridges the gap).
       window.__cotyScaleSrc = "{{ $cotyScaleJs.RelPermalink }}";
@@ -752,7 +752,7 @@
 
       // Suppress CSS transitions during initial paint so permanent transitions
       // on elements like .top-menu don't animate from the browser default to the
-      // correct palette color. Lifted after init via double-rAF in darkmode.js.
+      // correct palette color. Lifted after init via double-rAF in theme.js.
       document.documentElement.classList.add("theme-loading");
       var noTransStyle = document.createElement("style");
       noTransStyle.id = "theme-no-trans";
@@ -767,7 +767,8 @@
   {{ $js3 := resources.Get "js/header-hide.js" }}
   {{ $js_toast := resources.Get "js/toast.js" }}
   {{ $js_theme_derive := resources.Get "js/theme-derive.js" | default (resources.FromString "js/theme-derive-fallback.js" "(function(){window.ThemeDerive=window.ThemeDerive||{};})();") }}
-  {{ $js4 := resources.Get "js/darkmode.js" }}
+  {{ $js_custom_palette := resources.Get "js/theme-custom-palette.js" }}
+  {{ $js4 := resources.Get "js/theme.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
   {{ $js8 := resources.Get "js/smooth-scroll.js" }}
@@ -786,15 +787,18 @@
   {{ $js20 := resources.Get "js/tabs.js" }}
   {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
+  {{ $js_terminal := resources.Get "js/terminal.js" }}
   {{ $js_terminal_nav := resources.Get "js/terminal-nav.js" }}
   {{ $js_terminal_ai_data := resources.Get "js/terminal-ai-data.js" }}
   {{ $js_terminal_ai := resources.Get "js/terminal-ai.js" }}
-  {{/* NOTE: theme.js will be archived - logic moved to darkmode.js */}}
+  {{/* theme.js owns the theme system (mode/palette/typography/layout/effects);
+       the terminal command engine lives in terminal.js (loaded after theme.js,
+       which publishes the window.Theme seam it consumes). */}}
 
   <!-- JavaScript loading -->
   {{/* Pantone engine: eager only where it is always needed (palette generator
        + ui-library). Placed before the other defer scripts so it executes
-       before darkmode.js. Pantone-active pages inject it from the inline head
+       before theme.js. Pantone-active pages inject it from the inline head
        script; everyone else loads it on demand via ensureCotyLoaded(). */}}
   {{ if or $isPaletteGeneratorPage $isUiLibraryPage }}
     <script src="{{ $cotyScaleJs.RelPermalink }}" data-coty-scale defer></script>
@@ -806,7 +810,9 @@
     <script src="{{ $js3.RelPermalink }}" defer></script>
     <script src="{{ $js_toast.RelPermalink }}" defer></script>
     <script src="{{ $js_theme_derive.RelPermalink }}" defer></script>
+    <script src="{{ $js_custom_palette.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
+    <script src="{{ $js_terminal.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
     <script src="{{ $js8.RelPermalink }}" defer></script>
@@ -840,7 +846,7 @@
     <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_terminal $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

@@ -1,5 +1,5 @@
 /**
- * Terminal command line (darkmode.js): the tail <input> that fixes mobile
+ * Terminal command line (terminal.js): the tail <input> that fixes mobile
  * typing and hosts the small command set + easter eggs. Driven the same way as
  * darkmode-pantone.test.js — require the module, fire DOMContentLoaded, then
  * dispatch real events at the input.
@@ -30,7 +30,12 @@ describe("terminal command line", () => {
 
   function loadModule() {
     jest.isolateModules(() => {
-      require("../darkmode.js");
+      // theme-custom-palette.js publishes window.ThemeCustomPalette first (its
+      // shims in theme.js delegate to it), then theme.js (publishes window.Theme
+      // synchronously), then the terminal engine (aliases window.Theme).
+      require("../theme-custom-palette.js");
+      require("../theme.js");
+      require("../terminal.js");
     });
     document.dispatchEvent(new window.Event("DOMContentLoaded"));
   }
@@ -808,7 +813,7 @@ describe("terminal command line", () => {
     loadModule();
     typeCommand("konami");
     expect(document.documentElement.getAttribute("data-konami")).toBe("on");
-    // toggleKonami de-dupes a synchronous burst (see darkmode.js), so let the
+    // toggleKonami de-dupes a synchronous burst (see terminal.js), so let the
     // guard clear on the microtask queue before toggling back off.
     await Promise.resolve();
     typeCommand("konami");

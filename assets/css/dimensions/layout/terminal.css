@@ -9,7 +9,7 @@
    Colour stays owned by palette/mode and the text face by typography — this
    file only draws its decorative glyphs (prompts, rules, brackets) in mono so
    they hold up under any typeface. Pairs with typography: technical via the
-   layout-pairing map in darkmode.js.
+   layout-pairing map in theme.js.
 
    Structure: the tokens and the "Shared text chrome" section below carry the
    primitives (PS1 strings, the text-button reset, hover underline, bracket
@@ -32,7 +32,7 @@
    - DOM order on work posts: the gallery prompt needs .project-info followed
      by .gallery / .post-content containing figures.
    - Pages that cannot adapt opt out with data-terminal-exempt on <html>
-     (header.html); darkmode.js and the pre-hydration script fall back to
+     (header.html); theme.js and the pre-hydration script fall back to
      column there without touching the stored preference.
    ============================================================================ */
 
@@ -86,7 +86,7 @@
      an append-only `cd`), so every server-rendered history prompt — the header
      nav, the hero/featured/footer tour lines, a post's `cat` header — stays put
      as scrollback. Only the live input prompt tracks the working directory, via
-     the parallel --terminal-live-cwd chain below (darkmode.js's `chdir` moves
+     the parallel --terminal-live-cwd chain below (terminal.js's `chdir` moves
      that one alone). Scrollback echoes freeze their own inline --terminal-cwd. */
   --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
   --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
@@ -205,7 +205,7 @@
 
 /* The hero is the first line of the login tour: `cat welcome.txt` prints the
    intro. (Home-only — the hero section exists only there. Typeable: `welcome`
-   is a pseudo-file in darkmode.js.) */
+   is a pseudo-file in terminal.js.) */
 :root[data-layout="terminal"] .hero-section::before {
   content: var(--terminal-ps1) "cat welcome.txt";
   display: block;
@@ -379,7 +379,7 @@
 }
 
 /* Posts are files: an ls-row shows the slug as a .md filename (stamped onto the
-   link by darkmode.js), not the human title. The title stays in the DOM for
+   link by terminal.js), not the human title. The title stays in the DOM for
    screen readers and every other layout; here font-size:0 hides it and the
    ::after prints the filename. */
 :root[data-layout="terminal"] .summary-card__title a[data-slug],
@@ -684,7 +684,7 @@
   flex: none;
 }
 
-/* The `cd` echo carried in from a nav click (see darkmode.js): the command
+/* The `cd` echo carried in from a nav click (see terminal.js): the command
    that got you here, printed above this page's own prompt as scrollback. */
 :root[data-layout="terminal"] .terminal-prompt--cd {
   margin-bottom: var(--spacing-4);
@@ -1245,7 +1245,7 @@
 }
 
 /* The legal/status row is the site's colophon (©, status, legal links) — an
-   executed `cat colophon`, reproduced verbatim when typed (see darkmode.js's
+   executed `cat colophon`, reproduced verbatim when typed (see terminal.js's
    terminalColophonLines). `env` is the separate live state-dump command.
    display:block kills the subgrid so the prompt doesn't wrap in a track. */
 :root[data-layout="terminal"] .footer-meta {
@@ -1377,7 +1377,7 @@
    Boot transcript mode
 
    When a page replays a real command sequence on load (data-terminal-transcript,
-   set pre-paint in head.html + by darkmode.js), the terminal IS that transcript:
+   set pre-paint in head.html + by terminal.js), the terminal IS that transcript:
    the server-rendered header chrome (the `ls nav/` prompt, the nav-as-ls list,
    the `set` block, the quick-toggles), the page content (#main) and the footer
    blocks (sitemap, newsletter, colophon) are all things the transcript now
@@ -1419,7 +1419,7 @@
   font-size: var(--terminal-font-size);
   /* Reserve room under the live prompt for the mobile key bar, which is a
      fixed overlay (see .terminal-keybar) and so takes no layout space of its
-     own. darkmode.js measures the bar and sets --terminal-keybar-h while it is
+     own. terminal.js measures the bar and sets --terminal-keybar-h while it is
      visible; 0 otherwise (desktop, blurred), so this is a no-op there. Without
      it the prompt scrolls to the very bottom and hides behind the bar. */
   padding-bottom: var(--terminal-keybar-h, 0px);
@@ -1533,14 +1533,14 @@
    ride keys the on-screen keyboard lacks, plus a ⌄ jump-to-prompt. This bar
    surfaces them just above the keyboard while the prompt is focused. It's a
    coarse-pointer affordance only — desktop has the real keys, so the bar stays
-   display:none there. darkmode.js toggles .is-visible on focus and translates
+   display:none there. terminal.js toggles .is-visible on focus and translates
    the bar up over the keyboard via the visualViewport API (plain fixed sits
    behind it on iOS Safari); the fixed bottom anchor here is the base it starts
    from. The keys read as bracketed mono words, matching the terminal's chrome.
    ============================================================================ */
 
 /* Floating jump-to-prompt button: hidden until the live prompt scrolls out of
-   view (darkmode.js toggles .is-visible), then a small bracketed ⌄ pinned
+   view (terminal.js toggles .is-visible), then a small bracketed ⌄ pinned
    bottom-right that drops you back to the prompt. Terminal chrome — mono, a thin
    border and the page surface so it stays legible over scrollback, no app-style
    pill. Hidden entirely outside terminal layout and when the prompt is in view. */
@@ -1593,7 +1593,7 @@
     padding: var(--spacing-4) var(--size-page-margins);
     background: var(--surface-page);
     border-top: 1px solid var(--border-subtle);
-    /* darkmode.js sets translateY to clear the keyboard; hint the compositor. */
+    /* terminal.js sets translateY to clear the keyboard; hint the compositor. */
     will-change: transform;
   }
 }
@@ -1677,7 +1677,7 @@
 }
 
 /* Echoed command lines carry the real prompt string, like scrollback.
-   Append-only history: darkmode.js pins an inline --terminal-cwd on each echo
+   Append-only history: terminal.js pins an inline --terminal-cwd on each echo
    (the cwd it ran at). The :root --terminal-ps1 composite would resolve its
    inner var(--terminal-cwd) back at :root (the LIVE cwd), so re-declare the
    PS1 chain HERE — on the echo element — where the inner var resolves against
@@ -1825,7 +1825,7 @@
 /* During a flow the prompt shows the current field name (email>, name>, …)
    instead of the shell PS1, and the trailing hint offers the abort word. The
    label is read from the prompt span's OWN attribute — attr() can't reach an
-   ancestor's — so darkmode.js sets data-flow-label on both. */
+   ancestor's — so terminal.js sets data-flow-label on both. */
 :root[data-layout="terminal"] .terminal-tail__prompt[data-flow-label]::before {
   content: attr(data-flow-label) " ";
   color: var(--text-muted, inherit);
@@ -1833,7 +1833,7 @@
 
 :root[data-layout="terminal"] .terminal-tail[data-flow-label]::after {
   /* Hint text is per-mode: a flow offers its abort word, the `ai` assistant
-     offers its exit word. darkmode.js sets data-flow-hint alongside the label
+     offers its exit word. terminal.js sets data-flow-hint alongside the label
      (defaulting to the flow abort hint). */
   content: "  # " attr(data-flow-hint);
 }
@@ -2115,7 +2115,7 @@
 :root[data-layout="terminal"] .coty-transport {
   /* Inline job line inside the settings buffer, not a floating pill: JS moves
      the node under the Effects toggles (see syncCotyTransportPlacement in
-     darkmode.js), and these overrides drop the fixed positioning so it lays
+     theme.js), and these overrides drop the fixed positioning so it lays
      out in normal flow. */
   position: static;
   inset: auto;
@@ -2343,7 +2343,7 @@
 
 /* ============================================================================
    Boot theater
-   .terminal-booting (set by darkmode.js on entry + once per session) stages
+   .terminal-booting (set by terminal.js on entry + once per session) stages
    the chrome in: banner lines print, the prompts type their commands, the
    output rows land — content below is never gated. Reduced-motion users
    never receive the class.

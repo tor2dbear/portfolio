@@ -3,9 +3,9 @@
  *
  * Two layers are tested: classify() as a pure function over the intent data,
  * and the start()/handleLine() loop driven against a mocked window.Terminal —
- * the same small seam the real command engine (darkmode.js) publishes. Mocking
+ * the same small seam the real command engine (terminal.js) publishes. Mocking
  * that seam is exactly what letting the assistant be its own module buys us:
- * no darkmode.js, no DOM chrome, just the contract.
+ * no terminal.js, no DOM chrome, just the contract.
  */
 
 // Load the data + engine fresh each time so the module-scoped `active` flag

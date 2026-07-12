@@ -33,7 +33,10 @@ describe("darkmode pantone transport", () => {
 
   function loadModule() {
     jest.isolateModules(() => {
-      require("../darkmode.js");
+      // theme-custom-palette.js publishes window.ThemeCustomPalette, which
+      // theme.js's custom-palette shims delegate to; load it first (as in prod).
+      require("../theme-custom-palette.js");
+      require("../theme.js");
     });
     document.dispatchEvent(new window.Event("DOMContentLoaded"));
   }
