@@ -221,6 +221,60 @@ Templates filter hidden projects:
 - ES6+ syntax
 - Example: `focus-mode.js`, `theme.js`, `header-hide.js`, `tabs.js`
 
+### Architecture: modules and seams
+
+The larger subsystems are split into focused modules that talk **only through
+named `window.*` seams** — never by sharing a closure. A seam is a small frozen
+contract: adding members is fine, renaming or changing signatures breaks
+consumers (and the tests that mock the seam ARE the spec).
+
+```
+theme.js ─┬─ window.Theme ──────→ terminal.js ─┬─ window.Terminal ──→ terminal-ai.js
+          │                                    ├────────────────────→ terminal-flows.js
+          ├─→ theme-custom-palette.js          └────────────────────→ terminal-nav.js
+          │     (window.ThemeCustomPalette)
+          └─→ theme-pantone.js ───→ coty-scale.js
+                (window.ThemePantone)  (window.CotyScaleActions)
+```
+
+- **`theme.js`** — the theme core (mode, palette, typography, layout, effects,
+  icon/meta, init). Publishes `window.Theme` (high-level setters + read-only
+  queries) at module eval, and `window.ThemeActions` (settings-dropdown surface)
+  at init.
+- **`theme-custom-palette.js`** — applies a user-authored palette's runtime CSS
+  tokens via `window.ThemeDerive`. One-directional: it never calls back into
+  the theme. `theme.js` keeps four thin shims that no-op if it's absent.
+- **`theme-pantone.js`** — the Pantone/CotY controller (state machine, playback,
+  transport pill) between the settings UI and the `coty-scale.js` engine. It
+  registers **no** DOMContentLoaded handler: `theme.js`'s init drives its hooks
+  (`initControls`, `reconcileStartupPalette`, `rememberTransportHome`,
+  `initTransportUI`) so boot order stays deterministic. The pantone members of
+  `window.Theme` are lazy delegators into it.
+- **`terminal.js`** — the terminal command engine. Consumes `window.Theme`
+  (aliased once at IIFE eval); publishes `window.Terminal`. Its parser
+  (`runTerminalCommand`) is pure — it returns `{lines, action}` and the
+  executor (`applyTerminalAction`) performs the side effects.
+- **`terminal-ai.js` / `terminal-flows.js` / `terminal-nav.js`** — live entirely
+  behind `window.Terminal`. Input precedence in the key handler is:
+  active flow → ai delegate → shell parser.
+
+**Load order is a contract.** Scripts are listed in `layouts/partials/head.html`
+twice (dev `<script>` list and the prod `resources.Concat` slice) and the two
+MUST stay in sync: `theme-derive` → `theme-custom-palette` → `theme` →
+`theme-pantone` → `terminal` → `terminal-flows` → … → `terminal-nav` →
+`terminal-ai-data` → `terminal-ai`. Seam objects are published at module eval,
+so a consumer may capture references at its own eval only from modules loaded
+before it; everything else resolves lazily at call time (guarded, no-op if the
+provider is absent).
+
+**When extracting a new module:** define the seam first (thin wrappers in the
+host file, one commit, tests green), then move the code behind it (second
+commit). Keep the host's call sites unchanged via shims. Verify with the full
+Jest suite, `no-undef` lint (it catches every missed closure reference), and —
+for template/CSS changes — a byte-identical `hugo` build diff against the
+pre-change baseline (install the production-pinned version:
+`pip install hugo==0.154.2`).
+
 ### File Naming
 
 - Kebab-case: `focus-mode.js`
@@ -238,6 +292,12 @@ Templates filter hidden projects:
 - ESLint configuration in `eslint.config.js`
 - Prettier formatting
 - Pre-commit hooks via Husky
+- **Prettier trap:** files in `.prettierignore` are there for a reason —
+  `layouts/partials/ui-library/` holds `{{ highlight }}` blocks whose
+  whitespace IS the rendered output (a prettier pass reformats the page's
+  code samples), and the listed layout partials leave tags open that prettier
+  would auto-close. Never format them; extend the ignore list when adding
+  files with the same properties.
 
 ---
 
