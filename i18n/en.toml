@@ -479,3 +479,559 @@ other = "Cancel line"
 
 [terminal_key_bottom]
 other = "Jump to prompt"
+
+# ---------------------------------------------------------------------------
+# UI library (/ui-library/ page: tab partials in layouts/partials/ui-library/)
+# ---------------------------------------------------------------------------
+
+[uilib_12column_grid_system]
+other = "12-Column Grid System"
+
+[uilib_21_ratio_84]
+other = "2:1 Ratio (8+4)"
+
+[uilib_5050_split_66]
+other = "50/50 Split (6+6)"
+
+[uilib_a_12column_subgrid_system_with_flexible]
+other = "A 12-column subgrid system with flexible column spans and placements."
+
+[uilib_accept_terms]
+other = "Accept terms"
+
+[uilib_accordion_example]
+other = "Accordion example"
+
+[uilib_api]
+other = "API:"
+
+[uilib_approach]
+other = "Approach"
+
+[uilib_artdirection_placement]
+other = "Art-Direction Placement"
+
+[uilib_asymmetric_layout]
+other = "Asymmetric Layout"
+
+[uilib_available_icons_24px]
+other = "Available icons (24px)"
+
+[uilib_base_colors]
+other = "Base Colors"
+
+[uilib_block_1_col_16]
+other = "Block 1 (col 1–6)"
+
+[uilib_block_2_col_712]
+other = "Block 2 (col 7–12)"
+
+[uilib_body_small_for_secondary_copy_and]
+other = "Body small for secondary copy and helper text."
+
+[uilib_body_text_is_used_for_longer]
+other = "Body text is used for longer running content and should remain readable across multiple paragraphs."
+
+[uilib_border]
+other = "Border"
+
+[uilib_breadcrumb]
+other = "Breadcrumb"
+
+[uilib_breadcrumb_example]
+other = "Breadcrumb example"
+
+[uilib_button_with_icon]
+other = "Button with Icon"
+
+[uilib_buttons]
+other = "Buttons"
+
+[uilib_cannot_be_changed]
+other = "Cannot be changed"
+
+[uilib_classes]
+other = "Classes:"
+
+[uilib_click_here]
+other = "Click here"
+
+[uilib_closed_by_default]
+other = "Closed by default."
+
+[uilib_color_of_the_year]
+other = "Color of the Year"
+
+[uilib_color_scales]
+other = "Color scales"
+
+[uilib_color_semantics]
+other = "Color semantics"
+
+[uilib_combined_prose_aside_same_row]
+other = "Combined: prose + aside (same row)"
+
+[uilib_components]
+other = "Components"
+
+[uilib_default_button]
+other = "Default Button"
+
+[uilib_denmark]
+other = "Denmark"
+
+[uilib_design_system_guidelinespdf]
+other = "Design System - Guidelines.pdf"
+
+[uilib_details]
+other = "Details"
+
+[uilib_direct_usage_with_icon_class]
+other = "Direct usage with .icon class:"
+
+[uilib_disabled]
+other = "Disabled"
+
+[uilib_disabled_select]
+other = "Disabled select"
+
+[uilib_distance_statelayer]
+other = "Distance & state-layer"
+
+[uilib_document_and_resource_lists]
+other = "Document and resource lists"
+
+[uilib_download_card]
+other = "Download Card"
+
+[uilib_download_card_example]
+other = "Download Card example"
+
+[uilib_download_cards_for_files_and_resources]
+other = "Download cards for files and resources with hover states and text truncation."
+
+[uilib_duration]
+other = "Duration"
+
+[uilib_easing]
+other = "Easing"
+
+[uilib_editorial]
+other = "Editorial"
+
+[uilib_email]
+other = "Email"
+
+[uilib_enable_option]
+other = "Enable option"
+
+[uilib_error]
+other = "Error"
+
+[uilib_error_state]
+other = "Error state"
+
+[uilib_feedback_overlays]
+other = "Feedback & overlays"
+
+[uilib_file]
+other = "File:"
+
+[uilib_finland]
+other = "Finland"
+
+[uilib_first_panel_with_content]
+other = "First panel with content."
+
+[uilib_first_section]
+other = "First section"
+
+[uilib_focus_indicator]
+other = "Focus indicator"
+
+[uilib_font_families]
+other = "Font families"
+
+[uilib_forms]
+other = "Forms"
+
+[uilib_full_width_12_columns]
+other = "Full Width (12 columns)"
+
+[uilib_grid]
+other = "Grid"
+
+[uilib_home]
+other = "Home"
+
+[uilib_hook]
+other = "Hook:"
+
+[uilib_hover_me_bottom]
+other = "Hover me (bottom)"
+
+[uilib_hover_me_top]
+other = "Hover me (top)"
+
+[uilib_hover_me_topstart]
+other = "Hover me (top-start)"
+
+[uilib_hover_over_the_cards_to_see]
+other = "Hover over the cards to see the interaction."
+
+[uilib_icon]
+other = "Icon"
+
+[uilib_icons_via_svg_sprite_for_easy]
+other = "Icons via SVG sprite for easy reuse and minimal code duplication. Sprites are cacheable and easier to maintain."
+
+[uilib_info]
+other = "Info"
+
+[uilib_information_for_labels_metadata_and_technical]
+other = "Information for labels, metadata, and technical copy."
+
+[uilib_inline_checkboxes]
+other = "Inline checkboxes"
+
+[uilib_inline_col_col_49]
+other = "Inline --col (col 4–9)"
+
+[uilib_inline_radio_buttons]
+other = "Inline radio buttons"
+
+[uilib_invalid_value]
+other = "Invalid value"
+
+[uilib_layout]
+other = "Layout"
+
+[uilib_layout_controls_internal_gallery_structure_place]
+other = "`layout` controls internal gallery structure. `place` controls placement in the art-direction grid."
+
+[uilib_layout_placement]
+other = "Layout + placement"
+
+[uilib_lead_is_used_to_elevate_key]
+other = "Lead is used to elevate key lines in content."
+
+[uilib_lineheight]
+other = "Line-height"
+
+[uilib_longform_pages_with_anchor_sections]
+other = "Long-form pages with anchor sections"
+
+[uilib_measures]
+other = "Measures"
+
+[uilib_message]
+other = "Message"
+
+[uilib_micro_icons_10px]
+other = "Micro icons (10px)"
+
+[uilib_minimum_10_characters]
+other = "Minimum 10 characters"
+
+[uilib_motion]
+other = "Motion"
+
+[uilib_navigation_menu_for_longform_pages_with]
+other = "Navigation menu for long-form pages with links to key sections."
+
+[uilib_newsletter]
+other = "Newsletter"
+
+[uilib_no]
+other = "No"
+
+[uilib_norway]
+other = "Norway"
+
+[uilib_offset_1_span_6_slow_drift]
+other = "offset 1, span 6, slow drift"
+
+[uilib_offset_2_span_4_overlapping]
+other = "offset 2, span 4, overlapping"
+
+[uilib_offset_3_span_3]
+other = "offset 3, span 3"
+
+[uilib_offset_4_span_4_three_steps]
+other = "offset 4, span 4, three steps"
+
+[uilib_offset_6_span_6_twoblock_diagonal]
+other = "offset 6, span 6, two-block diagonal"
+
+[uilib_offset_highlight]
+other = "Offset + highlight"
+
+[uilib_option_1]
+other = "Option 1"
+
+[uilib_option_2]
+other = "Option 2"
+
+[uilib_option_3]
+other = "Option 3"
+
+[uilib_overview]
+other = "Overview"
+
+[uilib_page_2_of_5]
+other = "Page 2 of 5"
+
+[uilib_pagination]
+other = "Pagination"
+
+[uilib_pagination_example]
+other = "Pagination example"
+
+[uilib_palette]
+other = "Palette"
+
+[uilib_palette_saved]
+other = "Palette saved"
+
+[uilib_positions]
+other = "Positions:"
+
+[uilib_preamble_introduces_longform_content_with_a]
+other = "Preamble introduces long-form content with a slightly larger size and calmer rhythm."
+
+[uilib_primary_button]
+other = "Primary Button"
+
+[uilib_primary_secondary_action]
+other = "Primary, Secondary & Action"
+
+[uilib_problem]
+other = "Problem"
+
+[uilib_project_details]
+other = "Project details"
+
+[uilib_project_overview_2026pdf]
+other = "Project Overview 2026.pdf"
+
+[uilib_radio_buttons]
+other = "Radio Buttons"
+
+[uilib_radius]
+other = "Radius"
+
+[uilib_read_more]
+other = "Read more"
+
+[uilib_replay]
+other = "Replay"
+
+[uilib_resources]
+other = "Resources"
+
+[uilib_responsive_widens_to_8_col_at]
+other = "Responsive: widens to 8 col at tablet (md), full width at mobile (sm)."
+
+[uilib_results]
+other = "Results"
+
+[uilib_rings]
+other = "Rings"
+
+[uilib_scale]
+other = "Scale"
+
+[uilib_scales_are_generated_from_pantone_color]
+other = "Scales are generated from Pantone Color of the Year data and follow the active mode (light/dark)."
+
+[uilib_second_panel_with_content]
+other = "Second panel with content."
+
+[uilib_second_section]
+other = "Second section"
+
+[uilib_secondary_button_outlined]
+other = "Secondary Button (Outlined)"
+
+[uilib_select_an_option]
+other = "Select an option"
+
+[uilib_select_an_option_2]
+other = "-- Select an option --"
+
+[uilib_select_country]
+other = "Select country"
+
+[uilib_select_dropdown]
+other = "Select Dropdown"
+
+[uilib_select_multiple_options]
+other = "Select multiple options"
+
+[uilib_selected_state]
+other = "Selected state"
+
+[uilib_shadows]
+other = "Shadows"
+
+[uilib_show_html]
+other = "Show HTML"
+
+[uilib_show_shortcode]
+other = "Show shortcode"
+
+[uilib_size]
+other = "Size:"
+
+[uilib_size_2]
+other = "Size"
+
+[uilib_spacing]
+other = "Spacing"
+
+[uilib_specific_placement]
+other = "Specific Placement"
+
+[uilib_sprite]
+other = "Sprite:"
+
+[uilib_state_layer]
+other = "State layer"
+
+[uilib_state_overlays]
+other = "State Overlays"
+
+[uilib_status]
+other = "Status"
+
+[uilib_step_1]
+other = "Step 1"
+
+[uilib_step_2]
+other = "Step 2"
+
+[uilib_step_3]
+other = "Step 3"
+
+[uilib_step_4]
+other = "Step 4"
+
+[uilib_step_5]
+other = "Step 5"
+
+[uilib_stepped_text_staircase]
+other = "Stepped Text (Staircase)"
+
+[uilib_success]
+other = "Success"
+
+[uilib_surface]
+other = "Surface"
+
+[uilib_svg_sprite_system]
+other = "SVG sprite system"
+
+[uilib_sweden]
+other = "Sweden"
+
+[uilib_table_of_contents]
+other = "Table of Contents"
+
+[uilib_table_of_contents_2]
+other = "Table of contents"
+
+[uilib_table_of_contents_example]
+other = "Table of Contents example"
+
+[uilib_tabs_example]
+other = "Tabs example"
+
+[uilib_tag_examples]
+other = "Tag examples"
+
+[uilib_tags]
+other = "Tags"
+
+[uilib_tertiary_button_text_only]
+other = "Tertiary Button (Text Only)"
+
+[uilib_text]
+other = "Text"
+
+[uilib_text_blocks_that_shift_horizontally_across]
+other = "Text blocks that shift horizontally across the grid. Each element is placed in its own row and offset by a fixed number of columns."
+
+[uilib_text_input]
+other = "Text input"
+
+[uilib_text_inputs]
+other = "Text Inputs"
+
+[uilib_thirds_444]
+other = "Thirds (4+4+4)"
+
+[uilib_this_field_contains_an_error]
+other = "This field contains an error"
+
+[uilib_this_is_the_content_of_the]
+other = "This is the content of the first section."
+
+[uilib_toggle_example]
+other = "Toggle example"
+
+[uilib_toggle_switch]
+other = "Toggle switch"
+
+[uilib_tokens]
+other = "Tokens"
+
+[uilib_tooltip]
+other = "Tooltip"
+
+[uilib_tooltip_examples]
+other = "Tooltip examples"
+
+[uilib_tooltip_text]
+other = "Tooltip text!"
+
+[uilib_tracking]
+other = "Tracking"
+
+[uilib_type_scale]
+other = "Type scale"
+
+[uilib_type_something]
+other = "Type something..."
+
+[uilib_typography]
+other = "Typography"
+
+[uilib_typography_scale]
+other = "Typography scale"
+
+[uilib_usage]
+other = "Usage:"
+
+[uilib_usage_examples]
+other = "Usage examples"
+
+[uilib_validation_error]
+other = "Validation error"
+
+[uilib_warning]
+other = "Warning"
+
+[uilib_weight]
+other = "Weight"
+
+[uilib_with_legacy_container_for_backward_compatibility]
+other = "With legacy container (for backward compatibility):"
+
+[uilib_works]
+other = "Works"
+
+[uilib_write_your_message_here]
+other = "Write your message here..."
+
+[uilib_yes]
+other = "Yes"
