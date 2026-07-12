@@ -36,6 +36,7 @@ describe("terminal command line", () => {
       require("../theme-custom-palette.js");
       require("../theme.js");
       require("../terminal.js");
+      require("../terminal-flows.js");
     });
     document.dispatchEvent(new window.Event("DOMContentLoaded"));
   }
@@ -53,7 +54,30 @@ describe("terminal command line", () => {
     return document.querySelector('[data-js="terminal-session"]').textContent;
   }
 
+  // theme.js and terminal.js register a DOMContentLoaded handler inside their
+  // IIFE. jsdom keeps ONE document for the whole file, so those handlers pile up
+  // across loadModule() calls: on the next dispatch every prior instance's
+  // handler re-fires and re-binds a keydown listener to the fresh input. That was
+  // harmless when each instance owned its own flow state, but flow state now
+  // lives in the shared window.TerminalFlows singleton, so multiple stale
+  // handlers would drive one flow and corrupt it. Track the DOMContentLoaded
+  // listeners and strip them before each test, so every case boots exactly one
+  // live instance — matching production, which loads the modules once.
+  const domReadyListeners = [];
+  const realDocAddEventListener = document.addEventListener.bind(document);
+  document.addEventListener = function (type, listener, options) {
+    if (type === "DOMContentLoaded") {
+      domReadyListeners.push([listener, options]);
+    }
+    return realDocAddEventListener(type, listener, options);
+  };
+
   beforeEach(() => {
+    domReadyListeners
+      .splice(0)
+      .forEach(([listener, options]) =>
+        document.removeEventListener("DOMContentLoaded", listener, options)
+      );
     jest.resetModules();
     jest.useFakeTimers();
     localStorage.clear();

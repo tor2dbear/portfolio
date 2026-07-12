@@ -84,7 +84,8 @@
     }, 2400);
   }
 
-  // Set by the command engine's init to its endTerminalFlow(), so exitTerminal
+  // Set by the command engine's init to a reset that cancels any running flow
+  // (via window.TerminalFlows) and releases the ai delegate, so exitTerminal
   // (which lives out here, unable to reach the init closure) can abort any
   // half-finished contact/subscribe flow on the way out.
   var terminalFlowReset = null;
@@ -3435,7 +3436,9 @@
           );
           break;
         case "flow":
-          startTerminalFlow(action.flow);
+          if (window.TerminalFlows) {
+            window.TerminalFlows.start(action.flow);
+          }
           break;
         case "ai-start":
           if (
@@ -3832,20 +3835,21 @@
     }
 
     // ----------------------------------------------------------------------
-    // Interactive prompt flows (contact, subscribe)
-    // Some commands aren't one-shot: they collect a few fields one prompt at a
-    // time, like a CLI wizard, then POST to the very same backend the on-page
-    // forms use. While a flow runs, Enter feeds the current step (not the
-    // command parser), the prompt shows the field name, and `cancel`/Escape
-    // aborts. Contact posts to the Netlify form endpoint; subscribe reuses the
-    // footer newsletter form's action and hidden fields.
+    // Interactive prompt flows (contact, subscribe) live in terminal-flows.js,
+    // published as window.TerminalFlows. While a flow runs it owns Enter (fed
+    // its steps one at a time), checked BEFORE the ai delegate below so a flow
+    // the assistant hands off to still owns input until it finishes. This guard
+    // is what the input handlers test; it's a no-op (false) if that module
+    // isn't loaded.
     // ----------------------------------------------------------------------
-    let terminalFlow = null;
+    function flowActive() {
+      return !!(window.TerminalFlows && window.TerminalFlows.isActive());
+    }
 
     // ----------------------------------------------------------------------
     // Input delegate (the `ai` assistant)
     // A registered delegate takes over Enter the way a flow does, but for an
-    // open-ended chat rather than a fixed wizard. Checked AFTER terminalFlow in
+    // open-ended chat rather than a fixed wizard. Checked AFTER flowActive() in
     // the key handler, so a flow the assistant hands off to (contact/subscribe)
     // still owns input until it finishes. Published to terminal-ai.js via the
     // window.Terminal seam below; leaving the terminal releases it (exit reset).
@@ -3868,153 +3872,6 @@
         onRelease();
       }
     }
-
-    function isEmailish(value) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
-
-    function nonEmpty(value) {
-      return value.length > 0;
-    }
-
-    function submitContactFlow(data) {
-      printTerminalLine("sending…", "terminal-session__out");
-      var body = new window.URLSearchParams({
-        "form-name": "contact",
-        "bot-field": "",
-        name: data.name || "",
-        email: data.email || "",
-        message: data.message || "",
-      }).toString();
-      window
-        .fetch("/", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: body,
-        })
-        .then(function (response) {
-          printTerminalLine(
-            response && response.ok
-              ? "message sent — thanks, I'll be in touch."
-              : "send failed — try the contact page instead.",
-            "terminal-session__out"
-          );
-        })
-        .catch(function () {
-          printTerminalLine(
-            "send failed — you may be offline.",
-            "terminal-session__out"
-          );
-        })
-        .then(scrollTerminalToEnd);
-    }
-
-    function submitSubscribeFlow(data) {
-      var form = document.querySelector("form[data-mc-form]");
-      if (!form) {
-        printTerminalLine(
-          "subscribe: the newsletter isn't available here.",
-          "terminal-session__out"
-        );
-        scrollTerminalToEnd();
-        return;
-      }
-      var emailField = form.querySelector('input[type="email"]');
-      var formData = new window.FormData(form);
-      if (emailField && emailField.name) {
-        formData.set(emailField.name, data.email);
-      }
-      printTerminalLine("subscribing…", "terminal-session__out");
-      window
-        .fetch(form.action, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new window.URLSearchParams(formData).toString(),
-        })
-        .then(function (response) {
-          // A non-OK status returns HTML, not JSON — surface it as a server
-          // error rather than letting response.json() reject into the generic
-          // "offline" catch.
-          if (!response || !response.ok) {
-            printTerminalLine(
-              "couldn't subscribe — the server rejected it.",
-              "terminal-session__out"
-            );
-            return null;
-          }
-          return response.json();
-        })
-        .then(function (result) {
-          if (!result) {
-            return; // non-OK already reported
-          }
-          if (result.success) {
-            printTerminalLine(
-              "subscribed — check your inbox to confirm.",
-              "terminal-session__out"
-            );
-          } else if (result.error === "already_subscribed") {
-            printTerminalLine(
-              "you're already subscribed.",
-              "terminal-session__out"
-            );
-          } else {
-            printTerminalLine(
-              "couldn't subscribe — try the footer form.",
-              "terminal-session__out"
-            );
-          }
-        })
-        .catch(function () {
-          printTerminalLine(
-            "couldn't subscribe — you may be offline.",
-            "terminal-session__out"
-          );
-        })
-        .then(scrollTerminalToEnd);
-    }
-
-    var TERMINAL_FLOWS = {
-      contact: {
-        intro: "contact — send me a message. type 'cancel' to abort.",
-        steps: [
-          {
-            key: "email",
-            label: "email",
-            validate: isEmailish,
-            error: "that doesn't look like an email — try again",
-          },
-          {
-            key: "name",
-            label: "name",
-            validate: nonEmpty,
-            error: "name can't be empty",
-          },
-          {
-            key: "message",
-            label: "message",
-            validate: nonEmpty,
-            error: "message can't be empty",
-          },
-        ],
-        confirm: "send this? [Y/n]",
-        submit: submitContactFlow,
-      },
-      subscribe: {
-        intro:
-          "subscribe — the occasional note, no spam. type 'cancel' to abort.",
-        steps: [
-          {
-            key: "email",
-            label: "email",
-            validate: isEmailish,
-            error: "that doesn't look like an email — try again",
-          },
-        ],
-        confirm: "subscribe with this address? [Y/n]",
-        submit: submitSubscribeFlow,
-      },
-    };
 
     // The prompt is shown verbatim; field steps pass "email>", the confirm step
     // passes its full question. Pass null to restore the shell PS1. The label is
@@ -4046,78 +3903,15 @@
       }
     }
 
-    function startTerminalFlow(name) {
-      var def = TERMINAL_FLOWS[name];
-      if (!def) {
-        return;
-      }
-      terminalFlow = { def: def, step: 0, data: {}, confirming: false };
-      printTerminalLine(def.intro, "terminal-session__out");
-      setFlowPrompt(def.steps[0].label + ">");
-    }
-
-    function endTerminalFlow() {
-      terminalFlow = null;
-      setFlowPrompt(null);
-    }
-
     // Let the top-level exitTerminal() abort a flow AND release the `ai`
     // delegate when leaving the terminal, so re-entering starts clean and the
     // assistant's own state (via its onRelease) can't get stuck active.
     terminalFlowReset = function () {
-      endTerminalFlow();
+      if (window.TerminalFlows) {
+        window.TerminalFlows.cancel();
+      }
       releaseTerminalInput();
     };
-
-    function handleTerminalFlowInput(raw) {
-      var flow = terminalFlow;
-      var value = String(raw === null || raw === undefined ? "" : raw).trim();
-
-      if (value.toLowerCase() === "cancel") {
-        printTerminalLine("^C", "terminal-session__out");
-        endTerminalFlow();
-        return;
-      }
-
-      if (!flow.confirming) {
-        var stepDef = flow.def.steps[flow.step];
-        printTerminalLine(
-          stepDef.label + "> " + value,
-          "terminal-session__flow"
-        );
-        if (stepDef.validate && !stepDef.validate(value)) {
-          printTerminalLine(stepDef.error, "terminal-session__out");
-          return; // stay on this step
-        }
-        flow.data[stepDef.key] = value;
-        flow.step += 1;
-        if (flow.step < flow.def.steps.length) {
-          setFlowPrompt(flow.def.steps[flow.step].label + ">");
-        } else {
-          flow.confirming = true;
-          setFlowPrompt(flow.def.confirm);
-        }
-        return;
-      }
-
-      // Confirmation step: empty / y / yes sends; n / no aborts.
-      printTerminalLine(
-        flow.def.confirm + " " + value,
-        "terminal-session__flow"
-      );
-      var answer = value.toLowerCase();
-      if (answer === "" || answer === "y" || answer === "yes") {
-        var submit = flow.def.submit;
-        var data = flow.data;
-        endTerminalFlow();
-        submit(data);
-      } else if (answer === "n" || answer === "no") {
-        printTerminalLine("cancelled", "terminal-session__out");
-        endTerminalFlow();
-      } else {
-        printTerminalLine("please answer y or n", "terminal-session__out");
-      }
-    }
 
     function syncTerminalInputSize() {
       if (!terminalInput) {
@@ -4262,8 +4056,8 @@
         return;
       }
       printTerminalLine("^C", "terminal-session__out");
-      if (terminalFlow) {
-        endTerminalFlow();
+      if (flowActive()) {
+        window.TerminalFlows.cancel();
       }
       terminalInput.value = "";
       terminalHistoryCursor = null;
@@ -4304,13 +4098,13 @@
         }
         if (e.key === "Tab") {
           e.preventDefault();
-          if (!terminalFlow) {
+          if (!flowActive()) {
             terminalCompleteInput();
           }
           return;
         }
         if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-          if (!terminalFlow && terminalHistory.length) {
+          if (!flowActive() && terminalHistory.length) {
             e.preventDefault();
             terminalRecallHistory(e.key === "ArrowUp" ? -1 : 1);
           }
@@ -4321,8 +4115,8 @@
           var value = terminalInput.value;
           terminalInput.value = "";
           syncTerminalInputSize();
-          if (terminalFlow) {
-            handleTerminalFlowInput(value);
+          if (flowActive()) {
+            window.TerminalFlows.handleLine(value);
             scrollTerminalToEnd();
           } else if (terminalInputDelegate) {
             // The `ai` assistant owns the prompt: hand it the line (it echoes
@@ -4333,14 +4127,14 @@
             runTerminalInput(value);
           }
         } else if (e.key === "Escape") {
-          if (terminalFlow) {
+          if (flowActive()) {
             // Escape aborts an in-progress flow rather than leaving — clear the
             // half-typed value too, so it isn't run as a command on next Enter.
             e.preventDefault();
             terminalInput.value = "";
             syncTerminalInputSize();
             printTerminalLine("^C", "terminal-session__out");
-            endTerminalFlow();
+            window.TerminalFlows.cancel();
             scrollTerminalToEnd();
           } else if (terminalInputDelegate) {
             // Escape leaves the assistant (like ^C on a flow), back to the shell
@@ -4391,7 +4185,7 @@
           terminalRecallHistory(1);
         },
         tab: function () {
-          if (!terminalFlow) {
+          if (!flowActive()) {
             terminalCompleteInput();
           }
         },
