@@ -237,6 +237,18 @@
   display: none;
 }
 
+/* The typed boot replay (terminal.js) trails a steady block cursor after the
+   command text as it types, then drops it the instant the command runs. Sized
+   like the live prompt caret. Reduced-motion users never see it — their
+   transcript prints at once, with no typing. */
+:root[data-layout="terminal"] .terminal-session__cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  vertical-align: text-bottom;
+  background: var(--text-accent, currentColor);
+}
+
 /* First tail after a non-empty session log sits tight against it, not a full
    buffer gap — the prompt follows its own output. */
 :root[data-layout="terminal"] .terminal-session:not(:empty) + .terminal-tail {

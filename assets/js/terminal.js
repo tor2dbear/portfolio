@@ -49,6 +49,19 @@
   var getCotyActions = Theme.getCotyActions;
   var PANTONE_MANUAL_TRANSITION_MS = Theme.PANTONE_MANUAL_TRANSITION_MS;
 
+  // True when the visitor has asked for less motion — the OS setting or the
+  // site's own reduce-motion toggle. Gates every terminal animation (the boot
+  // theatre and the typed boot-transcript replay) down to a plain, instant
+  // render.
+  function terminalReducedMotion() {
+    return (
+      (typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+      document.documentElement.getAttribute("data-effect-reduced-motion") ===
+        "on"
+    );
+  }
+
   // Boot theater: a short staged print of the terminal chrome. Plays when
   // the user enters the layout and once per browser session on load —
   // never for reduced-motion users (system preference or the site toggle).
@@ -66,11 +79,7 @@
     } catch (e) {
       /* storage unavailable — the boot simply replays next load */
     }
-    if (
-      (typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
-      root.getAttribute("data-effect-reduced-motion") === "on"
-    ) {
+    if (terminalReducedMotion()) {
       return; // banner shown, but skip the staged print
     }
     root.classList.remove("terminal-booting");
@@ -3538,40 +3547,25 @@
       frame();
     }
 
-    // Run one command through the engine and print it into the scrollback
-    // exactly as a typed line would look: the frozen echo, then the output /
-    // side effects. Factored out of runTerminalInput so the boot transcript can
-    // replay the same path (opts.focus:false — a fresh page load must not steal
-    // focus and pop the mobile keyboard; opts.scroll:false — leave the viewport
-    // at the top so the banner and the start of the transcript are what you see,
-    // not the bottom prompt).
-    function emitTerminalCommand(raw, opts) {
-      opts = opts || {};
-      if (opts.history !== false) {
-        // Record the command before running it, so `history` includes itself —
-        // matching a real shell. Reset the ↑/↓ recall cursor to the live line.
-        terminalHistoryCursor = null;
-        var trimmed = String(
-          raw === null || raw === undefined ? "" : raw
-        ).trim();
-        if (trimmed) {
-          terminalHistory.push(trimmed);
-          if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
-            terminalHistory.shift();
-          }
+    // Record a command in the ↑/↓ recall ring before it runs, so `history`
+    // includes itself — matching a real shell — and reset the recall cursor to
+    // the live line. Shared by the typed command line and the boot replay.
+    function recordTerminalHistory(raw) {
+      terminalHistoryCursor = null;
+      var trimmed = String(raw === null || raw === undefined ? "" : raw).trim();
+      if (trimmed) {
+        terminalHistory.push(trimmed);
+        if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
+          terminalHistory.shift();
         }
       }
-      var result = runTerminalCommand(raw);
-      if (result.echo) {
-        // Freeze the echo at the cwd it ran at. applyTerminalAction (below)
-        // is what performs an append-only `cd`, so reading the cwd now — before
-        // it runs — captures where the command was actually typed.
-        printTerminalLine(
-          result.echo,
-          "terminal-session__cmd",
-          currentTerminalCwd()
-        );
-      }
+    }
+
+    // Print a command's output rows (neofetch art first, if any) and apply its
+    // action. The echo line is printed by the caller — the instant path prints
+    // it up front, the typed replay types it in — so this covers only what a
+    // real terminal streams *after* Enter.
+    function printTerminalResultOutput(result) {
       var artLines =
         result.action && result.action.type === "art" ? terminalArtLines() : [];
       artLines.forEach(function (line) {
@@ -3584,6 +3578,33 @@
         printTerminalLine(line, "terminal-session__out");
       });
       applyTerminalAction(result.action);
+    }
+
+    // Run one command through the engine and print it into the scrollback
+    // exactly as a typed line would look: the frozen echo, then the output /
+    // side effects. Factored out of runTerminalInput so the boot transcript can
+    // replay the same path (opts.focus:false — a fresh page load must not steal
+    // focus and pop the mobile keyboard; the reduced-motion boot uses this to
+    // print the whole session at once, while the animated boot types it in via
+    // playTerminalTranscript below).
+    function emitTerminalCommand(raw, opts) {
+      opts = opts || {};
+      if (opts.history !== false) {
+        recordTerminalHistory(raw);
+      }
+      var result = runTerminalCommand(raw);
+      if (result.echo) {
+        // Freeze the echo at the cwd it ran at. applyTerminalAction (below,
+        // inside printTerminalResultOutput) is what performs an append-only
+        // `cd`, so reading the cwd now — before it runs — captures where the
+        // command was actually typed.
+        printTerminalLine(
+          result.echo,
+          "terminal-session__cmd",
+          currentTerminalCwd()
+        );
+      }
+      printTerminalResultOutput(result);
       if (opts.focus !== false) {
         // Keep the newest output and the prompt in view; refocus so the mobile
         // keyboard stays up for the next command.
@@ -3637,9 +3658,91 @@
       // plain readable page visible rather than a blank screen. (head.html sets
       // it pre-paint too, to avoid a flash of the un-hidden page.)
       document.documentElement.setAttribute("data-terminal-transcript", "1");
-      commands.forEach(function (cmd) {
-        emitTerminalCommand(cmd, { focus: false });
-      });
+      if (terminalReducedMotion()) {
+        // Motion off: print the whole session at once, as a real terminal
+        // streams output instantly.
+        commands.forEach(function (cmd) {
+          emitTerminalCommand(cmd, { focus: false });
+        });
+        return;
+      }
+      // Motion on: replay it as a live session — each command typed at the
+      // prompt, then its output streamed — so the terminal reads as though it
+      // is being keyed in. The old CSS boot theatre staged the *server chrome*,
+      // which the transcript hides (its animations now fire on display:none
+      // elements); this replay is the animation.
+      playTerminalTranscript(commands);
+    }
+
+    // Replay pacing: per-character type speed, and the beat between commands.
+    var TERMINAL_REPLAY_TYPE_MS = 26;
+    var TERMINAL_REPLAY_GAP_MS = 180;
+
+    // Follow the replay by tracking the bottom WITHOUT focusing the input —
+    // focus would pop the mobile keyboard mid-replay, the very thing the
+    // focus:false boot avoids. scrollTo is a no-op while the session still fits
+    // (so the banner stays put), and only starts following once it overflows.
+    function scrollReplayToEnd() {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    // Type each command's echo at the prompt one character at a time, then — on
+    // the last character — run it and stream its output, then move to the next.
+    // A steady block cursor trails the text while it types and is dropped when
+    // the command runs, leaving a DOM identical to the instant path's echo line.
+    function playTerminalTranscript(commands) {
+      function runCommand(index) {
+        if (index >= commands.length) {
+          return;
+        }
+        var raw = commands[index];
+        recordTerminalHistory(raw);
+        var result = runTerminalCommand(raw);
+        // Freeze the echo's cwd now, before printTerminalResultOutput's
+        // applyTerminalAction can move it (an append-only `cd`).
+        var cwd = currentTerminalCwd();
+
+        function runOutput() {
+          printTerminalResultOutput(result);
+          scrollReplayToEnd();
+          window.setTimeout(function () {
+            runCommand(index + 1);
+          }, TERMINAL_REPLAY_GAP_MS);
+        }
+
+        if (!result.echo) {
+          // A silent command (nothing to type) — stream its output and move on.
+          runOutput();
+          return;
+        }
+
+        var line = document.createElement("span");
+        line.className = "terminal-session__line terminal-session__cmd";
+        line.style.setProperty("--terminal-cwd", '"' + cwd + '"');
+        var typed = document.createTextNode("");
+        var cursor = document.createElement("span");
+        cursor.className = "terminal-session__cursor";
+        line.appendChild(typed);
+        line.appendChild(cursor);
+        terminalSession.appendChild(line);
+        scrollReplayToEnd();
+
+        var text = result.echo;
+        var i = 0;
+        (function typeChar() {
+          if (i < text.length) {
+            i += 1;
+            typed.data = text.slice(0, i);
+            window.setTimeout(typeChar, TERMINAL_REPLAY_TYPE_MS);
+            return;
+          }
+          // Command runs: collapse to a plain echo line (dropping the cursor,
+          // matching the instant path's DOM), then stream its output.
+          line.textContent = text;
+          runOutput();
+        })();
+      }
+      runCommand(0);
     }
 
     // The boot banner's small block-curl, reused as neofetch art when present.
@@ -4101,6 +4204,13 @@
     var terminalJump = document.querySelector('[data-js="terminal-jump"]');
     if (terminalJump && terminalTail) {
       terminalJump.addEventListener("click", function () {
+        // Focus synchronously inside the tap so iOS brings up the on-screen
+        // keyboard: scrollTerminalToEnd focuses inside requestAnimationFrame,
+        // which lands a frame later and loses the user-gesture, so iOS then
+        // suppresses the keyboard. Focus here, then scroll onto the prompt.
+        if (terminalInput && isTerminalLayout()) {
+          terminalInput.focus();
+        }
         scrollTerminalToEnd();
       });
       var setJumpVisible = function (promptInView) {

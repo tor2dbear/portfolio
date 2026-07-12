@@ -1469,6 +1469,9 @@ describe("terminal command line", () => {
       "ls; set; cat welcome.txt; ls works/ --featured"
     );
     loadModule();
+    // The replay types each command in on a timer (motion on by default in
+    // this suite); flush the whole sequence to assert the final transcript.
+    jest.runAllTimers();
     const text = sessionText();
     // Echoes of each command (the __cmd lines carry the raw command text).
     expect(text).toContain("ls");
@@ -1494,7 +1497,9 @@ describe("terminal command line", () => {
     loadModule();
     expect(sessionText().trim()).toBe(""); // nothing yet — not in terminal
     window.ThemeActions.setLayout("terminal");
-    jest.runOnlyPendingTimers(); // the runner is deferred a tick past applyLayout
+    // The runner is deferred a tick past applyLayout, then types the commands
+    // in on timers; run them all so the `set` output has rendered.
+    jest.runAllTimers();
     expect(sessionText()).toContain("mode"); // `set` output rendered
     expect(
       document.documentElement.hasAttribute("data-terminal-transcript")
@@ -1504,6 +1509,7 @@ describe("terminal command line", () => {
   test("a layout toggle mid-session keeps the existing scrollback (no re-replay)", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();
+    jest.runAllTimers(); // let the boot replay finish before we're "mid-session"
     typeCommand("help");
     const before = sessionText();
     // Leave to column and back — the session persists, transcript doesn't stack.
@@ -1517,6 +1523,7 @@ describe("terminal command line", () => {
   test("boot transcript commands land in ↑ history", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();
+    jest.runAllTimers(); // let the replay type both commands in (and record them)
     const input = document.querySelector('[data-js="terminal-input"]');
     input.dispatchEvent(
       new window.KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true })
@@ -1541,6 +1548,45 @@ describe("terminal command line", () => {
     expect(
       document.documentElement.hasAttribute("data-terminal-transcript")
     ).toBe(false);
+  });
+
+  test("with motion on, the transcript types the commands in (cursor, then clean)", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    // Mid-replay: a typing cursor is on screen and only the first command has
+    // begun printing — proof it's streaming, not dumped in one synchronous shot.
+    expect(document.querySelector(".terminal-session__cursor")).not.toBeNull();
+    expect(sessionText()).not.toContain("mode"); // `set` hasn't run yet
+    jest.runAllTimers();
+    // Finished: the cursor is gone and the full session is present.
+    expect(document.querySelector(".terminal-session__cursor")).toBeNull();
+    expect(sessionText()).toContain("set");
+    expect(sessionText()).toContain("mode"); // `set` output rendered
+  });
+
+  test("reduced motion prints the whole transcript at once (no typing, no cursor)", () => {
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }));
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    // No timers to flush — the session is complete immediately, with no cursor.
+    expect(document.querySelector(".terminal-session__cursor")).toBeNull();
+    expect(sessionText()).toContain("mode");
+  });
+
+  test("the jump-to-prompt button focuses the prompt so mobile opens the keyboard", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const focusSpy = jest.spyOn(input, "focus");
+    document
+      .querySelector('[data-js="terminal-jump"]')
+      .dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+    // Focus must happen synchronously in the click (not deferred into rAF, which
+    // loses the user-gesture and makes iOS suppress the on-screen keyboard).
+    expect(focusSpy).toHaveBeenCalled();
   });
 
   // ---- language command -------------------------------------------------

@@ -538,3 +538,17 @@
 :root[data-layout="terminal"].terminal-booting footer {
   animation: terminal-print 10ms both 1.5s;
 }
+
+/* Transcript mode: the boot theatre above is inert here. Every element it
+   stages — the prompt, its typed command, the nav/quick items, #main — is
+   display:none (the transcript hides the server chrome; see boot.css), so
+   those staged animations fire on nothing. The one that still bit was footer:
+   the live transcript (.terminal-session + .terminal-tail) lives inside it, so
+   the 1.5s footer fade held the whole session at opacity:0 until 1.5s — mark,
+   long pause, then everything at once. The typed replay in terminal.js is the
+   animation now, so the footer must paint from the first frame; cancel its
+   stage (the banner art + exit-hint fades above still play). */
+:root[data-terminal-transcript][data-layout="terminal"].terminal-booting
+  footer {
+  animation: none;
+}
