@@ -1,0 +1,366 @@
+/* Terminal layout 4/5: mobile key bar + statusbar quick-toggles.
+   Part of the terminal layout dimension — split from terminal.css along its
+   original section order. The five files concatenate in sequence (see
+   head.html); do not reorder them, the cascade depends on it. */
+/* ============================================================================
+   Mobile key bar (accessory row)
+   The round-4 keyboard fundamentals (↑/↓ history recall, Tab completion, ^C)
+   ride keys the on-screen keyboard lacks, plus a ⌄ jump-to-prompt. This bar
+   surfaces them just above the keyboard while the prompt is focused. It's a
+   coarse-pointer affordance only — desktop has the real keys, so the bar stays
+   display:none there. terminal.js toggles .is-visible on focus and translates
+   the bar up over the keyboard via the visualViewport API (plain fixed sits
+   behind it on iOS Safari); the fixed bottom anchor here is the base it starts
+   from. The keys read as bracketed mono words, matching the terminal's chrome.
+   ============================================================================ */
+
+/* Floating jump-to-prompt button: hidden until the live prompt scrolls out of
+   view (terminal.js toggles .is-visible), then a small bracketed ⌄ pinned
+   bottom-right that drops you back to the prompt. Terminal chrome — mono, a thin
+   border and the page surface so it stays legible over scrollback, no app-style
+   pill. Hidden entirely outside terminal layout and when the prompt is in view. */
+.terminal-jump {
+  display: none;
+}
+
+:root[data-layout="terminal"] .terminal-jump.is-visible {
+  display: block;
+  position: fixed;
+  right: var(--size-page-margins);
+  bottom: var(--spacing-16);
+  z-index: 50;
+  min-width: 2.5em;
+  min-height: 2.5em;
+  padding: 0 var(--spacing-8);
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 2.4;
+  text-align: center;
+  color: var(--text-link, var(--text-default));
+  background: var(--surface-page);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-jump.is-visible:hover,
+:root[data-layout="terminal"] .terminal-jump.is-visible:focus-visible {
+  color: var(--text-default);
+  border-color: var(--text-default);
+  outline: none;
+}
+
+.terminal-keybar {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  :root[data-layout="terminal"] .terminal-keybar.is-visible {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4) var(--size-page-margins);
+    background: var(--surface-page);
+    border-top: 1px solid var(--border-subtle);
+    /* terminal.js sets translateY to clear the keyboard; hint the compositor. */
+    will-change: transform;
+  }
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 2.75em;
+  padding: 0 var(--spacing-8);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: var(--terminal-font-size);
+  line-height: 1;
+  color: var(--text-link, var(--text-default));
+  cursor: pointer;
+  /* No tap flash / double-tap zoom — this is a key, not a link. */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Bracketed like every other actionable word in the buffer. */
+:root[data-layout="terminal"] .terminal-keybar__key::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .terminal-keybar__key:active {
+  color: var(--text-accent, currentColor);
+}
+
+/* Party mode — the Konami code (or `konami`) sets data-konami, and the whole
+   terminal cycles hue. Motion-gated: reduced-motion visitors get a single
+   colourful tint instead of the animation. */
+:root[data-konami="on"][data-layout="terminal"] .top-menu__container,
+:root[data-konami="on"][data-layout="terminal"] .terminal-session,
+:root[data-konami="on"][data-layout="terminal"] .terminal-tail {
+  animation: terminal-konami-hue 6s linear infinite;
+}
+
+@keyframes terminal-konami-hue {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-konami="on"][data-layout="terminal"] .top-menu__container,
+  :root[data-konami="on"][data-layout="terminal"] .terminal-session,
+  :root[data-konami="on"][data-layout="terminal"] .terminal-tail {
+    animation: none;
+    filter: hue-rotate(150deg) saturate(1.4);
+  }
+}
+
+:root[data-effect-reduced-motion="on"][data-konami="on"][data-layout="terminal"]
+  .top-menu__container,
+:root[data-effect-reduced-motion="on"][data-konami="on"][data-layout="terminal"]
+  .terminal-session,
+:root[data-effect-reduced-motion="on"][data-konami="on"][data-layout="terminal"]
+  .terminal-tail {
+  animation: none;
+  filter: hue-rotate(150deg) saturate(1.4);
+}
+
+:root[data-layout="terminal"] .terminal-session__line {
+  display: block;
+}
+
+/* Blank separator lines (the markdown block gaps a cat'd .md prints) carry no
+   text, so a block box would collapse to zero height — give them a line box. */
+:root[data-layout="terminal"] .terminal-session__line:empty::before {
+  content: "\00a0";
+}
+
+/* Echoed command lines carry the real prompt string, like scrollback.
+   Append-only history: terminal.js pins an inline --terminal-cwd on each echo
+   (the cwd it ran at). The :root --terminal-ps1 composite would resolve its
+   inner var(--terminal-cwd) back at :root (the LIVE cwd), so re-declare the
+   PS1 chain HERE — on the echo element — where the inner var resolves against
+   the element's frozen --terminal-cwd. The live input prompt keeps the :root
+   composite, so it alone tracks the working directory. */
+:root[data-layout="terminal"] .terminal-session__cmd {
+  --terminal-ps1-short: var(--terminal-cwd, "~") "$ ";
+  --terminal-ps1: "visitor@" var(--terminal-host, "tor-bjorn.com") ":"
+    var(--terminal-ps1-short);
+}
+@media (max-width: 47.9375em) {
+  :root[data-layout="terminal"] .terminal-session__cmd {
+    --terminal-ps1: var(--terminal-ps1-short);
+  }
+}
+:root[data-layout="terminal"] .terminal-session__cmd::before {
+  content: var(--terminal-ps1);
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__out {
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__out--art {
+  color: inherit;
+}
+
+/* A cat'd [image N] token is a real button (opens the picture in the lightbox)
+   but must read as inline terminal text: strip the native chrome, inherit the
+   font, and mark it interactive with an underline + pointer. */
+:root[data-layout="terminal"] .terminal-session__image {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-muted, inherit);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  cursor: pointer;
+}
+
+:root[data-layout="terminal"] .terminal-session__image:hover,
+:root[data-layout="terminal"] .terminal-session__image:focus-visible {
+  color: var(--text-default, inherit);
+  text-decoration-color: currentColor;
+  outline: none;
+}
+
+/* `set` (no args) prints one row per setting: a fixed key column, then the
+   options as clickable chips (each runs its own `set <key> <value>`). Flex-wrap
+   so long option rows (typography) reflow on a phone instead of overflowing. */
+:root[data-layout="terminal"] .terminal-session__settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75ch;
+}
+
+:root[data-layout="terminal"] .terminal-session__settings-key {
+  min-width: 11ch;
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-session__setting {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-link, var(--text-default, inherit));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* The current value is bracketed and accented, mirroring the settings panel's
+   [System] convention. */
+:root[data-layout="terminal"] .terminal-session__setting.is-current {
+  color: var(--text-accent, currentColor);
+}
+
+:root[data-layout="terminal"] .terminal-session__setting.is-current::before {
+  content: "[";
+}
+
+:root[data-layout="terminal"] .terminal-session__setting.is-current::after {
+  content: "]";
+}
+
+:root[data-layout="terminal"] .terminal-session__setting:hover,
+:root[data-layout="terminal"] .terminal-session__setting:focus-visible {
+  color: var(--text-default, inherit);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  outline: none;
+}
+
+/* Inline links inside a cat'd page: clickable link text (the URL is hidden, the
+   click cats/opens it) — underlined like a terminal's derived hyperlink, sitting
+   in the prose flow. Reset the button chrome so it reads as a word, not a chip. */
+:root[data-layout="terminal"] .terminal-session__link {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text-link, var(--text-accent, inherit));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-session__link:hover,
+:root[data-layout="terminal"] .terminal-session__link:focus-visible {
+  color: var(--text-default, inherit);
+  outline: none;
+}
+
+/* The [report] chip the assistant prints after a reply: a muted, unshouting
+   affordance to flag a bad answer. No underline at rest (it's not a link into
+   content); it accents on hover like the other clickable tokens. */
+:root[data-layout="terminal"] .terminal-session__report {
+  color: var(--text-muted, inherit);
+  text-decoration: none;
+}
+
+/* Echoed answers inside an interactive flow (contact / subscribe) read like
+   what the user typed at the field prompt. */
+:root[data-layout="terminal"] .terminal-session__flow {
+  display: block;
+  color: var(--text-default, inherit);
+}
+
+/* During a flow the prompt shows the current field name (email>, name>, …)
+   instead of the shell PS1, and the trailing hint offers the abort word. The
+   label is read from the prompt span's OWN attribute — attr() can't reach an
+   ancestor's — so terminal.js sets data-flow-label on both. */
+:root[data-layout="terminal"] .terminal-tail__prompt[data-flow-label]::before {
+  content: attr(data-flow-label) " ";
+  color: var(--text-muted, inherit);
+}
+
+:root[data-layout="terminal"] .terminal-tail[data-flow-label]::after {
+  /* Hint text is per-mode: a flow offers its abort word, the `ai` assistant
+     offers its exit word. terminal.js sets data-flow-hint alongside the label
+     (defaulting to the flow abort hint). */
+  content: "  # " attr(data-flow-hint);
+}
+
+:root[data-layout="terminal"] .footer-column {
+  display: flex;
+  gap: 2ch;
+  align-items: baseline;
+}
+
+:root[data-layout="terminal"] .footer-heading {
+  font-size: var(--terminal-font-size);
+  font-weight: 400;
+  color: var(--text-muted, inherit);
+  margin: 0;
+  min-width: 12ch;
+  text-transform: lowercase;
+}
+
+:root[data-layout="terminal"] .footer-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1ch;
+}
+
+:root[data-layout="terminal"] .footer-menu li + li::before {
+  content: "· ";
+  color: var(--text-muted, inherit);
+}
+
+/* Icons are graphics — the stream and footer drop them; their adjacent text
+   labels (or sr-only spans) already carry the meaning. */
+:root[data-layout="terminal"] #main .icon,
+:root[data-layout="terminal"] footer .icon,
+:root[data-layout="terminal"] #main svg.icon,
+:root[data-layout="terminal"] footer svg.icon {
+  display: none;
+}
+
+/* ============================================================================
+   Statusbar quick-toggles
+   [sv] [mörkt] — text stand-ins for the dropdown controls. Hidden in every
+   other layout (navigation.css).
+   ============================================================================ */
+
+:root[data-layout="terminal"] .top-menu__item--terminal-quick {
+  display: flex;
+  align-items: center;
+}
+
+:root[data-layout="terminal"] .terminal-quick {
+  display: inline-flex;
+  align-items: baseline;
+  text-decoration: none;
+}

@@ -151,7 +151,11 @@
   {{ $dimensions_layout_column := resources.Get "css/dimensions/layout/column.css" }}
   {{ $dimensions_layout_editorial := resources.Get "css/dimensions/layout/editorial.css" }}
   {{ $dimensions_layout_index := resources.Get "css/dimensions/layout/index.css" }}
-  {{ $dimensions_layout_terminal := resources.Get "css/dimensions/layout/terminal.css" }}
+  {{ $terminal_core := resources.Get "css/dimensions/layout/terminal/core.css" }}
+  {{ $terminal_content := resources.Get "css/dimensions/layout/terminal/content.css" }}
+  {{ $terminal_boot := resources.Get "css/dimensions/layout/terminal/boot.css" }}
+  {{ $terminal_input := resources.Get "css/dimensions/layout/terminal/input.css" }}
+  {{ $terminal_panels := resources.Get "css/dimensions/layout/terminal/panels.css" }}
 
   <!-- CSS utilities -->
   {{ $utilities_typography := resources.Get "css/utilities/typography.css" }}
@@ -417,7 +421,11 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_column.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_editorial.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_index.RelPermalink }}" />
-    <link rel="stylesheet" type="text/css" href="{{ $dimensions_layout_terminal.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_core.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_content.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_boot.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_input.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $terminal_panels.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_typography.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_layout.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $utilities_grid.RelPermalink }}" />
@@ -467,7 +475,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $dimensions_layout_terminal $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -526,7 +534,7 @@
 
   {{/* Terminal layout prompt strings: host from the site URL, cwd from the
        current page's first path segment (language prefix stripped). Consumed
-       as CSS string vars by dimensions/layout/terminal.css; harmless (unused)
+       as CSS string vars by dimensions/layout/terminal/ (core.css); harmless (unused)
        in every other layout. */}}
   {{- $terminalHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
   {{- $terminalPath := strings.Trim .RelPermalink "/" -}}
