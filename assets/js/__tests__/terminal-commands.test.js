@@ -1553,8 +1553,12 @@ describe("terminal command line", () => {
   test("with motion on, the transcript types the commands in (cursor, then clean)", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();
-    // Mid-replay: a typing cursor is on screen and only the first command has
-    // begun printing — proof it's streaming, not dumped in one synchronous shot.
+    // Banner hold: nothing types until the mark has had a beat to register.
+    expect(sessionText().trim()).toBe("");
+    expect(document.querySelector(".terminal-session__cursor")).toBeNull();
+    // Past the hold (700ms), the first command is mid-type — a cursor trails it
+    // and only the first command has begun: proof it streams, not dumps.
+    jest.advanceTimersByTime(750);
     expect(document.querySelector(".terminal-session__cursor")).not.toBeNull();
     expect(sessionText()).not.toContain("mode"); // `set` hasn't run yet
     jest.runAllTimers();

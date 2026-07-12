@@ -702,7 +702,7 @@
     // really has: "mode" (not "theme"), no standalone "palette" (pantone lives
     // under effects), and "share".
     function terminalSettingsEntries() {
-      return ["mode", "typography", "layout", "effects", "share", "language"];
+      return ["mode", "layout", "typography", "effects", "share", "language"];
     }
 
     // The settable keys, their options, and the current value — the model both
@@ -722,14 +722,14 @@
           current: localStorage.getItem("theme-mode") || "system",
         },
         {
-          key: "typography",
-          options: TERMINAL_TYPOGRAPHY,
-          current: localStorage.getItem("theme-typography") || "editorial",
-        },
-        {
           key: "layout",
           options: TERMINAL_LAYOUTS,
           current: root.getAttribute("data-layout") || "column",
+        },
+        {
+          key: "typography",
+          options: TERMINAL_TYPOGRAPHY,
+          current: localStorage.getItem("theme-typography") || "editorial",
         },
         { key: "language", options: ["sv", "en"], current: currentLang() },
         {
@@ -3674,7 +3674,10 @@
       playTerminalTranscript(commands);
     }
 
-    // Replay pacing: per-character type speed, and the beat between commands.
+    // Replay pacing: the hold on the banner before the first command types (so
+    // the mark registers before the transcript scrolls it up), then the
+    // per-character type speed and the beat between commands.
+    var TERMINAL_REPLAY_START_MS = 700;
     var TERMINAL_REPLAY_TYPE_MS = 26;
     var TERMINAL_REPLAY_GAP_MS = 180;
 
@@ -3742,7 +3745,11 @@
           runOutput();
         })();
       }
-      runCommand(0);
+      // Hold on the banner first, so the mark reads before the transcript types
+      // in and scrolls it up.
+      window.setTimeout(function () {
+        runCommand(0);
+      }, TERMINAL_REPLAY_START_MS);
     }
 
     // The boot banner's small block-curl, reused as neofetch art when present.
