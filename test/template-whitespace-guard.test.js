@@ -19,7 +19,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const LAYOUTS_DIR = path.resolve(__dirname, "..");
+const LAYOUTS_DIR = path.resolve(__dirname, "../layouts");
 
 // Return the leaking whitespace runs found inside query-string hrefs in `html`.
 // Each entry is { attr, snippet } for reporting.

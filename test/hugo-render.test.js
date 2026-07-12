@@ -11,7 +11,7 @@
  *   B. layouts/partials/settings-dropdown.html linked the language switcher to
  *      `hidden` (noindex) translation stubs.
  *
- * How this works: layouts/__tests__/fixture/ is a tiny self-contained Hugo
+ * How this works: test/fixture/ is a tiny self-contained Hugo
  * site with probe layouts that render the two real templates in isolation. We
  * assemble a throwaway copy of it, inject the *current* real templates and the
  * real i18n/ dir, run `hugo`, and assert on the emitted HTML. Because the probe
@@ -22,6 +22,11 @@
  * up before `npm test`; locally you need it on PATH or HUGO_PATH). When it is
  * absent the suite skips rather than fails, so `npm test` stays green for
  * contributors without Hugo.
+ *
+ * NB: this fixture lives in test/, NOT under layouts/ — Hugo parses every file
+ * under layouts/ as a template, so probe layouts and .test.js files there break
+ * the production build (Go-template syntax like `{{-` in a JS comment aborts
+ * `hugo --minify`). Keep all Hugo-render test material out of layouts/.
  */
 
 const { spawnSync } = require("child_process");
@@ -29,7 +34,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
-const REPO_ROOT = path.resolve(__dirname, "../..");
+const REPO_ROOT = path.resolve(__dirname, "..");
 const FIXTURE_DIR = path.join(__dirname, "fixture");
 const HUGO_BIN = process.env.HUGO_PATH || "hugo";
 

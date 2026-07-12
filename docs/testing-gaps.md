@@ -73,9 +73,10 @@ palette/pantone/year state between tests. Now cleared (plus `sessionStorage`).
       `shouldInstrument` directly (fast, hugo-independent, part of `npm test`),
       and a `npm run test:coverage` step now runs in both the `quick` and
       `quality` CI jobs so the full istanbul/test-exclude pipeline is exercised.
-- [x] **Build a Hugo template-render harness** — done. `layouts/__tests__/`
-      holds a tiny self-contained Hugo fixture site (`fixture/`) plus
-      `hugo-render.test.js`, which injects the real `summary-employer.html` and
+- [x] **Build a Hugo template-render harness** — done. `test/` holds a tiny
+      self-contained Hugo fixture site (`test/fixture/`) plus
+      `test/hugo-render.test.js`, which injects the real `summary-employer.html`
+      and
       `settings-dropdown.html` (and real `i18n/`) into a throwaway copy, runs
       `hugo`, and asserts on the emitted HTML. Covers both original cases
       (employer href has no whitespace; hidden-translation stubs are not linked)
@@ -92,7 +93,7 @@ palette/pantone/year state between tests. Now cleared (plus `sessionStorage`).
       `--audit-level=high` step ignores). Dependabot (maintainer email / auto
       PRs) was deliberately skipped — that reaches a person, not the PR loop.
 - [x] **Static whitespace guard for template query strings** — done.
-      `layouts/__tests__/template-whitespace-guard.test.js` scans every layout
+      `test/template-whitespace-guard.test.js` scans every layout
       for the gap-A shape (a multi-line query-string href whose whitespace is
       trimmed by neither `-}}` nor `{{-`). Token-aware, so the fixed multi-line
       form passes; verified it finds 4 leaks in the pre-fix summary-employer and
