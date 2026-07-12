@@ -68,16 +68,34 @@ palette/pantone/year state between tests. Now cleared (plus `sessionStorage`).
 - [x] Add the Pantone lazy-load regression test (C) — done on `codex-fixes`.
 - [x] Make `darkmode-pantone.test.js` `beforeEach` hermetic (strip `<html>`
       data-attrs + `sessionStorage`) — done on `codex-fixes`.
-- [ ] **Decide CI audit policy** — raise the existing `npm audit` step to
-      `--audit-level=moderate` and/or drop `continue-on-error`, and add it to the
-      PR (`quality`) job, not just the push (`quick`) job. Left undone because
-      moderate + blocking can block unrelated PRs on new transitive advisories —
-      a policy call to make together.
-- [ ] **Run coverage in CI** — add `npm run test:coverage` (or a direct
-      `test-exclude` smoke test) so a broken instrumentation path can't pass
-      silently again (the class of bug behind D).
-- [ ] **Build a Hugo template-render harness** — the missing capability behind
-      A and B. Start with the two cases above (employer href, hidden-translation
-      language links) and grow from there.
-- [ ] Consider a lint/format guard for template query-string construction so the
-      A-class whitespace bug can't recur (trim markers are easy to forget).
+- [x] **Run coverage in CI** — done. Added both guards for the D-class bug:
+      `__tests__/toolchain-instrumentation.test.js` drives `test-exclude`'s
+      `shouldInstrument` directly (fast, hugo-independent, part of `npm test`),
+      and a `npm run test:coverage` step now runs in both the `quick` and
+      `quality` CI jobs so the full istanbul/test-exclude pipeline is exercised.
+- [x] **Build a Hugo template-render harness** — done. `test/` holds a tiny
+      self-contained Hugo fixture site (`test/fixture/`) plus
+      `test/hugo-render.test.js`, which injects the real `summary-employer.html`
+      and
+      `settings-dropdown.html` (and real `i18n/`) into a throwaway copy, runs
+      `hugo`, and asserts on the emitted HTML. Covers both original cases
+      (employer href has no whitespace; hidden-translation stubs are not linked)
+      plus a visible-translation control. Skips gracefully when Hugo is absent
+      (set `HUGO_PATH` or install Hugo to run it locally). Verified it fails
+      against the pre-fix templates. Grow it by adding fixture pages + probe
+      layouts for the next template under test.
+- [x] **CI audit policy — surface advisories in the dev loop** — done. The goal
+      was reach, not gating: a dependency advisory should show up where the work
+      happens (the PR), not be buried in a green job's logs. `npm audit` now runs
+      in the `quality` job and `scripts/quality/audit-summary.mjs` folds the
+      moderate/high/critical counts into the sticky PR quality comment
+      (non-blocking; catches the moderate/low class the push-job
+      `--audit-level=high` step ignores). Dependabot (maintainer email / auto
+      PRs) was deliberately skipped — that reaches a person, not the PR loop.
+- [x] **Static whitespace guard for template query strings** — done.
+      `test/template-whitespace-guard.test.js` scans every layout
+      for the gap-A shape (a multi-line query-string href whose whitespace is
+      trimmed by neither `-}}` nor `{{-`). Token-aware, so the fixed multi-line
+      form passes; verified it finds 4 leaks in the pre-fix summary-employer and
+      0 today. Defence-in-depth alongside the render harness, for new templates
+      nobody has written a render test for yet.

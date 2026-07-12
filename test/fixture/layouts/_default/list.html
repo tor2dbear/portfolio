@@ -1,0 +1,9 @@
+{{/* Probe layout for the employer-view href test (gap A).
+  Renders every child page through the real summary-employer.html. The child's
+  .Parent is this section page, which carries company_name, so the
+  with-company_name branch in summary-employer fires and we can assert the
+  emitted ?view=employer&ref=... query string is clean.
+*/}}
+<div id="employer-summaries">
+  {{ range .Pages }}{{ .Render "summary-employer" }}{{ end }}
+</div>

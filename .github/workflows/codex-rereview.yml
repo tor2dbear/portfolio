@@ -1,0 +1,56 @@
+name: codex-rereview
+
+# Request a fresh Codex review before merge, on demand.
+#
+# Codex re-reviews when someone comments "@codex review". Adding the
+# `codex-review` label to a PR posts that comment for you, then removes the
+# label so re-adding it triggers another pass. Use it after pushing fixes, to
+# get a final review of the merged state.
+#
+# ⚠️ Token: the comment is posted by github-actions[bot] by default. If Codex
+# ignores bot comments (some connectors do, to avoid loops), add a repo secret
+# CODEX_TRIGGER_TOKEN — a fine-grained PAT from a human account with
+# pull-requests:write / issues:write — and it will be used instead.
+#
+# Prerequisite: create a `codex-review` label in the repo (Issues → Labels).
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  request:
+    if: github.event.label.name == 'codex-review'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Codex for a fresh review
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.CODEX_TRIGGER_TOKEN || secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: '@codex review',
+            });
+
+            // Remove the label so re-adding it can trigger another review.
+            try {
+              await github.rest.issues.removeLabel({
+                owner,
+                repo,
+                issue_number: prNumber,
+                name: 'codex-review',
+              });
+            } catch (e) {
+              core.info(`Could not remove label: ${e.message}`);
+            }

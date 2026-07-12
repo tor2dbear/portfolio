@@ -44,6 +44,9 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Run coverage (exercises the instrumentation toolchain)
+        run: npm run test:coverage
+
       - name: Build
         run: hugo --minify
 
@@ -87,6 +90,9 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Run coverage (exercises the instrumentation toolchain)
+        run: npm run test:coverage
+
       - name: Build (local baseURL)
         run: hugo --minify --baseURL "http://127.0.0.1:4173/"
 
@@ -110,6 +116,10 @@ jobs:
       - name: Evaluate + summarize
         if: always()
         run: node scripts/quality/evaluate.mjs --policy quality-policy.yml --mode full --lighthouseDir "artifacts/lighthouse/.lighthouseci" --axeFile "artifacts/axe/axe-results.json" --outDir "artifacts/quality" --stepSummary true
+
+      - name: Dependency audit (report into sticky comment, non-blocking)
+        if: always()
+        run: node scripts/quality/audit-summary.mjs --outDir "artifacts/quality"
 
       - name: Upload artifacts
         if: always()

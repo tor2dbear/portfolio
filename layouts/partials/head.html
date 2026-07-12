@@ -581,34 +581,9 @@
     }
   </style>
 
-  {{/* Terminal filesystem manifest: maps each top-level segment to its kind and
-       URL so the terminal classifies ls/cd/tree and can fetch a dir without a
-       hardcoded guess. Sections are directories, standalone top-level pages are
-       files; a page overrides its kind via a `terminal_kind` param (contact =
-       action). The visual tools (terminal_kind = exempt) can't render as a
-       terminal, so they're left OUT of the filesystem entirely — not listed by
-       `ls`, not reachable by cd/open. The URL lets the terminal reach
-       footer-only sections (legal) that aren't in the nav. */}}
-  {{- $kinds := dict -}}
-  {{- range site.Sections -}}
-    {{- $k := "dir" -}}
-    {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
-    {{- if ne $k "exempt" -}}
-      {{- $kinds = merge $kinds (dict .Section (dict "kind" $k "url" .RelPermalink)) -}}
-    {{- end -}}
-  {{- end -}}
-  {{- range where site.RegularPages "Kind" "page" -}}
-    {{- $rel := strings.Trim .RelPermalink "/" -}}
-    {{- $rel = strings.TrimPrefix (printf "%s/" .Language.Lang) $rel -}}
-    {{- $rel = strings.Trim $rel "/" -}}
-    {{- $segs := split $rel "/" -}}
-    {{- $tk := .Params.terminal_kind | default "" -}}
-    {{- if and (eq (len $segs) 1) (ne $tk "hidden") (ne $tk "exempt") -}}
-      {{- $k := "file" -}}
-      {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
-      {{- $kinds = merge $kinds (dict (index $segs 0) (dict "kind" $k "url" .RelPermalink)) -}}
-    {{- end -}}
-  {{- end -}}
+  {{/* Terminal filesystem manifest — built in a returning partial so the same
+       mapping algorithm is rendered here and exercised by the render tests. */}}
+  {{- $kinds := partial "terminal-manifest.html" . -}}
   <script type="application/json" data-js="terminal-manifest">
     {{- $kinds | jsonify | safeJS -}}
   </script>

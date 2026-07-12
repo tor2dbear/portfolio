@@ -46,6 +46,7 @@ module.exports = [
         module: "readonly",
         require: "readonly",
         process: "readonly",
+        global: "readonly",
         __dirname: "readonly",
         __filename: "readonly",
         exports: "readonly",
