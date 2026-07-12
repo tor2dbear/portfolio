@@ -30,8 +30,10 @@ describe("terminal command line", () => {
 
   function loadModule() {
     jest.isolateModules(() => {
-      // theme.js first (publishes window.Theme synchronously), then the
-      // terminal engine, which aliases window.Theme at IIFE eval.
+      // theme-custom-palette.js publishes window.ThemeCustomPalette first (its
+      // shims in theme.js delegate to it), then theme.js (publishes window.Theme
+      // synchronously), then the terminal engine (aliases window.Theme).
+      require("../theme-custom-palette.js");
       require("../theme.js");
       require("../terminal.js");
     });

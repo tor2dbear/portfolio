@@ -767,6 +767,7 @@
   {{ $js3 := resources.Get "js/header-hide.js" }}
   {{ $js_toast := resources.Get "js/toast.js" }}
   {{ $js_theme_derive := resources.Get "js/theme-derive.js" | default (resources.FromString "js/theme-derive-fallback.js" "(function(){window.ThemeDerive=window.ThemeDerive||{};})();") }}
+  {{ $js_custom_palette := resources.Get "js/theme-custom-palette.js" }}
   {{ $js4 := resources.Get "js/theme.js" }}
   {{ $js5 := resources.Get "js/language-dropdown.js" }}
   {{ $js6 := resources.Get "js/focus-mode.js" }}
@@ -809,6 +810,7 @@
     <script src="{{ $js3.RelPermalink }}" defer></script>
     <script src="{{ $js_toast.RelPermalink }}" defer></script>
     <script src="{{ $js_theme_derive.RelPermalink }}" defer></script>
+    <script src="{{ $js_custom_palette.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
@@ -844,7 +846,7 @@
     <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js4 $js_terminal $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_terminal $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}
