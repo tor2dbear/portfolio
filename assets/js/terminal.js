@@ -3635,6 +3635,82 @@
         .filter(Boolean);
     }
 
+    // Fill the banner's "Last login: …" line — the transcript-mode stand-in for
+    // the hidden host/boot-ok meta. Shows the PREVIOUS visit's time (classic
+    // shell behaviour), computed once and cached per session so it's stable
+    // across page navigations and rotates on the next visit; the pseudo-tty is
+    // likewise stable per session. First-ever visit shows the current time.
+    function terminalStampLastLogin() {
+      var el = document.querySelector('[data-js="terminal-lastlogin"]');
+      if (!el) {
+        return;
+      }
+      var line = null;
+      try {
+        line = sessionStorage.getItem("terminal-login-line");
+      } catch (e) {
+        /* sessionStorage unavailable — recompute (still shows a valid line) */
+      }
+      if (!line) {
+        var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var mons = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        var pad = function (n) {
+          return (n < 10 ? "0" : "") + n;
+        };
+        var prev = null;
+        try {
+          prev = Number(localStorage.getItem("terminal-last-login")) || null;
+        } catch (e) {
+          /* localStorage unavailable — fall back to now */
+        }
+        var d = prev ? new Date(prev) : new Date();
+        var tty = null;
+        try {
+          tty = sessionStorage.getItem("terminal-tty");
+        } catch (e) {
+          /* ignore */
+        }
+        if (!tty) {
+          var n = Math.floor(Math.random() * 1000);
+          tty = "ttys" + (n < 10 ? "00" : n < 100 ? "0" : "") + n;
+        }
+        line =
+          "Last login: " +
+          days[d.getDay()] +
+          " " +
+          mons[d.getMonth()] +
+          " " +
+          pad(d.getDate()) +
+          " " +
+          pad(d.getHours()) +
+          ":" +
+          pad(d.getMinutes()) +
+          " on " +
+          tty;
+        try {
+          sessionStorage.setItem("terminal-login-line", line);
+          sessionStorage.setItem("terminal-tty", tty);
+          localStorage.setItem("terminal-last-login", String(Date.now()));
+        } catch (e) {
+          /* storage unavailable — the line still renders, just not persisted */
+        }
+      }
+      el.textContent = line;
+    }
+
     function runTerminalBootTranscript() {
       if (
         !terminalSession ||
@@ -3658,6 +3734,7 @@
       // plain readable page visible rather than a blank screen. (head.html sets
       // it pre-paint too, to avoid a flash of the un-hidden page.)
       document.documentElement.setAttribute("data-terminal-transcript", "1");
+      terminalStampLastLogin();
       if (terminalReducedMotion()) {
         // Motion off: print the whole session at once, as a real terminal
         // streams output instantly.

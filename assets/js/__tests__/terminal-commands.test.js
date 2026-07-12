@@ -104,6 +104,7 @@ describe("terminal command line", () => {
       <body>
         <div class="terminal-boot">
           <pre class="terminal-boot__art terminal-boot__art--sm">  ██\n ████</pre>
+          <p class="terminal-boot__lastlogin" data-js="terminal-lastlogin" aria-hidden="true"></p>
         </div>
         <button data-js="mode-option" data-mode="light"></button>
         <button data-js="mode-option" data-mode="dark"></button>
@@ -1579,6 +1580,15 @@ describe("terminal command line", () => {
     // No timers to flush — the session is complete immediately, with no cursor.
     expect(document.querySelector(".terminal-session__cursor")).toBeNull();
     expect(sessionText()).toContain("mode");
+  });
+
+  test("transcript mode fills the banner's Last login line", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    const login = document.querySelector('[data-js="terminal-lastlogin"]');
+    expect(login).not.toBeNull();
+    // A real "Last login: … on ttysNNN" line is printed under the banner.
+    expect(login.textContent).toMatch(/^Last login: .+ on ttys\d{3}$/);
   });
 
   test("the jump-to-prompt button focuses the prompt so mobile opens the keyboard", () => {
