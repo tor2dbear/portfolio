@@ -37,6 +37,7 @@ describe("darkmode pantone transport", () => {
       // theme.js's custom-palette shims delegate to; load it first (as in prod).
       require("../theme-custom-palette.js");
       require("../theme.js");
+      require("../theme-pantone.js");
     });
     document.dispatchEvent(new window.Event("DOMContentLoaded"));
   }

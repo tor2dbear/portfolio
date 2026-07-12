@@ -35,6 +35,7 @@ describe("terminal command line", () => {
       // synchronously), then the terminal engine (aliases window.Theme).
       require("../theme-custom-palette.js");
       require("../theme.js");
+      require("../theme-pantone.js");
       require("../terminal.js");
       require("../terminal-flows.js");
     });
