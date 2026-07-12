@@ -13,3 +13,7 @@ layouts/partials/header.html
 layouts/partials/header-client.html
 # Hugo CSS template — contains Go template syntax, not valid CSS
 assets/templates/coty-scales.css
+# UI-library tab partials: their {{ highlight }} blocks hold literal code
+# samples whose whitespace IS the rendered output — reformatting them changes
+# the page. Keep them byte-stable.
+layouts/partials/ui-library/

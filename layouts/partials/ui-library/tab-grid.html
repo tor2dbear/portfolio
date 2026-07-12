@@ -1,0 +1,774 @@
+      <!-- GRID TAB -->
+      <div
+        id="panel-grid"
+        class="tab-panel"
+        data-panel="grid"
+        role="tabpanel"
+        aria-labelledby="tab-grid"
+      >
+        <details class="accordion" data-sort="12-column-grid-system">
+          <summary class="accordion__trigger">
+            <h2 class="accordion__title type-headline-2">
+              {{ if eq .Language.Lang "sv" }}
+                12-kolumns Grid System
+              {{ else }}
+                12-Column Grid System
+              {{ end }}
+            </h2>
+          </summary>
+          <div class="accordion__content">
+            <p class="ui-library__section-intro">
+              {{ if eq .Language.Lang "sv" }}
+                Ett 12-kolumns subgrid-system med flexibla kolumnspanningar och
+                placeringar.
+              {{ else }}
+                A 12-column subgrid system with flexible column spans and
+                placements.
+              {{ end }}
+
+            </p>
+
+            <!-- Full Width -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  Full bredd (12 kolumner)
+                {{ else }}
+                  Full Width (12 columns)
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="col-span-12 grid-demo__item">col-span-12</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="col-span-12">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- 50/50 Split -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  50/50 Split (6+6)
+                {{ else }}
+                  50/50 Split (6+6)
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="col-span-6 grid-demo__item">col-span-6</div>
+                <div class="col-span-6 grid-demo__item">col-span-6</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="col-span-6">...</div>
+                  <div class="col-span-6">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- Thirds -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  Tredjedel delar (4+4+4)
+                {{ else }}
+                  Thirds (4+4+4)
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="col-span-4">...</div>
+                  <div class="col-span-4">...</div>
+                  <div class="col-span-4">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- 2:1 Ratio -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  2:1 Ratio (8+4)
+                {{ else }}
+                  2:1 Ratio (8+4)
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="col-span-8 grid-demo__item">col-span-8 (wide)</div>
+                <div class="col-span-4 grid-demo__item">col-span-4</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="col-span-8">...</div>
+                  <div class="col-span-4">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- Specific Placement -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  Specifik placering
+                {{ else }}
+                  Specific Placement
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="col-start-3 col-span-8 grid-demo__item">
+                  col-start-3 col-span-8
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="col-start-3 col-span-8">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- Asymmetric Layout -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  Asymmetrisk layout
+                {{ else }}
+                  Asymmetric Layout
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="col-span-3 grid-demo__item">3 cols</div>
+                <div class="col-span-6 grid-demo__item">6 cols</div>
+                <div class="col-span-3 grid-demo__item">3 cols</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="col-span-3">...</div>
+                  <div class="col-span-6">...</div>
+                  <div class="col-span-3">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+          </div>
+        </details>
+
+        <!-- Art-Direction Placement API -->
+        <details class="accordion" data-sort="art-direction-placement">
+          <summary class="accordion__trigger">
+            <h2 class="accordion__title type-headline-2">
+              {{ if eq .Language.Lang "sv" }}
+                Art-Direction Placering
+              {{ else }}
+                Art-Direction Placement
+              {{ end }}
+            </h2>
+          </summary>
+          <div class="accordion__content">
+            <p class="ui-library__section-intro">
+              {{ if eq .Language.Lang "sv" }}
+                Placeringspresets via <code>--col</code> custom property. Varje
+                block kan art-directedas med en klass eller inline
+                <code>style="--col: col-start 3 / span 8;"</code>.
+              {{ else }}
+                Placement presets via <code>--col</code> custom property. Each
+                block can be art-directed with a class or inline
+                <code>style="--col: col-start 3 / span 8;"</code>.
+              {{ end }}
+
+            </p>
+
+            <!-- place-full -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">.place-full (col 1–12)</h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-full grid-demo__item">place-full</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-full">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- place-wide -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">.place-wide (col 1–10)</h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-wide grid-demo__item">place-wide</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-wide">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- place-prose -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">.place-prose (col 1–8)</h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-prose grid-demo__item">place-prose</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-prose">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- place-narrow -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">.place-narrow (col 2–9)</h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-narrow grid-demo__item">place-narrow</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-narrow">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- place-article -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                .place-article (xl: col 3-10, lg: col 2-11, md: col 1-12)
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-article grid-demo__item">place-article</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-article">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- place-aside -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">.place-aside (col 9–12)</h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-aside grid-demo__item">place-aside</div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-aside">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- place-aside-left -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">.place-aside-left (col 1–4)</h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-aside-left grid-demo__item">
+                  place-aside-left
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-aside-left">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- Inline --col override -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  Inline --col (col 4–9)
+                {{ else }}
+                  Inline --col (col 4–9)
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div
+                  class="grid-demo__item"
+                  style="--col: col-start 4 / span 6; grid-column: var(--col);"
+                >
+                  style="--col: col-start 4 / span 6;"
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div style="--col: col-start 4 / span 6;">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- Combined: prose + aside on same row -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                {{ if eq .Language.Lang "sv" }}
+                  Kombinerat: prose + aside (samma rad)
+                {{ else }}
+                  Combined: prose + aside (same row)
+                {{ end }}
+              </h3>
+              <div class="grid-demo use-subgrid">
+                <div class="place-prose grid-demo__item" style="--row: 1;">
+                  place-prose
+                </div>
+                <div class="place-aside grid-demo__item" style="--row: 1;">
+                  place-aside
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid">
+                  <div class="place-prose" style="--row: 1;">...</div>
+                  <div class="place-aside" style="--row: 1;">...</div>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+          </div>
+        </details>
+
+        <!-- Stepped Text -->
+        <details class="accordion" data-sort="stepped-text-staircase">
+          <summary class="accordion__trigger">
+            <h2 class="accordion__title type-headline-2">
+              {{ if eq .Language.Lang "sv" }}
+                Stegad text (Tripp-trapp-trull)
+              {{ else }}
+                Stepped Text (Staircase)
+              {{ end }}
+            </h2>
+          </summary>
+          <div class="accordion__content">
+            <p class="ui-library__section-intro">
+              {{ if eq .Language.Lang "sv" }}
+                Textsteg som flyttas horisontellt genom gridet. Varje element
+                placeras i en egen rad och förskjuts med ett fast antal
+                kolumner.
+              {{ else }}
+                Text blocks that shift horizontally across the grid. Each
+                element is placed in its own row and offset by a fixed number of
+                columns.
+              {{ end }}
+
+            </p>
+
+            <!-- stepped-3-3 -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                .stepped-3-3
+                ({{ if eq .Language.Lang "sv" }}
+                  förskjutning 3, spann 3
+                {{ else }}
+                  offset 3, span 3
+                {{ end }})
+              </h3>
+              <div class="grid-demo use-subgrid stepped-3-3">
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 1
+                  {{ else }}
+                    Step 1
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 2
+                  {{ else }}
+                    Step 2
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 3
+                  {{ else }}
+                    Step 3
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 4
+                  {{ else }}
+                    Step 4
+                  {{ end }}
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid stepped-3-3">
+                  <p>Step 1</p>
+                  <p>Step 2</p>
+                  <p>Step 3</p>
+                  <p>Step 4</p>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- stepped-2-4 -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                .stepped-2-4
+                ({{ if eq .Language.Lang "sv" }}
+                  förskjutning 2, spann 4, överlappning
+                {{ else }}
+                  offset 2, span 4, overlapping
+                {{ end }})
+              </h3>
+              <div class="grid-demo use-subgrid stepped-2-4">
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 1
+                  {{ else }}
+                    Step 1
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 2
+                  {{ else }}
+                    Step 2
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 3
+                  {{ else }}
+                    Step 3
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 4
+                  {{ else }}
+                    Step 4
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 5
+                  {{ else }}
+                    Step 5
+                  {{ end }}
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid stepped-2-4">
+                  <p>Step 1</p>
+                  <p>Step 2</p>
+                  <p>Step 3</p>
+                  <p>Step 4</p>
+                  <p>Step 5</p>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- stepped-4-4 -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                .stepped-4-4
+                ({{ if eq .Language.Lang "sv" }}
+                  förskjutning 4, spann 4, tre steg
+                {{ else }}
+                  offset 4, span 4, three steps
+                {{ end }})
+              </h3>
+              <div class="grid-demo use-subgrid stepped-4-4">
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 1
+                  {{ else }}
+                    Step 1
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 2
+                  {{ else }}
+                    Step 2
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 3
+                  {{ else }}
+                    Step 3
+                  {{ end }}
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid stepped-4-4">
+                  <p>Step 1</p>
+                  <p>Step 2</p>
+                  <p>Step 3</p>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- stepped-1-6 -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                .stepped-1-6
+                ({{ if eq .Language.Lang "sv" }}
+                  förskjutning 1, spann 6, långsam drift
+                {{ else }}
+                  offset 1, span 6, slow drift
+                {{ end }})
+              </h3>
+              <div class="grid-demo use-subgrid stepped-1-6">
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 1
+                  {{ else }}
+                    Step 1
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 2
+                  {{ else }}
+                    Step 2
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 3
+                  {{ else }}
+                    Step 3
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 4
+                  {{ else }}
+                    Step 4
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Steg 5
+                  {{ else }}
+                    Step 5
+                  {{ end }}
+                </div>
+              </div>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid stepped-1-6">
+                  <p>Step 1</p>
+                  <p>Step 2</p>
+                  <p>Step 3</p>
+                  <p>Step 4</p>
+                  <p>Step 5</p>
+                  </div>` "html" ""
+                }}
+              </details>
+            </div>
+
+            <!-- stepped-6-6 -->
+            <div class="grid-section">
+              <h3 class="type-headline-small">
+                .stepped-6-6
+                ({{ if eq .Language.Lang "sv" }}
+                  förskjutning 6, spann 6, diagonal tvåblock
+                {{ else }}
+                  offset 6, span 6, two-block diagonal
+                {{ end }})
+              </h3>
+              <div class="grid-demo use-subgrid stepped-6-6">
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Block 1 (col 1–6)
+                  {{ else }}
+                    Block 1 (col 1–6)
+                  {{ end }}
+                </div>
+                <div class="grid-demo__item">
+                  {{ if eq .Language.Lang "sv" }}
+                    Block 2 (col 7–12)
+                  {{ else }}
+                    Block 2 (col 7–12)
+                  {{ end }}
+                </div>
+              </div>
+              <p class="ui-library__note">
+                {{ if eq .Language.Lang "sv" }}
+                  Responsivt: breddas till 8 col vid tablet (md), full bredd vid
+                  mobil (sm).
+                {{ else }}
+                  Responsive: widens to 8 col at tablet (md), full width at
+                  mobile (sm).
+                {{ end }}
+              </p>
+              <details class="code-example">
+                <summary>
+                  {{ if eq .Language.Lang "sv" }}
+                    Visa HTML
+                  {{ else }}
+                    Show HTML
+                  {{ end }}
+                </summary>
+                {{ highlight `<div class="use-subgrid stepped-6-6">
+                  <div>Block 1</div>
+                  <div>Block 2</div>
+                  </div>
+
+                  <!-- Responsive behaviour (built-in):
+                  Desktop: 6+6 cols, diagonal
+                  Tablet: 8+8 cols, overlapping
+                  Mobile: full width, stacked -->` "html" ""
+                }}
+              </details>
+            </div>
+          </div>
+        </details>
+      </div>
