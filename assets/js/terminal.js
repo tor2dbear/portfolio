@@ -6,17 +6,17 @@
  * mapped onto the site's nav, the interactive contact/subscribe flows, and the
  * enter/exit glue that swaps the terminal in and out of the page.
  *
- * Extracted from darkmode.js. It owns NONE of the theme system: it drives
+ * Extracted from theme.js. It owns NONE of the theme system: it drives
  * appearance only through the `window.Theme` seam (aliased at the top of this
- * IIFE) and never reaches into darkmode.js's closure. It publishes the
+ * IIFE) and never reaches into theme.js's closure. It publishes the
  * `window.Terminal` seam that terminal-ai.js consumes, and `window.TerminalSlugs`
- * that terminal-nav.js re-stamps after an in-place swap. Loads AFTER darkmode.js
+ * that terminal-nav.js re-stamps after an in-place swap. Loads AFTER theme.js
  * (so window.Theme exists) and BEFORE terminal-nav.js / terminal-ai.js.
  *
  * The theme module hands the terminal control at two points: setLayout() calls
  * window.Terminal.enterLayout() when the user switches INTO terminal (boot
  * theatre + transcript replay), and the four bridge vars that used to live in
- * darkmode.js (flow reset, nav api, boot runner, last-viewed url) now live here
+ * theme.js (flow reset, nav api, boot runner, last-viewed url) now live here
  * as the engine's own internal state, read by the local exitTerminal().
  */
 
@@ -26,8 +26,8 @@
   // ==========================================================================
   // Theme seam aliases
   // Pull the high-level theme/layout API off window.Theme (published by
-  // darkmode.js, which loads first) into local names, so the moved command
-  // engine below reads exactly as it did when it lived inside darkmode.js's
+  // theme.js, which loads first) into local names, so the moved command
+  // engine below reads exactly as it did when it lived inside theme.js's
   // closure. This single block is the only inward coupling to the theme module.
   // ==========================================================================
   var Theme = window.Theme || {};

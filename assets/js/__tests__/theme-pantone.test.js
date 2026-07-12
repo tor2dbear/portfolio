@@ -33,7 +33,7 @@ describe("darkmode pantone transport", () => {
 
   function loadModule() {
     jest.isolateModules(() => {
-      require("../darkmode.js");
+      require("../theme.js");
     });
     document.dispatchEvent(new window.Event("DOMContentLoaded"));
   }

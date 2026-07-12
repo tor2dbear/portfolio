@@ -166,11 +166,11 @@
 
     {{/* Terminal layout: the localized home intro (the hero, in prose) that the
          boot transcript prints via `cat welcome.txt`. Hidden data source only —
-         darkmode.js reads its text; falls back to a hardcoded blurb if absent. */}}
+         terminal.js reads its text; falls back to a hardcoded blurb if absent. */}}
     <pre hidden data-js="terminal-welcome">{{ i18n "terminal_welcome" }}</pre>
     {{/* Terminal layout: the buffer ends with a live prompt. A real <input> so
          mobile keyboards open on tap and commands / easter eggs can be typed —
-         see the command engine in darkmode.js. The session log above it holds
+         see the command engine in terminal.js. The session log above it holds
          the printed output of executed commands. Prompt text comes from the CSS
          vars in head.html; the whole block is hidden in every other layout. */}}
     <div class="terminal-session" data-js="terminal-session" aria-live="polite"></div>
@@ -194,11 +194,11 @@
     {{/* Mobile key bar: the round-4 keyboard fundamentals (history recall, Tab
          completion, ^C) ride keys the on-screen keyboard lacks. This accessory
          row — shown only in terminal layout while the prompt is focused and
-         pinned above the keyboard via the visualViewport API in darkmode.js —
+         pinned above the keyboard via the visualViewport API in terminal.js —
          surfaces them on touch, plus a ⌄ jump-to-prompt. Buttons carry the
          glyph for sighted users and an i18n label for assistive tech; the wiring
          (which preventDefaults so a tap never drops the keyboard) is in
-         darkmode.js. Hidden on desktop via a coarse-pointer media query. */}}
+         terminal.js. Hidden on desktop via a coarse-pointer media query. */}}
     <div class="terminal-keybar" data-js="terminal-keybar">
       <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="prev" aria-label="{{ i18n "terminal_key_prev" }}">↑</button>
       <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="next" aria-label="{{ i18n "terminal_key_next" }}">↓</button>
@@ -209,7 +209,7 @@
     {{/* Terminal layout: a floating jump-to-prompt button. Unlike the mobile key
          bar's ⌄ (which only rides the keyboard while the prompt is focused), this
          appears on any device once the live prompt scrolls out of view — reading
-         a long cat output, you can drop straight back to the prompt. darkmode.js
+         a long cat output, you can drop straight back to the prompt. terminal.js
          toggles .is-visible via an IntersectionObserver on the prompt. */}}
     <button class="terminal-jump" type="button" data-js="terminal-jump" aria-label="{{ i18n "terminal_key_bottom" }}">⌄</button>
   </div>

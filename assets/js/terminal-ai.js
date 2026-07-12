@@ -7,7 +7,7 @@
  * contact/subscribe flows. It is deliberately honest that it is NOT an LLM.
  *
  * Architecture: this module owns NONE of the terminal chrome. It talks to the
- * command engine (in darkmode.js) only through the small `window.Terminal`
+ * command engine (in terminal.js) only through the small `window.Terminal`
  * seam — print(), applyAction(), captureInput()/releaseInput(), setPrompt().
  * That single dependency is what lets the assistant be its own file (and be
  * unit-tested against a mocked Terminal), and it is the same export surface a

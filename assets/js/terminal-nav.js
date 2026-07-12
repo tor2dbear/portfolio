@@ -4,10 +4,10 @@
  * A typed `cd` in the terminal layout reads like a real shell: instead of
  * reloading the machine, it swaps the page content under the live prompt and
  * keeps the scrollback alive. Clicks are deliberately left untouched (they
- * still full-reload with the top `cd` echo — see darkmode.js); only the
+ * still full-reload with the top `cd` echo — see terminal.js); only the
  * command engine's `navigate` action routes here, and only for ordinary pages.
  *
- * darkmode.js decides eligibility it can know up front (terminal layout,
+ * terminal.js decides eligibility it can know up front (terminal layout,
  * same-origin, not home, not a language switch) and calls `TerminalNav.go()`.
  * This module makes the final call after fetching — a special page (the four
  * CSS-bundled pages: home, contact, ui-library, palette-generator) or a
@@ -33,7 +33,7 @@
   var lastPath = window.location.pathname;
 
   // Derive a page's cwd (~ or ~/segment) from a URL, mirroring head.html's
-  // per-page logic and darkmode.js's hrefToCwd (strip origin, query/hash, and
+  // per-page logic and terminal.js's hrefToCwd (strip origin, query/hash, and
   // the language prefix). Used for the prompt on back/forward restores.
   function pathToCwd(href) {
     var path = String(href || "")
@@ -147,7 +147,7 @@
   }
 
   // The prompt sits below #main, so a taller/shorter page shifts it — pin the
-  // viewport to the bottom, matching darkmode.js's scrollTerminalToEnd.
+  // viewport to the bottom, matching terminal.js's scrollTerminalToEnd.
   function keepPromptInView() {
     window.requestAnimationFrame(function () {
       window.scrollTo(0, document.body.scrollHeight);

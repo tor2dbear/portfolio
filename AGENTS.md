@@ -7,6 +7,7 @@ Documentation for AI assistants working with this project.
 ## Project Overview
 
 **Torbjörn Hedberg's Portfolio Website**
+
 - Static site built with Hugo
 - Bilingual: Swedish (primary) and English
 - Portfolio showcase + client/employer application system
@@ -80,31 +81,35 @@ Special feature for sending customized job applications with personalized stylin
 **Focus Mode System** uses URL query parameters instead of localStorage for a stateless, shareable, SEO-friendly solution.
 
 **1. Client Page Structure**:
+
 ```
 content/english/clients/deg17/_index.md
 content/english/employers/techcorp/_index.md
 ```
 
 **2. Front Matter**:
+
 ```yaml
 title: "Work application for UI position at Deg17"
-company_name: "deg17"           # Used in query params and filtering
+company_name: "deg17" # Used in query params and filtering
 preamble: "Introduction text"
 body: "Main letter content"
 attach_cv: "/images/cvd.pdf"
 attach_portfolio: "/images/portfolio_20220812.pdf"
 attach_letter: ""
-taxonomy_indexes: true          # For employer pages
+taxonomy_indexes: true # For employer pages
 ```
 
 **3. Query Parameter Flow**:
 
 **Client Mode**:
+
 ```
 /clients/deg17/ → /works/project/?view=client&ref=deg17
 ```
 
 **Employer Mode**:
+
 ```
 /employers/techcorp/ → /works/project/?view=employer
 ```
@@ -112,48 +117,71 @@ taxonomy_indexes: true          # For employer pages
 **4. JavaScript Implementation** (`focus-mode.js`):
 
 **a) Detect context**:
+
 - Reads URL parameters: `?view=client&ref=company` or `?view=employer`
 - Backward compatibility: `?source=client` (legacy)
 - Path detection: `/clients/` or `/employers/` in URL
 
 **b) Apply styling**:
+
 - Adds CSS class `clientpage` or `employerpage` to `#layout`
 - Classes trigger CSS to hide menu and adjust layout
 
 **c) Propagate parameters**:
+
 - Automatically adds query params to all internal links
 - Maintains focus mode context across navigation
 - Updates breadcrumbs with company name from `ref` parameter
 
 **d) Security**:
+
 - Uses `textContent` instead of `innerHTML` to prevent XSS
 - URL encoding/decoding for special characters
 - Try/catch blocks for error handling
 
 **5. CSS Styling**:
+
 ```css
 /* Client mode */
-#layout.clientpage #menu { display: none; }
-#layout.clientpage #main { width: 100%; }
-#layout.clientpage .hide-on-client { display: none; }
-#layout:not(.clientpage) .show-on-client { display: none; }
+#layout.clientpage #menu {
+  display: none;
+}
+#layout.clientpage #main {
+  width: 100%;
+}
+#layout.clientpage .hide-on-client {
+  display: none;
+}
+#layout:not(.clientpage) .show-on-client {
+  display: none;
+}
 
 /* Employer mode */
-#layout.employerpage #menu { display: none; }
-#layout.employerpage #main { width: 100%; }
-#layout.employerpage .hide-on-employer { display: none; }
-#layout:not(.employerpage) .show-on-employer { display: none; }
+#layout.employerpage #menu {
+  display: none;
+}
+#layout.employerpage #main {
+  width: 100%;
+}
+#layout.employerpage .hide-on-employer {
+  display: none;
+}
+#layout:not(.employerpage) .show-on-employer {
+  display: none;
+}
 ```
 
 **6. Hugo Taxonomy System**:
 
 **Employers**:
+
 - Uses Hugo taxonomy: `employers: [techcorp]` in project front matter
 - Template: `layouts/taxonomy/employer.html`
 - Queries projects directly: `{{ range where .Site.RegularPages "Type" "works" }}`
 - Filters by company: `{{ if in .Params.employers $companyName }}`
 
 **Clients**:
+
 - Uses Hugo taxonomy: `clients: [deg17]` in project front matter
 - Template: `layouts/taxonomy/client.html`
 - Same query pattern as employers
@@ -161,18 +189,21 @@ taxonomy_indexes: true          # For employer pages
 **7. Hidden Projects**:
 
 Projects can be visible only on client/employer pages:
+
 ```yaml
 employers: [techcorp]
-hidden: true              # Excluded from main portfolio
+hidden: true # Excluded from main portfolio
 draft: false
 ```
 
 Templates filter hidden projects:
+
 - `layouts/works/works.html` - Main portfolio
 - `layouts/index.html` - Featured section
 - `layouts/partials/related.html` - Related suggestions
 
 **Why Query Parameters?**
+
 - ✅ Stateless - no browser storage needed
 - ✅ Shareable URLs maintain context
 - ✅ SEO-friendly with canonical tags
@@ -184,22 +215,26 @@ Templates filter hidden projects:
 ## JavaScript Conventions
 
 ### Module Pattern
+
 - One function/feature per file
 - Vanilla JavaScript (no frameworks)
 - ES6+ syntax
-- Example: `focus-mode.js`, `darkmode.js`, `header-hide.js`, `tabs.js`
+- Example: `focus-mode.js`, `theme.js`, `header-hide.js`, `tabs.js`
 
 ### File Naming
+
 - Kebab-case: `focus-mode.js`
 - Descriptive names indicating function
 - Tests: `<module-name>.test.js`
 
 ### Testing
+
 - All modules should have corresponding tests in `assets/js/__tests__/`
 - Use Jest with jsdom environment
-- Test files mirror module names: `darkmode.js` → `darkmode.test.js`
+- Test files mirror module names: `theme.js` → `theme.test.js`
 
 ### Code Quality
+
 - ESLint configuration in `eslint.config.js`
 - Prettier formatting
 - Pre-commit hooks via Husky
@@ -231,6 +266,7 @@ hugo server -D        # Include draft content
 ### Pre-commit Hooks
 
 Configured in `package.json` with lint-staged:
+
 - Auto-formats `.js`, `.json`, `.md`, `.html`, `.css`
 - Runs ESLint on JavaScript files
 
@@ -239,16 +275,19 @@ Configured in `package.json` with lint-staged:
 ## Git Workflow (v4)
 
 ### Core Principles (Strict)
+
 - **Isolation**: One task = one branch.
 - **No Worktrees**: Development happens directly in the repo on a task branch.
 - **Verification**: Before editing any file, verify your location and branch.
 
 ### Branch Naming
+
 - **Format**: `<type>/<slug>-<sessionId>` (required, e.g., `feature/login-system-a1b2`)
 - **Types**: `feature/`, `fix/`, `docs/`, `refactor/`, `test/`
 - **Session ID**: Generate using `openssl rand -hex 2`.
 
 ### Creating a New Task
+
 ```bash
 git switch master
 git pull
@@ -256,19 +295,24 @@ git switch -c <type>/<slug>-<sessionId>
 ```
 
 ### Working in a Branch (The "Gold" Rules)
+
 1. **Verification Step**: Always run `pwd`, `git rev-parse --show-toplevel` and `git branch --show-current` before the first edit in a session to confirm repo root + branch.
 2. **Scope**: Only modify files related to the current task branch.
 3. **Commits**: All `git add`, `git commit`, and `git push` commands must be executed from the repo root.
 
 ### Syncing & Updates
+
 To bring in latest changes from master:
+
 ```bash
 git fetch origin
 git merge origin/master # Avoid rebase unless explicitly requested.
 ```
 
 ### Finishing a Task (Cleanup)
+
 Once the PR is merged on GitHub:
+
 ```bash
 # Delete Branch:
 git branch -d <branch-name>
@@ -278,10 +322,12 @@ git fetch --prune
 ```
 
 ### Pull Request Description Preference
+
 - Default format: **English Markdown**.
 - Always provide a ready-to-paste GitHub PR body (`## Summary`, `## Changes`, `## Testing`) when finishing a PR-related task, even if the user does not explicitly ask for it.
 
 ### Safety Guardrails
+
 - **Never** run two agents in the same repo folder at the same time.
 
 ---
@@ -289,16 +335,19 @@ git fetch --prune
 ## Deployment & Preview System
 
 ### Production
+
 - **URL**: https://www.tor-bjorn.com/
 - **Host**: Netlify (main/master branch only)
 - **Build**: Automatic on push to main/master
 
 ### Preview Builds
+
 Preview builds use **Netlify Deploy Previews**. These are non-metered on Netlify
 (they consume no credits), so there is no longer a reason to host previews on
 GitHub Pages — keeping the repo free to go private without breaking previews.
 
 **How it works**:
+
 1. Opening/updating a PR against main/master triggers a Netlify Deploy Preview
 2. Hugo builds with the deploy-preview baseURL (`--buildDrafts --buildFuture`)
 3. Netlify posts the preview link as a PR check / comment automatically
@@ -308,13 +357,16 @@ previews always build; other branch deploys are skipped unless the commit
 message contains `[netlify]`.
 
 ### Forcing a Netlify build on a non-PR branch
+
 Branch deploys (pushes to a branch without an open PR) are skipped by default.
 To force one, **add `[netlify]` to your commit message**:
+
 ```bash
 git commit -m "feat: my changes [netlify]"
 ```
 
 ### Configuration Files
+
 - **Netlify**: `netlify.toml` (production + deploy previews) and
   `scripts/netlify/ignore.sh` (build gate)
 - **GitHub Actions**: `.github/workflows/pr-checks.yml` (lint, tests, build,
@@ -327,6 +379,7 @@ git commit -m "feat: my changes [netlify]"
 ### Writing Articles (`/writing/` and `/texter/`)
 
 **Required front matter for every English writing article** (`content/english/writing/*.md`):
+
 ```toml
 +++
 title = "Article Title"
@@ -343,6 +396,7 @@ translationKey = "article-slug-used-as-key"
 ```
 
 **Required front matter for every Swedish writing article** (`content/swedish/texter/*.md`):
+
 ```toml
 +++
 title = "Artikelns titel"
@@ -359,12 +413,14 @@ translationKey = "article-slug-used-as-key"
 ```
 
 **Critical rules**:
+
 - `slug = "writing"` is **required** on all English writing articles — without it Hugo generates a wrong URL (e.g. `/writing/article-slug/article-slug/` instead of `/writing/article-slug/`). Every file in the directory must set this explicitly.
 - `slug = "texter"` is the equivalent requirement for Swedish articles.
 - `translationKey` must match exactly between the EN and SV versions — this is how Hugo and the templates link them as translations of each other.
 
 **Untranslated articles (English-only)**:
 When a Swedish translation is not ready, set `hidden = true` on the Swedish file. Effects:
+
 - The English article appears on `/sv/texter/` with an "English" badge and topic tags translated via `data/tag_translations.toml`
 - A Swedish lang-notice ("Denna text finns inte på svenska.") is shown when the user arrives from the Swedish list via `?from=sv`
 - The language switcher is hidden on the English article (no misleading fallback link)
@@ -375,7 +431,9 @@ When a Swedish translation is not ready, set `hidden = true` on the Swedish file
 ---
 
 ### Portfolio Projects (`/works/`)
+
 Front matter structure:
+
 ```yaml
 title: "Project Title"
 date: 2024-01-01
@@ -384,6 +442,7 @@ featured_image: "/images/project/hero.jpg"
 ```
 
 Project info block (renders via `layouts/partials/project-info.html`):
+
 ```yaml
 role: "Art Direction, Illustration"
 details:
@@ -396,13 +455,16 @@ client:
   url: "https://www.utblick.org/"
   about: ""
 ```
+
 - `role` is a single string (comma-separated if multiple roles).
 - `details` keys use `snake_case` for consistent labels.
 - Omit `client` for self-initiated/personal projects.
 
 ### Client Applications (`/clients/`)
+
 Front matter structure:
-```yaml
+
+````yaml
 title: "Application title"
 company_name: "company-slug"
 preamble: "Introduction text"
@@ -413,9 +475,10 @@ attach_portfolio: "/path/to/portfolio.pdf"
 attach_cv: "/path/to/cv.pdf"
 attach_portfolio: "/path/to/portfolio.pdf"
 attach_letter: "/path/to/letter.pdf"
-```
+````
 
 ### Images
+
 - **Responsive Images**: ALWAYS use the `headerimage` partial or Hugo's `render-image` hook.
   - **Do NOT** use raw `<img>` tags for content images.
   - The `headerimage` partial automates `srcset` generation and wraps the image in a `<picture>` tag.
@@ -424,19 +487,24 @@ attach_letter: "/path/to/letter.pdf"
 - **Header Images**: Use `.Params.header_image` in front matter and call `{{ partial "headerimage.html" . }}` in templates.
 
 ### Gallery Shortcode
+
 Wrap Markdown images in a layout-aware grid:
+
 ```markdown
 {{< gallery layout="1+1" place="wide" >}}
 ![Alt](image-1.webp)
 ![Alt](image-2.webp)
 {{< /gallery >}}
 ```
+
 Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
+
 - `layout` controls internal gallery structure.
 - `place` controls AD/grid placement (`full`, `wide`, `prose`, `article`, `narrow`, `aside`, `aside-left`, `bleed`).
 - If `place` is omitted, default is `full` for `layout="full"` and `wide` for other layouts.
 
 ### Tag Links
+
 - Tag URLs are section-scoped (`/works/tags/`, `/writing/tags/`, `/texter/tags/`).
 
 ---
@@ -444,6 +512,7 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 ## CSS Architecture
 
 ### File Layout
+
 - `assets/css/tokens/primitives.css` - Raw values (never overridden by themes)
 - `assets/css/tokens/semantic.css` - Canonical semantic tokens
 - `assets/css/tokens/components.css` - Component exceptions
@@ -471,25 +540,37 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/print.css` - Print styles
 
 ### Client-specific CSS
+
 ```css
 /* Show/hide elements based on client context */
-#layout.clientpage .hide-on-client { display: none; }
-#layout:not(.clientpage) .show-on-client { display: none; }
+#layout.clientpage .hide-on-client {
+  display: none;
+}
+#layout:not(.clientpage) .show-on-client {
+  display: none;
+}
 
 /* Layout adjustments */
-#layout.clientpage #menu { /* ... */ }
-#layout.clientpage #main { /* ... */ }
+#layout.clientpage #menu {
+  /* ... */
+}
+#layout.clientpage #main {
+  /* ... */
+}
 ```
 
 ### Token System (Current)
+
 - Canonical tokens are defined in `assets/css/tokens/semantic.css`.
 - Component exceptions live in `assets/css/tokens/components.css`.
 - Mode/palette overrides live in `assets/css/dimensions/mode/*` and `assets/css/dimensions/palette/*` and should only override canonical tokens.
 
 ### Palette System (Role-Based)
+
 The project now uses a role-based palette model with a baseline recipe + per-palette specs.
 
 **Data files**:
+
 - `data/theme-baseline.toml` - Baseline role recipe (contrast steps + default sources).
 - `data/themes/*.toml` - Palette specs (`standard`, `forest`, `mesa`) with:
   - `[roles]` (`text`, `surface`, `primary`, `secondary`)
@@ -498,12 +579,14 @@ The project now uses a role-based palette model with a baseline recipe + per-pal
   - `[component_overrides]` optional component exceptions
 
 **Runtime behavior**:
+
 - `assets/js/palette-generator.js` applies role/policy output to semantic CSS vars live in browser.
 - Theme menu palette selection updates both page theme and generator preset.
 - A saved custom palette is persisted in `localStorage` and exposed as `custom` in the palette menu.
 - Color of the Year year-selection is persisted in `localStorage` as `theme-coty-year`.
 
 **Current role intent**:
+
 - `text`: readable typography/contrast
 - `surface`: page/surface/tag backgrounds and related muted tones
 - `primary`: interactive/accent actions
@@ -511,11 +594,13 @@ The project now uses a role-based palette model with a baseline recipe + per-pal
 - `text-muted`: derived globally via `color-mix` from neutral gray + `--surface-ink-strong` to reduce saturation noise while keeping palette character
 
 **Guidelines**:
+
 - Prefer role/policy changes over per-token overrides.
 - Keep component-specific overrides minimal and documented.
 - Keep `standard` as reference baseline when evaluating drift in other palettes.
 
 ### CSS Load Order (head.html)
+
 1. tokens (primitives → semantic → components → legacy)
 2. dimensions (mode → palette → palette previews)
 3. utilities (typography → layout → grid → display → icons)
@@ -523,11 +608,13 @@ The project now uses a role-based palette model with a baseline recipe + per-pal
 5. pages (home → ui-library → style → clientpage → print)
 
 ### SVG Sprite System
+
 All icons use a centralized SVG sprite system for better performance and maintainability.
 
 **Sprite File**: `static/img/svg/sprite.svg`
 
 **Available Icons**:
+
 - `icon-pdf` - PDF document icon
 - `icon-download` - Download/circle icon
 - `icon-new-window` - External link/new window icon
@@ -542,6 +629,7 @@ All icons use a centralized SVG sprite system for better performance and maintai
 - `icon-language` - Language selector icon
 
 **Usage Patterns**:
+
 ```html
 <!-- Direct usage with .icon class -->
 <svg class="icon">
@@ -549,10 +637,14 @@ All icons use a centralized SVG sprite system for better performance and maintai
 </svg>
 
 <!-- With size variants -->
-<svg class="icon icon--sm"></svg>  <!-- 1rem -->
-<svg class="icon icon--xs"></svg>  <!-- 10px -->
-<svg class="icon icon--lg"></svg>  <!-- 2rem -->
-<svg class="icon icon--xl"></svg>  <!-- 2.5rem -->
+<svg class="icon icon--sm"></svg>
+<!-- 1rem -->
+<svg class="icon icon--xs"></svg>
+<!-- 10px -->
+<svg class="icon icon--lg"></svg>
+<!-- 2rem -->
+<svg class="icon icon--xl"></svg>
+<!-- 2.5rem -->
 
 <!-- Legacy containers (backward compatibility) -->
 <div class="pdf-icon">
@@ -561,34 +653,41 @@ All icons use a centralized SVG sprite system for better performance and maintai
 ```
 
 **Adding New Icons**:
+
 1. Add `<symbol id="icon-name" viewBox="...">` to `static/img/svg/sprite.svg`
 2. Use sprite reference: `<svg><use href="/img/svg/sprite.svg#icon-name"></use></svg>`
 3. Optionally add legacy container class to `assets/css/utilities/icons.css`
 4. Document in UI Library (`layouts/ui-library/single.html`)
 
 **Icon Styling**:
+
 - Icons inherit color from parent via `currentColor`
 - Size controlled by `width`/`height` or `.icon` size variants
 - Legacy containers (`.pdf-icon`, `.language-icon`, etc.) provide consistent 1.5rem sizing
 
 ### Sticky Footer Pattern
+
 The site uses CSS Grid for a sticky footer that works even with short content:
+
 ```css
 #layout {
   display: grid;
   min-height: 100vh;
-  grid-template-rows: auto 1fr auto;  /* header, main (fills space), footer */
+  grid-template-rows: auto 1fr auto; /* header, main (fills space), footer */
   grid-template-areas: "header" "main" "footer";
 }
 ```
+
 This ensures the footer stays at the bottom of the viewport even when page content is minimal (e.g., 404 page).
 
 ### Grid Art-Direction API
+
 The site uses a 12-column subgrid with a variable-driven placement system for editorial layout control.
 
 **Core concept**: Every child of `.use-subgrid` reads `--col` and `--row` custom properties to determine its grid placement. Set via classes (`.place-prose`) or inline styles (`style="--col: col-start 3 / span 8;"`).
 
 **Placement presets** (defined in `grid.css`):
+
 - `.place-full` — col 1–12 (full content width)
 - `.place-wide` — col 1–10 (images, figures)
 - `.place-prose` — col 1–8 (running text, replaces max-width: 70ch)
@@ -599,23 +698,27 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - `.place-bleed` — full-start / full-end (break out of content area)
 
 **Responsive tiers** (cascade with fallback):
+
 - `--col` — Desktop (default)
 - `--col-lg` — Large (≤79.9375em), falls back to `--col`
 - `--col-md` — Tablet (≤63.9375em), falls back to `--col`
 - `--col-sm` — Mobile (≤47.9375em), falls back to full width
 
 **Stepped text** ("tripp-trapp-trull" staircase patterns):
+
 - `.stepped-3-3` — offset 3, span 3 (clean staircase)
 - `.stepped-2-4` — offset 2, span 4 (overlapping)
 - `.stepped-4-4` — offset 4, span 4 (wide non-overlapping)
 - `.stepped-1-6` — offset 1, span 6 (slow drift)
 
 **Rules**:
+
 - Text measure (width) is controlled by grid placement, not `max-width` in `ch`. The `.prose-measure` class exists as a safety net for content outside the grid.
 - Rows must remain content-driven (`auto` or `max-content`). Never use `grid-auto-rows: 1fr`.
 - Mobile (≤47.9375em) switches from 12 to 4 columns.
 
 ### Breakpoints
+
 - Units: em-based, desktop-first with max-width queries.
 - Naming: xs, sm, md, lg, xl.
 - Values (base 16px):
@@ -628,6 +731,7 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - Bottom sheet UI for theme/language dropdowns: sm and xs only.
 
 ### Theming Dimensions (Current)
+
 - HTML data attributes drive theming:
   - `data-mode="light|dark"`
   - `data-palette="standard|forest|mesa|pantone|coty|custom"`
@@ -636,6 +740,7 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - When adding a new palette, also add its preview tokens in `assets/css/dimensions/palette/previews.css` so the theme dropdown can show palette dots in both modes.
 
 ### Pantone Player & Transport
+
 - Pantone uses a separate state model from the transport UI:
   - Pantone state: `inactive | paused | playing`
   - Transport UI state: `expanded | collapsed`
@@ -647,6 +752,7 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - The collapsed trigger must remain keyboard- and touch-accessible. The visually hidden transport body should not capture pointer events while collapsed.
 
 ### Keyboard Chords
+
 - Keyboard chords are implemented in `assets/js/keyboard-chords.js` and rendered from `data-shortcut` hints in the UI.
 - Current chord map:
   - `G` → toggle grid
@@ -658,6 +764,7 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - If the order or naming of mode/typography/effect options changes, update both the chord logic and the visible `data-shortcut` hints in the theme/settings panels.
 
 ### Theme Baseline Data (WIP)
+
 - Baseline role recipe lives in `data/theme-baseline.toml`.
 - Per-theme role mappings live in `data/themes/*.toml` (`standard`, `forest`, `mesa`, `pantone`).
 - This data model defines:
@@ -672,6 +779,7 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 ## Naming Conventions
 
 ### Tokens (CSS Custom Properties)
+
 - Prefix by domain: `text`, `bg`, `border`, `surface`, `brand`, `status`, `state`, `shadow`, `size`, `image`, `component`.
 - Contrast scale order: `subtle` → `muted` → `default` → `strong`.
 - Avoid overloaded prefixes like `text-*` for font sizes. Use `font-*` for typography sizes.
@@ -681,18 +789,22 @@ The site uses a 12-column subgrid with a variable-driven placement system for ed
 - Use component-role tokens only for intentional exceptions (e.g. `--component-nav-cta-*`), not for general theming.
 - Legacy aliases live in `assets/css/tokens/legacy.css` and must include `/* deprecated */`.
 - Legacy aliases map one-to-one to canonical tokens; remove legacy only after confirming no references remain.
-- **State-layer tokens (state-*)** must be applied as overlays (e.g. `background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover))`) on top of existing backgrounds, not as replacement background colors.
+- **State-layer tokens (state-\*)** must be applied as overlays (e.g. `background-image: linear-gradient(var(--state-on-light-hover), var(--state-on-light-hover))`) on top of existing backgrounds, not as replacement background colors.
 
 ### Button Link Styling
+
 When styling links, always exclude `.button` elements to prevent visited link colors from overriding button styles:
+
 ```css
 a:visited:not(.button) {
   color: var(--text-default);
 }
 ```
+
 This pattern is used in `assets/css/utilities/typography.css`.
 
 ### CSS / HTML Naming Spec
+
 - **Utilities**: short, functional, scale-based names (e.g. `mt-24`, `grid-1-3`, `text-sm`).
 - **Components**: block + element naming (BEM-light), e.g. `brand`, `brand__link`, `brand__word`, `brand__hyphen`.
 - **Variants**: modifier suffixes, e.g. `button--primary`, `brand__word--lead`.
@@ -700,6 +812,7 @@ This pattern is used in `assets/css/utilities/typography.css`.
 - **JS hooks**: prefer `data-js="hook-name"`; avoid styling via IDs. Use IDs only for anchors or form fields.
 
 ### CSS / HTML
+
 - Class names and IDs: kebab-case (e.g. `project-card`, `#main-nav`).
 - `data-*` attributes: kebab-case (e.g. `data-focus-mode`).
 - CSS custom properties: kebab-case with `--` prefix (e.g. `--bg-surface`).
@@ -709,25 +822,28 @@ This pattern is used in `assets/css/utilities/typography.css`.
 ## Testing
 
 ### Test Coverage
+
 - Jest configuration: `jest.config.js`
 - Setup: `jest.setup.js`
 - Environment: jsdom (browser simulation)
 
 ### Writing Tests
+
 ```javascript
 // Example from darkmode.test.js
-describe('darkmode functionality', () => {
+describe("darkmode functionality", () => {
   beforeEach(() => {
     document.body.innerHTML = '<div id="layout"></div>';
   });
 
-  test('should toggle dark mode class', () => {
+  test("should toggle dark mode class", () => {
     // Test implementation
   });
 });
 ```
 
 ### Running Tests
+
 ```bash
 npm test                    # Run all tests
 npm test -- --watch         # Watch mode
@@ -749,8 +865,8 @@ npm run test:coverage       # Generate coverage report
 8. **Taxonomy System**: Employers/clients use Hugo taxonomies - projects need taxonomy tags to appear on company pages
 9. **Hidden Projects**: Respect `hidden: true` parameter - must be filtered in main portfolio templates
 10. **Writing slug**: Every English writing article needs `slug = "writing"` and every Swedish texter article needs `slug = "texter"` in front matter — Hugo will generate wrong URLs without it
-10. **Request Handling**: Follow the "Request Handling Guidelines" section below - propose plans for analysis requests, implement directly only for clear action requests
-11. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
+11. **Request Handling**: Follow the "Request Handling Guidelines" section below - propose plans for analysis requests, implement directly only for clear action requests
+12. **Keep AGENTS.md Current**: If you change structure, workflows, or conventions, update this file accordingly
 
 ---
 
@@ -763,6 +879,7 @@ npm run test:coverage       # Generate coverage report
 ### Language Cues
 
 **Analysis/Proposal Requests** (respond with plan, wait for approval):
+
 - "Can you analyze..."
 - "What would be the best way to..."
 - "How should I..."
@@ -772,6 +889,7 @@ npm run test:coverage       # Generate coverage report
 - Questions that ask "how" or "what" about approach
 
 **Direct Action Requests** (proceed with implementation):
+
 - "Please add..."
 - "Create a..."
 - "Update the..."
@@ -809,6 +927,7 @@ When user gives clear implementation instructions:
 When in doubt, **default to proposing first**. It's better to over-communicate than to implement unwanted changes.
 
 **Example gray area**: "I want to add a blog section" could be:
+
 - Analysis request: User wants to discuss options and structure first
 - Action request: User has decided and wants it done immediately
 
@@ -826,6 +945,7 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 ## Common Tasks
 
 ### Adding a New Portfolio Project
+
 1. Create directory: `content/english/works/project-slug/`
 2. Add `index.md` with front matter
 3. Mirror in Swedish: `content/swedish/works/project-slug/`
@@ -833,6 +953,7 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 5. Test build: `hugo`
 
 ### Adding a New Client Application
+
 1. Create directory: `content/english/clients/company-slug/`
 2. Add `_index.md` with client front matter
 3. Ensure `company_name` matches company slug
@@ -842,6 +963,7 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 7. Test focus mode: `/clients/company-slug/` → click project → verify `?view=client&ref=company-slug`
 
 ### Adding a New Employer Application
+
 1. Create directory: `content/english/employers/company-slug/`
 2. Add `_index.md` with employer front matter (include `taxonomy_indexes: true`)
 3. Ensure `company_name` matches company slug
@@ -859,6 +981,7 @@ The same principles apply to Swedish requests. Common Swedish phrases:
 The CV is split into modular partials for reuse across different contexts:
 
 ### Partials Structure
+
 ```
 layouts/partials/
 ├── about_cv_base.html      # Shared sections (Work, Skills, Education, etc.)
@@ -867,11 +990,14 @@ layouts/partials/
 ```
 
 ### Usage
+
 - **Start page / About**: Uses `about_cv.html` (includes base only)
 - **Employer/Client pages**: Uses `about_cv_extended.html` (includes base + extra sections)
 
 ### Extended CV Sections
+
 The extended version adds (with bilingual support):
+
 - Freelance assignments
 - Non-profit work
 - Languages
@@ -881,9 +1007,11 @@ The extended version adds (with bilingual support):
 - Selected experience
 
 ### Language Support
+
 Extended CV uses `{{ if eq .Language.Lang "sv" }}` conditionals for bilingual content.
 
 ### Updating CV Content
+
 - **Shared sections**: Edit `about_cv_base.html` (updates everywhere)
 - **Extended-only sections**: Edit `about_cv_extended.html`
 
@@ -894,9 +1022,11 @@ Extended CV uses `{{ if eq .Language.Lang "sv" }}` conditionals for bilingual co
 The site supports generating PDFs via browser print (Ctrl+P → Save as PDF).
 
 ### Print Styling
+
 **File**: `assets/css/print.css`
 
 **Features**:
+
 - Hides navigation, footer, sidebar elements
 - Optimizes typography for A4 print
 - Adds print-header with contact info
@@ -904,21 +1034,26 @@ The site supports generating PDFs via browser print (Ctrl+P → Save as PDF).
 - Prevents orphaned headings (`break-after: avoid`)
 
 ### Print Header (Contact Info)
+
 Uses the existing `layouts/partials/contact_info.html` partial:
+
 - Styled differently for print (smaller fonts, border-bottom)
 - Icon hidden in print
 - No separate partial needed - single source of truth
 
 ### Print Footer
+
 - Shows page URL for reference
 - Uses `position: fixed` to appear on all pages (browser support varies)
 
 ### Portfolio Print Page
+
 A dedicated page for printing all tagged projects for an employer/client.
 
 **URL pattern**: `/employers/[company]/portfolio-print/` or `/clients/[company]/portfolio-print/`
 
 **Content file structure**:
+
 ```yaml
 # content/english/employers/techcorp/portfolio-print.md
 ---
@@ -934,6 +1069,7 @@ index: false
 **Layout**: `layouts/portfolio-print/single.html`
 
 ### Creating Portfolio-Print for New Employer/Client
+
 1. Create `portfolio-print.md` in the employer/client content folder
 2. Set `type: "portfolio-print"`
 3. Set `company_name` to match the employer/client slug
@@ -942,6 +1078,7 @@ index: false
 6. Mirror in other language folder
 
 ### PDF Generation Workflow
+
 1. Navigate to employer/client page
 2. Press Ctrl+P (Chrome recommended for best support)
 3. Select "Save as PDF"
@@ -949,11 +1086,14 @@ index: false
 5. Reference in front matter: `attach_letter: "filename.pdf"`
 
 ### Download Cards
+
 **Partial**: `layouts/partials/download-card.html`
+
 - Supports both absolute paths (`/images/file.pdf`) and page bundle resources (`file.pdf`)
 - Used in employer/client sidebars for PDF downloads
 
 ### Modifying JavaScript
+
 1. Edit module in `assets/js/`
 2. Update/create test in `assets/js/__tests__/`
 3. Run tests: `npm test`
@@ -961,36 +1101,43 @@ index: false
 5. Pre-commit hooks will format automatically
 
 ### 404 Pages
+
 Hugo generates bilingual 404 pages:
+
 - English: `/404.html`
 - Swedish: `/sv/404.html`
 
 **GitHub Pages Limitation**: GitHub Pages only serves `/404.html` for all 404 errors.
 
 **Solution**: A JavaScript redirect (`static/js/404-redirect.js`) detects Swedish paths and redirects:
+
 ```javascript
 // If URL starts with /sv/, redirect to Swedish 404
-if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
-  window.location.replace('/sv/404.html');
+if (path.startsWith("/sv/") && !path.endsWith("/404.html")) {
+  window.location.replace("/sv/404.html");
 }
 ```
 
 **Template**: `layouts/404.html`
+
 - Uses `.Lang` to show correct language content
 - Language dropdown uses `.Kind "404"` to detect 404 pages and link directly to other language's 404.html
 
 ### UI Library
+
 **Access**: `/ui-library/` (English) or `/sv/ui-library/` (Swedish)
 **Purpose**: Internal documentation of design tokens, components, and grid system
 **Not Indexed**: The page has `noindex: true` and is not linked from main navigation
 
 **Structure**:
+
 - **Tokens Tab**: All color scales (primitives, brand, semantic), typography, spacing
 - **Grid Tab**: 12-column subgrid examples, art-direction placement presets, stepped text patterns
 - **Components Tab**: Live component examples with meta-info (classes, files, tokens)
 - **Utilities Tab**: Typography and spacing utilities
 
 **Adding a New Component to UI Library**:
+
 1. Extract component CSS to `assets/css/components/[component].css`
 2. Import in `layouts/partials/head.html` (maintain load order in both the dev `<link>` list and the production concat slice)
 3. Add accordion in Components tab (`layouts/ui-library/single.html`)
@@ -1002,6 +1149,7 @@ if (path.startsWith('/sv/') && !path.endsWith('/404.html')) {
 6. Test in browser at `/ui-library/`
 
 **Component Documentation Pattern**:
+
 ```html
 <div class="component-doc">
   <div class="component-meta mb-16">
