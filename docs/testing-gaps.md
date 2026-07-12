@@ -91,7 +91,10 @@ palette/pantone/year state between tests. Now cleared (plus `sessionStorage`).
       (non-blocking; catches the moderate/low class the push-job
       `--audit-level=high` step ignores). Dependabot (maintainer email / auto
       PRs) was deliberately skipped — that reaches a person, not the PR loop.
-- [ ] Consider a lint/format guard for template query-string construction so the
-      A-class whitespace bug can't recur (trim markers are easy to forget). Now
-      partly mitigated by the render harness, which catches the A case directly;
-      a static guard would still add cheap defence-in-depth.
+- [x] **Static whitespace guard for template query strings** — done.
+      `layouts/__tests__/template-whitespace-guard.test.js` scans every layout
+      for the gap-A shape (a multi-line query-string href whose whitespace is
+      trimmed by neither `-}}` nor `{{-`). Token-aware, so the fixed multi-line
+      form passes; verified it finds 4 leaks in the pre-fix summary-employer and
+      0 today. Defence-in-depth alongside the render harness, for new templates
+      nobody has written a render test for yet.
