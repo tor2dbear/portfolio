@@ -83,13 +83,14 @@ palette/pantone/year state between tests. Now cleared (plus `sessionStorage`).
       (set `HUGO_PATH` or install Hugo to run it locally). Verified it fails
       against the pre-fix templates. Grow it by adding fixture pages + probe
       layouts for the next template under test.
-- [ ] **Decide CI audit policy** — raise the existing `npm audit` step to
-      `--audit-level=moderate` and/or drop `continue-on-error`, and add it to the
-      PR (`quality`) job, not just the push (`quick`) job. Left undone because
-      moderate + blocking can block unrelated PRs on new transitive advisories —
-      a policy call to make together. **Leaning: `moderate`, non-blocking**
-      (keep `continue-on-error: true`, add to the `quality` job) so advisories
-      are surfaced without gating unrelated PRs.
+- [x] **CI audit policy — surface advisories in the dev loop** — done. The goal
+      was reach, not gating: a dependency advisory should show up where the work
+      happens (the PR), not be buried in a green job's logs. `npm audit` now runs
+      in the `quality` job and `scripts/quality/audit-summary.mjs` folds the
+      moderate/high/critical counts into the sticky PR quality comment
+      (non-blocking; catches the moderate/low class the push-job
+      `--audit-level=high` step ignores). Dependabot (maintainer email / auto
+      PRs) was deliberately skipped — that reaches a person, not the PR loop.
 - [ ] Consider a lint/format guard for template query-string construction so the
       A-class whitespace bug can't recur (trim markers are easy to forget). Now
       partly mitigated by the render harness, which catches the A case directly;
