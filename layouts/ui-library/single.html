@@ -24,11 +24,7 @@
         aria-selected="true"
         aria-controls="panel-tokens"
       >
-        {{ if eq .Language.Lang "sv" }}
-          Tokens
-        {{ else }}
-          Tokens
-        {{ end }}
+        {{ i18n "uilib_tokens" }}
       </button>
       <button
         type="button"
@@ -39,11 +35,7 @@
         aria-selected="false"
         aria-controls="panel-grid"
       >
-        {{ if eq .Language.Lang "sv" }}
-          Grid
-        {{ else }}
-          Grid
-        {{ end }}
+        {{ i18n "uilib_grid" }}
       </button>
       <button
         type="button"
@@ -54,11 +46,7 @@
         aria-selected="false"
         aria-controls="panel-components"
       >
-        {{ if eq .Language.Lang "sv" }}
-          Komponenter
-        {{ else }}
-          Components
-        {{ end }}
+        {{ i18n "uilib_components" }}
       </button>
     </nav>
 

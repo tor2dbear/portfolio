@@ -473,3 +473,559 @@ other = "Avbryt raden"
 
 [terminal_key_bottom]
 other = "Hoppa till prompten"
+
+# ---------------------------------------------------------------------------
+# UI library (/ui-library/ page: tab partials in layouts/partials/ui-library/)
+# ---------------------------------------------------------------------------
+
+[uilib_12column_grid_system]
+other = "12-kolumns Grid System"
+
+[uilib_21_ratio_84]
+other = "2:1 Ratio (8+4)"
+
+[uilib_5050_split_66]
+other = "50/50 Split (6+6)"
+
+[uilib_a_12column_subgrid_system_with_flexible]
+other = "Ett 12-kolumns subgrid-system med flexibla kolumnspanningar och placeringar."
+
+[uilib_accept_terms]
+other = "Godkänn villkor"
+
+[uilib_accordion_example]
+other = "Accordion exempel"
+
+[uilib_api]
+other = "API:"
+
+[uilib_approach]
+other = "Metod"
+
+[uilib_artdirection_placement]
+other = "Art-Direction Placering"
+
+[uilib_asymmetric_layout]
+other = "Asymmetrisk layout"
+
+[uilib_available_icons_24px]
+other = "Tillgängliga ikoner (24px)"
+
+[uilib_base_colors]
+other = "Basfärger"
+
+[uilib_block_1_col_16]
+other = "Block 1 (col 1–6)"
+
+[uilib_block_2_col_712]
+other = "Block 2 (col 7–12)"
+
+[uilib_body_small_for_secondary_copy_and]
+other = "Body small för sekundär text och hjälpinformation."
+
+[uilib_body_text_is_used_for_longer]
+other = "Brödtext används för längre löpande innehåll och ska vara lättläst i flera stycken."
+
+[uilib_border]
+other = "Border"
+
+[uilib_breadcrumb]
+other = "Breadcrumb"
+
+[uilib_breadcrumb_example]
+other = "Breadcrumb exempel"
+
+[uilib_button_with_icon]
+other = "Button med ikon"
+
+[uilib_buttons]
+other = "Buttons"
+
+[uilib_cannot_be_changed]
+other = "Kan inte ändras"
+
+[uilib_classes]
+other = "Klasser:"
+
+[uilib_click_here]
+other = "Klicka här"
+
+[uilib_closed_by_default]
+other = "Stängd som default."
+
+[uilib_color_of_the_year]
+other = "Color of the Year"
+
+[uilib_color_scales]
+other = "Färgskalor"
+
+[uilib_color_semantics]
+other = "Färgsemantik"
+
+[uilib_combined_prose_aside_same_row]
+other = "Kombinerat: prose + aside (samma rad)"
+
+[uilib_components]
+other = "Komponenter"
+
+[uilib_default_button]
+other = "Default Button"
+
+[uilib_denmark]
+other = "Danmark"
+
+[uilib_design_system_guidelinespdf]
+other = "Designsystem - Riktlinjer.pdf"
+
+[uilib_details]
+other = "Detaljer"
+
+[uilib_direct_usage_with_icon_class]
+other = "Direktanvändning med .icon klass:"
+
+[uilib_disabled]
+other = "Inaktiverad"
+
+[uilib_disabled_select]
+other = "Inaktiverad select"
+
+[uilib_distance_statelayer]
+other = "Distance & state-layer"
+
+[uilib_document_and_resource_lists]
+other = "Dokument- och resurslistor"
+
+[uilib_download_card]
+other = "Download Card"
+
+[uilib_download_card_example]
+other = "Download Card exempel"
+
+[uilib_download_cards_for_files_and_resources]
+other = "Nedladdningskort för filer och resurser med hover states och texttrunkering."
+
+[uilib_duration]
+other = "Duration"
+
+[uilib_easing]
+other = "Easing"
+
+[uilib_editorial]
+other = "Redaktionellt"
+
+[uilib_email]
+other = "Email"
+
+[uilib_enable_option]
+other = "Aktivera alternativ"
+
+[uilib_error]
+other = "Error"
+
+[uilib_error_state]
+other = "Error state"
+
+[uilib_feedback_overlays]
+other = "Feedback & overlays"
+
+[uilib_file]
+other = "Fil:"
+
+[uilib_finland]
+other = "Finland"
+
+[uilib_first_panel_with_content]
+other = "Första panelen med innehåll."
+
+[uilib_first_section]
+other = "Första sektionen"
+
+[uilib_focus_indicator]
+other = "Fokusindikator"
+
+[uilib_font_families]
+other = "Font families"
+
+[uilib_forms]
+other = "Forms"
+
+[uilib_full_width_12_columns]
+other = "Full bredd (12 kolumner)"
+
+[uilib_grid]
+other = "Grid"
+
+[uilib_home]
+other = "Hem"
+
+[uilib_hook]
+other = "Hook:"
+
+[uilib_hover_me_bottom]
+other = "Hover mig (bottom)"
+
+[uilib_hover_me_top]
+other = "Hover mig (top)"
+
+[uilib_hover_me_topstart]
+other = "Hover mig (top-start)"
+
+[uilib_hover_over_the_cards_to_see]
+other = "Hover över korten för att se interaktionen."
+
+[uilib_icon]
+other = "Ikon"
+
+[uilib_icons_via_svg_sprite_for_easy]
+other = "Ikoner via SVG sprite för enkel återanvändning och minimal kodduplicering. Sprites är cachebara och lättare att underhålla."
+
+[uilib_info]
+other = "Info"
+
+[uilib_information_for_labels_metadata_and_technical]
+other = "Information för labels, metadata och tekniska texter."
+
+[uilib_inline_checkboxes]
+other = "Inline checkboxes"
+
+[uilib_inline_col_col_49]
+other = "Inline --col (col 4–9)"
+
+[uilib_inline_radio_buttons]
+other = "Inline radio buttons"
+
+[uilib_invalid_value]
+other = "Ogiltigt värde"
+
+[uilib_layout]
+other = "Layout"
+
+[uilib_layout_controls_internal_gallery_structure_place]
+other = "`layout` styr intern gallery-struktur. `place` styr placering i art-direction-griden."
+
+[uilib_layout_placement]
+other = "Layout + placement"
+
+[uilib_lead_is_used_to_elevate_key]
+other = "Lead används för att lyfta viktiga rader i innehållet."
+
+[uilib_lineheight]
+other = "Line-height"
+
+[uilib_longform_pages_with_anchor_sections]
+other = "Långa innehållssidor med ankarsektioner"
+
+[uilib_measures]
+other = "Mått"
+
+[uilib_message]
+other = "Meddelande"
+
+[uilib_micro_icons_10px]
+other = "Mikroikoner (10px)"
+
+[uilib_minimum_10_characters]
+other = "Minst 10 tecken"
+
+[uilib_motion]
+other = "Motion"
+
+[uilib_navigation_menu_for_longform_pages_with]
+other = "Navigeringsmeny för längre sidor med länkar till centrala sektioner."
+
+[uilib_newsletter]
+other = "Nyhetsbrev"
+
+[uilib_no]
+other = "Nej"
+
+[uilib_norway]
+other = "Norge"
+
+[uilib_offset_1_span_6_slow_drift]
+other = "förskjutning 1, spann 6, långsam drift"
+
+[uilib_offset_2_span_4_overlapping]
+other = "förskjutning 2, spann 4, överlappning"
+
+[uilib_offset_3_span_3]
+other = "förskjutning 3, spann 3"
+
+[uilib_offset_4_span_4_three_steps]
+other = "förskjutning 4, spann 4, tre steg"
+
+[uilib_offset_6_span_6_twoblock_diagonal]
+other = "förskjutning 6, spann 6, diagonal tvåblock"
+
+[uilib_offset_highlight]
+other = "Offset + markering"
+
+[uilib_option_1]
+other = "Alternativ 1"
+
+[uilib_option_2]
+other = "Alternativ 2"
+
+[uilib_option_3]
+other = "Alternativ 3"
+
+[uilib_overview]
+other = "Översikt"
+
+[uilib_page_2_of_5]
+other = "Sida 2 av 5"
+
+[uilib_pagination]
+other = "Pagination"
+
+[uilib_pagination_example]
+other = "Pagination exempel"
+
+[uilib_palette]
+other = "Palette"
+
+[uilib_palette_saved]
+other = "Palett sparad"
+
+[uilib_positions]
+other = "Positioner:"
+
+[uilib_preamble_introduces_longform_content_with_a]
+other = "Preamble introducerar längre innehåll med något större grad och luftigare rytm."
+
+[uilib_primary_button]
+other = "Primary Button"
+
+[uilib_primary_secondary_action]
+other = "Primary, Secondary & Action"
+
+[uilib_problem]
+other = "Problem"
+
+[uilib_project_details]
+other = "Projektdetaljer"
+
+[uilib_project_overview_2026pdf]
+other = "Projektöversikt 2026.pdf"
+
+[uilib_radio_buttons]
+other = "Radio Buttons"
+
+[uilib_radius]
+other = "Radius"
+
+[uilib_read_more]
+other = "Läs mer"
+
+[uilib_replay]
+other = "Spela om"
+
+[uilib_resources]
+other = "Resurser"
+
+[uilib_responsive_widens_to_8_col_at]
+other = "Responsivt: breddas till 8 col vid tablet (md), full bredd vid mobil (sm)."
+
+[uilib_results]
+other = "Resultat"
+
+[uilib_rings]
+other = "Rings"
+
+[uilib_scale]
+other = "Skala"
+
+[uilib_scales_are_generated_from_pantone_color]
+other = "Skalor genereras från Pantone Color of the Year-data och följer aktivt läge (light/dark)."
+
+[uilib_second_panel_with_content]
+other = "Andra panelen med innehåll."
+
+[uilib_second_section]
+other = "Andra sektionen"
+
+[uilib_secondary_button_outlined]
+other = "Secondary Button (Outlined)"
+
+[uilib_select_an_option]
+other = "Välj ett alternativ"
+
+[uilib_select_an_option_2]
+other = "-- Välj ett alternativ --"
+
+[uilib_select_country]
+other = "Välj land"
+
+[uilib_select_dropdown]
+other = "Select Dropdown"
+
+[uilib_select_multiple_options]
+other = "Välj flera alternativ"
+
+[uilib_selected_state]
+other = "Valt tillstånd"
+
+[uilib_shadows]
+other = "Shadows"
+
+[uilib_show_html]
+other = "Visa HTML"
+
+[uilib_show_shortcode]
+other = "Visa shortcode"
+
+[uilib_size]
+other = "Storlek:"
+
+[uilib_size_2]
+other = "Storlek"
+
+[uilib_spacing]
+other = "Spacing"
+
+[uilib_specific_placement]
+other = "Specifik placering"
+
+[uilib_sprite]
+other = "Sprite:"
+
+[uilib_state_layer]
+other = "State layer"
+
+[uilib_state_overlays]
+other = "State Overlays"
+
+[uilib_status]
+other = "Status"
+
+[uilib_step_1]
+other = "Steg 1"
+
+[uilib_step_2]
+other = "Steg 2"
+
+[uilib_step_3]
+other = "Steg 3"
+
+[uilib_step_4]
+other = "Steg 4"
+
+[uilib_step_5]
+other = "Steg 5"
+
+[uilib_stepped_text_staircase]
+other = "Stegad text (Tripp-trapp-trull)"
+
+[uilib_success]
+other = "Success"
+
+[uilib_surface]
+other = "Ytor"
+
+[uilib_svg_sprite_system]
+other = "SVG sprite system"
+
+[uilib_sweden]
+other = "Sverige"
+
+[uilib_table_of_contents]
+other = "Table of Contents"
+
+[uilib_table_of_contents_2]
+other = "Innehållsförteckning"
+
+[uilib_table_of_contents_example]
+other = "Table of Contents exempel"
+
+[uilib_tabs_example]
+other = "Tabs exempel"
+
+[uilib_tag_examples]
+other = "Tag exempel"
+
+[uilib_tags]
+other = "Tags"
+
+[uilib_tertiary_button_text_only]
+other = "Tertiary Button (Text Only)"
+
+[uilib_text]
+other = "Text"
+
+[uilib_text_blocks_that_shift_horizontally_across]
+other = "Textsteg som flyttas horisontellt genom gridet. Varje element placeras i en egen rad och förskjuts med ett fast antal kolumner."
+
+[uilib_text_input]
+other = "Text input"
+
+[uilib_text_inputs]
+other = "Text Inputs"
+
+[uilib_thirds_444]
+other = "Tredjedel delar (4+4+4)"
+
+[uilib_this_field_contains_an_error]
+other = "Detta fält innehåller fel"
+
+[uilib_this_is_the_content_of_the]
+other = "Detta är innehållet i den första sektionen."
+
+[uilib_toggle_example]
+other = "Toggle exempel"
+
+[uilib_toggle_switch]
+other = "Toggle switch"
+
+[uilib_tokens]
+other = "Tokens"
+
+[uilib_tooltip]
+other = "Tooltip"
+
+[uilib_tooltip_examples]
+other = "Tooltip exempel"
+
+[uilib_tooltip_text]
+other = "Tooltip text!"
+
+[uilib_tracking]
+other = "Tracking"
+
+[uilib_type_scale]
+other = "Type scale"
+
+[uilib_type_something]
+other = "Skriv något..."
+
+[uilib_typography]
+other = "Typografi"
+
+[uilib_typography_scale]
+other = "Typografisk skala"
+
+[uilib_usage]
+other = "Användning:"
+
+[uilib_usage_examples]
+other = "Användningsexempel"
+
+[uilib_validation_error]
+other = "Valideringsfel"
+
+[uilib_warning]
+other = "Warning"
+
+[uilib_weight]
+other = "Weight"
+
+[uilib_with_legacy_container_for_backward_compatibility]
+other = "Med legacy container (för bakåtkompatibilitet):"
+
+[uilib_works]
+other = "Arbeten"
+
+[uilib_write_your_message_here]
+other = "Skriv ditt meddelande här..."
+
+[uilib_yes]
+other = "Ja"

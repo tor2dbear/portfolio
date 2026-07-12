@@ -10,11 +10,7 @@
         <details class="accordion" data-sort="10-color-scales">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Färgskalor
-              {{ else }}
-                Color scales
-              {{ end }}
+               {{ i18n "uilib_color_scales" }} 
             </h2>
           </summary>
           <div class="accordion__content">
@@ -24,11 +20,7 @@
               <details class="accordion-nested" data-sort="00-base-colors">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Basfärger
-                    {{ else }}
-                      Base Colors
-                    {{ end }}</span
+                    > {{ i18n "uilib_base_colors" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content color-grid">
@@ -95,23 +87,13 @@
         <details class="accordion" data-sort="11-color-pantone">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Color of the Year
-              {{ else }}
-                Color of the Year
-              {{ end }}
+               {{ i18n "uilib_color_of_the_year" }} 
             </h2>
           </summary>
           <div class="accordion__content">
             <div class="token-section">
               <p class="ui-library__note">
-                {{ if eq .Language.Lang "sv" }}
-                  Skalor genereras från Pantone Color of the Year-data och
-                  följer aktivt läge (light/dark).
-                {{ else }}
-                  Scales are generated from Pantone Color of the Year data and
-                  follow the active mode (light/dark).
-                {{ end }}
+                 {{ i18n "uilib_scales_are_generated_from_pantone_color" }} 
               </p>
               <div
                 class="pantone-year-list"
@@ -125,11 +107,7 @@
         <details class="accordion" data-sort="12-color-semantics">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Färgsemantik
-              {{ else }}
-                Color semantics
-              {{ end }}
+               {{ i18n "uilib_color_semantics" }} 
             </h2>
           </summary>
           <div class="accordion__content">
@@ -138,11 +116,7 @@
               <details class="accordion-nested" data-sort="text">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Text
-                    {{ else }}
-                      Text
-                    {{ end }}</span
+                    > {{ i18n "uilib_text" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content color-grid">
@@ -209,11 +183,7 @@
               <details class="accordion-nested" data-sort="surface">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Ytor
-                    {{ else }}
-                      Surface
-                    {{ end }}</span
+                    > {{ i18n "uilib_surface" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content">
@@ -298,11 +268,7 @@
               <details class="accordion-nested" data-sort="border">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Border
-                    {{ else }}
-                      Border
-                    {{ end }}</span
+                    > {{ i18n "uilib_border" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content">
@@ -355,11 +321,7 @@
               <details class="accordion-nested" data-sort="primary-secondary">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Primary, Secondary &amp; Action
-                    {{ else }}
-                      Primary, Secondary &amp; Action
-                    {{ end }}</span
+                    > {{ i18n "uilib_primary_secondary_action" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content color-grid">
@@ -451,11 +413,7 @@
               <details class="accordion-nested" data-sort="state-overlays">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      State Overlays
-                    {{ else }}
-                      State Overlays
-                    {{ end }}</span
+                    > {{ i18n "uilib_state_overlays" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content color-grid">
@@ -538,20 +496,12 @@
               <details class="accordion-nested" data-sort="status">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Status
-                    {{ else }}
-                      Status
-                    {{ end }}</span
+                    > {{ i18n "uilib_status" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content">
                   <h3 class="type-headline-5">
-                    {{ if eq .Language.Lang "sv" }}
-                      Error
-                    {{ else }}
-                      Error
-                    {{ end }}
+                     {{ i18n "uilib_error" }} 
                   </h3>
                   <div class="color-grid">
                     <div class="color-swatch">
@@ -584,11 +534,7 @@
                   </div>
 
                   <h3 class="type-headline-5">
-                    {{ if eq .Language.Lang "sv" }}
-                      Success
-                    {{ else }}
-                      Success
-                    {{ end }}
+                     {{ i18n "uilib_success" }} 
                   </h3>
                   <div class="color-grid">
                     <div class="color-swatch">
@@ -621,11 +567,7 @@
                   </div>
 
                   <h3 class="type-headline-5">
-                    {{ if eq .Language.Lang "sv" }}
-                      Warning
-                    {{ else }}
-                      Warning
-                    {{ end }}
+                     {{ i18n "uilib_warning" }} 
                   </h3>
                   <div class="color-grid">
                     <div class="color-swatch">
@@ -658,11 +600,7 @@
                   </div>
 
                   <h3 class="type-headline-5">
-                    {{ if eq .Language.Lang "sv" }}
-                      Info
-                    {{ else }}
-                      Info
-                    {{ end }}
+                     {{ i18n "uilib_info" }} 
                   </h3>
                   <div class="color-grid">
                     <div class="color-swatch">
@@ -703,11 +641,7 @@
         <details class="accordion" data-sort="20-typography">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Typografi
-              {{ else }}
-                Typography
-              {{ end }}
+               {{ i18n "uilib_typography" }} 
             </h2>
           </summary>
           <div class="accordion__content">
@@ -715,11 +649,7 @@
               <details class="accordion-nested" data-sort="font-families">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Font families
-                    {{ else }}
-                      Font families
-                    {{ end }}</span
+                    > {{ i18n "uilib_font_families" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content typography-token-grid">
@@ -792,11 +722,7 @@
               <details class="accordion-nested" data-sort="font-scale">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Type scale
-                    {{ else }}
-                      Type scale
-                    {{ end }}</span
+                    > {{ i18n "uilib_type_scale" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content typography-token-grid">
@@ -988,11 +914,7 @@
               <details class="accordion-nested" data-sort="line-height">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Line-height
-                    {{ else }}
-                      Line-height
-                    {{ end }}</span
+                    > {{ i18n "uilib_lineheight" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content typography-token-grid">
@@ -1038,11 +960,7 @@
               <details class="accordion-nested" data-sort="tracking">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Tracking
-                    {{ else }}
-                      Tracking
-                    {{ end }}</span
+                    > {{ i18n "uilib_tracking" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content typography-token-grid">
@@ -1133,11 +1051,7 @@
               <details class="accordion-nested" data-sort="weight">
                 <summary class="accordion-nested__trigger">
                   <span class="type-body-large"
-                    >{{ if eq .Language.Lang "sv" }}
-                      Weight
-                    {{ else }}
-                      Weight
-                    {{ end }}</span
+                    > {{ i18n "uilib_weight" }} </span
                   >
                 </summary>
                 <div class="accordion-nested__content typography-token-grid">
@@ -1196,11 +1110,7 @@
         <details class="accordion" data-sort="30-spacing">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Spacing
-              {{ else }}
-                Spacing
-              {{ end }}
+               {{ i18n "uilib_spacing" }} 
             </h2>
           </summary>
           <div class="accordion__content">
@@ -1332,21 +1242,13 @@
         <details class="accordion" data-sort="40-size">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Storlek
-              {{ else }}
-                Size
-              {{ end }}
+               {{ i18n "uilib_size_2" }} 
             </h2>
           </summary>
           <div class="accordion__content">
             <div class="token-section">
               <h3 class="type-headline-small">
-                {{ if eq .Language.Lang "sv" }}
-                  Skala
-                {{ else }}
-                  Scale
-                {{ end }}
+                 {{ i18n "uilib_scale" }} 
               </h3>
               <div class="size-token-grid">
                 <article
@@ -1507,11 +1409,7 @@
             </div>
             <div class="token-section">
               <h3 class="type-headline-small">
-                {{ if eq .Language.Lang "sv" }}
-                  Layout
-                {{ else }}
-                  Layout
-                {{ end }}
+                 {{ i18n "uilib_layout" }} 
               </h3>
               <div class="size-token-grid size-token-grid--wide">
                 <article
@@ -1607,11 +1505,7 @@
             </div>
             <div class="token-section">
               <h3 class="type-headline-small">
-                {{ if eq .Language.Lang "sv" }}
-                  Mått
-                {{ else }}
-                  Measures
-                {{ end }}
+                 {{ i18n "uilib_measures" }} 
               </h3>
               <div class="size-token-grid size-token-grid--wide">
                 <article
@@ -1714,11 +1608,7 @@
         <details class="accordion" data-sort="50-radius">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Radius
-              {{ else }}
-                Radius
-              {{ end }}
+               {{ i18n "uilib_radius" }} 
             </h2>
           </summary>
           <div class="accordion__content token-preview-grid">
@@ -1786,11 +1676,7 @@
         <details class="accordion" data-sort="60-shadows">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Shadows
-              {{ else }}
-                Shadows
-              {{ end }}
+               {{ i18n "uilib_shadows" }} 
             </h2>
           </summary>
           <div class="accordion__content token-preview-grid">
@@ -1835,11 +1721,7 @@
         <details class="accordion" data-sort="70-rings">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Rings
-              {{ else }}
-                Rings
-              {{ end }}
+               {{ i18n "uilib_rings" }} 
             </h2>
           </summary>
           <div class="accordion__content token-preview-grid">
@@ -1852,11 +1734,7 @@
                 <code>--ring-focus</code>
               </p>
               <p class="type-information token-preview__value">
-                {{ if eq .Language.Lang "sv" }}
-                  Fokusindikator
-                {{ else }}
-                  Focus indicator
-                {{ end }}
+                 {{ i18n "uilib_focus_indicator" }} 
               </p>
             </div>
             <div class="token-preview">
@@ -1868,11 +1746,7 @@
                 <code>--ring-error</code>
               </p>
               <p class="type-information token-preview__value">
-                {{ if eq .Language.Lang "sv" }}
-                  Valideringsfel
-                {{ else }}
-                  Validation error
-                {{ end }}
+                 {{ i18n "uilib_validation_error" }} 
               </p>
             </div>
             <div class="token-preview">
@@ -1884,11 +1758,7 @@
                 <code>--ring-selected</code>
               </p>
               <p class="type-information token-preview__value">
-                {{ if eq .Language.Lang "sv" }}
-                  Valt tillstånd
-                {{ else }}
-                  Selected state
-                {{ end }}
+                 {{ i18n "uilib_selected_state" }} 
               </p>
             </div>
             <div class="token-preview">
@@ -1900,11 +1770,7 @@
                 <code>--ring-selected-emphasis</code>
               </p>
               <p class="type-information token-preview__value">
-                {{ if eq .Language.Lang "sv" }}
-                  Offset + markering
-                {{ else }}
-                  Offset + highlight
-                {{ end }}
+                 {{ i18n "uilib_offset_highlight" }} 
               </p>
             </div>
           </div>
@@ -1914,11 +1780,7 @@
         <details class="accordion" data-sort="80-motion">
           <summary class="accordion__trigger">
             <h2 class="accordion__title type-headline-2">
-              {{ if eq .Language.Lang "sv" }}
-                Motion
-              {{ else }}
-                Motion
-              {{ end }}
+               {{ i18n "uilib_motion" }} 
             </h2>
           </summary>
           <div class="accordion__content motion-demo">
@@ -1928,19 +1790,11 @@
                 class="motion-demo__replay"
                 data-js="motion-replay"
               >
-                {{ if eq .Language.Lang "sv" }}
-                  Spela om
-                {{ else }}
-                  Replay
-                {{ end }}
+                 {{ i18n "uilib_replay" }} 
               </button>
             </div>
             <h3 class="type-headline-small">
-              {{ if eq .Language.Lang "sv" }}
-                Duration
-              {{ else }}
-                Duration
-              {{ end }}
+               {{ i18n "uilib_duration" }} 
             </h3>
             <div class="motion-demo-grid">
               <div
@@ -2006,11 +1860,7 @@
             </div>
 
             <h3 class="type-headline-small">
-              {{ if eq .Language.Lang "sv" }}
-                Easing
-              {{ else }}
-                Easing
-              {{ end }}
+               {{ i18n "uilib_easing" }} 
             </h3>
             <div class="motion-demo-grid">
               <div
@@ -2060,11 +1910,7 @@
             </div>
 
             <h3 class="type-headline-small">
-              {{ if eq .Language.Lang "sv" }}
-                Distance & state-layer
-              {{ else }}
-                Distance & state-layer
-              {{ end }}
+               {{ i18n "uilib_distance_statelayer" }} 
             </h3>
             <div class="motion-demo-grid">
               <div class="motion-demo-card">
@@ -2099,11 +1945,7 @@
               </div>
               <div class="motion-demo-card">
                 <button class="motion-state-demo" type="button">
-                  {{ if eq .Language.Lang "sv" }}
-                    State layer
-                  {{ else }}
-                    State layer
-                  {{ end }}
+                   {{ i18n "uilib_state_layer" }} 
                 </button>
                 <p class="type-information text-muted">
                   <code>--state-layer-duration</code>
