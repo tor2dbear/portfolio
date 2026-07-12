@@ -791,6 +791,7 @@
   {{ $js15 := resources.Get "js/brand-curl-random.js" }}
   {{ $js16 := resources.Get "js/grid-overlay.js" }}
   {{ $js17 := resources.Get "js/keyboard-chords.js" }}
+  {{ $js_toml_highlight := resources.Get "js/toml-highlight.js" }}
   {{ $js18 := resources.Get "js/palette-generator.js" }}
   {{ $js19 := resources.Get "js/writing-tag-filter.js" }}
   {{ $js20 := resources.Get "js/tabs.js" }}
@@ -843,6 +844,7 @@
     <script src="{{ $js16.RelPermalink }}" defer></script>
     <script src="{{ $js17.RelPermalink }}" defer></script>
     {{ if $isPaletteGeneratorPage }}
+      <script src="{{ $js_toml_highlight.RelPermalink }}" defer></script>
       <script src="{{ $js18.RelPermalink }}" defer></script>
     {{ end }}
     {{ if $isWritingListPage }}
@@ -869,7 +871,7 @@
       {{ $pageJs = $pageJs | append $js10 $js21 }}
     {{ end }}
     {{ if $isPaletteGeneratorPage }}
-      {{ $pageJs = $pageJs | append $js18 }}
+      {{ $pageJs = $pageJs | append $js_toml_highlight $js18 }}
     {{ end }}
     {{ if $isWritingListPage }}
       {{ $pageJs = $pageJs | append $js19 }}
