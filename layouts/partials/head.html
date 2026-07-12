@@ -697,6 +697,10 @@
         document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
         if (storedLayout === "terminal") {
           document.documentElement.setAttribute("data-terminal-transcript", "1");
+          // Withhold the live prompt from the first frame; terminal.js clears
+          // this once the replay finishes (or immediately, for reduced motion),
+          // so it never sits under the banner before the session has printed.
+          document.documentElement.setAttribute("data-terminal-replaying", "1");
         }
       }
 

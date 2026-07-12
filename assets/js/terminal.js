@@ -3721,6 +3721,9 @@
         !isTerminalLayout() ||
         document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
+        // No replay on this call — clear the pre-paint flag so the live prompt
+        // (hidden while replaying) is never left withheld.
+        document.documentElement.removeAttribute("data-terminal-replaying");
         return;
       }
       var commands = terminalBootCommands();
@@ -3737,10 +3740,12 @@
       terminalStampLastLogin();
       if (terminalReducedMotion()) {
         // Motion off: print the whole session at once, as a real terminal
-        // streams output instantly.
+        // streams output instantly — including the live prompt, so clear the
+        // replay flag that withholds it.
         commands.forEach(function (cmd) {
           emitTerminalCommand(cmd, { focus: false });
         });
+        document.documentElement.removeAttribute("data-terminal-replaying");
         return;
       }
       // Motion on: replay it as a live session — each command typed at the
@@ -3771,8 +3776,16 @@
     // A steady block cursor trails the text while it types and is dropped when
     // the command runs, leaving a DOM identical to the instant path's echo line.
     function playTerminalTranscript(commands) {
+      var root = document.documentElement;
+      // Withhold the live prompt (CSS hides it) until the session has printed —
+      // it hasn't "arrived" yet. Idempotent with the pre-paint flag head.html
+      // sets, and set here too for the toggle path (no reload, no pre-paint).
+      root.setAttribute("data-terminal-replaying", "1");
       function runCommand(index) {
         if (index >= commands.length) {
+          // Session fully printed — reveal the live prompt, ready for input.
+          root.removeAttribute("data-terminal-replaying");
+          scrollReplayToEnd();
           return;
         }
         var raw = commands[index];
@@ -4298,7 +4311,14 @@
         scrollTerminalToEnd();
       });
       var setJumpVisible = function (promptInView) {
-        if (isTerminalLayout() && !promptInView) {
+        // While the boot replay withholds the prompt it's display:none, which
+        // the observer reads as "out of view" — don't let that surface the jump
+        // button mid-boot.
+        if (
+          isTerminalLayout() &&
+          !promptInView &&
+          !document.documentElement.hasAttribute("data-terminal-replaying")
+        ) {
           terminalJump.classList.add("is-visible");
         } else {
           terminalJump.classList.remove("is-visible");

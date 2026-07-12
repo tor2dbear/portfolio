@@ -90,6 +90,7 @@ describe("terminal command line", () => {
     [
       "data-terminal-boot",
       "data-terminal-transcript",
+      "data-terminal-replaying",
       "data-terminal-exempt",
       "data-terminal-booted",
     ].forEach((attr) => document.documentElement.removeAttribute(attr));
@@ -1554,19 +1555,27 @@ describe("terminal command line", () => {
   test("with motion on, the transcript types the commands in (cursor, then clean)", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();
-    // Banner hold: nothing types until the mark has had a beat to register.
+    // Banner hold: nothing types until the mark has had a beat to register,
+    // and the live prompt is withheld while the replay runs.
     expect(sessionText().trim()).toBe("");
     expect(document.querySelector(".terminal-session__cursor")).toBeNull();
+    expect(
+      document.documentElement.hasAttribute("data-terminal-replaying")
+    ).toBe(true);
     // Past the hold (700ms), the first command is mid-type — a cursor trails it
     // and only the first command has begun: proof it streams, not dumps.
     jest.advanceTimersByTime(750);
     expect(document.querySelector(".terminal-session__cursor")).not.toBeNull();
     expect(sessionText()).not.toContain("mode"); // `set` hasn't run yet
     jest.runAllTimers();
-    // Finished: the cursor is gone and the full session is present.
+    // Finished: the cursor is gone, the full session is present, and the live
+    // prompt is revealed (replay flag cleared).
     expect(document.querySelector(".terminal-session__cursor")).toBeNull();
     expect(sessionText()).toContain("set");
     expect(sessionText()).toContain("mode"); // `set` output rendered
+    expect(
+      document.documentElement.hasAttribute("data-terminal-replaying")
+    ).toBe(false);
   });
 
   test("reduced motion prints the whole transcript at once (no typing, no cursor)", () => {
@@ -1577,9 +1586,13 @@ describe("terminal command line", () => {
     }));
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();
-    // No timers to flush — the session is complete immediately, with no cursor.
+    // No timers to flush — the session is complete immediately, with no cursor,
+    // and the live prompt is shown (replay flag never left set).
     expect(document.querySelector(".terminal-session__cursor")).toBeNull();
     expect(sessionText()).toContain("mode");
+    expect(
+      document.documentElement.hasAttribute("data-terminal-replaying")
+    ).toBe(false);
   });
 
   test("transcript mode fills the banner's Last login line", () => {

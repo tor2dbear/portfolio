@@ -169,6 +169,15 @@
   padding-bottom: var(--terminal-keybar-h, 0px);
 }
 
+/* While the boot transcript replays, the live prompt hasn't arrived yet — the
+   session is still typing itself out — so hide it until the replay finishes
+   (terminal.js clears data-terminal-replaying), when it appears ready for
+   input. Without this the empty prompt sits under the banner from the first
+   frame, before anything has run. Set pre-paint by head.html, so no flash. */
+:root[data-terminal-replaying][data-layout="terminal"] .terminal-tail {
+  display: none;
+}
+
 :root[data-layout="terminal"] .terminal-tail__prompt::before {
   content: var(--terminal-ps1-live);
   color: var(--text-muted, inherit);
