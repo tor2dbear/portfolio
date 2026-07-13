@@ -168,6 +168,30 @@
          boot transcript prints via `cat welcome.txt`. Hidden data source only —
          terminal.js reads its text; falls back to a hardcoded blurb if absent. */}}
     <pre hidden data-js="terminal-welcome">{{ i18n "terminal_welcome" }}</pre>
+    {{/* Terminal layout: the localized string catalog for the command engine —
+         help, the easter-egg index, cat-able pseudo-files, and the UI strings
+         (errors, the set hint, whoami). terminal.js reads this and falls back to
+         the English literals in terminal-data.js if it's absent. Rendered per
+         language, so the terminal speaks the page's language. */}}
+    <script type="application/json" data-js="terminal-i18n">
+      {{- dict
+        "help" (i18n "terminal_help")
+        "easterEggs" (i18n "terminal_easter_eggs")
+        "files" (dict
+          "readme" (i18n "terminal_file_readme")
+          "about" (i18n "terminal_file_about")
+          "secret" (i18n "terminal_file_secret")
+          "config" (i18n "terminal_file_config"))
+        "ui" (dict
+          "setHint" (i18n "terminal_set_hint")
+          "whoami" (i18n "terminal_whoami")
+          "lsAccess" (i18n "terminal_err_ls_access")
+          "catMissing" (i18n "terminal_err_cat_missing")
+          "catUnreachable" (i18n "terminal_err_cat_unreachable")
+          "catIsDir" (i18n "terminal_err_cat_isdir")
+          "notFound" (i18n "terminal_err_not_found"))
+        | jsonify -}}
+    </script>
     {{/* Terminal layout: the buffer ends with a live prompt. A real <input> so
          mobile keyboards open on tap and commands / easter eggs can be typed —
          see the command engine in terminal.js. The session log above it holds

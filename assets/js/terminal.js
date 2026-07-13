@@ -355,8 +355,46 @@
     // The last printed output line, for `copy` with no argument.
     var lastTerminalOutput = "";
 
+    // Localized terminal strings, rendered per language by footer.html into
+    // data-js="terminal-i18n". Present on every terminal page; the English
+    // literals in terminal-data.js are the fallback (no-JS build, a missing
+    // catalog, or a parse error), so the terminal never renders blank.
+    var TI18N = (function () {
+      var el = document.querySelector('[data-js="terminal-i18n"]');
+      if (!el || !el.textContent) {
+        return {};
+      }
+      try {
+        return JSON.parse(el.textContent) || {};
+      } catch (e) {
+        return {};
+      }
+    })();
+
+    // A newline-joined i18n block → an array of lines (edge blank lines from the
+    // TOML triple-quote trimmed), or the English fallback when the catalog lacks
+    // the key.
+    function tiLines(value, fallback) {
+      if (typeof value !== "string") {
+        return fallback;
+      }
+      return value.replace(/^\n+|\n+$/g, "").split("\n");
+    }
+
+    // A single UI string by catalog key, with %s placeholders filled from the
+    // trailing args, falling back to the English literal passed in.
+    function tiText(key, fallback) {
+      var v = TI18N.ui && TI18N.ui[key];
+      var str = typeof v === "string" ? v : fallback;
+      var args = Array.prototype.slice.call(arguments, 2);
+      var i = 0;
+      return str.replace(/%s/g, function () {
+        return i < args.length ? args[i++] : "%s";
+      });
+    }
+
     var TERMINAL_LAYOUTS = TD.TERMINAL_LAYOUTS || [];
-    const TERMINAL_HELP = TD.TERMINAL_HELP || [];
+    const TERMINAL_HELP = tiLines(TI18N.help, TD.TERMINAL_HELP || []);
 
     const TERMINAL_COMMAND_NAMES = TD.TERMINAL_COMMAND_NAMES || [];
 
@@ -374,9 +412,27 @@
       },
     };
 
-    const TERMINAL_FILES = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
+    // Pseudo-files: start from the English literals, then overlay any localized
+    // blocks from the catalog (readme/about/secret/config). welcome and colophon
+    // aren't here — they're reproduced live from the page's own (already
+    // localized) DOM by terminalWelcomeLines / terminalColophonLines.
+    const TERMINAL_FILES = (function () {
+      var base = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
+      var files = {};
+      Object.keys(base).forEach(function (k) {
+        files[k] = base[k];
+      });
+      var cat = TI18N.files || {};
+      Object.keys(cat).forEach(function (k) {
+        files[k] = tiLines(cat[k], files[k] || []);
+      });
+      return files;
+    })();
     const TERMINAL_FORTUNES = TD.TERMINAL_FORTUNES || [];
-    const TERMINAL_EASTER_EGGS = TD.TERMINAL_EASTER_EGGS || [];
+    const TERMINAL_EASTER_EGGS = tiLines(
+      TI18N.easterEggs,
+      TD.TERMINAL_EASTER_EGGS || []
+    );
 
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
@@ -1128,7 +1184,11 @@
       var node = terminalNodeAt(targetSegs);
       if (!node) {
         return [
-          "ls: cannot access '" + pathArg + "': No such file or directory",
+          tiText(
+            "lsAccess",
+            "ls: cannot access '%s': No such file or directory",
+            pathArg
+          ),
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
@@ -1938,7 +1998,10 @@
         case "whoami":
           return {
             echo: input,
-            lines: ["visitor", "(not logged in — but welcome anyway)"],
+            lines: tiLines(TI18N.ui && TI18N.ui.whoami, [
+              "visitor",
+              "(not logged in — but welcome anyway)",
+            ]),
             action: null,
           };
         case "date":
@@ -2029,9 +2092,11 @@
               return {
                 echo: input,
                 lines: [
-                  "ls: cannot access '" +
-                    lsPaths[0] +
-                    "': No such file or directory",
+                  tiText(
+                    "lsAccess",
+                    "ls: cannot access '%s': No such file or directory",
+                    lsPaths[0]
+                  ),
                 ],
                 action: null,
               };
@@ -2214,11 +2279,12 @@
             return {
               echo: input,
               lines: [
-                "cat: " +
-                  catName +
-                  ": Is a directory — try: ls " +
-                  catName +
-                  "/",
+                tiText(
+                  "catIsDir",
+                  "cat: %s: Is a directory — try: ls %s/",
+                  catName,
+                  catName
+                ),
               ],
               action: null,
             };
@@ -2286,7 +2352,13 @@
           }
           return {
             echo: input,
-            lines: ["cat: " + args[0] + ": No such file or directory"],
+            lines: [
+              tiText(
+                "catMissing",
+                "cat: %s: No such file or directory",
+                args[0]
+              ),
+            ],
             action: null,
           };
         }
@@ -2852,7 +2924,9 @@
         default:
           return {
             echo: input,
-            lines: [cmd + ": command not found — try 'help'"],
+            lines: [
+              tiText("notFound", "%s: command not found — try 'help'", cmd),
+            ],
             action: null,
           };
       }
@@ -3274,8 +3348,16 @@
             .catch(function (err) {
               printTerminalLine(
                 err && err.notFound
-                  ? "cat: " + catLabel + ": No such file or directory"
-                  : "cat: cannot reach " + action.url,
+                  ? tiText(
+                      "catMissing",
+                      "cat: %s: No such file or directory",
+                      catLabel
+                    )
+                  : tiText(
+                      "catUnreachable",
+                      "cat: cannot reach %s",
+                      action.url
+                    ),
                 "terminal-session__out"
               );
               scrollTerminalToEnd();
@@ -3501,7 +3583,10 @@
       });
       var hint = document.createElement("span");
       hint.className = "terminal-session__line terminal-session__out";
-      hint.textContent = "click a value or type: set <name> <value>";
+      hint.textContent = tiText(
+        "setHint",
+        "click a value or type: set <name> <value>"
+      );
       terminalSession.appendChild(hint);
     }
 

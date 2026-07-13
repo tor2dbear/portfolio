@@ -459,6 +459,124 @@ other = "skriv exit eller tryck esc för att lämna terminalen"
 [terminal_input_label]
 other = "Terminalens kommandorad — skriv ett kommando och tryck Enter (testa 'help')"
 
+# --- Terminalens kommandomotor (renderas till data-js="terminal-i18n" av
+# footer.html, läses av terminal.js). Behåll kommandokolumnens breddning i
+# terminal_help / terminal_easter_eggs; bara beskrivningarna är prosa. ---
+
+[terminal_help]
+other = """
+kommandon:
+  help      den här listan
+  whoami    vem frågar
+  date      datum & tid
+  pwd       arbetskatalog
+  ls        lista katalog
+  cd <page> byt sida
+  cv        cv (om)
+  tree      webbkarta
+  lang [sv|en]  språk
+  echo      skriv text
+  neofetch  sessionsinfo
+  dark|light|system  läge
+  pantone   [on|off|YYYY]
+  grain|blend|motion on/off
+  grid      rutnät
+  set [k v] visa/ändra inställn.
+  share     kopiera utseendet
+  layout <name>  byt layout
+  hire      jobba ihop
+  social    mina länkar
+  copy <x>  till urklipp
+  ai        chatta med clanker
+  contact   meddela mig
+  subscribe nyhetsbrev
+  clear     rensa skärmen
+  exit      lämna terminalen
+tangenter: ↑↓ historik · Tab · ^L/^C/^U
+"""
+
+[terminal_easter_eggs]
+other = """
+påskägg:
+  sudo      åtkomst nekad
+  coffee    HTTP 418
+  cat <f>   readme/about/colophon…
+  man <cmd> enrads-manual
+  uname     shell / -a session
+  colour    palettprover
+  fortune   design-aforism
+  history   kommandohistorik
+  uptime    sessionens ålder
+  top       processlista
+  vim/nano/emacs  redigerarskämt
+  :q :wq    avsluta som vim
+  rm -rf /  allt ligger i git
+  git <sub> blame/commit/push…
+  npm i     låtsas-resolve
+  hello     hälsning
+  konami    party (↑↑↓↓←→←→ba)
+  sl        tuff tuff
+  cowsay <x> pratande ko
+  moo       super-ko-krafter
+  xyzzy     inget händer
+  42        svaret
+  ping      pong
+  weather   låtsas-prognos
+  logo      brand-curl
+  matrix    digitalt regn
+  debug/env temastatus
+  reset     återställ
+"""
+
+[terminal_file_readme]
+other = """
+det är en portfolio. kika runt.
+skriv 'help' för kommandolistan.
+"""
+
+[terminal_file_about]
+other = """
+designer & utvecklare.
+skriv 'cd about' för den långa versionen.
+"""
+
+[terminal_file_secret]
+other = """
+det finns inga hemligheter här.
+(källkoden ligger ju där — view-source:)
+"""
+
+[terminal_file_config]
+other = """
+# ~/.config — terminalinställningar
+shell   tor-sh 1.0
+prompt  ~$ (ändra via inställningspanelen)
+"""
+
+[terminal_whoami]
+other = """
+besökare
+(inte inloggad — men välkommen ändå)
+"""
+
+[terminal_set_hint]
+other = "klicka på ett värde eller skriv: set <namn> <värde>"
+
+[terminal_err_ls_access]
+other = "ls: kommer inte åt '%s': Ingen sådan fil eller katalog"
+
+[terminal_err_cat_missing]
+other = "cat: %s: Ingen sådan fil eller katalog"
+
+[terminal_err_cat_unreachable]
+other = "cat: når inte %s"
+
+[terminal_err_cat_isdir]
+other = "cat: %s: Är en katalog — testa: ls %s/"
+
+[terminal_err_not_found]
+other = "%s: kommandot hittades inte — testa 'help'"
+
 [terminal_key_prev]
 other = "Föregående kommando"
 

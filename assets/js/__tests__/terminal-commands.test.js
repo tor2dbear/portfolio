@@ -1595,6 +1595,29 @@ describe("terminal command line", () => {
     ).toBe(false);
   });
 
+  test("the terminal renders help/easter-egg text from the localized catalog", () => {
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "kommandon:\n  help      den här listan",
+      easterEggs: "påskägg:\n  moo       super-ko-krafter",
+    });
+    document.body.appendChild(cat);
+    loadModule();
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
+    typeCommand("easteregg");
+    expect(sessionText()).toContain("super-ko-krafter");
+  });
+
+  test("without a catalog the terminal falls back to the English literals", () => {
+    loadModule();
+    typeCommand("help");
+    // The English default from terminal-data.js.
+    expect(sessionText()).toContain("this list");
+  });
+
   test("a localized (percent-encoded) slug lists by its real, decoded name", () => {
     loadModule();
     // A Swedish post card whose href carries a percent-encoded slug.
