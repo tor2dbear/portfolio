@@ -229,6 +229,33 @@
   box-shadow: none;
 }
 
+/* Inline autosuggestion (fish-style): the muted remainder of a single-candidate
+   completion, shown right after the caret. A <button> so a tap accepts it on
+   mobile; stripped to bare inline text otherwise. Empty (no suggestion) → zero
+   width, so it never nudges the layout. */
+:root[data-layout="terminal"] .terminal-tail__ghost {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  color: var(--text-muted, inherit);
+  cursor: pointer;
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root[data-layout="terminal"] .terminal-tail__ghost:empty {
+  display: none;
+}
+
 :root[data-layout="terminal"] .terminal-tail::after {
   content: "  # " attr(data-exit-hint);
   font-family: var(--font-mono);

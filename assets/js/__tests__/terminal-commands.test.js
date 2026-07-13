@@ -176,7 +176,8 @@ describe("terminal command line", () => {
         <p class="terminal-tail" data-exit-hint="type exit or press esc">
           <span class="terminal-tail__prompt"></span
           ><span class="terminal-tail__caret"></span
-          ><input id="terminal-input" class="terminal-tail__input" data-js="terminal-input" type="text" size="1" />
+          ><input id="terminal-input" class="terminal-tail__input" data-js="terminal-input" type="text" size="1"
+          /><button class="terminal-tail__ghost" type="button" data-js="terminal-ghost" tabindex="-1" aria-hidden="true"></button>
         </p>
         <div class="terminal-keybar" data-js="terminal-keybar">
           <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="prev" aria-label="Previous command">↑</button>
@@ -824,6 +825,26 @@ describe("terminal command line", () => {
     keydown({ key: "Tab" });
     expect(sessionText()).toContain("--featured");
     expect(sessionText()).toContain("--images");
+  });
+
+  test("the inline suggestion previews a single completion; → accepts it", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const ghost = document.querySelector('[data-js="terminal-ghost"]');
+    // A partial command with exactly one match shows the remainder as ghost.
+    input.value = "wea";
+    input.setSelectionRange(3, 3);
+    input.dispatchEvent(new window.Event("input", { bubbles: true }));
+    expect(ghost.textContent).toBe("ther"); // → weather
+    // → at end of line accepts it (and the completed word clears the ghost).
+    keydown({ key: "ArrowRight" });
+    expect(input.value).toBe("weather");
+    expect(ghost.textContent).toBe("");
+    // An ambiguous prefix suggests nothing.
+    input.value = "c";
+    input.setSelectionRange(1, 1);
+    input.dispatchEvent(new window.Event("input", { bubbles: true }));
+    expect(ghost.textContent).toBe("");
   });
 
   test("Ctrl+L clears the screen, Ctrl+C cancels the line", () => {

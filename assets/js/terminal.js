@@ -263,6 +263,7 @@
     const terminalTail = terminalInput
       ? terminalInput.closest(".terminal-tail")
       : null;
+    const terminalGhost = document.querySelector('[data-js="terminal-ghost"]');
     const terminalSession = document.querySelector(
       '[data-js="terminal-session"]'
     );
@@ -4171,6 +4172,9 @@
       if (terminalTail) {
         terminalTail.classList.toggle("is-typing", terminalInput.value !== "");
       }
+      // The value just changed, so the inline suggestion may have too — every
+      // value mutation (typing, history recall, Tab fill, cancel) routes here.
+      terminalUpdateGhost();
     }
 
     // Track the Konami code as it's typed into the prompt. Non-destructive:
@@ -4218,105 +4222,105 @@
       }
     }
 
-    // Tab completion: complete the command word, or a cd/ls/open path fragment
-    // against the current directory's children. Single match fills; multiple
-    // print the candidates.
+    // The completion candidates for a command line's LAST word, plus that raw
+    // fragment. Shared by Tab (which fills/lists) and the inline ghost
+    // suggestion (which previews a lone candidate). Returns {candidates, frag}.
+    function terminalCompletionFor(value) {
+      var parts = String(value || "").split(/\s+/);
+      var frag = parts[parts.length - 1] || "";
+      var f = frag.toLowerCase();
+      if (parts.length <= 1) {
+        return {
+          candidates: TERMINAL_COMMAND_NAMES.filter(function (name) {
+            return name.indexOf(f) === 0;
+          }),
+          frag: frag,
+        };
+      }
+      var verb = parts[0].toLowerCase();
+      var candidates = [];
+      if (verb === "set") {
+        // `set ⇥` completes the setting keys; `set <key> ⇥` completes that key's
+        // values — Tab is the terminal-true way to discover what `set` can do.
+        var spec = terminalSettingsSpec();
+        if (parts.length === 2) {
+          candidates = spec
+            .map(function (s) {
+              return s.key;
+            })
+            .filter(function (k) {
+              return k.indexOf(f) === 0;
+            });
+        } else if (parts.length === 3) {
+          var setEntry = spec.filter(function (s) {
+            return s.key === parts[1].toLowerCase();
+          })[0];
+          candidates = setEntry
+            ? setEntry.options.filter(function (o) {
+                return o.indexOf(f) === 0;
+              })
+            : [];
+        }
+      } else if (verb === "ls" && f.charAt(0) === "-") {
+        // `ls -⇥` completes the flags (--featured/--images/-a/-R).
+        candidates = TERMINAL_LS_FLAGS.filter(function (flag) {
+          return flag.indexOf(f) === 0;
+        });
+      } else if (
+        verb === "cd" ||
+        verb === "ls" ||
+        verb === "open" ||
+        verb === "cat"
+      ) {
+        var cwdSegs = terminalCwdSegments();
+        var node = terminalNodeAt(cwdSegs);
+        candidates = node
+          ? Object.keys(node.children).filter(function (name) {
+              return name.indexOf(f) === 0;
+            })
+          : [];
+        // cat/open reach the page's posts too — complete them as .md files.
+        if (verb === "cat" || verb === "open") {
+          terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
+            var file = slug + ".md";
+            if (file.indexOf(f) === 0 && candidates.indexOf(file) === -1) {
+              candidates.push(file);
+            }
+          });
+        }
+        // A directory you `cd`'d into but never loaded isn't in the tree or the
+        // live DOM — but if you `ls`'d it, its entries are cached. Offer dir
+        // names to cd, and (for cat/open) its files as .md, stripping the
+        // classify markers (`/`, `@`) so they complete like real names.
+        (terminalLsDirCache[cwdSegs.join("/")] || []).forEach(function (label) {
+          if (/\/$/.test(label)) {
+            var dir = label.slice(0, -1).toLowerCase();
+            if (dir.indexOf(f) === 0 && candidates.indexOf(dir) === -1) {
+              candidates.push(dir);
+            }
+          } else if (
+            (verb === "cat" || verb === "open") &&
+            /\.md@?$/i.test(label)
+          ) {
+            var file = label.replace(/@$/, "").toLowerCase();
+            if (file.indexOf(f) === 0 && candidates.indexOf(file) === -1) {
+              candidates.push(file);
+            }
+          }
+        });
+      }
+      return { candidates: candidates, frag: frag };
+    }
+
+    // Tab completion: complete the last word, or — on multiple matches — print
+    // the candidates for the user to pick from.
     function terminalCompleteInput() {
       if (!terminalInput) {
         return;
       }
-      var value = terminalInput.value;
-      var parts = value.split(/\s+/);
-      var candidates;
-      var frag;
-      if (parts.length <= 1) {
-        frag = (parts[0] || "").toLowerCase();
-        candidates = TERMINAL_COMMAND_NAMES.filter(function (name) {
-          return name.indexOf(frag) === 0;
-        });
-      } else {
-        var verb = parts[0].toLowerCase();
-        frag = (parts[parts.length - 1] || "").toLowerCase();
-        if (verb === "set") {
-          // `set ⇥` completes the setting keys; `set <key> ⇥` completes that
-          // key's values — Tab is the terminal-true way to discover what `set`
-          // can do (alongside `set` with no args and `man set`).
-          var spec = terminalSettingsSpec();
-          if (parts.length === 2) {
-            candidates = spec
-              .map(function (s) {
-                return s.key;
-              })
-              .filter(function (k) {
-                return k.indexOf(frag) === 0;
-              });
-          } else if (parts.length === 3) {
-            var setEntry = spec.filter(function (s) {
-              return s.key === parts[1].toLowerCase();
-            })[0];
-            candidates = setEntry
-              ? setEntry.options.filter(function (o) {
-                  return o.indexOf(frag) === 0;
-                })
-              : [];
-          } else {
-            return;
-          }
-        } else if (verb === "ls" && frag.charAt(0) === "-") {
-          // `ls -⇥` completes the flags (--featured/--images/-a/-R)
-          // and short flags — the same discovery Tab gives `set`.
-          candidates = TERMINAL_LS_FLAGS.filter(function (flag) {
-            return flag.indexOf(frag) === 0;
-          });
-        } else if (
-          verb !== "cd" &&
-          verb !== "ls" &&
-          verb !== "open" &&
-          verb !== "cat"
-        ) {
-          return;
-        } else {
-          var cwdSegs = terminalCwdSegments();
-          var node = terminalNodeAt(cwdSegs);
-          candidates = node
-            ? Object.keys(node.children).filter(function (name) {
-                return name.indexOf(frag) === 0;
-              })
-            : [];
-          // cat/open reach the page's posts too — complete them as .md files.
-          if (verb === "cat" || verb === "open") {
-            terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
-              var file = slug + ".md";
-              if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
-                candidates.push(file);
-              }
-            });
-          }
-          // A directory you `cd`'d into but never loaded isn't in the tree or
-          // the live DOM — but if you `ls`'d it, its entries are cached. Offer
-          // dir names to cd, and (for cat/open) its files as .md, stripping the
-          // classify markers (`/`, `@`) so they complete like real names.
-          (terminalLsDirCache[cwdSegs.join("/")] || []).forEach(function (
-            label
-          ) {
-            if (/\/$/.test(label)) {
-              var dir = label.slice(0, -1).toLowerCase();
-              if (dir.indexOf(frag) === 0 && candidates.indexOf(dir) === -1) {
-                candidates.push(dir);
-              }
-            } else if (
-              (verb === "cat" || verb === "open") &&
-              /\.md@?$/i.test(label)
-            ) {
-              var file = label.replace(/@$/, "").toLowerCase();
-              if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
-                candidates.push(file);
-              }
-            }
-          });
-        }
-      }
+      var candidates = terminalCompletionFor(terminalInput.value).candidates;
       if (candidates.length === 1) {
+        var parts = terminalInput.value.split(/\s+/);
         parts[parts.length - 1] = candidates[0];
         terminalInput.value = parts.join(" ") + (parts.length === 1 ? " " : "");
         syncTerminalInputSize();
@@ -4324,6 +4328,63 @@
         printTerminalLine(candidates.join("  "), "terminal-session__out");
         scrollTerminalToEnd();
       }
+    }
+
+    // The remainder to preview as ghost text: shown only when the last word has
+    // exactly ONE completion and the caret is at the end (a suggestion for the
+    // tail, not a mid-line edit). Empty during a flow / the ai chat / an empty
+    // line — there's no command being typed then.
+    function terminalGhostRemainder() {
+      if (!terminalInput || flowActive() || terminalInputDelegate) {
+        return "";
+      }
+      var value = terminalInput.value;
+      if (!value) {
+        return "";
+      }
+      if (
+        typeof terminalInput.selectionStart === "number" &&
+        terminalInput.selectionStart !== value.length
+      ) {
+        return "";
+      }
+      var res = terminalCompletionFor(value);
+      if (res.candidates.length !== 1) {
+        return "";
+      }
+      var cand = res.candidates[0];
+      var frag = res.frag;
+      if (
+        cand.length <= frag.length ||
+        cand.slice(0, frag.length).toLowerCase() !== frag.toLowerCase()
+      ) {
+        return "";
+      }
+      return cand.slice(frag.length);
+    }
+
+    function terminalUpdateGhost() {
+      if (terminalGhost) {
+        terminalGhost.textContent = terminalGhostRemainder();
+      }
+    }
+
+    // Accept the current ghost: append it to the input, drop the ghost, and
+    // recompute (the completed word may itself suggest the next). Returns true
+    // if there was something to accept, so the key handler can preventDefault.
+    function terminalAcceptGhost() {
+      if (!terminalInput || !terminalGhost || !terminalGhost.textContent) {
+        return false;
+      }
+      terminalInput.value += terminalGhost.textContent;
+      var end = terminalInput.value.length;
+      try {
+        terminalInput.setSelectionRange(end, end);
+      } catch (e) {
+        /* selection API unavailable — value is still set */
+      }
+      syncTerminalInputSize();
+      return true;
     }
 
     // ^C: abort the current line — echo the caret marker, end any running flow,
@@ -4349,6 +4410,25 @@
         terminalHistoryCursor = null;
         syncTerminalInputSize();
       });
+      // The inline suggestion is only meaningful while typing: refresh it on
+      // focus, clear it on blur so it doesn't linger under the idle caret.
+      terminalInput.addEventListener("focus", terminalUpdateGhost);
+      terminalInput.addEventListener("blur", function () {
+        if (terminalGhost) {
+          terminalGhost.textContent = "";
+        }
+      });
+      if (terminalGhost) {
+        // Tap the ghost to accept it — the mobile key row has no → key.
+        // preventDefault on pointerdown keeps the field focused (keyboard up).
+        terminalGhost.addEventListener("pointerdown", function (e) {
+          e.preventDefault();
+        });
+        terminalGhost.addEventListener("click", function () {
+          terminalAcceptGhost();
+          terminalInput.focus();
+        });
+      }
       terminalInput.addEventListener("keydown", function (e) {
         advanceKonami(e);
         // Ctrl shortcuts: ^L clear screen, ^U clear line, ^C cancel line.
@@ -4373,6 +4453,19 @@
             terminalCancelLine();
             return;
           }
+        }
+        // Accept the inline suggestion: → at end of line, or End. (Tab also
+        // accepts it — the ghost previews Tab's single-candidate fill.)
+        if (
+          (e.key === "ArrowRight" || e.key === "End") &&
+          !e.shiftKey &&
+          terminalInput.selectionStart === terminalInput.value.length &&
+          terminalGhost &&
+          terminalGhost.textContent
+        ) {
+          e.preventDefault();
+          terminalAcceptGhost();
+          return;
         }
         if (e.key === "Tab") {
           e.preventDefault();
