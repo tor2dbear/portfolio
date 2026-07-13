@@ -471,7 +471,6 @@ kommandon:
   date      datum & tid
   pwd       arbetskatalog
   ls        lista katalog
-  ls --featured|related|info  linser
   cd <page> byt sida
   cv        cv (om)
   tree      webbkarta

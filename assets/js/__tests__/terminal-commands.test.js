@@ -784,17 +784,17 @@ describe("terminal command line", () => {
     expect(input.value).toBe("set mode dark");
   });
 
-  test("Tab completes an ls lens flag", () => {
+  test("Tab completes an ls flag", () => {
     loadModule();
     const input = document.querySelector('[data-js="terminal-input"]');
-    input.value = "ls --rel";
+    input.value = "ls --fea";
     keydown({ key: "Tab" });
-    expect(input.value).toBe("ls --related"); // fills; no trailing space, like cd/set
-    // A bare `ls -` lists the available lenses/flags.
+    expect(input.value).toBe("ls --featured"); // fills; no trailing space, like cd/set
+    // A bare `ls --` lists the available flags.
     input.value = "ls --";
     keydown({ key: "Tab" });
-    expect(sessionText()).toContain("--related");
     expect(sessionText()).toContain("--featured");
+    expect(sessionText()).toContain("--images");
   });
 
   test("Ctrl+L clears the screen, Ctrl+C cancels the line", () => {
@@ -1470,13 +1470,6 @@ describe("terminal command line", () => {
     expect(sessionText().slice(before.length)).not.toContain(
       "no such file or directory"
     );
-  });
-
-  test("ls <file> --info points at cat (a post's info lives in the file)", () => {
-    loadModule();
-    typeCommand("ls a-cut-up-world.md --info");
-    // --info is a lens on the loaded page; for an unopened post it hints at cat.
-    expect(sessionText()).toContain("try: cat a-cut-up-world.md");
   });
 
   test("ls --featured lists the page's cards as clickable files (not misread as -a)", () => {

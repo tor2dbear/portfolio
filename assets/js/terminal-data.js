@@ -39,7 +39,6 @@
     "  date      date & time",
     "  pwd       working dir",
     "  ls        list dir",
-    "  ls --featured|related|info  lenses",
     "  cd <page> change page",
     "  cv        résumé (about)",
     "  tree      site map",

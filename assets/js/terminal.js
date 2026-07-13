@@ -402,17 +402,10 @@
 
     const TERMINAL_COMMAND_NAMES = TD.TERMINAL_COMMAND_NAMES || [];
 
-    // The `ls` lenses + short flags, offered by Tab completion (`ls -⇥`) so the
-    // filtered views are discoverable, not just documented. --related/--info
-    // read the current post; --featured the page's cards; --images its figures.
-    var TERMINAL_LS_FLAGS = [
-      "--featured",
-      "--related",
-      "--info",
-      "--images",
-      "-a",
-      "-R",
-    ];
+    // The `ls` flags, offered by Tab completion (`ls -⇥`). --featured lists the
+    // page's cards (home's featured works); --images counts its figures; -a/-R
+    // are the real ls short flags (hidden entries / recursive).
+    var TERMINAL_LS_FLAGS = ["--featured", "--images", "-a", "-R"];
 
     // Toggleable image effects, keyed by command word. `invert` flags that the
     // command's sense is the opposite of its data-attribute: "motion on" means
@@ -854,10 +847,9 @@
       "system",
     ];
 
-    // Filtered `ls` views — the same tool, different lens. `--featured` lists
-    // the curated cards on the current page (home's featured works); `--related`
-    // lists a post's sibling projects; `--info` prints a post's role/details.
-    // All harvested from the current page's DOM — a page's own sequence.
+    // A filtered `ls` view — same tool, a lens. `--featured` lists the curated
+    // cards on the current page (home's featured works), harvested from that
+    // page's DOM — a page's own sequence.
     function terminalHarvestFileLabels(selector) {
       var out = [];
       document.querySelectorAll(selector).forEach(function (a) {
@@ -878,7 +870,7 @@
       return out.length ? [out.join("  ")] : [emptyMsg];
     }
 
-    // A harvested file view (`ls --featured` / `--related`) as a clickable
+    // A harvested file view (`ls --featured`) as a clickable
     // ls-list result — each entry cats itself, same as a plain `ls`. Falls back
     // to a plain "(empty)" line when nothing matched.
     function terminalHarvestResult(input, selector, emptyMsg) {
@@ -900,9 +892,10 @@
     }
 
     // The project meta (role / details / client) as "label: value" lines,
-    // read from any root (the live page for `ls --info`, or a fetched post for
-    // `cat`). Details is a <dl> of pairs → one line each ("year: 2016"); role
-    // and client are text paragraphs → joined onto their section's line.
+    // appended to a `cat` post so its front-matter details come along. Read from
+    // the given root (the live #main, or a fetched post's doc). Details is a <dl>
+    // of pairs → one line each ("year: 2016"); role and client are text
+    // paragraphs → joined onto their section's line.
     function terminalInfoLinesFrom(root) {
       var out = [];
       (root || document)
@@ -942,11 +935,6 @@
           }
         });
       return out;
-    }
-
-    function terminalInfoLines() {
-      var out = terminalInfoLinesFrom(document);
-      return out.length ? out : ["(no info here)"];
     }
 
     // Serialize an element's inline content back to markdown source: emphasis
@@ -2093,7 +2081,7 @@
           };
         case "ls":
         case "dir": {
-          // Long filter flags (--featured/--related/--info) are separate lenses;
+          // Long filter flags (--featured/--images) are separate lenses;
           // short flags (-a) reveal hidden entries. Keep them apart so "--featured"
           // (which contains an "a") isn't misread as -a.
           var lsLong = args.filter(function (a) {
@@ -2144,31 +2132,6 @@
               ".summary-card a[href], .article-card a[href]",
               "(nothing featured here)"
             );
-          }
-          if (lsLong.indexOf("--related") !== -1) {
-            return terminalHarvestResult(
-              input,
-              ".related-items__item .type-headline-4 a[href]",
-              "(no related files)"
-            );
-          }
-          if (lsLong.indexOf("--info") !== -1) {
-            // `--info` is a lens on the page you're viewing. For a post you
-            // haven't opened, its meta now lives in the file — point at cat
-            // rather than the misleading "(no info here)".
-            if (lsPaths.length) {
-              return {
-                echo: input,
-                lines: [
-                  "ls: --info reads the current page — for " +
-                    lsPaths[0] +
-                    " try: cat " +
-                    lsPaths[0],
-                ],
-                action: null,
-              };
-            }
-            return { echo: input, lines: terminalInfoLines(), action: null };
           }
           if (lsLong.indexOf("--images") !== -1) {
             var figs = document.querySelectorAll(
@@ -4288,7 +4251,7 @@
             return;
           }
         } else if (verb === "ls" && frag.charAt(0) === "-") {
-          // `ls -⇥` completes the lenses (--featured/--related/--info/--images)
+          // `ls -⇥` completes the flags (--featured/--images/-a/-R)
           // and short flags — the same discovery Tab gives `set`.
           candidates = TERMINAL_LS_FLAGS.filter(function (flag) {
             return flag.indexOf(frag) === 0;
