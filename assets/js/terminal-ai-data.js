@@ -925,6 +925,11 @@
         keywords: {
           sv: [
             "hur ar sajten byggd",
+            "hur ar sidan byggd",
+            "hur ar den har sidan byggd",
+            "hur ar den byggd",
+            "hur byggdes sidan",
+            "hur ar det byggt",
             "vilken teknik",
             "hugo",
             "hur byggde du",
@@ -933,6 +938,13 @@
           ],
           en: [
             "how is the site built",
+            "how is this page built",
+            "how is this page build",
+            "how is this page made",
+            "how is this built",
+            "how is this made",
+            "how did you make this",
+            "how was this made",
             "what tech",
             "hugo",
             "how did you build",
@@ -1003,6 +1015,152 @@
         reply: {
           sv: ["Svenska och engelska flytande, tyska på mellannivå."],
           en: ["Swedish and English fluently, German at a moderate level."],
+        },
+      },
+      {
+        // Switch the *site* to Swedish. Runs the real `lang sv` command (see the
+        // `command` action in terminal-ai.js), which loads the translated page.
+        // Distinct from `languages` (which describes the languages he speaks):
+        // the phrasing here is a request to change, not a question.
+        id: "switch-swedish",
+        action: { type: "command", command: "lang sv" },
+        keywords: {
+          sv: [
+            "byt till svenska",
+            "byta till svenska",
+            "byt sprak till svenska",
+            "byt sprak svenska",
+            "pa svenska",
+            "prata svenska",
+            "skriv pa svenska",
+            "svenska tack",
+            "kan vi ta det pa svenska",
+            "svenska",
+          ],
+          en: [
+            "switch to swedish",
+            "change to swedish",
+            "in swedish",
+            "speak swedish",
+            "swedish please",
+            "language swedish",
+            "set language to swedish",
+            "swedish",
+          ],
+        },
+        reply: {
+          sv: ["Visst — byter till svenska. (kör 'lang sv' åt dig)"],
+          en: ["Sure — switching to Swedish. (running 'lang sv' for you)"],
+        },
+      },
+      {
+        // Switch the site to English. Mirror of switch-swedish.
+        id: "switch-english",
+        action: { type: "command", command: "lang en" },
+        keywords: {
+          sv: [
+            "byt till engelska",
+            "byta till engelska",
+            "byt sprak till engelska",
+            "byt sprak engelska",
+            "pa engelska",
+            "prata engelska",
+            "skriv pa engelska",
+            "engelska tack",
+            "kan vi ta det pa engelska",
+            "engelska",
+          ],
+          en: [
+            "switch to english",
+            "change to english",
+            "in english",
+            "speak english",
+            "english please",
+            "language english",
+            "set language to english",
+            "english",
+          ],
+        },
+        reply: {
+          sv: ["Visst — byter till engelska. (kör 'lang en' åt dig)"],
+          en: ["Sure — switching to English. (running 'lang en' for you)"],
+        },
+      },
+      {
+        // Asked to switch to (or speak) German. Honest: the site is only built
+        // in Swedish and English, so there's nothing to switch to — even though
+        // Torbjörn himself speaks some German (see the `languages` intent, which
+        // still owns "do you speak German?").
+        id: "german",
+        keywords: {
+          sv: [
+            "byt till tyska",
+            "pa tyska",
+            "prata tyska",
+            "sag nagot pa tyska",
+            "saga nagot pa tyska",
+            "nagot pa tyska",
+            "tyska",
+          ],
+          en: [
+            "switch to german",
+            "in german",
+            "speak german",
+            "say something in german",
+            "something in german",
+            "auf deutsch",
+            "deutsch",
+            "german",
+          ],
+        },
+        reply: {
+          sv: [
+            "Tyskan får du ta med Torbjörn själv — sajten finns bara på",
+            "svenska och engelska, så det finns inget att byta till. Skriv",
+            "'lang sv' eller 'lang en'.",
+          ],
+          en: [
+            "German you'll have to take up with Torbjörn himself — this site",
+            "only exists in Swedish and English, so there's nothing to switch",
+            "to. Type 'lang sv' or 'lang en'.",
+          ],
+        },
+      },
+      {
+        // A clanker has no clock — but the terminal does. Point at `date`
+        // rather than inventing a time (the shell's `date` prints both).
+        id: "time",
+        keywords: {
+          sv: [
+            "vad ar klockan",
+            "hur mycket ar klockan",
+            "vad ar det for tid",
+            "vad ar tiden",
+            "klockan",
+            "vilket datum ar det",
+            "vad ar det for datum",
+            "vilken dag ar det",
+          ],
+          en: [
+            "what time is it",
+            "whats the time",
+            "what is the time",
+            "current time",
+            "the time now",
+            "what date is it",
+            "todays date",
+            "what day is it",
+          ],
+        },
+        reply: {
+          sv: [
+            "Jag har ingen klocka i mig — men skriv 'date' så visar",
+            "terminalen tid och datum.",
+          ],
+          en: [
+            "I've no clock of my own — type 'date' for the terminal's",
+            "time and date.",
+          ],
         },
       },
       {

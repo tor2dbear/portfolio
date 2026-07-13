@@ -189,6 +189,53 @@ describe("classify", () => {
     const ai = loadAi();
     expect(ai.normalize("Vänner, Öländska!")).toBe("vanner olandska");
   });
+
+  test("routes switch-language requests to the switch intents", () => {
+    const ai = loadAi();
+    expect(ai.classify("switch to swedish").intent.id).toBe("switch-swedish");
+    expect(ai.classify("language swedish").intent.id).toBe("switch-swedish");
+    expect(ai.classify("kan du byta språk till svenska?").intent.id).toBe(
+      "switch-swedish"
+    );
+    expect(ai.classify("switch to english").intent.id).toBe("switch-english");
+    expect(ai.classify("kan vi ta det på engelska?").intent.id).toBe(
+      "switch-english"
+    );
+  });
+
+  test("a German request is handled honestly, not routed to switch", () => {
+    const ai = loadAi();
+    expect(ai.classify("okej. kan du säga nånting på tyska?").intent.id).toBe(
+      "german"
+    );
+    expect(ai.classify("switch to german").intent.id).toBe("german");
+  });
+
+  test("'do you speak X' still describes languages, not a switch", () => {
+    const ai = loadAi();
+    // The question about ability stays with the `languages` intent even though
+    // the switch intents own the bare language names.
+    expect(ai.classify("what languages do you speak?").intent.id).toBe(
+      "languages"
+    );
+    expect(ai.classify("do you speak german?").intent.id).toBe("languages");
+  });
+
+  test("time and date questions point at the date command", () => {
+    const ai = loadAi();
+    expect(ai.classify("what time is it?").intent.id).toBe("time");
+    expect(ai.classify("vad är klockan?").intent.id).toBe("time");
+    expect(ai.classify("what date is it?").intent.id).toBe("time");
+  });
+
+  test("'how is this page built' reaches the colophon", () => {
+    const ai = loadAi();
+    expect(ai.classify("how is this page build?").intent.id).toBe("colophon");
+    expect(ai.classify("how is this page built?").intent.id).toBe("colophon");
+    expect(ai.classify("hur är den här sidan byggd?").intent.id).toBe(
+      "colophon"
+    );
+  });
 });
 
 describe("start / handleLine loop", () => {
@@ -278,6 +325,37 @@ describe("start / handleLine loop", () => {
     expect(m.text()).toContain("visst");
     expect(m.text()).not.toContain("you> cd works");
     expect(m.t.releaseInput).not.toHaveBeenCalled();
+    expect(ai.isActive()).toBe(true);
+  });
+
+  test("a switch-to-swedish request runs `lang sv` and stays put", () => {
+    setLang("en");
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("switch to swedish");
+
+    // The reply is printed, then the real command runs — the page load that
+    // follows ends the session, so the assistant does not release input here.
+    expect(m.text()).toContain("switching to Swedish");
+    expect(m.t.run).toHaveBeenCalledWith("lang sv");
+    expect(m.t.releaseInput).not.toHaveBeenCalled();
+    expect(ai.isActive()).toBe(true);
+  });
+
+  test("a German request replies honestly and runs no command", () => {
+    const ai = loadAi();
+    const m = mockTerminal();
+    window.Terminal = m.t;
+    ai.start();
+
+    m.feed("kan du säga nånting på tyska?");
+
+    expect(m.text().toLowerCase()).toContain("tyskan");
+    expect(m.t.run).not.toHaveBeenCalled();
+    expect(m.t.applyAction).not.toHaveBeenCalled();
     expect(ai.isActive()).toBe(true);
   });
 
