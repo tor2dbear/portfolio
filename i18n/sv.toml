@@ -577,6 +577,78 @@ other = "cat: %s: Är en katalog — testa: ls %s/"
 [terminal_err_not_found]
 other = "%s: kommandot hittades inte — testa 'help'"
 
+# --- contact / subscribe-flöden (terminal-flows.js). 'cancel', 'y'/'j', 'n'
+# står kvar som kommandoord; bara prosan är översatt. ---
+
+[terminal_flow_contact_intro]
+other = "contact — skicka ett meddelande. skriv 'cancel' för att avbryta."
+
+[terminal_flow_subscribe_intro]
+other = "subscribe — enstaka notis, ingen spam. skriv 'cancel' för att avbryta."
+
+[terminal_flow_confirm_send]
+other = "skicka detta? [J/n]"
+
+[terminal_flow_confirm_subscribe]
+other = "prenumerera med denna adress? [J/n]"
+
+[terminal_flow_label_email]
+other = "e-post"
+
+[terminal_flow_label_name]
+other = "namn"
+
+[terminal_flow_label_message]
+other = "meddelande"
+
+[terminal_flow_err_email]
+other = "det ser inte ut som en e-postadress — försök igen"
+
+[terminal_flow_err_name]
+other = "namnet kan inte vara tomt"
+
+[terminal_flow_err_message]
+other = "meddelandet kan inte vara tomt"
+
+[terminal_flow_sending]
+other = "skickar…"
+
+[terminal_flow_sent]
+other = "meddelandet skickat — tack, jag hör av mig."
+
+[terminal_flow_send_fail_page]
+other = "kunde inte skicka — testa kontaktsidan istället."
+
+[terminal_flow_send_fail_offline]
+other = "kunde inte skicka — du kanske är offline."
+
+[terminal_flow_subscribing]
+other = "prenumererar…"
+
+[terminal_flow_sub_unavailable]
+other = "subscribe: nyhetsbrevet är inte tillgängligt här."
+
+[terminal_flow_sub_reject]
+other = "kunde inte prenumerera — servern nekade."
+
+[terminal_flow_sub_confirm]
+other = "prenumererar — kolla din inkorg för att bekräfta."
+
+[terminal_flow_sub_already]
+other = "du prenumererar redan."
+
+[terminal_flow_sub_fail_footer]
+other = "kunde inte prenumerera — testa formuläret i sidfoten."
+
+[terminal_flow_sub_fail_offline]
+other = "kunde inte prenumerera — du kanske är offline."
+
+[terminal_flow_cancelled]
+other = "avbrutet"
+
+[terminal_flow_answer_yn]
+other = "svara j eller n"
+
 [terminal_key_prev]
 other = "Föregående kommando"
 

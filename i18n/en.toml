@@ -583,6 +583,78 @@ other = "cat: %s: Is a directory — try: ls %s/"
 [terminal_err_not_found]
 other = "%s: command not found — try 'help'"
 
+# --- contact / subscribe CLI-wizard flows (terminal-flows.js). 'cancel', 'y',
+# 'n' stay as typed command words; only the prose is localized. ---
+
+[terminal_flow_contact_intro]
+other = "contact — send me a message. type 'cancel' to abort."
+
+[terminal_flow_subscribe_intro]
+other = "subscribe — the occasional note, no spam. type 'cancel' to abort."
+
+[terminal_flow_confirm_send]
+other = "send this? [Y/n]"
+
+[terminal_flow_confirm_subscribe]
+other = "subscribe with this address? [Y/n]"
+
+[terminal_flow_label_email]
+other = "email"
+
+[terminal_flow_label_name]
+other = "name"
+
+[terminal_flow_label_message]
+other = "message"
+
+[terminal_flow_err_email]
+other = "that doesn't look like an email — try again"
+
+[terminal_flow_err_name]
+other = "name can't be empty"
+
+[terminal_flow_err_message]
+other = "message can't be empty"
+
+[terminal_flow_sending]
+other = "sending…"
+
+[terminal_flow_sent]
+other = "message sent — thanks, I'll be in touch."
+
+[terminal_flow_send_fail_page]
+other = "send failed — try the contact page instead."
+
+[terminal_flow_send_fail_offline]
+other = "send failed — you may be offline."
+
+[terminal_flow_subscribing]
+other = "subscribing…"
+
+[terminal_flow_sub_unavailable]
+other = "subscribe: the newsletter isn't available here."
+
+[terminal_flow_sub_reject]
+other = "couldn't subscribe — the server rejected it."
+
+[terminal_flow_sub_confirm]
+other = "subscribed — check your inbox to confirm."
+
+[terminal_flow_sub_already]
+other = "you're already subscribed."
+
+[terminal_flow_sub_fail_footer]
+other = "couldn't subscribe — try the footer form."
+
+[terminal_flow_sub_fail_offline]
+other = "couldn't subscribe — you may be offline."
+
+[terminal_flow_cancelled]
+other = "cancelled"
+
+[terminal_flow_answer_yn]
+other = "please answer y or n"
+
 [terminal_key_prev]
 other = "Previous command"
 

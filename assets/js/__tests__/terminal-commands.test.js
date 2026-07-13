@@ -928,6 +928,40 @@ describe("terminal command line", () => {
       .getAttribute("data-flow-label");
   }
 
+  test("the contact flow speaks the localized catalog (labels, confirm, Swedish yes)", async () => {
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      flows: {
+        contactIntro: "contact — skicka ett meddelande.",
+        labelEmail: "e-post",
+        labelName: "namn",
+        labelMessage: "meddelande",
+        confirmSend: "skicka detta? [J/n]",
+        sent: "meddelandet skickat.",
+      },
+    });
+    document.body.appendChild(cat);
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+    window.fetch = fetchMock;
+
+    loadModule();
+    typeCommand("contact");
+    expect(tailPrompt()).toBe("e-post>"); // localized label
+    expect(sessionText()).toContain("skicka ett meddelande");
+    typeCommand("me@example.com");
+    typeCommand("Ada");
+    typeCommand("hej");
+    expect(tailPrompt()).toBe("skicka detta? [J/n]");
+    typeCommand("j"); // Swedish "yes" is accepted
+    await flush();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(sessionText()).toContain("meddelandet skickat");
+  });
+
   test("contact walks through prompts and POSTs to the Netlify form", async () => {
     const fetchMock = jest
       .fn()
