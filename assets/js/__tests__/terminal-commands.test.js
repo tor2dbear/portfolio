@@ -1331,6 +1331,35 @@ describe("terminal command line", () => {
     ).not.toBeNull();
   });
 
+  test("empty blocks around images leave no phantom blank line (single gap)", () => {
+    window.history.pushState({}, "", "/works/gallery2/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      "<p>Intro.</p>" +
+      "<p></p>" + // empty block some layouts emit
+      '<figure><img alt="A" src="/a.jpg"></figure>' +
+      '<figure><img alt="B" src="/b.jpg"></figure>' +
+      "<p>  </p>" + // whitespace-only block
+      "<p>Outro.</p>" +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat gallery2.md");
+    const texts = [...document.querySelectorAll(".terminal-session__line")].map(
+      (n) => n.textContent
+    );
+    const iIntro = texts.findIndex((t) => t.indexOf("Intro.") !== -1);
+    const iImg1 = texts.findIndex((t) => t.indexOf("[image 1") !== -1);
+    const iImg2 = texts.findIndex((t) => t.indexOf("[image 2") !== -1);
+    const iOutro = texts.findIndex((t) => t.indexOf("Outro.") !== -1);
+    // Exactly one blank line before the run, images tight, one blank after.
+    expect(iImg1 - iIntro).toBe(2); // Intro, "", [image 1]
+    expect(iImg2).toBe(iImg1 + 1); // adjacent
+    expect(iOutro - iImg2).toBe(2); // [image 2], "", Outro
+  });
+
   test("cat renders a post's markdown structure (headings, quote, list, emphasis)", () => {
     window.history.pushState({}, "", "/works/demo/");
     const main = document.createElement("main");

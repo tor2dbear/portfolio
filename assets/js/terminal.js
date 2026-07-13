@@ -1090,15 +1090,23 @@
         } else if (tag === "li") {
           prefix = "- ";
         }
-        blockBreak(tag);
-        terminalInlineMarkdown(el)
+        var parts = terminalInlineMarkdown(el)
           .split("\n")
-          .forEach(function (part) {
-            var text = part.replace(/[ \t]+/g, " ").trim();
-            if (text) {
-              tokens.push({ text: prefix + text });
-            }
-          });
+          .map(function (part) {
+            return part.replace(/[ \t]+/g, " ").trim();
+          })
+          .filter(Boolean);
+        // An empty block (a blank <p> some layouts emit around image runs)
+        // contributes no text — skip it entirely, BEFORE the separator, so it
+        // can't leave a phantom blank line. That stray blank is what doubled the
+        // gap before/after an image run when such a <p> bracketed it.
+        if (!parts.length) {
+          continue;
+        }
+        blockBreak(tag);
+        parts.forEach(function (part) {
+          tokens.push({ text: prefix + part });
+        });
       }
       // Append the project meta as its own trailing block — cat shows the whole
       // file, so the role/details/client you set in front matter come along.
