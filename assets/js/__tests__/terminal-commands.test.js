@@ -1699,6 +1699,26 @@ describe("terminal command line", () => {
     ).toBe(false);
   });
 
+  test("a page's boot lists the nav for orientation, then cats the page", () => {
+    // A deep-linked page boots `ls ~; cat <slug>.md` — the nav gives a sense of
+    // where you are (the chrome is hidden in transcript mode), then the page.
+    window.history.pushState({}, "", "/works/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML = '<div class="content post"><p>Post body.</p></div>';
+    document.body.appendChild(main);
+    document.documentElement.setAttribute(
+      "data-terminal-boot",
+      "ls ~; cat demo.md"
+    );
+    window.Element.prototype.scrollIntoView = jest.fn();
+    loadModule();
+    jest.runAllTimers();
+    const text = sessionText();
+    expect(text).toContain("works/"); // the nav listing (orientation)
+    expect(text).toContain("Post body."); // then the page's own #main
+  });
+
   test("the terminal renders help/easter-egg text from the localized catalog", () => {
     const cat = document.createElement("script");
     cat.type = "application/json";
