@@ -1290,6 +1290,47 @@ describe("terminal command line", () => {
     expect(window.fetch).not.toHaveBeenCalled();
   });
 
+  test("consecutive images print tight — no blank line between them", () => {
+    window.history.pushState({}, "", "/works/gallery/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      '<figure><img alt="A" src="/a.jpg"></figure>' +
+      '<figure><img alt="B" src="/b.jpg"></figure>' +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat gallery.md");
+    const texts = [...document.querySelectorAll(".terminal-session__line")].map(
+      (n) => n.textContent
+    );
+    const iA = texts.findIndex((t) => t.indexOf("[image 1") !== -1);
+    const iB = texts.findIndex((t) => t.indexOf("[image 2") !== -1);
+    expect(iA).toBeGreaterThanOrEqual(0);
+    // The two image lines are adjacent — no empty separator line between.
+    expect(iB).toBe(iA + 1);
+  });
+
+  test("cat of a post lands the reader at the top and marks the new content", () => {
+    window.Element.prototype.scrollIntoView = jest.fn();
+    window.history.pushState({}, "", "/works/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML = '<div class="content post"><p>Body.</p></div>';
+    document.body.appendChild(main);
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const blurSpy = jest.spyOn(input, "blur");
+    typeCommand("cat demo.md");
+    // Keyboard dismissed — this is a read, not typing.
+    expect(blurSpy).toHaveBeenCalled();
+    // The echoed command line is flashed to mark where the new content begins.
+    expect(
+      document.querySelector(".terminal-session__cmd--reveal")
+    ).not.toBeNull();
+  });
+
   test("cat renders a post's markdown structure (headings, quote, list, emphasis)", () => {
     window.history.pushState({}, "", "/works/demo/");
     const main = document.createElement("main");

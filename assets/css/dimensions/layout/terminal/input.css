@@ -173,6 +173,39 @@
   color: var(--text-muted, inherit);
 }
 
+/* When a `cat` loads a post, terminal.js scrolls this echo line to the top of
+   the viewport (the start of what you opened) — leave a little air above it so
+   it isn't flush against the status bar. */
+:root[data-layout="terminal"] .terminal-session__cmd {
+  scroll-margin-top: var(--spacing-16);
+}
+
+/* …and briefly tints it, so the eye catches where the freshly-loaded content
+   begins. The soft accent surface adapts to theme + pantone. Motion-gated. */
+@keyframes terminal-cat-reveal {
+  from {
+    background-color: var(--surface-accent);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+:root[data-layout="terminal"] .terminal-session__cmd--reveal {
+  border-radius: 3px;
+  animation: terminal-cat-reveal 0.9s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-layout="terminal"] .terminal-session__cmd--reveal {
+    animation: none;
+  }
+}
+
+:root[data-effect-reduced-motion="on"] .terminal-session__cmd--reveal {
+  animation: none;
+}
+
 :root[data-layout="terminal"] .terminal-session__out {
   color: var(--text-muted, inherit);
 }

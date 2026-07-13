@@ -355,6 +355,10 @@
     // The last printed output line, for `copy` with no argument.
     var lastTerminalOutput = "";
 
+    // The most recently echoed command line element, so a `cat` that loads a
+    // post can scroll the reader to the top of that output (see revealTerminalCat).
+    var lastTerminalCmdLine = null;
+
     // Localized terminal strings, rendered per language by footer.html into
     // data-js="terminal-i18n". Present on every terminal page; the English
     // literals in terminal-data.js are the fallback (no-JS build, a missing
@@ -1000,10 +1004,13 @@
       var imageN = 0;
       var prevBlock = null;
       // A blank line separates blocks — the terminal's version of a margin, and
-      // exactly how the blocks sit in the .md source. Consecutive list items
-      // stay tight (a real list has no blank between rows).
+      // exactly how the blocks sit in the .md source. Consecutive list items and
+      // consecutive images stay tight (no blank between them): a real list has
+      // no gap between rows, and stacked [image N] tokens read as one plate.
       var blockBreak = function (kind) {
-        var tight = kind === "li" && prevBlock === "li";
+        var tight =
+          (kind === "li" && prevBlock === "li") ||
+          (kind === "figure" && prevBlock === "figure");
         if (tokens.length && !tight) {
           tokens.push({ text: "" });
         }
@@ -3316,6 +3323,9 @@
           // (images as [image N] tokens) into the scrollback below — nothing
           // above the prompt changes. `open` is the escape hatch to the page.
           var catLabel = action.name || action.url;
+          // Captured now, before the async fetch resolves, so the reveal lands
+          // on THIS command's echo even if another prints meanwhile.
+          var catCmdLine = lastTerminalCmdLine;
           if (typeof window.fetch !== "function") {
             printTerminalLine(
               "cat: cannot reach " + action.url,
@@ -3343,7 +3353,7 @@
               );
               // Reading a page IS visiting it here — so exit lands on it.
               terminalLastViewedUrl = action.url;
-              scrollTerminalToEnd();
+              revealTerminalCat(catCmdLine);
             })
             .catch(function (err) {
               printTerminalLine(
@@ -3364,16 +3374,26 @@
             });
           break;
         }
-        case "cat-local":
+        case "cat-local": {
           // The current page's own file: read #main directly instead of
           // re-fetching the page you're already on (the boot transcript's
           // `cat <slug>.md` on a post/about). Synchronous, so no blank flash
           // while a fetch round-trips.
+          var localCmdLine = lastTerminalCmdLine;
           printTerminalCatTokens(
             terminalExtractPostLines(document, window.location.href, null),
             action.name
           );
+          // A user `cat` of the current page lands the reader at the top of the
+          // output; the boot transcript's own cat-local doesn't (it stays at the
+          // banner while the replay runs).
+          if (
+            !document.documentElement.hasAttribute("data-terminal-replaying")
+          ) {
+            revealTerminalCat(localCmdLine);
+          }
           break;
+        }
         case "flow":
           if (window.TerminalFlows) {
             window.TerminalFlows.start(action.flow);
@@ -3428,7 +3448,7 @@
 
     function printTerminalLine(text, className, frozenCwd) {
       if (!terminalSession) {
-        return;
+        return null;
       }
       var line = document.createElement("span");
       line.className = "terminal-session__line " + className;
@@ -3444,6 +3464,7 @@
       if (className.indexOf("terminal-session__out") !== -1) {
         lastTerminalOutput = text;
       }
+      return line;
     }
 
     // A cat'd image prints as a clickable [image N] token: a terminal can't
@@ -3704,8 +3725,9 @@
         // Freeze the echo at the cwd it ran at. applyTerminalAction (below,
         // inside printTerminalResultOutput) is what performs an append-only
         // `cd`, so reading the cwd now — before it runs — captures where the
-        // command was actually typed.
-        printTerminalLine(
+        // command was actually typed. Kept so a `cat` that loads a post can
+        // land the reader at this line (the top of the file), not the prompt.
+        lastTerminalCmdLine = printTerminalLine(
           result.echo,
           "terminal-session__cmd",
           currentTerminalCwd()
@@ -3964,6 +3986,33 @@
           window.scrollTo(0, document.body.scrollHeight);
           terminalInput.focus();
         });
+      }
+    }
+
+    // A `cat` that loads a post prints a whole document, so ending at the prompt
+    // below it (scrollTerminalToEnd) strands the reader past everything they
+    // just opened. Instead, land at the TOP of that output — the echoed command
+    // line — like opening the file in a pager, and dismiss the keyboard (this is
+    // a read, not typing). A brief tint flash on the command line marks where
+    // the new content begins; the live prompt sits below, reachable via ⌄.
+    function revealTerminalCat(cmdLine) {
+      if (!isTerminalLayout()) {
+        return;
+      }
+      if (terminalInput) {
+        terminalInput.blur();
+      }
+      if (!cmdLine || typeof cmdLine.scrollIntoView !== "function") {
+        scrollTerminalToEnd();
+        return;
+      }
+      window.requestAnimationFrame(function () {
+        cmdLine.scrollIntoView({ block: "start" });
+      });
+      if (!terminalReducedMotion()) {
+        cmdLine.classList.remove("terminal-session__cmd--reveal");
+        void cmdLine.offsetWidth; // reflow so a re-cat replays the flash
+        cmdLine.classList.add("terminal-session__cmd--reveal");
       }
     }
 
