@@ -339,6 +339,14 @@
     var terminalHistory = [];
     var TERMINAL_HISTORY_MAX = 100;
 
+    // Entry labels a remote `ls` fetched, keyed by cwd segments ("works/tags").
+    // An append-only `cd` moves the prompt without loading the directory, so Tab
+    // completion (synchronous, reads only the loaded page + the static tree) has
+    // nothing to offer there. Once you `ls` such a directory we cache what it
+    // held, so completing within it works — matching how you'd naturally `ls`
+    // first, then Tab.
+    var terminalLsDirCache = {};
+
     // Literal tables — help text, Tab-completion vocabulary, cat-able
     // pseudo-files, fortunes, the easter-egg index, the konami sequence and
     // the selectable layouts — live in terminal-data.js (window.TerminalData),
@@ -3276,6 +3284,10 @@
               var doc = new DOMParser().parseFromString(html, "text/html");
               var files = terminalRemoteLsEntries(doc, action.cwd);
               if (files.length) {
+                // Remember what this directory held, so Tab completion works in
+                // it even though the `cd` never loaded its page.
+                terminalLsDirCache[terminalSegmentsOf(action.cwd).join("/")] =
+                  files;
                 // Clickable, like the local `ls` — each post cats itself, each
                 // tag dir cds into it.
                 printTerminalLsList(
@@ -4280,6 +4292,28 @@
               }
             });
           }
+          // A directory you `cd`'d into but never loaded isn't in the tree or
+          // the live DOM — but if you `ls`'d it, its entries are cached. Offer
+          // dir names to cd, and (for cat/open) its files as .md, stripping the
+          // classify markers (`/`, `@`) so they complete like real names.
+          (terminalLsDirCache[cwdSegs.join("/")] || []).forEach(function (
+            label
+          ) {
+            if (/\/$/.test(label)) {
+              var dir = label.slice(0, -1).toLowerCase();
+              if (dir.indexOf(frag) === 0 && candidates.indexOf(dir) === -1) {
+                candidates.push(dir);
+              }
+            } else if (
+              (verb === "cat" || verb === "open") &&
+              /\.md@?$/i.test(label)
+            ) {
+              var file = label.replace(/@$/, "").toLowerCase();
+              if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
+                candidates.push(file);
+              }
+            }
+          });
         }
       }
       if (candidates.length === 1) {

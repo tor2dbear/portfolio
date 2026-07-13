@@ -374,6 +374,35 @@ describe("terminal command line", () => {
     );
   });
 
+  test("Tab completes files in a cd'd-into directory once ls has cached them", async () => {
+    // Live cwd sits in a tag dir the page never loaded (page cwd is ~), so a
+    // bare `ls` remote-fetches it.
+    window.getComputedStyle = () => ({
+      getPropertyValue: (prop) =>
+        prop === "--terminal-live-cwd"
+          ? "~/works/tags/experimental"
+          : prop === "--terminal-cwd"
+          ? "~"
+          : "#ffffff",
+    });
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve(
+          '<div class="summary-card"><a href="/works/things-in-a-conversation/">x</a></div>' +
+            '<div class="summary-card"><a href="/works/a-cut-up-world/">y</a></div>'
+        ),
+    });
+    loadModule();
+    typeCommand("ls"); // remote-ls fetches the tag dir and caches its files
+    await flush();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    // Before, Tab had nothing here; now the cached filename completes.
+    input.value = "cat thin";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cat things-in-a-conversation.md");
+  });
+
   test("cat prints a known pseudo-file and 404s unknown ones", () => {
     loadModule();
     typeCommand("cat readme");
