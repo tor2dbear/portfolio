@@ -1595,6 +1595,20 @@ describe("terminal command line", () => {
     ).toBe(false);
   });
 
+  test("a localized (percent-encoded) slug lists by its real, decoded name", () => {
+    loadModule();
+    // A Swedish post card whose href carries a percent-encoded slug.
+    const card = document.createElement("div");
+    card.className = "article-card";
+    card.innerHTML =
+      '<a href="/writing/g%c3%b6teborgsaffisch/">Göteborgsaffisch</a>';
+    document.body.appendChild(card);
+    typeCommand("ls --featured");
+    // Listed by its real name (göteborgsaffisch.md), not the raw escapes.
+    expect(sessionText()).toContain("göteborgsaffisch.md");
+    expect(sessionText()).not.toContain("g%c3%b6");
+  });
+
   test("transcript mode fills the banner's Last login line", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();

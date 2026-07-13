@@ -475,7 +475,17 @@
         parts.shift();
       }
       return parts.map(function (p) {
-        return p.toLowerCase();
+        // Decode percent-escapes so a localized slug reads as its real name
+        // (g%c3%b6teborgsaffisch → göteborgsaffisch) in listings and matches a
+        // typed `cat göteborgsaffisch.md`. Fetches still use the raw href, which
+        // the browser re-encodes, so the round-trip is unaffected.
+        var seg = p;
+        try {
+          seg = decodeURIComponent(p);
+        } catch (e) {
+          /* malformed escape — keep the raw segment */
+        }
+        return seg.toLowerCase();
       });
     }
 
@@ -1432,7 +1442,19 @@
       if (segs.length && segs[0].toLowerCase() === lang) {
         segs.shift();
       }
-      return segs.length ? segs[segs.length - 1].toLowerCase() : "";
+      if (!segs.length) {
+        return "";
+      }
+      // Decode so a localized slug matches the decoded names cat/ls now use
+      // (see terminalHrefSegments) — else `cat <slug>.md` on the page you're on
+      // wouldn't recognise itself.
+      var slug = segs[segs.length - 1];
+      try {
+        slug = decodeURIComponent(slug);
+      } catch (e) {
+        /* malformed escape — keep the raw segment */
+      }
+      return slug.toLowerCase();
     }
 
     function terminalContentTargetHref(dest) {
