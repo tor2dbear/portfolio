@@ -315,6 +315,31 @@
   outline: none;
 }
 
+/* The pager marker: a dim, clickable `--More--` that reveals the folded rows.
+   Reads as terminal chrome (muted), not a value — block so it sits on its own
+   line like a real `more` prompt. */
+:root[data-layout="terminal"] .terminal-session__more {
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--text-muted, inherit);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-session__more:hover,
+:root[data-layout="terminal"] .terminal-session__more:focus-visible {
+  color: var(--text-accent, inherit);
+  outline: none;
+}
+
 /* The [report] chip the assistant prints after a reply: a muted, unshouting
    affordance to flag a bad answer. No underline at rest (it's not a link into
    content); it accents on hover like the other clickable tokens. */

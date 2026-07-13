@@ -2123,6 +2123,7 @@
                 lsRSegs.length ? "~/" + lsRSegs.join("/") : "~"
               ),
               action: null,
+              paged: { preview: TERMINAL_PAGE_SIZE },
             };
           }
           if (lsLong.indexOf("--featured") !== -1) {
@@ -2261,7 +2262,12 @@
           };
         }
         case "tree":
-          return { echo: input, lines: terminalTreeLines(), action: null };
+          return {
+            echo: input,
+            lines: terminalTreeLines(),
+            action: null,
+            paged: { preview: TERMINAL_PAGE_SIZE },
+          };
         case "cat": {
           if (!args.length) {
             return {
@@ -2458,7 +2464,12 @@
           };
         }
         case "history":
-          return { echo: input, lines: historyLines(), action: null };
+          return {
+            echo: input,
+            lines: historyLines(),
+            action: null,
+            paged: { preview: TERMINAL_PAGE_SIZE },
+          };
         case "uptime":
           return { echo: input, lines: [uptimeLine()], action: null };
         case "top":
@@ -3584,11 +3595,65 @@
     // so clicking is the same as typing it; the current value is marked. This is
     // the OSC-8-style clickable-output convention (`ls --hyperlink`), and it is
     // what unifies the panel with the command — one truth, click or type.
+    // A screenful before the pager kicks in, for long text dumps (tree, ls -R,
+    // history). `set` passes its own smaller preview (the main axes).
+    var TERMINAL_PAGE_SIZE = 12;
+
+    // Append pre-built row elements with a `less`/`more`-style pager: past a
+    // preview count, show a dim clickable "--More--" that reveals the rest
+    // inline (a tap on mobile, a click on desktop). Only kicks in when it hides
+    // more than a single row — otherwise it'd trade one line for the marker.
+    function appendTerminalRowsPaged(rows, preview) {
+      if (!terminalSession) {
+        return;
+      }
+      if (rows.length <= preview + 1) {
+        rows.forEach(function (row) {
+          terminalSession.appendChild(row);
+        });
+        return;
+      }
+      rows.slice(0, preview).forEach(function (row) {
+        terminalSession.appendChild(row);
+      });
+      var rest = rows.slice(preview);
+      var more = document.createElement("button");
+      more.type = "button";
+      more.className =
+        "terminal-session__line terminal-session__out terminal-session__more";
+      more.textContent = tiText(
+        "pagerMore",
+        "--More--  +%s more · tap",
+        rest.length
+      );
+      more.addEventListener("click", function () {
+        var frag = document.createDocumentFragment();
+        rest.forEach(function (row) {
+          frag.appendChild(row);
+        });
+        // Reveal in place — grow the buffer where the marker sat, don't jump.
+        more.parentNode.insertBefore(frag, more);
+        more.remove();
+      });
+      terminalSession.appendChild(more);
+    }
+
+    // Plain text lines, paged.
+    function printTerminalLinesPaged(lines, preview) {
+      var rows = (lines || []).map(function (line) {
+        var row = document.createElement("span");
+        row.className = "terminal-session__line terminal-session__out";
+        row.textContent = line;
+        return row;
+      });
+      appendTerminalRowsPaged(rows, preview);
+    }
+
     function printTerminalSettingsList() {
       if (!terminalSession) {
         return;
       }
-      terminalSettingsSpec().forEach(function (setting) {
+      var rows = terminalSettingsSpec().map(function (setting) {
         var line = document.createElement("span");
         line.className =
           "terminal-session__line terminal-session__out terminal-session__settings-row";
@@ -3608,7 +3673,7 @@
           btn.setAttribute("data-cmd", "set " + setting.key + " " + opt);
           line.appendChild(btn);
         });
-        terminalSession.appendChild(line);
+        return line;
       });
       var hint = document.createElement("span");
       hint.className = "terminal-session__line terminal-session__out";
@@ -3616,7 +3681,10 @@
         "setHint",
         "click a value or type: set <name> <value>"
       );
-      terminalSession.appendChild(hint);
+      rows.push(hint);
+      // Preview the main axes (mode, layout, typography, language); the effect
+      // toggles + hint fold under the pager so the boot `set` stays compact.
+      appendTerminalRowsPaged(rows, 4);
     }
 
     // A plain `ls` listing as clickable entries — clicking runs the entry's
@@ -3710,9 +3778,14 @@
           "terminal-session__out terminal-session__out--art"
         );
       });
-      (result.lines || []).forEach(function (line) {
-        printTerminalLine(line, "terminal-session__out");
-      });
+      if (result.paged) {
+        // Long text dumps (tree, ls -R, history) page past a screenful.
+        printTerminalLinesPaged(result.lines || [], result.paged.preview);
+      } else {
+        (result.lines || []).forEach(function (line) {
+          printTerminalLine(line, "terminal-session__out");
+        });
+      }
       applyTerminalAction(result.action);
     }
 

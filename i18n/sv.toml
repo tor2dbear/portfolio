@@ -571,6 +571,9 @@ other = "cat: %s: Ingen sådan fil eller katalog"
 [terminal_err_cat_unreachable]
 other = "cat: når inte %s"
 
+[terminal_pager_more]
+other = "--More--  +%s rader · tryck"
+
 [terminal_err_cat_isdir]
 other = "cat: %s: Är en katalog — testa: ls %s/"
 

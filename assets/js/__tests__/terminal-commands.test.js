@@ -253,13 +253,19 @@ describe("terminal command line", () => {
     expect(localStorage.getItem("theme-typography")).toBe("technical");
   });
 
-  test("set with no args lists current values", () => {
+  test("set with no args previews the main axes and folds the rest under a pager", () => {
     loadModule();
     typeCommand("set");
-    const out = sessionText();
-    expect(out).toContain("mode");
-    expect(out).toContain("typography");
-    expect(out).toContain("set <name> <value>");
+    // The main axes (mode … language) preview up front.
+    expect(sessionText()).toContain("mode");
+    expect(sessionText()).toContain("typography");
+    // The effect toggles + hint fold under a --More-- until revealed.
+    expect(sessionText()).not.toContain("set <name> <value>");
+    const more = document.querySelector(".terminal-session__more");
+    expect(more).not.toBeNull();
+    more.click();
+    expect(sessionText()).toContain("motion");
+    expect(sessionText()).toContain("set <name> <value>");
   });
 
   test("set renders clickable chips that run the command on click", () => {
@@ -617,6 +623,11 @@ describe("terminal command line", () => {
   test("ls -R is recursive — per-directory blocks, not a flat list", () => {
     loadModule();
     typeCommand("ls -R ~/");
+    // The long recursive dump pages; reveal it to check the full structure.
+    const more = document.querySelector(".terminal-session__more");
+    if (more) {
+      more.click();
+    }
     const text = sessionText();
     // A recursive listing has sub-directory headers (e.g. "~/works:"), which a
     // flat single-level ls never prints.
