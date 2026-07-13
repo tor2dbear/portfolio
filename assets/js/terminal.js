@@ -4022,15 +4022,22 @@
       // Track the on-screen keyboard: with position:fixed;bottom:0 the bar sits
       // BEHIND the keyboard on iOS Safari (plain fixed positions against the
       // layout viewport, which the keyboard doesn't shrink). Translate it up by
-      // the overlap — layout viewport minus the visual viewport — so it rides on
-      // top of the keyboard. No visualViewport API → leave it pinned to the
-      // bottom (still usable, just possibly overlapped).
+      // the keyboard's height — layout viewport minus the visual viewport — so it
+      // rides on top of the keyboard. No visualViewport API → leave it pinned to
+      // the bottom (still usable, just possibly overlapped).
+      //
+      // Deliberately NOT subtracting vv.offsetTop: the keyboard's height doesn't
+      // change while the page scrolls, so the bar shouldn't move either. During a
+      // scroll on iOS Safari vv.offsetTop spikes transiently, which — if folded in
+      // here — shrinks the lift to zero and drops the bar back behind the keyboard
+      // mid-scroll (it reappears only once scrolling settles). Tracking height
+      // alone keeps it steady.
       function positionKeybar() {
         var vv = window.visualViewport;
         if (!vv) {
           return;
         }
-        var overlap = window.innerHeight - vv.height - vv.offsetTop;
+        var overlap = window.innerHeight - vv.height;
         terminalKeybar.style.transform =
           "translateY(" + -Math.max(0, overlap) + "px)";
       }
