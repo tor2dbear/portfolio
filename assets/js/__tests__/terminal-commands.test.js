@@ -784,6 +784,19 @@ describe("terminal command line", () => {
     expect(input.value).toBe("set mode dark");
   });
 
+  test("Tab completes an ls lens flag", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "ls --rel";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("ls --related"); // fills; no trailing space, like cd/set
+    // A bare `ls -` lists the available lenses/flags.
+    input.value = "ls --";
+    keydown({ key: "Tab" });
+    expect(sessionText()).toContain("--related");
+    expect(sessionText()).toContain("--featured");
+  });
+
   test("Ctrl+L clears the screen, Ctrl+C cancels the line", () => {
     loadModule();
     const input = document.querySelector('[data-js="terminal-input"]');

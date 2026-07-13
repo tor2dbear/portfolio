@@ -402,6 +402,18 @@
 
     const TERMINAL_COMMAND_NAMES = TD.TERMINAL_COMMAND_NAMES || [];
 
+    // The `ls` lenses + short flags, offered by Tab completion (`ls -⇥`) so the
+    // filtered views are discoverable, not just documented. --related/--info
+    // read the current post; --featured the page's cards; --images its figures.
+    var TERMINAL_LS_FLAGS = [
+      "--featured",
+      "--related",
+      "--info",
+      "--images",
+      "-a",
+      "-R",
+    ];
+
     // Toggleable image effects, keyed by command word. `invert` flags that the
     // command's sense is the opposite of its data-attribute: "motion on" means
     // animation on, i.e. data-effect-reduced-motion OFF. Built once, not per
@@ -4275,6 +4287,12 @@
           } else {
             return;
           }
+        } else if (verb === "ls" && frag.charAt(0) === "-") {
+          // `ls -⇥` completes the lenses (--featured/--related/--info/--images)
+          // and short flags — the same discovery Tab gives `set`.
+          candidates = TERMINAL_LS_FLAGS.filter(function (flag) {
+            return flag.indexOf(frag) === 0;
+          });
         } else if (
           verb !== "cd" &&
           verb !== "ls" &&
