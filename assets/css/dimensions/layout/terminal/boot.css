@@ -150,6 +150,17 @@
   align-content: start;
 }
 
+/* In transcript mode the <footer> IS the terminal buffer, not a page footer, so
+   its page chrome spacing has no business here — the fluid margin-top (spacing-64
+   × rhythm ≈ 58px) and top padding stacked with the banner's padding and the
+   scrollback's own top margin into a dead band under the banner, above the first
+   prompt. Drop both so the transcript hugs the banner; the scrollback's
+   margin-top alone gives one clean gap. */
+:root[data-terminal-transcript][data-layout="terminal"] footer {
+  margin-top: 0;
+  padding-top: 0;
+}
+
 /* The buffer ends with a live prompt. Kept as a normal block so the prompt,
    caret, input and hint all flow inline like one line of terminal text —
    crucially NOT a flex row, which (with the input's native field box) pushed
