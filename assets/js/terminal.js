@@ -4019,27 +4019,35 @@
         bottom: scrollTerminalToEnd,
       };
 
-      // Track the on-screen keyboard: with position:fixed;bottom:0 the bar sits
-      // BEHIND the keyboard on iOS Safari (plain fixed positions against the
-      // layout viewport, which the keyboard doesn't shrink). Translate it up by
-      // the keyboard's height — layout viewport minus the visual viewport — so it
-      // rides on top of the keyboard. No visualViewport API → leave it pinned to
-      // the bottom (still usable, just possibly overlapped).
+      // Pin the bar just above the on-screen keyboard. With position:fixed;bottom:0
+      // it lands at the bottom of whichever viewport the browser anchors fixed
+      // elements to — the layout viewport on iOS Safari (so the keyboard, which
+      // shrinks only the *visual* viewport, covers it), which is why it needs
+      // lifting at all. Rather than compute the lift from innerHeight/vv.height
+      // (brittle: the exact keyboard height iOS reports drifts with the accessory
+      // bar, and folding in vv.offsetTop makes the bar jump around as that value
+      // spikes during scroll), MEASURE it: neutralise any prior lift, read where
+      // the bar's bottom actually renders, and translate it up by exactly the gap
+      // down to the keyboard's top (the visual viewport's bottom edge). Clamped at
+      // 0 so it never pushes down into the keyboard. Self-correcting — it lands
+      // right whether fixed anchors to the layout or the visual viewport, and
+      // there's nothing left to over- or under-shoot. No visualViewport API →
+      // leave it pinned to the bottom (still usable, just possibly overlapped).
       //
-      // Deliberately NOT subtracting vv.offsetTop: the keyboard's height doesn't
-      // change while the page scrolls, so the bar shouldn't move either. During a
-      // scroll on iOS Safari vv.offsetTop spikes transiently, which — if folded in
-      // here — shrinks the lift to zero and drops the bar back behind the keyboard
-      // mid-scroll (it reappears only once scrolling settles). Tracking height
-      // alone keeps it steady.
+      // Only called on focus/resize (keyboard open/close), never on scroll: the
+      // keyboard stays put while the page scrolls, so the bar must not move with
+      // it — repositioning mid-scroll is exactly what made it flicker before.
       function positionKeybar() {
         var vv = window.visualViewport;
         if (!vv) {
           return;
         }
-        var overlap = window.innerHeight - vv.height;
+        terminalKeybar.style.transform = "none";
+        var barBottom = terminalKeybar.getBoundingClientRect().bottom;
+        var keyboardTop = vv.offsetTop + vv.height;
+        var lift = barBottom - keyboardTop;
         terminalKeybar.style.transform =
-          "translateY(" + -Math.max(0, overlap) + "px)";
+          "translateY(" + -Math.max(0, lift) + "px)";
       }
 
       // Publish the bar's height so the prompt can reserve space for this fixed
@@ -4091,12 +4099,14 @@
         );
       });
 
+      // Reposition only when the keyboard itself opens/closes/changes height
+      // (visualViewport resize), never on visualViewport scroll — the keyboard
+      // doesn't move while the page scrolls, so neither should the bar.
       if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", function () {
           positionKeybar();
           updateKeybarSpace();
         });
-        window.visualViewport.addEventListener("scroll", positionKeybar);
       }
     }
 
