@@ -90,6 +90,7 @@ describe("terminal command line", () => {
     [
       "data-terminal-boot",
       "data-terminal-transcript",
+      "data-terminal-replaying",
       "data-terminal-exempt",
       "data-terminal-booted",
     ].forEach((attr) => document.documentElement.removeAttribute(attr));
@@ -104,6 +105,7 @@ describe("terminal command line", () => {
       <body>
         <div class="terminal-boot">
           <pre class="terminal-boot__art terminal-boot__art--sm">  ██\n ████</pre>
+          <p class="terminal-boot__lastlogin" data-js="terminal-lastlogin" aria-hidden="true"></p>
         </div>
         <button data-js="mode-option" data-mode="light"></button>
         <button data-js="mode-option" data-mode="dark"></button>
@@ -174,7 +176,8 @@ describe("terminal command line", () => {
         <p class="terminal-tail" data-exit-hint="type exit or press esc">
           <span class="terminal-tail__prompt"></span
           ><span class="terminal-tail__caret"></span
-          ><input id="terminal-input" class="terminal-tail__input" data-js="terminal-input" type="text" size="1" />
+          ><input id="terminal-input" class="terminal-tail__input" data-js="terminal-input" type="text" size="1"
+          /><button class="terminal-tail__ghost" type="button" data-js="terminal-ghost" tabindex="-1" aria-hidden="true"></button>
         </p>
         <div class="terminal-keybar" data-js="terminal-keybar">
           <button class="terminal-keybar__key" type="button" tabindex="-1" data-keybar="prev" aria-label="Previous command">↑</button>
@@ -251,13 +254,19 @@ describe("terminal command line", () => {
     expect(localStorage.getItem("theme-typography")).toBe("technical");
   });
 
-  test("set with no args lists current values", () => {
+  test("set with no args previews the main axes and folds the rest under a pager", () => {
     loadModule();
     typeCommand("set");
-    const out = sessionText();
-    expect(out).toContain("mode");
-    expect(out).toContain("typography");
-    expect(out).toContain("set <name> <value>");
+    // The main axes (mode … language) preview up front.
+    expect(sessionText()).toContain("mode");
+    expect(sessionText()).toContain("typography");
+    // The effect toggles + hint fold under a --More-- until revealed.
+    expect(sessionText()).not.toContain("set <name> <value>");
+    const more = document.querySelector(".terminal-session__more");
+    expect(more).not.toBeNull();
+    more.click();
+    expect(sessionText()).toContain("motion");
+    expect(sessionText()).toContain("set <name> <value>");
   });
 
   test("set renders clickable chips that run the command on click", () => {
@@ -364,6 +373,59 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain(
       "not a directory: works/tags/experimental/a-cut-up-world — try: cat a-cut-up-world.md"
     );
+  });
+
+  test("Tab completes files in a cd'd-into directory once ls has cached them", async () => {
+    // Live cwd sits in a tag dir the page never loaded (page cwd is ~), so a
+    // bare `ls` remote-fetches it.
+    window.getComputedStyle = () => ({
+      getPropertyValue: (prop) =>
+        prop === "--terminal-live-cwd"
+          ? "~/works/tags/experimental"
+          : prop === "--terminal-cwd"
+          ? "~"
+          : "#ffffff",
+    });
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve(
+          '<div class="summary-card"><a href="/works/things-in-a-conversation/">x</a></div>' +
+            '<div class="summary-card"><a href="/works/a-cut-up-world/">y</a></div>'
+        ),
+    });
+    loadModule();
+    typeCommand("ls"); // remote-ls fetches the tag dir and caches its files
+    await flush();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    // Before, Tab had nothing here; now the cached filename completes.
+    input.value = "cat thin";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cat things-in-a-conversation.md");
+  });
+
+  test("Tab completes a post in an unvisited directory once the page index warms", async () => {
+    // From the home page ~/works's projects were never listed, so completion
+    // has nothing for them — until the prompt is focused and the site's page
+    // index (index.json) warms the ls cache.
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          items: [
+            { url: "https://tor-bjorn.com/works/things-in-a-conversation/" },
+            { url: "https://tor-bjorn.com/works/a-cut-up-world/" },
+          ],
+        }),
+    });
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.dispatchEvent(new window.Event("focus")); // warms the cache
+    await flush();
+    expect(window.fetch.mock.calls[0][0]).toContain("/index.json");
+    input.value = "cat ~/works/thin";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cat ~/works/things-in-a-conversation.md");
   });
 
   test("cat prints a known pseudo-file and 404s unknown ones", () => {
@@ -615,6 +677,11 @@ describe("terminal command line", () => {
   test("ls -R is recursive — per-directory blocks, not a flat list", () => {
     loadModule();
     typeCommand("ls -R ~/");
+    // The long recursive dump pages; reveal it to check the full structure.
+    const more = document.querySelector(".terminal-session__more");
+    if (more) {
+      more.click();
+    }
     const text = sessionText();
     // A recursive listing has sub-directory headers (e.g. "~/works:"), which a
     // flat single-level ls never prints.
@@ -760,6 +827,17 @@ describe("terminal command line", () => {
     expect(input.value).toBe("cd writing");
   });
 
+  test("Tab completes a qualified path against the named directory", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    // The article-card link → /writing/the-grid-inherited/. Even though the
+    // cwd is home, `cat ~/writing/the` resolves the ~/writing part and
+    // completes the file against that section's posts, keeping the prefix.
+    input.value = "cat ~/writing/the";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cat ~/writing/the-grid-inherited.md");
+  });
+
   test("Tab completes a set key and then its value", () => {
     loadModule();
     const input = document.querySelector('[data-js="terminal-input"]');
@@ -769,6 +847,39 @@ describe("terminal command line", () => {
     input.value = "set mode d";
     keydown({ key: "Tab" });
     expect(input.value).toBe("set mode dark");
+  });
+
+  test("Tab completes an ls flag", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "ls --fea";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("ls --featured"); // fills; no trailing space, like cd/set
+    // A bare `ls --` lists the available flags.
+    input.value = "ls --";
+    keydown({ key: "Tab" });
+    expect(sessionText()).toContain("--featured");
+    expect(sessionText()).toContain("--images");
+  });
+
+  test("the inline suggestion previews a single completion; → accepts it", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const ghost = document.querySelector('[data-js="terminal-ghost"]');
+    // A partial command with exactly one match shows the remainder as ghost.
+    input.value = "wea";
+    input.setSelectionRange(3, 3);
+    input.dispatchEvent(new window.Event("input", { bubbles: true }));
+    expect(ghost.textContent).toBe("ther"); // → weather
+    // → at end of line accepts it (and the completed word clears the ghost).
+    keydown({ key: "ArrowRight" });
+    expect(input.value).toBe("weather");
+    expect(ghost.textContent).toBe("");
+    // An ambiguous prefix suggests nothing.
+    input.value = "c";
+    input.setSelectionRange(1, 1);
+    input.dispatchEvent(new window.Event("input", { bubbles: true }));
+    expect(ghost.textContent).toBe("");
   });
 
   test("Ctrl+L clears the screen, Ctrl+C cancels the line", () => {
@@ -925,6 +1036,40 @@ describe("terminal command line", () => {
       .querySelector(".terminal-tail")
       .getAttribute("data-flow-label");
   }
+
+  test("the contact flow speaks the localized catalog (labels, confirm, Swedish yes)", async () => {
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      flows: {
+        contactIntro: "contact — skicka ett meddelande.",
+        labelEmail: "e-post",
+        labelName: "namn",
+        labelMessage: "meddelande",
+        confirmSend: "skicka detta? [J/n]",
+        sent: "meddelandet skickat.",
+      },
+    });
+    document.body.appendChild(cat);
+    const fetchMock = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+    window.fetch = fetchMock;
+
+    loadModule();
+    typeCommand("contact");
+    expect(tailPrompt()).toBe("e-post>"); // localized label
+    expect(sessionText()).toContain("skicka ett meddelande");
+    typeCommand("me@example.com");
+    typeCommand("Ada");
+    typeCommand("hej");
+    expect(tailPrompt()).toBe("skicka detta? [J/n]");
+    typeCommand("j"); // Swedish "yes" is accepted
+    await flush();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(sessionText()).toContain("meddelandet skickat");
+  });
 
   test("contact walks through prompts and POSTs to the Netlify form", async () => {
     const fetchMock = jest
@@ -1254,6 +1399,76 @@ describe("terminal command line", () => {
     expect(window.fetch).not.toHaveBeenCalled();
   });
 
+  test("consecutive images print tight — no blank line between them", () => {
+    window.history.pushState({}, "", "/works/gallery/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      '<figure><img alt="A" src="/a.jpg"></figure>' +
+      '<figure><img alt="B" src="/b.jpg"></figure>' +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat gallery.md");
+    const texts = [...document.querySelectorAll(".terminal-session__line")].map(
+      (n) => n.textContent
+    );
+    const iA = texts.findIndex((t) => t.indexOf("[image 1") !== -1);
+    const iB = texts.findIndex((t) => t.indexOf("[image 2") !== -1);
+    expect(iA).toBeGreaterThanOrEqual(0);
+    // The two image lines are adjacent — no empty separator line between.
+    expect(iB).toBe(iA + 1);
+  });
+
+  test("cat of a post lands the reader at the top and marks the new content", () => {
+    window.Element.prototype.scrollIntoView = jest.fn();
+    window.history.pushState({}, "", "/works/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML = '<div class="content post"><p>Body.</p></div>';
+    document.body.appendChild(main);
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const blurSpy = jest.spyOn(input, "blur");
+    typeCommand("cat demo.md");
+    // Keyboard dismissed — this is a read, not typing.
+    expect(blurSpy).toHaveBeenCalled();
+    // The echoed command line is flashed to mark where the new content begins.
+    expect(
+      document.querySelector(".terminal-session__cmd--reveal")
+    ).not.toBeNull();
+  });
+
+  test("empty blocks around images leave no phantom blank line (single gap)", () => {
+    window.history.pushState({}, "", "/works/gallery2/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      "<p>Intro.</p>" +
+      "<p></p>" + // empty block some layouts emit
+      '<figure><img alt="A" src="/a.jpg"></figure>' +
+      '<figure><img alt="B" src="/b.jpg"></figure>' +
+      "<p>  </p>" + // whitespace-only block
+      "<p>Outro.</p>" +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat gallery2.md");
+    const texts = [...document.querySelectorAll(".terminal-session__line")].map(
+      (n) => n.textContent
+    );
+    const iIntro = texts.findIndex((t) => t.indexOf("Intro.") !== -1);
+    const iImg1 = texts.findIndex((t) => t.indexOf("[image 1") !== -1);
+    const iImg2 = texts.findIndex((t) => t.indexOf("[image 2") !== -1);
+    const iOutro = texts.findIndex((t) => t.indexOf("Outro.") !== -1);
+    // Exactly one blank line before the run, images tight, one blank after.
+    expect(iImg1 - iIntro).toBe(2); // Intro, "", [image 1]
+    expect(iImg2).toBe(iImg1 + 1); // adjacent
+    expect(iOutro - iImg2).toBe(2); // [image 2], "", Outro
+  });
+
   test("cat renders a post's markdown structure (headings, quote, list, emphasis)", () => {
     window.history.pushState({}, "", "/works/demo/");
     const main = document.createElement("main");
@@ -1340,13 +1555,6 @@ describe("terminal command line", () => {
     expect(sessionText().slice(before.length)).not.toContain(
       "no such file or directory"
     );
-  });
-
-  test("ls <file> --info points at cat (a post's info lives in the file)", () => {
-    loadModule();
-    typeCommand("ls a-cut-up-world.md --info");
-    // --info is a lens on the loaded page; for an unopened post it hints at cat.
-    expect(sessionText()).toContain("try: cat a-cut-up-world.md");
   });
 
   test("ls --featured lists the page's cards as clickable files (not misread as -a)", () => {
@@ -1469,6 +1677,9 @@ describe("terminal command line", () => {
       "ls; set; cat welcome.txt; ls works/ --featured"
     );
     loadModule();
+    // The replay types each command in on a timer (motion on by default in
+    // this suite); flush the whole sequence to assert the final transcript.
+    jest.runAllTimers();
     const text = sessionText();
     // Echoes of each command (the __cmd lines carry the raw command text).
     expect(text).toContain("ls");
@@ -1494,7 +1705,9 @@ describe("terminal command line", () => {
     loadModule();
     expect(sessionText().trim()).toBe(""); // nothing yet — not in terminal
     window.ThemeActions.setLayout("terminal");
-    jest.runOnlyPendingTimers(); // the runner is deferred a tick past applyLayout
+    // The runner is deferred a tick past applyLayout, then types the commands
+    // in on timers; run them all so the `set` output has rendered.
+    jest.runAllTimers();
     expect(sessionText()).toContain("mode"); // `set` output rendered
     expect(
       document.documentElement.hasAttribute("data-terminal-transcript")
@@ -1504,6 +1717,7 @@ describe("terminal command line", () => {
   test("a layout toggle mid-session keeps the existing scrollback (no re-replay)", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();
+    jest.runAllTimers(); // let the boot replay finish before we're "mid-session"
     typeCommand("help");
     const before = sessionText();
     // Leave to column and back — the session persists, transcript doesn't stack.
@@ -1517,6 +1731,7 @@ describe("terminal command line", () => {
   test("boot transcript commands land in ↑ history", () => {
     document.documentElement.setAttribute("data-terminal-boot", "ls; set");
     loadModule();
+    jest.runAllTimers(); // let the replay type both commands in (and record them)
     const input = document.querySelector('[data-js="terminal-input"]');
     input.dispatchEvent(
       new window.KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true })
@@ -1541,6 +1756,127 @@ describe("terminal command line", () => {
     expect(
       document.documentElement.hasAttribute("data-terminal-transcript")
     ).toBe(false);
+  });
+
+  test("with motion on, the transcript types the commands in (cursor, then clean)", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    // Banner hold: nothing types until the mark has had a beat to register,
+    // and the live prompt is withheld while the replay runs.
+    expect(sessionText().trim()).toBe("");
+    expect(document.querySelector(".terminal-session__cursor")).toBeNull();
+    expect(
+      document.documentElement.hasAttribute("data-terminal-replaying")
+    ).toBe(true);
+    // Past the hold (700ms), the first command is mid-type — a cursor trails it
+    // and only the first command has begun: proof it streams, not dumps.
+    jest.advanceTimersByTime(750);
+    expect(document.querySelector(".terminal-session__cursor")).not.toBeNull();
+    expect(sessionText()).not.toContain("mode"); // `set` hasn't run yet
+    jest.runAllTimers();
+    // Finished: the cursor is gone, the full session is present, and the live
+    // prompt is revealed (replay flag cleared).
+    expect(document.querySelector(".terminal-session__cursor")).toBeNull();
+    expect(sessionText()).toContain("set");
+    expect(sessionText()).toContain("mode"); // `set` output rendered
+    expect(
+      document.documentElement.hasAttribute("data-terminal-replaying")
+    ).toBe(false);
+  });
+
+  test("reduced motion prints the whole transcript at once (no typing, no cursor)", () => {
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }));
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    // No timers to flush — the session is complete immediately, with no cursor,
+    // and the live prompt is shown (replay flag never left set).
+    expect(document.querySelector(".terminal-session__cursor")).toBeNull();
+    expect(sessionText()).toContain("mode");
+    expect(
+      document.documentElement.hasAttribute("data-terminal-replaying")
+    ).toBe(false);
+  });
+
+  test("a page's boot lists the nav for orientation, then cats the page", () => {
+    // A deep-linked page boots `ls ~; cat <slug>.md` — the nav gives a sense of
+    // where you are (the chrome is hidden in transcript mode), then the page.
+    window.history.pushState({}, "", "/works/demo/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML = '<div class="content post"><p>Post body.</p></div>';
+    document.body.appendChild(main);
+    document.documentElement.setAttribute(
+      "data-terminal-boot",
+      "ls ~; cat demo.md"
+    );
+    window.Element.prototype.scrollIntoView = jest.fn();
+    loadModule();
+    jest.runAllTimers();
+    const text = sessionText();
+    expect(text).toContain("works/"); // the nav listing (orientation)
+    expect(text).toContain("Post body."); // then the page's own #main
+  });
+
+  test("the terminal renders help/easter-egg text from the localized catalog", () => {
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "kommandon:\n  help      den här listan",
+      easterEggs: "påskägg:\n  moo       super-ko-krafter",
+    });
+    document.body.appendChild(cat);
+    loadModule();
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
+    typeCommand("easteregg");
+    expect(sessionText()).toContain("super-ko-krafter");
+  });
+
+  test("without a catalog the terminal falls back to the English literals", () => {
+    loadModule();
+    typeCommand("help");
+    // The English default from terminal-data.js.
+    expect(sessionText()).toContain("this list");
+  });
+
+  test("a localized (percent-encoded) slug lists by its real, decoded name", () => {
+    loadModule();
+    // A Swedish post card whose href carries a percent-encoded slug.
+    const card = document.createElement("div");
+    card.className = "article-card";
+    card.innerHTML =
+      '<a href="/writing/g%c3%b6teborgsaffisch/">Göteborgsaffisch</a>';
+    document.body.appendChild(card);
+    typeCommand("ls --featured");
+    // Listed by its real name (göteborgsaffisch.md), not the raw escapes.
+    expect(sessionText()).toContain("göteborgsaffisch.md");
+    expect(sessionText()).not.toContain("g%c3%b6");
+  });
+
+  test("transcript mode fills the banner's Last login line", () => {
+    document.documentElement.setAttribute("data-terminal-boot", "ls; set");
+    loadModule();
+    const login = document.querySelector('[data-js="terminal-lastlogin"]');
+    expect(login).not.toBeNull();
+    // A real "Last login: … on ttysNNN" line is printed under the banner.
+    expect(login.textContent).toMatch(/^Last login: .+ on ttys\d{3}$/);
+  });
+
+  test("the jump-to-prompt button focuses the prompt so mobile opens the keyboard", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    const focusSpy = jest.spyOn(input, "focus");
+    document
+      .querySelector('[data-js="terminal-jump"]')
+      .dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+    // Focus must happen synchronously in the click (not deferred into rAF, which
+    // loses the user-gesture and makes iOS suppress the on-screen keyboard).
+    expect(focusSpy).toHaveBeenCalled();
   });
 
   // ---- language command -------------------------------------------------

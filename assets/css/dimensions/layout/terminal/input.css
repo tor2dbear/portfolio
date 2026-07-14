@@ -173,6 +173,39 @@
   color: var(--text-muted, inherit);
 }
 
+/* When a `cat` loads a post, terminal.js scrolls this echo line to the top of
+   the viewport (the start of what you opened) — leave a little air above it so
+   it isn't flush against the status bar. */
+:root[data-layout="terminal"] .terminal-session__cmd {
+  scroll-margin-top: var(--spacing-16);
+}
+
+/* …and briefly tints it, so the eye catches where the freshly-loaded content
+   begins. The soft accent surface adapts to theme + pantone. Motion-gated. */
+@keyframes terminal-cat-reveal {
+  from {
+    background-color: var(--surface-accent);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+:root[data-layout="terminal"] .terminal-session__cmd--reveal {
+  border-radius: 3px;
+  animation: terminal-cat-reveal 0.9s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-layout="terminal"] .terminal-session__cmd--reveal {
+    animation: none;
+  }
+}
+
+:root[data-effect-reduced-motion="on"] .terminal-session__cmd--reveal {
+  animation: none;
+}
+
 :root[data-layout="terminal"] .terminal-session__out {
   color: var(--text-muted, inherit);
 }
@@ -279,6 +312,31 @@
 :root[data-layout="terminal"] .terminal-session__link:hover,
 :root[data-layout="terminal"] .terminal-session__link:focus-visible {
   color: var(--text-default, inherit);
+  outline: none;
+}
+
+/* The pager marker: a dim, clickable `--More--` that reveals the folded rows.
+   Reads as terminal chrome (muted), not a value — block so it sits on its own
+   line like a real `more` prompt. */
+:root[data-layout="terminal"] .terminal-session__more {
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--text-muted, inherit);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:root[data-layout="terminal"] .terminal-session__more:hover,
+:root[data-layout="terminal"] .terminal-session__more:focus-visible {
+  color: var(--text-accent, inherit);
   outline: none;
 }
 

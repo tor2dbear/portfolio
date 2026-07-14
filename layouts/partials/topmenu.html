@@ -16,6 +16,17 @@
       <span class="terminal-boot__title">{{ $bootTitle }}</span>
       <span class="terminal-boot__status">{{ i18n "terminal_boot_ok" }}</span>
     </p>
+    {{/* Terminal transcript mode hides the fabricated meta above; this login
+      line takes its place under the banner — a real "Last login: …" printed
+      by terminal.js (previous visit's time, stable per session). Empty until
+      JS fills it, and CSS-gated to transcript mode, so it never shows blank
+      or on non-transcript pages.
+    */}}
+    <p
+      class="terminal-boot__lastlogin"
+      data-js="terminal-lastlogin"
+      aria-hidden="true"
+    ></p>
     <p class="terminal-boot__line">
       <span class="terminal-boot__hint">{{ i18n "terminal_exit_hint" }}</span>
       <button class="terminal-boot__exit" type="button" data-js="terminal-exit">

@@ -49,6 +49,19 @@
   var getCotyActions = Theme.getCotyActions;
   var PANTONE_MANUAL_TRANSITION_MS = Theme.PANTONE_MANUAL_TRANSITION_MS;
 
+  // True when the visitor has asked for less motion — the OS setting or the
+  // site's own reduce-motion toggle. Gates every terminal animation (the boot
+  // theatre and the typed boot-transcript replay) down to a plain, instant
+  // render.
+  function terminalReducedMotion() {
+    return (
+      (typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+      document.documentElement.getAttribute("data-effect-reduced-motion") ===
+        "on"
+    );
+  }
+
   // Boot theater: a short staged print of the terminal chrome. Plays when
   // the user enters the layout and once per browser session on load —
   // never for reduced-motion users (system preference or the site toggle).
@@ -66,11 +79,7 @@
     } catch (e) {
       /* storage unavailable — the boot simply replays next load */
     }
-    if (
-      (typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
-      root.getAttribute("data-effect-reduced-motion") === "on"
-    ) {
+    if (terminalReducedMotion()) {
       return; // banner shown, but skip the staged print
     }
     root.classList.remove("terminal-booting");
@@ -254,6 +263,7 @@
     const terminalTail = terminalInput
       ? terminalInput.closest(".terminal-tail")
       : null;
+    const terminalGhost = document.querySelector('[data-js="terminal-ghost"]');
     const terminalSession = document.querySelector(
       '[data-js="terminal-session"]'
     );
@@ -330,6 +340,74 @@
     var terminalHistory = [];
     var TERMINAL_HISTORY_MAX = 100;
 
+    // Entry labels a remote `ls` fetched, keyed by cwd segments ("works/tags").
+    // An append-only `cd` moves the prompt without loading the directory, so Tab
+    // completion (synchronous, reads only the loaded page + the static tree) has
+    // nothing to offer there. Once you `ls` such a directory we cache what it
+    // held, so completing within it works — matching how you'd naturally `ls`
+    // first, then Tab.
+    var terminalLsDirCache = {};
+
+    // Prefetch the site's JSON feed (index.json — every published page in the
+    // main sections, with its URL) once, and fold each page into the ls cache
+    // under its parent directory. A real shell can complete a path you've never
+    // `cd`'d into because the filesystem is local; this gives the terminal the
+    // same reach, so `cat ~/works/thi⇥` completes from any page, not just from
+    // inside ~/works. Best-effort and purely additive: a real `ls` still
+    // overwrites the cache (fresh wins), and a missing/failed feed just leaves
+    // completion as lazy as it was before.
+    var terminalContentIndexSeeded = false;
+    function terminalSeedContentIndex() {
+      if (terminalContentIndexSeeded || typeof window.fetch !== "function") {
+        return;
+      }
+      terminalContentIndexSeeded = true;
+      var url = terminalHomeUrl().replace(/\/+$/, "") + "/index.json";
+      var pending;
+      try {
+        pending = window.fetch(url, { credentials: "same-origin" });
+      } catch (e) {
+        return; // fetch threw synchronously — leave completion lazy
+      }
+      if (!pending || typeof pending.then !== "function") {
+        return; // not a real fetch (e.g. a bare stub) — nothing to await
+      }
+      pending
+        .then(function (res) {
+          return res.ok ? res.json() : Promise.reject();
+        })
+        .then(function (feed) {
+          ((feed && feed.items) || []).forEach(function (item) {
+            var href = String(item && item.url ? item.url : "").replace(
+              /^[a-z]+:\/\/[^/]+/i,
+              ""
+            );
+            var segs = terminalHrefSegments(href);
+            // A top-level page (segs.length < 2) is already in the tree/manifest
+            // — only the nested posts need seeding.
+            if (!segs || segs.length < 2) {
+              return;
+            }
+            var dirKey = segs.slice(0, -1).join("/");
+            var file = segs[segs.length - 1] + ".md";
+            var list =
+              terminalLsDirCache[dirKey] || (terminalLsDirCache[dirKey] = []);
+            var exists = list.some(function (label) {
+              return label.replace(/[/@*]+$/, "").toLowerCase() === file;
+            });
+            if (!exists) {
+              list.push(file);
+            }
+          });
+          // A ghost the user is already looking at should pick up the newly
+          // known posts without waiting for the next keystroke.
+          terminalUpdateGhost();
+        })
+        .catch(function () {
+          /* no feed / offline — completion stays lazy, exactly as before */
+        });
+    }
+
     // Literal tables — help text, Tab-completion vocabulary, cat-able
     // pseudo-files, fortunes, the easter-egg index, the konami sequence and
     // the selectable layouts — live in terminal-data.js (window.TerminalData),
@@ -346,10 +424,57 @@
     // The last printed output line, for `copy` with no argument.
     var lastTerminalOutput = "";
 
+    // The most recently echoed command line element, so a `cat` that loads a
+    // post can scroll the reader to the top of that output (see revealTerminalCat).
+    var lastTerminalCmdLine = null;
+
+    // Localized terminal strings, rendered per language by footer.html into
+    // data-js="terminal-i18n". Present on every terminal page; the English
+    // literals in terminal-data.js are the fallback (no-JS build, a missing
+    // catalog, or a parse error), so the terminal never renders blank.
+    var TI18N = (function () {
+      var el = document.querySelector('[data-js="terminal-i18n"]');
+      if (!el || !el.textContent) {
+        return {};
+      }
+      try {
+        return JSON.parse(el.textContent) || {};
+      } catch (e) {
+        return {};
+      }
+    })();
+
+    // A newline-joined i18n block → an array of lines (edge blank lines from the
+    // TOML triple-quote trimmed), or the English fallback when the catalog lacks
+    // the key.
+    function tiLines(value, fallback) {
+      if (typeof value !== "string") {
+        return fallback;
+      }
+      return value.replace(/^\n+|\n+$/g, "").split("\n");
+    }
+
+    // A single UI string by catalog key, with %s placeholders filled from the
+    // trailing args, falling back to the English literal passed in.
+    function tiText(key, fallback) {
+      var v = TI18N.ui && TI18N.ui[key];
+      var str = typeof v === "string" ? v : fallback;
+      var args = Array.prototype.slice.call(arguments, 2);
+      var i = 0;
+      return str.replace(/%s/g, function () {
+        return i < args.length ? args[i++] : "%s";
+      });
+    }
+
     var TERMINAL_LAYOUTS = TD.TERMINAL_LAYOUTS || [];
-    const TERMINAL_HELP = TD.TERMINAL_HELP || [];
+    const TERMINAL_HELP = tiLines(TI18N.help, TD.TERMINAL_HELP || []);
 
     const TERMINAL_COMMAND_NAMES = TD.TERMINAL_COMMAND_NAMES || [];
+
+    // The `ls` flags, offered by Tab completion (`ls -⇥`). --featured lists the
+    // page's cards (home's featured works); --images counts its figures; -a/-R
+    // are the real ls short flags (hidden entries / recursive).
+    var TERMINAL_LS_FLAGS = ["--featured", "--images", "-a", "-R"];
 
     // Toggleable image effects, keyed by command word. `invert` flags that the
     // command's sense is the opposite of its data-attribute: "motion on" means
@@ -365,9 +490,27 @@
       },
     };
 
-    const TERMINAL_FILES = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
+    // Pseudo-files: start from the English literals, then overlay any localized
+    // blocks from the catalog (readme/about/secret/config). welcome and colophon
+    // aren't here — they're reproduced live from the page's own (already
+    // localized) DOM by terminalWelcomeLines / terminalColophonLines.
+    const TERMINAL_FILES = (function () {
+      var base = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
+      var files = {};
+      Object.keys(base).forEach(function (k) {
+        files[k] = base[k];
+      });
+      var cat = TI18N.files || {};
+      Object.keys(cat).forEach(function (k) {
+        files[k] = tiLines(cat[k], files[k] || []);
+      });
+      return files;
+    })();
     const TERMINAL_FORTUNES = TD.TERMINAL_FORTUNES || [];
-    const TERMINAL_EASTER_EGGS = TD.TERMINAL_EASTER_EGGS || [];
+    const TERMINAL_EASTER_EGGS = tiLines(
+      TI18N.easterEggs,
+      TD.TERMINAL_EASTER_EGGS || []
+    );
 
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
@@ -466,7 +609,17 @@
         parts.shift();
       }
       return parts.map(function (p) {
-        return p.toLowerCase();
+        // Decode percent-escapes so a localized slug reads as its real name
+        // (g%c3%b6teborgsaffisch → göteborgsaffisch) in listings and matches a
+        // typed `cat göteborgsaffisch.md`. Fetches still use the raw href, which
+        // the browser re-encodes, so the round-trip is unaffected.
+        var seg = p;
+        try {
+          seg = decodeURIComponent(p);
+        } catch (e) {
+          /* malformed escape — keep the raw segment */
+        }
+        return seg.toLowerCase();
       });
     }
 
@@ -693,7 +846,7 @@
     // really has: "mode" (not "theme"), no standalone "palette" (pantone lives
     // under effects), and "share".
     function terminalSettingsEntries() {
-      return ["mode", "typography", "layout", "effects", "share", "language"];
+      return ["mode", "layout", "typography", "effects", "share", "language"];
     }
 
     // The settable keys, their options, and the current value — the model both
@@ -713,14 +866,14 @@
           current: localStorage.getItem("theme-mode") || "system",
         },
         {
-          key: "typography",
-          options: TERMINAL_TYPOGRAPHY,
-          current: localStorage.getItem("theme-typography") || "editorial",
-        },
-        {
           key: "layout",
           options: TERMINAL_LAYOUTS,
           current: root.getAttribute("data-layout") || "column",
+        },
+        {
+          key: "typography",
+          options: TERMINAL_TYPOGRAPHY,
+          current: localStorage.getItem("theme-typography") || "editorial",
         },
         { key: "language", options: ["sv", "en"], current: currentLang() },
         {
@@ -763,10 +916,9 @@
       "system",
     ];
 
-    // Filtered `ls` views — the same tool, different lens. `--featured` lists
-    // the curated cards on the current page (home's featured works); `--related`
-    // lists a post's sibling projects; `--info` prints a post's role/details.
-    // All harvested from the current page's DOM — a page's own sequence.
+    // A filtered `ls` view — same tool, a lens. `--featured` lists the curated
+    // cards on the current page (home's featured works), harvested from that
+    // page's DOM — a page's own sequence.
     function terminalHarvestFileLabels(selector) {
       var out = [];
       document.querySelectorAll(selector).forEach(function (a) {
@@ -787,7 +939,7 @@
       return out.length ? [out.join("  ")] : [emptyMsg];
     }
 
-    // A harvested file view (`ls --featured` / `--related`) as a clickable
+    // A harvested file view (`ls --featured`) as a clickable
     // ls-list result — each entry cats itself, same as a plain `ls`. Falls back
     // to a plain "(empty)" line when nothing matched.
     function terminalHarvestResult(input, selector, emptyMsg) {
@@ -809,9 +961,10 @@
     }
 
     // The project meta (role / details / client) as "label: value" lines,
-    // read from any root (the live page for `ls --info`, or a fetched post for
-    // `cat`). Details is a <dl> of pairs → one line each ("year: 2016"); role
-    // and client are text paragraphs → joined onto their section's line.
+    // appended to a `cat` post so its front-matter details come along. Read from
+    // the given root (the live #main, or a fetched post's doc). Details is a <dl>
+    // of pairs → one line each ("year: 2016"); role and client are text
+    // paragraphs → joined onto their section's line.
     function terminalInfoLinesFrom(root) {
       var out = [];
       (root || document)
@@ -851,11 +1004,6 @@
           }
         });
       return out;
-    }
-
-    function terminalInfoLines() {
-      var out = terminalInfoLinesFrom(document);
-      return out.length ? out : ["(no info here)"];
     }
 
     // Serialize an element's inline content back to markdown source: emphasis
@@ -925,10 +1073,13 @@
       var imageN = 0;
       var prevBlock = null;
       // A blank line separates blocks — the terminal's version of a margin, and
-      // exactly how the blocks sit in the .md source. Consecutive list items
-      // stay tight (a real list has no blank between rows).
+      // exactly how the blocks sit in the .md source. Consecutive list items and
+      // consecutive images stay tight (no blank between them): a real list has
+      // no gap between rows, and stacked [image N] tokens read as one plate.
       var blockBreak = function (kind) {
-        var tight = kind === "li" && prevBlock === "li";
+        var tight =
+          (kind === "li" && prevBlock === "li") ||
+          (kind === "figure" && prevBlock === "figure");
         if (tokens.length && !tight) {
           tokens.push({ text: "" });
         }
@@ -1008,15 +1159,23 @@
         } else if (tag === "li") {
           prefix = "- ";
         }
-        blockBreak(tag);
-        terminalInlineMarkdown(el)
+        var parts = terminalInlineMarkdown(el)
           .split("\n")
-          .forEach(function (part) {
-            var text = part.replace(/[ \t]+/g, " ").trim();
-            if (text) {
-              tokens.push({ text: prefix + text });
-            }
-          });
+          .map(function (part) {
+            return part.replace(/[ \t]+/g, " ").trim();
+          })
+          .filter(Boolean);
+        // An empty block (a blank <p> some layouts emit around image runs)
+        // contributes no text — skip it entirely, BEFORE the separator, so it
+        // can't leave a phantom blank line. That stray blank is what doubled the
+        // gap before/after an image run when such a <p> bracketed it.
+        if (!parts.length) {
+          continue;
+        }
+        blockBreak(tag);
+        parts.forEach(function (part) {
+          tokens.push({ text: prefix + part });
+        });
       }
       // Append the project meta as its own trailing block — cat shows the whole
       // file, so the role/details/client you set in front matter come along.
@@ -1109,7 +1268,11 @@
       var node = terminalNodeAt(targetSegs);
       if (!node) {
         return [
-          "ls: cannot access '" + pathArg + "': No such file or directory",
+          tiText(
+            "lsAccess",
+            "ls: cannot access '%s': No such file or directory",
+            pathArg
+          ),
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
@@ -1423,7 +1586,19 @@
       if (segs.length && segs[0].toLowerCase() === lang) {
         segs.shift();
       }
-      return segs.length ? segs[segs.length - 1].toLowerCase() : "";
+      if (!segs.length) {
+        return "";
+      }
+      // Decode so a localized slug matches the decoded names cat/ls now use
+      // (see terminalHrefSegments) — else `cat <slug>.md` on the page you're on
+      // wouldn't recognise itself.
+      var slug = segs[segs.length - 1];
+      try {
+        slug = decodeURIComponent(slug);
+      } catch (e) {
+        /* malformed escape — keep the raw segment */
+      }
+      return slug.toLowerCase();
     }
 
     function terminalContentTargetHref(dest) {
@@ -1907,7 +2082,10 @@
         case "whoami":
           return {
             echo: input,
-            lines: ["visitor", "(not logged in — but welcome anyway)"],
+            lines: tiLines(TI18N.ui && TI18N.ui.whoami, [
+              "visitor",
+              "(not logged in — but welcome anyway)",
+            ]),
             action: null,
           };
         case "date":
@@ -1972,7 +2150,7 @@
           };
         case "ls":
         case "dir": {
-          // Long filter flags (--featured/--related/--info) are separate lenses;
+          // Long filter flags (--featured/--images) are separate lenses;
           // short flags (-a) reveal hidden entries. Keep them apart so "--featured"
           // (which contains an "a") isn't misread as -a.
           var lsLong = args.filter(function (a) {
@@ -1998,9 +2176,11 @@
               return {
                 echo: input,
                 lines: [
-                  "ls: cannot access '" +
-                    lsPaths[0] +
-                    "': No such file or directory",
+                  tiText(
+                    "lsAccess",
+                    "ls: cannot access '%s': No such file or directory",
+                    lsPaths[0]
+                  ),
                 ],
                 action: null,
               };
@@ -2012,6 +2192,7 @@
                 lsRSegs.length ? "~/" + lsRSegs.join("/") : "~"
               ),
               action: null,
+              paged: { preview: TERMINAL_PAGE_SIZE },
             };
           }
           if (lsLong.indexOf("--featured") !== -1) {
@@ -2020,31 +2201,6 @@
               ".summary-card a[href], .article-card a[href]",
               "(nothing featured here)"
             );
-          }
-          if (lsLong.indexOf("--related") !== -1) {
-            return terminalHarvestResult(
-              input,
-              ".related-items__item .type-headline-4 a[href]",
-              "(no related files)"
-            );
-          }
-          if (lsLong.indexOf("--info") !== -1) {
-            // `--info` is a lens on the page you're viewing. For a post you
-            // haven't opened, its meta now lives in the file — point at cat
-            // rather than the misleading "(no info here)".
-            if (lsPaths.length) {
-              return {
-                echo: input,
-                lines: [
-                  "ls: --info reads the current page — for " +
-                    lsPaths[0] +
-                    " try: cat " +
-                    lsPaths[0],
-                ],
-                action: null,
-              };
-            }
-            return { echo: input, lines: terminalInfoLines(), action: null };
           }
           if (lsLong.indexOf("--images") !== -1) {
             var figs = document.querySelectorAll(
@@ -2150,7 +2306,12 @@
           };
         }
         case "tree":
-          return { echo: input, lines: terminalTreeLines(), action: null };
+          return {
+            echo: input,
+            lines: terminalTreeLines(),
+            action: null,
+            paged: { preview: TERMINAL_PAGE_SIZE },
+          };
         case "cat": {
           if (!args.length) {
             return {
@@ -2183,11 +2344,12 @@
             return {
               echo: input,
               lines: [
-                "cat: " +
-                  catName +
-                  ": Is a directory — try: ls " +
-                  catName +
-                  "/",
+                tiText(
+                  "catIsDir",
+                  "cat: %s: Is a directory — try: ls %s/",
+                  catName,
+                  catName
+                ),
               ],
               action: null,
             };
@@ -2255,7 +2417,13 @@
           }
           return {
             echo: input,
-            lines: ["cat: " + args[0] + ": No such file or directory"],
+            lines: [
+              tiText(
+                "catMissing",
+                "cat: %s: No such file or directory",
+                args[0]
+              ),
+            ],
             action: null,
           };
         }
@@ -2340,7 +2508,12 @@
           };
         }
         case "history":
-          return { echo: input, lines: historyLines(), action: null };
+          return {
+            echo: input,
+            lines: historyLines(),
+            action: null,
+            paged: { preview: TERMINAL_PAGE_SIZE },
+          };
         case "uptime":
           return { echo: input, lines: [uptimeLine()], action: null };
         case "top":
@@ -2821,7 +2994,9 @@
         default:
           return {
             echo: input,
-            lines: [cmd + ": command not found — try 'help'"],
+            lines: [
+              tiText("notFound", "%s: command not found — try 'help'", cmd),
+            ],
             action: null,
           };
       }
@@ -3170,6 +3345,10 @@
               var doc = new DOMParser().parseFromString(html, "text/html");
               var files = terminalRemoteLsEntries(doc, action.cwd);
               if (files.length) {
+                // Remember what this directory held, so Tab completion works in
+                // it even though the `cd` never loaded its page.
+                terminalLsDirCache[terminalSegmentsOf(action.cwd).join("/")] =
+                  files;
                 // Clickable, like the local `ls` — each post cats itself, each
                 // tag dir cds into it.
                 printTerminalLsList(
@@ -3211,6 +3390,9 @@
           // (images as [image N] tokens) into the scrollback below — nothing
           // above the prompt changes. `open` is the escape hatch to the page.
           var catLabel = action.name || action.url;
+          // Captured now, before the async fetch resolves, so the reveal lands
+          // on THIS command's echo even if another prints meanwhile.
+          var catCmdLine = lastTerminalCmdLine;
           if (typeof window.fetch !== "function") {
             printTerminalLine(
               "cat: cannot reach " + action.url,
@@ -3238,29 +3420,47 @@
               );
               // Reading a page IS visiting it here — so exit lands on it.
               terminalLastViewedUrl = action.url;
-              scrollTerminalToEnd();
+              revealTerminalCat(catCmdLine);
             })
             .catch(function (err) {
               printTerminalLine(
                 err && err.notFound
-                  ? "cat: " + catLabel + ": No such file or directory"
-                  : "cat: cannot reach " + action.url,
+                  ? tiText(
+                      "catMissing",
+                      "cat: %s: No such file or directory",
+                      catLabel
+                    )
+                  : tiText(
+                      "catUnreachable",
+                      "cat: cannot reach %s",
+                      action.url
+                    ),
                 "terminal-session__out"
               );
               scrollTerminalToEnd();
             });
           break;
         }
-        case "cat-local":
+        case "cat-local": {
           // The current page's own file: read #main directly instead of
           // re-fetching the page you're already on (the boot transcript's
           // `cat <slug>.md` on a post/about). Synchronous, so no blank flash
           // while a fetch round-trips.
+          var localCmdLine = lastTerminalCmdLine;
           printTerminalCatTokens(
             terminalExtractPostLines(document, window.location.href, null),
             action.name
           );
+          // A user `cat` of the current page lands the reader at the top of the
+          // output; the boot transcript's own cat-local doesn't (it stays at the
+          // banner while the replay runs).
+          if (
+            !document.documentElement.hasAttribute("data-terminal-replaying")
+          ) {
+            revealTerminalCat(localCmdLine);
+          }
           break;
+        }
         case "flow":
           if (window.TerminalFlows) {
             window.TerminalFlows.start(action.flow);
@@ -3315,7 +3515,7 @@
 
     function printTerminalLine(text, className, frozenCwd) {
       if (!terminalSession) {
-        return;
+        return null;
       }
       var line = document.createElement("span");
       line.className = "terminal-session__line " + className;
@@ -3331,6 +3531,7 @@
       if (className.indexOf("terminal-session__out") !== -1) {
         lastTerminalOutput = text;
       }
+      return line;
     }
 
     // A cat'd image prints as a clickable [image N] token: a terminal can't
@@ -3442,11 +3643,65 @@
     // so clicking is the same as typing it; the current value is marked. This is
     // the OSC-8-style clickable-output convention (`ls --hyperlink`), and it is
     // what unifies the panel with the command — one truth, click or type.
+    // A screenful before the pager kicks in, for long text dumps (tree, ls -R,
+    // history). `set` passes its own smaller preview (the main axes).
+    var TERMINAL_PAGE_SIZE = 12;
+
+    // Append pre-built row elements with a `less`/`more`-style pager: past a
+    // preview count, show a dim clickable "--More--" that reveals the rest
+    // inline (a tap on mobile, a click on desktop). Only kicks in when it hides
+    // more than a single row — otherwise it'd trade one line for the marker.
+    function appendTerminalRowsPaged(rows, preview) {
+      if (!terminalSession) {
+        return;
+      }
+      if (rows.length <= preview + 1) {
+        rows.forEach(function (row) {
+          terminalSession.appendChild(row);
+        });
+        return;
+      }
+      rows.slice(0, preview).forEach(function (row) {
+        terminalSession.appendChild(row);
+      });
+      var rest = rows.slice(preview);
+      var more = document.createElement("button");
+      more.type = "button";
+      more.className =
+        "terminal-session__line terminal-session__out terminal-session__more";
+      more.textContent = tiText(
+        "pagerMore",
+        "--More--  +%s more · tap",
+        rest.length
+      );
+      more.addEventListener("click", function () {
+        var frag = document.createDocumentFragment();
+        rest.forEach(function (row) {
+          frag.appendChild(row);
+        });
+        // Reveal in place — grow the buffer where the marker sat, don't jump.
+        more.parentNode.insertBefore(frag, more);
+        more.remove();
+      });
+      terminalSession.appendChild(more);
+    }
+
+    // Plain text lines, paged.
+    function printTerminalLinesPaged(lines, preview) {
+      var rows = (lines || []).map(function (line) {
+        var row = document.createElement("span");
+        row.className = "terminal-session__line terminal-session__out";
+        row.textContent = line;
+        return row;
+      });
+      appendTerminalRowsPaged(rows, preview);
+    }
+
     function printTerminalSettingsList() {
       if (!terminalSession) {
         return;
       }
-      terminalSettingsSpec().forEach(function (setting) {
+      var rows = terminalSettingsSpec().map(function (setting) {
         var line = document.createElement("span");
         line.className =
           "terminal-session__line terminal-session__out terminal-session__settings-row";
@@ -3466,12 +3721,18 @@
           btn.setAttribute("data-cmd", "set " + setting.key + " " + opt);
           line.appendChild(btn);
         });
-        terminalSession.appendChild(line);
+        return line;
       });
       var hint = document.createElement("span");
       hint.className = "terminal-session__line terminal-session__out";
-      hint.textContent = "click a value or type: set <name> <value>";
-      terminalSession.appendChild(hint);
+      hint.textContent = tiText(
+        "setHint",
+        "click a value or type: set <name> <value>"
+      );
+      rows.push(hint);
+      // Preview the main axes (mode, layout, typography, language); the effect
+      // toggles + hint fold under the pager so the boot `set` stays compact.
+      appendTerminalRowsPaged(rows, 4);
     }
 
     // A plain `ls` listing as clickable entries — clicking runs the entry's
@@ -3538,40 +3799,25 @@
       frame();
     }
 
-    // Run one command through the engine and print it into the scrollback
-    // exactly as a typed line would look: the frozen echo, then the output /
-    // side effects. Factored out of runTerminalInput so the boot transcript can
-    // replay the same path (opts.focus:false — a fresh page load must not steal
-    // focus and pop the mobile keyboard; opts.scroll:false — leave the viewport
-    // at the top so the banner and the start of the transcript are what you see,
-    // not the bottom prompt).
-    function emitTerminalCommand(raw, opts) {
-      opts = opts || {};
-      if (opts.history !== false) {
-        // Record the command before running it, so `history` includes itself —
-        // matching a real shell. Reset the ↑/↓ recall cursor to the live line.
-        terminalHistoryCursor = null;
-        var trimmed = String(
-          raw === null || raw === undefined ? "" : raw
-        ).trim();
-        if (trimmed) {
-          terminalHistory.push(trimmed);
-          if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
-            terminalHistory.shift();
-          }
+    // Record a command in the ↑/↓ recall ring before it runs, so `history`
+    // includes itself — matching a real shell — and reset the recall cursor to
+    // the live line. Shared by the typed command line and the boot replay.
+    function recordTerminalHistory(raw) {
+      terminalHistoryCursor = null;
+      var trimmed = String(raw === null || raw === undefined ? "" : raw).trim();
+      if (trimmed) {
+        terminalHistory.push(trimmed);
+        if (terminalHistory.length > TERMINAL_HISTORY_MAX) {
+          terminalHistory.shift();
         }
       }
-      var result = runTerminalCommand(raw);
-      if (result.echo) {
-        // Freeze the echo at the cwd it ran at. applyTerminalAction (below)
-        // is what performs an append-only `cd`, so reading the cwd now — before
-        // it runs — captures where the command was actually typed.
-        printTerminalLine(
-          result.echo,
-          "terminal-session__cmd",
-          currentTerminalCwd()
-        );
-      }
+    }
+
+    // Print a command's output rows (neofetch art first, if any) and apply its
+    // action. The echo line is printed by the caller — the instant path prints
+    // it up front, the typed replay types it in — so this covers only what a
+    // real terminal streams *after* Enter.
+    function printTerminalResultOutput(result) {
       var artLines =
         result.action && result.action.type === "art" ? terminalArtLines() : [];
       artLines.forEach(function (line) {
@@ -3580,10 +3826,43 @@
           "terminal-session__out terminal-session__out--art"
         );
       });
-      (result.lines || []).forEach(function (line) {
-        printTerminalLine(line, "terminal-session__out");
-      });
+      if (result.paged) {
+        // Long text dumps (tree, ls -R, history) page past a screenful.
+        printTerminalLinesPaged(result.lines || [], result.paged.preview);
+      } else {
+        (result.lines || []).forEach(function (line) {
+          printTerminalLine(line, "terminal-session__out");
+        });
+      }
       applyTerminalAction(result.action);
+    }
+
+    // Run one command through the engine and print it into the scrollback
+    // exactly as a typed line would look: the frozen echo, then the output /
+    // side effects. Factored out of runTerminalInput so the boot transcript can
+    // replay the same path (opts.focus:false — a fresh page load must not steal
+    // focus and pop the mobile keyboard; the reduced-motion boot uses this to
+    // print the whole session at once, while the animated boot types it in via
+    // playTerminalTranscript below).
+    function emitTerminalCommand(raw, opts) {
+      opts = opts || {};
+      if (opts.history !== false) {
+        recordTerminalHistory(raw);
+      }
+      var result = runTerminalCommand(raw);
+      if (result.echo) {
+        // Freeze the echo at the cwd it ran at. applyTerminalAction (below,
+        // inside printTerminalResultOutput) is what performs an append-only
+        // `cd`, so reading the cwd now — before it runs — captures where the
+        // command was actually typed. Kept so a `cat` that loads a post can
+        // land the reader at this line (the top of the file), not the prompt.
+        lastTerminalCmdLine = printTerminalLine(
+          result.echo,
+          "terminal-session__cmd",
+          currentTerminalCwd()
+        );
+      }
+      printTerminalResultOutput(result);
       if (opts.focus !== false) {
         // Keep the newest output and the prompt in view; refocus so the mobile
         // keyboard stays up for the next command.
@@ -3614,6 +3893,82 @@
         .filter(Boolean);
     }
 
+    // Fill the banner's "Last login: …" line — the transcript-mode stand-in for
+    // the hidden host/boot-ok meta. Shows the PREVIOUS visit's time (classic
+    // shell behaviour), computed once and cached per session so it's stable
+    // across page navigations and rotates on the next visit; the pseudo-tty is
+    // likewise stable per session. First-ever visit shows the current time.
+    function terminalStampLastLogin() {
+      var el = document.querySelector('[data-js="terminal-lastlogin"]');
+      if (!el) {
+        return;
+      }
+      var line = null;
+      try {
+        line = sessionStorage.getItem("terminal-login-line");
+      } catch (e) {
+        /* sessionStorage unavailable — recompute (still shows a valid line) */
+      }
+      if (!line) {
+        var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var mons = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        var pad = function (n) {
+          return (n < 10 ? "0" : "") + n;
+        };
+        var prev = null;
+        try {
+          prev = Number(localStorage.getItem("terminal-last-login")) || null;
+        } catch (e) {
+          /* localStorage unavailable — fall back to now */
+        }
+        var d = prev ? new Date(prev) : new Date();
+        var tty = null;
+        try {
+          tty = sessionStorage.getItem("terminal-tty");
+        } catch (e) {
+          /* ignore */
+        }
+        if (!tty) {
+          var n = Math.floor(Math.random() * 1000);
+          tty = "ttys" + (n < 10 ? "00" : n < 100 ? "0" : "") + n;
+        }
+        line =
+          "Last login: " +
+          days[d.getDay()] +
+          " " +
+          mons[d.getMonth()] +
+          " " +
+          pad(d.getDate()) +
+          " " +
+          pad(d.getHours()) +
+          ":" +
+          pad(d.getMinutes()) +
+          " on " +
+          tty;
+        try {
+          sessionStorage.setItem("terminal-login-line", line);
+          sessionStorage.setItem("terminal-tty", tty);
+          localStorage.setItem("terminal-last-login", String(Date.now()));
+        } catch (e) {
+          /* storage unavailable — the line still renders, just not persisted */
+        }
+      }
+      el.textContent = line;
+    }
+
     function runTerminalBootTranscript() {
       if (
         !terminalSession ||
@@ -3624,6 +3979,9 @@
         !isTerminalLayout() ||
         document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
+        // No replay on this call — clear the pre-paint flag so the live prompt
+        // (hidden while replaying) is never left withheld.
+        document.documentElement.removeAttribute("data-terminal-replaying");
         return;
       }
       var commands = terminalBootCommands();
@@ -3637,9 +3995,109 @@
       // plain readable page visible rather than a blank screen. (head.html sets
       // it pre-paint too, to avoid a flash of the un-hidden page.)
       document.documentElement.setAttribute("data-terminal-transcript", "1");
-      commands.forEach(function (cmd) {
-        emitTerminalCommand(cmd, { focus: false });
-      });
+      terminalStampLastLogin();
+      if (terminalReducedMotion()) {
+        // Motion off: print the whole session at once, as a real terminal
+        // streams output instantly — including the live prompt, so clear the
+        // replay flag that withholds it.
+        commands.forEach(function (cmd) {
+          emitTerminalCommand(cmd, { focus: false });
+        });
+        document.documentElement.removeAttribute("data-terminal-replaying");
+        return;
+      }
+      // Motion on: replay it as a live session — each command typed at the
+      // prompt, then its output streamed — so the terminal reads as though it
+      // is being keyed in. The old CSS boot theatre staged the *server chrome*,
+      // which the transcript hides (its animations now fire on display:none
+      // elements); this replay is the animation.
+      playTerminalTranscript(commands);
+    }
+
+    // Replay pacing: the hold on the banner before the first command types (so
+    // the mark registers before the transcript scrolls it up), then the
+    // per-character type speed and the beat between commands.
+    var TERMINAL_REPLAY_START_MS = 700;
+    var TERMINAL_REPLAY_TYPE_MS = 26;
+    var TERMINAL_REPLAY_GAP_MS = 180;
+
+    // Follow the replay by tracking the bottom WITHOUT focusing the input —
+    // focus would pop the mobile keyboard mid-replay, the very thing the
+    // focus:false boot avoids. scrollTo is a no-op while the session still fits
+    // (so the banner stays put), and only starts following once it overflows.
+    function scrollReplayToEnd() {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    // Type each command's echo at the prompt one character at a time, then — on
+    // the last character — run it and stream its output, then move to the next.
+    // A steady block cursor trails the text while it types and is dropped when
+    // the command runs, leaving a DOM identical to the instant path's echo line.
+    function playTerminalTranscript(commands) {
+      var root = document.documentElement;
+      // Withhold the live prompt (CSS hides it) until the session has printed —
+      // it hasn't "arrived" yet. Idempotent with the pre-paint flag head.html
+      // sets, and set here too for the toggle path (no reload, no pre-paint).
+      root.setAttribute("data-terminal-replaying", "1");
+      function runCommand(index) {
+        if (index >= commands.length) {
+          // Session fully printed — reveal the live prompt, ready for input.
+          root.removeAttribute("data-terminal-replaying");
+          scrollReplayToEnd();
+          return;
+        }
+        var raw = commands[index];
+        recordTerminalHistory(raw);
+        var result = runTerminalCommand(raw);
+        // Freeze the echo's cwd now, before printTerminalResultOutput's
+        // applyTerminalAction can move it (an append-only `cd`).
+        var cwd = currentTerminalCwd();
+
+        function runOutput() {
+          printTerminalResultOutput(result);
+          scrollReplayToEnd();
+          window.setTimeout(function () {
+            runCommand(index + 1);
+          }, TERMINAL_REPLAY_GAP_MS);
+        }
+
+        if (!result.echo) {
+          // A silent command (nothing to type) — stream its output and move on.
+          runOutput();
+          return;
+        }
+
+        var line = document.createElement("span");
+        line.className = "terminal-session__line terminal-session__cmd";
+        line.style.setProperty("--terminal-cwd", '"' + cwd + '"');
+        var typed = document.createTextNode("");
+        var cursor = document.createElement("span");
+        cursor.className = "terminal-session__cursor";
+        line.appendChild(typed);
+        line.appendChild(cursor);
+        terminalSession.appendChild(line);
+        scrollReplayToEnd();
+
+        var text = result.echo;
+        var i = 0;
+        (function typeChar() {
+          if (i < text.length) {
+            i += 1;
+            typed.data = text.slice(0, i);
+            window.setTimeout(typeChar, TERMINAL_REPLAY_TYPE_MS);
+            return;
+          }
+          // Command runs: collapse to a plain echo line (dropping the cursor,
+          // matching the instant path's DOM), then stream its output.
+          line.textContent = text;
+          runOutput();
+        })();
+      }
+      // Hold on the banner first, so the mark reads before the transcript types
+      // in and scrolls it up.
+      window.setTimeout(function () {
+        runCommand(0);
+      }, TERMINAL_REPLAY_START_MS);
     }
 
     // The boot banner's small block-curl, reused as neofetch art when present.
@@ -3657,6 +4115,33 @@
           window.scrollTo(0, document.body.scrollHeight);
           terminalInput.focus();
         });
+      }
+    }
+
+    // A `cat` that loads a post prints a whole document, so ending at the prompt
+    // below it (scrollTerminalToEnd) strands the reader past everything they
+    // just opened. Instead, land at the TOP of that output — the echoed command
+    // line — like opening the file in a pager, and dismiss the keyboard (this is
+    // a read, not typing). A brief tint flash on the command line marks where
+    // the new content begins; the live prompt sits below, reachable via ⌄.
+    function revealTerminalCat(cmdLine) {
+      if (!isTerminalLayout()) {
+        return;
+      }
+      if (terminalInput) {
+        terminalInput.blur();
+      }
+      if (!cmdLine || typeof cmdLine.scrollIntoView !== "function") {
+        scrollTerminalToEnd();
+        return;
+      }
+      window.requestAnimationFrame(function () {
+        cmdLine.scrollIntoView({ block: "start" });
+      });
+      if (!terminalReducedMotion()) {
+        cmdLine.classList.remove("terminal-session__cmd--reveal");
+        void cmdLine.offsetWidth; // reflow so a re-cat replays the flash
+        cmdLine.classList.add("terminal-session__cmd--reveal");
       }
     }
 
@@ -3747,6 +4232,9 @@
       if (terminalTail) {
         terminalTail.classList.toggle("is-typing", terminalInput.value !== "");
       }
+      // The value just changed, so the inline suggestion may have too — every
+      // value mutation (typing, history recall, Tab fill, cancel) routes here.
+      terminalUpdateGhost();
     }
 
     // Track the Konami code as it's typed into the prompt. Non-destructive:
@@ -3794,77 +4282,124 @@
       }
     }
 
-    // Tab completion: complete the command word, or a cd/ls/open path fragment
-    // against the current directory's children. Single match fills; multiple
-    // print the candidates.
+    // The completion candidates for a command line's LAST word, plus that raw
+    // fragment. Shared by Tab (which fills/lists) and the inline ghost
+    // suggestion (which previews a lone candidate). Returns {candidates, frag}.
+    function terminalCompletionFor(value) {
+      var parts = String(value || "").split(/\s+/);
+      var frag = parts[parts.length - 1] || "";
+      var f = frag.toLowerCase();
+      if (parts.length <= 1) {
+        return {
+          candidates: TERMINAL_COMMAND_NAMES.filter(function (name) {
+            return name.indexOf(f) === 0;
+          }),
+          frag: frag,
+        };
+      }
+      var verb = parts[0].toLowerCase();
+      var candidates = [];
+      if (verb === "set") {
+        // `set ⇥` completes the setting keys; `set <key> ⇥` completes that key's
+        // values — Tab is the terminal-true way to discover what `set` can do.
+        var spec = terminalSettingsSpec();
+        if (parts.length === 2) {
+          candidates = spec
+            .map(function (s) {
+              return s.key;
+            })
+            .filter(function (k) {
+              return k.indexOf(f) === 0;
+            });
+        } else if (parts.length === 3) {
+          var setEntry = spec.filter(function (s) {
+            return s.key === parts[1].toLowerCase();
+          })[0];
+          candidates = setEntry
+            ? setEntry.options.filter(function (o) {
+                return o.indexOf(f) === 0;
+              })
+            : [];
+        }
+      } else if (verb === "ls" && f.charAt(0) === "-") {
+        // `ls -⇥` completes the flags (--featured/--images/-a/-R).
+        candidates = TERMINAL_LS_FLAGS.filter(function (flag) {
+          return flag.indexOf(f) === 0;
+        });
+      } else if (
+        verb === "cd" ||
+        verb === "ls" ||
+        verb === "open" ||
+        verb === "cat"
+      ) {
+        // Path-aware completion: split the fragment on its last `/` so a
+        // qualified path (`cat ~/works/thi⇥`) completes the file part against
+        // the directory it names, not the cwd. The typed dir prefix is kept on
+        // every candidate so the fill/ghost produce the full path. A bare
+        // fragment (no `/`) resolves against the current directory as before.
+        var slash = frag.lastIndexOf("/");
+        var dirPart = slash === -1 ? "" : frag.slice(0, slash + 1);
+        var filePart = (
+          slash === -1 ? frag : frag.slice(slash + 1)
+        ).toLowerCase();
+        var dirSegs =
+          slash === -1
+            ? terminalCwdSegments()
+            : terminalResolveSegments(dirPart);
+        var node = terminalNodeAt(dirSegs);
+        var names = node
+          ? Object.keys(node.children).filter(function (name) {
+              return name.indexOf(filePart) === 0;
+            })
+          : [];
+        // cat/open reach the page's posts too — complete them as .md files.
+        if (verb === "cat" || verb === "open") {
+          terminalPageContentSlugs(dirSegs).forEach(function (slug) {
+            var file = slug + ".md";
+            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
+              names.push(file);
+            }
+          });
+        }
+        // A directory you `cd`'d into but never loaded isn't in the tree or the
+        // live DOM — but if you `ls`'d it, its entries are cached. Offer dir
+        // names to cd, and (for cat/open) its files as .md, stripping the
+        // classify markers (`/`, `@`) so they complete like real names.
+        (terminalLsDirCache[dirSegs.join("/")] || []).forEach(function (label) {
+          if (/\/$/.test(label)) {
+            var dir = label.slice(0, -1).toLowerCase();
+            if (dir.indexOf(filePart) === 0 && names.indexOf(dir) === -1) {
+              names.push(dir);
+            }
+          } else if (
+            (verb === "cat" || verb === "open") &&
+            /\.md@?$/i.test(label)
+          ) {
+            var file = label.replace(/@$/, "").toLowerCase();
+            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
+              names.push(file);
+            }
+          }
+        });
+        candidates = names.map(function (name) {
+          return dirPart + name;
+        });
+      }
+      return { candidates: candidates, frag: frag };
+    }
+
+    // Tab completion: complete the last word, or — on multiple matches — print
+    // the candidates for the user to pick from.
     function terminalCompleteInput() {
       if (!terminalInput) {
         return;
       }
-      var value = terminalInput.value;
-      var parts = value.split(/\s+/);
-      var candidates;
-      var frag;
-      if (parts.length <= 1) {
-        frag = (parts[0] || "").toLowerCase();
-        candidates = TERMINAL_COMMAND_NAMES.filter(function (name) {
-          return name.indexOf(frag) === 0;
-        });
-      } else {
-        var verb = parts[0].toLowerCase();
-        frag = (parts[parts.length - 1] || "").toLowerCase();
-        if (verb === "set") {
-          // `set ⇥` completes the setting keys; `set <key> ⇥` completes that
-          // key's values — Tab is the terminal-true way to discover what `set`
-          // can do (alongside `set` with no args and `man set`).
-          var spec = terminalSettingsSpec();
-          if (parts.length === 2) {
-            candidates = spec
-              .map(function (s) {
-                return s.key;
-              })
-              .filter(function (k) {
-                return k.indexOf(frag) === 0;
-              });
-          } else if (parts.length === 3) {
-            var setEntry = spec.filter(function (s) {
-              return s.key === parts[1].toLowerCase();
-            })[0];
-            candidates = setEntry
-              ? setEntry.options.filter(function (o) {
-                  return o.indexOf(frag) === 0;
-                })
-              : [];
-          } else {
-            return;
-          }
-        } else if (
-          verb !== "cd" &&
-          verb !== "ls" &&
-          verb !== "open" &&
-          verb !== "cat"
-        ) {
-          return;
-        } else {
-          var cwdSegs = terminalCwdSegments();
-          var node = terminalNodeAt(cwdSegs);
-          candidates = node
-            ? Object.keys(node.children).filter(function (name) {
-                return name.indexOf(frag) === 0;
-              })
-            : [];
-          // cat/open reach the page's posts too — complete them as .md files.
-          if (verb === "cat" || verb === "open") {
-            terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
-              var file = slug + ".md";
-              if (file.indexOf(frag) === 0 && candidates.indexOf(file) === -1) {
-                candidates.push(file);
-              }
-            });
-          }
-        }
-      }
+      // An explicit completion request is a hard signal to warm the page-index
+      // cache, in case the prompt was never focused first (e.g. a key-bar Tab).
+      terminalSeedContentIndex();
+      var candidates = terminalCompletionFor(terminalInput.value).candidates;
       if (candidates.length === 1) {
+        var parts = terminalInput.value.split(/\s+/);
         parts[parts.length - 1] = candidates[0];
         terminalInput.value = parts.join(" ") + (parts.length === 1 ? " " : "");
         syncTerminalInputSize();
@@ -3872,6 +4407,63 @@
         printTerminalLine(candidates.join("  "), "terminal-session__out");
         scrollTerminalToEnd();
       }
+    }
+
+    // The remainder to preview as ghost text: shown only when the last word has
+    // exactly ONE completion and the caret is at the end (a suggestion for the
+    // tail, not a mid-line edit). Empty during a flow / the ai chat / an empty
+    // line — there's no command being typed then.
+    function terminalGhostRemainder() {
+      if (!terminalInput || flowActive() || terminalInputDelegate) {
+        return "";
+      }
+      var value = terminalInput.value;
+      if (!value) {
+        return "";
+      }
+      if (
+        typeof terminalInput.selectionStart === "number" &&
+        terminalInput.selectionStart !== value.length
+      ) {
+        return "";
+      }
+      var res = terminalCompletionFor(value);
+      if (res.candidates.length !== 1) {
+        return "";
+      }
+      var cand = res.candidates[0];
+      var frag = res.frag;
+      if (
+        cand.length <= frag.length ||
+        cand.slice(0, frag.length).toLowerCase() !== frag.toLowerCase()
+      ) {
+        return "";
+      }
+      return cand.slice(frag.length);
+    }
+
+    function terminalUpdateGhost() {
+      if (terminalGhost) {
+        terminalGhost.textContent = terminalGhostRemainder();
+      }
+    }
+
+    // Accept the current ghost: append it to the input, drop the ghost, and
+    // recompute (the completed word may itself suggest the next). Returns true
+    // if there was something to accept, so the key handler can preventDefault.
+    function terminalAcceptGhost() {
+      if (!terminalInput || !terminalGhost || !terminalGhost.textContent) {
+        return false;
+      }
+      terminalInput.value += terminalGhost.textContent;
+      var end = terminalInput.value.length;
+      try {
+        terminalInput.setSelectionRange(end, end);
+      } catch (e) {
+        /* selection API unavailable — value is still set */
+      }
+      syncTerminalInputSize();
+      return true;
     }
 
     // ^C: abort the current line — echo the caret marker, end any running flow,
@@ -3897,6 +4489,31 @@
         terminalHistoryCursor = null;
         syncTerminalInputSize();
       });
+      // The inline suggestion is only meaningful while typing: refresh it on
+      // focus, clear it on blur so it doesn't linger under the idle caret.
+      // Focusing the prompt is also the first sign the user is about to type,
+      // so warm the page-index cache now — the completion for an unvisited
+      // directory needs it, and it's a one-shot fetch.
+      terminalInput.addEventListener("focus", function () {
+        terminalSeedContentIndex();
+        terminalUpdateGhost();
+      });
+      terminalInput.addEventListener("blur", function () {
+        if (terminalGhost) {
+          terminalGhost.textContent = "";
+        }
+      });
+      if (terminalGhost) {
+        // Tap the ghost to accept it — the mobile key row has no → key.
+        // preventDefault on pointerdown keeps the field focused (keyboard up).
+        terminalGhost.addEventListener("pointerdown", function (e) {
+          e.preventDefault();
+        });
+        terminalGhost.addEventListener("click", function () {
+          terminalAcceptGhost();
+          terminalInput.focus();
+        });
+      }
       terminalInput.addEventListener("keydown", function (e) {
         advanceKonami(e);
         // Ctrl shortcuts: ^L clear screen, ^U clear line, ^C cancel line.
@@ -3921,6 +4538,19 @@
             terminalCancelLine();
             return;
           }
+        }
+        // Accept the inline suggestion: → at end of line, or End. (Tab also
+        // accepts it — the ghost previews Tab's single-candidate fill.)
+        if (
+          (e.key === "ArrowRight" || e.key === "End") &&
+          !e.shiftKey &&
+          terminalInput.selectionStart === terminalInput.value.length &&
+          terminalGhost &&
+          terminalGhost.textContent
+        ) {
+          e.preventDefault();
+          terminalAcceptGhost();
+          return;
         }
         if (e.key === "Tab") {
           e.preventDefault();
@@ -4101,10 +4731,24 @@
     var terminalJump = document.querySelector('[data-js="terminal-jump"]');
     if (terminalJump && terminalTail) {
       terminalJump.addEventListener("click", function () {
+        // Focus synchronously inside the tap so iOS brings up the on-screen
+        // keyboard: scrollTerminalToEnd focuses inside requestAnimationFrame,
+        // which lands a frame later and loses the user-gesture, so iOS then
+        // suppresses the keyboard. Focus here, then scroll onto the prompt.
+        if (terminalInput && isTerminalLayout()) {
+          terminalInput.focus();
+        }
         scrollTerminalToEnd();
       });
       var setJumpVisible = function (promptInView) {
-        if (isTerminalLayout() && !promptInView) {
+        // While the boot replay withholds the prompt it's display:none, which
+        // the observer reads as "out of view" — don't let that surface the jump
+        // button mid-boot.
+        if (
+          isTerminalLayout() &&
+          !promptInView &&
+          !document.documentElement.hasAttribute("data-terminal-replaying")
+        ) {
           terminalJump.classList.add("is-visible");
         } else {
           terminalJump.classList.remove("is-visible");

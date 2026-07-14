@@ -537,8 +537,17 @@
        as CSS string vars by dimensions/layout/terminal/ (core.css); harmless (unused)
        in every other layout. */}}
   {{- $terminalHost := (urls.Parse .Site.BaseURL).Host | default "tor-bjorn.com" -}}
-  {{- $terminalPath := strings.Trim .RelPermalink "/" -}}
-  {{- $terminalPath = strings.TrimPrefix (printf "%s/" .Language.Lang) $terminalPath -}}
+  {{- /* Strip the language prefix off the FULL permalink (slash-wrapped), so the
+         localized home page — whose path is exactly the lang code, e.g. "/sv/" —
+         also reduces to "" (cwd ~), not "~/sv". Trimming to "sv" first and then
+         stripping "sv/" missed that case, leaking the lang code in as a phantom
+         directory: `ls` then listed the non-existent ~/sv and `cat <slug>.md`
+         resolved to ~/sv/<slug>, matching no card. */ -}}
+  {{- $langPrefix := printf "/%s/" .Language.Lang -}}
+  {{- $terminalPath := .RelPermalink -}}
+  {{- if hasPrefix $terminalPath $langPrefix -}}
+    {{- $terminalPath = strings.TrimPrefix $langPrefix $terminalPath -}}
+  {{- end -}}
   {{- $terminalPath = strings.Trim $terminalPath "/" -}}
   {{- $terminalSegs := split $terminalPath "/" -}}
   {{- $terminalSeg := index $terminalSegs 0 -}}
@@ -559,7 +568,12 @@
        renders in the plain styled layout (contact's form, the exempt tools).
         - home     → the intro tour
         - section/tag listing → `ls` (its posts, read from the page's cards)
-        - a post / standalone page → `cat <slug>.md` (its own #main, read live) */}}
+        - a post / standalone page → `ls ~; cat <slug>.md`: a nav listing for
+          orientation (the terminal hides the chrome, so without it a deep-linked
+          session would have no visible nav), then the page's own #main read
+          live. `ls ~` (not a bare `ls`) because a post's cwd is its section,
+          whose sibling list isn't in the post's DOM to print — the top-level nav
+          from the manifest always is. */}}
   {{- $terminalBoot := "" -}}
   {{- $tkind := .Params.terminal_kind | default "" -}}
   {{- if .IsHome -}}
@@ -571,7 +585,7 @@
   {{- else if eq .Kind "page" -}}
     {{- $slug := index (last 1 $terminalSegs) 0 -}}
     {{- with $slug -}}
-      {{- $terminalBoot = printf "cat %s.md" . -}}
+      {{- $terminalBoot = printf "ls ~; cat %s.md" . -}}
     {{- end -}}
   {{- end -}}
   <style>
@@ -697,6 +711,10 @@
         document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
         if (storedLayout === "terminal") {
           document.documentElement.setAttribute("data-terminal-transcript", "1");
+          // Withhold the live prompt from the first frame; terminal.js clears
+          // this once the replay finishes (or immediately, for reduced motion),
+          // so it never sits under the banner before the session has printed.
+          document.documentElement.setAttribute("data-terminal-replaying", "1");
         }
       }
 

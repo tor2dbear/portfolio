@@ -465,6 +465,199 @@ other = "type exit or press esc to leave the terminal"
 [terminal_input_label]
 other = "Terminal command input — type a command and press Enter (try 'help')"
 
+# --- Terminal command engine (rendered into data-js="terminal-i18n" by
+# footer.html and read by terminal.js). Keep the command column alignment in
+# terminal_help / terminal_easter_eggs; only the descriptions are prose. ---
+
+[terminal_help]
+other = """
+commands:
+  help      this list
+  whoami    who's asking
+  date      date & time
+  pwd       working dir
+  ls        list dir
+  cd <page> change page
+  cv        résumé (about)
+  tree      site map
+  lang [sv|en]  language
+  echo      print text
+  neofetch  session info
+  dark|light|system  mode
+  pantone   [on|off|YYYY]
+  grain|blend|motion on/off
+  grid      layout grid
+  set [k v] view/set settings
+  share     copy this look
+  layout <name>  switch layout
+  hire      let's work together
+  social    my links
+  copy <x>  to clipboard
+  ai        chat with clanker
+  contact   message me
+  subscribe newsletter
+  clear     wipe the screen
+  exit      leave the terminal
+keys: ↑↓ history · Tab complete · ^L/^C/^U
+"""
+
+[terminal_easter_eggs]
+other = """
+easter eggs:
+  sudo      permission denied
+  coffee    HTTP 418
+  cat <f>   readme/about/colophon…
+  man <cmd> one-line manual
+  uname     shell / -a session
+  colour    palette swatches
+  fortune   design aphorism
+  history   command scrollback
+  uptime    session age
+  top       process list
+  vim/nano/emacs  editor jokes
+  :q :wq    quit like vim
+  rm -rf /  it's all in git
+  git <sub> blame/commit/push…
+  npm i     fake resolve
+  hello     greeting
+  konami    party (↑↑↓↓←→←→ba)
+  sl        choo choo
+  cowsay <x> talking cow
+  moo       super cow powers
+  xyzzy     nothing happens
+  42        the answer
+  ping      pong
+  weather   fake forecast
+  logo      brand curl
+  matrix    digital rain
+  debug/env theme state
+  reset     restore defaults
+"""
+
+[terminal_file_readme]
+other = """
+it's a portfolio. poke around.
+type 'help' for the command list.
+"""
+
+[terminal_file_about]
+other = """
+designer & developer.
+type 'cd about' for the long version.
+"""
+
+[terminal_file_secret]
+other = """
+there are no secrets here.
+(the source is right there — view-source:)
+"""
+
+[terminal_file_config]
+other = """
+# ~/.config — terminal preferences
+shell   tor-sh 1.0
+prompt  ~$ (edit via the settings panel)
+"""
+
+[terminal_whoami]
+other = """
+visitor
+(not logged in — but welcome anyway)
+"""
+
+[terminal_set_hint]
+other = "click a value or type: set <name> <value>"
+
+[terminal_err_ls_access]
+other = "ls: cannot access '%s': No such file or directory"
+
+[terminal_err_cat_missing]
+other = "cat: %s: No such file or directory"
+
+[terminal_err_cat_unreachable]
+other = "cat: cannot reach %s"
+
+[terminal_pager_more]
+other = "--More--  +%s more · tap"
+
+[terminal_err_cat_isdir]
+other = "cat: %s: Is a directory — try: ls %s/"
+
+[terminal_err_not_found]
+other = "%s: command not found — try 'help'"
+
+# --- contact / subscribe CLI-wizard flows (terminal-flows.js). 'cancel', 'y',
+# 'n' stay as typed command words; only the prose is localized. ---
+
+[terminal_flow_contact_intro]
+other = "contact — send me a message. type 'cancel' to abort."
+
+[terminal_flow_subscribe_intro]
+other = "subscribe — the occasional note, no spam. type 'cancel' to abort."
+
+[terminal_flow_confirm_send]
+other = "send this? [Y/n]"
+
+[terminal_flow_confirm_subscribe]
+other = "subscribe with this address? [Y/n]"
+
+[terminal_flow_label_email]
+other = "email"
+
+[terminal_flow_label_name]
+other = "name"
+
+[terminal_flow_label_message]
+other = "message"
+
+[terminal_flow_err_email]
+other = "that doesn't look like an email — try again"
+
+[terminal_flow_err_name]
+other = "name can't be empty"
+
+[terminal_flow_err_message]
+other = "message can't be empty"
+
+[terminal_flow_sending]
+other = "sending…"
+
+[terminal_flow_sent]
+other = "message sent — thanks, I'll be in touch."
+
+[terminal_flow_send_fail_page]
+other = "send failed — try the contact page instead."
+
+[terminal_flow_send_fail_offline]
+other = "send failed — you may be offline."
+
+[terminal_flow_subscribing]
+other = "subscribing…"
+
+[terminal_flow_sub_unavailable]
+other = "subscribe: the newsletter isn't available here."
+
+[terminal_flow_sub_reject]
+other = "couldn't subscribe — the server rejected it."
+
+[terminal_flow_sub_confirm]
+other = "subscribed — check your inbox to confirm."
+
+[terminal_flow_sub_already]
+other = "you're already subscribed."
+
+[terminal_flow_sub_fail_footer]
+other = "couldn't subscribe — try the footer form."
+
+[terminal_flow_sub_fail_offline]
+other = "couldn't subscribe — you may be offline."
+
+[terminal_flow_cancelled]
+other = "cancelled"
+
+[terminal_flow_answer_yn]
+other = "please answer y or n"
+
 [terminal_key_prev]
 other = "Previous command"
 
