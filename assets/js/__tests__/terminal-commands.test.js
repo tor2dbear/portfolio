@@ -404,6 +404,30 @@ describe("terminal command line", () => {
     expect(input.value).toBe("cat things-in-a-conversation.md");
   });
 
+  test("Tab completes a post in an unvisited directory once the page index warms", async () => {
+    // From the home page ~/works's projects were never listed, so completion
+    // has nothing for them — until the prompt is focused and the site's page
+    // index (index.json) warms the ls cache.
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          items: [
+            { url: "https://tor-bjorn.com/works/things-in-a-conversation/" },
+            { url: "https://tor-bjorn.com/works/a-cut-up-world/" },
+          ],
+        }),
+    });
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.dispatchEvent(new window.Event("focus")); // warms the cache
+    await flush();
+    expect(window.fetch.mock.calls[0][0]).toContain("/index.json");
+    input.value = "cat ~/works/thin";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cat ~/works/things-in-a-conversation.md");
+  });
+
   test("cat prints a known pseudo-file and 404s unknown ones", () => {
     loadModule();
     typeCommand("cat readme");

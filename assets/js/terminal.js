@@ -348,6 +348,66 @@
     // first, then Tab.
     var terminalLsDirCache = {};
 
+    // Prefetch the site's JSON feed (index.json — every published page in the
+    // main sections, with its URL) once, and fold each page into the ls cache
+    // under its parent directory. A real shell can complete a path you've never
+    // `cd`'d into because the filesystem is local; this gives the terminal the
+    // same reach, so `cat ~/works/thi⇥` completes from any page, not just from
+    // inside ~/works. Best-effort and purely additive: a real `ls` still
+    // overwrites the cache (fresh wins), and a missing/failed feed just leaves
+    // completion as lazy as it was before.
+    var terminalContentIndexSeeded = false;
+    function terminalSeedContentIndex() {
+      if (terminalContentIndexSeeded || typeof window.fetch !== "function") {
+        return;
+      }
+      terminalContentIndexSeeded = true;
+      var url = terminalHomeUrl().replace(/\/+$/, "") + "/index.json";
+      var pending;
+      try {
+        pending = window.fetch(url, { credentials: "same-origin" });
+      } catch (e) {
+        return; // fetch threw synchronously — leave completion lazy
+      }
+      if (!pending || typeof pending.then !== "function") {
+        return; // not a real fetch (e.g. a bare stub) — nothing to await
+      }
+      pending
+        .then(function (res) {
+          return res.ok ? res.json() : Promise.reject();
+        })
+        .then(function (feed) {
+          ((feed && feed.items) || []).forEach(function (item) {
+            var href = String(item && item.url ? item.url : "").replace(
+              /^[a-z]+:\/\/[^/]+/i,
+              ""
+            );
+            var segs = terminalHrefSegments(href);
+            // A top-level page (segs.length < 2) is already in the tree/manifest
+            // — only the nested posts need seeding.
+            if (!segs || segs.length < 2) {
+              return;
+            }
+            var dirKey = segs.slice(0, -1).join("/");
+            var file = segs[segs.length - 1] + ".md";
+            var list =
+              terminalLsDirCache[dirKey] || (terminalLsDirCache[dirKey] = []);
+            var exists = list.some(function (label) {
+              return label.replace(/[/@*]+$/, "").toLowerCase() === file;
+            });
+            if (!exists) {
+              list.push(file);
+            }
+          });
+          // A ghost the user is already looking at should pick up the newly
+          // known posts without waiting for the next keystroke.
+          terminalUpdateGhost();
+        })
+        .catch(function () {
+          /* no feed / offline — completion stays lazy, exactly as before */
+        });
+    }
+
     // Literal tables — help text, Tab-completion vocabulary, cat-able
     // pseudo-files, fortunes, the easter-egg index, the konami sequence and
     // the selectable layouts — live in terminal-data.js (window.TerminalData),
@@ -4334,6 +4394,9 @@
       if (!terminalInput) {
         return;
       }
+      // An explicit completion request is a hard signal to warm the page-index
+      // cache, in case the prompt was never focused first (e.g. a key-bar Tab).
+      terminalSeedContentIndex();
       var candidates = terminalCompletionFor(terminalInput.value).candidates;
       if (candidates.length === 1) {
         var parts = terminalInput.value.split(/\s+/);
@@ -4428,7 +4491,13 @@
       });
       // The inline suggestion is only meaningful while typing: refresh it on
       // focus, clear it on blur so it doesn't linger under the idle caret.
-      terminalInput.addEventListener("focus", terminalUpdateGhost);
+      // Focusing the prompt is also the first sign the user is about to type,
+      // so warm the page-index cache now — the completion for an unvisited
+      // directory needs it, and it's a one-shot fetch.
+      terminalInput.addEventListener("focus", function () {
+        terminalSeedContentIndex();
+        terminalUpdateGhost();
+      });
       terminalInput.addEventListener("blur", function () {
         if (terminalGhost) {
           terminalGhost.textContent = "";
