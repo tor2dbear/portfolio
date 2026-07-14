@@ -1840,6 +1840,42 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("this list");
   });
 
+  test("rehydrate re-reads a swapped-in i18n catalog (no stale-language replies)", () => {
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "kommandon:\n  help      den här listan",
+    });
+    document.body.appendChild(cat);
+    loadModule();
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
+    // An in-place swap replaces the catalog under the live prompt; rehydrate()
+    // must re-read it so the engine stops answering in the old language.
+    cat.textContent = JSON.stringify({
+      help: "commands:\n  help      this exact list",
+    });
+    window.Terminal.rehydrate();
+    typeCommand("help");
+    expect(sessionText()).toContain("this exact list");
+  });
+
+  test("rehydrate resets the fs/tree model to a swapped-in manifest", () => {
+    loadModule();
+    typeCommand("ls");
+    expect(sessionText()).not.toContain("notes/");
+    // A swap replaces the manifest blob (a page with a different tree). rehydrate
+    // clears the dir-tree + TerminalFS caches so ls reflects the new tree.
+    const man = document.querySelector('[data-js="terminal-manifest"]');
+    man.textContent = JSON.stringify({
+      notes: { kind: "dir", url: "/notes/" },
+    });
+    window.Terminal.rehydrate();
+    typeCommand("ls");
+    expect(sessionText()).toContain("notes/");
+  });
+
   test("a localized (percent-encoded) slug lists by its real, decoded name", () => {
     loadModule();
     // A Swedish post card whose href carries a percent-encoded slug.

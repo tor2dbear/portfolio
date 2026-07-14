@@ -90,6 +90,21 @@ describe("terminal in-place navigation", () => {
     jest.spyOn(window.history, "pushState");
   });
 
+  test("a swap re-hydrates the terminal engine via window.Terminal.rehydrate", async () => {
+    // After swapping #main the engine must re-read the page chrome (i18n, the
+    // fs/tree/nav model, card slugs) — terminal-nav delegates that to the
+    // terminal.js rehydrate seam.
+    window.Terminal = { rehydrate: jest.fn() };
+    mockFetch(pageHtml());
+    loadModule();
+    const swapped = await window.TerminalNav.go("/writing/", {
+      cwd: "~/writing",
+    });
+    expect(swapped).toBe(true);
+    expect(window.Terminal.rehydrate).toHaveBeenCalled();
+    delete window.Terminal;
+  });
+
   test("go() swaps #main, patches the title + cwd, and pushes state", async () => {
     mockFetch(pageHtml());
     loadModule();

@@ -367,21 +367,16 @@
     // post can scroll the reader to the top of that output (see revealTerminalCat).
     var lastTerminalCmdLine = null;
 
-    // Localized terminal strings, rendered per language by footer.html into
-    // data-js="terminal-i18n". Present on every terminal page; the English
-    // literals in terminal-data.js are the fallback (no-JS build, a missing
-    // catalog, or a parse error), so the terminal never renders blank.
-    var TI18N = (function () {
-      var el = document.querySelector('[data-js="terminal-i18n"]');
-      if (!el || !el.textContent) {
-        return {};
-      }
-      try {
-        return JSON.parse(el.textContent) || {};
-      } catch (e) {
-        return {};
-      }
-    })();
+    // Localized terminal strings + the tables derived from them (help, pseudo-
+    // files, easter eggs), read per language from data-js="terminal-i18n". Held
+    // in reassignable vars, not consts: hydrateTerminalSession() re-reads them
+    // after an in-place page/language swap so the engine can't reply from the
+    // previous language's catalog. The English literals in terminal-data.js are
+    // the fallback (no-JS build, a missing catalog, or a parse error).
+    var TI18N = {};
+    var TERMINAL_HELP = [];
+    var TERMINAL_FILES = {};
+    var TERMINAL_EASTER_EGGS = [];
 
     // A newline-joined i18n block → an array of lines (edge blank lines from the
     // TOML triple-quote trimmed), or the English fallback when the catalog lacks
@@ -406,7 +401,40 @@
     }
 
     var TERMINAL_LAYOUTS = TD.TERMINAL_LAYOUTS || [];
-    const TERMINAL_HELP = tiLines(TI18N.help, TD.TERMINAL_HELP || []);
+
+    // Read data-js="terminal-i18n" and (re)derive the catalog-backed tables.
+    // The single place the catalog is parsed — called at boot and again by
+    // hydrateTerminalSession() after an in-place swap.
+    function readTerminalCatalog() {
+      var el = document.querySelector('[data-js="terminal-i18n"]');
+      TI18N = {};
+      if (el && el.textContent) {
+        try {
+          TI18N = JSON.parse(el.textContent) || {};
+        } catch (e) {
+          TI18N = {}; // malformed catalog — fall back to the English literals
+        }
+      }
+      TERMINAL_HELP = tiLines(TI18N.help, TD.TERMINAL_HELP || []);
+      // Pseudo-files: English literals, then overlay any localized blocks from
+      // the catalog (readme/about/secret/config). welcome and colophon aren't
+      // here — they're reproduced live from the page's own localized DOM.
+      var files = {};
+      var base = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
+      Object.keys(base).forEach(function (k) {
+        files[k] = base[k];
+      });
+      var cat = TI18N.files || {};
+      Object.keys(cat).forEach(function (k) {
+        files[k] = tiLines(cat[k], files[k] || []);
+      });
+      TERMINAL_FILES = files;
+      TERMINAL_EASTER_EGGS = tiLines(
+        TI18N.easterEggs,
+        TD.TERMINAL_EASTER_EGGS || []
+      );
+    }
+    readTerminalCatalog();
 
     const TERMINAL_COMMAND_NAMES = TD.TERMINAL_COMMAND_NAMES || [];
 
@@ -429,27 +457,7 @@
       },
     };
 
-    // Pseudo-files: start from the English literals, then overlay any localized
-    // blocks from the catalog (readme/about/secret/config). welcome and colophon
-    // aren't here — they're reproduced live from the page's own (already
-    // localized) DOM by terminalWelcomeLines / terminalColophonLines.
-    const TERMINAL_FILES = (function () {
-      var base = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
-      var files = {};
-      Object.keys(base).forEach(function (k) {
-        files[k] = base[k];
-      });
-      var cat = TI18N.files || {};
-      Object.keys(cat).forEach(function (k) {
-        files[k] = tiLines(cat[k], files[k] || []);
-      });
-      return files;
-    })();
     const TERMINAL_FORTUNES = TD.TERMINAL_FORTUNES || [];
-    const TERMINAL_EASTER_EGGS = tiLines(
-      TI18N.easterEggs,
-      TD.TERMINAL_EASTER_EGGS || []
-    );
 
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
@@ -4810,7 +4818,27 @@
           }
         });
     }
-    terminalStampSlugs();
+
+    // One entry point for (re)deriving everything the terminal reads from the
+    // page chrome — the i18n catalog and its tables, the fs/tree/nav caches, and
+    // the cards' slug stamps. Boot calls it once; an in-place swap (terminal-nav)
+    // calls it after replacing #main, so the engine can't keep answering from the
+    // previous page's chrome (the "Swedish page, English replies" desync class).
+    // A cross-document chrome transplant (i18n/manifest/nav for the language
+    // swap) is step 3; today the source is always the live DOM.
+    function hydrateTerminalSession() {
+      readTerminalCatalog();
+      terminalDirTreeCache = null;
+      terminalNavTargetsCache = null;
+      if (
+        window.TerminalFS &&
+        typeof window.TerminalFS.refresh === "function"
+      ) {
+        window.TerminalFS.refresh();
+      }
+      terminalStampSlugs();
+    }
+    hydrateTerminalSession();
     window.TerminalSlugs = { refresh: terminalStampSlugs };
 
     // Replay the page's boot transcript into the scrollback (after slugs are
@@ -4899,6 +4927,13 @@
         if (terminalBootRunner) {
           window.setTimeout(terminalBootRunner, 0);
         }
+      },
+      // Re-derive everything the engine reads from the page chrome after an
+      // in-place navigation has swapped #main. terminal-nav.js calls this so the
+      // i18n catalog, the fs/tree/nav model and the card slug stamps track the
+      // new page instead of the one that booted. Subsumes TerminalSlugs.refresh.
+      rehydrate: function () {
+        hydrateTerminalSession();
       },
       captureInput: captureTerminalInput,
       releaseInput: releaseTerminalInput,

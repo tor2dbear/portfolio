@@ -137,8 +137,13 @@
     ) {
       window.CotyScaleActions.init();
     }
-    // Stamp the swapped-in cards' slugs so they render as .md filenames.
-    if (
+    // Re-derive the terminal's view of the page: the i18n catalog, the
+    // fs/tree/nav model and the swapped-in cards' slug stamps. rehydrate()
+    // subsumes the slug-stamping; fall back to the narrower TerminalSlugs seam
+    // if an older engine is loaded.
+    if (window.Terminal && typeof window.Terminal.rehydrate === "function") {
+      window.Terminal.rehydrate();
+    } else if (
       window.TerminalSlugs &&
       typeof window.TerminalSlugs.refresh === "function"
     ) {
