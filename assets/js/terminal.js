@@ -340,73 +340,12 @@
     var terminalHistory = [];
     var TERMINAL_HISTORY_MAX = 100;
 
-    // Entry labels a remote `ls` fetched, keyed by cwd segments ("works/tags").
-    // An append-only `cd` moves the prompt without loading the directory, so Tab
-    // completion (synchronous, reads only the loaded page + the static tree) has
-    // nothing to offer there. Once you `ls` such a directory we cache what it
-    // held, so completing within it works — matching how you'd naturally `ls`
-    // first, then Tab.
-    var terminalLsDirCache = {};
-
-    // Prefetch the site's JSON feed (index.json — every published page in the
-    // main sections, with its URL) once, and fold each page into the ls cache
-    // under its parent directory. A real shell can complete a path you've never
-    // `cd`'d into because the filesystem is local; this gives the terminal the
-    // same reach, so `cat ~/works/thi⇥` completes from any page, not just from
-    // inside ~/works. Best-effort and purely additive: a real `ls` still
-    // overwrites the cache (fresh wins), and a missing/failed feed just leaves
-    // completion as lazy as it was before.
-    var terminalContentIndexSeeded = false;
-    function terminalSeedContentIndex() {
-      if (terminalContentIndexSeeded || typeof window.fetch !== "function") {
-        return;
-      }
-      terminalContentIndexSeeded = true;
-      var url = terminalHomeUrl().replace(/\/+$/, "") + "/index.json";
-      var pending;
-      try {
-        pending = window.fetch(url, { credentials: "same-origin" });
-      } catch (e) {
-        return; // fetch threw synchronously — leave completion lazy
-      }
-      if (!pending || typeof pending.then !== "function") {
-        return; // not a real fetch (e.g. a bare stub) — nothing to await
-      }
-      pending
-        .then(function (res) {
-          return res.ok ? res.json() : Promise.reject();
-        })
-        .then(function (feed) {
-          ((feed && feed.items) || []).forEach(function (item) {
-            var href = String(item && item.url ? item.url : "").replace(
-              /^[a-z]+:\/\/[^/]+/i,
-              ""
-            );
-            var segs = terminalHrefSegments(href);
-            // A top-level page (segs.length < 2) is already in the tree/manifest
-            // — only the nested posts need seeding.
-            if (!segs || segs.length < 2) {
-              return;
-            }
-            var dirKey = segs.slice(0, -1).join("/");
-            var file = segs[segs.length - 1] + ".md";
-            var list =
-              terminalLsDirCache[dirKey] || (terminalLsDirCache[dirKey] = []);
-            var exists = list.some(function (label) {
-              return label.replace(/[/@*]+$/, "").toLowerCase() === file;
-            });
-            if (!exists) {
-              list.push(file);
-            }
-          });
-          // A ghost the user is already looking at should pick up the newly
-          // known posts without waiting for the next keystroke.
-          terminalUpdateGhost();
-        })
-        .catch(function () {
-          /* no feed / offline — completion stays lazy, exactly as before */
-        });
-    }
+    // The site model — what `ls`/`cd`/`tree`/completion treat as the filesystem
+    // — lives in terminal-fs.js (window.TerminalFS): one full-tree manifest,
+    // read synchronously. It replaced the old scattered model (a top-level-only
+    // manifest, a per-cwd ls cache, and an index.json prefetch that folded posts
+    // into it). Completion now knows every post the instant the page loads, with
+    // no fetch to await, so the former warm-the-cache seed is gone.
 
     // Literal tables — help text, Tab-completion vocabulary, cat-able
     // pseudo-files, fortunes, the easter-egg index, the konami sequence and
@@ -623,28 +562,28 @@
       });
     }
 
-    // A small nested directory tree built from every nav + footer link path,
-    // so `ls`, `tree`, `cd` and Tab completion share one data-driven model of
-    // the "filesystem". Cached like terminalNavTargets — the links are static.
+    // The nested directory tree `ls`, `tree`, `cd` and Tab completion walk.
+    // The authoritative structure — sections, every post, standalone pages —
+    // comes from the full-tree manifest via window.TerminalFS (one synchronous
+    // source, no per-page scraping). Then the nav/footer links are harvested for
+    // the one thing the flat manifest doesn't enumerate: a section's `tags/`
+    // taxonomy dir (works has real tag term pages; the term contents are listed
+    // on demand by remote-ls). Cached — both the manifest and the links are
+    // static for the page's lifetime.
     var terminalDirTreeCache = null;
     function terminalDirTree() {
       if (terminalDirTreeCache) {
         return terminalDirTreeCache;
       }
-      var root = { name: "~", href: terminalHomeUrl(), children: {} };
-      // Seed the top level from the manifest — the authoritative list of what's
-      // in ~ (including footer-only sections like legal that carry no nav link,
-      // and without the noise of harvesting every footer href e.g. index.xml).
-      var manifest = terminalManifest();
-      Object.keys(manifest).forEach(function (seg) {
-        root.children[seg] = {
-          name: seg,
-          href: manifest[seg].url || null,
-          children: {},
-        };
-      });
-      // Then harvest the (relative) nav links for deeper structure — a section's
-      // tags/ and the like.
+      var root = (window.TerminalFS && window.TerminalFS.tree()) || {
+        name: "~",
+        href: terminalHomeUrl(),
+        kind: "dir",
+        children: {},
+      };
+      // Graft the (relative) nav/footer links for a section's tags/ hierarchy —
+      // idempotent: sections and posts are already in the manifest tree, so this
+      // only adds the taxonomy dirs the manifest leaves out.
       var links = document.querySelectorAll(
         ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href]"
       );
@@ -656,7 +595,12 @@
         var node = root;
         segs.forEach(function (seg) {
           if (!node.children[seg]) {
-            node.children[seg] = { name: seg, href: null, children: {} };
+            node.children[seg] = {
+              name: seg,
+              href: null,
+              kind: "dir",
+              children: {},
+            };
           }
           node = node.children[seg];
         });
@@ -736,67 +680,25 @@
       return node;
     }
 
-    // Slugs of the current page's own content links (article / summary cards)
-    // that live under the given section — so `ls` inside e.g. ~/writing lists
-    // the actual posts, which the nav tree can't know about.
-    function terminalPageContentSlugs(sectionSegments) {
-      if (!sectionSegments.length) {
-        return [];
-      }
-      var section = sectionSegments[0];
-      var out = [];
-      var seen = {};
-      document
-        .querySelectorAll(".article-card a[href], .summary-card a[href]")
-        .forEach(function (link) {
-          var segs = terminalHrefSegments(link.getAttribute("href"));
-          if (!segs || segs.length < 2 || segs[0] !== section) {
-            return;
-          }
-          var slug = segs[segs.length - 1];
-          if (seen[slug]) {
-            return;
-          }
-          seen[slug] = true;
-          out.push(slug);
-        });
-      return out;
-    }
-
-    // List a single directory. Structural children come from the nav/footer
-    // tree; for the current directory, the page's own content links are merged
-    // in. Unknown path → an ls-style error; a real page whose contents can't
-    // be listed from here (a different section) → a `cd` hint rather than a
-    // bare empty result.
     // The terminal presents the site as a filesystem, and Hugo tells it what
-    // each top-level thing IS via the manifest emitted in head.html: a section
-    // is a `dir`, a standalone page a `file`, the contact form an `action`, a
-    // visual tool `exempt`. Parsed once; the client no longer guesses.
-    var terminalManifestCache = null;
+    // each thing IS via the full-tree manifest emitted in head.html: a section
+    // is a `dir`, a post/standalone page a `file`, the contact form an `action`,
+    // a visual tool `exempt`. window.TerminalFS parses it once (keys normalized
+    // to decoded, lowercased logical paths); this is the flat map, for the
+    // callers that look a node up by name (cd/cat classification, slug stamping).
     function terminalManifest() {
-      if (terminalManifestCache) {
-        return terminalManifestCache;
-      }
-      terminalManifestCache = {};
-      var el = document.querySelector('[data-js="terminal-manifest"]');
-      if (el && el.textContent) {
-        try {
-          terminalManifestCache = JSON.parse(el.textContent) || {};
-        } catch (e) {
-          /* malformed manifest — fall back to the dir default below */
-        }
-      }
-      return terminalManifestCache;
+      return (window.TerminalFS && window.TerminalFS.manifest()) || {};
     }
 
-    // A top-level segment's kind. Deeper structural nodes (e.g. a section's
-    // `tags/`) aren't in the manifest and default to `dir` — they list children.
+    // A node's kind by its logical path (`works` or `works/a-cut-up-world`).
+    // A path not in the manifest (e.g. a nav-grafted `tags/` dir) defaults to
+    // `dir` — it lists children.
     function terminalNodeKind(name) {
       var e = terminalManifest()[String(name || "").toLowerCase()];
       return (e && e.kind) || "dir";
     }
 
-    // A top-level segment's URL from the manifest — lets the terminal reach a
+    // A logical path's URL from the manifest — lets the terminal reach a
     // footer-only section (legal) that has no nav link to resolve against.
     function terminalManifestUrl(name) {
       var e = terminalManifest()[String(name || "").toLowerCase()];
@@ -805,8 +707,19 @@
 
     // How an entry renders in a listing: dir → `name/`, file → `name.md`,
     // action → `name` (a command), exempt → `name*` (a tool you `open`).
-    function terminalEntryLabel(name) {
-      switch (terminalNodeKind(name)) {
+    // Takes a tree node (kind carried per node, so nested posts label as files)
+    // or a bare top-level name (kind looked up in the manifest).
+    function terminalEntryLabel(nameOrNode) {
+      var name;
+      var kind;
+      if (nameOrNode && typeof nameOrNode === "object") {
+        name = nameOrNode.name;
+        kind = nameOrNode.kind || "dir";
+      } else {
+        name = nameOrNode;
+        kind = terminalNodeKind(name);
+      }
+      switch (kind) {
         case "file":
           return name + ".md";
         case "action":
@@ -1191,27 +1104,16 @@
 
     // A directory's entry labels, kind-formatted (dir → `name/`, file →
     // `name.md`, action → `name`, exempt → `name*`). Shared by the text `ls`
-    // and the clickable `ls` so the two can never list different things.
-    function terminalLsEntryLabels(node, targetSegs, isCwd, showHidden) {
+    // and the clickable `ls` so the two can never list different things. The
+    // children — sections, and each section's posts as files — come straight
+    // from the manifest tree, so a section lists its posts whether or not the
+    // page they live on is the one loaded.
+    function terminalLsEntryLabels(node, showHidden) {
       var entries = Object.keys(node.children)
         .sort()
         .map(function (k) {
-          return terminalEntryLabel(node.children[k].name);
+          return terminalEntryLabel(node.children[k]);
         });
-      if (isCwd) {
-        // The page's own content (posts) are FILES: a post is a .md you `cat`,
-        // not a directory you `cd` into — so it reads like real `ls` and the
-        // prompt stays in the section when you open one.
-        terminalPageContentSlugs(targetSegs).forEach(function (slug) {
-          var entry = slug + ".md";
-          if (
-            entries.indexOf(entry) === -1 &&
-            entries.indexOf(slug + "/") === -1
-          ) {
-            entries.push(entry);
-          }
-        });
-      }
       if (showHidden) {
         entries = [".secret", ".config"].concat(entries);
       }
@@ -1276,7 +1178,7 @@
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
-      var entries = terminalLsEntryLabels(node, targetSegs, isCwd, showHidden);
+      var entries = terminalLsEntryLabels(node, showHidden);
       if (!entries.length) {
         // A real page (has an href) that we're not currently on: its contents
         // live on that page, so point there instead of printing nothing.
@@ -1326,14 +1228,19 @@
           out.push(
             keys
               .map(function (k) {
-                return n.children[k].name + "/";
+                return terminalEntryLabel(n.children[k]);
               })
               .join("  ")
           );
         }
         out.push("");
+        // Recurse into directories only (a section, or its tags/ dir — printed
+        // even when empty). A post is a file: it's a leaf, not its own header.
         keys.forEach(function (k) {
-          walk(n.children[k], p + "/" + n.children[k].name);
+          var child = n.children[k];
+          if ((child.kind || "dir") === "dir") {
+            walk(child, p + "/" + child.name);
+          }
         });
       }
       walk(node, path);
@@ -1354,7 +1261,7 @@
           lines.push(
             prefix +
               (last ? "└── " : "├── ") +
-              terminalEntryLabel(node.children[key].name)
+              terminalEntryLabel(node.children[key])
           );
           walk(node.children[key], prefix + (last ? "    " : "│   "));
         });
@@ -2212,16 +2119,19 @@
               action: null,
             };
           }
-          // Append-only: listing the section (or a nested tags dir) you've cd'd
-          // into but haven't loaded (cd only moved the prompt) — fetch it and
-          // print below, without touching anything above.
+          // Append-only fallback: listing a directory the manifest tree can't
+          // resolve — a tag term dir (its posts are symlinks listed on the term
+          // page) or a node absent from the manifest — that you've cd'd into but
+          // haven't loaded. Fetch it and print below, without touching anything
+          // above. A section or any other dir the manifest knows lists
+          // synchronously from the tree in the clickable branch, no fetch.
           if (!lsPaths.length && !lsLong.length) {
             var lsSegs = terminalCwdSegments();
-            // You've cd'd away from the loaded page (live cwd ≠ page cwd), so the
-            // current DOM can't list here → fetch that path and print it below.
+            var lsCwdNode = terminalNodeAt(lsSegs);
             if (
               lsSegs.length &&
-              lsSegs.join("/") !== terminalPageCwdSegments().join("/")
+              lsSegs.join("/") !== terminalPageCwdSegments().join("/") &&
+              (!lsCwdNode || !Object.keys(lsCwdNode.children).length)
             ) {
               var lsUrl = terminalCwdUrl(lsSegs);
               if (lsUrl) {
@@ -2254,12 +2164,7 @@
               var lsTokSegs = terminalResolveSegments(lsPaths[0] || "");
               var lsTokNode = terminalNodeAt(lsTokSegs);
               if (lsTokNode) {
-                var lsTokLabels = terminalLsEntryLabels(
-                  lsTokNode,
-                  lsTokSegs,
-                  lsTokSegs.join("/") === terminalCwdSegments().join("/"),
-                  false
-                );
+                var lsTokLabels = terminalLsEntryLabels(lsTokNode, false);
                 if (lsTokLabels.length) {
                   return {
                     echo: input,
@@ -3345,10 +3250,6 @@
               var doc = new DOMParser().parseFromString(html, "text/html");
               var files = terminalRemoteLsEntries(doc, action.cwd);
               if (files.length) {
-                // Remember what this directory held, so Tab completion works in
-                // it even though the `cd` never loaded its page.
-                terminalLsDirCache[terminalSegmentsOf(action.cwd).join("/")] =
-                  files;
                 // Clickable, like the local `ls` — each post cats itself, each
                 // tag dir cds into it.
                 printTerminalLsList(
@@ -4347,40 +4248,23 @@
             ? terminalCwdSegments()
             : terminalResolveSegments(dirPart);
         var node = terminalNodeAt(dirSegs);
-        var names = node
-          ? Object.keys(node.children).filter(function (name) {
-              return name.indexOf(filePart) === 0;
-            })
-          : [];
-        // cat/open reach the page's posts too — complete them as .md files.
-        if (verb === "cat" || verb === "open") {
-          terminalPageContentSlugs(dirSegs).forEach(function (slug) {
-            var file = slug + ".md";
-            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
-              names.push(file);
+        // The manifest tree knows the whole directory synchronously — sections,
+        // and each section's posts as files — so completion reaches any post the
+        // instant the page loads, with no cache to warm. cat/open complete a post
+        // as `name.md` (you cat a file); cd/ls complete it bare.
+        var names = [];
+        if (node) {
+          Object.keys(node.children).forEach(function (name) {
+            var child = node.children[name];
+            var display =
+              (verb === "cat" || verb === "open") && child.kind === "file"
+                ? name + ".md"
+                : name;
+            if (display.toLowerCase().indexOf(filePart) === 0) {
+              names.push(display);
             }
           });
         }
-        // A directory you `cd`'d into but never loaded isn't in the tree or the
-        // live DOM — but if you `ls`'d it, its entries are cached. Offer dir
-        // names to cd, and (for cat/open) its files as .md, stripping the
-        // classify markers (`/`, `@`) so they complete like real names.
-        (terminalLsDirCache[dirSegs.join("/")] || []).forEach(function (label) {
-          if (/\/$/.test(label)) {
-            var dir = label.slice(0, -1).toLowerCase();
-            if (dir.indexOf(filePart) === 0 && names.indexOf(dir) === -1) {
-              names.push(dir);
-            }
-          } else if (
-            (verb === "cat" || verb === "open") &&
-            /\.md@?$/i.test(label)
-          ) {
-            var file = label.replace(/@$/, "").toLowerCase();
-            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
-              names.push(file);
-            }
-          }
-        });
         candidates = names.map(function (name) {
           return dirPart + name;
         });
@@ -4394,9 +4278,6 @@
       if (!terminalInput) {
         return;
       }
-      // An explicit completion request is a hard signal to warm the page-index
-      // cache, in case the prompt was never focused first (e.g. a key-bar Tab).
-      terminalSeedContentIndex();
       var candidates = terminalCompletionFor(terminalInput.value).candidates;
       if (candidates.length === 1) {
         var parts = terminalInput.value.split(/\s+/);
@@ -4491,11 +4372,7 @@
       });
       // The inline suggestion is only meaningful while typing: refresh it on
       // focus, clear it on blur so it doesn't linger under the idle caret.
-      // Focusing the prompt is also the first sign the user is about to type,
-      // so warm the page-index cache now — the completion for an unvisited
-      // directory needs it, and it's a one-shot fetch.
       terminalInput.addEventListener("focus", function () {
-        terminalSeedContentIndex();
         terminalUpdateGhost();
       });
       terminalInput.addEventListener("blur", function () {

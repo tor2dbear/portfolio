@@ -37,6 +37,7 @@ describe("terminal command line", () => {
       require("../theme.js");
       require("../theme-pantone.js");
       require("../terminal-data.js");
+      require("../terminal-fs.js");
       require("../terminal.js");
       require("../terminal-flows.js");
     });
@@ -100,7 +101,7 @@ describe("terminal command line", () => {
 
     document.documentElement.innerHTML = `
       <head><meta name="theme-color" content="#ffffff">
-        <script type="application/json" data-js="terminal-manifest">{"works":{"kind":"dir","url":"/works/"},"writing":{"kind":"dir","url":"/writing/"},"about":{"kind":"file","url":"/about/"},"contact":{"kind":"action","url":"/contact/"},"legal":{"kind":"dir","url":"/legal/"},"ui-library":{"kind":"exempt","url":"/ui-library/"},"palette-generator":{"kind":"exempt","url":"/palette-generator/"}}</script>
+        <script type="application/json" data-js="terminal-manifest">{"works":{"kind":"dir","url":"/works/"},"works/a-cut-up-world":{"kind":"file","url":"/works/a-cut-up-world/"},"works/things-in-a-conversation":{"kind":"file","url":"/works/things-in-a-conversation/"},"writing":{"kind":"dir","url":"/writing/"},"writing/the-grid-inherited":{"kind":"file","url":"/writing/the-grid-inherited/"},"about":{"kind":"file","url":"/about/"},"contact":{"kind":"action","url":"/contact/"},"legal":{"kind":"dir","url":"/legal/"},"legal/license":{"kind":"file","url":"/legal/license/"},"ui-library":{"kind":"exempt","url":"/ui-library/"},"palette-generator":{"kind":"exempt","url":"/palette-generator/"}}</script>
       </head>
       <body>
         <div class="terminal-boot">
@@ -375,57 +376,26 @@ describe("terminal command line", () => {
     );
   });
 
-  test("Tab completes files in a cd'd-into directory once ls has cached them", async () => {
-    // Live cwd sits in a tag dir the page never loaded (page cwd is ~), so a
-    // bare `ls` remote-fetches it.
-    window.getComputedStyle = () => ({
-      getPropertyValue: (prop) =>
-        prop === "--terminal-live-cwd"
-          ? "~/works/tags/experimental"
-          : prop === "--terminal-cwd"
-          ? "~"
-          : "#ffffff",
-    });
-    window.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      text: () =>
-        Promise.resolve(
-          '<div class="summary-card"><a href="/works/things-in-a-conversation/">x</a></div>' +
-            '<div class="summary-card"><a href="/works/a-cut-up-world/">y</a></div>'
-        ),
-    });
-    loadModule();
-    typeCommand("ls"); // remote-ls fetches the tag dir and caches its files
-    await flush();
-    const input = document.querySelector('[data-js="terminal-input"]');
-    // Before, Tab had nothing here; now the cached filename completes.
-    input.value = "cat thin";
-    keydown({ key: "Tab" });
-    expect(input.value).toBe("cat things-in-a-conversation.md");
-  });
-
-  test("Tab completes a post in an unvisited directory once the page index warms", async () => {
-    // From the home page ~/works's projects were never listed, so completion
-    // has nothing for them — until the prompt is focused and the site's page
-    // index (index.json) warms the ls cache.
-    window.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          items: [
-            { url: "https://tor-bjorn.com/works/things-in-a-conversation/" },
-            { url: "https://tor-bjorn.com/works/a-cut-up-world/" },
-          ],
-        }),
-    });
+  test("Tab completes a post in any section synchronously — no fetch, no cache", () => {
+    // The full-tree manifest knows every post the instant the page loads, so a
+    // qualified path completes with no `ls`, no focus, no index.json prefetch.
+    window.fetch = jest.fn();
     loadModule();
     const input = document.querySelector('[data-js="terminal-input"]');
-    input.dispatchEvent(new window.Event("focus")); // warms the cache
-    await flush();
-    expect(window.fetch.mock.calls[0][0]).toContain("/index.json");
     input.value = "cat ~/works/thin";
     keydown({ key: "Tab" });
     expect(input.value).toBe("cat ~/works/things-in-a-conversation.md");
+    expect(window.fetch).not.toHaveBeenCalled();
+  });
+
+  test("Tab completes a post as a bare name for cd (a file is .md only for cat)", () => {
+    // Kind-aware completion: cat/open complete a file as `name.md`; cd/ls
+    // complete it bare (you cat a file, you cd a dir).
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "cd ~/works/thin";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cd ~/works/things-in-a-conversation");
   });
 
   test("cat prints a known pseudo-file and 404s unknown ones", () => {
@@ -642,9 +612,11 @@ describe("terminal command line", () => {
     expect(sessionText()).not.toContain("the-grid-inherited/");
   });
 
-  test("ls of another section hints at cd instead of printing nothing", () => {
+  test("ls of another section lists its posts from the manifest, from anywhere", () => {
     loadModule();
-    // Sitting on /works/, ask for a different section's contents.
+    // Sitting on /works/, ask for a different section's contents. The manifest
+    // knows the whole tree, so a remote section lists its posts directly instead
+    // of the old "(cd writing to list it)" hint that a DOM-only model needed.
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
         prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
@@ -653,7 +625,7 @@ describe("terminal command line", () => {
       ),
     }));
     typeCommand("ls ~/writing");
-    expect(sessionText()).toContain("cd writing");
+    expect(sessionText()).toContain("the-grid-inherited.md");
   });
 
   test("ls lists several paths with per-directory headers", () => {
@@ -1286,10 +1258,11 @@ describe("terminal command line", () => {
     );
   });
 
-  test("append-only ls renders the fetched section's posts as clickable files", async () => {
+  test("ls in a cd'd-into section lists it synchronously from the manifest — no fetch", () => {
     // After `cd writing` (append-only: the live cwd moves, the loaded page
-    // doesn't), a bare `ls` can't read the DOM — it fetches /writing/ and lists
-    // it below. Those posts must be clickable too, just like a local `ls`.
+    // doesn't), a bare `ls` no longer needs to fetch the section — the full-tree
+    // manifest already knows its posts, so it lists them as clickable files at
+    // once, without a round-trip.
     loadModule();
     // Page cwd is home (~); the live cwd has moved into ~/writing.
     window.getComputedStyle = jest.fn(() => ({
@@ -1303,27 +1276,16 @@ describe("terminal command line", () => {
     }));
     window.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      text: () =>
-        Promise.resolve(
-          '<div class="summary-card"><a href="/writing/the-grid-inherited/">The grid</a></div>' +
-            '<div class="summary-card"><a href="/writing/another-post/">Another</a></div>'
-        ),
+      text: () => Promise.resolve(""),
     });
     typeCommand("ls");
-    // The remote-ls handler is async (fetch → parse → print); flush its chain.
-    for (let i = 0; i < 6; i++) {
-      await Promise.resolve();
-    }
 
     const post = document.querySelector(
       '.terminal-session__ls-entry[data-cmd="cat the-grid-inherited.md"]'
     );
     expect(post).not.toBeNull();
-    expect(
-      document.querySelector(
-        '.terminal-session__ls-entry[data-cmd="cat another-post.md"]'
-      )
-    ).not.toBeNull();
+    // The listing came from the manifest, not a fetch.
+    expect(window.fetch).not.toHaveBeenCalled();
 
     const before = sessionText();
     post.dispatchEvent(new window.Event("click", { bubbles: true }));
@@ -1331,6 +1293,40 @@ describe("terminal command line", () => {
     expect(sessionText().slice(before.length)).toContain(
       "cat the-grid-inherited.md"
     );
+  });
+
+  test("ls in a tag term dir the manifest doesn't enumerate falls back to remote-ls", async () => {
+    // Tag term dirs (works/tags/<term>) aren't in the flat manifest — their
+    // posts are symlinks whose canonical file lives up in the section. Listing
+    // one you've cd'd into but not loaded still fetches the term page and prints
+    // its posts as clickable symlinks (the retained defensive fallback).
+    loadModule();
+    window.getComputedStyle = jest.fn(() => ({
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-live-cwd"
+          ? "~/works/tags/experimental"
+          : prop === "--terminal-cwd"
+          ? "~"
+          : "#ffffff"
+      ),
+    }));
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve(
+          '<div class="summary-card"><a href="/works/things-in-a-conversation/">x</a></div>'
+        ),
+    });
+    typeCommand("ls");
+    // The remote-ls handler is async (fetch → parse → print); flush its chain.
+    for (let i = 0; i < 6; i++) {
+      await Promise.resolve();
+    }
+    expect(window.fetch).toHaveBeenCalled();
+    const post = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat things-in-a-conversation.md"]'
+    );
+    expect(post).not.toBeNull();
   });
 
   test("clicking a directory entry in transcript mode opens it (cd then ls)", () => {
