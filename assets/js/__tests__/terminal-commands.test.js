@@ -1970,6 +1970,66 @@ describe("terminal command line", () => {
     delete window.TerminalNav;
   });
 
+  test("Terminal.switchLanguage swaps in place (toggle / panel-radio seam)", async () => {
+    window.getComputedStyle = () => ({
+      getPropertyValue: (prop) =>
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : "#ffffff",
+    });
+    window.TerminalNav = { go: jest.fn(() => Promise.resolve(true)) };
+    loadModule();
+    window.Terminal.switchLanguage("/sv/writing/");
+    expect(window.TerminalNav.go).toHaveBeenCalledWith(
+      "/sv/writing/",
+      expect.objectContaining({ cwd: "~/writing" })
+    );
+    await flush();
+    expect(sessionText()).toContain("language →");
+    delete window.TerminalNav;
+  });
+
+  test("clicking the statusbar language toggle swaps in place, not a reload", () => {
+    window.getComputedStyle = () => ({
+      getPropertyValue: (prop) =>
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : "#ffffff",
+    });
+    window.TerminalNav = { go: jest.fn(() => Promise.resolve(true)) };
+    loadModule();
+    // The fixture nav carries a .terminal-quick--lang toggle to /sv/writing/.
+    const toggle = document.querySelector(".terminal-quick--lang");
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    toggle.dispatchEvent(evt);
+    expect(evt.defaultPrevented).toBe(true);
+    expect(window.TerminalNav.go).toHaveBeenCalledWith(
+      "/sv/writing/",
+      expect.objectContaining({ cwd: "~/writing" })
+    );
+    delete window.TerminalNav;
+  });
+
+  test("a modifier-click on the language toggle is left to the browser", () => {
+    window.TerminalNav = { go: jest.fn() };
+    loadModule();
+    const toggle = document.querySelector(".terminal-quick--lang");
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+      metaKey: true,
+    });
+    toggle.dispatchEvent(evt);
+    expect(evt.defaultPrevented).toBe(false);
+    expect(window.TerminalNav.go).not.toHaveBeenCalled();
+    delete window.TerminalNav;
+  });
+
   test("a localized (percent-encoded) slug lists by its real, decoded name", () => {
     loadModule();
     // A Swedish post card whose href carries a percent-encoded slug.

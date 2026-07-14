@@ -4803,6 +4803,28 @@
       ) {
         return;
       }
+      // The statusbar language toggle switches language in place (fetch + swap +
+      // rehydrate) rather than full-reloading — the same path a typed `lang`
+      // takes, with a reload fallback when the swap declines. Handled before the
+      // nav-link match, which excludes `.terminal-quick` (a toggle is a language
+      // switch, not a directory change, so it prints no `cd` echo).
+      var langLink =
+        e.target && e.target.closest
+          ? e.target.closest(".terminal-quick--lang[href]")
+          : null;
+      if (langLink) {
+        var langHref = langLink.getAttribute("href");
+        if (langHref && langHref.charAt(0) !== "#") {
+          e.preventDefault();
+          navigateTerminal({
+            type: "navigate",
+            url: langHref,
+            cd: false,
+            lang: true,
+          });
+        }
+        return;
+      }
       var link =
         e.target && e.target.closest
           ? e.target.closest(
@@ -5057,6 +5079,17 @@
       // chrome (i18n/manifest/nav/<html lang>) for a language swap.
       rehydrate: function (sourceDoc) {
         hydrateTerminalSession(sourceDoc);
+      },
+      // Switch language in place from OUTSIDE the command engine — the statusbar
+      // toggle and the settings-panel radio — by running the exact path a typed
+      // `lang` takes (swap + transplant + confirm, or a full-reload fallback when
+      // the gate/fetch declines). Keeps every language switch out of a reload in
+      // terminal layout without duplicating the swap logic.
+      switchLanguage: function (url) {
+        if (!url) {
+          return;
+        }
+        navigateTerminal({ type: "navigate", url: url, cd: false, lang: true });
       },
       captureInput: captureTerminalInput,
       releaseInput: releaseTerminalInput,
