@@ -4272,19 +4272,32 @@
         verb === "open" ||
         verb === "cat"
       ) {
-        var cwdSegs = terminalCwdSegments();
-        var node = terminalNodeAt(cwdSegs);
-        candidates = node
+        // Path-aware completion: split the fragment on its last `/` so a
+        // qualified path (`cat ~/works/thi⇥`) completes the file part against
+        // the directory it names, not the cwd. The typed dir prefix is kept on
+        // every candidate so the fill/ghost produce the full path. A bare
+        // fragment (no `/`) resolves against the current directory as before.
+        var slash = frag.lastIndexOf("/");
+        var dirPart = slash === -1 ? "" : frag.slice(0, slash + 1);
+        var filePart = (
+          slash === -1 ? frag : frag.slice(slash + 1)
+        ).toLowerCase();
+        var dirSegs =
+          slash === -1
+            ? terminalCwdSegments()
+            : terminalResolveSegments(dirPart);
+        var node = terminalNodeAt(dirSegs);
+        var names = node
           ? Object.keys(node.children).filter(function (name) {
-              return name.indexOf(f) === 0;
+              return name.indexOf(filePart) === 0;
             })
           : [];
         // cat/open reach the page's posts too — complete them as .md files.
         if (verb === "cat" || verb === "open") {
-          terminalPageContentSlugs(cwdSegs).forEach(function (slug) {
+          terminalPageContentSlugs(dirSegs).forEach(function (slug) {
             var file = slug + ".md";
-            if (file.indexOf(f) === 0 && candidates.indexOf(file) === -1) {
-              candidates.push(file);
+            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
+              names.push(file);
             }
           });
         }
@@ -4292,21 +4305,24 @@
         // live DOM — but if you `ls`'d it, its entries are cached. Offer dir
         // names to cd, and (for cat/open) its files as .md, stripping the
         // classify markers (`/`, `@`) so they complete like real names.
-        (terminalLsDirCache[cwdSegs.join("/")] || []).forEach(function (label) {
+        (terminalLsDirCache[dirSegs.join("/")] || []).forEach(function (label) {
           if (/\/$/.test(label)) {
             var dir = label.slice(0, -1).toLowerCase();
-            if (dir.indexOf(f) === 0 && candidates.indexOf(dir) === -1) {
-              candidates.push(dir);
+            if (dir.indexOf(filePart) === 0 && names.indexOf(dir) === -1) {
+              names.push(dir);
             }
           } else if (
             (verb === "cat" || verb === "open") &&
             /\.md@?$/i.test(label)
           ) {
             var file = label.replace(/@$/, "").toLowerCase();
-            if (file.indexOf(f) === 0 && candidates.indexOf(file) === -1) {
-              candidates.push(file);
+            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
+              names.push(file);
             }
           }
+        });
+        candidates = names.map(function (name) {
+          return dirPart + name;
         });
       }
       return { candidates: candidates, frag: frag };

@@ -803,6 +803,17 @@ describe("terminal command line", () => {
     expect(input.value).toBe("cd writing");
   });
 
+  test("Tab completes a qualified path against the named directory", () => {
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    // The article-card link → /writing/the-grid-inherited/. Even though the
+    // cwd is home, `cat ~/writing/the` resolves the ~/writing part and
+    // completes the file against that section's posts, keeping the prefix.
+    input.value = "cat ~/writing/the";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cat ~/writing/the-grid-inherited.md");
+  });
+
   test("Tab completes a set key and then its value", () => {
     loadModule();
     const input = document.querySelector('[data-js="terminal-input"]');
