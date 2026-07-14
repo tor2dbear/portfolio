@@ -458,6 +458,15 @@
         active = false;
         t.applyAction(action);
       }
+    } else if (action && action.type === "command" && action.command) {
+      // A data intent that maps to a real command ("switch to Swedish" →
+      // `lang sv`). Run it through the same seam a typed command uses, and
+      // stay in the assistant: a navigating command like `lang` ends the
+      // session via the page load, exactly as if the visitor had typed it.
+      var tc = term();
+      if (tc && typeof tc.run === "function") {
+        tc.run(action.command);
+      }
     }
   }
 
