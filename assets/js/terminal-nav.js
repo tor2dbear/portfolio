@@ -123,8 +123,10 @@
 
   // Re-run only the content-dependent init a #main swap invalidates. Kept tiny
   // by design (see the file header): lightbox figure focusability, plus the
-  // cheap idempotent Coty init when that engine is loaded.
-  function refreshContentInit() {
+  // cheap idempotent Coty init when that engine is loaded. `doc` is the fetched
+  // document, handed to rehydrate so a language swap can transplant the chrome
+  // that lives outside #main (i18n/manifest/nav/<html lang>).
+  function refreshContentInit(doc) {
     if (
       window.TerminalLightbox &&
       typeof window.TerminalLightbox.refresh === "function"
@@ -138,11 +140,12 @@
       window.CotyScaleActions.init();
     }
     // Re-derive the terminal's view of the page: the i18n catalog, the
-    // fs/tree/nav model and the swapped-in cards' slug stamps. rehydrate()
-    // subsumes the slug-stamping; fall back to the narrower TerminalSlugs seam
-    // if an older engine is loaded.
+    // fs/tree/nav model and the swapped-in cards' slug stamps. rehydrate(doc)
+    // subsumes the slug-stamping (and transplants the language chrome when the
+    // fetched doc differs); fall back to the narrower TerminalSlugs seam if an
+    // older engine is loaded.
     if (window.Terminal && typeof window.Terminal.rehydrate === "function") {
-      window.Terminal.rehydrate();
+      window.Terminal.rehydrate(doc);
     } else if (
       window.TerminalSlugs &&
       typeof window.TerminalSlugs.refresh === "function"
@@ -238,7 +241,7 @@
     } else {
       document.documentElement.removeAttribute("data-terminal-home");
     }
-    refreshContentInit();
+    refreshContentInit(doc);
     settleScroll();
     return true;
   }

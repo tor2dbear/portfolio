@@ -101,7 +101,11 @@ describe("terminal in-place navigation", () => {
       cwd: "~/writing",
     });
     expect(swapped).toBe(true);
-    expect(window.Terminal.rehydrate).toHaveBeenCalled();
+    // Called WITH the fetched document, so hydrate can transplant the language
+    // chrome (i18n/manifest/nav) on a language swap.
+    expect(window.Terminal.rehydrate).toHaveBeenCalledWith(
+      expect.any(window.Document)
+    );
     delete window.Terminal;
   });
 

@@ -1952,7 +1952,9 @@
           }
           // Switch language by loading the translated page. cd:false so the
           // navigation doesn't print a spurious `cd` echo (same directory,
-          // different language).
+          // different language); lang:true lets navigateTerminal swap it in
+          // place (fetch + transplant the chrome + rehydrate) instead of a full
+          // reload, so the session survives the language change.
           return {
             echo: input,
             lines: [],
@@ -1960,6 +1962,7 @@
               type: "navigate",
               url: languages[langTarget].href,
               cd: false,
+              lang: true,
             },
           };
         }
@@ -2975,14 +2978,23 @@
     // echo already printed to the scrollback, so an in-place swap needs no extra
     // output; on fallback the reload wipes it and the stash reprints it on top.
     function navigateTerminal(action) {
-      var cwd = hrefToCwd(action.url);
+      // A language switch is the same directory in another language, so keep the
+      // current cwd — the target URL carries the NEW language's prefix, which
+      // hrefToCwd (which strips the CURRENT page's prefix) wouldn't recognise, so
+      // deriving from it would misread e.g. /sv/writing/ as ~/sv.
+      var cwd =
+        action.lang === true ? currentTerminalCwd() : hrefToCwd(action.url);
       // In transcript mode the page content (#main) is hidden — it's just the
       // boot transcript's data source — so an in-place #main swap would paint
       // nothing. A `navigate` (open/lang) instead does a full load; the
       // destination re-runs its own boot transcript, keeping the session model.
+      // A language switch is cd:false (same directory) but should still swap in
+      // place — the whole point of the persistent session. Everything else in
+      // the gate stands: transcript mode paints nothing on a #main swap, home is
+      // a CSS-bundled page terminal-nav declines, cross-origin/no-nav can't swap.
       var canSwap =
         !document.documentElement.hasAttribute("data-terminal-transcript") &&
-        action.cd !== false &&
+        (action.cd !== false || action.lang === true) &&
         isTerminalLayout() &&
         cwd !== "~" &&
         isSameOriginUrl(action.url) &&
@@ -2995,8 +3007,29 @@
       window.TerminalNav.go(action.url, { cwd: cwd }).then(function (swapped) {
         if (!swapped) {
           fullReloadNavigate(action);
+          return;
+        }
+        // The swap re-hydrated the engine mid-flight, so TI18N and the language
+        // selector are already the new language — confirm it in that language.
+        if (action.lang === true) {
+          confirmLanguageSwitch();
         }
       });
+    }
+
+    // Print the post-swap language confirmation and raise the same toast the
+    // other terminal settings use. Reads the now-current language off the
+    // freshly transplanted selector so the label is in the new language.
+    function confirmLanguageSwitch() {
+      var here = currentLang();
+      var name = (terminalLanguages()[here] || {}).name || here;
+      printTerminalLine(
+        tiText("langSwitched", "language → %s", name),
+        "terminal-session__out"
+      );
+      if (window.Toast && typeof window.Toast.show === "function") {
+        window.Toast.show("language", name);
+      }
     }
 
     // Render a fetched directory listing by what the cwd IS:
@@ -4824,9 +4857,97 @@
     // the cards' slug stamps. Boot calls it once; an in-place swap (terminal-nav)
     // calls it after replacing #main, so the engine can't keep answering from the
     // previous page's chrome (the "Swedish page, English replies" desync class).
-    // A cross-document chrome transplant (i18n/manifest/nav for the language
-    // swap) is step 3; today the source is always the live DOM.
-    function hydrateTerminalSession() {
+
+    // Transplant the language-differing chrome that lives OUTSIDE #main from a
+    // fetched document into the live DOM — used by a language swap, where the
+    // i18n catalog, manifest, nav and <html lang> all flip. Done by content /
+    // attribute writes IN PLACE, never node replacement: the settings panel, nav
+    // and language radios carry direct-bound listeners (theme.js, settings-
+    // dropdown.js, language-dropdown.js) that a node swap would orphan. The data
+    // scripts have no listeners, so their text is replaced freely. For a
+    // same-language content swap the source equals the live chrome, so this is a
+    // no-op. Decorative non-terminal chrome (panel labels, footer strings) isn't
+    // relocalized here — it lags until the next full load (step 4).
+    function transplantTerminalChrome(sourceDoc) {
+      if (!sourceDoc || !sourceDoc.documentElement) {
+        return;
+      }
+      // 1. Data scripts (no listeners): i18n catalog, fs manifest, welcome text.
+      ["terminal-i18n", "terminal-manifest", "terminal-welcome"].forEach(
+        function (key) {
+          var sel = '[data-js="' + key + '"]';
+          var src = sourceDoc.querySelector(sel);
+          var live = document.querySelector(sel);
+          if (src && live) {
+            live.textContent = src.textContent;
+          }
+        }
+      );
+      // 2. <html> lang + home url. Leave the runtime, localStorage-driven attrs
+      // (data-mode/palette/typography/layout/effect-*/terminal-*) untouched —
+      // they're not in the fetched static markup and are already correct.
+      var srcHtml = sourceDoc.documentElement;
+      var lang = srcHtml.getAttribute("lang");
+      if (lang) {
+        document.documentElement.setAttribute("lang", lang);
+      }
+      var homeUrl = srcHtml.getAttribute("data-home-url");
+      if (homeUrl) {
+        document.documentElement.setAttribute("data-home-url", homeUrl);
+      }
+      // 3. Nav links (incl. the prompt host + the statusbar lang toggle): update
+      // href + label in place so `ls nav`, cd targets and the toggle all track
+      // the new language. The two translations render one template, so the anchor
+      // order matches; a length mismatch means an unexpected shape — skip it.
+      var liveNav = document.querySelectorAll(".top-menu__nav a[href]");
+      var srcNav = sourceDoc.querySelectorAll(".top-menu__nav a[href]");
+      if (liveNav.length && liveNav.length === srcNav.length) {
+        for (var i = 0; i < liveNav.length; i++) {
+          liveNav[i].setAttribute("href", srcNav[i].getAttribute("href") || "");
+          liveNav[i].textContent = srcNav[i].textContent;
+        }
+      }
+      // 4. Language radios: match by code, copy the translated href (the current
+      // language carries none) + checked state, so a later lang/panel switch and
+      // terminalLanguages() target the right pages.
+      var srcLangByCode = {};
+      sourceDoc
+        .querySelectorAll(".language-option input[data-language-code]")
+        .forEach(function (input) {
+          var c = (
+            input.getAttribute("data-language-code") || ""
+          ).toLowerCase();
+          if (c) {
+            srcLangByCode[c] = input;
+          }
+        });
+      document
+        .querySelectorAll(".language-option input[data-language-code]")
+        .forEach(function (input) {
+          var c = (
+            input.getAttribute("data-language-code") || ""
+          ).toLowerCase();
+          var src = srcLangByCode[c];
+          if (!src) {
+            return;
+          }
+          var href = src.getAttribute("data-language-href");
+          if (href) {
+            input.setAttribute("data-language-href", href);
+          } else {
+            input.removeAttribute("data-language-href");
+          }
+          input.checked = src.hasAttribute("checked");
+        });
+    }
+
+    // Given a fetched document (a language swap), transplant the chrome first;
+    // then re-derive. Without a sourceDoc this is the boot / same-language path,
+    // exactly as before.
+    function hydrateTerminalSession(sourceDoc) {
+      if (sourceDoc) {
+        transplantTerminalChrome(sourceDoc);
+      }
       readTerminalCatalog();
       terminalDirTreeCache = null;
       terminalNavTargetsCache = null;
@@ -4932,8 +5053,10 @@
       // in-place navigation has swapped #main. terminal-nav.js calls this so the
       // i18n catalog, the fs/tree/nav model and the card slug stamps track the
       // new page instead of the one that booted. Subsumes TerminalSlugs.refresh.
-      rehydrate: function () {
-        hydrateTerminalSession();
+      // Pass the fetched document to also transplant the language-differing
+      // chrome (i18n/manifest/nav/<html lang>) for a language swap.
+      rehydrate: function (sourceDoc) {
+        hydrateTerminalSession(sourceDoc);
       },
       captureInput: captureTerminalInput,
       releaseInput: releaseTerminalInput,

@@ -94,6 +94,7 @@ describe("terminal command line", () => {
       "data-terminal-replaying",
       "data-terminal-exempt",
       "data-terminal-booted",
+      "lang",
     ].forEach((attr) => document.documentElement.removeAttribute(attr));
     // A test may pushState to a deeper path; reset so location-derived logic
     // (the current-page slug) starts from home each case.
@@ -1874,6 +1875,99 @@ describe("terminal command line", () => {
     window.Terminal.rehydrate();
     typeCommand("ls");
     expect(sessionText()).toContain("notes/");
+  });
+
+  test("rehydrate(doc) transplants a translated document's chrome (language swap)", () => {
+    // The live page starts English, with an English catalog.
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "commands:\n  help      this list",
+    });
+    document.body.appendChild(cat);
+    loadModule();
+    typeCommand("help");
+    expect(sessionText()).toContain("this list");
+
+    // A fetched Swedish document: sv <html lang>, sv manifest, sv i18n catalog,
+    // and a nav whose anchor count mirrors the live nav (so the in-place link
+    // transplant runs — see the length guard).
+    const svHtml =
+      '<!doctype html><html lang="sv" data-home-url="/sv/"><head>' +
+      '<script type="application/json" data-js="terminal-manifest">' +
+      '{"arbeten":{"kind":"dir","url":"/sv/arbeten/"}}</script></head><body>' +
+      '<nav class="top-menu__nav">' +
+      '<a class="terminal-prompt__host" href="/sv/"></a>' +
+      '<a class="top-menu__link" href="/sv/arbeten/">Arbeten</a>' +
+      '<a class="top-menu__link" href="/sv/arbeten/tags/">Taggar</a>' +
+      '<a class="top-menu__link" href="/sv/texter/">Texter</a>' +
+      '<a class="top-menu__link" href="/sv/om/">Om</a>' +
+      '<a class="terminal-quick terminal-quick--lang" href="/writing/" lang="en">en</a>' +
+      "</nav>" +
+      '<script type="application/json" data-js="terminal-i18n">' +
+      JSON.stringify({ help: "kommandon:\n  help      den här listan" }) +
+      "</script></body></html>";
+    const doc = new DOMParser().parseFromString(svHtml, "text/html");
+    window.Terminal.rehydrate(doc);
+
+    // <html lang> flipped, the engine speaks Swedish, and the fs model + nav
+    // reflect the Swedish tree.
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
+    typeCommand("ls");
+    expect(sessionText()).toContain("arbeten/");
+    typeCommand("ls nav");
+    expect(sessionText()).toContain("om/");
+  });
+
+  test("lang swaps in place via TerminalNav instead of reloading", async () => {
+    // A content page (cwd ~/writing) whose Swedish translation is a real page.
+    window.getComputedStyle = () => ({
+      getPropertyValue: (prop) =>
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : "#ffffff",
+    });
+    document.documentElement.setAttribute("data-layout", "terminal");
+    // go being called at all proves the swap path was taken — a full reload
+    // (fullReloadNavigate) never calls TerminalNav.go.
+    window.TerminalNav = { go: jest.fn(() => Promise.resolve(true)) };
+    document
+      .querySelector('.language-option input[data-language-code="sv"]')
+      .setAttribute("data-language-href", "/sv/writing/");
+    loadModule();
+    typeCommand("lang sv");
+    expect(window.TerminalNav.go).toHaveBeenCalledWith(
+      "/sv/writing/",
+      expect.objectContaining({ cwd: "~/writing" })
+    );
+    await flush();
+    // The swap resolved, so the confirmation prints (in the new language).
+    expect(sessionText()).toContain("language →");
+    delete window.TerminalNav;
+  });
+
+  test("lang falls back to a full reload when the swap declines", async () => {
+    window.getComputedStyle = () => ({
+      getPropertyValue: (prop) =>
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : "#ffffff",
+    });
+    document.documentElement.setAttribute("data-layout", "terminal");
+    window.TerminalNav = { go: jest.fn(() => Promise.resolve(false)) };
+    document
+      .querySelector('.language-option input[data-language-code="sv"]')
+      .setAttribute("data-language-href", "/sv/writing/");
+    loadModule();
+    typeCommand("lang sv");
+    await flush();
+    // The swap declined → fullReloadNavigate runs; no in-place confirmation.
+    expect(window.TerminalNav.go).toHaveBeenCalled();
+    expect(sessionText()).not.toContain("language →");
+    delete window.TerminalNav;
   });
 
   test("a localized (percent-encoded) slug lists by its real, decoded name", () => {

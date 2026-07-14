@@ -574,6 +574,9 @@ other = "cat: når inte %s"
 [terminal_pager_more]
 other = "--More--  +%s rader · tryck"
 
+[terminal_lang_switched]
+other = "språk → %s"
+
 [terminal_err_cat_isdir]
 other = "cat: %s: Är en katalog — testa: ls %s/"
 
