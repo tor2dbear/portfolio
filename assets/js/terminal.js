@@ -4790,6 +4790,67 @@
       container.insertBefore(line, anchor);
     }
 
+    // The terminal command a clicked real-page link stands for, or null when the
+    // link doesn't resolve to something the terminal knows (then the caller falls
+    // back to the browser). Content cards are already stamped by
+    // terminalStampSlugs — data-slug → a post (cat), data-dir → a section (cd) —
+    // and that stamp is the terminal name, so it survives the URL-slug rename (a
+    // work lives at /englishwork/…) and the Swedish translation. Nav links are
+    // classified from their logical path by kind, but only when the node is known
+    // (the Swedish nav slug the manifest keys elsewhere returns null → reload).
+    function terminalCommandForClick(target) {
+      if (!target || !target.closest) {
+        return null;
+      }
+      var card = target.closest(".summary-card, .article-card");
+      if (card) {
+        var stamped = card.querySelector("[data-slug], [data-dir]");
+        if (stamped) {
+          var slug = stamped.getAttribute("data-slug");
+          if (slug) {
+            return "cat " + slug + ".md";
+          }
+          var dir = stamped.getAttribute("data-dir");
+          if (dir) {
+            return "cd " + dir;
+          }
+        }
+        return null; // an unstamped card link — leave it to the browser
+      }
+      var navLink = target.closest(
+        ".top-menu__nav a[href]:not(.terminal-quick), .terminal-prompt__host[href]"
+      );
+      if (!navLink) {
+        return null;
+      }
+      var href = navLink.getAttribute("href");
+      if (!href || href.charAt(0) === "#") {
+        return null;
+      }
+      var segs = terminalHrefSegments(href);
+      if (!segs) {
+        return null; // external / non-root-relative
+      }
+      if (!segs.length) {
+        return "cd ~"; // the prompt host / home
+      }
+      var node = terminalNodeAt(segs);
+      if (!node) {
+        return null; // unknown to the terminal → fall back to the reload
+      }
+      var name = segs.join("/");
+      switch (node.kind || terminalNodeKind(name)) {
+        case "file":
+          return "cat " + segs[segs.length - 1] + ".md";
+        case "action":
+          return name;
+        case "exempt":
+          return "open " + name;
+        default:
+          return "cd " + name;
+      }
+    }
+
     // Nav clicks that change page read as `cd <page>` on the next screen.
     document.addEventListener("click", function (e) {
       if (
@@ -4822,6 +4883,25 @@
             cd: false,
             lang: true,
           });
+        }
+        return;
+      }
+      // Clicking a real-page link runs the matching terminal command in place
+      // instead of reloading — a section cds (+ ls), a post/project card cats
+      // itself inline — so the scrollback and prompt survive. Only when the link
+      // resolves to something the terminal knows; otherwise fall through to the
+      // stash + full reload below, exactly as before.
+      var clickCmd = terminalCommandForClick(e.target);
+      if (clickCmd) {
+        e.preventDefault();
+        runTerminalInput(clickCmd);
+        // A directory "opens" — append its listing, matching the rendered
+        // ls-entry behavior (transcript mode, where the session IS the page).
+        if (
+          document.documentElement.hasAttribute("data-terminal-transcript") &&
+          /^cd\s+\S/.test(clickCmd)
+        ) {
+          runTerminalInput("ls");
         }
         return;
       }

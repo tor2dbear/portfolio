@@ -2099,12 +2099,97 @@ describe("terminal command line", () => {
 
   // ---- Nav "cd" feedback ------------------------------------------------
 
-  test("clicking a nav link stashes a cd command for the next page", () => {
+  // These assert on shared, current-DOM outcomes — the `--terminal-live-cwd`
+  // inline var (a `cd` sets it) and a fetch mock (a `cat` fetches) — rather than
+  // the scrollback text, because terminal.js binds its click handler on
+  // `document`, and jsdom keeps one document across the file so re-requiring the
+  // module (loadModule) leaves extra handlers that would muddy a text assertion.
+  function liveCwd() {
+    return document.documentElement.style.getPropertyValue(
+      "--terminal-live-cwd"
+    );
+  }
+  function leftClick(el) {
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    el.dispatchEvent(evt);
+    return evt;
+  }
+
+  test("clicking a known nav link runs its command (cd) in place", () => {
     loadModule();
-    sessionStorage.removeItem("terminal-cd");
-    document.querySelector('.top-menu__link[href="/writing/"]').click();
-    const stashed = JSON.parse(sessionStorage.getItem("terminal-cd"));
-    expect(stashed.cmd).toBe("cd ~/writing");
+    document.documentElement.style.removeProperty("--terminal-live-cwd");
+    const evt = leftClick(
+      document.querySelector('.top-menu__link[href="/writing/"]')
+    );
+    // Intercepted and run as `cd writing` (append-only move), not a browser nav.
+    expect(evt.defaultPrevented).toBe(true);
+    expect(liveCwd()).toContain("writing");
+  });
+
+  test("clicking a content card cats the post inline (fetches its page)", () => {
+    window.fetch = jest.fn(() =>
+      Promise.resolve({ ok: true, text: () => Promise.resolve("") })
+    );
+    loadModule();
+    // A stamped project card: data-slug marks it a post (a .md file → cat).
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="summary-card"><a class="summary-card__title" ' +
+        'href="/works/foo/" data-slug="foo">Foo</a></div>'
+    );
+    const evt = leftClick(document.querySelector(".summary-card a[data-slug]"));
+    expect(evt.defaultPrevented).toBe(true);
+    // `cat foo.md` resolves to the card's href and remote-cats it.
+    expect(
+      window.fetch.mock.calls.some((c) => String(c[0]).includes("foo"))
+    ).toBe(true);
+  });
+
+  test("clicking a section card cds into it", () => {
+    loadModule();
+    document.documentElement.style.removeProperty("--terminal-live-cwd");
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="summary-card"><a class="summary-card__title" ' +
+        'href="/works/" data-dir="works">Works</a></div>'
+    );
+    const evt = leftClick(document.querySelector(".summary-card a[data-dir]"));
+    expect(evt.defaultPrevented).toBe(true);
+    expect(liveCwd()).toContain("works");
+  });
+
+  test("an unstamped card link is left to the browser (no interception)", () => {
+    loadModule();
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="summary-card"><a href="/works/bar/">Bar</a></div>'
+    );
+    const evt = leftClick(
+      document.querySelector('.summary-card a[href="/works/bar/"]')
+    );
+    // No data-slug/data-dir → the terminal can't map it → the browser handles it.
+    expect(evt.defaultPrevented).toBe(false);
+  });
+
+  test("a modifier-click on a nav link is left to the browser", () => {
+    window.fetch = jest.fn(() =>
+      Promise.resolve({ ok: true, text: () => Promise.resolve("") })
+    );
+    loadModule();
+    const el = document.querySelector('.top-menu__link[href="/writing/"]');
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+      metaKey: true,
+    });
+    el.dispatchEvent(evt);
+    // Cmd/ctrl-click → open in new tab → the terminal must not intercept.
+    expect(evt.defaultPrevented).toBe(false);
   });
 
   test("clicking the statusbar language toggle does NOT stash a cd echo", () => {
