@@ -1,22 +1,33 @@
-{{/* Terminal filesystem manifest: maps each top-level segment to its kind and
-  URL so the terminal classifies ls/cd/tree and can fetch a dir without a
-  hardcoded guess. Sections are directories, standalone top-level pages are
-  files; a page overrides its kind via a `terminal_kind` param (contact =
-  action). The visual tools (terminal_kind = exempt) can't render as a
-  terminal, so they're left OUT of the filesystem entirely — not listed by
-  `ls`, not reachable by cd/open. The URL lets the terminal reach
-  footer-only sections (legal) that aren't in the nav.
+{{/* Terminal filesystem manifest: the full site tree the terminal treats as its
+  filesystem, keyed by LOGICAL path so `ls`/`cd`/`tree`/completion know every
+  node synchronously (no runtime scraping — see assets/js/terminal-fs.js).
+
+  Each entry maps a logical path → {kind, url, title, tags?}:
+  - Sections are `dir`s (works, writing, newsletter, legal).
+  - Every post / standalone page is a `file`; a page overrides its kind via a
+  `terminal_kind` param (contact = action). `hidden`/`exempt` pages are left
+  OUT entirely — not listed by ls, not reachable by cd/open.
+  - The `url` is the real RelPermalink (used to fetch a post's body); the key
+  is the LOGICAL path, which can differ (works posts live at /englishwork/…
+  but the terminal dir is `works/`). We rebuild the logical path from
+  `.Section` + the tail of the URL, so the renamed section slug never leaks
+  into the tree.
+
+  Section `tags/` taxonomy dirs aren't enumerated here — the terminal grafts
+  those from nav/footer links, and term contents load on demand via remote-ls.
 
   A returning partial so head.html emits it as the terminal-manifest JSON and
   the template-render tests can assert the mapping without rendering all of
   head.html.
 */}}
 {{- $kinds := dict -}}
+{{- $sectionNames := slice -}}
 {{- range site.Sections -}}
   {{- $k := "dir" -}}
   {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
   {{- if ne $k "exempt" -}}
-    {{- $kinds = merge $kinds (dict .Section (dict "kind" $k "url" .RelPermalink)) -}}
+    {{- $sectionNames = append .Section $sectionNames -}}
+    {{- $kinds = merge $kinds (dict .Section (dict "kind" $k "url" .RelPermalink "title" .Title)) -}}
   {{- end -}}
 {{- end -}}
 {{- range where site.RegularPages "Kind" "page" -}}
@@ -24,11 +35,39 @@
   {{- $rel = strings.TrimPrefix (printf "%s/" .Language.Lang) $rel -}}
   {{- $rel = strings.Trim $rel "/" -}}
   {{- $segs := split $rel "/" -}}
+  {{- $section := .Section -}}
   {{- $tk := .Params.terminal_kind | default "" -}}
-  {{- if and (eq (len $segs) 1) (ne $tk "hidden") (ne $tk "exempt") -}}
+  {{/* Include a page only when it belongs to a real (non-exempt) content
+    section, or is a standalone top-level page. This keeps taxonomy/term
+    bundles (clients, employers) out of the filesystem, as before.
+  */}}
+  {{- $include := false -}}
+  {{- if $section -}}
+    {{- if in $sectionNames $section -}}{{ $include = true }}{{- end -}}
+  {{- else if eq (len $segs) 1 -}}
+    {{- $include = true -}}
+  {{- end -}}
+  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") -}}
     {{- $k := "file" -}}
     {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
-    {{- $kinds = merge $kinds (dict (index $segs 0) (dict "kind" $k "url" .RelPermalink)) -}}
+    {{/* Logical path: the section name (not its URL slug) + the URL tail, built
+      as a string so the renamed section slug never leaks into the key. A
+      standalone top-level page keeps its single segment.
+    */}}
+    {{- $key := delimit $segs "/" -}}
+    {{- if $section -}}
+      {{- $tail := after 1 $segs -}}
+      {{- if gt (len $tail) 0 -}}
+        {{- $key = printf "%s/%s" $section (delimit $tail "/") -}}
+      {{- else -}}
+        {{- $key = $section -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $entry := dict "kind" $k "url" .RelPermalink "title" .Title -}}
+    {{- with .Params.tags }}
+      {{ $entry = merge $entry (dict "tags" .) }}
+    {{ end -}}
+    {{- $kinds = merge $kinds (dict $key $entry) -}}
   {{- end -}}
 {{- end -}}
 {{- return $kinds -}}

@@ -8,38 +8,66 @@
  * present in the DOM.
  */
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
-  document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.querySelector('.language-toggle');
-    const panel = document.querySelector('.language-panel');
-    const overlay = document.querySelector('.language-overlay');
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.querySelector(".language-toggle");
+    const panel = document.querySelector(".language-panel");
+    const overlay = document.querySelector(".language-overlay");
 
     function setPendingToast(languageName) {
-      if (!languageName) {return;}
+      if (!languageName) {
+        return;
+      }
       try {
-        localStorage.setItem('pending-toast', JSON.stringify({
-          category: 'language',
-          value: languageName.trim(),
-          icon: 'icon-language-micro'
-        }));
+        localStorage.setItem(
+          "pending-toast",
+          JSON.stringify({
+            category: "language",
+            value: languageName.trim(),
+            icon: "icon-language-micro",
+          })
+        );
       } catch (e) {}
     }
 
     function navigateByInput(input) {
-      if (!input) {return;}
-      const href = input.getAttribute('data-language-href');
-      if (!href) {return;}
-      const name = input.getAttribute('data-language-name') || '';
+      if (!input) {
+        return;
+      }
+      const href = input.getAttribute("data-language-href");
+      if (!href) {
+        return;
+      }
+      const name = input.getAttribute("data-language-name") || "";
+      // In the terminal layout, switch language in place (no reload) via the
+      // terminal's seam — it prints its own confirmation + toast, so skip the
+      // reload-only pending toast. Everywhere else, the normal full navigation.
+      const inTerminal =
+        document.documentElement.getAttribute("data-layout") === "terminal";
+      if (
+        inTerminal &&
+        window.Terminal &&
+        typeof window.Terminal.switchLanguage === "function"
+      ) {
+        window.Terminal.switchLanguage(href);
+        return;
+      }
       setPendingToast(name);
       window.location.href = href;
     }
 
     function navigateByLanguageCode(code) {
-      if (!code) {return;}
-      const input = document.querySelector(`input[type="radio"][data-language-code="${code}"][data-language-href]`);
-      if (!input) {return;}
+      if (!code) {
+        return;
+      }
+      const input = document.querySelector(
+        `input[type="radio"][data-language-code="${code}"][data-language-href]`
+      );
+      if (!input) {
+        return;
+      }
       navigateByInput(input);
     }
 
@@ -47,30 +75,40 @@
     // inputs live in the settings panel.
     window.LanguageActions = { setLanguage: navigateByLanguageCode };
 
-    document.querySelectorAll('input[type="radio"][data-language-href]').forEach(function(input) {
-      input.addEventListener('change', function() {
-        navigateByInput(input);
+    document
+      .querySelectorAll('input[type="radio"][data-language-href]')
+      .forEach(function (input) {
+        input.addEventListener("change", function () {
+          navigateByInput(input);
+        });
       });
-    });
 
     // Everything below drives the standalone language dropdown panel, which is
     // optional. When it is absent (unified settings panel), we stop here.
-    if (!toggle || !panel) {return;}
+    if (!toggle || !panel) {
+      return;
+    }
 
     function isGridActive() {
-      const value = document.documentElement.getAttribute('data-grid-overlay');
-      return value !== null && value !== 'closing';
+      const value = document.documentElement.getAttribute("data-grid-overlay");
+      return value !== null && value !== "closing";
     }
 
     function shouldUsePanelPortal() {
-      if (panel.hasAttribute('hidden')) {return false;}
-      if (!window.matchMedia('(min-width: 30em)').matches) {return false;}
+      if (panel.hasAttribute("hidden")) {
+        return false;
+      }
+      if (!window.matchMedia("(min-width: 30em)").matches) {
+        return false;
+      }
       return isGridActive();
     }
 
     function ensurePanelPortalOrigin() {
-      if (panel.__portalPlaceholder) {return;}
-      const placeholder = document.createComment('dropdown-portal-anchor');
+      if (panel.__portalPlaceholder) {
+        return;
+      }
+      const placeholder = document.createComment("dropdown-portal-anchor");
       panel.parentNode.insertBefore(placeholder, panel);
       panel.__portalPlaceholder = placeholder;
     }
@@ -83,7 +121,9 @@
       const gutter = 8;
 
       let left = toggleRect.right - panelWidth;
-      if (left < gutter) {left = gutter;}
+      if (left < gutter) {
+        left = gutter;
+      }
       if (left + panelWidth > viewportWidth - gutter) {
         left = viewportWidth - panelWidth - gutter;
       }
@@ -91,8 +131,8 @@
       panel.style.top = `${toggleRect.bottom + 8}px`;
       panel.style.left = `${Math.max(left, gutter)}px`;
       panel.style.width = `${panelWidth}px`;
-      panel.style.right = 'auto';
-      panel.style.bottom = 'auto';
+      panel.style.right = "auto";
+      panel.style.bottom = "auto";
     }
 
     function mountPanelPortal() {
@@ -100,13 +140,15 @@
       if (panel.parentNode !== document.body) {
         document.body.appendChild(panel);
       }
-      panel.classList.add('dropdown-panel--portal');
-      panel.style.position = 'fixed';
+      panel.classList.add("dropdown-panel--portal");
+      panel.style.position = "fixed";
       positionPanelAtToggle();
     }
 
     function restorePanelPortal(panelEl) {
-      if (!panelEl || !panelEl.classList.contains('dropdown-panel--portal')) {return;}
+      if (!panelEl || !panelEl.classList.contains("dropdown-panel--portal")) {
+        return;
+      }
 
       const placeholder = panelEl.__portalPlaceholder;
       if (placeholder && placeholder.parentNode) {
@@ -115,13 +157,13 @@
       }
 
       panelEl.__portalPlaceholder = null;
-      panelEl.classList.remove('dropdown-panel--portal');
-      panelEl.style.position = '';
-      panelEl.style.top = '';
-      panelEl.style.left = '';
-      panelEl.style.width = '';
-      panelEl.style.right = '';
-      panelEl.style.bottom = '';
+      panelEl.classList.remove("dropdown-panel--portal");
+      panelEl.style.position = "";
+      panelEl.style.top = "";
+      panelEl.style.left = "";
+      panelEl.style.width = "";
+      panelEl.style.right = "";
+      panelEl.style.bottom = "";
     }
 
     function syncLanguagePanelPortal() {
@@ -129,7 +171,7 @@
         mountPanelPortal();
         return;
       }
-      if (document.documentElement.hasAttribute('data-grid-overlay')) {
+      if (document.documentElement.hasAttribute("data-grid-overlay")) {
         return;
       }
       restorePanelPortal(panel);
@@ -137,13 +179,15 @@
 
     function togglePanel(e) {
       e.stopPropagation();
-      const isHidden = panel.hasAttribute('hidden');
+      const isHidden = panel.hasAttribute("hidden");
 
       if (isHidden) {
         closeThemePanel();
-        panel.removeAttribute('hidden');
-        if (overlay) {overlay.removeAttribute('hidden');}
-        toggle.setAttribute('aria-expanded', 'true');
+        panel.removeAttribute("hidden");
+        if (overlay) {
+          overlay.removeAttribute("hidden");
+        }
+        toggle.setAttribute("aria-expanded", "true");
         syncLanguagePanelPortal();
       } else {
         closePanel();
@@ -151,61 +195,67 @@
     }
 
     function closePanel() {
-      if (panel && !panel.hasAttribute('hidden')) {
-        panel.setAttribute('hidden', '');
-        if (overlay) {overlay.setAttribute('hidden', '');}
-        toggle.setAttribute('aria-expanded', 'false');
+      if (panel && !panel.hasAttribute("hidden")) {
+        panel.setAttribute("hidden", "");
+        if (overlay) {
+          overlay.setAttribute("hidden", "");
+        }
+        toggle.setAttribute("aria-expanded", "false");
         syncLanguagePanelPortal();
       }
     }
 
     function closeThemePanel() {
-      const themePanel = document.querySelector('.theme-panel');
-      const themeToggle = document.querySelector('.theme-toggle');
-      const themeOverlay = document.querySelector('.theme-overlay');
+      const themePanel = document.querySelector(".theme-panel");
+      const themeToggle = document.querySelector(".theme-toggle");
+      const themeOverlay = document.querySelector(".theme-overlay");
 
-      if (themePanel && !themePanel.hasAttribute('hidden')) {
-        themePanel.setAttribute('hidden', '');
-        if (themeOverlay) {themeOverlay.setAttribute('hidden', '');}
-        if (themeToggle) {themeToggle.setAttribute('aria-expanded', 'false');}
+      if (themePanel && !themePanel.hasAttribute("hidden")) {
+        themePanel.setAttribute("hidden", "");
+        if (themeOverlay) {
+          themeOverlay.setAttribute("hidden", "");
+        }
+        if (themeToggle) {
+          themeToggle.setAttribute("aria-expanded", "false");
+        }
         restorePanelPortal(themePanel);
       }
     }
 
     // Toggle on click
-    toggle.addEventListener('click', togglePanel);
+    toggle.addEventListener("click", togglePanel);
     syncLanguagePanelPortal();
 
     if (overlay) {
-      overlay.addEventListener('click', closePanel);
+      overlay.addEventListener("click", closePanel);
     }
 
     // Close on click outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener("click", function (e) {
       if (!toggle.contains(e.target) && !panel.contains(e.target)) {
         closePanel();
       }
     });
 
-    const syncOnViewportChange = function() {
-      if (!panel.hasAttribute('hidden')) {
+    const syncOnViewportChange = function () {
+      if (!panel.hasAttribute("hidden")) {
         syncLanguagePanelPortal();
       }
     };
-    window.addEventListener('resize', syncOnViewportChange);
-    window.addEventListener('scroll', syncOnViewportChange, { passive: true });
+    window.addEventListener("resize", syncOnViewportChange);
+    window.addEventListener("scroll", syncOnViewportChange, { passive: true });
 
-    const gridObserver = new MutationObserver(function() {
+    const gridObserver = new MutationObserver(function () {
       syncOnViewportChange();
     });
     gridObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-grid-overlay']
+      attributeFilter: ["data-grid-overlay"],
     });
 
     // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
         closePanel();
       }
     });
@@ -215,13 +265,13 @@
     let touchCurrentY = 0;
 
     if (panel && overlay) {
-      panel.addEventListener('touchstart', function(e) {
+      panel.addEventListener("touchstart", function (e) {
         touchStartY = e.changedTouches[0].screenY;
-        panel.style.transition = 'none';
-        overlay.style.transition = 'none';
+        panel.style.transition = "none";
+        overlay.style.transition = "none";
       });
 
-      panel.addEventListener('touchmove', function(e) {
+      panel.addEventListener("touchmove", function (e) {
         touchCurrentY = e.changedTouches[0].screenY;
         const deltaY = touchCurrentY - touchStartY;
 
@@ -233,24 +283,24 @@
           // Update overlay opacity based on drag distance
           const panelHeight = panel.getBoundingClientRect().height;
           const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
-          const opacity = 1 - (deltaY / maxDeltaY);
+          const opacity = 1 - deltaY / maxDeltaY;
           overlay.style.opacity = Math.max(opacity, 0);
         }
       });
 
-      panel.addEventListener('touchend', function () {
+      panel.addEventListener("touchend", function () {
         const deltaY = touchCurrentY - touchStartY;
 
-        panel.style.transition = 'transform 0.3s ease-in-out';
-        overlay.style.transition = 'opacity 0.3s ease-in-out';
+        panel.style.transition = "transform 0.3s ease-in-out";
+        overlay.style.transition = "opacity 0.3s ease-in-out";
 
         // Close if dragged down more than 50px
         if (deltaY > 50) {
           closePanel();
         } else {
           // Return to original position
-          panel.style.transform = 'translateY(0)';
-          overlay.style.opacity = '1';
+          panel.style.transform = "translateY(0)";
+          overlay.style.opacity = "1";
         }
 
         touchStartY = 0;

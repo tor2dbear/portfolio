@@ -580,6 +580,9 @@ other = "cat: cannot reach %s"
 [terminal_pager_more]
 other = "--More--  +%s more · tap"
 
+[terminal_lang_switched]
+other = "language → %s"
+
 [terminal_err_cat_isdir]
 other = "cat: %s: Is a directory — try: ls %s/"
 

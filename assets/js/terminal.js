@@ -340,73 +340,12 @@
     var terminalHistory = [];
     var TERMINAL_HISTORY_MAX = 100;
 
-    // Entry labels a remote `ls` fetched, keyed by cwd segments ("works/tags").
-    // An append-only `cd` moves the prompt without loading the directory, so Tab
-    // completion (synchronous, reads only the loaded page + the static tree) has
-    // nothing to offer there. Once you `ls` such a directory we cache what it
-    // held, so completing within it works — matching how you'd naturally `ls`
-    // first, then Tab.
-    var terminalLsDirCache = {};
-
-    // Prefetch the site's JSON feed (index.json — every published page in the
-    // main sections, with its URL) once, and fold each page into the ls cache
-    // under its parent directory. A real shell can complete a path you've never
-    // `cd`'d into because the filesystem is local; this gives the terminal the
-    // same reach, so `cat ~/works/thi⇥` completes from any page, not just from
-    // inside ~/works. Best-effort and purely additive: a real `ls` still
-    // overwrites the cache (fresh wins), and a missing/failed feed just leaves
-    // completion as lazy as it was before.
-    var terminalContentIndexSeeded = false;
-    function terminalSeedContentIndex() {
-      if (terminalContentIndexSeeded || typeof window.fetch !== "function") {
-        return;
-      }
-      terminalContentIndexSeeded = true;
-      var url = terminalHomeUrl().replace(/\/+$/, "") + "/index.json";
-      var pending;
-      try {
-        pending = window.fetch(url, { credentials: "same-origin" });
-      } catch (e) {
-        return; // fetch threw synchronously — leave completion lazy
-      }
-      if (!pending || typeof pending.then !== "function") {
-        return; // not a real fetch (e.g. a bare stub) — nothing to await
-      }
-      pending
-        .then(function (res) {
-          return res.ok ? res.json() : Promise.reject();
-        })
-        .then(function (feed) {
-          ((feed && feed.items) || []).forEach(function (item) {
-            var href = String(item && item.url ? item.url : "").replace(
-              /^[a-z]+:\/\/[^/]+/i,
-              ""
-            );
-            var segs = terminalHrefSegments(href);
-            // A top-level page (segs.length < 2) is already in the tree/manifest
-            // — only the nested posts need seeding.
-            if (!segs || segs.length < 2) {
-              return;
-            }
-            var dirKey = segs.slice(0, -1).join("/");
-            var file = segs[segs.length - 1] + ".md";
-            var list =
-              terminalLsDirCache[dirKey] || (terminalLsDirCache[dirKey] = []);
-            var exists = list.some(function (label) {
-              return label.replace(/[/@*]+$/, "").toLowerCase() === file;
-            });
-            if (!exists) {
-              list.push(file);
-            }
-          });
-          // A ghost the user is already looking at should pick up the newly
-          // known posts without waiting for the next keystroke.
-          terminalUpdateGhost();
-        })
-        .catch(function () {
-          /* no feed / offline — completion stays lazy, exactly as before */
-        });
-    }
+    // The site model — what `ls`/`cd`/`tree`/completion treat as the filesystem
+    // — lives in terminal-fs.js (window.TerminalFS): one full-tree manifest,
+    // read synchronously. It replaced the old scattered model (a top-level-only
+    // manifest, a per-cwd ls cache, and an index.json prefetch that folded posts
+    // into it). Completion now knows every post the instant the page loads, with
+    // no fetch to await, so the former warm-the-cache seed is gone.
 
     // Literal tables — help text, Tab-completion vocabulary, cat-able
     // pseudo-files, fortunes, the easter-egg index, the konami sequence and
@@ -428,21 +367,16 @@
     // post can scroll the reader to the top of that output (see revealTerminalCat).
     var lastTerminalCmdLine = null;
 
-    // Localized terminal strings, rendered per language by footer.html into
-    // data-js="terminal-i18n". Present on every terminal page; the English
-    // literals in terminal-data.js are the fallback (no-JS build, a missing
-    // catalog, or a parse error), so the terminal never renders blank.
-    var TI18N = (function () {
-      var el = document.querySelector('[data-js="terminal-i18n"]');
-      if (!el || !el.textContent) {
-        return {};
-      }
-      try {
-        return JSON.parse(el.textContent) || {};
-      } catch (e) {
-        return {};
-      }
-    })();
+    // Localized terminal strings + the tables derived from them (help, pseudo-
+    // files, easter eggs), read per language from data-js="terminal-i18n". Held
+    // in reassignable vars, not consts: hydrateTerminalSession() re-reads them
+    // after an in-place page/language swap so the engine can't reply from the
+    // previous language's catalog. The English literals in terminal-data.js are
+    // the fallback (no-JS build, a missing catalog, or a parse error).
+    var TI18N = {};
+    var TERMINAL_HELP = [];
+    var TERMINAL_FILES = {};
+    var TERMINAL_EASTER_EGGS = [];
 
     // A newline-joined i18n block → an array of lines (edge blank lines from the
     // TOML triple-quote trimmed), or the English fallback when the catalog lacks
@@ -467,7 +401,40 @@
     }
 
     var TERMINAL_LAYOUTS = TD.TERMINAL_LAYOUTS || [];
-    const TERMINAL_HELP = tiLines(TI18N.help, TD.TERMINAL_HELP || []);
+
+    // Read data-js="terminal-i18n" and (re)derive the catalog-backed tables.
+    // The single place the catalog is parsed — called at boot and again by
+    // hydrateTerminalSession() after an in-place swap.
+    function readTerminalCatalog() {
+      var el = document.querySelector('[data-js="terminal-i18n"]');
+      TI18N = {};
+      if (el && el.textContent) {
+        try {
+          TI18N = JSON.parse(el.textContent) || {};
+        } catch (e) {
+          TI18N = {}; // malformed catalog — fall back to the English literals
+        }
+      }
+      TERMINAL_HELP = tiLines(TI18N.help, TD.TERMINAL_HELP || []);
+      // Pseudo-files: English literals, then overlay any localized blocks from
+      // the catalog (readme/about/secret/config). welcome and colophon aren't
+      // here — they're reproduced live from the page's own localized DOM.
+      var files = {};
+      var base = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
+      Object.keys(base).forEach(function (k) {
+        files[k] = base[k];
+      });
+      var cat = TI18N.files || {};
+      Object.keys(cat).forEach(function (k) {
+        files[k] = tiLines(cat[k], files[k] || []);
+      });
+      TERMINAL_FILES = files;
+      TERMINAL_EASTER_EGGS = tiLines(
+        TI18N.easterEggs,
+        TD.TERMINAL_EASTER_EGGS || []
+      );
+    }
+    readTerminalCatalog();
 
     const TERMINAL_COMMAND_NAMES = TD.TERMINAL_COMMAND_NAMES || [];
 
@@ -490,27 +457,7 @@
       },
     };
 
-    // Pseudo-files: start from the English literals, then overlay any localized
-    // blocks from the catalog (readme/about/secret/config). welcome and colophon
-    // aren't here — they're reproduced live from the page's own (already
-    // localized) DOM by terminalWelcomeLines / terminalColophonLines.
-    const TERMINAL_FILES = (function () {
-      var base = TD.TERMINAL_FILES || { welcome: [], colophon: [] };
-      var files = {};
-      Object.keys(base).forEach(function (k) {
-        files[k] = base[k];
-      });
-      var cat = TI18N.files || {};
-      Object.keys(cat).forEach(function (k) {
-        files[k] = tiLines(cat[k], files[k] || []);
-      });
-      return files;
-    })();
     const TERMINAL_FORTUNES = TD.TERMINAL_FORTUNES || [];
-    const TERMINAL_EASTER_EGGS = tiLines(
-      TI18N.easterEggs,
-      TD.TERMINAL_EASTER_EGGS || []
-    );
 
     function terminalHost() {
       return (window.location && window.location.hostname) || "tor-bjorn.com";
@@ -623,28 +570,28 @@
       });
     }
 
-    // A small nested directory tree built from every nav + footer link path,
-    // so `ls`, `tree`, `cd` and Tab completion share one data-driven model of
-    // the "filesystem". Cached like terminalNavTargets — the links are static.
+    // The nested directory tree `ls`, `tree`, `cd` and Tab completion walk.
+    // The authoritative structure — sections, every post, standalone pages —
+    // comes from the full-tree manifest via window.TerminalFS (one synchronous
+    // source, no per-page scraping). Then the nav/footer links are harvested for
+    // the one thing the flat manifest doesn't enumerate: a section's `tags/`
+    // taxonomy dir (works has real tag term pages; the term contents are listed
+    // on demand by remote-ls). Cached — both the manifest and the links are
+    // static for the page's lifetime.
     var terminalDirTreeCache = null;
     function terminalDirTree() {
       if (terminalDirTreeCache) {
         return terminalDirTreeCache;
       }
-      var root = { name: "~", href: terminalHomeUrl(), children: {} };
-      // Seed the top level from the manifest — the authoritative list of what's
-      // in ~ (including footer-only sections like legal that carry no nav link,
-      // and without the noise of harvesting every footer href e.g. index.xml).
-      var manifest = terminalManifest();
-      Object.keys(manifest).forEach(function (seg) {
-        root.children[seg] = {
-          name: seg,
-          href: manifest[seg].url || null,
-          children: {},
-        };
-      });
-      // Then harvest the (relative) nav links for deeper structure — a section's
-      // tags/ and the like.
+      var root = (window.TerminalFS && window.TerminalFS.tree()) || {
+        name: "~",
+        href: terminalHomeUrl(),
+        kind: "dir",
+        children: {},
+      };
+      // Graft the (relative) nav/footer links for a section's tags/ hierarchy —
+      // idempotent: sections and posts are already in the manifest tree, so this
+      // only adds the taxonomy dirs the manifest leaves out.
       var links = document.querySelectorAll(
         ".top-menu__nav a[href]:not(.terminal-quick), .top-menu__link[href]"
       );
@@ -656,7 +603,12 @@
         var node = root;
         segs.forEach(function (seg) {
           if (!node.children[seg]) {
-            node.children[seg] = { name: seg, href: null, children: {} };
+            node.children[seg] = {
+              name: seg,
+              href: null,
+              kind: "dir",
+              children: {},
+            };
           }
           node = node.children[seg];
         });
@@ -736,67 +688,25 @@
       return node;
     }
 
-    // Slugs of the current page's own content links (article / summary cards)
-    // that live under the given section — so `ls` inside e.g. ~/writing lists
-    // the actual posts, which the nav tree can't know about.
-    function terminalPageContentSlugs(sectionSegments) {
-      if (!sectionSegments.length) {
-        return [];
-      }
-      var section = sectionSegments[0];
-      var out = [];
-      var seen = {};
-      document
-        .querySelectorAll(".article-card a[href], .summary-card a[href]")
-        .forEach(function (link) {
-          var segs = terminalHrefSegments(link.getAttribute("href"));
-          if (!segs || segs.length < 2 || segs[0] !== section) {
-            return;
-          }
-          var slug = segs[segs.length - 1];
-          if (seen[slug]) {
-            return;
-          }
-          seen[slug] = true;
-          out.push(slug);
-        });
-      return out;
-    }
-
-    // List a single directory. Structural children come from the nav/footer
-    // tree; for the current directory, the page's own content links are merged
-    // in. Unknown path → an ls-style error; a real page whose contents can't
-    // be listed from here (a different section) → a `cd` hint rather than a
-    // bare empty result.
     // The terminal presents the site as a filesystem, and Hugo tells it what
-    // each top-level thing IS via the manifest emitted in head.html: a section
-    // is a `dir`, a standalone page a `file`, the contact form an `action`, a
-    // visual tool `exempt`. Parsed once; the client no longer guesses.
-    var terminalManifestCache = null;
+    // each thing IS via the full-tree manifest emitted in head.html: a section
+    // is a `dir`, a post/standalone page a `file`, the contact form an `action`,
+    // a visual tool `exempt`. window.TerminalFS parses it once (keys normalized
+    // to decoded, lowercased logical paths); this is the flat map, for the
+    // callers that look a node up by name (cd/cat classification, slug stamping).
     function terminalManifest() {
-      if (terminalManifestCache) {
-        return terminalManifestCache;
-      }
-      terminalManifestCache = {};
-      var el = document.querySelector('[data-js="terminal-manifest"]');
-      if (el && el.textContent) {
-        try {
-          terminalManifestCache = JSON.parse(el.textContent) || {};
-        } catch (e) {
-          /* malformed manifest — fall back to the dir default below */
-        }
-      }
-      return terminalManifestCache;
+      return (window.TerminalFS && window.TerminalFS.manifest()) || {};
     }
 
-    // A top-level segment's kind. Deeper structural nodes (e.g. a section's
-    // `tags/`) aren't in the manifest and default to `dir` — they list children.
+    // A node's kind by its logical path (`works` or `works/a-cut-up-world`).
+    // A path not in the manifest (e.g. a nav-grafted `tags/` dir) defaults to
+    // `dir` — it lists children.
     function terminalNodeKind(name) {
       var e = terminalManifest()[String(name || "").toLowerCase()];
       return (e && e.kind) || "dir";
     }
 
-    // A top-level segment's URL from the manifest — lets the terminal reach a
+    // A logical path's URL from the manifest — lets the terminal reach a
     // footer-only section (legal) that has no nav link to resolve against.
     function terminalManifestUrl(name) {
       var e = terminalManifest()[String(name || "").toLowerCase()];
@@ -805,8 +715,19 @@
 
     // How an entry renders in a listing: dir → `name/`, file → `name.md`,
     // action → `name` (a command), exempt → `name*` (a tool you `open`).
-    function terminalEntryLabel(name) {
-      switch (terminalNodeKind(name)) {
+    // Takes a tree node (kind carried per node, so nested posts label as files)
+    // or a bare top-level name (kind looked up in the manifest).
+    function terminalEntryLabel(nameOrNode) {
+      var name;
+      var kind;
+      if (nameOrNode && typeof nameOrNode === "object") {
+        name = nameOrNode.name;
+        kind = nameOrNode.kind || "dir";
+      } else {
+        name = nameOrNode;
+        kind = terminalNodeKind(name);
+      }
+      switch (kind) {
         case "file":
           return name + ".md";
         case "action":
@@ -1191,27 +1112,16 @@
 
     // A directory's entry labels, kind-formatted (dir → `name/`, file →
     // `name.md`, action → `name`, exempt → `name*`). Shared by the text `ls`
-    // and the clickable `ls` so the two can never list different things.
-    function terminalLsEntryLabels(node, targetSegs, isCwd, showHidden) {
+    // and the clickable `ls` so the two can never list different things. The
+    // children — sections, and each section's posts as files — come straight
+    // from the manifest tree, so a section lists its posts whether or not the
+    // page they live on is the one loaded.
+    function terminalLsEntryLabels(node, showHidden) {
       var entries = Object.keys(node.children)
         .sort()
         .map(function (k) {
-          return terminalEntryLabel(node.children[k].name);
+          return terminalEntryLabel(node.children[k]);
         });
-      if (isCwd) {
-        // The page's own content (posts) are FILES: a post is a .md you `cat`,
-        // not a directory you `cd` into — so it reads like real `ls` and the
-        // prompt stays in the section when you open one.
-        terminalPageContentSlugs(targetSegs).forEach(function (slug) {
-          var entry = slug + ".md";
-          if (
-            entries.indexOf(entry) === -1 &&
-            entries.indexOf(slug + "/") === -1
-          ) {
-            entries.push(entry);
-          }
-        });
-      }
       if (showHidden) {
         entries = [".secret", ".config"].concat(entries);
       }
@@ -1276,7 +1186,7 @@
         ];
       }
       var isCwd = targetSegs.join("/") === terminalCwdSegments().join("/");
-      var entries = terminalLsEntryLabels(node, targetSegs, isCwd, showHidden);
+      var entries = terminalLsEntryLabels(node, showHidden);
       if (!entries.length) {
         // A real page (has an href) that we're not currently on: its contents
         // live on that page, so point there instead of printing nothing.
@@ -1326,14 +1236,19 @@
           out.push(
             keys
               .map(function (k) {
-                return n.children[k].name + "/";
+                return terminalEntryLabel(n.children[k]);
               })
               .join("  ")
           );
         }
         out.push("");
+        // Recurse into directories only (a section, or its tags/ dir — printed
+        // even when empty). A post is a file: it's a leaf, not its own header.
         keys.forEach(function (k) {
-          walk(n.children[k], p + "/" + n.children[k].name);
+          var child = n.children[k];
+          if ((child.kind || "dir") === "dir") {
+            walk(child, p + "/" + child.name);
+          }
         });
       }
       walk(node, path);
@@ -1354,7 +1269,7 @@
           lines.push(
             prefix +
               (last ? "└── " : "├── ") +
-              terminalEntryLabel(node.children[key].name)
+              terminalEntryLabel(node.children[key])
           );
           walk(node.children[key], prefix + (last ? "    " : "│   "));
         });
@@ -2037,7 +1952,9 @@
           }
           // Switch language by loading the translated page. cd:false so the
           // navigation doesn't print a spurious `cd` echo (same directory,
-          // different language).
+          // different language); lang:true lets navigateTerminal swap it in
+          // place (fetch + transplant the chrome + rehydrate) instead of a full
+          // reload, so the session survives the language change.
           return {
             echo: input,
             lines: [],
@@ -2045,6 +1962,7 @@
               type: "navigate",
               url: languages[langTarget].href,
               cd: false,
+              lang: true,
             },
           };
         }
@@ -2212,16 +2130,19 @@
               action: null,
             };
           }
-          // Append-only: listing the section (or a nested tags dir) you've cd'd
-          // into but haven't loaded (cd only moved the prompt) — fetch it and
-          // print below, without touching anything above.
+          // Append-only fallback: listing a directory the manifest tree can't
+          // resolve — a tag term dir (its posts are symlinks listed on the term
+          // page) or a node absent from the manifest — that you've cd'd into but
+          // haven't loaded. Fetch it and print below, without touching anything
+          // above. A section or any other dir the manifest knows lists
+          // synchronously from the tree in the clickable branch, no fetch.
           if (!lsPaths.length && !lsLong.length) {
             var lsSegs = terminalCwdSegments();
-            // You've cd'd away from the loaded page (live cwd ≠ page cwd), so the
-            // current DOM can't list here → fetch that path and print it below.
+            var lsCwdNode = terminalNodeAt(lsSegs);
             if (
               lsSegs.length &&
-              lsSegs.join("/") !== terminalPageCwdSegments().join("/")
+              lsSegs.join("/") !== terminalPageCwdSegments().join("/") &&
+              (!lsCwdNode || !Object.keys(lsCwdNode.children).length)
             ) {
               var lsUrl = terminalCwdUrl(lsSegs);
               if (lsUrl) {
@@ -2254,12 +2175,7 @@
               var lsTokSegs = terminalResolveSegments(lsPaths[0] || "");
               var lsTokNode = terminalNodeAt(lsTokSegs);
               if (lsTokNode) {
-                var lsTokLabels = terminalLsEntryLabels(
-                  lsTokNode,
-                  lsTokSegs,
-                  lsTokSegs.join("/") === terminalCwdSegments().join("/"),
-                  false
-                );
+                var lsTokLabels = terminalLsEntryLabels(lsTokNode, false);
                 if (lsTokLabels.length) {
                   return {
                     echo: input,
@@ -3062,11 +2978,55 @@
     // echo already printed to the scrollback, so an in-place swap needs no extra
     // output; on fallback the reload wipes it and the stash reprints it on top.
     function navigateTerminal(action) {
+      // A language switch keeps the terminal session and only needs the CHROME
+      // swapped (i18n catalog, manifest, nav, <html lang>), not the visible
+      // #main — so it takes its own in-place path: fetch the translated page,
+      // hydrate the engine from it, push history and confirm, keeping the current
+      // cwd (same directory, new language). That works everywhere a #main swap
+      // can't: transcript mode (where #main is hidden and a swap would paint
+      // nothing) and CSS-bundled pages like home (which the #main-swap route
+      // declines). A full reload is only the fallback when fetch can't run or
+      // fails.
+      if (action.lang === true) {
+        if (
+          isTerminalLayout() &&
+          isSameOriginUrl(action.url) &&
+          typeof window.fetch === "function"
+        ) {
+          window
+            .fetch(action.url, { credentials: "same-origin" })
+            .then(function (res) {
+              return res.ok ? res.text() : Promise.reject();
+            })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, "text/html");
+              hydrateTerminalSession(doc);
+              try {
+                window.history.pushState(
+                  { terminalLang: true },
+                  "",
+                  action.url
+                );
+              } catch (e) {
+                /* same-origin already checked; ignore a hostile pushState throw */
+              }
+              // Hydrate flipped TI18N + the selector, so this reads in the new
+              // language.
+              confirmLanguageSwitch();
+            })
+            .catch(function () {
+              fullReloadNavigate(action);
+            });
+          return;
+        }
+        fullReloadNavigate(action);
+        return;
+      }
+      // Typed cd/open/home: swap the visible #main in place when we can. In
+      // transcript mode #main is hidden (a swap paints nothing), home is a
+      // CSS-bundled page terminal-nav declines, cross-origin/no-nav can't swap —
+      // those fall back to a full reload, which re-runs the destination's boot.
       var cwd = hrefToCwd(action.url);
-      // In transcript mode the page content (#main) is hidden — it's just the
-      // boot transcript's data source — so an in-place #main swap would paint
-      // nothing. A `navigate` (open/lang) instead does a full load; the
-      // destination re-runs its own boot transcript, keeping the session model.
       var canSwap =
         !document.documentElement.hasAttribute("data-terminal-transcript") &&
         action.cd !== false &&
@@ -3084,6 +3044,21 @@
           fullReloadNavigate(action);
         }
       });
+    }
+
+    // Print the post-swap language confirmation and raise the same toast the
+    // other terminal settings use. Reads the now-current language off the
+    // freshly transplanted selector so the label is in the new language.
+    function confirmLanguageSwitch() {
+      var here = currentLang();
+      var name = (terminalLanguages()[here] || {}).name || here;
+      printTerminalLine(
+        tiText("langSwitched", "language → %s", name),
+        "terminal-session__out"
+      );
+      if (window.Toast && typeof window.Toast.show === "function") {
+        window.Toast.show("language", name);
+      }
     }
 
     // Render a fetched directory listing by what the cwd IS:
@@ -3345,10 +3320,6 @@
               var doc = new DOMParser().parseFromString(html, "text/html");
               var files = terminalRemoteLsEntries(doc, action.cwd);
               if (files.length) {
-                // Remember what this directory held, so Tab completion works in
-                // it even though the `cd` never loaded its page.
-                terminalLsDirCache[terminalSegmentsOf(action.cwd).join("/")] =
-                  files;
                 // Clickable, like the local `ls` — each post cats itself, each
                 // tag dir cds into it.
                 printTerminalLsList(
@@ -4347,40 +4318,23 @@
             ? terminalCwdSegments()
             : terminalResolveSegments(dirPart);
         var node = terminalNodeAt(dirSegs);
-        var names = node
-          ? Object.keys(node.children).filter(function (name) {
-              return name.indexOf(filePart) === 0;
-            })
-          : [];
-        // cat/open reach the page's posts too — complete them as .md files.
-        if (verb === "cat" || verb === "open") {
-          terminalPageContentSlugs(dirSegs).forEach(function (slug) {
-            var file = slug + ".md";
-            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
-              names.push(file);
+        // The manifest tree knows the whole directory synchronously — sections,
+        // and each section's posts as files — so completion reaches any post the
+        // instant the page loads, with no cache to warm. cat/open complete a post
+        // as `name.md` (you cat a file); cd/ls complete it bare.
+        var names = [];
+        if (node) {
+          Object.keys(node.children).forEach(function (name) {
+            var child = node.children[name];
+            var display =
+              (verb === "cat" || verb === "open") && child.kind === "file"
+                ? name + ".md"
+                : name;
+            if (display.toLowerCase().indexOf(filePart) === 0) {
+              names.push(display);
             }
           });
         }
-        // A directory you `cd`'d into but never loaded isn't in the tree or the
-        // live DOM — but if you `ls`'d it, its entries are cached. Offer dir
-        // names to cd, and (for cat/open) its files as .md, stripping the
-        // classify markers (`/`, `@`) so they complete like real names.
-        (terminalLsDirCache[dirSegs.join("/")] || []).forEach(function (label) {
-          if (/\/$/.test(label)) {
-            var dir = label.slice(0, -1).toLowerCase();
-            if (dir.indexOf(filePart) === 0 && names.indexOf(dir) === -1) {
-              names.push(dir);
-            }
-          } else if (
-            (verb === "cat" || verb === "open") &&
-            /\.md@?$/i.test(label)
-          ) {
-            var file = label.replace(/@$/, "").toLowerCase();
-            if (file.indexOf(filePart) === 0 && names.indexOf(file) === -1) {
-              names.push(file);
-            }
-          }
-        });
         candidates = names.map(function (name) {
           return dirPart + name;
         });
@@ -4394,9 +4348,6 @@
       if (!terminalInput) {
         return;
       }
-      // An explicit completion request is a hard signal to warm the page-index
-      // cache, in case the prompt was never focused first (e.g. a key-bar Tab).
-      terminalSeedContentIndex();
       var candidates = terminalCompletionFor(terminalInput.value).candidates;
       if (candidates.length === 1) {
         var parts = terminalInput.value.split(/\s+/);
@@ -4491,11 +4442,7 @@
       });
       // The inline suggestion is only meaningful while typing: refresh it on
       // focus, clear it on blur so it doesn't linger under the idle caret.
-      // Focusing the prompt is also the first sign the user is about to type,
-      // so warm the page-index cache now — the completion for an unvisited
-      // directory needs it, and it's a one-shot fetch.
       terminalInput.addEventListener("focus", function () {
-        terminalSeedContentIndex();
         terminalUpdateGhost();
       });
       terminalInput.addEventListener("blur", function () {
@@ -4872,6 +4819,67 @@
       container.insertBefore(line, anchor);
     }
 
+    // The terminal command a clicked real-page link stands for, or null when the
+    // link doesn't resolve to something the terminal knows (then the caller falls
+    // back to the browser). Content cards are already stamped by
+    // terminalStampSlugs — data-slug → a post (cat), data-dir → a section (cd) —
+    // and that stamp is the terminal name, so it survives the URL-slug rename (a
+    // work lives at /englishwork/…) and the Swedish translation. Nav links are
+    // classified from their logical path by kind, but only when the node is known
+    // (the Swedish nav slug the manifest keys elsewhere returns null → reload).
+    function terminalCommandForClick(target) {
+      if (!target || !target.closest) {
+        return null;
+      }
+      var card = target.closest(".summary-card, .article-card");
+      if (card) {
+        var stamped = card.querySelector("[data-slug], [data-dir]");
+        if (stamped) {
+          var slug = stamped.getAttribute("data-slug");
+          if (slug) {
+            return "cat " + slug + ".md";
+          }
+          var dir = stamped.getAttribute("data-dir");
+          if (dir) {
+            return "cd " + dir;
+          }
+        }
+        return null; // an unstamped card link — leave it to the browser
+      }
+      var navLink = target.closest(
+        ".top-menu__nav a[href]:not(.terminal-quick), .terminal-prompt__host[href]"
+      );
+      if (!navLink) {
+        return null;
+      }
+      var href = navLink.getAttribute("href");
+      if (!href || href.charAt(0) === "#") {
+        return null;
+      }
+      var segs = terminalHrefSegments(href);
+      if (!segs) {
+        return null; // external / non-root-relative
+      }
+      if (!segs.length) {
+        return "cd ~"; // the prompt host / home
+      }
+      var node = terminalNodeAt(segs);
+      if (!node) {
+        return null; // unknown to the terminal → fall back to the reload
+      }
+      var name = segs.join("/");
+      switch (node.kind || terminalNodeKind(name)) {
+        case "file":
+          return "cat " + segs[segs.length - 1] + ".md";
+        case "action":
+          return name;
+        case "exempt":
+          return "open " + name;
+        default:
+          return "cd " + name;
+      }
+    }
+
     // Nav clicks that change page read as `cd <page>` on the next screen.
     document.addEventListener("click", function (e) {
       if (
@@ -4883,6 +4891,47 @@
         e.shiftKey ||
         e.altKey
       ) {
+        return;
+      }
+      // The statusbar language toggle switches language in place (fetch + swap +
+      // rehydrate) rather than full-reloading — the same path a typed `lang`
+      // takes, with a reload fallback when the swap declines. Handled before the
+      // nav-link match, which excludes `.terminal-quick` (a toggle is a language
+      // switch, not a directory change, so it prints no `cd` echo).
+      var langLink =
+        e.target && e.target.closest
+          ? e.target.closest(".terminal-quick--lang[href]")
+          : null;
+      if (langLink) {
+        var langHref = langLink.getAttribute("href");
+        if (langHref && langHref.charAt(0) !== "#") {
+          e.preventDefault();
+          navigateTerminal({
+            type: "navigate",
+            url: langHref,
+            cd: false,
+            lang: true,
+          });
+        }
+        return;
+      }
+      // Clicking a real-page link runs the matching terminal command in place
+      // instead of reloading — a section cds (+ ls), a post/project card cats
+      // itself inline — so the scrollback and prompt survive. Only when the link
+      // resolves to something the terminal knows; otherwise fall through to the
+      // stash + full reload below, exactly as before.
+      var clickCmd = terminalCommandForClick(e.target);
+      if (clickCmd) {
+        e.preventDefault();
+        runTerminalInput(clickCmd);
+        // A directory "opens" — append its listing, matching the rendered
+        // ls-entry behavior (transcript mode, where the session IS the page).
+        if (
+          document.documentElement.hasAttribute("data-terminal-transcript") &&
+          /^cd\s+\S/.test(clickCmd)
+        ) {
+          runTerminalInput("ls");
+        }
         return;
       }
       var link =
@@ -4933,7 +4982,135 @@
           }
         });
     }
-    terminalStampSlugs();
+
+    // One entry point for (re)deriving everything the terminal reads from the
+    // page chrome — the i18n catalog and its tables, the fs/tree/nav caches, and
+    // the cards' slug stamps. Boot calls it once; an in-place swap (terminal-nav)
+    // calls it after replacing #main, so the engine can't keep answering from the
+    // previous page's chrome (the "Swedish page, English replies" desync class).
+
+    // Transplant the language-differing chrome that lives OUTSIDE #main from a
+    // fetched document into the live DOM — used by a language swap, where the
+    // i18n catalog, manifest, nav and <html lang> all flip. Done by content /
+    // attribute writes IN PLACE, never node replacement: the settings panel, nav
+    // and language radios carry direct-bound listeners (theme.js, settings-
+    // dropdown.js, language-dropdown.js) that a node swap would orphan. The data
+    // scripts have no listeners, so their text is replaced freely. For a
+    // same-language content swap the source equals the live chrome, so this is a
+    // no-op. The terminal's own prompt line (the exit hint + input label) IS
+    // relocalized; decorative non-terminal chrome (settings-panel labels, the
+    // footer strings) isn't — it lags until the next full load.
+    function transplantTerminalChrome(sourceDoc) {
+      if (!sourceDoc || !sourceDoc.documentElement) {
+        return;
+      }
+      // 1. Data scripts (no listeners): i18n catalog, fs manifest, welcome text.
+      ["terminal-i18n", "terminal-manifest", "terminal-welcome"].forEach(
+        function (key) {
+          var sel = '[data-js="' + key + '"]';
+          var src = sourceDoc.querySelector(sel);
+          var live = document.querySelector(sel);
+          if (src && live) {
+            live.textContent = src.textContent;
+          }
+        }
+      );
+      // 2. <html> lang + home url. Leave the runtime, localStorage-driven attrs
+      // (data-mode/palette/typography/layout/effect-*/terminal-*) untouched —
+      // they're not in the fetched static markup and are already correct.
+      var srcHtml = sourceDoc.documentElement;
+      var lang = srcHtml.getAttribute("lang");
+      if (lang) {
+        document.documentElement.setAttribute("lang", lang);
+      }
+      var homeUrl = srcHtml.getAttribute("data-home-url");
+      if (homeUrl) {
+        document.documentElement.setAttribute("data-home-url", homeUrl);
+      }
+      // 3. Nav links (incl. the prompt host + the statusbar lang toggle): update
+      // href + label in place so `ls nav`, cd targets and the toggle all track
+      // the new language. The two translations render one template, so the anchor
+      // order matches; a length mismatch means an unexpected shape — skip it.
+      var liveNav = document.querySelectorAll(".top-menu__nav a[href]");
+      var srcNav = sourceDoc.querySelectorAll(".top-menu__nav a[href]");
+      if (liveNav.length && liveNav.length === srcNav.length) {
+        for (var i = 0; i < liveNav.length; i++) {
+          liveNav[i].setAttribute("href", srcNav[i].getAttribute("href") || "");
+          liveNav[i].textContent = srcNav[i].textContent;
+        }
+      }
+      // 4. Language radios: match by code, copy the translated href (the current
+      // language carries none) + checked state, so a later lang/panel switch and
+      // terminalLanguages() target the right pages.
+      var srcLangByCode = {};
+      sourceDoc
+        .querySelectorAll(".language-option input[data-language-code]")
+        .forEach(function (input) {
+          var c = (
+            input.getAttribute("data-language-code") || ""
+          ).toLowerCase();
+          if (c) {
+            srcLangByCode[c] = input;
+          }
+        });
+      document
+        .querySelectorAll(".language-option input[data-language-code]")
+        .forEach(function (input) {
+          var c = (
+            input.getAttribute("data-language-code") || ""
+          ).toLowerCase();
+          var src = srcLangByCode[c];
+          if (!src) {
+            return;
+          }
+          var href = src.getAttribute("data-language-href");
+          if (href) {
+            input.setAttribute("data-language-href", href);
+          } else {
+            input.removeAttribute("data-language-href");
+          }
+          input.checked = src.hasAttribute("checked");
+        });
+      // 5. The live prompt line's localized text. It lives in .terminal-tail,
+      // which also holds the real <input> (direct-bound listeners) — so copy
+      // the strings IN PLACE, never replace the node: the exit hint (a CSS
+      // ::after content: attr(data-exit-hint), so writing the attribute
+      // re-renders it) and the sr-only input label. Without this the prompt
+      // keeps whispering the boot language after an in-place language swap.
+      var srcTail = sourceDoc.querySelector(".terminal-tail");
+      var liveTail = document.querySelector(".terminal-tail");
+      if (srcTail && liveTail) {
+        var exitHint = srcTail.getAttribute("data-exit-hint");
+        if (exitHint !== null) {
+          liveTail.setAttribute("data-exit-hint", exitHint);
+        }
+        var srcLabel = srcTail.querySelector('label[for="terminal-input"]');
+        var liveLabel = liveTail.querySelector('label[for="terminal-input"]');
+        if (srcLabel && liveLabel) {
+          liveLabel.textContent = srcLabel.textContent;
+        }
+      }
+    }
+
+    // Given a fetched document (a language swap), transplant the chrome first;
+    // then re-derive. Without a sourceDoc this is the boot / same-language path,
+    // exactly as before.
+    function hydrateTerminalSession(sourceDoc) {
+      if (sourceDoc) {
+        transplantTerminalChrome(sourceDoc);
+      }
+      readTerminalCatalog();
+      terminalDirTreeCache = null;
+      terminalNavTargetsCache = null;
+      if (
+        window.TerminalFS &&
+        typeof window.TerminalFS.refresh === "function"
+      ) {
+        window.TerminalFS.refresh();
+      }
+      terminalStampSlugs();
+    }
+    hydrateTerminalSession();
     window.TerminalSlugs = { refresh: terminalStampSlugs };
 
     // Replay the page's boot transcript into the scrollback (after slugs are
@@ -5022,6 +5199,26 @@
         if (terminalBootRunner) {
           window.setTimeout(terminalBootRunner, 0);
         }
+      },
+      // Re-derive everything the engine reads from the page chrome after an
+      // in-place navigation has swapped #main. terminal-nav.js calls this so the
+      // i18n catalog, the fs/tree/nav model and the card slug stamps track the
+      // new page instead of the one that booted. Subsumes TerminalSlugs.refresh.
+      // Pass the fetched document to also transplant the language-differing
+      // chrome (i18n/manifest/nav/<html lang>) for a language swap.
+      rehydrate: function (sourceDoc) {
+        hydrateTerminalSession(sourceDoc);
+      },
+      // Switch language in place from OUTSIDE the command engine — the statusbar
+      // toggle and the settings-panel radio — by running the exact path a typed
+      // `lang` takes (swap + transplant + confirm, or a full-reload fallback when
+      // the gate/fetch declines). Keeps every language switch out of a reload in
+      // terminal layout without duplicating the swap logic.
+      switchLanguage: function (url) {
+        if (!url) {
+          return;
+        }
+        navigateTerminal({ type: "navigate", url: url, cd: false, lang: true });
       },
       captureInput: captureTerminalInput,
       releaseInput: releaseTerminalInput,

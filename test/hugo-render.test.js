@@ -181,6 +181,19 @@ describeOrSkip("Hugo template rendering", () => {
       expect(manifest()["docs"]).toMatchObject({ kind: "action" });
     });
 
+    test("widened to the full tree: a section's nested post is a file, keyed by its logical path", () => {
+      const m = manifest();
+      // sample-work lives at employer-fixture/sample-work/ — a depth-2 page the
+      // old top-level-only manifest never emitted. It's now a file under its
+      // section, keyed by the logical path (section name + tail), not flattened
+      // to a bare slug.
+      expect(m["employer-fixture/sample-work"]).toMatchObject({
+        kind: "file",
+        url: "/employer-fixture/sample-work/",
+      });
+      expect(m).not.toHaveProperty("sample-work");
+    });
+
     test("exempt sections and hidden pages are left out entirely", () => {
       const m = manifest();
       expect(m).not.toHaveProperty("tools"); // terminal_kind: exempt

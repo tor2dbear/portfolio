@@ -37,6 +37,7 @@ describe("terminal command line", () => {
       require("../theme.js");
       require("../theme-pantone.js");
       require("../terminal-data.js");
+      require("../terminal-fs.js");
       require("../terminal.js");
       require("../terminal-flows.js");
     });
@@ -93,6 +94,7 @@ describe("terminal command line", () => {
       "data-terminal-replaying",
       "data-terminal-exempt",
       "data-terminal-booted",
+      "lang",
     ].forEach((attr) => document.documentElement.removeAttribute(attr));
     // A test may pushState to a deeper path; reset so location-derived logic
     // (the current-page slug) starts from home each case.
@@ -100,7 +102,7 @@ describe("terminal command line", () => {
 
     document.documentElement.innerHTML = `
       <head><meta name="theme-color" content="#ffffff">
-        <script type="application/json" data-js="terminal-manifest">{"works":{"kind":"dir","url":"/works/"},"writing":{"kind":"dir","url":"/writing/"},"about":{"kind":"file","url":"/about/"},"contact":{"kind":"action","url":"/contact/"},"legal":{"kind":"dir","url":"/legal/"},"ui-library":{"kind":"exempt","url":"/ui-library/"},"palette-generator":{"kind":"exempt","url":"/palette-generator/"}}</script>
+        <script type="application/json" data-js="terminal-manifest">{"works":{"kind":"dir","url":"/works/"},"works/a-cut-up-world":{"kind":"file","url":"/works/a-cut-up-world/"},"works/things-in-a-conversation":{"kind":"file","url":"/works/things-in-a-conversation/"},"writing":{"kind":"dir","url":"/writing/"},"writing/the-grid-inherited":{"kind":"file","url":"/writing/the-grid-inherited/"},"about":{"kind":"file","url":"/about/"},"contact":{"kind":"action","url":"/contact/"},"legal":{"kind":"dir","url":"/legal/"},"legal/license":{"kind":"file","url":"/legal/license/"},"ui-library":{"kind":"exempt","url":"/ui-library/"},"palette-generator":{"kind":"exempt","url":"/palette-generator/"}}</script>
       </head>
       <body>
         <div class="terminal-boot">
@@ -375,57 +377,26 @@ describe("terminal command line", () => {
     );
   });
 
-  test("Tab completes files in a cd'd-into directory once ls has cached them", async () => {
-    // Live cwd sits in a tag dir the page never loaded (page cwd is ~), so a
-    // bare `ls` remote-fetches it.
-    window.getComputedStyle = () => ({
-      getPropertyValue: (prop) =>
-        prop === "--terminal-live-cwd"
-          ? "~/works/tags/experimental"
-          : prop === "--terminal-cwd"
-          ? "~"
-          : "#ffffff",
-    });
-    window.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      text: () =>
-        Promise.resolve(
-          '<div class="summary-card"><a href="/works/things-in-a-conversation/">x</a></div>' +
-            '<div class="summary-card"><a href="/works/a-cut-up-world/">y</a></div>'
-        ),
-    });
-    loadModule();
-    typeCommand("ls"); // remote-ls fetches the tag dir and caches its files
-    await flush();
-    const input = document.querySelector('[data-js="terminal-input"]');
-    // Before, Tab had nothing here; now the cached filename completes.
-    input.value = "cat thin";
-    keydown({ key: "Tab" });
-    expect(input.value).toBe("cat things-in-a-conversation.md");
-  });
-
-  test("Tab completes a post in an unvisited directory once the page index warms", async () => {
-    // From the home page ~/works's projects were never listed, so completion
-    // has nothing for them — until the prompt is focused and the site's page
-    // index (index.json) warms the ls cache.
-    window.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          items: [
-            { url: "https://tor-bjorn.com/works/things-in-a-conversation/" },
-            { url: "https://tor-bjorn.com/works/a-cut-up-world/" },
-          ],
-        }),
-    });
+  test("Tab completes a post in any section synchronously — no fetch, no cache", () => {
+    // The full-tree manifest knows every post the instant the page loads, so a
+    // qualified path completes with no `ls`, no focus, no index.json prefetch.
+    window.fetch = jest.fn();
     loadModule();
     const input = document.querySelector('[data-js="terminal-input"]');
-    input.dispatchEvent(new window.Event("focus")); // warms the cache
-    await flush();
-    expect(window.fetch.mock.calls[0][0]).toContain("/index.json");
     input.value = "cat ~/works/thin";
     keydown({ key: "Tab" });
     expect(input.value).toBe("cat ~/works/things-in-a-conversation.md");
+    expect(window.fetch).not.toHaveBeenCalled();
+  });
+
+  test("Tab completes a post as a bare name for cd (a file is .md only for cat)", () => {
+    // Kind-aware completion: cat/open complete a file as `name.md`; cd/ls
+    // complete it bare (you cat a file, you cd a dir).
+    loadModule();
+    const input = document.querySelector('[data-js="terminal-input"]');
+    input.value = "cd ~/works/thin";
+    keydown({ key: "Tab" });
+    expect(input.value).toBe("cd ~/works/things-in-a-conversation");
   });
 
   test("cat prints a known pseudo-file and 404s unknown ones", () => {
@@ -642,9 +613,11 @@ describe("terminal command line", () => {
     expect(sessionText()).not.toContain("the-grid-inherited/");
   });
 
-  test("ls of another section hints at cd instead of printing nothing", () => {
+  test("ls of another section lists its posts from the manifest, from anywhere", () => {
     loadModule();
-    // Sitting on /works/, ask for a different section's contents.
+    // Sitting on /works/, ask for a different section's contents. The manifest
+    // knows the whole tree, so a remote section lists its posts directly instead
+    // of the old "(cd writing to list it)" hint that a DOM-only model needed.
     window.getComputedStyle = jest.fn(() => ({
       getPropertyValue: jest.fn((prop) =>
         prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
@@ -653,7 +626,7 @@ describe("terminal command line", () => {
       ),
     }));
     typeCommand("ls ~/writing");
-    expect(sessionText()).toContain("cd writing");
+    expect(sessionText()).toContain("the-grid-inherited.md");
   });
 
   test("ls lists several paths with per-directory headers", () => {
@@ -1286,10 +1259,11 @@ describe("terminal command line", () => {
     );
   });
 
-  test("append-only ls renders the fetched section's posts as clickable files", async () => {
+  test("ls in a cd'd-into section lists it synchronously from the manifest — no fetch", () => {
     // After `cd writing` (append-only: the live cwd moves, the loaded page
-    // doesn't), a bare `ls` can't read the DOM — it fetches /writing/ and lists
-    // it below. Those posts must be clickable too, just like a local `ls`.
+    // doesn't), a bare `ls` no longer needs to fetch the section — the full-tree
+    // manifest already knows its posts, so it lists them as clickable files at
+    // once, without a round-trip.
     loadModule();
     // Page cwd is home (~); the live cwd has moved into ~/writing.
     window.getComputedStyle = jest.fn(() => ({
@@ -1303,27 +1277,16 @@ describe("terminal command line", () => {
     }));
     window.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      text: () =>
-        Promise.resolve(
-          '<div class="summary-card"><a href="/writing/the-grid-inherited/">The grid</a></div>' +
-            '<div class="summary-card"><a href="/writing/another-post/">Another</a></div>'
-        ),
+      text: () => Promise.resolve(""),
     });
     typeCommand("ls");
-    // The remote-ls handler is async (fetch → parse → print); flush its chain.
-    for (let i = 0; i < 6; i++) {
-      await Promise.resolve();
-    }
 
     const post = document.querySelector(
       '.terminal-session__ls-entry[data-cmd="cat the-grid-inherited.md"]'
     );
     expect(post).not.toBeNull();
-    expect(
-      document.querySelector(
-        '.terminal-session__ls-entry[data-cmd="cat another-post.md"]'
-      )
-    ).not.toBeNull();
+    // The listing came from the manifest, not a fetch.
+    expect(window.fetch).not.toHaveBeenCalled();
 
     const before = sessionText();
     post.dispatchEvent(new window.Event("click", { bubbles: true }));
@@ -1331,6 +1294,40 @@ describe("terminal command line", () => {
     expect(sessionText().slice(before.length)).toContain(
       "cat the-grid-inherited.md"
     );
+  });
+
+  test("ls in a tag term dir the manifest doesn't enumerate falls back to remote-ls", async () => {
+    // Tag term dirs (works/tags/<term>) aren't in the flat manifest — their
+    // posts are symlinks whose canonical file lives up in the section. Listing
+    // one you've cd'd into but not loaded still fetches the term page and prints
+    // its posts as clickable symlinks (the retained defensive fallback).
+    loadModule();
+    window.getComputedStyle = jest.fn(() => ({
+      getPropertyValue: jest.fn((prop) =>
+        prop === "--terminal-live-cwd"
+          ? "~/works/tags/experimental"
+          : prop === "--terminal-cwd"
+          ? "~"
+          : "#ffffff"
+      ),
+    }));
+    window.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve(
+          '<div class="summary-card"><a href="/works/things-in-a-conversation/">x</a></div>'
+        ),
+    });
+    typeCommand("ls");
+    // The remote-ls handler is async (fetch → parse → print); flush its chain.
+    for (let i = 0; i < 6; i++) {
+      await Promise.resolve();
+    }
+    expect(window.fetch).toHaveBeenCalled();
+    const post = document.querySelector(
+      '.terminal-session__ls-entry[data-cmd="cat things-in-a-conversation.md"]'
+    );
+    expect(post).not.toBeNull();
   });
 
   test("clicking a directory entry in transcript mode opens it (cd then ls)", () => {
@@ -1844,6 +1841,267 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("this list");
   });
 
+  test("rehydrate re-reads a swapped-in i18n catalog (no stale-language replies)", () => {
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "kommandon:\n  help      den här listan",
+    });
+    document.body.appendChild(cat);
+    loadModule();
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
+    // An in-place swap replaces the catalog under the live prompt; rehydrate()
+    // must re-read it so the engine stops answering in the old language.
+    cat.textContent = JSON.stringify({
+      help: "commands:\n  help      this exact list",
+    });
+    window.Terminal.rehydrate();
+    typeCommand("help");
+    expect(sessionText()).toContain("this exact list");
+  });
+
+  test("rehydrate resets the fs/tree model to a swapped-in manifest", () => {
+    loadModule();
+    typeCommand("ls");
+    expect(sessionText()).not.toContain("notes/");
+    // A swap replaces the manifest blob (a page with a different tree). rehydrate
+    // clears the dir-tree + TerminalFS caches so ls reflects the new tree.
+    const man = document.querySelector('[data-js="terminal-manifest"]');
+    man.textContent = JSON.stringify({
+      notes: { kind: "dir", url: "/notes/" },
+    });
+    window.Terminal.rehydrate();
+    typeCommand("ls");
+    expect(sessionText()).toContain("notes/");
+  });
+
+  test("rehydrate(doc) transplants a translated document's chrome (language swap)", () => {
+    // The live page starts English, with an English catalog.
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "commands:\n  help      this list",
+    });
+    document.body.appendChild(cat);
+    loadModule();
+    typeCommand("help");
+    expect(sessionText()).toContain("this list");
+
+    // A fetched Swedish document: sv <html lang>, sv manifest, sv i18n catalog,
+    // and a nav whose anchor count mirrors the live nav (so the in-place link
+    // transplant runs — see the length guard).
+    const svHtml =
+      '<!doctype html><html lang="sv" data-home-url="/sv/"><head>' +
+      '<script type="application/json" data-js="terminal-manifest">' +
+      '{"arbeten":{"kind":"dir","url":"/sv/arbeten/"}}</script></head><body>' +
+      '<nav class="top-menu__nav">' +
+      '<a class="terminal-prompt__host" href="/sv/"></a>' +
+      '<a class="top-menu__link" href="/sv/arbeten/">Arbeten</a>' +
+      '<a class="top-menu__link" href="/sv/arbeten/tags/">Taggar</a>' +
+      '<a class="top-menu__link" href="/sv/texter/">Texter</a>' +
+      '<a class="top-menu__link" href="/sv/om/">Om</a>' +
+      '<a class="terminal-quick terminal-quick--lang" href="/writing/" lang="en">en</a>' +
+      "</nav>" +
+      '<script type="application/json" data-js="terminal-i18n">' +
+      JSON.stringify({ help: "kommandon:\n  help      den här listan" }) +
+      "</script></body></html>";
+    const doc = new DOMParser().parseFromString(svHtml, "text/html");
+    window.Terminal.rehydrate(doc);
+
+    // <html lang> flipped, the engine speaks Swedish, and the fs model + nav
+    // reflect the Swedish tree.
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
+    typeCommand("ls");
+    expect(sessionText()).toContain("arbeten/");
+    typeCommand("ls nav");
+    expect(sessionText()).toContain("om/");
+  });
+
+  test("rehydrate(doc) relocalizes the prompt line + the UI-string catalog", () => {
+    // The engine's own prompt line (the exit hint, a CSS ::after reading
+    // data-exit-hint) and its UI strings (errors, the lang-switch confirmation)
+    // must flip with the language too — not just help/ls. Otherwise the terminal
+    // keeps whispering the boot language after an in-place swap.
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      ui: { notFound: "%s: kommandot hittades inte" },
+    });
+    document.body.appendChild(cat);
+    // The live prompt line carries an English exit hint + input label.
+    const liveTail = document.querySelector(".terminal-tail");
+    liveTail.setAttribute("data-exit-hint", "type exit to leave");
+    const liveLabel = document.createElement("label");
+    liveLabel.className = "sr-only";
+    liveLabel.setAttribute("for", "terminal-input");
+    liveLabel.textContent = "Type a command";
+    liveTail.insertBefore(liveLabel, liveTail.firstChild);
+    loadModule();
+
+    const svHtml =
+      '<!doctype html><html lang="sv"><head></head><body>' +
+      '<p class="terminal-tail" data-exit-hint="skriv exit för att lämna">' +
+      '<label class="sr-only" for="terminal-input">Skriv ett kommando</label>' +
+      '<input id="terminal-input" data-js="terminal-input" /></p>' +
+      '<script type="application/json" data-js="terminal-i18n">' +
+      JSON.stringify({ ui: { notFound: "%s: kommandot hittades inte" } }) +
+      "</script></body></html>";
+    const doc = new DOMParser().parseFromString(svHtml, "text/html");
+    window.Terminal.rehydrate(doc);
+
+    // The prompt line's exit hint + input label are now Swedish, in place (the
+    // live <input> node is preserved, not replaced).
+    const tail = document.querySelector(".terminal-tail");
+    expect(tail.getAttribute("data-exit-hint")).toBe(
+      "skriv exit för att lämna"
+    );
+    expect(tail.querySelector('label[for="terminal-input"]').textContent).toBe(
+      "Skriv ett kommando"
+    );
+    expect(document.querySelector('[data-js="terminal-input"]')).not.toBeNull();
+
+    // And a UI string (command-not-found) now renders from the Swedish catalog.
+    typeCommand("frobnicate");
+    expect(sessionText()).toContain("frobnicate: kommandot hittades inte");
+  });
+
+  // A language switch is a chrome-only in-place swap: fetch the translated page,
+  // hydrate from it, push history, confirm. No visible #main swap, so it works in
+  // transcript mode and on home — where the #main-swap route can't. These helpers
+  // set up a content cwd, a live English catalog to transplant into, and a fetch
+  // that returns the Swedish page.
+  function svPageHtml() {
+    const manifest =
+      '<script type="application/json" data-js="terminal-manifest">{}</script>';
+    const i18n =
+      '<script type="application/json" data-js="terminal-i18n">' +
+      JSON.stringify({
+        help: "kommandon:\n  help      den här listan",
+        ui: { langSwitched: "språk → %s" },
+      }) +
+      "</script>";
+    return (
+      '<!doctype html><html lang="sv"><head>' +
+      manifest +
+      "</head><body>" +
+      i18n +
+      "</body></html>"
+    );
+  }
+  function setupLangSwap() {
+    window.getComputedStyle = () => ({
+      getPropertyValue: (prop) =>
+        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
+          ? "~/writing"
+          : "#ffffff",
+    });
+    document.documentElement.setAttribute("data-layout", "terminal");
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "commands:\n  help      this list",
+    });
+    document.body.appendChild(cat);
+    document
+      .querySelector('.language-option input[data-language-code="sv"]')
+      .setAttribute("data-language-href", "/sv/writing/");
+    window.fetch = jest.fn(() =>
+      Promise.resolve({ ok: true, text: () => Promise.resolve(svPageHtml()) })
+    );
+  }
+  function fetchedSvWriting() {
+    return window.fetch.mock.calls.some((c) => c[0] === "/sv/writing/");
+  }
+
+  test("lang swaps in place by fetching + hydrating (no reload)", async () => {
+    setupLangSwap();
+    loadModule();
+    typeCommand("lang sv");
+    await flush();
+    // Fetched the translation and hydrated from it — the engine now speaks
+    // Swedish, no reload.
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+    // The confirmation itself reads from the freshly-transplanted catalog — it's
+    // Swedish ("språk →"), not the English "language →" fallback.
+    expect(sessionText()).toContain("språk →");
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
+  });
+
+  test("lang swaps in place even in transcript mode (the default) — no reload", async () => {
+    // Regression: the real terminal boots in transcript mode (head.html sets
+    // data-terminal-transcript), where the old #main-swap gate forced a full
+    // reload. The chrome-only swap runs regardless.
+    setupLangSwap();
+    document.documentElement.setAttribute("data-terminal-transcript", "1");
+    loadModule();
+    typeCommand("lang sv");
+    await flush();
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+  });
+
+  test("lang falls back to a full reload when the fetch fails", async () => {
+    setupLangSwap();
+    window.fetch = jest.fn(() => Promise.reject(new Error("network")));
+    loadModule();
+    typeCommand("lang sv");
+    await flush();
+    // Fetch failed → fullReloadNavigate; the in-place swap did not happen.
+    expect(window.fetch).toHaveBeenCalled();
+    expect(document.documentElement.getAttribute("lang")).not.toBe("sv");
+  });
+
+  test("Terminal.switchLanguage swaps in place (toggle / panel-radio seam)", async () => {
+    setupLangSwap();
+    loadModule();
+    window.Terminal.switchLanguage("/sv/writing/");
+    await flush();
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+  });
+
+  test("clicking the statusbar language toggle swaps in place, not a reload", async () => {
+    setupLangSwap();
+    loadModule();
+    // The fixture nav carries a .terminal-quick--lang toggle to /sv/writing/.
+    const toggle = document.querySelector(".terminal-quick--lang");
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    toggle.dispatchEvent(evt);
+    expect(evt.defaultPrevented).toBe(true);
+    await flush();
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+  });
+
+  test("a modifier-click on the language toggle is left to the browser", () => {
+    window.TerminalNav = { go: jest.fn() };
+    loadModule();
+    const toggle = document.querySelector(".terminal-quick--lang");
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+      metaKey: true,
+    });
+    toggle.dispatchEvent(evt);
+    expect(evt.defaultPrevented).toBe(false);
+    expect(window.TerminalNav.go).not.toHaveBeenCalled();
+    delete window.TerminalNav;
+  });
+
   test("a localized (percent-encoded) slug lists by its real, decoded name", () => {
     loadModule();
     // A Swedish post card whose href carries a percent-encoded slug.
@@ -1913,12 +2171,97 @@ describe("terminal command line", () => {
 
   // ---- Nav "cd" feedback ------------------------------------------------
 
-  test("clicking a nav link stashes a cd command for the next page", () => {
+  // These assert on shared, current-DOM outcomes — the `--terminal-live-cwd`
+  // inline var (a `cd` sets it) and a fetch mock (a `cat` fetches) — rather than
+  // the scrollback text, because terminal.js binds its click handler on
+  // `document`, and jsdom keeps one document across the file so re-requiring the
+  // module (loadModule) leaves extra handlers that would muddy a text assertion.
+  function liveCwd() {
+    return document.documentElement.style.getPropertyValue(
+      "--terminal-live-cwd"
+    );
+  }
+  function leftClick(el) {
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+    });
+    el.dispatchEvent(evt);
+    return evt;
+  }
+
+  test("clicking a known nav link runs its command (cd) in place", () => {
     loadModule();
-    sessionStorage.removeItem("terminal-cd");
-    document.querySelector('.top-menu__link[href="/writing/"]').click();
-    const stashed = JSON.parse(sessionStorage.getItem("terminal-cd"));
-    expect(stashed.cmd).toBe("cd ~/writing");
+    document.documentElement.style.removeProperty("--terminal-live-cwd");
+    const evt = leftClick(
+      document.querySelector('.top-menu__link[href="/writing/"]')
+    );
+    // Intercepted and run as `cd writing` (append-only move), not a browser nav.
+    expect(evt.defaultPrevented).toBe(true);
+    expect(liveCwd()).toContain("writing");
+  });
+
+  test("clicking a content card cats the post inline (fetches its page)", () => {
+    window.fetch = jest.fn(() =>
+      Promise.resolve({ ok: true, text: () => Promise.resolve("") })
+    );
+    loadModule();
+    // A stamped project card: data-slug marks it a post (a .md file → cat).
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="summary-card"><a class="summary-card__title" ' +
+        'href="/works/foo/" data-slug="foo">Foo</a></div>'
+    );
+    const evt = leftClick(document.querySelector(".summary-card a[data-slug]"));
+    expect(evt.defaultPrevented).toBe(true);
+    // `cat foo.md` resolves to the card's href and remote-cats it.
+    expect(
+      window.fetch.mock.calls.some((c) => String(c[0]).includes("foo"))
+    ).toBe(true);
+  });
+
+  test("clicking a section card cds into it", () => {
+    loadModule();
+    document.documentElement.style.removeProperty("--terminal-live-cwd");
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="summary-card"><a class="summary-card__title" ' +
+        'href="/works/" data-dir="works">Works</a></div>'
+    );
+    const evt = leftClick(document.querySelector(".summary-card a[data-dir]"));
+    expect(evt.defaultPrevented).toBe(true);
+    expect(liveCwd()).toContain("works");
+  });
+
+  test("an unstamped card link is left to the browser (no interception)", () => {
+    loadModule();
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<div class="summary-card"><a href="/works/bar/">Bar</a></div>'
+    );
+    const evt = leftClick(
+      document.querySelector('.summary-card a[href="/works/bar/"]')
+    );
+    // No data-slug/data-dir → the terminal can't map it → the browser handles it.
+    expect(evt.defaultPrevented).toBe(false);
+  });
+
+  test("a modifier-click on a nav link is left to the browser", () => {
+    window.fetch = jest.fn(() =>
+      Promise.resolve({ ok: true, text: () => Promise.resolve("") })
+    );
+    loadModule();
+    const el = document.querySelector('.top-menu__link[href="/writing/"]');
+    const evt = new window.MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+      metaKey: true,
+    });
+    el.dispatchEvent(evt);
+    // Cmd/ctrl-click → open in new tab → the terminal must not intercept.
+    expect(evt.defaultPrevented).toBe(false);
   });
 
   test("clicking the statusbar language toggle does NOT stash a cd echo", () => {
