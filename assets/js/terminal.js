@@ -4997,8 +4997,9 @@
     // dropdown.js, language-dropdown.js) that a node swap would orphan. The data
     // scripts have no listeners, so their text is replaced freely. For a
     // same-language content swap the source equals the live chrome, so this is a
-    // no-op. Decorative non-terminal chrome (panel labels, footer strings) isn't
-    // relocalized here — it lags until the next full load (step 4).
+    // no-op. The terminal's own prompt line (the exit hint + input label) IS
+    // relocalized; decorative non-terminal chrome (settings-panel labels, the
+    // footer strings) isn't — it lags until the next full load.
     function transplantTerminalChrome(sourceDoc) {
       if (!sourceDoc || !sourceDoc.documentElement) {
         return;
@@ -5070,6 +5071,25 @@
           }
           input.checked = src.hasAttribute("checked");
         });
+      // 5. The live prompt line's localized text. It lives in .terminal-tail,
+      // which also holds the real <input> (direct-bound listeners) — so copy
+      // the strings IN PLACE, never replace the node: the exit hint (a CSS
+      // ::after content: attr(data-exit-hint), so writing the attribute
+      // re-renders it) and the sr-only input label. Without this the prompt
+      // keeps whispering the boot language after an in-place language swap.
+      var srcTail = sourceDoc.querySelector(".terminal-tail");
+      var liveTail = document.querySelector(".terminal-tail");
+      if (srcTail && liveTail) {
+        var exitHint = srcTail.getAttribute("data-exit-hint");
+        if (exitHint !== null) {
+          liveTail.setAttribute("data-exit-hint", exitHint);
+        }
+        var srcLabel = srcTail.querySelector('label[for="terminal-input"]');
+        var liveLabel = liveTail.querySelector('label[for="terminal-input"]');
+        if (srcLabel && liveLabel) {
+          liveLabel.textContent = srcLabel.textContent;
+        }
+      }
     }
 
     // Given a fetched document (a language swap), transplant the chrome first;

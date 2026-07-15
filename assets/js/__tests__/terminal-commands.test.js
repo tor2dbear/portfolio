@@ -1922,6 +1922,55 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("om/");
   });
 
+  test("rehydrate(doc) relocalizes the prompt line + the UI-string catalog", () => {
+    // The engine's own prompt line (the exit hint, a CSS ::after reading
+    // data-exit-hint) and its UI strings (errors, the lang-switch confirmation)
+    // must flip with the language too — not just help/ls. Otherwise the terminal
+    // keeps whispering the boot language after an in-place swap.
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      ui: { notFound: "%s: kommandot hittades inte" },
+    });
+    document.body.appendChild(cat);
+    // The live prompt line carries an English exit hint + input label.
+    const liveTail = document.querySelector(".terminal-tail");
+    liveTail.setAttribute("data-exit-hint", "type exit to leave");
+    const liveLabel = document.createElement("label");
+    liveLabel.className = "sr-only";
+    liveLabel.setAttribute("for", "terminal-input");
+    liveLabel.textContent = "Type a command";
+    liveTail.insertBefore(liveLabel, liveTail.firstChild);
+    loadModule();
+
+    const svHtml =
+      '<!doctype html><html lang="sv"><head></head><body>' +
+      '<p class="terminal-tail" data-exit-hint="skriv exit för att lämna">' +
+      '<label class="sr-only" for="terminal-input">Skriv ett kommando</label>' +
+      '<input id="terminal-input" data-js="terminal-input" /></p>' +
+      '<script type="application/json" data-js="terminal-i18n">' +
+      JSON.stringify({ ui: { notFound: "%s: kommandot hittades inte" } }) +
+      "</script></body></html>";
+    const doc = new DOMParser().parseFromString(svHtml, "text/html");
+    window.Terminal.rehydrate(doc);
+
+    // The prompt line's exit hint + input label are now Swedish, in place (the
+    // live <input> node is preserved, not replaced).
+    const tail = document.querySelector(".terminal-tail");
+    expect(tail.getAttribute("data-exit-hint")).toBe(
+      "skriv exit för att lämna"
+    );
+    expect(tail.querySelector('label[for="terminal-input"]').textContent).toBe(
+      "Skriv ett kommando"
+    );
+    expect(document.querySelector('[data-js="terminal-input"]')).not.toBeNull();
+
+    // And a UI string (command-not-found) now renders from the Swedish catalog.
+    typeCommand("frobnicate");
+    expect(sessionText()).toContain("frobnicate: kommandot hittades inte");
+  });
+
   // A language switch is a chrome-only in-place swap: fetch the translated page,
   // hydrate from it, push history, confirm. No visible #main swap, so it works in
   // transcript mode and on home — where the #main-swap route can't. These helpers
@@ -1932,7 +1981,10 @@ describe("terminal command line", () => {
       '<script type="application/json" data-js="terminal-manifest">{}</script>';
     const i18n =
       '<script type="application/json" data-js="terminal-i18n">' +
-      JSON.stringify({ help: "kommandon:\n  help      den här listan" }) +
+      JSON.stringify({
+        help: "kommandon:\n  help      den här listan",
+        ui: { langSwitched: "språk → %s" },
+      }) +
       "</script>";
     return (
       '<!doctype html><html lang="sv"><head>' +
@@ -1977,6 +2029,9 @@ describe("terminal command line", () => {
     // Swedish, no reload.
     expect(fetchedSvWriting()).toBe(true);
     expect(document.documentElement.getAttribute("lang")).toBe("sv");
+    // The confirmation itself reads from the freshly-transplanted catalog — it's
+    // Swedish ("språk →"), not the English "language →" fallback.
+    expect(sessionText()).toContain("språk →");
     typeCommand("help");
     expect(sessionText()).toContain("den här listan");
   });
