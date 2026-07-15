@@ -2978,23 +2978,58 @@
     // echo already printed to the scrollback, so an in-place swap needs no extra
     // output; on fallback the reload wipes it and the stash reprints it on top.
     function navigateTerminal(action) {
-      // A language switch is the same directory in another language, so keep the
-      // current cwd — the target URL carries the NEW language's prefix, which
-      // hrefToCwd (which strips the CURRENT page's prefix) wouldn't recognise, so
-      // deriving from it would misread e.g. /sv/writing/ as ~/sv.
-      var cwd =
-        action.lang === true ? currentTerminalCwd() : hrefToCwd(action.url);
-      // In transcript mode the page content (#main) is hidden — it's just the
-      // boot transcript's data source — so an in-place #main swap would paint
-      // nothing. A `navigate` (open/lang) instead does a full load; the
-      // destination re-runs its own boot transcript, keeping the session model.
-      // A language switch is cd:false (same directory) but should still swap in
-      // place — the whole point of the persistent session. Everything else in
-      // the gate stands: transcript mode paints nothing on a #main swap, home is
-      // a CSS-bundled page terminal-nav declines, cross-origin/no-nav can't swap.
+      // A language switch keeps the terminal session and only needs the CHROME
+      // swapped (i18n catalog, manifest, nav, <html lang>), not the visible
+      // #main — so it takes its own in-place path: fetch the translated page,
+      // hydrate the engine from it, push history and confirm, keeping the current
+      // cwd (same directory, new language). That works everywhere a #main swap
+      // can't: transcript mode (where #main is hidden and a swap would paint
+      // nothing) and CSS-bundled pages like home (which the #main-swap route
+      // declines). A full reload is only the fallback when fetch can't run or
+      // fails.
+      if (action.lang === true) {
+        if (
+          isTerminalLayout() &&
+          isSameOriginUrl(action.url) &&
+          typeof window.fetch === "function"
+        ) {
+          window
+            .fetch(action.url, { credentials: "same-origin" })
+            .then(function (res) {
+              return res.ok ? res.text() : Promise.reject();
+            })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, "text/html");
+              hydrateTerminalSession(doc);
+              try {
+                window.history.pushState(
+                  { terminalLang: true },
+                  "",
+                  action.url
+                );
+              } catch (e) {
+                /* same-origin already checked; ignore a hostile pushState throw */
+              }
+              // Hydrate flipped TI18N + the selector, so this reads in the new
+              // language.
+              confirmLanguageSwitch();
+            })
+            .catch(function () {
+              fullReloadNavigate(action);
+            });
+          return;
+        }
+        fullReloadNavigate(action);
+        return;
+      }
+      // Typed cd/open/home: swap the visible #main in place when we can. In
+      // transcript mode #main is hidden (a swap paints nothing), home is a
+      // CSS-bundled page terminal-nav declines, cross-origin/no-nav can't swap —
+      // those fall back to a full reload, which re-runs the destination's boot.
+      var cwd = hrefToCwd(action.url);
       var canSwap =
         !document.documentElement.hasAttribute("data-terminal-transcript") &&
-        (action.cd !== false || action.lang === true) &&
+        action.cd !== false &&
         isTerminalLayout() &&
         cwd !== "~" &&
         isSameOriginUrl(action.url) &&
@@ -3007,12 +3042,6 @@
       window.TerminalNav.go(action.url, { cwd: cwd }).then(function (swapped) {
         if (!swapped) {
           fullReloadNavigate(action);
-          return;
-        }
-        // The swap re-hydrated the engine mid-flight, so TI18N and the language
-        // selector are already the new language — confirm it in that language.
-        if (action.lang === true) {
-          confirmLanguageSwitch();
         }
       });
     }

@@ -1922,8 +1922,27 @@ describe("terminal command line", () => {
     expect(sessionText()).toContain("om/");
   });
 
-  test("lang swaps in place via TerminalNav instead of reloading", async () => {
-    // A content page (cwd ~/writing) whose Swedish translation is a real page.
+  // A language switch is a chrome-only in-place swap: fetch the translated page,
+  // hydrate from it, push history, confirm. No visible #main swap, so it works in
+  // transcript mode and on home — where the #main-swap route can't. These helpers
+  // set up a content cwd, a live English catalog to transplant into, and a fetch
+  // that returns the Swedish page.
+  function svPageHtml() {
+    const manifest =
+      '<script type="application/json" data-js="terminal-manifest">{}</script>';
+    const i18n =
+      '<script type="application/json" data-js="terminal-i18n">' +
+      JSON.stringify({ help: "kommandon:\n  help      den här listan" }) +
+      "</script>";
+    return (
+      '<!doctype html><html lang="sv"><head>' +
+      manifest +
+      "</head><body>" +
+      i18n +
+      "</body></html>"
+    );
+  }
+  function setupLangSwap() {
     window.getComputedStyle = () => ({
       getPropertyValue: (prop) =>
         prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
@@ -1931,72 +1950,72 @@ describe("terminal command line", () => {
           : "#ffffff",
     });
     document.documentElement.setAttribute("data-layout", "terminal");
-    // go being called at all proves the swap path was taken — a full reload
-    // (fullReloadNavigate) never calls TerminalNav.go.
-    window.TerminalNav = { go: jest.fn(() => Promise.resolve(true)) };
+    const cat = document.createElement("script");
+    cat.type = "application/json";
+    cat.setAttribute("data-js", "terminal-i18n");
+    cat.textContent = JSON.stringify({
+      help: "commands:\n  help      this list",
+    });
+    document.body.appendChild(cat);
     document
       .querySelector('.language-option input[data-language-code="sv"]')
       .setAttribute("data-language-href", "/sv/writing/");
+    window.fetch = jest.fn(() =>
+      Promise.resolve({ ok: true, text: () => Promise.resolve(svPageHtml()) })
+    );
+  }
+  function fetchedSvWriting() {
+    return window.fetch.mock.calls.some((c) => c[0] === "/sv/writing/");
+  }
+
+  test("lang swaps in place by fetching + hydrating (no reload)", async () => {
+    setupLangSwap();
     loadModule();
     typeCommand("lang sv");
-    expect(window.TerminalNav.go).toHaveBeenCalledWith(
-      "/sv/writing/",
-      expect.objectContaining({ cwd: "~/writing" })
-    );
     await flush();
-    // The swap resolved, so the confirmation prints (in the new language).
-    expect(sessionText()).toContain("language →");
-    delete window.TerminalNav;
+    // Fetched the translation and hydrated from it — the engine now speaks
+    // Swedish, no reload.
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+    typeCommand("help");
+    expect(sessionText()).toContain("den här listan");
   });
 
-  test("lang falls back to a full reload when the swap declines", async () => {
-    window.getComputedStyle = () => ({
-      getPropertyValue: (prop) =>
-        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
-          ? "~/writing"
-          : "#ffffff",
-    });
-    document.documentElement.setAttribute("data-layout", "terminal");
-    window.TerminalNav = { go: jest.fn(() => Promise.resolve(false)) };
-    document
-      .querySelector('.language-option input[data-language-code="sv"]')
-      .setAttribute("data-language-href", "/sv/writing/");
+  test("lang swaps in place even in transcript mode (the default) — no reload", async () => {
+    // Regression: the real terminal boots in transcript mode (head.html sets
+    // data-terminal-transcript), where the old #main-swap gate forced a full
+    // reload. The chrome-only swap runs regardless.
+    setupLangSwap();
+    document.documentElement.setAttribute("data-terminal-transcript", "1");
     loadModule();
     typeCommand("lang sv");
     await flush();
-    // The swap declined → fullReloadNavigate runs; no in-place confirmation.
-    expect(window.TerminalNav.go).toHaveBeenCalled();
-    expect(sessionText()).not.toContain("language →");
-    delete window.TerminalNav;
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
+  });
+
+  test("lang falls back to a full reload when the fetch fails", async () => {
+    setupLangSwap();
+    window.fetch = jest.fn(() => Promise.reject(new Error("network")));
+    loadModule();
+    typeCommand("lang sv");
+    await flush();
+    // Fetch failed → fullReloadNavigate; the in-place swap did not happen.
+    expect(window.fetch).toHaveBeenCalled();
+    expect(document.documentElement.getAttribute("lang")).not.toBe("sv");
   });
 
   test("Terminal.switchLanguage swaps in place (toggle / panel-radio seam)", async () => {
-    window.getComputedStyle = () => ({
-      getPropertyValue: (prop) =>
-        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
-          ? "~/writing"
-          : "#ffffff",
-    });
-    window.TerminalNav = { go: jest.fn(() => Promise.resolve(true)) };
+    setupLangSwap();
     loadModule();
     window.Terminal.switchLanguage("/sv/writing/");
-    expect(window.TerminalNav.go).toHaveBeenCalledWith(
-      "/sv/writing/",
-      expect.objectContaining({ cwd: "~/writing" })
-    );
     await flush();
-    expect(sessionText()).toContain("language →");
-    delete window.TerminalNav;
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
   });
 
-  test("clicking the statusbar language toggle swaps in place, not a reload", () => {
-    window.getComputedStyle = () => ({
-      getPropertyValue: (prop) =>
-        prop === "--terminal-cwd" || prop === "--terminal-live-cwd"
-          ? "~/writing"
-          : "#ffffff",
-    });
-    window.TerminalNav = { go: jest.fn(() => Promise.resolve(true)) };
+  test("clicking the statusbar language toggle swaps in place, not a reload", async () => {
+    setupLangSwap();
     loadModule();
     // The fixture nav carries a .terminal-quick--lang toggle to /sv/writing/.
     const toggle = document.querySelector(".terminal-quick--lang");
@@ -2007,11 +2026,9 @@ describe("terminal command line", () => {
     });
     toggle.dispatchEvent(evt);
     expect(evt.defaultPrevented).toBe(true);
-    expect(window.TerminalNav.go).toHaveBeenCalledWith(
-      "/sv/writing/",
-      expect.objectContaining({ cwd: "~/writing" })
-    );
-    delete window.TerminalNav;
+    await flush();
+    expect(fetchedSvWriting()).toBe(true);
+    expect(document.documentElement.getAttribute("lang")).toBe("sv");
   });
 
   test("a modifier-click on the language toggle is left to the browser", () => {
