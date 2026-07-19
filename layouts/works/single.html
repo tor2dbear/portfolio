@@ -57,6 +57,16 @@
   </nav>
   <h1 class="type-headline-1 works-post__title reveal place-wide">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
   <h2 class="type-preamble works-post__description reveal place-prose">{{ .Description }}</h2>
+  {{ with .Params.live_url }}
+  <div class="works-post__cta reveal place-prose">
+    <a class="button button--primary" href="{{ . }}" target="_blank" rel="noopener">
+      {{ $.Params.live_label | default (cond (eq $.Language.Lang "sv") "Öppna live" "View live") }}
+      <svg class="icon icon--sm" aria-hidden="true" focusable="false">
+        <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-new-window"></use>
+      </svg>
+    </a>
+  </div>
+  {{ end }}
   <div class="type-information is-muted works-post__meta reveal place-prose"> {{ partial "date.html" . }}</div>
   <div class="works-post__tags reveal place-prose"> {{ partial "post_tags.html" . }}</div>
  

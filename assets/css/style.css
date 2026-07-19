@@ -381,6 +381,10 @@ footer > * {
   margin-bottom: var(--spacing-16);
 }
 
+.works-post__cta {
+  margin-bottom: var(--spacing-24);
+}
+
 /* Works content AD mapping: keep prose text narrow but allow full-width media blocks */
 .content.post.works-post > .post-content.place-prose {
   display: contents;
