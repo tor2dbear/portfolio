@@ -53,11 +53,11 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 ### Selected design decisions
 
-**Themes are five tokens, not a re-skin.** Four CRT palettes (green phosphor, amber, ice, mono) each set only five colour tokens; the rest follows. The two frames below are the *same session* recoloured — nothing is restyled per theme. The typeface is self-hosted JetBrains Mono, shared with this portfolio.
+**Themes are five tokens, not a re-skin.** Four CRT palettes (green phosphor, amber, ice, mono) each set only five colour tokens; the rest follows. In the clip below, `theme amber` and `theme ice` recolour the whole screen at once — nothing is restyled per theme, the tokens simply cascade. The typeface is self-hosted JetBrains Mono, shared with this portfolio.
 
-![The same session in amber — one of four palettes, set by five colour tokens.](02-theme-amber.png "The same session in amber — one of four palettes, set by five colour tokens.")
+![A terminal session — pipes, then theme amber and theme ice recolour everything from five colour tokens.](10-terminal-tour.mp4 "A terminal session — pipes, then theme switches recolour everything from five tokens.")
 
-![…and in ice. Same layout, same tokens, a different palette — the switch is one command: theme ice.](03-theme-ice.png "…and in ice. Same layout, same tokens, a different palette — the switch is one command: theme ice.")
+*A looping recreation of the saved `tour` session — real commands and output, animated (not a screen recording).*
 
 **The editor is really `nano`.** Full-screen apps inherit the theme for free and keep the idiom: `^O` saves, `^X` exits, line and column in the status bar.
 

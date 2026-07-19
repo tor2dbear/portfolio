@@ -53,11 +53,11 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 
 ### Utvalda designbeslut
 
-**Teman är fem tokens, inte ett omskal.** Fyra CRT-paletter (grön fosfor, bärnsten, is, mono) sätter var och en bara fem färg-tokens; resten följer med. De två rutorna nedan är *samma session* omfärgad — inget stylas om per tema. Typsnittet är självhostat JetBrains Mono, delat med den här portfolion.
+**Teman är fem tokens, inte ett omskal.** Fyra CRT-paletter (grön fosfor, bärnsten, is, mono) sätter var och en bara fem färg-tokens; resten följer med. I klippet nedan färgar `theme amber` och `theme ice` om hela skärmen på en gång — inget stylas om per tema, tokens kaskaderar bara. Typsnittet är självhostat JetBrains Mono, delat med den här portfolion.
 
-![Samma session i bärnsten — en av fyra paletter, satt av fem färg-tokens.](02-theme-amber.png "Samma session i bärnsten — en av fyra paletter, satt av fem färg-tokens.")
+![En terminalsession — pipes, sedan färgar theme amber och theme ice om allt från fem färg-tokens.](10-terminal-tour.mp4 "En terminalsession — pipes, sedan färgar tema-byten om allt från fem tokens.")
 
-![…och i is. Samma layout, samma tokens, en annan palett — bytet är ett kommando: theme ice.](03-theme-ice.png "…och i is. Samma layout, samma tokens, en annan palett — bytet är ett kommando: theme ice.")
+*En loopande återgivning av den sparade `tour`-sessionen — äkta kommandon och utdata, animerat (inte en skärminspelning).*
 
 **Editorn är `nano` på riktigt.** Fullskärmsappar ärver temat gratis och håller idiomet: `^O` sparar, `^X` avslutar, rad och kolumn i statusraden.
 
