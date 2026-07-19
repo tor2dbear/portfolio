@@ -3,7 +3,6 @@ author: "Torbjörn Hedberg"
 date: 2026-07-15
 linktitle: PIA
 title: "PIA — en liten dator i webbläsaren"
-subtitle: Eget projekt · 2026
 slug: works
 weight: 16
 tags: ["Digitala Produkter"]
@@ -20,7 +19,7 @@ role: "Idé, design och utveckling (solo)"
 details:
   year: 2026
   platform: "Webb · installerbar PWA"
-  stack: "TypeScript · Vite · Vitest · Cloudflare Pages"
+  stack: "TypeScript · Vite · Vitest · Supabase · Cloudflare Pages"
   scope: "Idé, design, arkitektur & utveckling"
 ---
 
@@ -74,9 +73,7 @@ För en designer är det här kärnan: **struktur är det som gör att produkten
 
 **Touch-baren är kontext-medveten — en webb-avvikelse, medvetet gjord.** På ett fysiskt tangentbord göms den helt (Tab, pilar och pipe finns redan på tangenterna). På touch dyker den upp, grupperad i logiska kluster med hårfina avdelare: *komplettering · navigering · skiljetecken · kontroll*. Kontroll-gruppen är en enda `ctrl`-knapp som fäller ut hela readline-uppsättningen (`^A ^E ^U ^K ^W …`), så baren förblir ren fast funktionaliteten växer.
 
-![Samma dator i tummen. Touch-baren dyker bara upp på pekskärm.](07-mobile-keybar.png "Samma dator i tummen. Touch-baren dyker bara upp på pekskärm.")
-
-![Kontroll-gruppen är en `ctrl`-knapp som fäller ut hela readline-uppsättningen — ren bar, växande funktion.](08-mobile-ctrl-tray.png "Kontroll-gruppen är en ctrl-knapp som fäller ut hela readline-uppsättningen — ren bar, växande funktion.")
+![Samma dator i tummen — till vänster touch-baren, till höger ctrl-knappen utfälld till hela readline-uppsättningen. Baren dyker bara upp på pekskärm.](07-mobile-mockup.png "Samma dator i tummen — till vänster touch-baren, till höger ctrl-knappen utfälld till hela readline-uppsättningen. Baren dyker bara upp på pekskärm.")
 
 **Samma app, olika hem.** Installerad på iOS-hemskärmen finns ingen webbläsar-chrome att luta sig mot. `display-mode: standalone` plus riktig hantering av "safe area" (kamerahål, home-indicator) gör att allt sitter kant-i-kant — medan webbläsarläget lämnas orört. Och **push är på riktigt:** påminnelser (`remind`) och samarbets-notiser når telefonen via Web Push även när fliken är stängd — samma terminala kommando, en molnfunktion under huven.
 

@@ -3,7 +3,6 @@ author: "Torbjörn Hedberg"
 date: 2026-07-15
 linktitle: PIA
 title: "PIA — a little computer in the browser"
-subtitle: Solo product · 2026
 slug: works
 weight: 16
 tags: ["Digital Product"]
@@ -20,7 +19,7 @@ role: "Concept, design and development (solo)"
 details:
   year: 2026
   platform: "Web · installable PWA"
-  stack: "TypeScript · Vite · Vitest · Cloudflare Pages"
+  stack: "TypeScript · Vite · Vitest · Supabase · Cloudflare Pages"
   scope: "Concept, design, architecture & development"
 ---
 
@@ -74,9 +73,7 @@ For a designer, this is the core: **structure is what lets a product grow withou
 
 **The touch bar is context-aware — a web deviation, made on purpose.** On a physical keyboard it hides completely (Tab, arrows and pipe are already on the keys). On touch it appears, grouped into logical clusters with hairline dividers: *completion · navigation · punctuation · control*. The control group is a single `ctrl` button that unfolds the whole readline set (`^A ^E ^U ^K ^W …`), so the bar stays clean as the functionality grows.
 
-![The same computer in your thumb. The touch bar only appears on a touchscreen.](07-mobile-keybar.png "The same computer in your thumb. The touch bar only appears on a touchscreen.")
-
-![The control group is a `ctrl` button that unfolds the whole readline set — clean bar, growing function.](08-mobile-ctrl-tray.png "The control group is a ctrl button that unfolds the whole readline set — clean bar, growing function.")
+![The same computer in your thumb — left, the touch bar; right, the ctrl button unfolded to the full readline set. The bar only appears on a touchscreen.](07-mobile-mockup.png "The same computer in your thumb — left, the touch bar; right, the ctrl button unfolded to the full readline set. The bar only appears on a touchscreen.")
 
 **Same app, different home.** Installed on the iOS home screen there's no browser chrome to lean on. `display-mode: standalone` plus real safe-area handling (camera notch, home indicator) makes everything sit edge to edge — while the browser mode is left untouched. And **push is real:** reminders (`remind`) and collaboration notices reach the phone via Web Push even when the tab is closed — the same terminal command, a cloud function underneath.
 
