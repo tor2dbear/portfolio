@@ -94,15 +94,14 @@ For a designer, this is the core: **structure is what lets a product grow withou
 The most unusual decision is how PIA is verified. **The whole product is exercised through one scripted session** in the real terminal, saved as a readable transcript ("the tour"). Add a feature, and you add lines to that session and review the diff against the saved transcript — that diff *is* the verification. The clock is frozen and volatile output masked, so the only thing that moves is real behaviour. The result is a regression test that also reads as a guided tour of the product.
 
 ```diff
-  guest@pia:~$ theme ice
-  theme set to ice
-+ guest@pia:~$ remind 17:00 "water the plants"
-+ reminder set · 17:00 · "water the plants"
-  guest@pia:~$ ls ~/todo
-  groceries.txt  packing.txt
+ guest@pia:~$ at now+5m echo remember
+ scheduled for Sat Jul 18 12:05 UTC 2026
+   echo remember
++guest@pia:~$ remind now+1h standup
++remind: reminders need a cloud account — run `login`
 ```
 
-*A slice of the tour: shipping `remind` meant adding those two green lines — reviewing this diff against the saved transcript is the test.*
+*A real slice of the tour: adding `remind` appended the two green lines — and its honest guest declination is the behaviour under test. The frozen clock keeps the diff stable; the reviewed diff is the verification.*
 
 On top of it: type checking, unit tests, and manual checks in a real browser for what tests can't see (colours, WASM, PWA behaviour). Everything lands via branch → PR → CI → merge, with automatic preview URLs per change.
 

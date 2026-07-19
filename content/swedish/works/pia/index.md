@@ -94,15 +94,14 @@ För en designer är det här kärnan: **struktur är det som gör att produkten
 Det mest ovanliga beslutet är hur PIA verifieras. **Hela produkten körs igenom via en enda skriptad session** i den riktiga terminalen, sparad som en läsbar utskrift ("the tour"). Lägger man till en funktion lägger man till rader i den sessionen och granskar diffen mot den sparade utskriften — den diffen *är* verifieringen. Klockan är fryst och flyktig utdata maskeras, så det enda som ändras är verkligt beteende. Resultatet är ett regressionstest som också läses som en guidad rundtur av produkten.
 
 ```diff
-  guest@pia:~$ theme ice
-  theme set to ice
-+ guest@pia:~$ remind 17:00 "vattna blommorna"
-+ reminder set · 17:00 · "vattna blommorna"
-  guest@pia:~$ ls ~/todo
-  groceries.txt  packing.txt
+ guest@pia:~$ at now+5m echo remember
+ scheduled for Sat Jul 18 12:05 UTC 2026
+   echo remember
++guest@pia:~$ remind now+1h standup
++remind: reminders need a cloud account — run `login`
 ```
 
-*Ett utdrag ur touren: att shippa `remind` innebar att lägga till de två gröna raderna — att granska den här diffen mot den sparade utskriften är testet.*
+*Ett äkta utdrag ur touren: att lägga till `remind` la till de två gröna raderna — och den ärliga gäst-avböjningen är beteendet som testas. Den frysta klockan håller diffen stabil; den granskade diffen är verifieringen.*
 
 Ovanpå det: typkontroll, enhetstester och manuell verifiering i en riktig webbläsare för det som testerna inte kan se (färger, WASM, PWA-beteende). Allt landar via gren → PR → CI → merge, med automatiska förhandsvisnings-URL:er per ändring.
 
