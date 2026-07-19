@@ -31,7 +31,7 @@ PIA is a working little computer that lives entirely in the browser. You log in 
 
 The name nods to Apple's *Lisa* — PIA stands for *Personal Integrated Applications*.
 
-**It's as much a design study in consistency as a product.** One rule — *terminal idiom first* — drives every decision, all the way down into the architecture. This case study is about what that single constraint bought, and what it cost.
+**It's as much a design study in consistency as a product.** One rule — *terminal idiom first* — drives every decision, all the way down into the architecture. This case study is about what that single constraint bought, and what it cost. It's also the clearest argument I can make for how I approach products: pick one principle, push it into the architecture, and let structure — not willpower — hold the thing together as it grows.
 
 ### The idea
 
@@ -47,7 +47,9 @@ It sounds strict, and that's the point. **Consistency is a feature:** know one t
 
 ![A broad command register that follows Unix convention — real names and flags, friendly aliases secondary.](06-command-register.png "A broad command register that follows Unix convention — real names and flags, friendly aliases secondary.")
 
-**The hardest decision was what to do when there *is* no terminal equivalent.** Email, password and a confirmation mail are pure web. `share`/`publish` returning a URL has no shell counterpart. Touch buttons likewise. Rather than dress them up as something they aren't, the rule is blunt: **flag the deviation and make it a deliberate, documented decision — not a slip.** That's the line between a product with an opinion and a pile of features.
+**The hardest decision was what to do when there *is* no terminal equivalent.** Email, password and a confirmation mail are pure web. `share`/`publish` returning a URL has no shell counterpart. Touch buttons likewise. Rather than dress them up as something they aren't, the rule is blunt — and it's the line between a product with an opinion and a pile of features.
+
+> Flag the deviation and make it a deliberate, documented decision — not a slip.
 
 ### Architecture as a design decision
 
@@ -56,6 +58,8 @@ It sounds strict, and that's the point. **Consistency is a feature:** know one t
 **That turns a big product change into a swap, not a rewrite.** Guests run local adapters; signed-in users run cloud adapters (Supabase) — behind the exact same interface. Full-screen apps (the editor, the games) are "just another screen app" taking over through the same mechanism, so new tools cost almost nothing to add.
 
 For a designer, this is the core: **structure is what lets a product grow without decaying.** The seam is invisible, but it's the reason everything else feels light.
+
+![The adapter seam: the terminal reaches the world through one CommandContext and three interfaces; guests run local implementations, signed-in users run cloud (Supabase) — behind the same contract.](09-architecture.svg "The adapter seam — the terminal only ever sees interfaces; guest runs local, signed-in runs cloud (Supabase), behind the same contract.")
 
 ### Selected design decisions
 
@@ -88,6 +92,17 @@ For a designer, this is the core: **structure is what lets a product grow withou
 ### Quality: the test that reads like a tour
 
 The most unusual decision is how PIA is verified. **The whole product is exercised through one scripted session** in the real terminal, saved as a readable transcript ("the tour"). Add a feature, and you add lines to that session and review the diff against the saved transcript — that diff *is* the verification. The clock is frozen and volatile output masked, so the only thing that moves is real behaviour. The result is a regression test that also reads as a guided tour of the product.
+
+```diff
+  guest@pia:~$ theme ice
+  theme set to ice
++ guest@pia:~$ remind 17:00 "water the plants"
++ reminder set · 17:00 · "water the plants"
+  guest@pia:~$ ls ~/todo
+  groceries.txt  packing.txt
+```
+
+*A slice of the tour: shipping `remind` meant adding those two green lines — reviewing this diff against the saved transcript is the test.*
 
 On top of it: type checking, unit tests, and manual checks in a real browser for what tests can't see (colours, WASM, PWA behaviour). Everything lands via branch → PR → CI → merge, with automatic preview URLs per change.
 

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1980 1275" role="img">
+<defs><marker id="ar--" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5bbf5b"/></marker></defs>
+<rect width="1980" height="1275" fill="#0b0f0b"/>
+<text x="80" y="120" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="52" fill="#7ef07e" font-weight="600" text-anchor="start" letter-spacing="1">the adapter seam</text>
+<line x1="80" y1="150" x2="470" y2="150" stroke="#2f6f2f" stroke-width="2"/>
+<rect x="70" y="525" width="300" height="190" rx="14" fill="#121a12" stroke="#2f6f2f" stroke-width="2"/>
+<text x="220" y="615" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="40" fill="#bcd6bc" font-weight="600" text-anchor="middle" letter-spacing="0">Terminal</text>
+<text x="220" y="665" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#6f836f" font-weight="400" text-anchor="middle" letter-spacing="0">commands · pipes</text>
+<line x1="378" y1="620" x2="452" y2="620" stroke="#5bbf5b" stroke-width="2.5" marker-end="url(#ar--)"/>
+<rect x="460" y="505" width="410" height="230" rx="14" fill="#121a12" stroke="#2f6f2f" stroke-width="2"/>
+<text x="665" y="590" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="38" fill="#5bbf5b" font-weight="600" text-anchor="middle" letter-spacing="0">CommandContext</text>
+<text x="665" y="642" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#6f836f" font-weight="400" text-anchor="middle" letter-spacing="0">print · filesystem</text>
+<text x="665" y="682" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#6f836f" font-weight="400" text-anchor="middle" letter-spacing="0">auth · stdin …</text>
+<line x1="950" y1="230" x2="950" y2="1010" stroke="#7ef07e" stroke-width="2.5" stroke-dasharray="4 10" opacity="0.9"/>
+<text x="950" y="205" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="32" fill="#7ef07e" font-weight="600" text-anchor="middle" letter-spacing="0">the seam</text>
+<text x="950" y="1050" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="26" fill="#6f836f" font-weight="400" text-anchor="middle" letter-spacing="0">the terminal only ever sees interfaces</text>
+<line x1="872" y1="620" x2="998" y2="620" stroke="#5bbf5b" stroke-width="2.5" marker-end="url(#ar--)"/>
+<text x="1190.0" y="425" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="27" fill="#6f836f" font-weight="400" text-anchor="middle" letter-spacing="2">interfaces</text>
+<rect x="1000" y="455" width="380" height="96" rx="14" fill="#121a12" stroke="#2f6f2f" stroke-width="2"/>
+<text x="1190.0" y="515.0" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="34" fill="#bcd6bc" font-weight="500" text-anchor="middle" letter-spacing="0">StorageAdapter</text>
+<rect x="1000" y="572" width="380" height="96" rx="14" fill="#121a12" stroke="#2f6f2f" stroke-width="2"/>
+<text x="1190.0" y="632.0" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="34" fill="#bcd6bc" font-weight="500" text-anchor="middle" letter-spacing="0">AuthAdapter</text>
+<rect x="1000" y="689" width="380" height="96" rx="14" fill="#121a12" stroke="#2f6f2f" stroke-width="2"/>
+<text x="1190.0" y="749.0" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="34" fill="#bcd6bc" font-weight="500" text-anchor="middle" letter-spacing="0">ShareStore</text>
+<rect x="1560" y="420" width="360" height="150" rx="14" fill="#121a12" stroke="#2f6f2f" stroke-width="2"/>
+<text x="1740.0" y="482" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="36" fill="#bcd6bc" font-weight="600" text-anchor="middle" letter-spacing="0">Local runtime</text>
+<text x="1740.0" y="528" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#6f836f" font-weight="400" text-anchor="middle" letter-spacing="0">browser · guest</text>
+<rect x="1560" y="680" width="360" height="150" rx="14" fill="#121a12" stroke="#2f6f2f" stroke-width="2"/>
+<text x="1740.0" y="742" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="36" fill="#bcd6bc" font-weight="600" text-anchor="middle" letter-spacing="0">Cloud</text>
+<text x="1740.0" y="788" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#7ef07e" font-weight="400" text-anchor="middle" letter-spacing="0">Supabase · signed in</text>
+<line x1="1380" y1="620" x2="1420" y2="620" stroke="#5bbf5b" stroke-width="2.5"/>
+<circle cx="1420" cy="620" r="6" fill="#5bbf5b"/>
+<line x1="1420" y1="620" x2="1558" y2="495.0" stroke="#5bbf5b" stroke-width="2.5" marker-end="url(#ar--)"/>
+<line x1="1420" y1="620" x2="1558" y2="755.0" stroke="#5bbf5b" stroke-width="2.5" marker-end="url(#ar--)"/>
+<text x="990.0" y="1215" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="30" fill="#bcd6bc" font-weight="400" text-anchor="middle" letter-spacing="0">Same interface, two implementations — a big change is a swap, not a rewrite.</text>
+</svg>

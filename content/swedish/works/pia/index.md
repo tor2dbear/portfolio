@@ -31,7 +31,7 @@ PIA är en fungerande liten dator som lever helt i webbläsaren. Man loggar in p
 
 Namnet är en blinkning till Apples *Lisa* — PIA står för *Personal Integrated Applications*.
 
-**Det är lika mycket en designstudie i konsekvens som en produkt.** En enda regel — *terminal-idiom först* — får styra varenda beslut, ända in i arkitekturen. Det här caset handlar om vad den enda regeln köpte, och vad den kostade.
+**Det är lika mycket en designstudie i konsekvens som en produkt.** En enda regel — *terminal-idiom först* — får styra varenda beslut, ända in i arkitekturen. Det här caset handlar om vad den enda regeln köpte, och vad den kostade. Det är också det tydligaste argument jag kan ge för hur jag angriper produkter: välj en princip, tryck in den i arkitekturen, och låt strukturen — inte viljestyrkan — hålla ihop det hela när det växer.
 
 ### Idén
 
@@ -47,7 +47,9 @@ Det låter strikt, och det är poängen. **Konsekvens är en funktion:** kan man
 
 ![Ett brett kommandoregister som följer Unix-konvention — riktiga namn och flaggor, vänliga alias sekundära.](06-command-register.png "Ett brett kommandoregister som följer Unix-konvention — riktiga namn och flaggor, vänliga alias sekundära.")
 
-**Det svåraste beslutet var vad man gör när det *inte* finns någon terminal-motsvarighet.** E-post, lösenord och bekräftelsemejl är ren webb. `share`/`publish` som returnerar en URL har ingen skal-motsvarighet. Touch-knappar likaså. I stället för att klä upp dem till något de inte är är regeln rak: **flagga avvikelsen och gör den till ett medvetet, dokumenterat beslut — inte en glidning.** Det är skillnaden mellan en produkt med en åsikt och en hög funktioner.
+**Det svåraste beslutet var vad man gör när det *inte* finns någon terminal-motsvarighet.** E-post, lösenord och bekräftelsemejl är ren webb. `share`/`publish` som returnerar en URL har ingen skal-motsvarighet. Touch-knappar likaså. I stället för att klä upp dem till något de inte är är regeln rak — och det är skillnaden mellan en produkt med en åsikt och en hög funktioner.
+
+> Flagga avvikelsen och gör den till ett medvetet, dokumenterat beslut — inte en glidning.
 
 ### Arkitektur som designbeslut
 
@@ -56,6 +58,8 @@ Det låter strikt, och det är poängen. **Konsekvens är en funktion:** kan man
 **Det gör en stor produktförändring till ett byte, inte en omskrivning.** Gäster kör lokala adaptrar; inloggade användare kör moln-adaptrar (Supabase) — bakom exakt samma gränssnitt. Fullskärmsappar (editorn, spelen) är "bara ännu en skärm-app" som tar över via samma mekanism, så nya verktyg kostar nästan ingenting att lägga till.
 
 För en designer är det här kärnan: **struktur är det som gör att produkten kan växa utan att förfalla.** Sömmen är osynlig, men den är anledningen till att allt annat känns lätt.
+
+![Adaptersömmen: terminalen når världen genom ett `CommandContext` och tre gränssnitt; gäster kör lokala implementationer, inloggade kör moln (Supabase) — bakom samma kontrakt.](09-architecture.svg "Adaptersömmen — terminalen ser bara gränssnitt; gäst kör lokalt, inloggad kör moln (Supabase), bakom samma kontrakt.")
 
 ### Utvalda designbeslut
 
@@ -88,6 +92,17 @@ För en designer är det här kärnan: **struktur är det som gör att produkten
 ### Kvalitet: testet som läses som en rundtur
 
 Det mest ovanliga beslutet är hur PIA verifieras. **Hela produkten körs igenom via en enda skriptad session** i den riktiga terminalen, sparad som en läsbar utskrift ("the tour"). Lägger man till en funktion lägger man till rader i den sessionen och granskar diffen mot den sparade utskriften — den diffen *är* verifieringen. Klockan är fryst och flyktig utdata maskeras, så det enda som ändras är verkligt beteende. Resultatet är ett regressionstest som också läses som en guidad rundtur av produkten.
+
+```diff
+  guest@pia:~$ theme ice
+  theme set to ice
++ guest@pia:~$ remind 17:00 "vattna blommorna"
++ reminder set · 17:00 · "vattna blommorna"
+  guest@pia:~$ ls ~/todo
+  groceries.txt  packing.txt
+```
+
+*Ett utdrag ur touren: att shippa `remind` innebar att lägga till de två gröna raderna — att granska den här diffen mot den sparade utskriften är testet.*
 
 Ovanpå det: typkontroll, enhetstester och manuell verifiering i en riktig webbläsare för det som testerna inte kan se (färger, WASM, PWA-beteende). Allt landar via gren → PR → CI → merge, med automatiska förhandsvisnings-URL:er per ändring.
 
