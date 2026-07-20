@@ -523,6 +523,18 @@
         themeColorAnimFrame = requestAnimationFrame(tick);
       } else {
         themeColorAnimFrame = null;
+        // Cache the settled colour keyed by the resolved mode so the early
+        // inline <head> script can pre-seed the status-bar meta before paint on
+        // the next navigation — avoiding the white flash on iOS. Keyed by mode
+        // so light/dark never seed each other's colour.
+        try {
+          var settledMode =
+            document.documentElement.getAttribute("data-mode") || "light";
+          localStorage.setItem(
+            "theme-color-cache-" + settledMode,
+            resolvePageColor()
+          );
+        } catch (e) {}
       }
     }
     themeColorAnimFrame = requestAnimationFrame(tick);
