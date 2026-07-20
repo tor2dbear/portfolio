@@ -659,6 +659,26 @@
         document.documentElement.setAttribute("data-mode", storedMode);
       }
 
+      // Seed the iOS status-bar colour (theme-color) before first paint. The
+      // static metas below are keyed on prefers-color-scheme, which iOS
+      // resolves by the *system* appearance — so a visitor running the site in
+      // dark while their phone is light gets a white status-bar flash on every
+      // navigation until theme.js catches up. Set both metas to the resolved
+      // mode's colour now: prefer the exact colour theme.js cached for this
+      // mode, else the mode's base surface. Keyed by mode so a light<->dark
+      // switch can never seed a stale colour.
+      try {
+        var resolvedMode =
+          document.documentElement.getAttribute("data-mode") || "light";
+        var seedColor =
+          localStorage.getItem("theme-color-cache-" + resolvedMode) ||
+          (resolvedMode === "dark" ? "#18181b" : "#ffffff");
+        var tcMetas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var tci = 0; tci < tcMetas.length; tci++) {
+          tcMetas[tci].setAttribute("content", seedColor);
+        }
+      } catch (e) {}
+
       // Set palette (standard/pantone)
       var storedPalette = localStorage.getItem("theme-palette") || "standard";
       document.documentElement.setAttribute("data-palette", storedPalette);
