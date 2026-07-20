@@ -152,6 +152,7 @@
           }
           dragEngaged = true;
           setDragTransition(false);
+          panel.classList.add("is-dragging"); // freezes the ::backdrop transition
           try {
             panel.setPointerCapture(dragPointerId);
           } catch (err) {
@@ -162,6 +163,10 @@
         dragDelta = Math.max(0, delta);
         e.preventDefault();
         panel.style.transform = "translateY(" + dragDelta + "px)";
+        // Fade the scrim/blur out in step with the pull (0 at rest → 1 when the
+        // sheet has travelled its full height).
+        var progress = Math.min(1, dragDelta / (panel.offsetHeight || 1));
+        panel.style.setProperty("--sheet-drag", String(progress));
       }
 
       function endDrag(e) {
@@ -182,12 +187,14 @@
           return;
         }
         var threshold = Math.min(120, panel.offsetHeight * 0.25);
+        // Re-enable the CSS transitions (both the panel's and, via removing the
+        // class, the ::backdrop's) so the tail motion animates.
+        panel.classList.remove("is-dragging");
+        setDragTransition(true);
+        void panel.offsetHeight; // flush so the dragged position is the start
         if (delta > threshold) {
-          // Slide the rest of the way down from the finger position, then close.
-          // Restore the CSS transition, flush so the current (dragged) transform
-          // is the animation's start, then animate to fully off-screen.
-          setDragTransition(true);
-          void panel.offsetHeight;
+          // Slide the rest of the way down from the finger position and fade the
+          // scrim fully out in sync, then close.
           var settled = false;
           var finish = function () {
             if (settled) {
@@ -204,6 +211,7 @@
             // (::backdrop + @starting-style drive the enter animation).
             panel.style.transform = "";
             panel.style.transition = "";
+            panel.style.removeProperty("--sheet-drag");
           };
           var onEnd = function (ev) {
             if (ev.target === panel && ev.propertyName === "transform") {
@@ -213,10 +221,11 @@
           panel.addEventListener("transitionend", onEnd);
           window.setTimeout(finish, 500); // fallback if transitionend is missed
           panel.style.transform = "translateY(100%)";
+          panel.style.setProperty("--sheet-drag", "1");
         } else {
-          // Snap back to the resting position.
-          setDragTransition(true);
+          // Snap back to the resting position and restore the full scrim.
           panel.style.transform = "";
+          panel.style.setProperty("--sheet-drag", "0");
         }
       }
 

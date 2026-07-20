@@ -161,9 +161,18 @@
 }
 
 .settings-panel:popover-open::backdrop {
-  opacity: 1;
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  backdrop-filter: blur(14px) saturate(120%);
+  /* --sheet-drag (0 → 1) is set by the drag handler and inherited from the
+     panel; it fades the scrim/blur out as the sheet is pulled down. Falls back
+     to 0 (full scrim) when unset or where ::backdrop doesn't inherit vars. */
+  opacity: calc(1 - var(--sheet-drag, 0));
+  -webkit-backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px))
+    saturate(120%);
+  backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
+}
+
+/* While the finger is down, the scrim must track the drag with no lag. */
+.settings-panel.is-dragging::backdrop {
+  transition: none;
 }
 
 @starting-style {
