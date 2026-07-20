@@ -19,16 +19,23 @@
     content="#18181b"
     media="(prefers-color-scheme: dark)"
   />
-  <!-- Cross-document view transitions supply the page-to-page motion. Flag the
-       document when the browser actually runs them (the pagereveal event only
-       exists where cross-document view transitions do — Chromium/Safari, not
-       Firefox today). CSS then skips the scroll-reveal entry animation there so
-       it doesn't double up with the navigation cross-fade. Set here (before the
-       body renders) to avoid a flash of the reveal starting state. -->
+  <!-- While a cross-document view transition is running, flag the document so
+       CSS can pause the scroll-reveal entry animation for that moment only —
+       otherwise content sits hidden in the new snapshot and slides in over the
+       cross-fade. The flag is cleared when the transition finishes, so anything
+       still below the fold resumes revealing on scroll. Registered in <head> so
+       it's in place before the pagereveal event fires; a no-op in browsers
+       without cross-document view transitions. -->
   <script>
-    if ("onpagereveal" in window) {
-      document.documentElement.classList.add("has-view-transitions");
-    }
+    window.addEventListener("pagereveal", function (event) {
+      if (!event.viewTransition) return;
+      var root = document.documentElement;
+      root.classList.add("is-view-transition");
+      var clear = function () {
+        root.classList.remove("is-view-transition");
+      };
+      event.viewTransition.finished.then(clear, clear);
+    });
   </script>
   <script>
     (function () {

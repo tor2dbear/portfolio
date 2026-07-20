@@ -67,6 +67,14 @@ body {
   navigation: auto;
 }
 
+/* The feel of the page cross-fade. This is the main knob — adjust duration and
+   easing here, or swap the animation entirely (e.g. a directional slide). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: ease;
+}
+
 /* The header is present on every page: give it its own transition group so it
    isn't cross-faded as part of the page root… */
 .top-menu {
@@ -83,12 +91,13 @@ body {
   animation: none;
 }
 
-/* Where cross-document view transitions run, they ARE the page-to-page motion,
-   so skip the scroll-reveal entry animation — otherwise content sits hidden in
-   the new page's snapshot and slides in over the cross-fade, which reads as a
-   jump. Browsers without view transitions (e.g. Firefox today) keep reveal.
-   The flag is set by a head script that feature-detects `onpagereveal`. */
-:root.has-view-transitions .reveal {
+/* While a navigation transition is running, pause the scroll-reveal entry
+   animation (the `is-view-transition` flag is set/cleared by a head script on
+   pagereveal → viewTransition.finished). This keeps content in place for the
+   cross-fade instead of it sliding in over the transition; once the transition
+   finishes the flag is removed and anything still below the fold reveals on
+   scroll as usual. Browsers without view transitions keep reveal throughout. */
+:root.is-view-transition .reveal {
   opacity: 1;
   transform: none;
   transition: none;
