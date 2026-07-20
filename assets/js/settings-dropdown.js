@@ -117,6 +117,112 @@
       window.addEventListener("resize", reposition);
       window.addEventListener("scroll", reposition, { passive: true });
 
+      // --- Drag-to-dismiss for the mobile bottom sheet ---------------------
+      // Only the sheet layout (< 30em, open) is draggable; the desktop
+      // dropdown is left alone. A downward drag from the top handle zone
+      // follows the finger; releasing past a threshold hides the popover,
+      // otherwise it snaps back.
+      var DRAG_ZONE = 56; // px from the top of the panel that starts a drag
+      var DRAG_ENGAGE = 6; // px of travel before we treat it as a drag
+      var dragPointerId = null;
+      var dragStartY = 0;
+      var dragDelta = 0;
+      var dragEngaged = false;
+
+      function isMobileSheet() {
+        return (
+          panel.matches(":popover-open") &&
+          !window.matchMedia("(min-width: 30em)").matches
+        );
+      }
+
+      function setDragTransition(on) {
+        panel.style.transition = on ? "" : "none";
+      }
+
+      function onDragMove(e) {
+        if (dragPointerId === null || e.pointerId !== dragPointerId) {
+          return;
+        }
+        var delta = e.clientY - dragStartY;
+        if (!dragEngaged) {
+          if (delta < DRAG_ENGAGE) {
+            // Ignore upward / tiny moves; let them stay a tap or scroll.
+            return;
+          }
+          dragEngaged = true;
+          setDragTransition(false);
+          try {
+            panel.setPointerCapture(dragPointerId);
+          } catch (err) {
+            /* capture unsupported */
+          }
+        }
+        // Clamp so an upward drag can't lift the sheet above its resting spot.
+        dragDelta = Math.max(0, delta);
+        e.preventDefault();
+        panel.style.transform = "translateY(" + dragDelta + "px)";
+      }
+
+      function endDrag(e) {
+        if (dragPointerId === null || e.pointerId !== dragPointerId) {
+          return;
+        }
+        var wasEngaged = dragEngaged;
+        var delta = dragDelta;
+        try {
+          panel.releasePointerCapture(dragPointerId);
+        } catch (err) {
+          /* not captured */
+        }
+        dragPointerId = null;
+        dragEngaged = false;
+        dragDelta = 0;
+        if (!wasEngaged) {
+          return;
+        }
+        var threshold = Math.min(120, panel.offsetHeight * 0.25);
+        if (delta > threshold) {
+          // Continue the motion off-screen, then hand back to the popover
+          // close (which runs its own exit transition). Restoring the CSS
+          // transition first makes the tail smooth.
+          setDragTransition(true);
+          panel.style.transform = "translateY(100%)";
+          try {
+            panel.hidePopover();
+          } catch (err) {
+            /* already closed */
+          }
+          // Clear the inline overrides once the popover is closed so the next
+          // open starts clean (::backdrop + @starting-style take over).
+          panel.style.transform = "";
+        } else {
+          // Snap back to the resting position.
+          setDragTransition(true);
+          panel.style.transform = "";
+        }
+      }
+
+      panel.addEventListener("pointerdown", function (e) {
+        if (dragPointerId !== null || !isMobileSheet()) {
+          return;
+        }
+        if (e.pointerType === "mouse") {
+          return; // touch/pen only — mouse users have light-dismiss
+        }
+        var r = panel.getBoundingClientRect();
+        if (e.clientY - r.top > DRAG_ZONE) {
+          return; // grabbed below the handle zone — leave scrolling alone
+        }
+        dragPointerId = e.pointerId;
+        dragStartY = e.clientY;
+        dragDelta = 0;
+        dragEngaged = false;
+      });
+      panel.addEventListener("pointermove", onDragMove);
+      panel.addEventListener("pointerup", endDrag);
+      panel.addEventListener("pointercancel", endDrag);
+
       window.addEventListener("theme:layout-changed", function (e) {
         if (e && e.detail && e.detail.layout === "terminal") {
           disablePopover();
