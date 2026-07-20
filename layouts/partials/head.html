@@ -748,6 +748,17 @@
         storedGrain === "1" ? "on" : "off"
       );
 
+      // Reduce-motion is set here too (not just by theme.js on DOMContentLoaded)
+      // so it's in place before the pagereveal handler and progressbar.js run —
+      // both of which decide whether to animate the navigation/wordmark from this
+      // attribute. Without it, a returning visitor who enabled the site's Reduce
+      // motion (but whose OS reports no-preference) would still get the animation.
+      var storedMotion = localStorage.getItem("theme-effect-reduced-motion");
+      document.documentElement.setAttribute(
+        "data-effect-reduced-motion",
+        storedMotion === "1" ? "on" : "off"
+      );
+
       // CotyScale (Pantone engine) is lazy-loaded. Expose its URL for
       // theme.js, and when Pantone is already active inject it now — before
       // the deferred bundle — so returning Pantone users get their scale with

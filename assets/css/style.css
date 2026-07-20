@@ -103,6 +103,17 @@ body {
   }
 }
 
+/* Honour the site's own "Reduce motion" setting too (data-effect-reduced-motion,
+   set pre-paint in head.html). `@view-transition { navigation }` can't be gated
+   on an attribute, so neutralise the snapshot animations instead: the page still
+   swaps, but instantly — no cross-fade — matching the OS-preference behaviour. */
+:root[data-effect-reduced-motion="on"]::view-transition-group(*),
+:root[data-effect-reduced-motion="on"]::view-transition-image-pair(*),
+:root[data-effect-reduced-motion="on"]::view-transition-old(*),
+:root[data-effect-reduced-motion="on"]::view-transition-new(*) {
+  animation: none !important;
+}
+
 /* || ========== Transitions ------------------------------------- */
 
 /* Theme-swap transition for theme-driven surfaces, text, borders, and icons. */
