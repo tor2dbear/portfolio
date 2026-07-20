@@ -114,13 +114,19 @@
   right: 0;
   bottom: 0;
   background: color-mix(in srgb, var(--surface-page) 55%, transparent);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  backdrop-filter: blur(14px) saturate(120%);
+  /* Closed = no blur; it ramps to blur(14px) on open (below) so the frost
+     visibly builds instead of appearing at full strength the moment opacity
+     lifts. */
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+  backdrop-filter: blur(0) saturate(100%);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
-    visibility var(--motion-duration-base) var(--motion-ease-standard);
+  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    -webkit-backdrop-filter var(--motion-duration-sheet)
+      var(--motion-ease-emphasized),
+    backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized);
 }
 
 .settings-overlay::before {
@@ -136,7 +142,7 @@
 
 @supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay {
-    backdrop-filter: url(#liquid-glass) blur(14px) saturate(120%);
+    backdrop-filter: url(#liquid-glass) blur(0) saturate(100%);
     background: color-mix(in srgb, var(--surface-page) 40%, transparent);
   }
 }
@@ -144,6 +150,16 @@
 .settings-overlay:not([hidden]) {
   opacity: 1;
   visibility: visible;
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  backdrop-filter: blur(14px) saturate(120%);
+}
+
+/* Open state for the liquid-glass variant — declared after the base open rule
+   so it wins in supporting browsers, and so the blur ramps rather than snaps. */
+@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
+  .settings-overlay:not([hidden]) {
+    backdrop-filter: url(#liquid-glass) blur(14px) saturate(120%);
+  }
 }
 
 /* ≥ 30em: render as an anchored dropdown popover (not a bottom sheet).
