@@ -31,6 +31,9 @@
       if (!event.viewTransition) return;
       var root = document.documentElement;
       root.classList.add("is-view-transition");
+      // Expose the running transition so other scripts (e.g. the brand mark
+      // retract) can wait for it to finish before starting their own motion.
+      window.__pageViewTransition = event.viewTransition;
       var clear = function () {
         root.classList.remove("is-view-transition");
       };
