@@ -114,11 +114,12 @@
      popover default is width: fit-content, so set it back to auto. Desktop
      overrides this with a fixed width below. */
   width: auto;
-  /* The sheet has no internal scroll on mobile, so claim vertical gestures for
-     the drag-to-dismiss handler instead of letting the browser start a pan
-     (which would steal the gesture and cancel our pointer events). Desktop
-     resets this below. */
-  touch-action: none;
+  /* The sheet has no internal scroll on mobile, so claim single-finger vertical
+     gestures for the drag-to-dismiss handler instead of letting the browser
+     start a pan (which would steal the gesture and cancel our pointer events).
+     `pinch-zoom` (not `none`) still lets low-vision users magnify the settings.
+     Desktop resets this below. */
+  touch-action: pinch-zoom;
 }
 
 /* Lock background scroll while the mobile bottom sheet is open. Desktop keeps

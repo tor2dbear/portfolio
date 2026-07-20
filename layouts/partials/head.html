@@ -664,14 +664,26 @@
       // resolves by the *system* appearance — so a visitor running the site in
       // dark while their phone is light gets a white status-bar flash on every
       // navigation until theme.js catches up. Set both metas to the resolved
-      // mode's colour now: prefer the exact colour theme.js cached for this
-      // mode, else the mode's base surface. Keyed by mode so a light<->dark
-      // switch can never seed a stale colour.
+      // colour now: prefer the exact colour theme.js cached for this exact
+      // theme combo, else the mode's base surface.
       try {
         var resolvedMode =
           document.documentElement.getAttribute("data-mode") || "light";
+        // Key the cache by every dimension that moves --surface-page: mode,
+        // palette, and (for Pantone) the COTY year. Keying by mode alone let a
+        // palette switch — e.g. a shared ?theme= URL applied above — seed the
+        // status bar with the previous palette's colour, recreating the flash.
+        // An unknown combo just falls back to the mode's base surface.
+        var tcPalette = localStorage.getItem("theme-palette") || "standard";
+        var tcYear = localStorage.getItem("theme-coty-year") || "2026";
+        var tcKey =
+          "theme-color-cache-" +
+          resolvedMode +
+          "-" +
+          tcPalette +
+          (tcPalette === "pantone" ? "-" + tcYear : "");
         var seedColor =
-          localStorage.getItem("theme-color-cache-" + resolvedMode) ||
+          localStorage.getItem(tcKey) ||
           (resolvedMode === "dark" ? "#18181b" : "#ffffff");
         var tcMetas = document.querySelectorAll('meta[name="theme-color"]');
         for (var tci = 0; tci < tcMetas.length; tci++) {
