@@ -31,6 +31,19 @@
       root.classList.add("is-view-transition");
       window.__pageViewTransition = event.viewTransition;
       var clear = function () {
+        // Before dropping the flag, lock in every .reveal element that's
+        // currently in view as revealed. The transition already showed it, so it
+        // must not blink back to opacity:0 if reveal-on-scroll.js is still
+        // waiting on its images. Below-fold elements are left to reveal on scroll.
+        try {
+          var reveals = document.querySelectorAll(".reveal:not(.is-revealed)");
+          for (var i = 0; i < reveals.length; i++) {
+            var box = reveals[i].getBoundingClientRect();
+            if (box.top < window.innerHeight && box.bottom > 0) {
+              reveals[i].classList.add("is-revealed");
+            }
+          }
+        } catch (e) {}
         root.classList.remove("is-view-transition");
       };
       event.viewTransition.finished.then(clear, clear);
