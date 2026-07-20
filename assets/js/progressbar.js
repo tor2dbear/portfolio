@@ -248,8 +248,17 @@ updateMetrics();
     cancelIntro();
   };
 
-  // Retract on the next frame (once the starting length has painted).
-  requestAnimationFrame(start);
+  // If a cross-document view transition is running, retract once it finishes so
+  // the tween doesn't play under the frozen header snapshot (the wordmark holds
+  // its length through the short fade, then retracts); otherwise retract now.
+  requestAnimationFrame(function () {
+    var vt = window.__pageViewTransition;
+    if (vt && vt.finished && typeof vt.finished.then === "function") {
+      vt.finished.then(start, start);
+    } else {
+      start();
+    }
+  });
 
   window.addEventListener("scroll", onUserScroll, { once: true, passive: true });
 })();

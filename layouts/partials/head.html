@@ -19,6 +19,23 @@
     content="#18181b"
     media="(prefers-color-scheme: dark)"
   />
+  <!-- While a cross-document view transition runs, flag the document (so CSS can
+       pause the scroll-reveal entry animation for that moment) and expose the
+       transition so progressbar.js can retract the wordmark once it finishes.
+       Registered in <head> so it's in place before pagereveal fires; a no-op in
+       browsers without cross-document view transitions. -->
+  <script>
+    window.addEventListener("pagereveal", function (event) {
+      if (!event.viewTransition) return;
+      var root = document.documentElement;
+      root.classList.add("is-view-transition");
+      window.__pageViewTransition = event.viewTransition;
+      var clear = function () {
+        root.classList.remove("is-view-transition");
+      };
+      event.viewTransition.finished.then(clear, clear);
+    });
+  </script>
   <script>
     (function () {
       try {
