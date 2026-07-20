@@ -75,10 +75,14 @@
     transform var(--motion-duration-sheet) var(--motion-ease-emphasized),
     visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
     display var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete,
+    overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
       allow-discrete;
 }
 
-.settings-panel:not([hidden]) {
+/* Legacy (non-popover) open state — gated with :not([popover]) so it doesn't
+   collide with the popover path, which never sets [hidden]. */
+.settings-panel:not([hidden]):not([popover]) {
   transform: translateY(0);
   opacity: 1;
   visibility: visible;
@@ -88,9 +92,60 @@
    from display:none ([hidden]) to shown — without this it would jump to the
    open state. Mobile: slide up from below the viewport. */
 @starting-style {
-  .settings-panel:not([hidden]) {
+  .settings-panel:not([hidden]):not([popover]) {
     opacity: 0;
     transform: translateY(calc(100% + var(--spacing-16)));
+  }
+}
+
+/* --- Popover prototype (top-layer) ------------------------------------------
+   settings-dropdown.js upgrades the panel to a native popover where supported;
+   it then toggles via the top layer (:popover-open) rather than [hidden], and
+   ::backdrop is the scrim. Closed styles come from the base .settings-panel
+   rule above. */
+.settings-panel[popover] {
+  margin: 0; /* override the UA popover centering default */
+}
+
+.settings-panel[popover]:popover-open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+@starting-style {
+  .settings-panel[popover]:popover-open {
+    opacity: 0;
+    transform: translateY(calc(100% + var(--spacing-16)));
+  }
+}
+
+.settings-panel::backdrop {
+  background: color-mix(in srgb, var(--surface-page) 55%, transparent);
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+  backdrop-filter: blur(0) saturate(100%);
+  opacity: 0;
+  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    -webkit-backdrop-filter var(--motion-duration-sheet)
+      var(--motion-ease-emphasized),
+    backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    display var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete,
+    overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete;
+}
+
+.settings-panel:popover-open::backdrop {
+  opacity: 1;
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  backdrop-filter: blur(14px) saturate(120%);
+}
+
+@starting-style {
+  .settings-panel:popover-open::backdrop {
+    opacity: 0;
+    -webkit-backdrop-filter: blur(0) saturate(100%);
+    backdrop-filter: blur(0) saturate(100%);
   }
 }
 
@@ -184,16 +239,42 @@
     transform: translateY(calc(var(--spacing-8) * -1));
   }
 
-  .settings-panel:not([hidden]) {
+  .settings-panel:not([hidden]):not([popover]) {
     transform: translateY(0);
   }
 
   /* Desktop dropdown enters by sliding down from just above the toggle. */
   @starting-style {
-    .settings-panel:not([hidden]) {
+    .settings-panel:not([hidden]):not([popover]) {
       opacity: 0;
       transform: translateY(calc(var(--spacing-8) * -1));
     }
+  }
+
+  /* Popover path on desktop: a top-layer element positioned under the toggle by
+     JS (fixed), no full-screen scrim. */
+  .settings-panel[popover] {
+    position: fixed;
+    top: auto;
+    left: auto;
+    bottom: auto;
+  }
+
+  .settings-panel[popover]:popover-open {
+    transform: translateY(0);
+  }
+
+  @starting-style {
+    .settings-panel[popover]:popover-open {
+      opacity: 0;
+      transform: translateY(calc(var(--spacing-8) * -1));
+    }
+  }
+
+  .settings-panel::backdrop {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   /* No mobile-sheet drag handle or full-screen scrim on desktop. */

@@ -32,6 +32,105 @@
       );
     })();
 
+    // --- Popover prototype (progressive enhancement) ---------------------
+    // Where the Popover API is supported, upgrade the panel to a native
+    // top-layer popover: native open/close/light-dismiss/focus, ::backdrop as
+    // the scrim, and CSS-driven enter/exit. The whole legacy path below (portal,
+    // outside-click, Escape, overlay element) is skipped in that case. Browsers
+    // without popover fall through to the legacy implementation unchanged.
+    var supportsPopover =
+      typeof panel.showPopover === "function" &&
+      Object.prototype.hasOwnProperty.call(window.HTMLElement.prototype, "popover");
+
+    function inTerminalLayout() {
+      return (
+        document.documentElement.getAttribute("data-layout") === "terminal"
+      );
+    }
+
+    function initPopoverPanel() {
+      // The custom overlay is replaced by ::backdrop.
+      if (overlay && overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+
+      function enablePopover() {
+        if (panel.getAttribute("popover") === "auto") {
+          return;
+        }
+        panel.removeAttribute("hidden");
+        panel.setAttribute("popover", "auto"); // closed until showPopover/target
+        toggle.setAttribute("popovertarget", panel.id);
+      }
+
+      function disablePopover() {
+        if (panel.matches(":popover-open")) {
+          try {
+            panel.hidePopover();
+          } catch (e) {
+            /* not open */
+          }
+        }
+        panel.removeAttribute("popover");
+        toggle.removeAttribute("popovertarget");
+      }
+
+      // The terminal layout prints the panel inline as text — not a popover.
+      if (inTerminalLayout()) {
+        disablePopover();
+      } else {
+        enablePopover();
+      }
+
+      // Desktop: the top-layer panel is anchored under the toggle via inline
+      // position; mobile keeps the CSS fixed bottom sheet.
+      function positionPanel() {
+        if (!window.matchMedia("(min-width: 30em)").matches) {
+          panel.style.top = "";
+          panel.style.right = "";
+          panel.style.left = "";
+          return;
+        }
+        var r = toggle.getBoundingClientRect();
+        panel.style.left = "auto";
+        panel.style.right =
+          Math.max(8, Math.round(window.innerWidth - r.right)) + "px";
+        panel.style.top = Math.round(r.bottom + 8) + "px";
+      }
+
+      panel.addEventListener("toggle", function (e) {
+        var open = e.newState === "open";
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        setSettingsPanelOpenState(open);
+        if (open) {
+          closeThemePanel();
+          closeLanguagePanel();
+          positionPanel();
+        }
+      });
+
+      var reposition = function () {
+        if (panel.matches(":popover-open")) {
+          positionPanel();
+        }
+      };
+      window.addEventListener("resize", reposition);
+      window.addEventListener("scroll", reposition, { passive: true });
+
+      window.addEventListener("theme:layout-changed", function (e) {
+        if (e && e.detail && e.detail.layout === "terminal") {
+          disablePopover();
+        } else {
+          enablePopover();
+        }
+      });
+    }
+
+    if (supportsPopover) {
+      initPopoverPanel();
+      return;
+    }
+
     function setSettingsPanelOpenState(isOpen) {
       if (isOpen) {
         document.documentElement.setAttribute(
