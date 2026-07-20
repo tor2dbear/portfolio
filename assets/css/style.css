@@ -57,59 +57,6 @@ body {
   }
 }
 
-/* || ========== View transitions (cross-document) --------------- */
-
-/* Native, JS-free transitions between page navigations (same-origin, MPA —
-   which is exactly what this Hugo site is). Progressive enhancement: browsers
-   without support just navigate as before. The default is a brief root
-   cross-fade. Supported in Chromium 126+ and Safari 18.2+. */
-@view-transition {
-  navigation: auto;
-}
-
-/* The feel of the page cross-fade. This is the main knob — adjust duration and
-   easing here, or swap the animation entirely (e.g. a directional slide). */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 280ms;
-  animation-timing-function: ease;
-}
-
-/* The header is present on every page: give it its own transition group so it
-   isn't cross-faded as part of the page root… */
-.top-menu {
-  view-transition-name: top-menu;
-}
-
-/* …and hold that group static instead of fading it. A named group still gets a
-   default cross-fade, and the header's content differs per page (active link,
-   the scroll-progress wordmark), so without this it visibly flickers even
-   though it stays in the same place. */
-::view-transition-group(top-menu),
-::view-transition-old(top-menu),
-::view-transition-new(top-menu) {
-  animation: none;
-}
-
-/* While a navigation transition is running, pause the scroll-reveal entry
-   animation (the `is-view-transition` flag is set/cleared by a head script on
-   pagereveal → viewTransition.finished). This keeps content in place for the
-   cross-fade instead of it sliding in over the transition; once the transition
-   finishes the flag is removed and anything still below the fold reveals on
-   scroll as usual. Browsers without view transitions keep reveal throughout. */
-:root.is-view-transition .reveal {
-  opacity: 1;
-  transform: none;
-  transition: none;
-}
-
-/* Honour the OS "reduce motion" preference: skip the navigation transition. */
-@media (prefers-reduced-motion: reduce) {
-  @view-transition {
-    navigation: none;
-  }
-}
-
 /* || ========== Transitions ------------------------------------- */
 
 /* Theme-swap transition for theme-driven surfaces, text, borders, and icons. */

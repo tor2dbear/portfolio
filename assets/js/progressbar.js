@@ -18,7 +18,7 @@ let rightMaxPx = 0;
 // progress; the next page paints that length, then tweens it to zero — after
 // the view transition (if one is running) so the two motions don't fight.
 const BRAND_PROGRESS_KEY = "brandProgress";
-const INTRO_DURATION_MS = 460;
+const INTRO_DURATION_MS = 300;
 let introRafId = null;
 let introPlaying = false;
 
@@ -248,16 +248,8 @@ updateMetrics();
     cancelIntro();
   };
 
-  // If a cross-document view transition is running, retract once it finishes so
-  // the tween doesn't play under the frozen snapshot; otherwise retract now.
-  requestAnimationFrame(function () {
-    var vt = window.__pageViewTransition;
-    if (vt && vt.finished && typeof vt.finished.then === "function") {
-      vt.finished.then(start, start);
-    } else {
-      start();
-    }
-  });
+  // Retract on the next frame (once the starting length has painted).
+  requestAnimationFrame(start);
 
   window.addEventListener("scroll", onUserScroll, { once: true, passive: true });
 })();
