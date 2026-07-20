@@ -476,6 +476,13 @@
   function initCotyModeControls() {
     if (cotyModeToggles) {
       cotyModeToggles.forEach((button) => {
+        // Guard against double-wiring if init runs more than once against the
+        // same element (e.g. a re-fired DOMContentLoaded) — a second click
+        // handler would toggle the state right back.
+        if (button.__pantoneModeWired) {
+          return;
+        }
+        button.__pantoneModeWired = true;
         button.addEventListener("click", function (event) {
           event.stopPropagation();
           togglePantoneMode();
