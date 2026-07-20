@@ -160,17 +160,67 @@
       }
     }
 
+    function teardownPortal() {
+      resetPanelStyles();
+      syncSettingsPortal();
+    }
+
     function closePanel() {
-      if (panel && !panel.hasAttribute("hidden")) {
-        panel.setAttribute("hidden", "");
-        if (overlay) {
-          overlay.setAttribute("hidden", "");
-        }
-        toggle.setAttribute("aria-expanded", "false");
-        setSettingsPanelOpenState(false);
-        resetPanelStyles();
-        syncSettingsPortal();
+      if (!panel || panel.hasAttribute("hidden")) {
+        return;
       }
+
+      // The mobile sheet is portaled to <body>. Restoring the portal moves the
+      // panel in the DOM, which cancels a running CSS transition — so a straight
+      // teardown snaps the sheet shut. Let the slide-out finish first, then tear
+      // down. Desktop (not portaled) and reduced-motion tear down immediately.
+      var reduceMotion =
+        document.documentElement.getAttribute("data-effect-reduced-motion") ===
+          "on" ||
+        (window.matchMedia &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      var animateOut =
+        panel.classList.contains("dropdown-panel--portal") && !reduceMotion;
+
+      panel.setAttribute("hidden", "");
+      if (overlay) {
+        overlay.setAttribute("hidden", "");
+      }
+      toggle.setAttribute("aria-expanded", "false");
+      setSettingsPanelOpenState(false);
+
+      if (!animateOut) {
+        teardownPortal();
+        return;
+      }
+
+      var done = false;
+      var timer = null;
+      var finish = function () {
+        if (done) {
+          return;
+        }
+        done = true;
+        panel.removeEventListener("transitionend", onEnd);
+        if (timer) {
+          window.clearTimeout(timer);
+        }
+        // A fast re-open before the slide-out ends cancels the teardown.
+        if (panel.hasAttribute("hidden")) {
+          teardownPortal();
+        }
+      };
+      var onEnd = function (e) {
+        if (
+          e.target === panel &&
+          (e.propertyName === "transform" || e.propertyName === "opacity")
+        ) {
+          finish();
+        }
+      };
+      panel.addEventListener("transitionend", onEnd);
+      // Fallback if transitionend never arrives (interrupted mid-flight, etc.).
+      timer = window.setTimeout(finish, 500);
     }
 
     function togglePanel(e) {
