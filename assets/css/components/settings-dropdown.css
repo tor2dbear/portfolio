@@ -105,6 +105,10 @@
    rule above. */
 .settings-panel[popover] {
   margin: 0; /* override the UA popover centering default */
+  /* Mobile bottom sheet stretches to the (base) left/right insets; the UA
+     popover default is width: fit-content, so set it back to auto. Desktop
+     overrides this with a fixed width below. */
+  width: auto;
 }
 
 .settings-panel[popover]:popover-open {
@@ -121,7 +125,15 @@
 }
 
 .settings-panel::backdrop {
-  background: color-mix(in srgb, var(--surface-page) 55%, transparent);
+  /* Scrim, plus a solid → transparent gradient at the very top that fades to
+     the page bg to hide the sheet/edge under the status bar (this replaces the
+     old .settings-overlay::before). */
+  background: linear-gradient(
+      to bottom,
+      var(--surface-page) 90px,
+      transparent 130px
+    ),
+    color-mix(in srgb, var(--surface-page) 55%, transparent);
   -webkit-backdrop-filter: blur(0) saturate(100%);
   backdrop-filter: blur(0) saturate(100%);
   opacity: 0;
@@ -252,12 +264,16 @@
   }
 
   /* Popover path on desktop: a top-layer element positioned under the toggle by
-     JS (fixed), no full-screen scrim. */
+     JS (fixed), fixed 304px width (the UA popover default is fit-content), no
+     full-screen scrim. */
   .settings-panel[popover] {
     position: fixed;
     top: auto;
     left: auto;
     bottom: auto;
+    width: var(--theme-panel-width);
+    min-width: var(--theme-panel-width);
+    max-width: var(--theme-panel-width);
   }
 
   .settings-panel[popover]:popover-open {
@@ -271,7 +287,10 @@
     }
   }
 
-  .settings-panel::backdrop {
+  /* Target the open state so it beats .settings-panel:popover-open::backdrop
+     (equal specificity, later in source) — no scrim/blur on the desktop
+     dropdown. */
+  .settings-panel:popover-open::backdrop {
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
