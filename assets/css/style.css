@@ -57,6 +57,29 @@ body {
   }
 }
 
+/* || ========== View transitions (cross-document) --------------- */
+
+/* Native, JS-free transitions between page navigations (same-origin, MPA —
+   which is exactly what this Hugo site is). Progressive enhancement: browsers
+   without support just navigate as before. The default is a brief root
+   cross-fade. Supported in Chromium 126+ and Safari 18.2+. */
+@view-transition {
+  navigation: auto;
+}
+
+/* The header is present on every page: give it a stable transition name so it
+   holds steady across the navigation instead of cross-fading with the page. */
+.top-menu {
+  view-transition-name: top-menu;
+}
+
+/* Honour the OS "reduce motion" preference: skip the navigation transition. */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
 /* || ========== Transitions ------------------------------------- */
 
 /* Theme-swap transition for theme-driven surfaces, text, borders, and icons. */
