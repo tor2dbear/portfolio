@@ -122,9 +122,9 @@
       settingsToggle.setAttribute("aria-expanded", "false");
     }
 
-    // Clear the open-state attribute so CSS-driven UI (e.g. the coty-transport
-    // trigger) is restored. Without this the three dots stay hidden on mobile
-    // until another close path removes the attribute.
+    // Clear the open-state attribute so CSS-driven UI keyed on it is restored.
+    // Without this some controls stay hidden on mobile until another close path
+    // removes the attribute.
     if (document.documentElement.hasAttribute("data-settings-panel-open")) {
       document.documentElement.removeAttribute("data-settings-panel-open");
       window.dispatchEvent(new window.CustomEvent("theme:sheet-closed"));

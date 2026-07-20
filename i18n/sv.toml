@@ -340,24 +340,6 @@ other = "Aktivera Pantone"
 [coty_deactivate]
 other = "Avaktivera Pantone"
 
-[coty_play]
-other = "Starta Pantone"
-
-[coty_pause]
-other = "Pausa Pantone"
-
-[coty_stop]
-other = "Stoppa Pantone"
-
-[coty_previous]
-other = "Föregående Pantone Color of the Year"
-
-[coty_next]
-other = "Nästa Pantone Color of the Year"
-
-[coty_shuffle]
-other = "Växla Pantone-shuffle"
-
 [toast_palette_saved]
 other = "Palett sparad"
 
@@ -405,9 +387,6 @@ other = "Palettgenerator"
 
 [all_posts]
 other = "Alla inlägg"
-
-[coty_show_controls]
-other = "Visa Pantone-kontroller"
 
 [newsletter_url]
 other = "nyhetsbrev"

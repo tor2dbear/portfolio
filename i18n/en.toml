@@ -340,24 +340,6 @@ other = "Activate Pantone"
 [coty_deactivate]
 other = "Deactivate Pantone"
 
-[coty_play]
-other = "Play Pantone"
-
-[coty_pause]
-other = "Pause Pantone"
-
-[coty_stop]
-other = "Stop Pantone"
-
-[coty_previous]
-other = "Previous Pantone Color of the Year"
-
-[coty_next]
-other = "Next Pantone Color of the Year"
-
-[coty_shuffle]
-other = "Toggle Pantone shuffle"
-
 [toast_palette_saved]
 other = "Palette saved"
 
@@ -411,9 +393,6 @@ other = "This text has not been translated to Swedish yet."
 
 [lang_browse_swedish]
 other = "Browse writing in Swedish →"
-
-[coty_show_controls]
-other = "Show Pantone controls"
 
 [newsletter_url]
 other = "newsletter"

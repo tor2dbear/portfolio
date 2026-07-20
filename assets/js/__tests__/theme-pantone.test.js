@@ -1,4 +1,4 @@
-describe("darkmode pantone transport", () => {
+describe("darkmode pantone", () => {
   function setupCotyActions() {
     const entries = [
       { year: 2024, name: "Peach Fuzz" },
@@ -71,27 +71,6 @@ describe("darkmode pantone transport", () => {
         >
           Pantone mode
         </button>
-        <div data-js="coty-transport" hidden>
-          <button
-            data-js="coty-transport-trigger"
-            aria-label="Show Pantone controls"
-          >
-            Trigger
-          </button>
-          <button
-            data-js="coty-transport-toggle"
-            data-label-play="Play Pantone"
-            data-label-pause="Pause Pantone"
-            aria-label="Play Pantone"
-            aria-pressed="false"
-          >
-            <svg data-js="coty-play-icon"></svg>
-          </button>
-          <button data-js="coty-stop" aria-label="Stop Pantone">Stop</button>
-          <button data-js="coty-prev" aria-label="Previous">Prev</button>
-          <button data-js="coty-next" aria-label="Next">Next</button>
-          <button data-js="coty-shuffle" aria-label="Shuffle">Shuffle</button>
-        </div>
         <span
           data-js="footer-palette"
           data-category="Palette"
@@ -120,7 +99,7 @@ describe("darkmode pantone transport", () => {
     jest.useRealTimers();
   });
 
-  test("activating pantone mode starts paused on the latest year", () => {
+  test("activating pantone mode starts active on the latest year", () => {
     loadModule();
 
     document.querySelector('[data-js="coty-mode-toggle"]').click();
@@ -129,168 +108,16 @@ describe("darkmode pantone transport", () => {
       "pantone"
     );
     expect(document.documentElement.getAttribute("data-pantone-state")).toBe(
-      "paused"
+      "active"
     );
     expect(document.documentElement.getAttribute("data-coty-year")).toBe(
       "2026"
     );
-    expect(document.querySelector('[data-js="coty-transport"]').hidden).toBe(
-      false
-    );
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("expanded");
     expect(
       document
         .querySelector('[data-js="coty-mode-toggle"]')
         .getAttribute("aria-pressed")
     ).toBe("true");
-    expect(
-      document
-        .querySelector('[data-js="coty-transport-toggle"]')
-        .getAttribute("aria-label")
-    ).toBe("Play Pantone");
-  });
-
-  test("transport toggles between play and pause and stop returns to inactive", () => {
-    loadModule();
-
-    document.querySelector('[data-js="coty-mode-toggle"]').click();
-    window.ThemeActions.playPantone();
-
-    expect(document.documentElement.getAttribute("data-pantone-state")).toBe(
-      "playing"
-    );
-    expect(
-      document
-        .querySelector('[data-js="coty-transport-toggle"]')
-        .getAttribute("aria-label")
-    ).toBe("Pause Pantone");
-
-    window.ThemeActions.pausePantone();
-
-    expect(document.documentElement.getAttribute("data-pantone-state")).toBe(
-      "paused"
-    );
-
-    window.ThemeActions.stopPantone();
-
-    expect(document.documentElement.getAttribute("data-pantone-state")).toBe(
-      "inactive"
-    );
-    expect(document.documentElement.getAttribute("data-palette")).toBe(
-      "standard"
-    );
-    expect(document.querySelector('[data-js="coty-transport"]').hidden).toBe(
-      true
-    );
-  });
-
-  test("transport collapses after inactivity and expands again via trigger", () => {
-    loadModule();
-
-    document.querySelector('[data-js="coty-mode-toggle"]').click();
-
-    jest.advanceTimersByTime(4000);
-
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("collapsed");
-
-    document.querySelector('[data-js="coty-transport-trigger"]').click();
-
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("expanded");
-  });
-
-  test("collapsed transport state persists across reload", () => {
-    localStorage.setItem("theme-palette", "pantone");
-    localStorage.setItem("theme-pantone-state", "paused");
-    localStorage.setItem("theme-pantone-transport-ui", "collapsed");
-
-    loadModule();
-
-    expect(document.querySelector('[data-js="coty-transport"]').hidden).toBe(
-      false
-    );
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("collapsed");
-  });
-
-  test("collapsed transport uses hover intent before expanding", () => {
-    loadModule();
-
-    document.querySelector('[data-js="coty-mode-toggle"]').click();
-    jest.advanceTimersByTime(4000);
-
-    const trigger = document.querySelector(
-      '[data-js="coty-transport-trigger"]'
-    );
-    trigger.dispatchEvent(
-      new window.MouseEvent("mouseenter", {
-        bubbles: true,
-        relatedTarget: null,
-      })
-    );
-
-    jest.advanceTimersByTime(220);
-
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("collapsed");
-
-    trigger.dispatchEvent(
-      new window.MouseEvent("mouseenter", {
-        bubbles: true,
-        relatedTarget: null,
-      })
-    );
-
-    jest.advanceTimersByTime(119);
-
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("collapsed");
-
-    jest.advanceTimersByTime(1);
-
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("expanded");
-  });
-
-  test("collapsed transport expands on touch interaction", () => {
-    loadModule();
-
-    document.querySelector('[data-js="coty-mode-toggle"]').click();
-    jest.advanceTimersByTime(4000);
-
-    const trigger = document.querySelector(
-      '[data-js="coty-transport-trigger"]'
-    );
-    trigger.dispatchEvent(new window.Event("touchend", { bubbles: true }));
-
-    expect(
-      document
-        .querySelector('[data-js="coty-transport"]')
-        .getAttribute("data-ui-state")
-    ).toBe("expanded");
   });
 
   test("activating pantone before CotyScale loads snaps to the latest year once it does", () => {
