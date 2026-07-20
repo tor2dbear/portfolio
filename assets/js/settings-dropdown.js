@@ -107,8 +107,6 @@
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         setSettingsPanelOpenState(open);
         if (open) {
-          closeThemePanel();
-          closeLanguagePanel();
           positionPanel();
         }
       });
@@ -263,8 +261,6 @@
         }
         var willOpen = panel.hasAttribute("hidden");
         if (willOpen) {
-          closeThemePanel();
-          closeLanguagePanel();
           panel.removeAttribute("hidden");
         } else {
           panel.setAttribute("hidden", "");
@@ -370,39 +366,6 @@
       }
     }
 
-    function closeThemePanel() {
-      const themePanel = document.querySelector(".theme-panel");
-      const themeToggle = document.querySelector(".theme-toggle");
-      const themeOverlay = document.querySelector(".theme-overlay");
-
-      if (themePanel && !themePanel.hasAttribute("hidden")) {
-        themePanel.setAttribute("hidden", "");
-        if (themeOverlay) {
-          themeOverlay.setAttribute("hidden", "");
-        }
-        if (themeToggle) {
-          themeToggle.setAttribute("aria-expanded", "false");
-        }
-        document.documentElement.removeAttribute("data-theme-panel-open");
-      }
-    }
-
-    function closeLanguagePanel() {
-      const languagePanel = document.querySelector(".language-panel");
-      const languageToggle = document.querySelector(".language-toggle");
-      const languageOverlay = document.querySelector(".language-overlay");
-
-      if (languagePanel && !languagePanel.hasAttribute("hidden")) {
-        languagePanel.setAttribute("hidden", "");
-        if (languageOverlay) {
-          languageOverlay.setAttribute("hidden", "");
-        }
-        if (languageToggle) {
-          languageToggle.setAttribute("aria-expanded", "false");
-        }
-      }
-    }
-
     function resetPanelStyles() {
       if (!panel) {
         return;
@@ -483,8 +446,6 @@
       const isHidden = panel.hasAttribute("hidden");
 
       if (isHidden) {
-        closeThemePanel();
-        closeLanguagePanel();
         panel.removeAttribute("hidden");
         if (overlay) {
           overlay.removeAttribute("hidden");
