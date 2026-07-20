@@ -73,6 +73,10 @@
         }
         panel.removeAttribute("popover");
         toggle.removeAttribute("popovertarget");
+        // Restore the closed [hidden] state. Without the popover attribute the
+        // panel is a plain element again, so it would otherwise render inline;
+        // [hidden] keeps it closed and lets the manual toggle below drive it.
+        panel.setAttribute("hidden", "");
       }
 
       // The terminal layout prints the panel inline as text — not a popover.
@@ -248,6 +252,26 @@
       panel.addEventListener("pointermove", onDragMove);
       panel.addEventListener("pointerup", endDrag);
       panel.addEventListener("pointercancel", endDrag);
+
+      // When the panel isn't a native popover (terminal layout), the
+      // popovertarget invoker is gone, so drive open/close manually — the same
+      // [hidden] toggle the legacy path uses. When it IS a popover the invoker
+      // activates it natively and this handler stays out of the way.
+      toggle.addEventListener("click", function () {
+        if (panel.hasAttribute("popover")) {
+          return;
+        }
+        var willOpen = panel.hasAttribute("hidden");
+        if (willOpen) {
+          closeThemePanel();
+          closeLanguagePanel();
+          panel.removeAttribute("hidden");
+        } else {
+          panel.setAttribute("hidden", "");
+        }
+        toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+        setSettingsPanelOpenState(willOpen);
+      });
 
       window.addEventListener("theme:layout-changed", function (e) {
         if (e && e.detail && e.detail.layout === "terminal") {

@@ -91,6 +91,21 @@
     var settingsOverlay = document.querySelector('[data-js="settings-overlay"]');
     var settingsToggle = document.querySelector('[data-js="settings-toggle"]');
 
+    // Native popover path (settings-dropdown.js upgrades the panel where
+    // supported): close through the API so the top-layer state stays consistent.
+    // Adding [hidden] would leave it stuck "showing" and unable to reopen. The
+    // popover 'toggle' handler resets aria-expanded and the open-state attribute.
+    if (settingsPanel && settingsPanel.hasAttribute("popover")) {
+      if (settingsPanel.matches(":popover-open")) {
+        try {
+          settingsPanel.hidePopover();
+        } catch (e) {
+          /* already closed */
+        }
+      }
+      return;
+    }
+
     if (settingsPanel && !settingsPanel.hasAttribute("hidden")) {
       settingsPanel.setAttribute("hidden", "");
       settingsPanel.style.transform = "";
