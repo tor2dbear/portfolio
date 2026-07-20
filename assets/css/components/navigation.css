@@ -223,7 +223,12 @@ html[data-grid-overlay] .top-menu {
 .brand__mark {
   display: block;
   height: 1.5rem;
-  width: 6rem;
+  /* Rest width = the loop only (progressbar.js sets it to the loop width at
+     scroll 0 on every load). Matching that here avoids a first-paint shrink
+     from 6rem → ~1.5rem, which otherwise reflowed the header and — with view
+     transitions — popped against the captured snapshot. It still grows on
+     scroll via the inline width set by progressbar.js. */
+  width: 1.5rem;
   color: var(--text-default);
   max-width: 100%;
 }
