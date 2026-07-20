@@ -120,6 +120,9 @@
   --motion-stagger-step: 25ms;
   --motion-delay-reveal-step: 220ms;
 
+  /* Bottom sheet / dropdown panel open + close (settings, etc.). */
+  --motion-duration-sheet: var(--motion-duration-slow);
+
   --motion-ease-standard: ease;
   --motion-ease-decelerate: ease-out;
   --motion-ease-accelerate: ease-in;

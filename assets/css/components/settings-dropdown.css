@@ -67,15 +67,31 @@
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
-    transform var(--motion-duration-base) var(--motion-ease-standard),
-    visibility var(--motion-duration-base) var(--motion-ease-standard);
+  /* `display` is animated with allow-discrete so the panel — which toggles
+     display:none via [hidden] — stays displayed until the slide-out finishes
+     instead of vanishing instantly. See the @starting-style block below for the
+     slide-in. */
+  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    transform var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    display var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete;
 }
 
 .settings-panel:not([hidden]) {
   transform: translateY(0);
   opacity: 1;
   visibility: visible;
+}
+
+/* The enter animation needs an explicit "from" state, because the panel goes
+   from display:none ([hidden]) to shown — without this it would jump to the
+   open state. Mobile: slide up from below the viewport. */
+@starting-style {
+  .settings-panel:not([hidden]) {
+    opacity: 0;
+    transform: translateY(calc(100% + var(--spacing-16)));
+  }
 }
 
 .settings-panel::before {
@@ -154,6 +170,14 @@
 
   .settings-panel:not([hidden]) {
     transform: translateY(0);
+  }
+
+  /* Desktop dropdown enters by sliding down from just above the toggle. */
+  @starting-style {
+    .settings-panel:not([hidden]) {
+      opacity: 0;
+      transform: translateY(calc(var(--spacing-8) * -1));
+    }
   }
 
   /* No mobile-sheet drag handle or full-screen scrim on desktop. */
