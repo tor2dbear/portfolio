@@ -18,7 +18,30 @@ let rightMaxPx = 0;
 // progress; the next page paints that length, then tweens it to zero — after
 // the view transition (if one is running) so the two motions don't fight.
 const BRAND_PROGRESS_KEY = "brandProgress";
-const INTRO_DURATION_MS = 300;
+
+// Retract duration comes from the --motion-duration-brand-retract token so CSS
+// and JS share one source of truth; fall back if it's unavailable.
+function readDurationToken(name, fallbackMs) {
+  try {
+    var v = getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
+    if (v.endsWith("ms")) {
+      return parseFloat(v);
+    }
+    if (v.endsWith("s")) {
+      return parseFloat(v) * 1000;
+    }
+  } catch (e) {
+    /* getComputedStyle unavailable — use the fallback */
+  }
+  return fallbackMs;
+}
+
+const INTRO_DURATION_MS = readDurationToken(
+  "--motion-duration-brand-retract",
+  300
+);
 let introRafId = null;
 let introPlaying = false;
 

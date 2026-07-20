@@ -120,6 +120,11 @@
   --motion-stagger-step: 25ms;
   --motion-delay-reveal-step: 220ms;
 
+  /* Navigation motion. The page cross-fade (view transitions) and the brand
+     wordmark retract on navigation; read in style.css and progressbar.js. */
+  --motion-duration-view-transition: var(--motion-duration-base);
+  --motion-duration-brand-retract: var(--motion-duration-slow);
+
   --motion-ease-standard: ease;
   --motion-ease-decelerate: ease-out;
   --motion-ease-accelerate: ease-in;

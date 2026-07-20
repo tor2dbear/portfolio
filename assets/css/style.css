@@ -70,7 +70,7 @@ body {
    reads as snappy rather than delayed. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 200ms;
+  animation-duration: var(--motion-duration-view-transition);
 }
 
 /* The header is on every page: give it its own group and hold it static instead
