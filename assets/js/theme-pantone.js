@@ -27,7 +27,6 @@
   var Theme = window.Theme || {};
   var setBlendEnabled = Theme.setBlendEnabled;
   var commitPaletteSelection = Theme.commitPaletteSelection;
-  var isTerminalLayout = Theme.isTerminalLayout;
   var applyPalette = Theme.applyPalette;
   var updatePaletteUI = Theme.updatePaletteUI;
   var updateFooterPaletteLabel = Theme.updateFooterPaletteLabel;
