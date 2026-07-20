@@ -52,6 +52,11 @@
 
 .settings-panel {
   --theme-control-size: var(--size-40);
+  /* Drag-to-dismiss progress (0 = at rest, 1 = pulled its full height). Set by
+     settings-dropdown.js during a drag and read by ::backdrop to fade the
+     scrim/blur in step with the pull; declared here so the value is always
+     defined (0) before JS runs. */
+  --sheet-drag: 0;
   position: fixed;
   bottom: var(--spacing-8);
   left: var(--spacing-8);
