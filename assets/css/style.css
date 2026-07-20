@@ -67,10 +67,20 @@ body {
   navigation: auto;
 }
 
-/* The header is present on every page: give it a stable transition name so it
-   holds steady across the navigation instead of cross-fading with the page. */
+/* The header is present on every page: give it its own transition group so it
+   isn't cross-faded as part of the page root… */
 .top-menu {
   view-transition-name: top-menu;
+}
+
+/* …and hold that group static instead of fading it. A named group still gets a
+   default cross-fade, and the header's content differs per page (active link,
+   the scroll-progress wordmark), so without this it visibly flickers even
+   though it stays in the same place. */
+::view-transition-group(top-menu),
+::view-transition-old(top-menu),
+::view-transition-new(top-menu) {
+  animation: none;
 }
 
 /* Honour the OS "reduce motion" preference: skip the navigation transition. */
