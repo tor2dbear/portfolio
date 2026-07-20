@@ -83,6 +83,17 @@ body {
   animation: none;
 }
 
+/* Where cross-document view transitions run, they ARE the page-to-page motion,
+   so skip the scroll-reveal entry animation — otherwise content sits hidden in
+   the new page's snapshot and slides in over the cross-fade, which reads as a
+   jump. Browsers without view transitions (e.g. Firefox today) keep reveal.
+   The flag is set by a head script that feature-detects `onpagereveal`. */
+:root.has-view-transitions .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 /* Honour the OS "reduce motion" preference: skip the navigation transition. */
 @media (prefers-reduced-motion: reduce) {
   @view-transition {
