@@ -183,19 +183,36 @@
         }
         var threshold = Math.min(120, panel.offsetHeight * 0.25);
         if (delta > threshold) {
-          // Continue the motion off-screen, then hand back to the popover
-          // close (which runs its own exit transition). Restoring the CSS
-          // transition first makes the tail smooth.
+          // Slide the rest of the way down from the finger position, then close.
+          // Restore the CSS transition, flush so the current (dragged) transform
+          // is the animation's start, then animate to fully off-screen.
           setDragTransition(true);
+          void panel.offsetHeight;
+          var settled = false;
+          var finish = function () {
+            if (settled) {
+              return;
+            }
+            settled = true;
+            panel.removeEventListener("transitionend", onEnd);
+            try {
+              panel.hidePopover();
+            } catch (err) {
+              /* already closed */
+            }
+            // Clear the inline overrides so the next open starts clean
+            // (::backdrop + @starting-style drive the enter animation).
+            panel.style.transform = "";
+            panel.style.transition = "";
+          };
+          var onEnd = function (ev) {
+            if (ev.target === panel && ev.propertyName === "transform") {
+              finish();
+            }
+          };
+          panel.addEventListener("transitionend", onEnd);
+          window.setTimeout(finish, 500); // fallback if transitionend is missed
           panel.style.transform = "translateY(100%)";
-          try {
-            panel.hidePopover();
-          } catch (err) {
-            /* already closed */
-          }
-          // Clear the inline overrides once the popover is closed so the next
-          // open starts clean (::backdrop + @starting-style take over).
-          panel.style.transform = "";
         } else {
           // Snap back to the resting position.
           setDragTransition(true);

@@ -109,6 +109,19 @@
      popover default is width: fit-content, so set it back to auto. Desktop
      overrides this with a fixed width below. */
   width: auto;
+  /* The sheet has no internal scroll on mobile, so claim vertical gestures for
+     the drag-to-dismiss handler instead of letting the browser start a pan
+     (which would steal the gesture and cancel our pointer events). Desktop
+     resets this below. */
+  touch-action: none;
+}
+
+/* Lock background scroll while the mobile bottom sheet is open. Desktop keeps
+   scrolling (the dropdown repositions to follow), so gate to the sheet range. */
+@media (max-width: 29.9375em) {
+  html[data-settings-panel-open="true"] {
+    overflow: hidden;
+  }
 }
 
 .settings-panel[popover]:popover-open {
@@ -274,6 +287,7 @@
     width: var(--theme-panel-width);
     min-width: var(--theme-panel-width);
     max-width: var(--theme-panel-width);
+    touch-action: auto;
   }
 
   .settings-panel[popover]:popover-open {
