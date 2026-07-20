@@ -26,8 +26,8 @@
    - topmenu.html: .terminal-boot banner, .terminal-prompt rows and the
      quick-toggle/home li's exist only for this layout (hidden elsewhere by
      navigation.css); footer.html: .terminal-tail with data-exit-hint.
-   - settings-dropdown.html: data-terminal-expand/-collapse on
-     .settings-toggle carry the expander labels; effect buttons label
+   - settings-dropdown.html: the .settings-toggle gear is hidden here —
+     settings are edited via the `set` command; effect buttons label
      themselves via data-toast-title/aria-label.
    - summary templates: .summary-card__year spans (hidden in other layouts)
      become the ls-row year column.

@@ -15,23 +15,6 @@
       return;
     }
 
-    // Keep the terminal collapsed marker ("… +N lines (click to expand)") honest:
-    // N is the number of settings the panel lists (mode, typography, layout,
-    // effects, share, language). Recomputed from the DOM so it can't drift when a
-    // section is added or removed. No-op off the terminal layout (the attribute is
-    // only rendered as text there); works for every locale by rewriting the digits.
-    (function syncTerminalExpandCount() {
-      const expandLabel = toggle.getAttribute("data-terminal-expand");
-      if (!expandLabel) {
-        return;
-      }
-      const count = panel.querySelectorAll(".theme-section").length;
-      toggle.setAttribute(
-        "data-terminal-expand",
-        expandLabel.replace(/\+\s*\d+/, "+" + count)
-      );
-    })();
-
     // --- Popover prototype (progressive enhancement) ---------------------
     // Where the Popover API is supported, upgrade the panel to a native
     // top-layer popover: native open/close/light-dismiss/focus, ::backdrop as
@@ -74,8 +57,9 @@
         panel.removeAttribute("popover");
         toggle.removeAttribute("popovertarget");
         // Restore the closed [hidden] state. Without the popover attribute the
-        // panel is a plain element again, so it would otherwise render inline;
-        // [hidden] keeps it closed and lets the manual toggle below drive it.
+        // panel is a plain element again and would otherwise render inline. In
+        // the terminal layout settings are edited via the `set` command (the
+        // toggle is hidden there), so the DOM panel stays hidden.
         panel.setAttribute("hidden", "");
       }
 
@@ -250,24 +234,6 @@
       panel.addEventListener("pointermove", onDragMove);
       panel.addEventListener("pointerup", endDrag);
       panel.addEventListener("pointercancel", endDrag);
-
-      // When the panel isn't a native popover (terminal layout), the
-      // popovertarget invoker is gone, so drive open/close manually — the same
-      // [hidden] toggle the legacy path uses. When it IS a popover the invoker
-      // activates it natively and this handler stays out of the way.
-      toggle.addEventListener("click", function () {
-        if (panel.hasAttribute("popover")) {
-          return;
-        }
-        var willOpen = panel.hasAttribute("hidden");
-        if (willOpen) {
-          panel.removeAttribute("hidden");
-        } else {
-          panel.setAttribute("hidden", "");
-        }
-        toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
-        setSettingsPanelOpenState(willOpen);
-      });
 
       window.addEventListener("theme:layout-changed", function (e) {
         if (e && e.detail && e.detail.layout === "terminal") {
