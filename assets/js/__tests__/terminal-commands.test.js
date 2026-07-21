@@ -1165,6 +1165,60 @@ describe("terminal command line", () => {
     );
   });
 
+  test("pantone play activates and starts the auto-cycle", () => {
+    loadModule();
+    typeCommand("pantone play");
+    expect(sessionText()).toContain("cycling colour-of-the-year");
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+    expect(document.documentElement.getAttribute("data-pantone-state")).toBe(
+      "playing"
+    );
+  });
+
+  test("pantone play is refused when reduce motion is on", () => {
+    loadModule();
+    document.documentElement.setAttribute("data-effect-reduced-motion", "on");
+    typeCommand("pantone play");
+    expect(sessionText()).toContain("play disabled");
+    // A refusal must not activate Pantone.
+    expect(document.documentElement.getAttribute("data-palette")).not.toBe(
+      "pantone"
+    );
+  });
+
+  test("pantone pause holds the colour and stops cycling", () => {
+    loadModule();
+    typeCommand("pantone play");
+    expect(document.documentElement.getAttribute("data-pantone-state")).toBe(
+      "playing"
+    );
+    typeCommand("pantone pause");
+    expect(document.documentElement.getAttribute("data-pantone-state")).toBe(
+      "paused"
+    );
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+  });
+
+  test("pantone random activates and jumps to a different available year", () => {
+    loadModule();
+    // Two known years, currently on 2026 → random must pick the other (2025).
+    window.CotyScaleActions.getEntries = jest.fn(() => [
+      { year: 2025, name: "Prev" },
+      { year: 2026, name: "Latest" },
+    ]);
+    window.CotyScaleActions.getCurrentYear = jest.fn(() => 2026);
+    typeCommand("pantone random");
+    expect(sessionText()).toContain("(random)");
+    expect(sessionText()).toContain("year → 2025");
+    expect(document.documentElement.getAttribute("data-palette")).toBe(
+      "pantone"
+    );
+  });
+
   test("grain on / off / toggle drives the grain effect", () => {
     loadModule();
     typeCommand("grain on");

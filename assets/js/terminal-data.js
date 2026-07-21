@@ -46,7 +46,7 @@
     "  echo      print text",
     "  neofetch  session info",
     "  dark|light|system  mode",
-    "  pantone   [on|off|YYYY]",
+    "  pantone   [on|off|play|pause|random|YYYY]",
     "  grain|blend|motion on/off",
     "  grid      layout grid",
     "  set [k v] view/set settings",
