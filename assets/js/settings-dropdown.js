@@ -191,16 +191,32 @@
         return Math.min(content, sheetBounds().rest);
       }
 
+      // Resolve a CSS length token to pixels. getPropertyValue on a custom
+      // property returns the raw token (e.g. "1.5rem", not "24px"), so a rem
+      // value must be scaled by the root font size rather than parseFloat'd
+      // straight — otherwise "1.5rem" reads as 1.5px.
+      function tokenToPx(prop, fallback) {
+        var raw = getComputedStyle(document.documentElement)
+          .getPropertyValue(prop)
+          .trim();
+        var n = parseFloat(raw);
+        if (isNaN(n)) {
+          return fallback;
+        }
+        if (raw.indexOf("rem") !== -1) {
+          var root =
+            parseFloat(getComputedStyle(document.documentElement).fontSize) ||
+            16;
+          return n * root;
+        }
+        return n;
+      }
+
       // The two detent heights (px) the CSS caps the sheet at: rest = 82dvh,
       // full = 100dvh - --spacing-24. innerHeight stands in for dvh.
       function sheetBounds() {
         var vh = window.innerHeight || 0;
-        var gap =
-          parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue(
-              "--spacing-24"
-            )
-          ) || 24;
+        var gap = tokenToPx("--spacing-24", 24);
         return { rest: Math.round(vh * 0.82), full: Math.round(vh - gap) };
       }
 
