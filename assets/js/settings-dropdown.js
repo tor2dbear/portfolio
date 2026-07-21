@@ -147,9 +147,24 @@
           panel.classList.remove("is-expanded");
           panel.classList.remove("is-clipped");
           cancelPendingSizeCleanup();
+          // Release an in-flight drag too (Escape / grid-switch can close the
+          // sheet mid-drag); otherwise a stuck dragPointerId rejects every
+          // pointerdown after reopening and the detent interaction is dead.
+          if (dragPointerId !== null) {
+            try {
+              panel.releasePointerCapture(dragPointerId);
+            } catch (err) {
+              /* not captured */
+            }
+            dragPointerId = null;
+          }
+          dragEngaged = false;
+          dragDelta = 0;
+          panel.classList.remove("is-dragging");
           panel.style.height = "";
           panel.style.maxHeight = "";
           panel.style.transform = "";
+          panel.style.transition = "";
           panel.style.removeProperty("--sheet-drag");
           if (panelBody) {
             panelBody.scrollTop = 0;
