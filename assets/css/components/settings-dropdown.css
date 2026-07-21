@@ -68,7 +68,7 @@
   background: var(--surface-elevated);
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-12) var(--spacing-12) 0 0;
-  padding: var(--spacing-32) var(--spacing-12) var(--spacing-24);
+  padding: var(--spacing-32) var(--spacing-12) 0;
   transform: translateY(calc(100% + var(--spacing-16)));
   box-shadow: var(--shadow-03);
   z-index: 1000;
@@ -138,10 +138,9 @@
   .settings-panel[popover] {
     display: flex;
     flex-direction: column;
-    /* Rest as a clear partial "peek" sheet (not near-fullscreen), so the
-       content reliably overflows — which is what makes the overflow cue and
-       the drag-up-to-expand gesture meaningful. */
-    --sheet-max: 60dvh;
+    /* Resting height cap. Keep the 0.82 fraction in sync with sheetBounds()
+       in settings-dropdown.js (used for the collapse-from-expanded fallback). */
+    --sheet-max: 82dvh;
     /* border-box so --sheet-max is the whole sheet's height, padding + border
        included. Without it the 56px vertical padding is added on top of the cap,
        pushing the expanded sheet's top (and the collapse handle) off-screen. */

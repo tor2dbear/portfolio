@@ -269,13 +269,13 @@
         return n;
       }
 
-      // The two detent heights (px) the CSS caps the sheet at: rest = 60dvh,
+      // The two detent heights (px) the CSS caps the sheet at: rest = 82dvh,
       // full = 100dvh - --spacing-24. innerHeight stands in for dvh. Keep the
-      // 0.6 rest fraction in sync with --sheet-max in settings-dropdown.css.
+      // 0.82 rest fraction in sync with --sheet-max in settings-dropdown.css.
       function sheetBounds() {
         var vh = window.innerHeight || 0;
         var gap = tokenToPx("--spacing-24", 24);
-        return { rest: Math.round(vh * 0.6), full: Math.round(vh - gap) };
+        return { rest: Math.round(vh * 0.82), full: Math.round(vh - gap) };
       }
 
       // Show the bottom-fade overflow cue only when the resting sheet still has
@@ -370,7 +370,8 @@
           // A settle from a previous drag may still be animating — drop its
           // pending cleanup so its fallback timer can't wipe this drag's size.
           cancelPendingSizeCleanup();
-          panel.classList.remove("is-clipped"); // no overflow cue mid-drag
+          // Keep the overflow fade through the drag (it re-evaluates on settle)
+          // so it doesn't blink out the moment you touch the sheet.
           setDragTransition(false);
           panel.classList.add("is-dragging"); // freezes the ::backdrop transition
           // Snapshot the geometry the live resize + release decision work in:
