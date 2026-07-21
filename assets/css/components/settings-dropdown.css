@@ -138,7 +138,10 @@
   .settings-panel[popover] {
     display: flex;
     flex-direction: column;
-    --sheet-max: 82dvh;
+    /* Rest as a clear partial "peek" sheet (not near-fullscreen), so the
+       content reliably overflows — which is what makes the overflow cue and
+       the drag-up-to-expand gesture meaningful. */
+    --sheet-max: 60dvh;
     /* border-box so --sheet-max is the whole sheet's height, padding + border
        included. Without it the 56px vertical padding is added on top of the cap,
        pushing the expanded sheet's top (and the collapse handle) off-screen. */
@@ -174,19 +177,23 @@
     touch-action: pan-y pinch-zoom;
   }
 
-  /* Overflow cue: when the resting sheet clips its content, fade the bottom edge
-     so it reads as "there's more — drag up to expand". JS toggles .is-clipped
-     (only at rest, only when the body actually overflows); it lifts on expand.
-     pointer-events:none so it never blocks the control underneath. */
-  .settings-panel[popover].is-clipped::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: var(--spacing-40);
-    background: linear-gradient(to top, var(--surface-elevated), transparent);
-    pointer-events: none;
+  /* Overflow cue: when the resting sheet clips its content, fade the body's
+     bottom edge to transparent so the content visibly dissolves — reads as
+     "there's more — drag up to expand". A mask on the body (not a panel ::after)
+     keeps the fade over actual content, above the panel's bottom padding. JS
+     toggles .is-clipped only at rest while the body overflows, and lifts it once
+     scrolled to the end or expanded. */
+  .settings-panel[popover].is-clipped .settings-panel__body {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - var(--spacing-40)),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - var(--spacing-40)),
+      transparent
+    );
   }
 }
 
