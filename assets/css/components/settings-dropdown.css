@@ -68,8 +68,7 @@
   background: var(--surface-elevated);
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-12) var(--spacing-12) 0 0;
-  padding: var(--spacing-32) var(--spacing-12)
-    max(var(--spacing-16), env(safe-area-inset-bottom));
+  padding: var(--spacing-32) var(--spacing-12) 0;
   transform: translateY(calc(100% + var(--spacing-16)));
   box-shadow: var(--shadow-03);
   z-index: 1000;
@@ -174,6 +173,11 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     touch-action: pinch-zoom;
+    /* Air below the last row lives *inside* the scroll container so it trails
+       the content (revealed once you scroll to the end) instead of being a
+       fixed band at the panel's bottom that eats into the visible viewport and
+       clips the last row. Honors the iOS home indicator on the flush edge. */
+    padding-bottom: max(var(--spacing-16), env(safe-area-inset-bottom));
   }
 
   .settings-panel[popover].is-expanded .settings-panel__body {
