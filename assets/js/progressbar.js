@@ -13,6 +13,38 @@ const loopHeight = 24;
 let leftMaxPx = 0;
 let rightMaxPx = 0;
 
+// On navigation the scroll-progress dash retracts from its previous length back
+// to the resting loop instead of snapping. The leaving page stashes its
+// progress; the next page paints that length, then tweens it to zero — after
+// the view transition (if one is running) so the two motions don't fight.
+const BRAND_PROGRESS_KEY = "brandProgress";
+
+// Retract duration comes from the --motion-duration-brand-retract token so CSS
+// and JS share one source of truth; fall back if it's unavailable.
+function readDurationToken(name, fallbackMs) {
+  try {
+    var v = getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
+    if (v.endsWith("ms")) {
+      return parseFloat(v);
+    }
+    if (v.endsWith("s")) {
+      return parseFloat(v) * 1000;
+    }
+  } catch (e) {
+    /* getComputedStyle unavailable — use the fallback */
+  }
+  return fallbackMs;
+}
+
+const INTRO_DURATION_MS = readDurationToken(
+  "--motion-duration-brand-retract",
+  300
+);
+let introRafId = null;
+let introPlaying = false;
+
 function updateMetrics() {
   const brandContainer = brandMark ? brandMark.parentElement : null;
   const headerContainer = brandContainer
@@ -48,40 +80,22 @@ function markBrandReady() {
   rootElement.setAttribute("data-brand-ready", "true");
 }
 
-function scheduleProgressUpdate() {
-  if (rafId !== null) {
-    return;
-  }
-  rafId = requestAnimationFrame(() => {
-    rafId = null;
-    progressBar();
-  });
+function prefersReducedMotion() {
+  return (
+    (rootElement &&
+      rootElement.getAttribute("data-effect-reduced-motion") === "on") ||
+    (typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+  );
 }
 
-function progressBar() {
+// Paint the mark for a given 0..1 progress. Shared by the scroll handler and
+// the retract tween so both draw the dash identically (no distortion).
+function renderProgress(progress) {
   if (!brandMark || !brandLineLeft || !brandLineRight || !brandLoop) {
     return;
   }
-  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-  var height =
-    document.documentElement.scrollHeight -
-    document.documentElement.clientHeight;
-  var progress = height > 0 ? winScroll / height : 0;
-
   progress = Math.min(Math.max(progress, 0), 1);
-
-  const isCompact =
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(max-width: 47.9375em)").matches;
-
-  // The terminal layout shows the curl as a static letter-sized glyph: no
-  // scroll progress, so the side lines stay at zero and the mark is loop-only.
-  const isTerminal =
-    rootElement && rootElement.getAttribute("data-layout") === "terminal";
-
-  if (isCompact || isTerminal) {
-    progress = 0;
-  }
 
   const leftLength = leftMaxPx * progress;
   const rightLength = rightMaxPx * progress;
@@ -105,6 +119,83 @@ function progressBar() {
   markBrandReady();
 }
 
+// Progress from the current scroll position (0 on compact/terminal layouts,
+// where the mark is a static loop-only glyph).
+function scrollProgress() {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height =
+    document.documentElement.scrollHeight -
+    document.documentElement.clientHeight;
+  var progress = height > 0 ? winScroll / height : 0;
+
+  const isCompact =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(max-width: 47.9375em)").matches;
+  const isTerminal =
+    rootElement && rootElement.getAttribute("data-layout") === "terminal";
+
+  if (isCompact || isTerminal) {
+    progress = 0;
+  }
+
+  return Math.min(Math.max(progress, 0), 1);
+}
+
+function scheduleProgressUpdate() {
+  if (rafId !== null) {
+    return;
+  }
+  rafId = requestAnimationFrame(() => {
+    rafId = null;
+    progressBar();
+  });
+}
+
+function progressBar() {
+  // The retract intro owns the mark while it runs.
+  if (introPlaying) {
+    return;
+  }
+  renderProgress(scrollProgress());
+}
+
+// Tween the dash from `from` back to the resting loop (0).
+function playIntro(from) {
+  updateMetrics();
+  introPlaying = true;
+  renderProgress(from);
+
+  var startTs = null;
+  function step(ts) {
+    if (startTs === null) {
+      startTs = ts;
+    }
+    var t = Math.min((ts - startTs) / INTRO_DURATION_MS, 1);
+    var eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    renderProgress(from * (1 - eased));
+    if (t < 1) {
+      introRafId = requestAnimationFrame(step);
+    } else {
+      introRafId = null;
+      introPlaying = false;
+      progressBar();
+    }
+  }
+  introRafId = requestAnimationFrame(step);
+}
+
+// Hand control back to the scroll handler (e.g. the user scrolls mid-intro).
+function cancelIntro() {
+  if (introRafId !== null) {
+    cancelAnimationFrame(introRafId);
+    introRafId = null;
+  }
+  if (introPlaying) {
+    introPlaying = false;
+    progressBar();
+  }
+}
+
 function syncBrand() {
   updateMetrics();
   progressBar();
@@ -124,12 +215,76 @@ if (rootElement) {
   rootElement.setAttribute("data-brand-ready", "false");
 }
 
+// Stash the progress on the way out so the next page can retract from it.
+function stashProgress() {
+  try {
+    var p = scrollProgress();
+    if (p > 0.02) {
+      window.sessionStorage.setItem(BRAND_PROGRESS_KEY, String(p));
+    } else {
+      window.sessionStorage.removeItem(BRAND_PROGRESS_KEY);
+    }
+  } catch (e) {
+    /* sessionStorage unavailable — just skip the retract */
+  }
+}
+window.addEventListener("pagehide", stashProgress);
+
 window.onscroll = function () {
   scheduleProgressUpdate();
 };
 
 updateMetrics();
-requestAnimationFrame(syncBrand);
+
+// Retract intro on a fresh, top-of-page navigation; otherwise sync normally.
+(function initBrand() {
+  var stored = 0;
+  try {
+    stored = parseFloat(window.sessionStorage.getItem(BRAND_PROGRESS_KEY)) || 0;
+    window.sessionStorage.removeItem(BRAND_PROGRESS_KEY);
+  } catch (e) {
+    stored = 0;
+  }
+
+  var atTop = (window.scrollY || window.pageYOffset || 0) < 4;
+  if (!(stored > 0.02) || !atTop || prefersReducedMotion() || !brandMark) {
+    requestAnimationFrame(syncBrand);
+    return;
+  }
+
+  // Paint the previous (scrolled) length now so it matches the outgoing page —
+  // seamless if a view transition captures the header — then retract it.
+  introPlaying = true;
+  renderProgress(stored);
+
+  var started = false;
+  var cancelled = false;
+  var start = function () {
+    if (started || cancelled) {
+      return;
+    }
+    started = true;
+    playIntro(stored);
+  };
+  var onUserScroll = function () {
+    cancelled = true;
+    cancelIntro();
+  };
+
+  // If a cross-document view transition is running, retract once it finishes so
+  // the tween doesn't play under the frozen header snapshot (the wordmark holds
+  // its length through the short fade, then retracts); otherwise retract now.
+  requestAnimationFrame(function () {
+    var vt = window.__pageViewTransition;
+    if (vt && vt.finished && typeof vt.finished.then === "function") {
+      vt.finished.then(start, start);
+    } else {
+      start();
+    }
+  });
+
+  window.addEventListener("scroll", onUserScroll, { once: true, passive: true });
+})();
 
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(() => settleBrand(6));

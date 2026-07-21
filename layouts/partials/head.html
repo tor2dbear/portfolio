@@ -19,6 +19,36 @@
     content="#18181b"
     media="(prefers-color-scheme: dark)"
   />
+  <!-- While a cross-document view transition runs, flag the document (so CSS can
+       pause the scroll-reveal entry animation for that moment) and expose the
+       transition so progressbar.js can retract the wordmark once it finishes.
+       Registered in <head> so it's in place before pagereveal fires; a no-op in
+       browsers without cross-document view transitions. -->
+  <script>
+    window.addEventListener("pagereveal", function (event) {
+      if (!event.viewTransition) return;
+      var root = document.documentElement;
+      root.classList.add("is-view-transition");
+      window.__pageViewTransition = event.viewTransition;
+      var clear = function () {
+        // Before dropping the flag, lock in every .reveal element that's
+        // currently in view as revealed. The transition already showed it, so it
+        // must not blink back to opacity:0 if reveal-on-scroll.js is still
+        // waiting on its images. Below-fold elements are left to reveal on scroll.
+        try {
+          var reveals = document.querySelectorAll(".reveal:not(.is-revealed)");
+          for (var i = 0; i < reveals.length; i++) {
+            var box = reveals[i].getBoundingClientRect();
+            if (box.top < window.innerHeight && box.bottom > 0) {
+              reveals[i].classList.add("is-revealed");
+            }
+          }
+        } catch (e) {}
+        root.classList.remove("is-view-transition");
+      };
+      event.viewTransition.finished.then(clear, clear);
+    });
+  </script>
   <script>
     (function () {
       try {
@@ -729,6 +759,17 @@
       document.documentElement.setAttribute(
         "data-effect-grain",
         storedGrain === "1" ? "on" : "off"
+      );
+
+      // Reduce-motion is set here too (not just by theme.js on DOMContentLoaded)
+      // so it's in place before the pagereveal handler and progressbar.js run —
+      // both of which decide whether to animate the navigation/wordmark from this
+      // attribute. Without it, a returning visitor who enabled the site's Reduce
+      // motion (but whose OS reports no-preference) would still get the animation.
+      var storedMotion = localStorage.getItem("theme-effect-reduced-motion");
+      document.documentElement.setAttribute(
+        "data-effect-reduced-motion",
+        storedMotion === "1" ? "on" : "off"
       );
 
       // CotyScale (Pantone engine) is lazy-loaded. Expose its URL for
