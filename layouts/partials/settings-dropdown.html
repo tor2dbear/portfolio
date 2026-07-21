@@ -24,8 +24,6 @@
     aria-expanded="false"
     aria-haspopup="true"
     data-js="settings-toggle"
-    data-terminal-expand="{{ i18n "terminal_settings_expand" }}"
-    data-terminal-collapse="{{ i18n "terminal_settings_collapse" }}"
   >
     <span class="settings-icon" aria-hidden="true">
       <svg class="icon" aria-hidden="true">
@@ -36,7 +34,7 @@
 
   <div class="settings-overlay" hidden data-js="settings-overlay"></div>
 
-  <div class="settings-panel" hidden data-js="settings-panel">
+  <div class="settings-panel" id="settings-panel" hidden data-js="settings-panel">
     <div class="theme-section">
       <div class="theme-section-heading">
         <h3 class="theme-section-title">{{ i18n "mode" }}</h3>

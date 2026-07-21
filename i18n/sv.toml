@@ -436,12 +436,6 @@ other = "Nästa inlägg"
 [breadcrumb_label]
 other = "Brödsmulor"
 
-[terminal_settings_expand]
-other = "… +6 rader (klicka för att visa)"
-
-[terminal_settings_collapse]
-other = "(dölj)"
-
 [terminal_boot_ok]
 other = "[ ok ] palett · typografi · layout laddade"
 
