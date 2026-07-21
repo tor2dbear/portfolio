@@ -173,6 +173,21 @@
        that starts at the top (scrollTop 0) to collapse the sheet. */
     touch-action: pan-y pinch-zoom;
   }
+
+  /* Overflow cue: when the resting sheet clips its content, fade the bottom edge
+     so it reads as "there's more — drag up to expand". JS toggles .is-clipped
+     (only at rest, only when the body actually overflows); it lifts on expand.
+     pointer-events:none so it never blocks the control underneath. */
+  .settings-panel[popover].is-clipped::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--spacing-40);
+    background: linear-gradient(to top, var(--surface-elevated), transparent);
+    pointer-events: none;
+  }
 }
 
 /* Lock background scroll while the mobile bottom sheet is open. Desktop keeps

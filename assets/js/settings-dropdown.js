@@ -130,6 +130,7 @@
           // Capture the true resting height now, while the sheet hugs its
           // content (before any expand stretches the body).
           restHeightPx = Math.round(panel.getBoundingClientRect().height);
+          updateClipCue();
         } else {
           // Reset to the resting detent so the next open starts collapsed, and
           // rewind the body to the top — the resting sheet doesn't scroll, so a
@@ -161,6 +162,7 @@
         restHeightPx = sheetExpanded
           ? 0
           : Math.round(panel.getBoundingClientRect().height);
+        updateClipCue();
       });
 
       // --- Detent drag for the mobile bottom sheet -------------------------
@@ -247,6 +249,18 @@
         return { rest: Math.round(vh * 0.82), full: Math.round(vh - gap) };
       }
 
+      // Show the bottom-fade overflow cue only when the resting sheet actually
+      // clips its content (there's more to reveal by expanding). Removed while
+      // expanded or during a drag.
+      function updateClipCue() {
+        var clipped =
+          !sheetExpanded &&
+          !!panelBody &&
+          panel.matches(":popover-open") &&
+          panelBody.scrollHeight > panelBody.clientHeight + 1;
+        panel.classList.toggle("is-clipped", clipped);
+      }
+
       function setDragTransition(on) {
         panel.style.transition = on ? "" : "none";
       }
@@ -287,6 +301,8 @@
           teardown();
           panel.style.height = "";
           panel.style.maxHeight = "";
+          // Layout is final now — re-evaluate whether the resting sheet clips.
+          updateClipCue();
         };
         var onHeightEnd = function (ev) {
           if (ev.target === panel && ev.propertyName === "height") {
@@ -321,6 +337,7 @@
           // A settle from a previous drag may still be animating — drop its
           // pending cleanup so its fallback timer can't wipe this drag's size.
           cancelPendingSizeCleanup();
+          panel.classList.remove("is-clipped"); // no overflow cue mid-drag
           setDragTransition(false);
           panel.classList.add("is-dragging"); // freezes the ::backdrop transition
           // Snapshot the geometry the live resize + release decision work in:
