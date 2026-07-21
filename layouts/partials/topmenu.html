@@ -1,3 +1,81 @@
+{{/* Inline the icons the header actually paints, so their <use href="#…">
+  resolves against this document rather than the external sprite file.
+  External sprite references aren't drawn into a view-transition snapshot,
+  which made these nav icons blink on navigation; inline symbols render in
+  the snapshot. Hidden container — the symbols only show via <use>.
+*/}}
+<svg
+  width="0"
+  height="0"
+  aria-hidden="true"
+  focusable="false"
+  style="position: absolute; width: 0; height: 0; overflow: hidden"
+>
+  <symbol id="icon-settings" viewBox="0 0 24 24">
+    <path
+      d="M19.922 7.213a1.874 1.874 0 0 0 1.065 2.571l1.265 0.45a1.875 1.875 0 0 1 0 3.534l-1.265 0.45a1.874 1.874 0 0 0 -1.065 2.571L20.5 18a1.875 1.875 0 0 1 -2.5 2.5l-1.213 -0.576a1.874 1.874 0 0 0 -2.571 1.065l-0.45 1.265a1.875 1.875 0 0 1 -3.533 0l-0.45 -1.265a1.875 1.875 0 0 0 -2.572 -1.065L6 20.5A1.874 1.874 0 0 1 3.5 18l0.576 -1.213a1.874 1.874 0 0 0 -1.065 -2.571l-1.265 -0.45a1.875 1.875 0 0 1 0 -3.534l1.265 -0.45a1.874 1.874 0 0 0 1.065 -2.569L3.5 6A1.874 1.874 0 0 1 6 3.5l1.213 0.576a1.875 1.875 0 0 0 2.57 -1.063l0.45 -1.265a1.875 1.875 0 0 1 3.533 0l0.45 1.265a1.874 1.874 0 0 0 2.571 1.065L18 3.5A1.875 1.875 0 0 1 20.5 6Z"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1"
+    ></path>
+    <path
+      d="M7.499 12.001a4.5 4.5 0 1 0 9 0 4.5 4.5 0 1 0 -9 0Z"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1"
+    ></path>
+  </symbol>
+  <symbol id="icon-contact" viewBox="0 0 24 24">
+    <g transform="translate(2.5, 3)">
+      <path
+        d="M14.5 0.5h-10a4 4 0 0 0 -4 4v5a4 4 0 0 0 4 4h1v4l4.5 -4h4.5a4 4 0 0 0 4 -4v-5a4 4 0 0 0 -4 -4Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1"
+      ></path>
+    </g>
+  </symbol>
+  <symbol id="icon-profile-male" viewBox="0 0 24 24">
+    <path
+      d="M7.131 6.875a2.625 2.625 0 1 0 5.25 0 2.625 2.625 0 1 0 -5.25 0"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.5"
+    ></path>
+    <path
+      d="M10.006 14.75h-4.75a4.5 4.5 0 0 1 7.75 -3.112"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.5"
+    ></path>
+    <path
+      d="M7.49 18.75H3.756a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.5"
+    ></path>
+    <path
+      d="m13.718 19.227 3.822 -3.822a1.423 1.423 0 0 1 2.012 2.012l-4.44 4.439a2.845 2.845 0 0 1 -4.023 -4.023l4.871 -4.87A4.267 4.267 0 0 1 21.994 19l-4.253 4.25"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.5"
+    ></path>
+  </symbol>
+</svg>
 <header id="topmenu" class="top-menu" data-js="top-menu">
   <div class="grain-overlay grain-overlay--nav" aria-hidden="true"></div>
   {{/* Terminal layout: boot banner — a frameless block-pixel rendering of the brand curl (luminance-thresholded from the mark's SVG into █ blocks, Claude-CLI style). No frame: it was what forced a fixed width and clipped/scrolled on phones. Two sizes instead — a compact ~26-col curl for narrow screens, a detailed ~40-col one at >=48em (CSS swaps them) — so each viewport gets art that fits without scrolling. The block glyphs tile solid at line-height 1 (see terminal.css). The host title and boot line print below. Hidden in every other layout. */}}
@@ -149,18 +227,14 @@
                 data-focus-icon="contact-default"
               >
                 <svg class="icon icon--sm" aria-hidden="true">
-                  <use
-                    href="{{ "img/svg/sprite.svg?v=20260601a" | relURL }}#icon-contact"
-                  ></use>
+                  <use href="#icon-contact"></use>
                 </svg>
               </span>
               <svg
                 class="icon icon--sm top-menu__icon top-menu__icon--profile"
                 data-focus-icon="contact-profile"
               >
-                <use
-                  href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-profile-male"
-                ></use>
+                <use href="#icon-profile-male"></use>
               </svg>
             </span>
           </a>

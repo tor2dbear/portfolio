@@ -57,6 +57,63 @@ body {
   }
 }
 
+/* || ========== View transitions (cross-document) --------------- */
+
+/* Native page-to-page cross-fade for same-origin navigations (this Hugo site
+   is a multi-page app). Progressive enhancement: browsers without support just
+   navigate as before. Chromium 126+ and Safari 18.2+ today. */
+@view-transition {
+  navigation: auto;
+}
+
+/* Keep the fade short so the wordmark "hold, then retract" (progressbar.js)
+   reads as snappy rather than delayed. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--motion-duration-view-transition);
+}
+
+/* The header is on every page: give it its own group and hold it static instead
+   of cross-fading it (its content differs per page — active link, the
+   scroll-progress wordmark — so a plain cross-fade flickers). Its icons are
+   inlined in topmenu.html so they render in the snapshot rather than blinking. */
+.top-menu {
+  view-transition-name: top-menu;
+}
+::view-transition-group(top-menu),
+::view-transition-old(top-menu),
+::view-transition-new(top-menu) {
+  animation: none;
+}
+
+/* Pause the scroll-reveal entry animation while the transition runs, so content
+   doesn't slide in over the cross-fade. The flag is set/cleared by a head
+   script (pagereveal → viewTransition.finished); below-fold elements resume
+   revealing on scroll afterwards. */
+:root.is-view-transition .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* Honour the OS "reduce motion" preference: skip the navigation transition. */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
+/* Honour the site's own "Reduce motion" setting too (data-effect-reduced-motion,
+   set pre-paint in head.html). `@view-transition { navigation }` can't be gated
+   on an attribute, so neutralise the snapshot animations instead: the page still
+   swaps, but instantly — no cross-fade — matching the OS-preference behaviour. */
+:root[data-effect-reduced-motion="on"]::view-transition-group(*),
+:root[data-effect-reduced-motion="on"]::view-transition-image-pair(*),
+:root[data-effect-reduced-motion="on"]::view-transition-old(*),
+:root[data-effect-reduced-motion="on"]::view-transition-new(*) {
+  animation: none !important;
+}
+
 /* || ========== Transitions ------------------------------------- */
 
 /* Theme-swap transition for theme-driven surfaces, text, borders, and icons. */
