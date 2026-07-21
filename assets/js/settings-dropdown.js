@@ -217,6 +217,7 @@
       var dragStartMax = 0; // sheet outer height at engage (px)
       var dragRestPx = 0; // resting detent height (px)
       var dragFullPx = 0; // expanded detent height (px)
+      var dragStartedExpanded = false; // did this drag begin from fullscreen?
 
       function isMobileSheet() {
         return (
@@ -402,6 +403,7 @@
           // (measured when already at rest, computed from content otherwise).
           dragStartMax = Math.round(panel.getBoundingClientRect().height);
           dragFullPx = sheetBounds().full;
+          dragStartedExpanded = sheetExpanded;
           // Whether expanding would actually reveal anything: measured now, while
           // the body is still at its resting layout (before the resize below).
           // Already expanded → the body scrolls, so treat as expandable.
@@ -480,6 +482,11 @@
         // nothing to reveal — otherwise a compact sheet rests as a near-empty
         // fullscreen. Fall back to rest instead.
         if (action === "expand" && !dragCanExpand) {
+          action = "rest";
+        }
+        // Dismissal is reserved for drags that begin at rest; a long pull that
+        // starts from fullscreen collapses to rest rather than closing.
+        if (action === "dismiss" && dragStartedExpanded) {
           action = "rest";
         }
         // Re-enable the CSS transitions (both the panel's and, via removing the
@@ -563,10 +570,16 @@
           return; // touch/pen only — mouse users have light-dismiss
         }
         suppressNextClick = false; // fresh gesture — drop any stale suppression
-        // Expanded: the body scrolls, so only arm a drag when it's at the very
-        // top — a downward pull from there collapses; mid-scroll is the
-        // browser's to scroll. At rest the whole sheet is the drag surface.
-        if (sheetExpanded && panelBody && panelBody.scrollTop > 0) {
+        // Expanded + scrolled: leave a gesture that starts INSIDE the scrollable
+        // body to the browser (it's scrolling). But the pinned handle/top
+        // padding (target is the panel, not the body) must always be able to
+        // collapse the sheet, even when the content is scrolled down.
+        if (
+          sheetExpanded &&
+          panelBody &&
+          panelBody.scrollTop > 0 &&
+          panelBody.contains(e.target)
+        ) {
           return;
         }
         dragPointerId = e.pointerId;
