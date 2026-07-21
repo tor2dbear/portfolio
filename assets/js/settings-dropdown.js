@@ -268,15 +268,19 @@
         return { rest: Math.round(vh * 0.82), full: Math.round(vh - gap) };
       }
 
-      // Show the bottom-fade overflow cue only when the resting sheet actually
-      // clips its content (there's more to reveal by expanding). Removed while
-      // expanded or during a drag.
+      // Show the bottom-fade overflow cue only when the resting sheet still has
+      // content below the fold — i.e. not expanded, not mid-drag, and there's
+      // room left to scroll (a mouse/keyboard user can scroll the resting body,
+      // so drop the cue once they reach the end). Re-run on body scroll.
       function updateClipCue() {
-        var clipped =
-          !sheetExpanded &&
-          !!panelBody &&
-          panel.matches(":popover-open") &&
-          panelBody.scrollHeight > panelBody.clientHeight + 1;
+        var clipped = false;
+        if (!sheetExpanded && panelBody && panel.matches(":popover-open")) {
+          var remaining =
+            panelBody.scrollHeight -
+            panelBody.clientHeight -
+            panelBody.scrollTop;
+          clipped = remaining > 1;
+        }
         panel.classList.toggle("is-clipped", clipped);
       }
 
@@ -424,8 +428,10 @@
           return;
         }
         // The gesture became a drag, not a tap — swallow the click it would
-        // otherwise synthesize on the control it started on.
-        suppressNextClick = true;
+        // otherwise synthesize on the control it started on. Only a pointerup
+        // synthesizes that click; a pointercancel doesn't, so don't leave the
+        // flag armed to swallow the user's next real click/keyboard activation.
+        suppressNextClick = e.type === "pointerup";
         var dismissThreshold = Math.min(120, (dragRestPx || 480) * 0.25);
         var action = decideSheetTarget(
           dragStartMax - delta,
@@ -527,6 +533,12 @@
       panel.addEventListener("pointermove", onDragMove);
       panel.addEventListener("pointerup", endDrag);
       panel.addEventListener("pointercancel", endDrag);
+
+      // A mouse/keyboard user can scroll the resting body; re-evaluate the
+      // overflow cue so it lifts once they reach the end.
+      if (panelBody) {
+        panelBody.addEventListener("scroll", updateClipCue, { passive: true });
+      }
 
       // A drag that engaged (moved past the threshold) must not also fire a
       // click on whatever control it started on — swallow the synthesized click
