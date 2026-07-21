@@ -138,6 +138,11 @@
   .settings-panel[popover] {
     display: flex;
     flex-direction: column;
+    /* Edge-to-edge sheet: drop the border so its bottom/side edges don't draw a
+       hairline at the screen edges (which flickers as iOS Safari's toolbar
+       shows/hides). The rounded top + box-shadow define the sheet instead.
+       Desktop keeps its border. */
+    border: none;
     /* Resting height cap. Keep the 0.82 fraction in sync with sheetBounds()
        in settings-dropdown.js (used for the collapse-from-expanded fallback). */
     --sheet-max: 82dvh;
