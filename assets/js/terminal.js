@@ -1698,6 +1698,72 @@
               action: { type: "pantone", state: "step", step: step },
             };
           }
+          if (sub === "play") {
+            // Auto-cycling colour is motion — respect the reduce-motion setting
+            // (site toggle or OS preference) and refuse rather than cycle.
+            var reduceMotion =
+              document.documentElement.getAttribute(
+                "data-effect-reduced-motion"
+              ) === "on" ||
+              (typeof window.matchMedia === "function" &&
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+            if (reduceMotion) {
+              return {
+                echo: input,
+                lines: ["pantone: play disabled — reduce motion is on"],
+                action: null,
+              };
+            }
+            return {
+              echo: input,
+              lines: [
+                "[1] pantone: cycling colour-of-the-year — pantone pause to hold, off to stop",
+              ],
+              action: { type: "pantone", state: "play" },
+            };
+          }
+          if (sub === "pause") {
+            return {
+              echo: input,
+              lines: ["pantone: cycling paused (" + getCurrentCotyYear() + ")"],
+              action: { type: "pantone", state: "pause" },
+            };
+          }
+          if (sub === "random") {
+            var randomActions = getCotyActions();
+            var randomEntries =
+              randomActions && typeof randomActions.getEntries === "function"
+                ? randomActions.getEntries()
+                : null;
+            if (randomEntries && randomEntries.length) {
+              var current = Number(getCurrentCotyYear());
+              var pool = randomEntries.filter(function (entry) {
+                return Number(entry.year) !== current;
+              });
+              if (!pool.length) {
+                pool = randomEntries;
+              }
+              var randomYear = Number(
+                pool[Math.floor(Math.random() * pool.length)].year
+              );
+              return {
+                echo: input,
+                lines: ["pantone: year → " + randomYear + " (random)"],
+                action: { type: "pantone", state: "year", year: randomYear },
+              };
+            }
+            // Engine not loaded yet — turn Pantone on (which loads it); the
+            // next `pantone random` can then shuffle among the known years.
+            return {
+              echo: input,
+              lines: [
+                "pantone: on (" +
+                  getCurrentCotyYear() +
+                  ") — run pantone random again to shuffle",
+              ],
+              action: { type: "pantone", state: "on" },
+            };
+          }
           if (/^\d{4}$/.test(sub)) {
             var wanted = parseInt(sub, 10);
             var actions = getCotyActions();
@@ -1735,7 +1801,7 @@
               lines: [
                 "pantone: unknown option '" +
                   sub +
-                  "' — try on, off, next, prev, or a year",
+                  "' — try on, off, play, pause, random, next, prev, or a year",
               ],
               action: null,
             };
@@ -3228,6 +3294,20 @@
             advanceCotyYear(action.step, {
               fromUser: true,
               transitionDuration: PANTONE_MANUAL_TRANSITION_MS,
+            });
+          } else if (action.state === "play") {
+            // Activate + start the auto-cycle loop (setPantoneState "playing"
+            // arms the timer). Reset to the latest year only when starting cold.
+            activatePantone({
+              playing: true,
+              resetYear: !isPantoneModeActive(),
+            });
+          } else if (action.state === "pause") {
+            // Hold the current colour, stop cycling. From off, this turns
+            // Pantone on (paused) at the latest year.
+            activatePantone({
+              playing: false,
+              resetYear: !isPantoneModeActive(),
             });
           } else {
             togglePantoneMode();
