@@ -207,17 +207,36 @@
         );
       }
 
+      // The body's intrinsic content height (px), reliable even while the body
+      // is flex-stretched to the expanded detent (where scrollHeight reports the
+      // stretched client height, not the content). Measures the last child's
+      // extent from the body's content top instead.
+      function bodyContentHeight() {
+        if (!panelBody) {
+          return 0;
+        }
+        var last = panelBody.lastElementChild;
+        if (!last) {
+          return panelBody.scrollHeight;
+        }
+        var bottom =
+          last.getBoundingClientRect().bottom -
+          panelBody.getBoundingClientRect().top +
+          panelBody.scrollTop +
+          (parseFloat(getComputedStyle(last).marginBottom) || 0);
+        return Math.round(bottom);
+      }
+
       // The resting outer height (px): the sheet hugs its content up to the rest
       // cap (82dvh). Prefer the value measured while actually at rest; fall back
-      // to the content estimate (only hit if a drag somehow precedes any rest
-      // measurement). Both are clamped to the cap.
+      // to the intrinsic content height (used when the cache was invalidated,
+      // e.g. after a resize while expanded). Both are clamped to the cap.
       function restingHeight() {
         var cap = sheetBounds().rest;
         if (restHeightPx > 0) {
           return Math.min(restHeightPx, cap);
         }
-        var content = (panelBody ? panelBody.scrollHeight : 0) + panelChromeV();
-        return Math.min(content, cap);
+        return Math.min(bodyContentHeight() + panelChromeV(), cap);
       }
 
       // Resolve a CSS length token to pixels. getPropertyValue on a custom
@@ -461,12 +480,16 @@
         }
         panel.style.transform = "";
         panel.style.setProperty("--sheet-drag", "0");
+        // Leave max-height unconstrained (it's "none" from the drag) through the
+        // height transition — a none→length max-height isn't interpolated, so
+        // reapplying the cap now would clamp a high dragged height to rest before
+        // the height can animate (a snap). clearInlineSizeAfterTransition clears
+        // both once the height settles.
         if (action === "expand") {
           sheetExpanded = true;
           panel.classList.add("is-expanded");
           // Animate the explicit height the rest of the way to full, then hand
           // it back to the class (which holds the full height).
-          panel.style.maxHeight = "";
           panel.style.height = dragFullPx + "px";
         } else {
           // "rest": snap-back from rest, or collapse from expanded. Reset the
@@ -477,7 +500,6 @@
           if (panelBody) {
             panelBody.scrollTop = 0;
           }
-          panel.style.maxHeight = "";
           panel.style.height = restingHeight() + "px";
         }
         clearInlineSizeAfterTransition();
