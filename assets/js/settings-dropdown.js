@@ -150,6 +150,19 @@
       window.addEventListener("resize", reposition);
       window.addEventListener("scroll", reposition, { passive: true });
 
+      // A viewport change (e.g. rotation) makes the cached resting height stale.
+      // Re-measure it when the sheet is at rest; when it's expanded the resting
+      // height can't be measured, so invalidate it and let restingHeight()
+      // recompute from content on the next collapse.
+      window.addEventListener("resize", function () {
+        if (!panel.matches(":popover-open")) {
+          return;
+        }
+        restHeightPx = sheetExpanded
+          ? 0
+          : Math.round(panel.getBoundingClientRect().height);
+      });
+
       // --- Detent drag for the mobile bottom sheet -------------------------
       // Only the sheet layout (< 30em, open) is draggable; the desktop
       // dropdown is left alone. The resting sheet is a single drag surface
