@@ -237,18 +237,40 @@
         panel.style.transition = on ? "" : "none";
       }
 
+      // Teardown for the in-flight settle cleanup (below), so a new drag can
+      // cancel the previous settle's pending listener + fallback timer before
+      // they fire mid-gesture and wipe the live inline size.
+      var pendingSizeCleanup = null;
+
+      function cancelPendingSizeCleanup() {
+        if (pendingSizeCleanup) {
+          pendingSizeCleanup();
+        }
+      }
+
       // After a detent settle animates, clear the inline height/max-height so
       // CSS controls the sheet again (the resting cap hugs content; .is-expanded
       // holds the full height) — otherwise a stale inline px would survive a
       // rotation or content change.
       function clearInlineSizeAfterTransition() {
+        cancelPendingSizeCleanup(); // supersede any previous settle
         var done = false;
-        var clear = function () {
+        var teardown = function () {
           if (done) {
             return;
           }
           done = true;
           panel.removeEventListener("transitionend", onHeightEnd);
+          window.clearTimeout(timer);
+          if (pendingSizeCleanup === teardown) {
+            pendingSizeCleanup = null;
+          }
+        };
+        var clear = function () {
+          if (done) {
+            return;
+          }
+          teardown();
           panel.style.height = "";
           panel.style.maxHeight = "";
         };
@@ -258,7 +280,10 @@
           }
         };
         panel.addEventListener("transitionend", onHeightEnd);
-        window.setTimeout(clear, 500); // fallback if transitionend is missed
+        var timer = window.setTimeout(clear, 500); // fallback if end is missed
+        // A superseding drag calls this to drop the listener/timer WITHOUT
+        // clearing (the new gesture now owns the inline size).
+        pendingSizeCleanup = teardown;
       }
 
       function onDragMove(e) {
@@ -279,6 +304,9 @@
             return;
           }
           dragEngaged = true;
+          // A settle from a previous drag may still be animating — drop its
+          // pending cleanup so its fallback timer can't wipe this drag's size.
+          cancelPendingSizeCleanup();
           setDragTransition(false);
           panel.classList.add("is-dragging"); // freezes the ::backdrop transition
           // Snapshot the geometry the live resize + release decision work in:
