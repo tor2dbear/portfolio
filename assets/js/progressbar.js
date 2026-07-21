@@ -283,7 +283,10 @@ updateMetrics();
     }
   });
 
-  window.addEventListener("scroll", onUserScroll, { once: true, passive: true });
+  window.addEventListener("scroll", onUserScroll, {
+    once: true,
+    passive: true,
+  });
 })();
 
 if (document.fonts && document.fonts.ready) {

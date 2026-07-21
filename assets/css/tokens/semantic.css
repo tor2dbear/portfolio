@@ -120,6 +120,9 @@
   --motion-stagger-step: 25ms;
   --motion-delay-reveal-step: 220ms;
 
+  /* Bottom sheet / dropdown panel open + close (settings, etc.). */
+  --motion-duration-sheet: var(--motion-duration-slow);
+
   /* Navigation motion. The page cross-fade (view transitions) and the brand
      wordmark retract on navigation; read in style.css and progressbar.js. */
   --motion-duration-view-transition: var(--motion-duration-base);
