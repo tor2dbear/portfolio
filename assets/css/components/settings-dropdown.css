@@ -136,6 +136,10 @@
     display: flex;
     flex-direction: column;
     --sheet-max: 82dvh;
+    /* border-box so --sheet-max is the whole sheet's height, padding + border
+       included. Without it the 56px vertical padding is added on top of the cap,
+       pushing the expanded sheet's top (and the collapse handle) off-screen. */
+    box-sizing: border-box;
     max-height: var(--sheet-max);
     /* The panel clips; the body below is what scrolls. */
     overflow: hidden;
