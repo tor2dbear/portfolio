@@ -135,8 +135,17 @@
           // Reset to the resting detent so the next open starts collapsed, and
           // rewind the body to the top — the resting sheet doesn't scroll, so a
           // stale scrollTop would leave the first controls clipped on reopen.
+          // Cancel any in-flight settle and clear its inline sizing too, so a
+          // reopen before the fallback fires doesn't render at (and cache) a
+          // stale detent height, then snap when the old cleanup runs.
           sheetExpanded = false;
           panel.classList.remove("is-expanded");
+          panel.classList.remove("is-clipped");
+          cancelPendingSizeCleanup();
+          panel.style.height = "";
+          panel.style.maxHeight = "";
+          panel.style.transform = "";
+          panel.style.removeProperty("--sheet-drag");
           if (panelBody) {
             panelBody.scrollTop = 0;
           }
