@@ -269,12 +269,13 @@
         return n;
       }
 
-      // The two detent heights (px) the CSS caps the sheet at: rest = 82dvh,
-      // full = 100dvh - --spacing-24. innerHeight stands in for dvh.
+      // The two detent heights (px) the CSS caps the sheet at: rest = 60dvh,
+      // full = 100dvh - --spacing-24. innerHeight stands in for dvh. Keep the
+      // 0.6 rest fraction in sync with --sheet-max in settings-dropdown.css.
       function sheetBounds() {
         var vh = window.innerHeight || 0;
         var gap = tokenToPx("--spacing-24", 24);
-        return { rest: Math.round(vh * 0.82), full: Math.round(vh - gap) };
+        return { rest: Math.round(vh * 0.6), full: Math.round(vh - gap) };
       }
 
       // Show the bottom-fade overflow cue only when the resting sheet still has
