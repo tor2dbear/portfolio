@@ -478,7 +478,7 @@ kommandon:
   echo      skriv text
   neofetch  sessionsinfo
   dark|light|system  läge
-  pantone   [on|off|YYYY]
+  pantone   [on|off|play|pause|random|YYYY]
   grain|blend|motion on/off
   grid      rutnät
   set [k v] visa/ändra inställn.
