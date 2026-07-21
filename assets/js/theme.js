@@ -168,7 +168,7 @@
     }
     const pantone = pantoneCtl();
     if (pantone) {
-      pantone.setPantoneState(palette === "pantone" ? "active" : "inactive", {
+      pantone.setPantoneState(palette === "pantone" ? "paused" : "inactive", {
         syncPalette: false,
       });
     }
@@ -765,6 +765,11 @@
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
+    // Record the Pantone controls' authored (floating) home before applyLayout
+    // can move them, so returning from the terminal restores them correctly.
+    if (window.ThemePantone) {
+      window.ThemePantone.rememberTransportHome();
+    }
     applyLayout(storedLayout);
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
@@ -812,6 +817,16 @@
           ) !== "on"
         );
       },
+      playPantone: function () {
+        if (window.ThemePantone) {
+          window.ThemePantone.playPantone();
+        }
+      },
+      pausePantone: function () {
+        if (window.ThemePantone) {
+          window.ThemePantone.pausePantone();
+        }
+      },
       stopPantone: function () {
         if (window.ThemePantone) {
           window.ThemePantone.stopPantone();
@@ -853,6 +868,11 @@
         return window.ThemePantone
           ? window.ThemePantone.getCurrentCotyYear()
           : null;
+      },
+      setCotyShuffleEnabled: function (enabled) {
+        if (window.ThemePantone) {
+          window.ThemePantone.setCotyShuffleEnabled(enabled);
+        }
       },
       refreshCustomPalette: refreshCustomPaletteState,
     };
@@ -1013,6 +1033,7 @@
     updateFooterPaletteLabel: updateFooterPaletteLabel,
     runThemeTransition: runThemeTransition,
     animateThemeColorMeta: animateThemeColorMeta,
+    getPlayerSpriteUrl: getPlayerSpriteUrl,
     // Timing constant used by manual pantone transitions from the terminal.
     // Canonical definition lives in theme-pantone.js; the literal is duplicated
     // here because eval-time consumers copy the value before that file loads.

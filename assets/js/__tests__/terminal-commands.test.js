@@ -161,6 +161,15 @@ describe("terminal command line", () => {
             </ul>
           </address>
         </footer>
+        <div data-js="coty-transport" hidden>
+          <button data-js="coty-transport-trigger" aria-label="Show"></button>
+          <button
+            data-js="coty-transport-toggle"
+            data-label-play="Play"
+            data-label-pause="Pause"
+            aria-label="Play"
+          ><svg data-js="coty-play-icon"></svg></button>
+        </div>
         <form class="footer-newsletter__form" action="https://example.test/subscribe" method="post" data-mc-form novalidate>
           <input type="email" name="EMAIL" />
           <input type="hidden" name="locale" value="en" />
@@ -949,6 +958,24 @@ describe("terminal command line", () => {
     expect(sessionText().length).toBeGreaterThan(0);
     typeCommand("clear");
     expect(sessionText()).toBe("");
+  });
+
+  test("Pantone controls render inline inside the settings panel (not floating)", () => {
+    loadModule();
+    const panel = document.querySelector('[data-js="settings-panel"]');
+    const transport = document.querySelector('[data-js="coty-transport"]');
+    // In the terminal the transport is moved out of its floating home and into
+    // the settings panel, right after the Effects section — the core of the
+    // "render inline under the settings" change. (Restoring the floating pill on
+    // leaving the terminal is exercised in the browser, not here: this harness
+    // reloads the module against a shared jsdom window, which accumulates the
+    // layout listener and makes a within-suite layout switch unreliable.)
+    expect(transport.parentNode).toBe(panel);
+    expect(transport.previousElementSibling).toBe(
+      document
+        .querySelector('[data-js="coty-mode-toggle"]')
+        .closest(".theme-section")
+    );
   });
 
   test("exit leaves the terminal layout", () => {

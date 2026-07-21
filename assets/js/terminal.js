@@ -3211,11 +3211,11 @@
             stopPantone();
           } else if (action.state === "on") {
             if (!isPantoneModeActive()) {
-              activatePantone({ resetYear: true });
+              activatePantone({ playing: false, resetYear: true });
             }
           } else if (action.state === "year") {
             if (!isPantoneModeActive()) {
-              activatePantone({ resetYear: false });
+              activatePantone({ playing: false, resetYear: false });
             }
             setCotyYear(action.year, {
               fromUser: true,
@@ -3223,7 +3223,7 @@
             });
           } else if (action.state === "step") {
             if (!isPantoneModeActive()) {
-              activatePantone({ resetYear: false });
+              activatePantone({ playing: false, resetYear: false });
             }
             advanceCotyYear(action.step, {
               fromUser: true,

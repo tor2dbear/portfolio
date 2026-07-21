@@ -31,7 +31,9 @@
   }
 
   function disable(showToast) {
-    if (closing) {return;}
+    if (closing) {
+      return;
+    }
     closing = true;
 
     document.documentElement.setAttribute("data-grid-animate", "");
@@ -85,10 +87,14 @@
   }
 
   function closeSettingsPanelOnMobile() {
-    if (!window.matchMedia("(max-width: 29.9375em)").matches) {return;}
+    if (!window.matchMedia("(max-width: 29.9375em)").matches) {
+      return;
+    }
 
     var settingsPanel = document.querySelector('[data-js="settings-panel"]');
-    var settingsOverlay = document.querySelector('[data-js="settings-overlay"]');
+    var settingsOverlay = document.querySelector(
+      '[data-js="settings-overlay"]'
+    );
     var settingsToggle = document.querySelector('[data-js="settings-toggle"]');
 
     // Native popover path (settings-dropdown.js upgrades the panel where
@@ -122,9 +128,9 @@
       settingsToggle.setAttribute("aria-expanded", "false");
     }
 
-    // Clear the open-state attribute so CSS-driven UI keyed on it is restored.
-    // Without this some controls stay hidden on mobile until another close path
-    // removes the attribute.
+    // Clear the open-state attribute so CSS-driven UI (e.g. the coty-transport
+    // trigger) is restored. Without this the three dots stay hidden on mobile
+    // until another close path removes the attribute.
     if (document.documentElement.hasAttribute("data-settings-panel-open")) {
       document.documentElement.removeAttribute("data-settings-panel-open");
       window.dispatchEvent(new window.CustomEvent("theme:sheet-closed"));
@@ -140,12 +146,18 @@
 
   function updateFooterGrid(on) {
     var el = document.querySelector('[data-js="footer-grid"]');
-    if (!el) {return;}
+    if (!el) {
+      return;
+    }
     var btn = document.querySelector('[data-js="grid-toggle"]');
     var title = btn ? btn.getAttribute("data-toast-title") : "Grid";
     var label = on
-      ? (btn ? btn.getAttribute("data-toast-on") : "")
-      : (btn ? btn.getAttribute("data-toast-off") : "");
+      ? btn
+        ? btn.getAttribute("data-toast-on")
+        : ""
+      : btn
+      ? btn.getAttribute("data-toast-off")
+      : "";
     el.textContent = title + " " + label;
   }
 
@@ -176,6 +188,6 @@
       toggle();
       closeSettingsPanelOnMobile();
     },
-    isActive: isActive
+    isActive: isActive,
   };
 })();

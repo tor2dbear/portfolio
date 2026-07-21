@@ -273,6 +273,8 @@
 :root[data-layout="terminal"] .terminal-boot__exit,
 :root[data-layout="terminal"] .footer-newsletter__submit,
 :root[data-layout="terminal"] #main .button,
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button,
 :root[data-layout="terminal"] .contact-form__submit {
   background: transparent;
   border: none;
@@ -285,6 +287,13 @@
   font-family: inherit;
   color: var(--text-link, var(--text-default));
   cursor: pointer;
+}
+
+:root[data-layout="terminal"] .coty-transport__trigger,
+:root[data-layout="terminal"] .coty-player__button {
+  width: auto;
+  height: auto;
+  flex: 0 0 auto;
 }
 
 /* Text inputs join the stream: borderless, inheriting the buffer's face. */
@@ -322,6 +331,8 @@
 :root[data-layout="terminal"] .tag:hover,
 :root[data-layout="terminal"] .footer-newsletter__submit:hover,
 :root[data-layout="terminal"] #main .button:hover,
+:root[data-layout="terminal"] .coty-transport__trigger:hover,
+:root[data-layout="terminal"] .coty-player__button:hover,
 :root[data-layout="terminal"] .contact-form__submit:hover {
   background: transparent;
   background-image: none;
