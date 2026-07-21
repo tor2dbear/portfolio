@@ -120,9 +120,14 @@
       // starts from the expanded state, where the flex-stretched body can no
       // longer report the content-hugging height.
       var restHeightPx = 0;
+      // Bumped on every open/close so a deferred callback armed for one open
+      // (e.g. the drag-dismiss fallback) can detect it now belongs to a stale
+      // instance and bail instead of acting on a freshly reopened panel.
+      var openGeneration = 0;
 
       panel.addEventListener("toggle", function (e) {
         var open = e.newState === "open";
+        openGeneration++;
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         setSettingsPanelOpenState(open);
         if (open) {
@@ -465,12 +470,19 @@
           // Slide the rest of the way down from the finger position and fade the
           // scrim fully out in sync, then close.
           var settled = false;
+          var dismissGen = openGeneration;
           var finish = function () {
             if (settled) {
               return;
             }
             settled = true;
             panel.removeEventListener("transitionend", onEnd);
+            // If the panel was closed and reopened since this dismiss armed, the
+            // callback belongs to a stale instance — don't hidePopover() (which
+            // would close the new one) or touch its inline styles.
+            if (openGeneration !== dismissGen) {
+              return;
+            }
             try {
               panel.hidePopover();
             } catch (err) {
