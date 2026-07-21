@@ -152,18 +152,19 @@
   .settings-panel[popover] .settings-panel__body {
     flex: 1 1 auto;
     min-height: 0;
-    /* At rest the body does NOT scroll — the whole sheet is one drag surface, so
-       a drag anywhere drives the detent. It only becomes a scroll container once
-       expanded to full height (below). */
-    overflow: hidden;
+    /* At rest a single-finger touch can't scroll the body — touch-action allows
+       only pinch-zoom, not pan — so a touch drag drives the detent instead of
+       scrolling (content "doesn't scroll until fullscreen" on touch). The body
+       is still a scroll container, though, so mouse-wheel, keyboard focus and
+       pinch-zoom can reach content that overflows the resting detent. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
     touch-action: pinch-zoom;
   }
 
   .settings-panel[popover].is-expanded .settings-panel__body {
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    /* Now that the content scrolls, let the browser pan it; the JS reclaims a
-       downward pull that starts at the top (scrollTop 0) to collapse the sheet. */
+    /* Expanded: let touch pan the content too; the JS reclaims a downward pull
+       that starts at the top (scrollTop 0) to collapse the sheet. */
     touch-action: pan-y pinch-zoom;
   }
 }
