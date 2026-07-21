@@ -80,6 +80,7 @@
     transform var(--motion-duration-sheet) var(--motion-ease-emphasized),
     visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
     max-height var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    height var(--motion-duration-sheet) var(--motion-ease-emphasized),
     display var(--motion-duration-sheet) var(--motion-ease-emphasized)
       allow-discrete,
     overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
@@ -147,6 +148,9 @@
 
   .settings-panel[popover].is-expanded {
     --sheet-max: calc(100dvh - var(--spacing-24));
+    /* Explicit full height so the sheet reaches fullscreen even when its
+       content is shorter (the drag interpolates this height live). */
+    height: calc(100dvh - var(--spacing-24));
   }
 
   .settings-panel[popover] .settings-panel__body {

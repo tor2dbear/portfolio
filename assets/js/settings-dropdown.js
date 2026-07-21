@@ -164,7 +164,6 @@
       var dragStartMax = 0; // sheet outer height at engage (px)
       var dragRestPx = 0; // resting detent height (px)
       var dragFullPx = 0; // expanded detent height (px)
-      var dragResizable = false; // can the sheet grow/shrink (vs dismiss-only)?
 
       function isMobileSheet() {
         return (
@@ -173,12 +172,23 @@
         );
       }
 
-      // Expanding only helps when the resting sheet clips its content — i.e. the
-      // body has overflow to reveal. No overflow → nothing to expand into.
-      function sheetCanExpand() {
+      // Panel padding + borders (px) — the chrome around the scrollable body.
+      function panelChromeV() {
+        var cs = getComputedStyle(panel);
         return (
-          !!panelBody && panelBody.scrollHeight > panelBody.clientHeight + 1
+          parseFloat(cs.paddingTop) +
+          parseFloat(cs.paddingBottom) +
+          parseFloat(cs.borderTopWidth) +
+          parseFloat(cs.borderBottomWidth)
         );
+      }
+
+      // The resting outer height (px): the sheet hugs its content up to the rest
+      // cap (82dvh). Used to size the resting detent when a drag starts from the
+      // expanded state (where the sheet can't be measured at rest).
+      function restingHeight() {
+        var content = (panelBody ? panelBody.scrollHeight : 0) + panelChromeV();
+        return Math.min(content, sheetBounds().rest);
       }
 
       // The two detent heights (px) the CSS caps the sheet at: rest = 82dvh,
@@ -196,6 +206,30 @@
 
       function setDragTransition(on) {
         panel.style.transition = on ? "" : "none";
+      }
+
+      // After a detent settle animates, clear the inline height/max-height so
+      // CSS controls the sheet again (the resting cap hugs content; .is-expanded
+      // holds the full height) — otherwise a stale inline px would survive a
+      // rotation or content change.
+      function clearInlineSizeAfterTransition() {
+        var done = false;
+        var clear = function () {
+          if (done) {
+            return;
+          }
+          done = true;
+          panel.removeEventListener("transitionend", onHeightEnd);
+          panel.style.height = "";
+          panel.style.maxHeight = "";
+        };
+        var onHeightEnd = function (ev) {
+          if (ev.target === panel && ev.propertyName === "height") {
+            clear();
+          }
+        };
+        panel.addEventListener("transitionend", onHeightEnd);
+        window.setTimeout(clear, 500); // fallback if transitionend is missed
       }
 
       function onDragMove(e) {
@@ -218,14 +252,12 @@
           dragEngaged = true;
           setDragTransition(false);
           panel.classList.add("is-dragging"); // freezes the ::backdrop transition
-          // Snapshot the geometry the live resize + release decision work in.
-          // Use the measured height for the current detent (accurate) and the
-          // computed bound for the other.
-          var bounds = sheetBounds();
+          // Snapshot the geometry the live resize + release decision work in:
+          // the outer height at grab, the full detent, and the resting height
+          // (measured when already at rest, computed from content otherwise).
           dragStartMax = Math.round(panel.getBoundingClientRect().height);
-          dragResizable = sheetExpanded || sheetCanExpand();
-          dragRestPx = sheetExpanded ? bounds.rest : dragStartMax;
-          dragFullPx = sheetExpanded ? dragStartMax : bounds.full;
+          dragFullPx = sheetBounds().full;
+          dragRestPx = sheetExpanded ? restingHeight() : dragStartMax;
           try {
             panel.setPointerCapture(dragPointerId);
           } catch (err) {
@@ -234,37 +266,24 @@
         }
         dragDelta = delta;
         e.preventDefault();
-        if (dragResizable) {
-          // Follow the finger: pulling up grows the sheet toward full, pulling
-          // down shrinks it toward rest; below rest it becomes the dismiss track
-          // (slide down + fade the scrim). proposed is the sheet's outer height.
-          var proposed = dragStartMax - delta;
-          if (proposed >= dragRestPx) {
-            panel.style.transform = "";
-            panel.style.maxHeight = Math.min(proposed, dragFullPx) + "px";
-            panel.style.setProperty("--sheet-drag", "0");
-          } else {
-            panel.style.maxHeight = dragRestPx + "px";
-            var off = dragRestPx - proposed;
-            panel.style.transform = "translateY(" + off + "px)";
-            panel.style.setProperty(
-              "--sheet-drag",
-              String(Math.min(1, off / (dragRestPx || 1)))
-            );
-          }
-          return;
-        }
-        // Not resizable (content fits at rest): only a downward dismiss pull
-        // follows the finger; an upward pull does nothing.
-        if (delta > 0) {
-          panel.style.transform = "translateY(" + delta + "px)";
+        // Follow the finger with an explicit height (not max-height, which
+        // wouldn't stretch past the content): pulling up grows the sheet toward
+        // full, pulling down shrinks it toward rest; below rest it becomes the
+        // dismiss track (hold at rest height + slide down, fading the scrim).
+        var proposed = dragStartMax - delta;
+        panel.style.maxHeight = "none";
+        if (proposed >= dragRestPx) {
+          panel.style.transform = "";
+          panel.style.height = Math.min(proposed, dragFullPx) + "px";
+          panel.style.setProperty("--sheet-drag", "0");
+        } else {
+          panel.style.height = dragRestPx + "px";
+          var off = dragRestPx - proposed;
+          panel.style.transform = "translateY(" + off + "px)";
           panel.style.setProperty(
             "--sheet-drag",
-            String(Math.min(1, delta / (panel.offsetHeight || 1)))
+            String(Math.min(1, off / (dragRestPx || 1)))
           );
-        } else {
-          panel.style.transform = "";
-          panel.style.setProperty("--sheet-drag", "0");
         }
       }
 
@@ -289,21 +308,12 @@
         // otherwise synthesize on the control it started on.
         suppressNextClick = true;
         var dismissThreshold = Math.min(120, (dragRestPx || 480) * 0.25);
-        var action;
-        if (dragResizable) {
-          action = decideSheetTarget(
-            dragStartMax - delta,
-            dragRestPx,
-            dragFullPx,
-            dismissThreshold
-          );
-        } else {
-          // Content fits at rest: only a downward dismiss pull, no detents.
-          action =
-            delta > Math.min(120, panel.offsetHeight * 0.25)
-              ? "dismiss"
-              : "rest";
-        }
+        var action = decideSheetTarget(
+          dragStartMax - delta,
+          dragRestPx,
+          dragFullPx,
+          dismissThreshold
+        );
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
         panel.classList.remove("is-dragging");
@@ -328,6 +338,7 @@
             // (::backdrop + @starting-style drive the enter animation).
             panel.style.transform = "";
             panel.style.transition = "";
+            panel.style.height = "";
             panel.style.maxHeight = "";
             panel.style.removeProperty("--sheet-drag");
           };
@@ -342,24 +353,28 @@
           panel.style.setProperty("--sheet-drag", "1");
           return;
         }
+        panel.style.transform = "";
+        panel.style.setProperty("--sheet-drag", "0");
         if (action === "expand") {
           sheetExpanded = true;
           panel.classList.add("is-expanded");
+          // Animate the explicit height the rest of the way to full, then hand
+          // it back to the class (which holds the full height).
+          panel.style.maxHeight = "";
+          panel.style.height = dragFullPx + "px";
         } else {
           // "rest": snap-back from rest, or collapse from expanded. Reset the
-          // body to the top so the resting (non-scrolling) sheet never starts
-          // mid-content with the beginning clipped.
+          // body to the top, animate to the hug height, then hand back to the
+          // resting cap.
           sheetExpanded = false;
           panel.classList.remove("is-expanded");
           if (panelBody) {
             panelBody.scrollTop = 0;
           }
+          panel.style.maxHeight = "";
+          panel.style.height = restingHeight() + "px";
         }
-        // Hand the height back to the class (which animates via max-height) and
-        // clear the drag overrides / restore the full scrim.
-        panel.style.maxHeight = "";
-        panel.style.transform = "";
-        panel.style.setProperty("--sheet-drag", "0");
+        clearInlineSizeAfterTransition();
       }
 
       panel.addEventListener("pointerdown", function (e) {
