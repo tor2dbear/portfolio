@@ -6,40 +6,26 @@
 (function () {
   "use strict";
 
-  // Pure decision for the mobile bottom sheet's handle drag: given the vertical
-  // travel and the current detent, decide what release should do. Kept free of
-  // the DOM so it's unit-testable (see settings-sheet.test.js).
-  //   delta > 0 is a downward pull, delta < 0 upward.
-  //   - expanded: a downward pull past detentThreshold collapses to rest,
-  //     otherwise it snaps back (it's already full).
-  //   - rest: a downward pull past dismissThreshold dismisses; an upward pull
-  //     past detentThreshold expands (only when there's overflow to reveal);
-  //     otherwise it snaps back.
-  function decideSheetGesture(
-    delta,
-    expanded,
-    canExpand,
-    dismissThreshold,
-    detentThreshold
-  ) {
-    if (expanded) {
-      if (delta > detentThreshold) {
-        return "collapse";
-      }
-      return "snapback";
-    }
-    if (delta > dismissThreshold) {
+  // Pure decision for where a released detent drag settles, from the sheet's
+  // proposed outer height (px) after following the finger and the two detent
+  // heights. Kept DOM-free for unit testing (see settings-sheet.test.js).
+  //   - pulled well below the resting height (past dismissThreshold) → dismiss;
+  //   - at or above the midpoint between rest and full → expand;
+  //   - otherwise settle at rest ("rest" covers both a snap-back from rest and
+  //     a collapse from expanded).
+  function decideSheetTarget(proposedPx, restPx, fullPx, dismissThreshold) {
+    if (proposedPx <= restPx - dismissThreshold) {
       return "dismiss";
     }
-    if (delta < -detentThreshold && canExpand) {
+    if (proposedPx >= (restPx + fullPx) / 2) {
       return "expand";
     }
-    return "snapback";
+    return "rest";
   }
 
   // Testing seam.
   window.__settingsSheetInternals = {
-    decideSheetGesture: decideSheetGesture,
+    decideSheetTarget: decideSheetTarget,
   };
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -137,9 +123,14 @@
         if (open) {
           positionPanel();
         } else {
-          // Reset to the resting detent so the next open starts collapsed.
+          // Reset to the resting detent so the next open starts collapsed, and
+          // rewind the body to the top — the resting sheet doesn't scroll, so a
+          // stale scrollTop would leave the first controls clipped on reopen.
           sheetExpanded = false;
           panel.classList.remove("is-expanded");
+          if (panelBody) {
+            panelBody.scrollTop = 0;
+          }
         }
       });
 
@@ -163,12 +154,17 @@
       // snap on release; only the dismiss pull tracks the finger. A drag that
       // engages suppresses the click it would otherwise fire on a control.
       var DRAG_ENGAGE = 6; // px of travel before we treat it as a drag
-      var DETENT_THRESHOLD = 48; // px of travel to switch detent
       var dragPointerId = null;
       var dragStartY = 0;
       var dragDelta = 0;
       var dragEngaged = false;
       var suppressNextClick = false;
+      // Geometry snapshot taken when a drag engages, so the live resize and the
+      // release decision share one coordinate frame.
+      var dragStartMax = 0; // sheet outer height at engage (px)
+      var dragRestPx = 0; // resting detent height (px)
+      var dragFullPx = 0; // expanded detent height (px)
+      var dragResizable = false; // can the sheet grow/shrink (vs dismiss-only)?
 
       function isMobileSheet() {
         return (
@@ -183,6 +179,19 @@
         return (
           !!panelBody && panelBody.scrollHeight > panelBody.clientHeight + 1
         );
+      }
+
+      // The two detent heights (px) the CSS caps the sheet at: rest = 82dvh,
+      // full = 100dvh - --spacing-24. innerHeight stands in for dvh.
+      function sheetBounds() {
+        var vh = window.innerHeight || 0;
+        var gap =
+          parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--spacing-24"
+            )
+          ) || 24;
+        return { rest: Math.round(vh * 0.82), full: Math.round(vh - gap) };
       }
 
       function setDragTransition(on) {
@@ -209,6 +218,14 @@
           dragEngaged = true;
           setDragTransition(false);
           panel.classList.add("is-dragging"); // freezes the ::backdrop transition
+          // Snapshot the geometry the live resize + release decision work in.
+          // Use the measured height for the current detent (accurate) and the
+          // computed bound for the other.
+          var bounds = sheetBounds();
+          dragStartMax = Math.round(panel.getBoundingClientRect().height);
+          dragResizable = sheetExpanded || sheetCanExpand();
+          dragRestPx = sheetExpanded ? bounds.rest : dragStartMax;
+          dragFullPx = sheetExpanded ? dragStartMax : bounds.full;
           try {
             panel.setPointerCapture(dragPointerId);
           } catch (err) {
@@ -217,13 +234,34 @@
         }
         dragDelta = delta;
         e.preventDefault();
-        // Only the resting sheet's downward pull follows the finger (the dismiss
-        // track, with the scrim fading out). Expand (upward) and collapse
-        // (downward while expanded) snap on release, so leave the sheet put.
-        if (!sheetExpanded && delta > 0) {
+        if (dragResizable) {
+          // Follow the finger: pulling up grows the sheet toward full, pulling
+          // down shrinks it toward rest; below rest it becomes the dismiss track
+          // (slide down + fade the scrim). proposed is the sheet's outer height.
+          var proposed = dragStartMax - delta;
+          if (proposed >= dragRestPx) {
+            panel.style.transform = "";
+            panel.style.maxHeight = Math.min(proposed, dragFullPx) + "px";
+            panel.style.setProperty("--sheet-drag", "0");
+          } else {
+            panel.style.maxHeight = dragRestPx + "px";
+            var off = dragRestPx - proposed;
+            panel.style.transform = "translateY(" + off + "px)";
+            panel.style.setProperty(
+              "--sheet-drag",
+              String(Math.min(1, off / (dragRestPx || 1)))
+            );
+          }
+          return;
+        }
+        // Not resizable (content fits at rest): only a downward dismiss pull
+        // follows the finger; an upward pull does nothing.
+        if (delta > 0) {
           panel.style.transform = "translateY(" + delta + "px)";
-          var progress = Math.min(1, delta / (panel.offsetHeight || 1));
-          panel.style.setProperty("--sheet-drag", String(progress));
+          panel.style.setProperty(
+            "--sheet-drag",
+            String(Math.min(1, delta / (panel.offsetHeight || 1)))
+          );
         } else {
           panel.style.transform = "";
           panel.style.setProperty("--sheet-drag", "0");
@@ -250,14 +288,22 @@
         // The gesture became a drag, not a tap — swallow the click it would
         // otherwise synthesize on the control it started on.
         suppressNextClick = true;
-        var dismissThreshold = Math.min(120, panel.offsetHeight * 0.25);
-        var action = decideSheetGesture(
-          delta,
-          sheetExpanded,
-          sheetCanExpand(),
-          dismissThreshold,
-          DETENT_THRESHOLD
-        );
+        var dismissThreshold = Math.min(120, (dragRestPx || 480) * 0.25);
+        var action;
+        if (dragResizable) {
+          action = decideSheetTarget(
+            dragStartMax - delta,
+            dragRestPx,
+            dragFullPx,
+            dismissThreshold
+          );
+        } else {
+          // Content fits at rest: only a downward dismiss pull, no detents.
+          action =
+            delta > Math.min(120, panel.offsetHeight * 0.25)
+              ? "dismiss"
+              : "rest";
+        }
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
         panel.classList.remove("is-dragging");
@@ -282,6 +328,7 @@
             // (::backdrop + @starting-style drive the enter animation).
             panel.style.transform = "";
             panel.style.transition = "";
+            panel.style.maxHeight = "";
             panel.style.removeProperty("--sheet-drag");
           };
           var onEnd = function (ev) {
@@ -298,13 +345,19 @@
         if (action === "expand") {
           sheetExpanded = true;
           panel.classList.add("is-expanded");
-        } else if (action === "collapse") {
+        } else {
+          // "rest": snap-back from rest, or collapse from expanded. Reset the
+          // body to the top so the resting (non-scrolling) sheet never starts
+          // mid-content with the beginning clipped.
           sheetExpanded = false;
           panel.classList.remove("is-expanded");
+          if (panelBody) {
+            panelBody.scrollTop = 0;
+          }
         }
-        // expand / collapse / snapback all clear the drag transform and restore
-        // the full scrim; the max-height change (via .is-expanded) animates the
-        // resize.
+        // Hand the height back to the class (which animates via max-height) and
+        // clear the drag overrides / restore the full scrim.
+        panel.style.maxHeight = "";
         panel.style.transform = "";
         panel.style.setProperty("--sheet-drag", "0");
       }
