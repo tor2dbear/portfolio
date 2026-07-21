@@ -1,5 +1,13 @@
 name: pr-checks
 
+# Draft-first workflow (see docs/ci-workflow.md):
+#   - While a PR is a DRAFT, only the fast `quick` job runs on push
+#     (lint + test + coverage + build). The heavy Lighthouse/axe sweep is
+#     skipped, so iteration stays cheap and fast.
+#   - Marking the PR "Ready for review" runs the full `quality` sweep.
+# `concurrency` cancels a superseded run when you push again to the same
+# branch/PR, so rapid pushes don't stack.
+
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
@@ -9,6 +17,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   quick:
@@ -35,9 +47,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install quality tools (no lockfile changes)
-        run: npm install --no-save --no-package-lock @lhci/cli@0.14.0 playwright@1.49.1 @axe-core/playwright@4.10.2
-
       - name: Run linter
         run: npm run lint
 
@@ -55,7 +64,11 @@ jobs:
         continue-on-error: true
 
   quality:
-    if: github.event_name == 'pull_request'
+    # Only run the heavy Lighthouse/axe sweep once the PR is ready for review
+    # (non-draft). Draft PRs get the fast `quick` job on push instead; marking
+    # the PR ready (or pushing to a ready PR) triggers this. See
+    # docs/ci-workflow.md.
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: read
