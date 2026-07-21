@@ -304,7 +304,10 @@
       // so drop the cue once they reach the end). Re-run on body scroll.
       function updateClipCue() {
         var clipped = false;
-        if (!sheetExpanded && panelBody && panel.matches(":popover-open")) {
+        if (panelBody && panel.matches(":popover-open")) {
+          // Purely whether there's more content below the fold right now — not
+          // tied to the detent flag, so it tracks a live resize drag (the flag
+          // only flips at release). Fades in/out via the ::after opacity.
           var remaining =
             panelBody.scrollHeight -
             panelBody.clientHeight -
@@ -439,6 +442,9 @@
             String(Math.min(1, off / (dragRestPx || 1)))
           );
         }
+        // Re-evaluate the overflow fade against the sheet's new live height, so
+        // it fades in as a collapse crosses into overflow (not only on release).
+        updateClipCue();
       }
 
       function endDrag(e) {
