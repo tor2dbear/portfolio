@@ -153,20 +153,22 @@
 
       // --- Detent drag for the mobile bottom sheet -------------------------
       // Only the sheet layout (< 30em, open) is draggable; the desktop
-      // dropdown is left alone. Dragging the top handle zone drives two
-      // detents: from rest, a downward pull follows the finger and dismisses
-      // past a threshold, while an upward pull expands the sheet toward full
-      // height (when there's overflow to reveal); from expanded, a downward
-      // pull collapses back to rest. The body scrolls on its own below the
-      // handle. Expand/collapse snap on release; only the dismiss pull tracks
-      // the finger.
-      var DRAG_ZONE = 56; // px from the top of the panel that starts a drag
+      // dropdown is left alone. The resting sheet is a single drag surface
+      // (its body doesn't scroll), so a drag ANYWHERE drives the detents: a
+      // downward pull follows the finger and dismisses past a threshold, an
+      // upward pull expands the sheet toward full height (when there's overflow
+      // to reveal). Once expanded the body scrolls; only a downward pull that
+      // starts at the very top (scrollTop 0) is reclaimed to collapse back to
+      // rest — mid-scroll gestures are left to the browser. Expand/collapse
+      // snap on release; only the dismiss pull tracks the finger. A drag that
+      // engages suppresses the click it would otherwise fire on a control.
       var DRAG_ENGAGE = 6; // px of travel before we treat it as a drag
       var DETENT_THRESHOLD = 48; // px of travel to switch detent
       var dragPointerId = null;
       var dragStartY = 0;
       var dragDelta = 0;
       var dragEngaged = false;
+      var suppressNextClick = false;
 
       function isMobileSheet() {
         return (
@@ -196,6 +198,12 @@
           // Engage on travel in either direction (down = dismiss/collapse,
           // up = expand); a tiny move stays a tap.
           if (Math.abs(delta) < DRAG_ENGAGE) {
+            return;
+          }
+          // Expanded + upward from the top means the user is scrolling into the
+          // content — release the gesture back to the browser rather than drag.
+          if (sheetExpanded && delta < 0) {
+            dragPointerId = null;
             return;
           }
           dragEngaged = true;
@@ -239,6 +247,9 @@
         if (!wasEngaged) {
           return;
         }
+        // The gesture became a drag, not a tap — swallow the click it would
+        // otherwise synthesize on the control it started on.
+        suppressNextClick = true;
         var dismissThreshold = Math.min(120, panel.offsetHeight * 0.25);
         var action = decideSheetGesture(
           delta,
@@ -305,9 +316,12 @@
         if (e.pointerType === "mouse") {
           return; // touch/pen only — mouse users have light-dismiss
         }
-        var r = panel.getBoundingClientRect();
-        if (e.clientY - r.top > DRAG_ZONE) {
-          return; // grabbed below the handle zone — leave scrolling alone
+        suppressNextClick = false; // fresh gesture — drop any stale suppression
+        // Expanded: the body scrolls, so only arm a drag when it's at the very
+        // top — a downward pull from there collapses; mid-scroll is the
+        // browser's to scroll. At rest the whole sheet is the drag surface.
+        if (sheetExpanded && panelBody && panelBody.scrollTop > 0) {
+          return;
         }
         dragPointerId = e.pointerId;
         dragStartY = e.clientY;
@@ -317,6 +331,21 @@
       panel.addEventListener("pointermove", onDragMove);
       panel.addEventListener("pointerup", endDrag);
       panel.addEventListener("pointercancel", endDrag);
+
+      // A drag that engaged (moved past the threshold) must not also fire a
+      // click on whatever control it started on — swallow the synthesized click
+      // in the capture phase before it reaches the button/radio.
+      panel.addEventListener(
+        "click",
+        function (e) {
+          if (suppressNextClick) {
+            suppressNextClick = false;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        true
+      );
 
       window.addEventListener("theme:layout-changed", function (e) {
         if (e && e.detail && e.detail.layout === "terminal") {
