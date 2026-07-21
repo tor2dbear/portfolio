@@ -58,9 +58,11 @@
      defined (0) before JS runs. */
   --sheet-drag: 0;
   position: fixed;
-  bottom: var(--spacing-8);
-  left: var(--spacing-8);
-  right: var(--spacing-8);
+  /* Mobile bottom sheet: edge-to-edge, flush to the bottom (no inset margin).
+     Desktop (≥30em) re-anchors this as a dropdown below the toggle. */
+  bottom: 0;
+  left: 0;
+  right: 0;
   top: auto;
   min-width: unset;
   background: var(--surface-elevated);
