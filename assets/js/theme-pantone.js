@@ -15,7 +15,7 @@
  *
  * Load AFTER theme.js. This module registers no DOMContentLoaded handler of
  * its own: theme.js's init drives the hooks below (initControls,
- * reconcileStartupPalette, rememberTransportHome, initTransportUI) at exactly
+ * reconcileStartupPalette, initTransportUI) at exactly
  * the positions the inlined code used to run, so boot order is untouched.
  */
 
@@ -326,66 +326,6 @@
       stopCotyTransportHoverEnterTimer();
       cotyTransportHasUserEngaged = false;
       setCotyTransportUiState("expanded");
-    }
-  }
-
-  // The Pantone controls are one node reused at every layout. In the terminal
-  // they belong inline inside the settings panel (under the Effects toggles),
-  // not floating over the page; everywhere else they float. Rather than
-  // duplicate the DOM, move the node and remember its home so it returns to
-  // exactly where it started when the user leaves the terminal.
-  let cotyTransportHome = null;
-
-  function rememberCotyTransportHome(node) {
-    if (cotyTransportHome || !node || !node.parentNode) {
-      return;
-    }
-    cotyTransportHome = { parent: node.parentNode, next: node.nextSibling };
-  }
-
-  function syncCotyTransportPlacement() {
-    const node = document.querySelector('[data-js="coty-transport"]');
-    if (!node) {
-      return;
-    }
-    rememberCotyTransportHome(node);
-    if (isTerminalLayout()) {
-      const panel = document.querySelector('[data-js="settings-panel"]');
-      const modeToggle = document.querySelector('[data-js="coty-mode-toggle"]');
-      const anchor = modeToggle ? modeToggle.closest(".theme-section") : null;
-      if (panel && anchor && anchor.parentNode === panel) {
-        if (anchor.nextSibling !== node) {
-          panel.insertBefore(node, anchor.nextSibling);
-        }
-      } else if (panel && node.parentNode !== panel) {
-        panel.appendChild(node);
-      }
-      // Inline, it is always expanded — but only touch (and persist) the
-      // ui-state when Pantone is actually active/visible, so entering the
-      // terminal with the effect off doesn't clobber the floating pill's
-      // collapsed preference.
-      if (isPantoneModeActive()) {
-        setCotyTransportUiState("expanded");
-      }
-    } else if (
-      cotyTransportHome &&
-      cotyTransportHome.parent &&
-      cotyTransportHome.parent.isConnected &&
-      node.parentNode !== cotyTransportHome.parent
-    ) {
-      // Only restore into a home that is still part of the live document, and
-      // never anchor to a detached reference node.
-      const ref =
-        cotyTransportHome.next && cotyTransportHome.next.isConnected
-          ? cotyTransportHome.next
-          : null;
-      cotyTransportHome.parent.insertBefore(node, ref);
-      // Back as the floating pill: land in the collapsed three-dot resting
-      // state right away rather than leaving the full player expanded (it was
-      // forced open while inline in the terminal settings).
-      if (isPantoneModeActive()) {
-        setCotyTransportUiState("collapsed");
-      }
     }
   }
 
@@ -1061,17 +1001,10 @@
     return initialPalette;
   }
 
-  // Record the transport's authored (floating) home before applyLayout can
-  // move it, so returning from the terminal restores it correctly.
-  function rememberTransportHome() {
-    rememberCotyTransportHome(
-      document.querySelector('[data-js="coty-transport"]')
-    );
-  }
-
   // Transport bootstrapping: playback timer, collapsed/expanded state, player
-  // UI, layout-aware placement (kept in sync on theme:layout-changed), and the
-  // sheet-closed resume hook.
+  // UI, and the sheet-closed resume hook. The pill lives in its footer home at
+  // every layout (CSS hides it in the terminal — see terminal panels.css), so
+  // no layout-aware repositioning is needed.
   function initTransportUI() {
     syncCotyPlaybackTimer();
     setCotyTransportUiState(
@@ -1088,16 +1021,6 @@
       }
     }
 
-    if (window.__cotyPlacementHandler) {
-      window.removeEventListener(
-        "theme:layout-changed",
-        window.__cotyPlacementHandler
-      );
-    }
-    window.__cotyPlacementHandler = syncCotyTransportPlacement;
-    window.addEventListener("theme:layout-changed", syncCotyTransportPlacement);
-    syncCotyTransportPlacement();
-
     window.addEventListener(
       "theme:sheet-closed",
       resumeCotyTransportAutoCollapse
@@ -1111,7 +1034,6 @@
     // init hooks (theme.js init drives these, in order)
     initControls: initControls,
     reconcileStartupPalette: reconcileStartupPalette,
-    rememberTransportHome: rememberTransportHome,
     initTransportUI: initTransportUI,
     // mode/palette application hooks (theme.js applyMode/applyPalette)
     onModeApplied: onModeApplied,

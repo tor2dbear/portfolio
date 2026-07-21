@@ -765,11 +765,6 @@
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
-    // Record the Pantone controls' authored (floating) home before applyLayout
-    // can move them, so returning from the terminal restores them correctly.
-    if (window.ThemePantone) {
-      window.ThemePantone.rememberTransportHome();
-    }
     applyLayout(storedLayout);
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,

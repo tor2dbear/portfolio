@@ -960,22 +960,15 @@ describe("terminal command line", () => {
     expect(sessionText()).toBe("");
   });
 
-  test("Pantone controls render inline inside the settings panel (not floating)", () => {
+  test("Pantone player is not docked into the settings panel in the terminal", () => {
     loadModule();
     const panel = document.querySelector('[data-js="settings-panel"]');
     const transport = document.querySelector('[data-js="coty-transport"]');
-    // In the terminal the transport is moved out of its floating home and into
-    // the settings panel, right after the Effects section — the core of the
-    // "render inline under the settings" change. (Restoring the floating pill on
-    // leaving the terminal is exercised in the browser, not here: this harness
-    // reloads the module against a shared jsdom window, which accumulates the
-    // layout listener and makes a within-suite layout switch unreliable.)
-    expect(transport.parentNode).toBe(panel);
-    expect(transport.previousElementSibling).toBe(
-      document
-        .querySelector('[data-js="coty-mode-toggle"]')
-        .closest(".theme-section")
-    );
+    // The player pill is a graphical-theme control; in the terminal Pantone is
+    // driven by the `set pantone …` command and the pill is hidden via CSS. It
+    // stays in its authored home rather than being moved into the settings
+    // buffer, so it must not become a child of the panel.
+    expect(transport.parentNode).not.toBe(panel);
   });
 
   test("exit leaves the terminal layout", () => {
