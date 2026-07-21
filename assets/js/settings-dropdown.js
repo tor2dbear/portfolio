@@ -6,6 +6,42 @@
 (function () {
   "use strict";
 
+  // Pure decision for the mobile bottom sheet's handle drag: given the vertical
+  // travel and the current detent, decide what release should do. Kept free of
+  // the DOM so it's unit-testable (see settings-sheet.test.js).
+  //   delta > 0 is a downward pull, delta < 0 upward.
+  //   - expanded: a downward pull past detentThreshold collapses to rest,
+  //     otherwise it snaps back (it's already full).
+  //   - rest: a downward pull past dismissThreshold dismisses; an upward pull
+  //     past detentThreshold expands (only when there's overflow to reveal);
+  //     otherwise it snaps back.
+  function decideSheetGesture(
+    delta,
+    expanded,
+    canExpand,
+    dismissThreshold,
+    detentThreshold
+  ) {
+    if (expanded) {
+      if (delta > detentThreshold) {
+        return "collapse";
+      }
+      return "snapback";
+    }
+    if (delta > dismissThreshold) {
+      return "dismiss";
+    }
+    if (delta < -detentThreshold && canExpand) {
+      return "expand";
+    }
+    return "snapback";
+  }
+
+  // Testing seam.
+  window.__settingsSheetInternals = {
+    decideSheetGesture: decideSheetGesture,
+  };
+
   document.addEventListener("DOMContentLoaded", function () {
     const toggle = document.querySelector('[data-js="settings-toggle"]');
     const panel = document.querySelector('[data-js="settings-panel"]');
@@ -23,7 +59,10 @@
     // without popover fall through to the legacy implementation unchanged.
     var supportsPopover =
       typeof panel.showPopover === "function" &&
-      Object.prototype.hasOwnProperty.call(window.HTMLElement.prototype, "popover");
+      Object.prototype.hasOwnProperty.call(
+        window.HTMLElement.prototype,
+        "popover"
+      );
 
     function inTerminalLayout() {
       return (
@@ -86,12 +125,21 @@
         panel.style.top = Math.round(r.bottom + 8) + "px";
       }
 
+      // The mobile sheet's internal scroll container; the detent drag grows/
+      // shrinks the sheet around it. Absent on the desktop dropdown path.
+      var panelBody = panel.querySelector('[data-js="settings-panel-body"]');
+      var sheetExpanded = false;
+
       panel.addEventListener("toggle", function (e) {
         var open = e.newState === "open";
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         setSettingsPanelOpenState(open);
         if (open) {
           positionPanel();
+        } else {
+          // Reset to the resting detent so the next open starts collapsed.
+          sheetExpanded = false;
+          panel.classList.remove("is-expanded");
         }
       });
 
@@ -103,13 +151,18 @@
       window.addEventListener("resize", reposition);
       window.addEventListener("scroll", reposition, { passive: true });
 
-      // --- Drag-to-dismiss for the mobile bottom sheet ---------------------
+      // --- Detent drag for the mobile bottom sheet -------------------------
       // Only the sheet layout (< 30em, open) is draggable; the desktop
-      // dropdown is left alone. A downward drag from the top handle zone
-      // follows the finger; releasing past a threshold hides the popover,
-      // otherwise it snaps back.
+      // dropdown is left alone. Dragging the top handle zone drives two
+      // detents: from rest, a downward pull follows the finger and dismisses
+      // past a threshold, while an upward pull expands the sheet toward full
+      // height (when there's overflow to reveal); from expanded, a downward
+      // pull collapses back to rest. The body scrolls on its own below the
+      // handle. Expand/collapse snap on release; only the dismiss pull tracks
+      // the finger.
       var DRAG_ZONE = 56; // px from the top of the panel that starts a drag
       var DRAG_ENGAGE = 6; // px of travel before we treat it as a drag
+      var DETENT_THRESHOLD = 48; // px of travel to switch detent
       var dragPointerId = null;
       var dragStartY = 0;
       var dragDelta = 0;
@@ -119,6 +172,14 @@
         return (
           panel.matches(":popover-open") &&
           !window.matchMedia("(min-width: 30em)").matches
+        );
+      }
+
+      // Expanding only helps when the resting sheet clips its content — i.e. the
+      // body has overflow to reveal. No overflow → nothing to expand into.
+      function sheetCanExpand() {
+        return (
+          !!panelBody && panelBody.scrollHeight > panelBody.clientHeight + 1
         );
       }
 
@@ -132,8 +193,9 @@
         }
         var delta = e.clientY - dragStartY;
         if (!dragEngaged) {
-          if (delta < DRAG_ENGAGE) {
-            // Ignore upward / tiny moves; let them stay a tap or scroll.
+          // Engage on travel in either direction (down = dismiss/collapse,
+          // up = expand); a tiny move stays a tap.
+          if (Math.abs(delta) < DRAG_ENGAGE) {
             return;
           }
           dragEngaged = true;
@@ -145,14 +207,19 @@
             /* capture unsupported */
           }
         }
-        // Clamp so an upward drag can't lift the sheet above its resting spot.
-        dragDelta = Math.max(0, delta);
+        dragDelta = delta;
         e.preventDefault();
-        panel.style.transform = "translateY(" + dragDelta + "px)";
-        // Fade the scrim/blur out in step with the pull (0 at rest → 1 when the
-        // sheet has travelled its full height).
-        var progress = Math.min(1, dragDelta / (panel.offsetHeight || 1));
-        panel.style.setProperty("--sheet-drag", String(progress));
+        // Only the resting sheet's downward pull follows the finger (the dismiss
+        // track, with the scrim fading out). Expand (upward) and collapse
+        // (downward while expanded) snap on release, so leave the sheet put.
+        if (!sheetExpanded && delta > 0) {
+          panel.style.transform = "translateY(" + delta + "px)";
+          var progress = Math.min(1, delta / (panel.offsetHeight || 1));
+          panel.style.setProperty("--sheet-drag", String(progress));
+        } else {
+          panel.style.transform = "";
+          panel.style.setProperty("--sheet-drag", "0");
+        }
       }
 
       function endDrag(e) {
@@ -172,13 +239,20 @@
         if (!wasEngaged) {
           return;
         }
-        var threshold = Math.min(120, panel.offsetHeight * 0.25);
+        var dismissThreshold = Math.min(120, panel.offsetHeight * 0.25);
+        var action = decideSheetGesture(
+          delta,
+          sheetExpanded,
+          sheetCanExpand(),
+          dismissThreshold,
+          DETENT_THRESHOLD
+        );
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
         panel.classList.remove("is-dragging");
         setDragTransition(true);
         void panel.offsetHeight; // flush so the dragged position is the start
-        if (delta > threshold) {
+        if (action === "dismiss") {
           // Slide the rest of the way down from the finger position and fade the
           // scrim fully out in sync, then close.
           var settled = false;
@@ -208,11 +282,20 @@
           window.setTimeout(finish, 500); // fallback if transitionend is missed
           panel.style.transform = "translateY(100%)";
           panel.style.setProperty("--sheet-drag", "1");
-        } else {
-          // Snap back to the resting position and restore the full scrim.
-          panel.style.transform = "";
-          panel.style.setProperty("--sheet-drag", "0");
+          return;
         }
+        if (action === "expand") {
+          sheetExpanded = true;
+          panel.classList.add("is-expanded");
+        } else if (action === "collapse") {
+          sheetExpanded = false;
+          panel.classList.remove("is-expanded");
+        }
+        // expand / collapse / snapback all clear the drag transform and restore
+        // the full scrim; the max-height change (via .is-expanded) animates the
+        // resize.
+        panel.style.transform = "";
+        panel.style.setProperty("--sheet-drag", "0");
       }
 
       panel.addEventListener("pointerdown", function (e) {

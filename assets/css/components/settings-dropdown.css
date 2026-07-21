@@ -79,6 +79,7 @@
   transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
     transform var(--motion-duration-sheet) var(--motion-ease-emphasized),
     visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    max-height var(--motion-duration-sheet) var(--motion-ease-emphasized),
     display var(--motion-duration-sheet) var(--motion-ease-emphasized)
       allow-discrete,
     overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
@@ -114,12 +115,45 @@
      popover default is width: fit-content, so set it back to auto. Desktop
      overrides this with a fixed width below. */
   width: auto;
-  /* The sheet has no internal scroll on mobile, so claim single-finger vertical
-     gestures for the drag-to-dismiss handler instead of letting the browser
-     start a pan (which would steal the gesture and cancel our pointer events).
-     `pinch-zoom` (not `none`) still lets low-vision users magnify the settings.
-     Desktop resets this below. */
+  /* The top handle zone drives the detent drag (settings-dropdown.js), so claim
+     single-finger vertical gestures there instead of letting the browser pan —
+     which would steal the gesture and cancel our pointer events. The scrollable
+     body below (.settings-panel__body) overrides this with `pan-y` so its
+     overflow still scrolls. `pinch-zoom` (not `none`) keeps magnify for
+     low-vision users. Desktop resets this below. */
   touch-action: pinch-zoom;
+}
+
+/* --- Mobile bottom-sheet detents (rest ⇄ expanded) -------------------------
+   The sheet rests at --sheet-max (a partial height) and expands toward full
+   height when dragged up by the handle (settings-dropdown.js toggles
+   .is-expanded). The body is the internal scroll container, so content that
+   overflows either detent stays reachable: the handle zone drives the detents,
+   panning the body scrolls it. Scoped to the sheet range so the desktop
+   dropdown (which scrolls at the panel level) is untouched. */
+@media (max-width: 29.9375em) {
+  .settings-panel[popover] {
+    display: flex;
+    flex-direction: column;
+    --sheet-max: 82dvh;
+    max-height: var(--sheet-max);
+    /* The panel clips; the body below is what scrolls. */
+    overflow: hidden;
+  }
+
+  .settings-panel[popover].is-expanded {
+    --sheet-max: calc(100dvh - var(--spacing-24));
+  }
+
+  .settings-panel[popover] .settings-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Let the browser pan (and pinch-zoom) the body; the handle zone up top is
+       where the JS claims the detent drag. */
+    touch-action: pan-y pinch-zoom;
+  }
 }
 
 /* Lock background scroll while the mobile bottom sheet is open. Desktop keeps
@@ -157,8 +191,7 @@
   backdrop-filter: blur(0) saturate(100%);
   opacity: 0;
   transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    -webkit-backdrop-filter var(--motion-duration-sheet)
-      var(--motion-ease-emphasized),
+    -webkit-backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
     backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
     display var(--motion-duration-sheet) var(--motion-ease-emphasized)
       allow-discrete,
@@ -219,8 +252,7 @@
   visibility: hidden;
   transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
     visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    -webkit-backdrop-filter var(--motion-duration-sheet)
-      var(--motion-ease-emphasized),
+    -webkit-backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
     backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized);
 }
 
@@ -235,7 +267,8 @@
   pointer-events: none;
 }
 
-@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
+@supports (backdrop-filter: url(#x)) and
+  (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay {
     backdrop-filter: url(#liquid-glass) blur(0) saturate(100%);
     background: color-mix(in srgb, var(--surface-page) 40%, transparent);
@@ -251,7 +284,8 @@
 
 /* Open state for the liquid-glass variant — declared after the base open rule
    so it wins in supporting browsers, and so the blur ramps rather than snaps. */
-@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
+@supports (backdrop-filter: url(#x)) and
+  (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay:not([hidden]) {
     backdrop-filter: url(#liquid-glass) blur(14px) saturate(120%);
   }
