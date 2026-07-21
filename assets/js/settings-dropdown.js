@@ -115,6 +115,11 @@
       // shrinks the sheet around it. Absent on the desktop dropdown path.
       var panelBody = panel.querySelector('[data-js="settings-panel-body"]');
       var sheetExpanded = false;
+      // The resting outer height (px), measured while the sheet is actually at
+      // rest (on open, and at the start of a rest drag). Reused when a drag
+      // starts from the expanded state, where the flex-stretched body can no
+      // longer report the content-hugging height.
+      var restHeightPx = 0;
 
       panel.addEventListener("toggle", function (e) {
         var open = e.newState === "open";
@@ -122,6 +127,9 @@
         setSettingsPanelOpenState(open);
         if (open) {
           positionPanel();
+          // Capture the true resting height now, while the sheet hugs its
+          // content (before any expand stretches the body).
+          restHeightPx = Math.round(panel.getBoundingClientRect().height);
         } else {
           // Reset to the resting detent so the next open starts collapsed, and
           // rewind the body to the top — the resting sheet doesn't scroll, so a
@@ -184,11 +192,16 @@
       }
 
       // The resting outer height (px): the sheet hugs its content up to the rest
-      // cap (82dvh). Used to size the resting detent when a drag starts from the
-      // expanded state (where the sheet can't be measured at rest).
+      // cap (82dvh). Prefer the value measured while actually at rest; fall back
+      // to the content estimate (only hit if a drag somehow precedes any rest
+      // measurement). Both are clamped to the cap.
       function restingHeight() {
+        var cap = sheetBounds().rest;
+        if (restHeightPx > 0) {
+          return Math.min(restHeightPx, cap);
+        }
         var content = (panelBody ? panelBody.scrollHeight : 0) + panelChromeV();
-        return Math.min(content, sheetBounds().rest);
+        return Math.min(content, cap);
       }
 
       // Resolve a CSS length token to pixels. getPropertyValue on a custom
@@ -273,6 +286,11 @@
           // (measured when already at rest, computed from content otherwise).
           dragStartMax = Math.round(panel.getBoundingClientRect().height);
           dragFullPx = sheetBounds().full;
+          if (!sheetExpanded) {
+            // At rest the measured height IS the resting height — keep it fresh
+            // for a later collapse that starts from the expanded state.
+            restHeightPx = dragStartMax;
+          }
           dragRestPx = sheetExpanded ? restingHeight() : dragStartMax;
           try {
             panel.setPointerCapture(dragPointerId);
