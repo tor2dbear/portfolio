@@ -179,6 +179,7 @@
       var dragStartY = 0;
       var dragDelta = 0;
       var dragEngaged = false;
+      var dragCanExpand = false; // is there overflow to reveal by expanding?
       var suppressNextClick = false;
       // Geometry snapshot taken when a drag engages, so the live resize and the
       // release decision share one coordinate frame.
@@ -327,6 +328,13 @@
           // (measured when already at rest, computed from content otherwise).
           dragStartMax = Math.round(panel.getBoundingClientRect().height);
           dragFullPx = sheetBounds().full;
+          // Whether expanding would actually reveal anything: measured now, while
+          // the body is still at its resting layout (before the resize below).
+          // Already expanded → the body scrolls, so treat as expandable.
+          dragCanExpand =
+            sheetExpanded ||
+            (!!panelBody &&
+              panelBody.scrollHeight > panelBody.clientHeight + 1);
           if (!sheetExpanded) {
             // At rest the measured height IS the resting height — keep it fresh
             // for a later collapse that starts from the expanded state.
@@ -389,6 +397,12 @@
           dragFullPx,
           dismissThreshold
         );
+        // The drag follows the finger, but don't SETTLE expanded when there's
+        // nothing to reveal — otherwise a compact sheet rests as a near-empty
+        // fullscreen. Fall back to rest instead.
+        if (action === "expand" && !dragCanExpand) {
+          action = "rest";
+        }
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
         panel.classList.remove("is-dragging");
