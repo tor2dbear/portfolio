@@ -9,7 +9,7 @@ weight: 1
 tags: ["Digitala Produkter", "Experimentellt"]
 clients: []
 description: En designer för rörelsesystem – inte ännu en easing-leksak. Cadence behandlar rörelse som designsystem behandlar färg och typografi, som lager av tokens.
-header_image:
+header_image: cadence-poster.jpg
 featured: true
 draft: true
 role: "Koncept, design, utveckling"
