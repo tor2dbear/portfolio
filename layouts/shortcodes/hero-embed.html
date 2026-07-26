@@ -1,0 +1,49 @@
+{{- /*
+  hero-embed — drop a self-contained, same-origin HTML animation into a works
+  page as its wide hero.
+
+  The works single template lifts the FIRST <figure> out of the rendered content
+  and places it full-width (see layouts/works/single.html), so this shortcode
+  emits a <figure class="..."> to opt into that treatment. Call it as the first
+  thing in the body.
+
+  The embedded page (e.g. /cadence-hero.html) follows prefers-color-scheme on its
+  own; the inline script below also mirrors the site's manual theme toggle
+  (data-mode on <html>) into it via postMessage, so it tracks the visitor's
+  chosen mode — not just the OS.
+
+  Params:
+    src    (required) same-origin URL of the page to embed, e.g. "/cadence-hero.html"
+    ratio  (optional) CSS aspect-ratio, default "16 / 9"
+    title  (optional) iframe accessible name
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- $ratio := .Get "ratio" | default "16 / 9" -}}
+{{- $title := .Get "title" | default "Interactive embed" -}}
+{{- $id := printf "hero-embed-%d" .Ordinal -}}
+{{- if not $src -}}
+  {{- errorf "hero-embed: 'src' is required (%s)" .Position -}}
+{{- end -}}
+{{- $style := printf "width:100%%;aspect-ratio:%s;border:0;display:block" $ratio -}}
+<figure class="reveal hero-embed">
+  <iframe id="{{ $id }}" src="{{ $src | relURL }}" title="{{ $title }}" loading="lazy"
+          scrolling="no" style="{{ $style | safeCSS }}"></iframe>
+  <script>
+  (function () {
+    var f = document.getElementById({{ $id }});
+    if (!f) return;
+    function send() {
+      var mode = document.documentElement.getAttribute("data-mode") === "dark" ? "dark" : "light";
+      try { f.contentWindow.postMessage({ theme: mode }, "*"); } catch (e) {}
+    }
+    f.addEventListener("load", send);
+    if (f.contentWindow) send();
+    var mo = new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        if (muts[i].attributeName === "data-mode") { send(); break; }
+      }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
+  })();
+  </script>
+</figure>
