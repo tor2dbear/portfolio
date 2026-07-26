@@ -24,4 +24,4 @@ client:
   about: "Ett designverktyg för rörelsesystem som utforskar rörelse som lager av design-tokens – primitiver och semantiska intents."
 ---
 
-{{< hero-embed src="/cadence-hero.html" title="Cadence – ett rörelsesystem, utan ord: fyra semantiska intents som en solfjäder av easing-kurvor" >}}
+{{< hero-embed src="/cadence-hero.html#label" title="Cadence – ett rörelsesystem: fyra semantiska intents som en solfjäder av easing-kurvor, var och en märkt med sina intent-, kompositions- och varaktighetstokens" >}}

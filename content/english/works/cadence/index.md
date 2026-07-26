@@ -24,4 +24,4 @@ client:
   about: "A motion-system design tool exploring motion as layered design tokens — primitives and semantic intents."
 ---
 
-{{< hero-embed src="/cadence-hero.html" title="Cadence — a motion system, wordlessly: four semantic intents drawn as a fan of easing curves" >}}
+{{< hero-embed src="/cadence-hero.html#label" title="Cadence — a motion system, wordlessly: four semantic intents drawn as a fan of easing curves, each labelled with its intent, composition and duration tokens" >}}
