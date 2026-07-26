@@ -10,6 +10,7 @@ tags: ["Digital Product", "Experimental"]
 clients: []
 description: A motion system designer — not another easing toy. Cadence treats motion the way design systems treat color and type, as layered tokens.
 header_image: cadence-poster.jpg
+hero_embed: /cadence-hero.html
 featured: true
 draft: true
 role: "Concept, Design, Development"

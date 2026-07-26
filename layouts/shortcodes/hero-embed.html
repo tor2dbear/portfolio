@@ -13,9 +13,9 @@
   tracks the active palette instead of standing outside it. See the
   ".hero-embed__frame" rules in assets/css/style.css.
 
-  Theme: the embedded page follows prefers-color-scheme on its own; the inline
-  script below also mirrors the site's manual theme toggle (data-mode on <html>)
-  into it via postMessage, so it tracks the visitor's chosen mode.
+  Theme: the embedded page follows prefers-color-scheme on its own; assets/js/
+  hero-embed.js also mirrors the site's manual theme toggle (data-mode on <html>)
+  into every .hero-embed__frame via postMessage, so it tracks the chosen mode.
 
   Lightbox: the figure is a data-lightbox target of type "embed", so a click
   opens the LIVE animation enlarged (see assets/js/lightbox.js). The in-page
@@ -32,7 +32,6 @@
 {{- $ratio := .Get "ratio" | default "16 / 9" -}}
 {{- $title := .Get "title" | default "Interactive embed" -}}
 {{- $lightbox := ne (.Get "lightbox") "false" -}}
-{{- $id := printf "hero-embed-%d" .Ordinal -}}
 {{- if not $src -}}
   {{- errorf "hero-embed: 'src' is required (%s)" .Position -}}
 {{- end -}}
@@ -40,25 +39,7 @@
 {{- if $lightbox -}}{{- $style = printf "%s;pointer-events:none" $style -}}{{- end -}}
 <figure class="reveal hero-embed"{{ if $lightbox }} data-lightbox="{{ $src | relURL }}" data-lightbox-type="embed" data-lightbox-title="{{ $title }}" aria-label="{{ $title }}"{{ end }}>
   <div class="video-wrapper">
-    <iframe id="{{ $id }}" class="hero-embed__frame" src="{{ $src | relURL }}" title="{{ $title }}" loading="lazy"
+    <iframe class="hero-embed__frame" src="{{ $src | relURL }}" title="{{ $title }}" loading="lazy"
             scrolling="no" style="{{ $style | safeCSS }}"></iframe>
   </div>
-  <script>
-  (function () {
-    var f = document.getElementById({{ $id }});
-    if (!f) return;
-    function send() {
-      var mode = document.documentElement.getAttribute("data-mode") === "dark" ? "dark" : "light";
-      try { f.contentWindow.postMessage({ theme: mode }, "*"); } catch (e) {}
-    }
-    f.addEventListener("load", send);
-    if (f.contentWindow) send();
-    var mo = new MutationObserver(function (muts) {
-      for (var i = 0; i < muts.length; i++) {
-        if (muts[i].attributeName === "data-mode") { send(); break; }
-      }
-    });
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
-  })();
-  </script>
 </figure>
