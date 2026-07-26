@@ -7,27 +7,42 @@
   emits a <figure class="..."> to opt into that treatment. Call it as the first
   thing in the body.
 
-  The embedded page (e.g. /cadence-hero.html) follows prefers-color-scheme on its
-  own; the inline script below also mirrors the site's manual theme toggle
-  (data-mode on <html>) into it via postMessage, so it tracks the visitor's
-  chosen mode — not just the OS.
+  Palette / blend: the iframe is wrapped in a .video-wrapper and carries
+  .hero-embed__frame, the same hooks <img>/<video> use, so the site's image-blend
+  effect (grayscale + duotone / Pantone tri-tone) reaches it too — the hero
+  tracks the active palette instead of standing outside it. See the
+  ".hero-embed__frame" rules in assets/css/style.css.
+
+  Theme: the embedded page follows prefers-color-scheme on its own; the inline
+  script below also mirrors the site's manual theme toggle (data-mode on <html>)
+  into it via postMessage, so it tracks the visitor's chosen mode.
+
+  Lightbox: the figure is a data-lightbox target of type "embed", so a click
+  opens the LIVE animation enlarged (see assets/js/lightbox.js). The in-page
+  iframe is pointer-events:none so the click reaches the figure rather than being
+  swallowed by the iframe document.
 
   Params:
-    src    (required) same-origin URL of the page to embed, e.g. "/cadence-hero.html"
-    ratio  (optional) CSS aspect-ratio, default "16 / 9"
-    title  (optional) iframe accessible name
+    src       (required) same-origin URL of the page to embed, e.g. "/cadence-hero.html"
+    ratio     (optional) CSS aspect-ratio, default "16 / 9"
+    title     (optional) accessible name for the iframe / lightbox
+    lightbox  (optional) "false" to make the hero non-clickable, default true
 */ -}}
 {{- $src := .Get "src" -}}
 {{- $ratio := .Get "ratio" | default "16 / 9" -}}
 {{- $title := .Get "title" | default "Interactive embed" -}}
+{{- $lightbox := ne (.Get "lightbox") "false" -}}
 {{- $id := printf "hero-embed-%d" .Ordinal -}}
 {{- if not $src -}}
   {{- errorf "hero-embed: 'src' is required (%s)" .Position -}}
 {{- end -}}
 {{- $style := printf "width:100%%;aspect-ratio:%s;border:0;display:block" $ratio -}}
-<figure class="reveal hero-embed">
-  <iframe id="{{ $id }}" src="{{ $src | relURL }}" title="{{ $title }}" loading="lazy"
-          scrolling="no" style="{{ $style | safeCSS }}"></iframe>
+{{- if $lightbox -}}{{- $style = printf "%s;pointer-events:none" $style -}}{{- end -}}
+<figure class="reveal hero-embed"{{ if $lightbox }} data-lightbox="{{ $src | relURL }}" data-lightbox-type="embed" data-lightbox-title="{{ $title }}" aria-label="{{ $title }}"{{ end }}>
+  <div class="video-wrapper">
+    <iframe id="{{ $id }}" class="hero-embed__frame" src="{{ $src | relURL }}" title="{{ $title }}" loading="lazy"
+            scrolling="no" style="{{ $style | safeCSS }}"></iframe>
+  </div>
   <script>
   (function () {
     var f = document.getElementById({{ $id }});

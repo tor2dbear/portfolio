@@ -9,6 +9,7 @@
     '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
     "</button>" +
     '<picture class="lightbox__picture"><img class="lightbox__img" src="" alt="" /></picture>' +
+    '<div class="lightbox__embed-wrap video-wrapper" hidden><iframe class="lightbox__embed hero-embed__frame" title="" scrolling="no" loading="lazy"></iframe></div>' +
     '<div class="lightbox__nav" hidden>' +
     '<button class="lightbox__nav-btn lightbox__nav-btn--prev" aria-label="Previous image">‹</button>' +
     '<span class="lightbox__counter" aria-live="polite"></span>' +
@@ -17,6 +18,9 @@
   document.body.appendChild(overlay);
 
   var img = overlay.querySelector(".lightbox__img");
+  var picture = overlay.querySelector(".lightbox__picture");
+  var embedWrap = overlay.querySelector(".lightbox__embed-wrap");
+  var embed = overlay.querySelector(".lightbox__embed");
   var closeBtn = overlay.querySelector(".lightbox__close");
   var nav = overlay.querySelector(".lightbox__nav");
   var prevBtn = overlay.querySelector(".lightbox__nav-btn--prev");
@@ -34,14 +38,48 @@
     return image ? image.alt : "";
   }
 
+  // Mirror the host's manual theme (data-mode on <html>) into the embedded
+  // animation, exactly like the in-page hero-embed shortcode does.
+  function postEmbedTheme() {
+    try {
+      embed.contentWindow.postMessage(
+        {
+          theme:
+            document.documentElement.getAttribute("data-mode") === "dark"
+              ? "dark"
+              : "light",
+        },
+        "*"
+      );
+    } catch (e) {}
+  }
+  embed.addEventListener("load", postEmbedTheme);
+
   function show(index) {
     if (index < 0 || index >= gallery.length) {
       return;
     }
     galleryIndex = index;
     var figure = gallery[index];
-    img.src = figure.dataset.lightbox;
-    img.alt = figureAlt(figure);
+    // A figure can open either a still image (default) or a live embed
+    // (data-lightbox-type="embed", where data-lightbox is a same-origin page).
+    if (figure.dataset.lightboxType === "embed") {
+      picture.hidden = true;
+      embed.title = figure.dataset.lightboxTitle || figureAlt(figure) || "";
+      embedWrap.hidden = false;
+      var src = figure.dataset.lightbox;
+      if (embed.getAttribute("src") !== src) {
+        embed.src = src; // load listener re-posts the theme
+      } else {
+        postEmbedTheme();
+      }
+    } else {
+      embedWrap.hidden = true;
+      embed.removeAttribute("src"); // stop any running animation
+      picture.hidden = false;
+      img.src = figure.dataset.lightbox;
+      img.alt = figureAlt(figure);
+    }
     var multiple = gallery.length > 1;
     nav.hidden = !multiple;
     if (multiple) {
@@ -73,6 +111,9 @@
     previousFocus = document.activeElement;
     gallery = [];
     galleryIndex = -1;
+    embedWrap.hidden = true;
+    embed.removeAttribute("src");
+    picture.hidden = false;
     img.src = src;
     img.alt = alt || "";
     nav.hidden = true;
@@ -85,6 +126,8 @@
     overlay.classList.remove("is-open");
     document.documentElement.classList.remove("lightbox-open");
     img.src = "";
+    embed.removeAttribute("src"); // stop the animation and free the frame
+    embedWrap.hidden = true;
     if (previousFocus) {
       previousFocus.focus();
     }

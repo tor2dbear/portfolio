@@ -698,6 +698,32 @@ video {
   filter: none;
 }
 
+/*
+ * Hero embed (an <iframe> animation, e.g. the Cadence works hero) opts into the
+ * same image-blend treatment as <img>/<video>: the tint overlays come from its
+ * .video-wrapper, and these three rules mirror the grayscale / Pantone tri-tone
+ * / blend-off filter states so the hero tracks the active palette instead of
+ * standing outside it. Kept in lockstep with the img/video rules above.
+ */
+.hero-embed__frame {
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .hero-embed__frame {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .hero-embed__frame {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;
