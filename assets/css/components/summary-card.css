@@ -127,10 +127,10 @@
   height: auto;
 }
 
-/* Live hero-embed cards keep their own 16:9 ratio wherever they render: the
-   fixed 4/3 cover thumb the index layout uses for photos (below, >=48em) would
-   letterbox the animation, so opt these cards out and let the iframe drive the
-   height. */
+/* Live hero-embed cards keep their own aspect ratio (16:10) wherever they
+   render: the fixed 4/3 cover thumb the index layout uses for photos (below,
+   >=48em) would letterbox the animation, so opt these cards out and let the
+   iframe drive the height. */
 .summary-card__image .hero-embed-card,
 .summary-card__image .hero-embed-card .hero-embed__frame {
   display: block;

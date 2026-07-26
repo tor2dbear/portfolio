@@ -37,10 +37,10 @@ html.lightbox-open {
    carries .hero-embed__frame so the grayscale / tri-tone filter applies too —
    the enlarged view stays consistent with the in-page hero and the palette. */
 .lightbox__embed-wrap {
-  width: min(90vw, calc(90vh * 16 / 9));
+  width: min(90vw, calc(90vh * 16 / 10));
   max-width: 90vw;
   max-height: 90vh;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   cursor: default;
 }
 
