@@ -50,4 +50,6 @@ Det verkliga testet var att vända det mot mig själv.
 
 Jag klistrade in den här sajtens egna rörelse-tokens. Den gillade rytmen – och ertappade mig med att vara lat: två av mina easings är, i tysthet, samma kurva. Ett verktyg värt att lansera ska kunna genera sin skapare. Det här gjorde det.
 
+{{< embed-full src="/cadence-start.html" ratio="16 / 9" title="Cadence, live – ett verktyg för rörelsesystem: trimma varaktighets- och easing-skalor, komponera semantiska intents, och få ett system som kritiserar sig självt" caption="Cadence självt – live. Öppna det, eller gå vidare nedan." >}}
+
 **Live:** [cadence.tor2dbear.com](https://cadence.tor2dbear.com) · **Källkod:** [github.com/tor2dbear/cadence](https://github.com/tor2dbear/cadence)

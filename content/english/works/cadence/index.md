@@ -50,4 +50,6 @@ The real test was turning it on myself.
 
 I pasted this site's own motion tokens in. It liked the rhythm — and caught me being lazy: two of my easings are, quietly, the same curve. A tool worth shipping should be able to embarrass its maker. This one did.
 
+{{< embed-full src="/cadence-start.html" ratio="16 / 9" title="Cadence, live — a motion system designer: tune duration and easing scales, compose semantic intents, and get a system that critiques itself" caption="Cadence itself — live. Open it, or head over below." >}}
+
 **Live:** [cadence.tor2dbear.com](https://cadence.tor2dbear.com) · **Source:** [github.com/tor2dbear/cadence](https://github.com/tor2dbear/cadence)
