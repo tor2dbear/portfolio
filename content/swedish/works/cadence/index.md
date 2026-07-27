@@ -32,7 +32,7 @@ Rörelse är det sista osystematiserade hörnet av ett designsystem. Färg har t
 
 Två lager, lånade från hur vi redan hanterar färg. *Primitiver* är den råa vokabulären: en varaktighetsstege och en uppsättning easings du ritar för hand. *Intents* är meningen – `enter`, `exit`, `move` – komponerade från primitiverna by reference. Du namnger vad rörelse är *till för*, inte vad den *är*; ändra en primitiv och hela systemet tajmar om.
 
-![Tvålagersmodellen – primitiver komponerade till intents by reference.](cadence-two-layer-model.svg "Primitiver → intents, by reference. Art direction bor i namngivningen, inte siffrorna.")
+{{< infographic src="cadence-two-layer-model.svg" caption="Varje intent är en namngiven komposition av primitiver – ändra en primitiv så tajmar varje intent som refererar den om." >}}
 
 Beslutet jag är mest nöjd med var att sluta designa kring komponenter. En tidig version låste fyra roller till fyra demokomponenter och föll ihop i samma stund jag föreställde mig en femte. Så komponenter blev en bänk av instrument – var och en en lins på en enda egenskap hos en token, aldrig en skärm att återuppföra. Organisera ett system kring sina egna tokens, så kan inget hamna utanför.
 

@@ -747,6 +747,34 @@ video {
   filter: none;
 }
 
+/*
+ * Inline infographic (the `infographic` shortcode inlines an SVG). Drawn with
+ * currentColor for ink and CSS custom properties for accents, so it follows the
+ * manual light/dark theme; being inline SVG it's exempt from the image blend and
+ * keeps its colours. Role accents deepen on the light parchment and brighten on
+ * dark — the same pairs the motion hero uses.
+ */
+.infographic {
+  color: var(--text-default);
+  --ig-enter: #177f70;
+  --ig-exit: #b0402a;
+  --ig-move: #9a5e23;
+}
+
+:root[data-mode="dark"] .infographic {
+  --ig-enter: #8ad0c6;
+  --ig-exit: #e08b7f;
+  --ig-move: #e9b872;
+}
+
+.infographic svg {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  margin-inline: auto;
+}
+
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;

@@ -32,7 +32,7 @@ Motion is the last unsystematised corner of a design system. Colour has tokens; 
 
 Two layers, borrowed from how we already handle colour. *Primitives* are the raw vocabulary: a duration ladder and a set of easings you draw by hand. *Intents* are the meaning — `enter`, `exit`, `move` — composed from the primitives by reference. You name what motion is *for*, not what it *is*; change a primitive and the whole system re-times.
 
-![The two-layer model — primitives composed into intents by reference.](cadence-two-layer-model.svg "Primitives → intents, by reference. Art direction lives in the naming, not the numbers.")
+{{< infographic src="cadence-two-layer-model.svg" caption="Each intent is a named composition of primitives — change a primitive and every intent that references it re-times." >}}
 
 The decision I'm happiest with was to stop designing around components. An early version pinned four roles to four demo components and fell apart the moment I imagined a fifth. So components became a bench of instruments — each a lens on a single quality of a token, never a screen to restage. Organise a system around its own tokens and nothing can fall outside it.
 

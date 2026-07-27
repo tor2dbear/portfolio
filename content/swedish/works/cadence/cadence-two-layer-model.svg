@@ -1,72 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" font-family="ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace">
-  <rect width="1000" height="560" rx="14" fill="#ece5d6"/>
-
-  <!-- heading -->
-  <text x="44" y="56" font-size="14" letter-spacing="3" fill="#9a8f76">THE TWO-LAYER MODEL</text>
-  <text x="44" y="90" font-size="26" fill="#22356e" font-family="Georgia,'Times New Roman',serif" font-style="italic">Primitives, composed into intents by reference.</text>
-
-  <!-- ============ PRIMITIVES ============ -->
-  <rect x="44" y="126" width="404" height="392" rx="12" fill="#f4efe0" stroke="#22356e" stroke-opacity=".16"/>
-  <text x="68" y="166" font-size="15" font-weight="700" letter-spacing="1.5" fill="#22356e">PRIMITIVES</text>
-  <text x="68" y="188" font-size="12.5" fill="#8a7f68">the vocabulary · component-agnostic</text>
-
-  <text x="68" y="230" font-size="11.5" letter-spacing="1.5" fill="#655f51">DURATION LADDER</text>
-  <g font-size="12.5" fill="#22356e" text-anchor="middle">
-    <g><rect x="68"  y="242" width="60" height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="98"  y="260">fast</text></g>
-    <g><rect x="136" y="242" width="60" height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="166" y="260">base</text></g>
-    <g><rect x="204" y="242" width="60" height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="234" y="260">slow</text></g>
-    <g><rect x="272" y="242" width="72" height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="308" y="260">slower</text></g>
-    <g><rect x="352" y="242" width="64" height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="384" y="260">xslow</text></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" fill="none" font-family="ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace">
+  <!-- column headers -->
+  <g fill="currentColor" fill-opacity=".5" font-size="12" letter-spacing="1.5" text-anchor="middle">
+    <text x="262" y="30">DURATION</text>
+    <text x="492" y="30">EASING</text>
+  </g>
+  <g stroke="currentColor" stroke-opacity=".16">
+    <line x1="196" y1="44" x2="328" y2="44"/>
+    <line x1="384" y1="44" x2="600" y2="44"/>
   </g>
 
-  <text x="68" y="322" font-size="11.5" letter-spacing="1.5" fill="#655f51">EASING SET</text>
-  <g font-size="12.5" fill="#22356e" text-anchor="middle">
-    <g><rect x="68"  y="334" width="86"  height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="111" y="352">standard</text></g>
-    <g><rect x="162" y="334" width="104" height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="214" y="352">decelerate</text></g>
-    <g><rect x="68"  y="370" width="98"  height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="117" y="388">accelerate</text></g>
-    <g><rect x="174" y="370" width="112" height="28" rx="6" fill="#e7dfca" stroke="#22356e" stroke-opacity=".2"/><text x="230" y="388">emphasized</text></g>
-  </g>
-
-  <text x="68" y="462" font-size="12" fill="#8a7f68" font-style="italic" font-family="Georgia,serif">A duration ladder and a set of easings you draw by hand.</text>
-
-  <!-- ============ arrows ============ -->
-  <g stroke="#22356e" stroke-opacity=".38" fill="none">
-    <path d="M448 300 C 500 300, 500 250, 550 250" stroke-width="1.5"/>
-    <path d="M448 322 C 500 322, 500 322, 550 322" stroke-width="1.5"/>
-    <path d="M448 344 C 500 344, 500 394, 550 394" stroke-width="1.5"/>
-  </g>
-  <polygon points="550,250 542,246 542,254" fill="#22356e" fill-opacity=".5"/>
-  <polygon points="550,322 542,318 542,326" fill="#22356e" fill-opacity=".5"/>
-  <polygon points="550,394 542,390 542,398" fill="#22356e" fill-opacity=".5"/>
-  <text x="499" y="214" font-size="11" letter-spacing="1" fill="#9a8f76" text-anchor="middle">by ref.</text>
-
-  <!-- ============ INTENTS ============ -->
-  <rect x="552" y="126" width="404" height="392" rx="12" fill="#f4efe0" stroke="#22356e" stroke-opacity=".16"/>
-  <text x="576" y="166" font-size="15" font-weight="700" letter-spacing="1.5" fill="#22356e">INTENTS</text>
-  <text x="576" y="188" font-size="12.5" fill="#8a7f68">meaning · where art direction lives</text>
-
-  <g font-size="14">
+  <!-- rows: intent = duration + easing -->
+  <g font-size="16">
     <!-- enter -->
-    <circle cx="584" cy="243" r="5" fill="#177f70"/>
-    <text x="600" y="248" fill="#22356e" font-weight="700">enter</text>
-    <text x="576" y="272" font-size="12.5" fill="#655f51">= duration.base + emphasized</text>
-    <line x1="576" y1="292" x2="932" y2="292" stroke="#22356e" stroke-opacity=".1"/>
-
+    <g transform="translate(0,92)">
+      <circle cx="24" cy="0" r="6" fill="var(--ig-enter)"/>
+      <text x="42" y="5" fill="currentColor" font-weight="700">enter</text>
+      <text x="168" y="5" fill="currentColor" fill-opacity=".45" text-anchor="middle">=</text>
+      <rect x="196" y="-19" width="132" height="38" rx="9" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-opacity=".28"/>
+      <text x="262" y="5" fill="currentColor" text-anchor="middle">base</text>
+      <text x="356" y="5" fill="currentColor" fill-opacity=".45" text-anchor="middle">+</text>
+      <rect x="384" y="-19" width="216" height="38" rx="9" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-opacity=".28"/>
+      <text x="492" y="5" fill="currentColor" text-anchor="middle">emphasized</text>
+    </g>
     <!-- exit -->
-    <circle cx="584" cy="317" r="5" fill="#b0402a"/>
-    <text x="600" y="322" fill="#22356e" font-weight="700">exit</text>
-    <text x="576" y="346" font-size="12.5" fill="#655f51">= duration.fast + accelerate</text>
-    <line x1="576" y1="366" x2="932" y2="366" stroke="#22356e" stroke-opacity=".1"/>
-
+    <g transform="translate(0,152)">
+      <circle cx="24" cy="0" r="6" fill="var(--ig-exit)"/>
+      <text x="42" y="5" fill="currentColor" font-weight="700">exit</text>
+      <text x="168" y="5" fill="currentColor" fill-opacity=".45" text-anchor="middle">=</text>
+      <rect x="196" y="-19" width="132" height="38" rx="9" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-opacity=".28"/>
+      <text x="262" y="5" fill="currentColor" text-anchor="middle">fast</text>
+      <text x="356" y="5" fill="currentColor" fill-opacity=".45" text-anchor="middle">+</text>
+      <rect x="384" y="-19" width="216" height="38" rx="9" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-opacity=".28"/>
+      <text x="492" y="5" fill="currentColor" text-anchor="middle">accelerate</text>
+    </g>
     <!-- move -->
-    <circle cx="584" cy="391" r="5" fill="#9a5e23"/>
-    <text x="600" y="396" fill="#22356e" font-weight="700">move</text>
-    <text x="576" y="420" font-size="12.5" fill="#655f51">= duration.slow + standard</text>
-    <line x1="576" y1="440" x2="932" y2="440" stroke="#22356e" stroke-opacity=".1"/>
-
-    <!-- emphasized -->
-    <circle cx="584" cy="465" r="5" fill="#6a4a86"/>
-    <text x="600" y="470" fill="#22356e" font-weight="700">emphasized</text>
-    <text x="576" y="494" font-size="12.5" fill="#655f51">= duration.slower + emphasized</text>
+    <g transform="translate(0,212)">
+      <circle cx="24" cy="0" r="6" fill="var(--ig-move)"/>
+      <text x="42" y="5" fill="currentColor" font-weight="700">move</text>
+      <text x="168" y="5" fill="currentColor" fill-opacity=".45" text-anchor="middle">=</text>
+      <rect x="196" y="-19" width="132" height="38" rx="9" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-opacity=".28"/>
+      <text x="262" y="5" fill="currentColor" text-anchor="middle">slow</text>
+      <text x="356" y="5" fill="currentColor" fill-opacity=".45" text-anchor="middle">+</text>
+      <rect x="384" y="-19" width="216" height="38" rx="9" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-opacity=".28"/>
+      <text x="492" y="5" fill="currentColor" text-anchor="middle">standard</text>
+    </g>
   </g>
 </svg>
