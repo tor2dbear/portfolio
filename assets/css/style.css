@@ -740,6 +740,26 @@ video {
 }
 
 /*
+ * Desktop lock: the embedded page is rendered at a fixed design width (data-embed-w)
+ * so it always shows its desktop layout, and assets/js/hero-embed.js scales the
+ * iframe with transform to fit this window. .video-wrapper is already
+ * position:relative; we add overflow:hidden and pin the iframe to the top-left so
+ * the transform-scale reveals exactly the aspect-ratio window set on the wrapper.
+ * (.reveal keeps the figure hidden until scrolled in, by which point JS has
+ * applied the scale — so the unscaled state is never seen.)
+ */
+.embed-lock {
+  overflow: hidden;
+}
+
+.embed-lock > .hero-embed__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+
+/*
  * Optional true-colour media (opt-in via `plain_media` front matter): a works
  * entry whose media is colour-critical (product screenshots, an infographic, a
  * colour-coded motion hero) can opt its own figures OUT of the site's grayscale

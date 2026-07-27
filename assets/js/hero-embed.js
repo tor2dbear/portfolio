@@ -44,8 +44,45 @@
     }
   }
 
+  // Desktop lock: scale each fixed-design-width embed (.embed-lock) so its
+  // desktop layout fits the container at any screen size (see embed-full).
+  function scaleLocks() {
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".embed-lock > .hero-embed__frame"),
+      function (f) {
+        var wrap = f.parentElement;
+        var designW = parseFloat(f.dataset.embedW) || 1280;
+        var w = wrap.clientWidth;
+        if (w > 0) {
+          f.style.transform = "scale(" + w / designW + ")";
+        }
+      }
+    );
+  }
+
+  var hasRO = typeof ResizeObserver !== "undefined";
+  var ro = hasRO
+    ? new ResizeObserver(function () {
+        scaleLocks();
+      })
+    : null;
+
+  function observeLocks() {
+    if (!ro) {
+      return;
+    }
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".embed-lock"),
+      function (wrap) {
+        ro.observe(wrap);
+      }
+    );
+  }
+
   function wireAll() {
     frames().forEach(wire);
+    scaleLocks();
+    observeLocks();
   }
 
   if (document.readyState === "loading") {
@@ -53,6 +90,10 @@
   } else {
     wireAll();
   }
+
+  // Fallback for browsers without ResizeObserver (and a cheap safety net).
+  window.addEventListener("resize", scaleLocks);
+  window.addEventListener("load", scaleLocks);
 
   // Re-post to every embed whenever the site theme flips.
   new MutationObserver(function (muts) {
