@@ -9,7 +9,7 @@ weight: 10
 tags: ["Redaktionellt"]
 description: Redaktionell design för Utblicks 2015-nummer som utforskar afrikansk politik och identitet.
 worktheme:
-  color: rose
+  color: africa
   typography: refined
   layout: editorial
 header_image: utblick_africa-0005.jpg

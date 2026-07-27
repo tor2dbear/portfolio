@@ -176,3 +176,44 @@ accent_step_dark = 10
 "10" = "oklch(75% 0.10 156)"
 "11" = "oklch(85% 0.08 156)"
 "12" = "oklch(93% 0.05 156)"
+
+# ── Africa — neutral stock, one warm-red spot colour. ────────────────────────
+#    Accent-only model: surface, body text and borders stay the site default
+#    (neutral gray/white) — only the accents (primary, links, tags, buttons) take
+#    the red. One scale, no neutral scale needed.
+[[themes]]
+id = "africa"
+name = "Africa"
+neutral_surface = true
+on_primary_step_light = 1
+on_primary_step_dark = 1
+accent_step_light = 9
+accent_step_dark = 10
+
+[themes.scale_light]
+"1" = "oklch(98.5% 0.006 22)"
+"2" = "oklch(97% 0.012 22)"
+"3" = "oklch(94% 0.03 22)"
+"4" = "oklch(91% 0.05 22)"
+"5" = "oklch(85% 0.078 22)"
+"6" = "oklch(79% 0.105 22)"
+"7" = "oklch(71% 0.14 22)"
+"8" = "oklch(64% 0.17 22)"
+"9" = "oklch(56% 0.195 22)"
+"10" = "oklch(50% 0.185 22)"
+"11" = "oklch(43% 0.16 22)"
+"12" = "oklch(27% 0.10 22)"
+
+[themes.scale_dark]
+"1" = "oklch(16% 0.03 22)"
+"2" = "oklch(19% 0.045 22)"
+"3" = "oklch(24% 0.07 22)"
+"4" = "oklch(29% 0.09 22)"
+"5" = "oklch(34% 0.11 22)"
+"6" = "oklch(41% 0.14 22)"
+"7" = "oklch(50% 0.17 22)"
+"8" = "oklch(58% 0.19 22)"
+"9" = "oklch(64% 0.19 22)"
+"10" = "oklch(70% 0.17 22)"
+"11" = "oklch(81% 0.11 22)"
+"12" = "oklch(90% 0.06 22)"

@@ -138,7 +138,32 @@ function buildWorkTokenMap(theme, mode) {
       ? Number(theme.on_primary_step_dark || 12)
       : Number(theme.on_primary_step_light || 1);
 
-  if (isDuo) {
+  const isNeutral = Boolean(theme.neutral_surface);
+  if (isNeutral) {
+    // Accent-only: surface/text/borders stay the site default (neutral). Model
+    // the standard palette's page + text so the accent legibility checks below
+    // resolve against a realistic neutral background.
+    const accentStep =
+      mode === "dark"
+        ? Number(theme.accent_step_dark || 10)
+        : Number(theme.accent_step_light || 9);
+    tokens.set("--work-role-primary", `--work-${accentStep}`);
+    tokens.set("--work-role-primary-strong", "--work-11");
+    tokens.set("--work-role-on-primary", `--work-${onStep}`);
+    tokens.set("--surface-accent", "--work-4");
+    tokens.set(
+      "--surface-page",
+      mode === "dark" ? "oklch(17% 0.005 275)" : "oklch(99% 0.003 275)"
+    );
+    tokens.set(
+      "--surface-default",
+      mode === "dark" ? "oklch(21% 0.006 275)" : "oklch(97% 0.004 275)"
+    );
+    tokens.set(
+      "--text-default",
+      mode === "dark" ? "oklch(93% 0.008 275)" : "oklch(20% 0.01 275)"
+    );
+  } else if (isDuo) {
     // Surface/text from the base scale, every accent role from the accent scale.
     const accentStep =
       mode === "dark"
@@ -182,10 +207,13 @@ function buildWorkTokenMap(theme, mode) {
     tokens.set("--surface-accent", "--work-5");
   }
 
-  // Semantic mappings
-  tokens.set("--text-default", "--work-12");
-  tokens.set("--surface-page", "--work-role-surface");
-  tokens.set("--surface-default", "--work-role-surface-strong");
+  // Semantic mappings. Surface/text come from the theme scale unless the theme
+  // is accent-only (neutral surface), in which case they were seeded above.
+  if (!isNeutral) {
+    tokens.set("--text-default", "--work-12");
+    tokens.set("--surface-page", "--work-role-surface");
+    tokens.set("--surface-default", "--work-role-surface-strong");
+  }
   tokens.set("--primary", "--work-role-primary");
   tokens.set("--primary-strong", "--work-role-primary-strong");
   tokens.set("--text-accent", "--primary-strong");
@@ -286,6 +314,12 @@ describe("Work Theme Contrast Ratios", () => {
               fg: "--on-primary",
               bg: "--primary",
               min: WCAG_AA_LARGE,
+            },
+            {
+              name: "accent link (--text-accent on --surface-page)",
+              fg: "--text-accent",
+              bg: "--surface-page",
+              min: WCAG_AA,
             },
           ];
 
