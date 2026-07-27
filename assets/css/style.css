@@ -724,6 +724,28 @@ video {
   filter: none;
 }
 
+/*
+ * Curated works case (opts in via `wide_figures`): the media IS product
+ * screenshots and a colour-coded motion hero, so show them in true colour
+ * rather than the site's grayscale / duotone image blend — the tint would hide
+ * the very thing the case is about. Scoped to the case body; summary cards in
+ * listings keep the unified blend.
+ */
+.works-post--plain-media > figure picture::before,
+.works-post--plain-media > figure picture::after,
+.works-post--plain-media > figure .video-wrapper::before,
+.works-post--plain-media > figure .video-wrapper::after {
+  display: none;
+}
+
+.works-post--plain-media > figure img,
+.works-post--plain-media > figure video,
+.works-post--plain-media > figure .hero-embed__frame {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;
