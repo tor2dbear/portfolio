@@ -743,9 +743,20 @@
     // Load stored preferences or use defaults
     const storedMode = localStorage.getItem("theme-mode") || "system";
     const storedPalette = localStorage.getItem("theme-palette") || "standard";
+    // A works page may declare a default typography/layout (data-work-*, set
+    // server-side). It applies only when the visitor has no explicit stored
+    // choice — mirrors the pre-paint script in head.html so init doesn't
+    // clobber the server default with the global one. applyTypography/
+    // applyLayout below don't persist, so this default never becomes the
+    // visitor's stored choice.
     const storedTypography =
-      localStorage.getItem("theme-typography") || "editorial";
-    const storedLayout = localStorage.getItem("theme-layout") || "column";
+      localStorage.getItem("theme-typography") ||
+      document.documentElement.getAttribute("data-work-typography") ||
+      "editorial";
+    const storedLayout =
+      localStorage.getItem("theme-layout") ||
+      document.documentElement.getAttribute("data-work-layout") ||
+      "column";
     const normalizedStoredPalette =
       storedPalette === "coty" ? "pantone" : storedPalette;
     let initialPalette =

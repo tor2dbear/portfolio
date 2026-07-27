@@ -1,21 +1,44 @@
 <!DOCTYPE html>
 {{- /* Visual tool pages (component library, palette generator) can't collapse to text — they opt out of the terminal layout. The pre-hydration script and theme.js fall back to column here without touching the stored preference. */ -}}
 {{- $terminalExempt := or (eq .Type "ui-library") (eq .Type "palette-generator") -}}
-{{- /* Per-project color theme: a works page may pin a named theme from
-       data/work-themes.toml via `theme:` front matter. Set server-side (no
-       FOUC) and validated against the known theme ids — an unknown value is
-       ignored. Applies wherever the works page renders, including when it is
-       reached through a client or employer context (same rendered page). */ -}}
+{{- /* Per-project style: a works page may pin its own color theme, typography
+       preset and reading layout via a `worktheme:` front matter map:
+         worktheme:
+           color: rose        # a theme id from data/work-themes.toml
+           typography: refined # editorial | refined | expressive | technical | system
+           layout: editorial   # column | editorial | index  (terminal excluded)
+       All three are set server-side (no FOUC) and validated — an unknown value
+       is ignored. Color paints via data-work-theme (a base layer Pantone
+       overrides). Typography/layout are DEFAULTS: data-work-* is read by the
+       pre-paint script and theme.js only when the visitor has no explicit
+       stored choice of their own, and is never persisted. Applies wherever the
+       works page renders, including via a client or employer context (same
+       rendered page). Note: `layout` lives inside the map on purpose — a
+       top-level `layout` key is reserved by Hugo for template selection. */ -}}
 {{- $workTheme := "" -}}
+{{- $workTypography := "" -}}
+{{- $workLayout := "" -}}
 {{- if eq .Type "works" -}}
-  {{- with .Params.theme -}}
-    {{- $themeId := . -}}
-    {{- range (index $.Site.Data "work-themes").themes -}}
-      {{- if eq .id $themeId -}}{{- $workTheme = $themeId -}}{{- end -}}
+  {{- with .Params.worktheme -}}
+    {{- with .color -}}
+      {{- $colorId := . -}}
+      {{- range (index $.Site.Data "work-themes").themes -}}
+        {{- if eq .id $colorId -}}{{- $workTheme = $colorId -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- with .typography -}}
+      {{- if in (slice "editorial" "refined" "expressive" "technical" "system") . -}}
+        {{- $workTypography = . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- with .layout -}}
+      {{- if in (slice "column" "editorial" "index") . -}}
+        {{- $workLayout = . -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
-<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}{{ with $workTheme }} data-work-theme="{{ . }}"{{ end }}>
+<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}{{ with $workTheme }} data-work-theme="{{ . }}"{{ end }}{{ with $workTypography }} data-work-typography="{{ . }}"{{ end }}{{ with $workLayout }} data-work-layout="{{ . }}"{{ end }}>
   {{ partial "head.html" . }}
 
 

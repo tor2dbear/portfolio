@@ -736,28 +736,43 @@
       var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
       document.documentElement.setAttribute("data-coty-year", storedCotyYear);
 
-      // Set typography
-      var storedTypography = localStorage.getItem("theme-typography") || "editorial";
-      document.documentElement.setAttribute("data-typography", storedTypography);
+      // Set typography. A works page may declare a default preset
+      // (data-work-typography, set server-side from front matter); it applies
+      // only when the visitor has made no explicit choice of their own — a
+      // persisted pick always wins. Never persisted here, so leaving the page
+      // reverts to the global default.
+      var storedTypography = localStorage.getItem("theme-typography");
+      var effectiveTypography =
+        storedTypography ||
+        document.documentElement.getAttribute("data-work-typography") ||
+        "editorial";
+      document.documentElement.setAttribute("data-typography", effectiveTypography);
 
-      // Set layout (column/editorial/index/terminal). Visual tool pages
-      // opt out of terminal (data-terminal-exempt on <html>): they render
-      // column here while the stored preference stays untouched.
-      var storedLayout = localStorage.getItem("theme-layout") || "column";
+      // Set layout (column/editorial/index/terminal). A works page may declare
+      // a default (data-work-layout: column/editorial/index — terminal is
+      // excluded as it's a session-wide mode); it applies only when the visitor
+      // has no explicit stored choice. Visual tool pages opt out of terminal
+      // (data-terminal-exempt on <html>): they render column here while the
+      // stored preference stays untouched.
+      var storedLayout = localStorage.getItem("theme-layout");
+      var effectiveLayout =
+        storedLayout ||
+        document.documentElement.getAttribute("data-work-layout") ||
+        "column";
       if (
-        storedLayout === "terminal" &&
+        effectiveLayout === "terminal" &&
         document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
-        storedLayout = "column";
+        effectiveLayout = "column";
       }
-      document.documentElement.setAttribute("data-layout", storedLayout);
+      document.documentElement.setAttribute("data-layout", effectiveLayout);
 
       // Terminal boot banner is a login MOTD: shown once per session. If the
       // boot already played, mark the document so the ASCII art + status line
       // are hidden pre-paint on this (subsequent) page — no flash.
       try {
         if (
-          storedLayout === "terminal" &&
+          effectiveLayout === "terminal" &&
           sessionStorage.getItem("terminal-boot-played")
         ) {
           document.documentElement.setAttribute("data-terminal-booted", "1");
@@ -779,7 +794,7 @@
         !document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
         document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
-        if (storedLayout === "terminal") {
+        if (effectiveLayout === "terminal") {
           document.documentElement.setAttribute("data-terminal-transcript", "1");
           // Withhold the live prompt from the first frame; terminal.js clears
           // this once the replay finishes (or immediately, for reduced motion),

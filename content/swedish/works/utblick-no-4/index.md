@@ -8,7 +8,10 @@ slug: arbeten
 weight: 10
 tags: ["Redaktionellt"]
 description: Redaktionell design för Utblicks 2015-nummer som utforskar afrikansk politik och identitet.
-theme: rose
+worktheme:
+  color: rose
+  typography: refined
+  layout: editorial
 header_image: utblick_africa-0005.jpg
 featured: true
 role: "Art Direction, Illustration"

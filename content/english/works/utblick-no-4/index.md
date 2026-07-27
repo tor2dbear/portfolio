@@ -9,7 +9,10 @@ weight: 10
 tags: ["Editorial"]
 clients: ["deg17", "topic02"]
 description: Editorial design for Utblick's last 2015 issue exploring African politics and identity
-theme: rose
+worktheme:
+  color: rose
+  typography: refined
+  layout: editorial
 header_image: utblick_africa-0005.jpg
 featured: true
 role: "Art Direction, Illustration"

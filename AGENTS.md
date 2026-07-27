@@ -580,7 +580,20 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
 - `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `forest`, `mesa`, `pantone`, `coty`)
 - `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
-- `assets/templates/work-theme-scales.css` + `data/work-themes.toml` - Per-project color themes (works pages). A work project pins a named theme via `theme:` front matter; `header.html` sets `data-work-theme` server-side (no FOUC, no localStorage), and the template generates light + dark token blocks. It's a **base layer**: the selectors carry `:not([data-palette="pantone"])` so an explicit Pantone palette wins, and a custom palette (inline styles) wins too — on the default palette the work theme paints the page. Each theme is contrast-gated in both modes by `assets/css/__tests__/work-theme-contrast.test.js`.
+- **Per-project style (works pages)** — a work project can pin its own color theme, typography preset and reading layout via a `worktheme:` front matter map, set server-side in `header.html` (no FOUC, no localStorage), validated (unknown values ignored):
+
+  ```yaml
+  worktheme:
+    color: rose # theme id from data/work-themes.toml
+    typography: refined # editorial | refined | expressive | technical | system
+    layout: editorial # column | editorial | index  (terminal excluded — session-wide mode)
+  ```
+
+  `layout` sits inside the map on purpose: a top-level `layout` key is reserved by Hugo for template selection.
+
+  - **Color** (`data-work-theme`) — `assets/templates/work-theme-scales.css` + `data/work-themes.toml` generate light + dark token blocks per theme. A **base layer**: selectors carry `:not([data-palette="pantone"])` so an explicit Pantone palette wins (a custom palette's inline styles win too); on the default palette the work theme paints the page. Contrast-gated in both modes by `assets/css/__tests__/work-theme-contrast.test.js`.
+  - **Typography / layout** (`data-work-typography`, `data-work-layout`) — **defaults**, not overrides. The pre-paint script in `head.html` and `theme.js` init read them only when the visitor has no explicit stored choice, and never persist them — so a visitor's own selection always wins and leaving the page reverts to the global default (`editorial` / `column`).
+
 - `assets/css/utilities/typography.css` - Typography utilities
 - `assets/css/utilities/layout.css` - Layout utilities
 - `assets/css/utilities/grid.css` - 12-column subgrid + art-direction placement API
