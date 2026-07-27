@@ -4,7 +4,7 @@ date: 2026-07-26
 linktitle: Cadence
 title: Cadence
 subtitle: Verktyg för rörelsesystem
-slug: works
+slug: arbeten
 weight: 1
 tags: ["Digitala Produkter", "Experimentellt"]
 clients: []
@@ -50,7 +50,7 @@ Det verkliga testet var att vända det mot mig själv.
 
 Jag klistrade in den här sajtens egna rörelse-tokens. Den gillade rytmen – och ertappade mig med att vara lat: två av mina easings är, i tysthet, samma kurva. Ett verktyg värt att lansera ska kunna genera sin skapare. Det här gjorde det.
 
-{{< infographic src="cadence-logomark.svg" max="120" caption="Även identiteten är en rörelse-token – logotypmärket är en punkt som rör sig längs en easing-kurva." >}}
+{{< infographic src="cadence-logomark.svg" max="120" class="infographic--logomark" caption="Även identiteten är en rörelse-token – logotypmärket är en punkt som rör sig längs en easing-kurva." >}}
 
 {{< embed-full src="/cadence-start.html" ratio="16 / 9" title="Cadence, live – ett verktyg för rörelsesystem: trimma varaktighets- och easing-skalor, komponera semantiska intents, och få ett system som kritiserar sig självt" caption="Cadence självt – live. Öppna det, eller gå vidare nedan." >}}
 

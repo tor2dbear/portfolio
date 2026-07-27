@@ -831,6 +831,27 @@ video {
   filter: none;
 }
 
+/*
+ * Logomark: the one inline SVG that keeps its brand colour (Cadence navy,
+ * theme-aware) and opts out of the image blend — a logo shows in its own colour,
+ * not desaturated with the screenshots. Drawn with var(--lm-ink)/var(--lm-head).
+ */
+.infographic--logomark {
+  --lm-ink: #22356e;
+  --lm-head: #33468f;
+}
+
+:root[data-mode="dark"] .infographic--logomark {
+  --lm-ink: #8ea2e8;
+  --lm-head: #a6b6ef;
+}
+
+.infographic--logomark svg {
+  -webkit-filter: none !important;
+  -moz-filter: none !important;
+  filter: none !important;
+}
+
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;

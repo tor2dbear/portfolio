@@ -60,9 +60,9 @@
     );
   }
 
-  var hasRO = typeof ResizeObserver !== "undefined";
+  var hasRO = typeof window.ResizeObserver !== "undefined";
   var ro = hasRO
-    ? new ResizeObserver(function () {
+    ? new window.ResizeObserver(function () {
         scaleLocks();
       })
     : null;
