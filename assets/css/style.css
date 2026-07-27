@@ -773,6 +773,27 @@ video {
   max-width: 640px;
   height: auto;
   margin-inline: auto;
+  /* Support the image blend: the inline SVG desaturates with the rest of the
+     page media when blend is on. Transparency rules out the duotone tint
+     overlay (it would re-add a background box), so this is the grayscale half of
+     the treatment — enough to keep it consistent with the blended screenshots. */
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .infographic svg {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .infographic svg,
+.works-post--plain-media > figure .infographic svg {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
 }
 
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
