@@ -12,16 +12,36 @@
   Mirrors the role logic of assets/templates/coty-scales.css, but the semantic
   token mappings (which pantone.css supplies for COTY) are inlined here so a
   work theme is fully self-contained.
+
+  Two models:
+    - Single scale — role_mode "surface" (page takes a tint, primary from step 9)
+      or "primary" (accent-led, surface from step 4).
+    - Duo — a theme with an `accent_scale_*` in addition to `scale_*` uses TWO
+      hues: the base scale paints the surface/text (like a surface theme) while
+      the accent scale drives every accent role (primary, links, tags, action).
+      Models a two-spot-colour print piece: e.g. a rose paper with green ink.
 */ -}}
 {{- range .themes -}}
 {{- $id := .id -}}
-{{- $isSurface := eq .role_mode "surface" -}}
+{{- $isDuo := .accent_scale_light -}}
+{{- $isSurface := or $isDuo (eq .role_mode "surface") -}}
 
 {{- if .scale_light }}
 :root:not([data-palette="pantone"])[data-work-theme="{{ $id }}"] {
 {{ range $step, $value := .scale_light -}}  --work-{{ $step }}: {{ $value }};
 {{ end -}}
-{{- if $isSurface }}
+{{- if $isDuo -}}
+{{ range $step, $value := .accent_scale_light }}  --work-accent-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- end }}
+{{- if $isDuo }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-accent-{{ .accent_step_light }});
+  --work-role-primary-strong: var(--work-accent-11);
+  --work-role-on-primary: var(--work-accent-{{ .on_primary_step_light }});
+  --surface-accent: var(--work-accent-4);
+{{- else if $isSurface }}
   --work-role-surface: var(--work-{{ .anchor_step }});
   --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
   --work-role-primary: var(--work-9);
@@ -40,8 +60,8 @@
   --primary: var(--work-role-primary);
   --primary-strong: var(--work-role-primary-strong);
   --on-primary: var(--work-role-on-primary);
-  --secondary: var(--work-4);
-  --secondary-strong: var(--work-8);
+  --secondary: var(--work-{{ if $isDuo }}accent-4{{ else }}4{{ end }});
+  --secondary-strong: var(--work-{{ if $isDuo }}accent-8{{ else }}8{{ end }});
   --on-secondary: var(--work-12);
   --accent-primary: var(--primary);
   --accent-primary-strong: var(--primary-strong);
@@ -50,8 +70,8 @@
   --text-accent: var(--primary-strong);
   --text-default: var(--work-12);
   --surface-ink-strong: var(--work-11);
-  --text-link: var(--work-11);
-  --text-link-hover: var(--work-11);
+  --text-link: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
+  --text-link-hover: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
   --surface-page: var(--work-role-surface);
   --surface-default: var(--work-role-surface-strong);
   --border-subtle: var(--work-5);
@@ -71,7 +91,18 @@
 :root[data-mode="dark"]:not([data-palette="pantone"])[data-work-theme="{{ $id }}"] {
 {{ range $step, $value := .scale_dark -}}  --work-{{ $step }}: {{ $value }};
 {{ end -}}
-{{- if $isSurface }}
+{{- if $isDuo -}}
+{{ range $step, $value := .accent_scale_dark }}  --work-accent-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- end }}
+{{- if $isDuo }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-accent-{{ .accent_step_dark }});
+  --work-role-primary-strong: var(--work-accent-11);
+  --work-role-on-primary: var(--work-accent-{{ .on_primary_step_dark }});
+  --surface-accent: var(--work-accent-4);
+{{- else if $isSurface }}
   --work-role-surface: var(--work-{{ .anchor_step }});
   --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
   --work-role-primary: var(--work-9);
@@ -90,8 +121,8 @@
   --primary: var(--work-role-primary);
   --primary-strong: var(--work-role-primary-strong);
   --on-primary: var(--work-role-on-primary);
-  --secondary: var(--work-4);
-  --secondary-strong: var(--work-8);
+  --secondary: var(--work-{{ if $isDuo }}accent-4{{ else }}4{{ end }});
+  --secondary-strong: var(--work-{{ if $isDuo }}accent-8{{ else }}8{{ end }});
   --on-secondary: var(--work-12);
   --accent-primary: var(--primary);
   --accent-primary-strong: var(--primary-strong);
@@ -100,8 +131,8 @@
   --text-accent: var(--primary-strong);
   --text-default: var(--work-12);
   --surface-ink-strong: var(--work-11);
-  --text-link: var(--work-11);
-  --text-link-hover: var(--work-11);
+  --text-link: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
+  --text-link-hover: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
   --surface-page: var(--work-role-surface);
   --surface-default: var(--work-role-surface-strong);
   --border-subtle: var(--work-5);

@@ -117,7 +117,20 @@ function buildWorkTokenMap(theme, mode) {
     }
   }
 
-  const isSurface = (theme.role_mode || "").toLowerCase() === "surface";
+  const accentScale =
+    mode === "dark" ? theme.accent_scale_dark : theme.accent_scale_light;
+  const isDuo = Boolean(theme.accent_scale_light);
+  if (isDuo && accentScale) {
+    for (let i = 1; i <= 12; i++) {
+      const v = accentScale[String(i)];
+      if (v) {
+        tokens.set(`--work-accent-${i}`, v);
+      }
+    }
+  }
+
+  const isSurface =
+    isDuo || (theme.role_mode || "").toLowerCase() === "surface";
   const anchorStep = Number(theme.anchor_step || 0);
   const sourceStepDark = Number(theme.source_step_dark || anchorStep);
   const onStep =
@@ -125,7 +138,22 @@ function buildWorkTokenMap(theme, mode) {
       ? Number(theme.on_primary_step_dark || 12)
       : Number(theme.on_primary_step_light || 1);
 
-  if (isSurface) {
+  if (isDuo) {
+    // Surface/text from the base scale, every accent role from the accent scale.
+    const accentStep =
+      mode === "dark"
+        ? Number(theme.accent_step_dark || 10)
+        : Number(theme.accent_step_light || 9);
+    tokens.set("--work-role-surface", `--work-${anchorStep}`);
+    tokens.set(
+      "--work-role-surface-strong",
+      `--work-${Math.min(anchorStep + 1, 12)}`
+    );
+    tokens.set("--work-role-primary", `--work-accent-${accentStep}`);
+    tokens.set("--work-role-primary-strong", "--work-accent-11");
+    tokens.set("--work-role-on-primary", `--work-accent-${onStep}`);
+    tokens.set("--surface-accent", "--work-accent-4");
+  } else if (isSurface) {
     tokens.set("--work-role-surface", `--work-${anchorStep}`);
     tokens.set(
       "--work-role-surface-strong",

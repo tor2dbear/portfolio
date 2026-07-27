@@ -105,3 +105,74 @@ on_primary_step_dark = 12
 "10" = "oklch(32% 0.094 357.54)"
 "11" = "oklch(21% 0.06 357.54)"
 "12" = "oklch(10% 0.025 357.54)"
+
+# ── Utblick — a two-spot-colour print identity: rose paper + green ink. ───────
+#    Duo model: the base (rose) scale paints the surface + text, the accent
+#    (green) scale drives every accent role — primary, links, tags, buttons.
+[[themes]]
+id = "utblick"
+name = "Utblick"
+role_mode = "surface"
+anchor_step = 3
+on_primary_step_light = 1
+on_primary_step_dark = 1
+accent_step_light = 9
+accent_step_dark = 10
+
+# Rose — the paper. Light: a soft mauve tint; dark: a near-black warm ground.
+[themes.scale_light]
+"1" = "oklch(98.5% 0.004 350)"
+"2" = "oklch(97% 0.009 350)"
+"3" = "oklch(94.5% 0.018 350)"
+"4" = "oklch(91% 0.028 350)"
+"5" = "oklch(86% 0.04 350)"
+"6" = "oklch(80% 0.052 350)"
+"7" = "oklch(71% 0.068 350)"
+"8" = "oklch(61% 0.086 350)"
+"9" = "oklch(51% 0.095 350)"
+"10" = "oklch(41% 0.08 350)"
+"11" = "oklch(29% 0.058 350)"
+"12" = "oklch(17% 0.035 350)"
+
+[themes.scale_dark]
+"1" = "oklch(15% 0.012 350)"
+"2" = "oklch(17% 0.016 350)"
+"3" = "oklch(20% 0.022 350)"
+"4" = "oklch(24% 0.03 350)"
+"5" = "oklch(28% 0.038 350)"
+"6" = "oklch(33% 0.045 350)"
+"7" = "oklch(41% 0.055 350)"
+"8" = "oklch(52% 0.07 350)"
+"9" = "oklch(62% 0.08 350)"
+"10" = "oklch(71% 0.07 350)"
+"11" = "oklch(83% 0.05 350)"
+"12" = "oklch(94% 0.025 350)"
+
+# Green — the ink. Drives primary/links/tags; flips per mode automatically.
+[themes.accent_scale_light]
+"1" = "oklch(98% 0.012 156)"
+"2" = "oklch(96% 0.024 156)"
+"3" = "oklch(92% 0.045 156)"
+"4" = "oklch(87% 0.065 156)"
+"5" = "oklch(80% 0.088 156)"
+"6" = "oklch(71% 0.10 156)"
+"7" = "oklch(62% 0.108 156)"
+"8" = "oklch(54% 0.108 156)"
+"9" = "oklch(47% 0.10 156)"
+"10" = "oklch(40% 0.09 156)"
+"11" = "oklch(30% 0.07 156)"
+"12" = "oklch(19% 0.05 156)"
+
+[themes.accent_scale_dark]
+"1" = "oklch(16% 0.02 156)"
+"2" = "oklch(19% 0.028 156)"
+"3" = "oklch(23% 0.04 156)"
+"4" = "oklch(27% 0.05 156)"
+"5" = "oklch(33% 0.062 156)"
+"6" = "oklch(41% 0.078 156)"
+"7" = "oklch(50% 0.09 156)"
+"8" = "oklch(60% 0.10 156)"
+"9" = "oklch(68% 0.105 156)"
+"10" = "oklch(75% 0.10 156)"
+"11" = "oklch(85% 0.08 156)"
+"12" = "oklch(93% 0.05 156)"
