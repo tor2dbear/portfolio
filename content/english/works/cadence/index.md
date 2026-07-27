@@ -28,11 +28,13 @@ client:
 
 Motion is the last unsystematised corner of a design system. Colour has tokens; type has a scale. Motion is still magic numbers — a `cubic-bezier` tuned by feel, pasted from memory, never written down. **Cadence** treats it like the rest of the system, and gives it an opinion.
 
-![The Cadence editor — a live instrument panel.](cadence-editor.jpg "The instrument — durations and easings on the left, semantic intents in the middle, a live preview on the right.")
+![Two easings from the set — curves drawn by hand.](cadence-easing-set.jpg "The easing set — each curve drawn by hand, then named. The raw vocabulary the rest of the system refers back to.")
 
 Two layers, borrowed from how we already handle colour. *Primitives* are the raw vocabulary: a duration ladder and a set of easings you draw by hand. *Intents* are the meaning — `enter`, `exit`, `move` — composed from the primitives by reference. You name what motion is *for*, not what it *is*; change a primitive and the whole system re-times.
 
 {{< infographic src="cadence-two-layer-model.svg" caption="Each intent is a named composition of primitives — change a primitive and every intent that references it re-times." >}}
+
+![The enter intent, composed from primitives.](cadence-intent.jpg "The same model in the tool — enter borrows the base duration and the emphasized easing, and resolves to a real curve.")
 
 The decision I'm happiest with was to stop designing around components. An early version pinned four roles to four demo components and fell apart the moment I imagined a fifth. So components became a bench of instruments — each a lens on a single quality of a token, never a screen to restage. Organise a system around its own tokens and nothing can fall outside it.
 

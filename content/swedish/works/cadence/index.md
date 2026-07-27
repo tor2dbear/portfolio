@@ -28,11 +28,13 @@ client:
 
 Rörelse är det sista osystematiserade hörnet av ett designsystem. Färg har tokens; typografi har en skala. Rörelse är fortfarande magiska siffror – en `cubic-bezier` intrimmad på känsla, inklistrad ur minnet, aldrig nedskriven. **Cadence** behandlar den som resten av systemet, och ger den en åsikt.
 
-![Cadence-editorn – en levande instrumentpanel.](cadence-editor.jpg "Instrumentet – varaktigheter och easings till vänster, semantiska intents i mitten, en live-förhandsvisning till höger.")
+![Två easings ur uppsättningen – kurvor ritade för hand.](cadence-easing-set.jpg "Easing-uppsättningen – varje kurva ritad för hand, sedan namngiven. Den råa vokabulär som resten av systemet refererar tillbaka till.")
 
 Två lager, lånade från hur vi redan hanterar färg. *Primitiver* är den råa vokabulären: en varaktighetsstege och en uppsättning easings du ritar för hand. *Intents* är meningen – `enter`, `exit`, `move` – komponerade från primitiverna by reference. Du namnger vad rörelse är *till för*, inte vad den *är*; ändra en primitiv och hela systemet tajmar om.
 
 {{< infographic src="cadence-two-layer-model.svg" caption="Varje intent är en namngiven komposition av primitiver – ändra en primitiv så tajmar varje intent som refererar den om." >}}
+
+![enter-intentet, komponerat från primitiver.](cadence-intent.jpg "Samma modell i verktyget – enter lånar varaktigheten base och easingen emphasized, och löses upp till en riktig kurva.")
 
 Beslutet jag är mest nöjd med var att sluta designa kring komponenter. En tidig version låste fyra roller till fyra demokomponenter och föll ihop i samma stund jag föreställde mig en femte. Så komponenter blev en bänk av instrument – var och en en lins på en enda egenskap hos en token, aldrig en skärm att återuppföra. Organisera ett system kring sina egna tokens, så kan inget hamna utanför.
 
