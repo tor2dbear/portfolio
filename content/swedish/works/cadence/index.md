@@ -11,7 +11,6 @@ clients: []
 description: Det sista osystematiserade hörnet av ett designsystem är rörelse. Cadence tokeniserar den – och ger den en åsikt.
 header_image: cadence-poster.jpg
 hero_embed: /cadence-hero.html
-wide_figures: true
 featured: true
 draft: true
 role: "Koncept, design & utveckling"
@@ -32,6 +31,8 @@ Rörelse är det sista osystematiserade hörnet av ett designsystem. Färg har t
 ![Cadence-editorn – en levande instrumentpanel.](cadence-editor.jpg "Instrumentet – varaktigheter och easings till vänster, semantiska intents i mitten, en live-förhandsvisning till höger.")
 
 Två lager, lånade från hur vi redan hanterar färg. *Primitiver* är den råa vokabulären: en varaktighetsstege och en uppsättning easings du ritar för hand. *Intents* är meningen – `enter`, `exit`, `move` – komponerade från primitiverna by reference. Du namnger vad rörelse är *till för*, inte vad den *är*; ändra en primitiv och hela systemet tajmar om.
+
+![Tvålagersmodellen – primitiver komponerade till intents by reference.](cadence-two-layer-model.svg "Primitiver → intents, by reference. Art direction bor i namngivningen, inte siffrorna.")
 
 Beslutet jag är mest nöjd med var att sluta designa kring komponenter. En tidig version låste fyra roller till fyra demokomponenter och föll ihop i samma stund jag föreställde mig en femte. Så komponenter blev en bänk av instrument – var och en en lins på en enda egenskap hos en token, aldrig en skärm att återuppföra. Organisera ett system kring sina egna tokens, så kan inget hamna utanför.
 

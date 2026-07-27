@@ -1,6 +1,6 @@
 {{ partial "header.html" . }}
 
-<div class="content post works-post use-subgrid{{ if .Params.wide_figures }} works-post--plain-media{{ end }}">
+<div class="content post works-post use-subgrid{{ if .Params.plain_media }} works-post--plain-media{{ end }}">
   <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb show-on-client">
     <ul>
       <li class="application-breadcrumb__item">
@@ -60,28 +60,7 @@
   <div class="type-information is-muted works-post__meta reveal place-prose"> {{ partial "date.html" . }}</div>
   <div class="works-post__tags reveal place-prose"> {{ partial "post_tags.html" . }}</div>
  
-  {{ if .Params.wide_figures }}
-    {{/* Curated case study: interleave every top-level <figure> as a place-wide
-         grid child, with the prose between each as place-prose — so an entry can
-         read as a sequence of wide, art-directed beats rather than a column of
-         prose-width thumbnails. Opt-in via `wide_figures` front matter; every
-         other works entry keeps the single-hero behaviour in the branches below. */}}
-    {{ $c := .Content | replaceRE "<p>\\s*</p>" "" }}
-    {{ $figs := findRE "(?s)<figure[\\s\\S]*?</figure>" $c }}
-    {{ $prose := split (replaceRE "(?s)<figure[\\s\\S]*?</figure>" "@@CADFIG@@" $c) "@@CADFIG@@" }}
-    {{ range $i, $p := $prose }}
-      {{ with (trim $p " \n\r\t") }}
-        <div class="post-content prose place-prose">{{ . | safeHTML }}</div>
-      {{ end }}
-      {{ if lt $i (len $figs) }}
-        {{/* insert place-wide into the figure's class — tolerate attrs/newlines
-             between `<figure` and `class="` (the render hook wraps them). */}}
-        {{ $fig := replaceRE "(<figure\\b[^>]*?)class=\"" "${1}class=\"place-wide " (index $figs $i) }}
-        {{ $fig | safeHTML }}
-      {{ end }}
-    {{ end }}
-    {{ partial "project-info.html" . }}
-  {{ else if .Truncated }}
+  {{ if .Truncated }}
     {{ $summary := .Summary | replaceRE "<p>\\s*</p>" "" }}
     {{ $heroMatch := findRE "(?s)<figure[\\s\\S]*?</figure>" $summary 1 }}
     {{ $hero := "" }}

@@ -725,11 +725,12 @@ video {
 }
 
 /*
- * Curated works case (opts in via `wide_figures`): the media IS product
- * screenshots and a colour-coded motion hero, so show them in true colour
- * rather than the site's grayscale / duotone image blend — the tint would hide
- * the very thing the case is about. Scoped to the case body; summary cards in
- * listings keep the unified blend.
+ * Optional true-colour media (opt-in via `plain_media` front matter): a works
+ * entry whose media is colour-critical (product screenshots, an infographic, a
+ * colour-coded motion hero) can opt its own figures OUT of the site's grayscale
+ * / duotone image blend. Blend stays the default everywhere else; this is the
+ * per-project escape hatch. Scoped to the case body — summary cards in listings
+ * keep the unified blend.
  */
 .works-post--plain-media > figure picture::before,
 .works-post--plain-media > figure picture::after,
