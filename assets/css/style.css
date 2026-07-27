@@ -805,7 +805,7 @@ video {
 .infographic svg {
   display: block;
   width: 100%;
-  max-width: 640px;
+  max-width: var(--ig-max, 640px);
   height: auto;
   margin-inline: auto;
   /* Support the image blend: the inline SVG desaturates with the rest of the

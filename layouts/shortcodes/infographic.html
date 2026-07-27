@@ -16,7 +16,9 @@
 {{- if not $res -}}
   {{- errorf "infographic: resource %q not found (%s)" $src .Position -}}
 {{- end -}}
-<figure class="reveal infographic">
+{{- /* max: optional max display width in px (e.g. a small logomark vs a wide diagram) */ -}}
+{{- $max := .Get "max" -}}
+<figure class="reveal infographic"{{ with $max }} style="--ig-max:{{ . }}px"{{ end }}>
   {{ $res.Content | safeHTML }}
   {{- with .Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end -}}
 </figure>
