@@ -38,8 +38,6 @@ Två lager, lånade från hur vi redan hanterar färg. *Primitiver* är den råa
 
 Beslutet jag är mest nöjd med var att sluta designa kring komponenter. En tidig version låste fyra roller till fyra demokomponenter och föll ihop i samma stund jag föreställde mig en femte. Så komponenter blev en bänk av instrument – var och en en lins på en enda egenskap hos en token, aldrig en skärm att återuppföra. Organisera ett system kring sina egna tokens, så kan inget hamna utanför.
 
-![Åsiktslagret som läser ett helt system.](cadence-system-read.jpg "Åsiktslagret – det läser hela systemet och säger vad det skulle ändra.")
-
 De flesta verktyg genererar; de dömer inte. Den del jag är stoltast över är den med en synvinkel: den läser hela uppsättningen och säger var det skaver – en easing som i hemlighet är två, ett exit som är långsammare än sitt entré, en stege som haltar – och *vad den skulle ändra*, inte bara vad som är fel. Att koda in det omdömet – en art directors öga som en handfull checkar – är hela idén.
 
 Inget av det stannar i verktyget. Cadence exporterar den CSS du skulle ha skrivit för hand, och driver en riktig produktyta så att du kan känna systemet snarare än bara läsa det.

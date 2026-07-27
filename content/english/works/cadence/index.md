@@ -38,8 +38,6 @@ Two layers, borrowed from how we already handle colour. *Primitives* are the raw
 
 The decision I'm happiest with was to stop designing around components. An early version pinned four roles to four demo components and fell apart the moment I imagined a fifth. So components became a bench of instruments — each a lens on a single quality of a token, never a screen to restage. Organise a system around its own tokens and nothing can fall outside it.
 
-![The opinion layer reading a whole system.](cadence-system-read.jpg "The opinion layer — it reads the whole system and tells you what it would change.")
-
 Most tools generate; they don't judge. The part I'm proudest of is the one with a point of view: it reads the whole set and says where it's off — an easing that's secretly two, an exit slower than its entrance, a ladder that limps — and *what it would change*, not only what's wrong. Encoding that judgement — an art director's eye as a handful of checks — is the whole idea.
 
 None of it stays in the tool. Cadence exports the CSS you'd have written by hand, and drives a real product surface so you can feel the system rather than just read it.
