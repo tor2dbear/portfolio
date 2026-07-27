@@ -73,15 +73,24 @@ body {
   animation-duration: var(--motion-duration-view-transition);
 }
 
-/* The header is on every page: give it its own group and hold it static instead
-   of cross-fading it (its content differs per page — active link, the
-   scroll-progress wordmark — so a plain cross-fade flickers). Its icons are
-   inlined in topmenu.html so they render in the snapshot rather than blinking. */
+/* The header is on every page: give it its own group so it doesn't cross-fade
+   with the page (its content differs per page — active link, the scroll-progress
+   wordmark — and a two-way cross-fade flickers those). Its icons are inlined in
+   topmenu.html so they render in the snapshot rather than blinking.
+
+   The NEW snapshot is held static (animation: none) so it's fully painted from
+   the first frame — no content flicker — and the group doesn't morph. But the
+   OLD snapshot is left to its default fade-out: it dissolves to reveal the new
+   header underneath. Holding the old one static too made it snap to the new
+   colours only at the transition's END, which read as a blink of the header
+   background + CTA button when navigating to/from a themed works page (those
+   follow --surface-page / --primary, which the work theme changes). Fading the
+   old one out turns that snap into a smooth settle; on pages whose header
+   colours don't change it's invisible either way. */
 .top-menu {
   view-transition-name: top-menu;
 }
 ::view-transition-group(top-menu),
-::view-transition-old(top-menu),
 ::view-transition-new(top-menu) {
   animation: none;
 }
