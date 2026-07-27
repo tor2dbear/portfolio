@@ -424,6 +424,8 @@ figcaption {
   font-size: var(--text-sm);
   color: var(--text-muted);
   font-style: italic;
+  margin-top: var(--spacing-12);
+  line-height: var(--line-height-normal);
 }
 
 /* ==========================================================================
