@@ -580,6 +580,7 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
 - `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `forest`, `mesa`, `pantone`, `coty`)
 - `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
+- `assets/templates/work-theme-scales.css` + `data/work-themes.toml` - Per-project color themes (works pages). A work project pins a named theme via `theme:` front matter; `header.html` sets `data-work-theme` server-side (no FOUC, no localStorage), and the template generates light + dark token blocks. It's a **base layer**: the selectors carry `:not([data-palette="pantone"])` so an explicit Pantone palette wins, and a custom palette (inline styles) wins too — on the default palette the work theme paints the page. Each theme is contrast-gated in both modes by `assets/css/__tests__/work-theme-contrast.test.js`.
 - `assets/css/utilities/typography.css` - Typography utilities
 - `assets/css/utilities/layout.css` - Layout utilities
 - `assets/css/utilities/grid.css` - 12-column subgrid + art-direction placement API

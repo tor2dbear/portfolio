@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 {{- /* Visual tool pages (component library, palette generator) can't collapse to text — they opt out of the terminal layout. The pre-hydration script and theme.js fall back to column here without touching the stored preference. */ -}}
 {{- $terminalExempt := or (eq .Type "ui-library") (eq .Type "palette-generator") -}}
-<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}>
+{{- /* Per-project color theme: a works page may pin a named theme from
+       data/work-themes.toml via `theme:` front matter. Set server-side (no
+       FOUC) and validated against the known theme ids — an unknown value is
+       ignored. Applies wherever the works page renders, including when it is
+       reached through a client or employer context (same rendered page). */ -}}
+{{- $workTheme := "" -}}
+{{- if eq .Type "works" -}}
+  {{- with .Params.theme -}}
+    {{- $themeId := . -}}
+    {{- range (index $.Site.Data "work-themes").themes -}}
+      {{- if eq .id $themeId -}}{{- $workTheme = $themeId -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}{{ with $workTheme }} data-work-theme="{{ . }}"{{ end }}>
   {{ partial "head.html" . }}
 
 

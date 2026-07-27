@@ -1,0 +1,119 @@
+{{- /*
+  Work project color themes → static CSS.
+
+  One theme = a named color identity applied to a single works/ page. Each
+  theme emits a light and a dark block, keyed on data-work-theme (set
+  server-side in header.html from the page's front matter). The selectors carry
+  :not([data-palette="pantone"]) so an explicitly chosen Pantone palette always
+  wins; on the default palette the work theme paints the page. Specificity of
+  :root:not([...])[data-work-theme] is (0,3,0) — above standard's [data-palette]
+  (0,2,0), below Pantone's COTY-year block (0,3,0/0,4,0) via the :not() guard.
+
+  Mirrors the role logic of assets/templates/coty-scales.css, but the semantic
+  token mappings (which pantone.css supplies for COTY) are inlined here so a
+  work theme is fully self-contained.
+*/ -}}
+{{- range .themes -}}
+{{- $id := .id -}}
+{{- $isSurface := eq .role_mode "surface" -}}
+
+{{- if .scale_light }}
+:root:not([data-palette="pantone"])[data-work-theme="{{ $id }}"] {
+{{ range $step, $value := .scale_light -}}  --work-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- if $isSurface }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-9);
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_light }});
+  --surface-accent: var(--work-{{ if eq .anchor_step 5 }}4{{ else }}5{{ end }});
+{{- else }}
+  --work-role-primary: var(--work-{{ .anchor_step }});
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_light }});
+  --work-role-surface: var(--work-4);
+  --work-role-surface-strong: var(--work-5);
+  --surface-accent: var(--work-5);
+{{- end }}
+
+  --primary: var(--work-role-primary);
+  --primary-strong: var(--work-role-primary-strong);
+  --on-primary: var(--work-role-on-primary);
+  --secondary: var(--work-4);
+  --secondary-strong: var(--work-8);
+  --on-secondary: var(--work-12);
+  --accent-primary: var(--primary);
+  --accent-primary-strong: var(--primary-strong);
+  --accent-secondary: var(--secondary);
+  --accent-secondary-strong: var(--secondary-strong);
+  --text-accent: var(--primary-strong);
+  --text-default: var(--work-12);
+  --surface-ink-strong: var(--work-11);
+  --text-link: var(--work-11);
+  --text-link-hover: var(--work-11);
+  --surface-page: var(--work-role-surface);
+  --surface-default: var(--work-role-surface-strong);
+  --border-subtle: var(--work-5);
+  --border-default: var(--work-6);
+  --border-strong: var(--work-8);
+  --action: var(--work-role-primary);
+  --on-action: var(--work-role-on-primary);
+  --component-form-bg: var(--work-role-surface);
+  --component-form-placeholder: var(--text-muted);
+{{- range $key, $val := .overrides_light }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
+}
+{{ end -}}
+
+{{- if .scale_dark }}
+:root[data-mode="dark"]:not([data-palette="pantone"])[data-work-theme="{{ $id }}"] {
+{{ range $step, $value := .scale_dark -}}  --work-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- if $isSurface }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-9);
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_dark }});
+  --surface-accent: var(--work-{{ if ge .anchor_step 5 }}3{{ else }}5{{ end }});
+{{- else }}
+  --work-role-primary: var(--work-{{ .source_step_dark }});
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_dark }});
+  --work-role-surface: var(--work-4);
+  --work-role-surface-strong: var(--work-5);
+  --surface-accent: var(--work-5);
+{{- end }}
+
+  --primary: var(--work-role-primary);
+  --primary-strong: var(--work-role-primary-strong);
+  --on-primary: var(--work-role-on-primary);
+  --secondary: var(--work-4);
+  --secondary-strong: var(--work-8);
+  --on-secondary: var(--work-12);
+  --accent-primary: var(--primary);
+  --accent-primary-strong: var(--primary-strong);
+  --accent-secondary: var(--secondary);
+  --accent-secondary-strong: var(--secondary-strong);
+  --text-accent: var(--primary-strong);
+  --text-default: var(--work-12);
+  --surface-ink-strong: var(--work-11);
+  --text-link: var(--work-11);
+  --text-link-hover: var(--work-11);
+  --surface-page: var(--work-role-surface);
+  --surface-default: var(--work-role-surface-strong);
+  --border-subtle: var(--work-5);
+  --border-default: var(--work-6);
+  --border-strong: var(--work-8);
+  --action: var(--work-role-primary);
+  --on-action: var(--work-role-on-primary);
+  --component-form-bg: var(--work-role-surface);
+  --component-form-placeholder: var(--text-muted);
+{{- range $key, $val := .overrides_dark }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
+}
+{{ end -}}
+{{- end -}}

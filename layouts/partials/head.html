@@ -169,6 +169,13 @@
   {{ $cotyData := index .Site.Data "pantone-coty" }}
   {{ $coty_scales_tmpl := resources.Get "templates/coty-scales.css" }}
   {{ $coty_scales := $coty_scales_tmpl | resources.ExecuteAsTemplate "css/coty-scales-generated.css" $cotyData }}
+  {{/* Per-project color themes (works pages). Generated from data/work-themes.toml
+       and bundled after the palette dimensions so a work theme overrides the
+       standard palette; the :not([data-palette="pantone"]) guard in the template
+       keeps Pantone winning. */}}
+  {{ $workThemesData := index .Site.Data "work-themes" }}
+  {{ $work_theme_scales_tmpl := resources.Get "templates/work-theme-scales.css" }}
+  {{ $work_theme_scales := $work_theme_scales_tmpl | resources.ExecuteAsTemplate "css/work-theme-scales-generated.css" $workThemesData }}
 
   <!-- CSS dimensions (typography) -->
   {{ $dimensions_typo_editorial := resources.Get "css/dimensions/typography/editorial.css" }}
@@ -442,6 +449,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_previews.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $work_theme_scales.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $coty_scales.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_editorial.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_refined.RelPermalink }}" />
@@ -505,7 +513,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $work_theme_scales $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
