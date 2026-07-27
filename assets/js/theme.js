@@ -276,6 +276,10 @@
 
   function setTypography(typography) {
     localStorage.setItem("theme-typography", typography);
+    // An explicit choice wins everywhere, including a per-project typeset: drop
+    // the gate so the chosen font applies to the project body too (it was set
+    // pre-paint when no stored choice existed).
+    document.documentElement.removeAttribute("data-project-typeset");
     // Highlight the selected option immediately for instant feedback
     updateTypographyUI(typography);
 
@@ -743,16 +747,15 @@
     // Load stored preferences or use defaults
     const storedMode = localStorage.getItem("theme-mode") || "system";
     const storedPalette = localStorage.getItem("theme-palette") || "standard";
-    // A works page may declare a default typography/layout (data-work-*, set
-    // server-side). It applies only when the visitor has no explicit stored
-    // choice — mirrors the pre-paint script in head.html so init doesn't
-    // clobber the server default with the global one. applyTypography/
-    // applyLayout below don't persist, so this default never becomes the
-    // visitor's stored choice.
+    // Typography is purely the visitor's own preference (or the site default);
+    // a per-project typeset is content-scoped and gated by data-project-typeset
+    // (set pre-paint in head.html), not by this global attribute.
     const storedTypography =
-      localStorage.getItem("theme-typography") ||
-      document.documentElement.getAttribute("data-work-typography") ||
-      "editorial";
+      localStorage.getItem("theme-typography") || "editorial";
+    // Layout may take a per-project default (data-work-layout, set server-side)
+    // when the visitor has no explicit stored choice — mirrors the pre-paint
+    // script so init doesn't clobber the server default. applyLayout below
+    // doesn't persist, so this default never becomes the visitor's choice.
     const storedLayout =
       localStorage.getItem("theme-layout") ||
       document.documentElement.getAttribute("data-work-layout") ||

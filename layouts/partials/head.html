@@ -736,17 +736,26 @@
       var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
       document.documentElement.setAttribute("data-coty-year", storedCotyYear);
 
-      // Set typography. A works page may declare a default preset
-      // (data-work-typography, set server-side from front matter); it applies
-      // only when the visitor has made no explicit choice of their own — a
-      // persisted pick always wins. Never persisted here, so leaving the page
-      // reverts to the global default.
+      // Set typography (global). This is purely the visitor's own preference
+      // (or the site default) — it governs the whole page chrome and never
+      // reflects a per-project typeset.
       var storedTypography = localStorage.getItem("theme-typography");
-      var effectiveTypography =
-        storedTypography ||
-        document.documentElement.getAttribute("data-work-typography") ||
-        "editorial";
-      document.documentElement.setAttribute("data-typography", effectiveTypography);
+      document.documentElement.setAttribute(
+        "data-typography",
+        storedTypography || "editorial"
+      );
+
+      // Per-project typeset gate. A works page may typeset its own content
+      // (data-project-typography on .works-post) in a preset that differs from
+      // the chrome. It's a DEFAULT: it applies only while the visitor has made
+      // no explicit typography choice of their own — their pick then wins
+      // everywhere, including the project body. Decided here, pre-paint, from
+      // the root (the .works-post element isn't in the DOM yet), so the gated
+      // CSS resolves before first paint. theme.js drops the gate the moment the
+      // visitor picks a font at runtime.
+      if (!storedTypography) {
+        document.documentElement.setAttribute("data-project-typeset", "on");
+      }
 
       // Set layout (column/editorial/index/terminal). A works page may declare
       // a default (data-work-layout: column/editorial/index — terminal is
