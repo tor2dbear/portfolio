@@ -43,11 +43,27 @@
   </figure>
   {{/* IF mp4 */}}
 {{ else if eq $ext "mp4" }}
+  {{/* A sibling "<name>-poster.png/.jpg" resource, if present, is shown before
+    the video plays — and whenever autoplay is refused (iOS Low Power Mode,
+    reduced-motion, data saver), so the frame reads as intentional instead of
+    a blank first frame.
+  */}}
+  {{ $posterName := .Destination | safeURL | replaceRE "\\.mp4$" "-poster" }}
+  {{ $poster := or (.Page.Resources.GetMatch (printf "%s.png" $posterName)) (.Page.Resources.GetMatch (printf "%s.jpg" $posterName)) }}
   <figure
     class="reveal{{ if in $src "header-img" }}header-img reveal--delay{{ end }}"
   >
     <div class="video-wrapper">
-      <video width="100%" height="auto" autoplay muted loop playsinline>
+      <video
+        width="100%"
+        height="auto"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        {{ with $poster }}poster="{{ .RelPermalink }}"{{ end }}
+      >
         <source src="{{ $src.RelPermalink }}" type="video/mp4" />
         Your browser does not support the video tag.
       </video>

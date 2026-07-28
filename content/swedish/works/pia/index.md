@@ -23,7 +23,7 @@ details:
   scope: "Idé, design, arkitektur & utveckling"
 ---
 
-![En session från start: identitet, filsystem och pipes — samma kommandon och flaggor som ett riktigt skal.](01-hero-session.png "En session från start: identitet, filsystem och pipes — samma kommandon och flaggor som ett riktigt skal.")
+![Det första PIA gör är att presentera sig vid prompten.](01-hero-session.png "Det första PIA gör är att presentera sig vid prompten.")
 
 ### Översikt
 

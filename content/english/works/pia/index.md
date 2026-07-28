@@ -23,7 +23,7 @@ details:
   scope: "Concept, design, architecture & development"
 ---
 
-![A session from the start: identity, filesystem and pipes — the same commands and flags as a real shell.](01-hero-session.png "A session from the start: identity, filesystem and pipes — the same commands and flags as a real shell.")
+![The first thing PIA does is introduce itself at the prompt.](01-hero-session.png "The first thing PIA does is introduce itself at the prompt.")
 
 ### Overview
 
