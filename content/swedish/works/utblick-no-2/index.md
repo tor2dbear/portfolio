@@ -12,6 +12,7 @@ clients: ["clients01", "clients02", "volvo"]
 description: Redaktionell design och illustration för magasinet Utblick, publicerad av Utrikespolitiska föreningen Göteborg.
 worktheme:
   color: utblick
+  tags: filled
 header_image: header-img-utblick_no2-0002.jpeg
 featured: true
 role: "Art Direction, Illustratör"

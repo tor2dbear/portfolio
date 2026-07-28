@@ -12,6 +12,7 @@ clients: ["clients01", "clients02", "volvo", "deg17"]
 description: Publication design and illustrations for the magazine Utblick, published by Society of International Affairs in Gothenburg.
 worktheme:
   color: utblick
+  tags: filled
 header_image: header-img-utblick_no2-0002.jpeg
 featured: true
 role: "Art Direction, Illustration"

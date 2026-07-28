@@ -11,6 +11,7 @@ clients: ["deg17", "topic02"]
 description: Editorial design for Utblick's last 2015 issue exploring African politics and identity
 worktheme:
   color: africa
+  tags: filled
   typography: refined
   layout: editorial
 header_image: utblick_africa-0005.jpg
