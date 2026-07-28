@@ -725,38 +725,16 @@ video {
 }
 
 /*
- * Full-bleed body embed (the `embed-full` shortcode). Unlike hero-embed it lives
- * in the body, for a closing "here's the actual product" beat. The works single
- * template lifts this figure out of the prose column and re-emits it as a direct
- * child of the .use-subgrid grid with .place-bleed, so it spans the full page
- * width edge to edge (see layouts/works/single.html). It keeps .hero-embed__frame,
- * so the blend + theme-mirroring rules above still reach it. The caption is pulled
- * back to a readable measure and aligned to the content column.
+ * Full-bleed body image (the `media-full` shortcode). Lives in the body for a
+ * closing "here's the actual product" beat. The works single template lifts the
+ * figure out of the prose column and re-emits it as a direct .use-subgrid child
+ * with .place-full, so it spans the full content width (see works/single.html).
+ * The caption is pulled back to a readable measure and centred on the column.
  */
-.embed-full figcaption {
+.media-full figcaption {
   max-width: 68ch;
   margin-inline: auto;
   padding-inline: var(--size-page-margins, 1rem);
-}
-
-/*
- * Desktop lock: the embedded page is rendered at a fixed design width (data-embed-w)
- * so it always shows its desktop layout, and assets/js/hero-embed.js scales the
- * iframe with transform to fit this window. .video-wrapper is already
- * position:relative; we add overflow:hidden and pin the iframe to the top-left so
- * the transform-scale reveals exactly the aspect-ratio window set on the wrapper.
- * (.reveal keeps the figure hidden until scrolled in, by which point JS has
- * applied the scale — so the unscaled state is never seen.)
- */
-.embed-lock {
-  overflow: hidden;
-}
-
-.embed-lock > .hero-embed__frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform-origin: top left;
 }
 
 /*

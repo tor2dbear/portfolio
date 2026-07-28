@@ -52,6 +52,6 @@ Jag klistrade in den här sajtens egna rörelse-tokens. Den gillade rytmen – o
 
 {{< infographic src="cadence-logomark.svg" max="120" class="infographic--logomark" caption="Även identiteten är en rörelse-token – logotypmärket är en punkt som rör sig längs en easing-kurva." >}}
 
-{{< embed-full src="/cadence-start.html" ratio="16 / 9" title="Cadence, live – ett verktyg för rörelsesystem: trimma varaktighets- och easing-skalor, komponera semantiska intents, och få ett system som kritiserar sig självt" caption="Cadence självt – live. Öppna det, eller gå vidare nedan." >}}
+{{< media-full src="cadence-start.jpg" alt="Cadences startsida – ett verktyg för rörelsesystem." caption="Cadence självt – verktyget är en länk bort." >}}
 
 **Live:** [cadence.tor2dbear.com](https://cadence.tor2dbear.com) · **Källkod:** [github.com/tor2dbear/cadence](https://github.com/tor2dbear/cadence)

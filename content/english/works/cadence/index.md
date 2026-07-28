@@ -52,6 +52,6 @@ I pasted this site's own motion tokens in. It liked the rhythm — and caught me
 
 {{< infographic src="cadence-logomark.svg" max="120" class="infographic--logomark" caption="Even the identity is a motion token — the logomark is a dot easing along a curve." >}}
 
-{{< embed-full src="/cadence-start.html" ratio="16 / 9" title="Cadence, live — a motion system designer: tune duration and easing scales, compose semantic intents, and get a system that critiques itself" caption="Cadence itself — live. Open it, or head over below." >}}
+{{< media-full src="cadence-start.jpg" alt="Cadence's start page — a motion system designer." caption="Cadence itself — the live tool is one link away." >}}
 
 **Live:** [cadence.tor2dbear.com](https://cadence.tor2dbear.com) · **Source:** [github.com/tor2dbear/cadence](https://github.com/tor2dbear/cadence)
