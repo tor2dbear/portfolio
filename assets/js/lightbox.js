@@ -127,18 +127,33 @@
   // Open a single image by URL, with no gallery — used by the terminal layout
   // when a cat'd post's `[image N]` token (whose figure isn't in the DOM) is
   // clicked. No prev/next, since there's no on-page gallery to step through.
-  function openSrc(src, alt) {
+  function openSrc(src, alt, opts) {
     if (!src) {
       return;
     }
+    opts = opts || {};
     previousFocus = document.activeElement;
     gallery = [];
     galleryIndex = -1;
-    embedWrap.hidden = true;
-    embed.removeAttribute("src");
-    picture.hidden = false;
-    img.src = src;
-    img.alt = alt || "";
+    // A terminal token can point at a live embed (data-lightbox-type="embed",
+    // a same-origin page) rather than a still image; route it through the iframe
+    // branch so it isn't loaded as a broken <img>.
+    if (opts.embed) {
+      picture.hidden = true;
+      embed.title = opts.title || alt || "";
+      embedWrap.hidden = false;
+      if (embed.getAttribute("src") !== src) {
+        embed.src = src; // load listener posts the theme + reduced-motion
+      } else {
+        postEmbedTheme();
+      }
+    } else {
+      embedWrap.hidden = true;
+      embed.removeAttribute("src");
+      picture.hidden = false;
+      img.src = src;
+      img.alt = alt || "";
+    }
     nav.hidden = true;
     overlay.classList.add("is-open");
     document.documentElement.classList.add("lightbox-open");

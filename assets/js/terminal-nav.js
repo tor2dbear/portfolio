@@ -133,6 +133,12 @@
     ) {
       window.TerminalLightbox.refresh();
     }
+    // Newly swapped-in hero-embed iframes (e.g. a cat'd works page with a live
+    // hero) need their theme/reduced-motion wiring; hero-embed.js exposes this
+    // seam for exactly this in-place-nav case.
+    if (window.HeroEmbed && typeof window.HeroEmbed.refresh === "function") {
+      window.HeroEmbed.refresh();
+    }
     if (
       window.CotyScaleActions &&
       typeof window.CotyScaleActions.init === "function"

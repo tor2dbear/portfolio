@@ -768,6 +768,8 @@ video {
  */
 .infographic {
   color: var(--text-default);
+  /* default max display width; the shortcode's `max` param overrides it inline */
+  --ig-max: 640px;
   --ig-enter: #177f70;
   --ig-exit: #b0402a;
   --ig-move: #9a5e23;
