@@ -12,7 +12,7 @@ description: The last unsystematised corner of a design system is motion. Cadenc
 header_image: cadence-poster.jpg
 hero_embed: /cadence-hero.html
 featured: true
-draft: true
+draft: false
 role: "Concept, Design & Engineering"
 details:
   year: 2026

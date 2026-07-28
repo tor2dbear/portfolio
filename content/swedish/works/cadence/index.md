@@ -12,7 +12,7 @@ description: Det sista osystematiserade hörnet av ett designsystem är rörelse
 header_image: cadence-poster.jpg
 hero_embed: /cadence-hero.html
 featured: true
-draft: true
+draft: false
 role: "Koncept, design & utveckling"
 details:
   year: 2026
