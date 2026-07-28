@@ -218,11 +218,13 @@ accent_step_dark = 10
 "11" = "oklch(81% 0.11 22)"
 "12" = "oklch(90% 0.06 22)"
 
-# ── Cadence — matches the live tool: a light beige page, blue accents. ───────
+# ── Cadence — matches the live tool: a light beige page, deep navy accents. ──
 #    Duo model. The base (beige) scale paints the surface + text; the accent
-#    (blue) scale drives primary/links/tags/buttons. The beige surface is kept a
-#    touch LIGHTER than the real site so the case-study images (on their own
-#    beige) keep a visible edge instead of blending into the page.
+#    (navy/indigo) scale drives primary/links/tags/buttons — the same deep navy
+#    as the tool's "Start designing" button. surface-page (step 3) is kept a
+#    touch lighter than the real site so images keep an edge; surface-default
+#    (step 4, the project-info "fact box") is set to the real site's own beige
+#    background, so the fact box reads at the tool's actual paper tone.
 [[themes]]
 id = "cadence"
 name = "Cadence"
@@ -233,60 +235,61 @@ on_primary_step_dark = 1
 accent_step_light = 9
 accent_step_dark = 10
 
-# Beige — the paper. Light: a pale warm off-white; dark: a warm near-black.
+# Beige — the paper. step 3 = page (lighter than the site); step 4 = fact box
+# (the site's own bg beige); dark = a warm near-black.
 [themes.scale_light]
-"1" = "oklch(99.2% 0.006 85)"
-"2" = "oklch(98% 0.011 85)"
-"3" = "oklch(96.5% 0.016 85)"
-"4" = "oklch(93.5% 0.024 85)"
-"5" = "oklch(89% 0.032 85)"
-"6" = "oklch(83% 0.038 85)"
-"7" = "oklch(75% 0.044 85)"
-"8" = "oklch(66% 0.05 85)"
-"9" = "oklch(56% 0.05 85)"
-"10" = "oklch(46% 0.045 85)"
-"11" = "oklch(35% 0.035 85)"
-"12" = "oklch(22% 0.024 85)"
+"1" = "oklch(99.2% 0.006 88)"
+"2" = "oklch(98% 0.011 88)"
+"3" = "oklch(96.5% 0.016 88)"
+"4" = "oklch(90.6% 0.017 90)"
+"5" = "oklch(85% 0.03 88)"
+"6" = "oklch(79% 0.038 88)"
+"7" = "oklch(72% 0.044 88)"
+"8" = "oklch(64% 0.05 88)"
+"9" = "oklch(55% 0.05 88)"
+"10" = "oklch(45% 0.045 88)"
+"11" = "oklch(34% 0.035 88)"
+"12" = "oklch(20% 0.02 88)"
 
 [themes.scale_dark]
-"1" = "oklch(17% 0.008 85)"
-"2" = "oklch(19% 0.011 85)"
-"3" = "oklch(23% 0.015 85)"
-"4" = "oklch(27% 0.02 85)"
-"5" = "oklch(32% 0.024 85)"
-"6" = "oklch(38% 0.028 85)"
-"7" = "oklch(46% 0.032 85)"
-"8" = "oklch(56% 0.036 85)"
-"9" = "oklch(66% 0.04 85)"
-"10" = "oklch(74% 0.04 85)"
-"11" = "oklch(85% 0.03 85)"
-"12" = "oklch(93% 0.02 85)"
+"1" = "oklch(17% 0.008 88)"
+"2" = "oklch(19% 0.011 88)"
+"3" = "oklch(23% 0.015 88)"
+"4" = "oklch(27% 0.02 88)"
+"5" = "oklch(32% 0.024 88)"
+"6" = "oklch(38% 0.028 88)"
+"7" = "oklch(46% 0.032 88)"
+"8" = "oklch(56% 0.036 88)"
+"9" = "oklch(66% 0.04 88)"
+"10" = "oklch(74% 0.04 88)"
+"11" = "oklch(85% 0.03 88)"
+"12" = "oklch(93% 0.02 88)"
 
-# Blue — the accent. Drives primary/links/tags; flips per mode automatically.
+# Navy/indigo — the accent. step 9 (primary) = the button's deep navy.
 [themes.accent_scale_light]
-"1" = "oklch(98% 0.01 258)"
-"2" = "oklch(96% 0.02 258)"
-"3" = "oklch(93% 0.04 258)"
-"4" = "oklch(89% 0.06 258)"
-"5" = "oklch(83% 0.09 258)"
-"6" = "oklch(76% 0.12 258)"
-"7" = "oklch(68% 0.15 258)"
-"8" = "oklch(60% 0.17 258)"
-"9" = "oklch(52% 0.18 258)"
-"10" = "oklch(46% 0.17 258)"
-"11" = "oklch(40% 0.15 258)"
-"12" = "oklch(26% 0.10 258)"
+"1" = "oklch(97% 0.01 272)"
+"2" = "oklch(94.5% 0.02 272)"
+"3" = "oklch(90% 0.035 272)"
+"4" = "oklch(85% 0.05 272)"
+"5" = "oklch(76% 0.07 272)"
+"6" = "oklch(65% 0.09 272)"
+"7" = "oklch(54% 0.10 272)"
+"8" = "oklch(43% 0.105 272)"
+"9" = "oklch(33% 0.10 272)"
+"10" = "oklch(29% 0.09 272)"
+"11" = "oklch(26% 0.075 272)"
+"12" = "oklch(20% 0.055 272)"
 
 [themes.accent_scale_dark]
-"1" = "oklch(16% 0.03 258)"
-"2" = "oklch(20% 0.045 258)"
-"3" = "oklch(25% 0.06 258)"
-"4" = "oklch(29% 0.075 258)"
-"5" = "oklch(35% 0.095 258)"
-"6" = "oklch(43% 0.12 258)"
-"7" = "oklch(52% 0.145 258)"
-"8" = "oklch(62% 0.155 258)"
-"9" = "oklch(70% 0.15 258)"
-"10" = "oklch(76% 0.13 258)"
-"11" = "oklch(84% 0.10 258)"
-"12" = "oklch(92% 0.06 258)"
+"1" = "oklch(17% 0.03 272)"
+"2" = "oklch(21% 0.045 272)"
+"3" = "oklch(26% 0.06 272)"
+"4" = "oklch(30% 0.075 272)"
+"5" = "oklch(36% 0.095 272)"
+"6" = "oklch(44% 0.115 272)"
+"7" = "oklch(53% 0.13 272)"
+"8" = "oklch(62% 0.14 272)"
+"9" = "oklch(70% 0.14 272)"
+"10" = "oklch(76% 0.125 272)"
+"11" = "oklch(84% 0.10 272)"
+"12" = "oklch(91% 0.06 272)"
