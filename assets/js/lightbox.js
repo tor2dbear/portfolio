@@ -78,6 +78,20 @@
     attributeFilter: ["data-mode", "data-effect-reduced-motion"],
   });
 
+  // OS reduced-motion / colour-scheme changes aren't attribute mutations, so
+  // watch the media query too and re-post while the embed lightbox is open (the
+  // child defers to the host once posted, so it needs this fresh state).
+  if (window.matchMedia) {
+    var rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (rmq.addEventListener) {
+      rmq.addEventListener("change", function () {
+        if (overlay.classList.contains("is-open") && !embedWrap.hidden) {
+          postEmbedTheme();
+        }
+      });
+    }
+  }
+
   function show(index) {
     if (index < 0 || index >= gallery.length) {
       return;

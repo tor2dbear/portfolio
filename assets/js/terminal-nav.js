@@ -139,6 +139,14 @@
     if (window.HeroEmbed && typeof window.HeroEmbed.refresh === "function") {
       window.HeroEmbed.refresh();
     }
+    // Swapped-in media (a demo video, an animated logomark) may need pausing if
+    // the visitor prefers reduced motion; reduced-motion-media.js exposes this.
+    if (
+      window.ReducedMotionMedia &&
+      typeof window.ReducedMotionMedia.refresh === "function"
+    ) {
+      window.ReducedMotionMedia.refresh();
+    }
     if (
       window.CotyScaleActions &&
       typeof window.CotyScaleActions.init === "function"

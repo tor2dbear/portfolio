@@ -340,8 +340,11 @@
   // The active one can switch at runtime so the embed honours the host's
   // reduced-motion setting (posted from hero-embed.js / lightbox.js), not just
   // the OS media query it was born with.
-  var rafId=null, running=null;
-  function stopLoop(){ if(rafId!=null){ cancelAnimationFrame(rafId); rafId=null; } }
+  var rafId=null, running=null, calmTimer=null;
+  function stopLoop(){
+    if(rafId!=null){ cancelAnimationFrame(rafId); rafId=null; }
+    if(calmTimer!=null){ clearTimeout(calmTimer); calmTimer=null; }
+  }
 
   function startCalm(){
     running='calm';
@@ -363,7 +366,7 @@
         last=now;
         curve.style.opacity=curveGlow.style.opacity=orb.style.opacity=orbGlow.style.opacity=0;
         cross.style.opacity=0; handles.style.opacity=0;
-        setTimeout(function(){ idx=(idx+1)%INTENTS.length; showCalm(idx); }, FADE);
+        calmTimer=setTimeout(function(){ calmTimer=null; idx=(idx+1)%INTENTS.length; showCalm(idx); }, FADE);
       }
       rafId=requestAnimationFrame(calm);
     };
@@ -372,8 +375,11 @@
 
   function startFull(){
     running='full';
-    // clear any calm transitions so the per-frame opacity changes aren't eased
+    // Clear calm's transitions so the per-frame opacity changes aren't eased,
+    // and restore any opacity the calm fade may have zeroed — otherwise a switch
+    // mid-fade (the frame loop never sets curve opacity) can leave it invisible.
     curve.style.transition=curveGlow.style.transition=orb.style.transition=orbGlow.style.transition=cross.style.transition="";
+    curve.style.opacity=curveGlow.style.opacity=orb.style.opacity=orbGlow.style.opacity=cross.style.opacity="";
     chip.style.opacity="";
     var SLOT=3600, DRAW=600, RIDE_IN=980;
     var t0=null, lastChipX=X0, tGlobal=0;
@@ -428,13 +434,17 @@
     if(r) startCalm(); else startFull();
   }
 
+  var hosted=false;
   window.addEventListener('message', function(e){
     var d=(e&&e.data)||{};
     if(d.theme==='light'||d.theme==='dark'||d.theme==='auto'){ mode=d.theme; retheme(); }
-    if(typeof d.reduce==='boolean'){ applyMotion(d.reduce || osReduce()); }
+    if(typeof d.reduce==='boolean'){ hosted=true; applyMotion(d.reduce || osReduce()); }
   });
+  // Standalone (no parent): OS changes drive motion directly. Once a host has
+  // posted its reduced-motion state, defer to it — the host re-posts on OS and
+  // setting changes and may carry a manual override the OS query can't see.
   var rmq=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)");
-  if(rmq&&rmq.addEventListener){ rmq.addEventListener('change', function(){ applyMotion(osReduce()); }); }
+  if(rmq&&rmq.addEventListener){ rmq.addEventListener('change', function(){ if(!hosted) applyMotion(osReduce()); }); }
 
   applyMotion(reduceState);
 })();
