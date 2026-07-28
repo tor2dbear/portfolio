@@ -27,15 +27,19 @@ details:
 
 ### Overview
 
-PIA is a working little computer that lives in a browser tab. You log in at a prompt, move through a filesystem, edit files, and pipe commands (`sort fruit.txt | uniq`). No backend to get started: guests run locally, signed-in users sync to the cloud. The name nods to Apple's *Lisa* — PIA is *Personal Integrated Applications*.
+PIA is a working little computer that lives in a browser tab. You log in at a prompt, move through a filesystem, edit files, and pipe commands (`sort fruit.txt | uniq`). No backend to get started: guests run locally, signed-in users sync to the cloud. The name nods to Apple's _Lisa_ — PIA is _Personal Integrated Applications_.
 
 I wanted to see how far "a computer in a tab" goes if you refuse to cheat — not a toy terminal, but something that behaves like a real shell: the same names, flags and flows as Unix, that happens to run in the browser and works with a thumb on a phone.
 
-That means two worlds collide. The terminal is keyboard, text and 1970s convention; the web is touch, share links, email sign-in and home-screen apps. **The whole project is one rule — *terminal idiom first* — pushed all the way into the architecture.** It's the clearest argument I can make for how I build products: pick one principle and let structure, not willpower, hold things together as they grow.
+That means two worlds collide. The terminal is keyboard, text and 1970s convention; the web is touch, share links, email sign-in and home-screen apps. **The whole project is one rule — _terminal idiom first_ — pushed all the way into the architecture.** It's the clearest argument I can make for how I build products: pick one principle and let structure, not willpower, hold things together as they grow.
+
+![PIA running end to end: identity, a real filesystem, the nano editor, real Python via `brew install`, and a package or two — one continuous session.](02-tour.mp4 "PIA running: identity, filesystem, the nano editor, Python, and packages — one continuous session.")
+
+_A looping, self-running tour — the built-in `demo` command replays a scripted session (deterministic, identical every take — not a screen recording)._
 
 ### The design principle: terminal idiom first
 
-Every command follows Unix convention — **name, flags and behaviour.** The real name (`nano`, `useradd`, `grep -n`) wins over a friendly web invention (`edit`, `register`, a GUI shortcut); friendly names survive only as *aliases*. Know one command and you can guess the next: the editor is `nano` (`^O` saves, `^X` exits), the prompt is `user@pia:~$`, settings live in a `.pia/` dotfile.
+Every command follows Unix convention — **name, flags and behaviour.** The real name (`nano`, `useradd`, `grep -n`) wins over a friendly web invention (`edit`, `register`, a GUI shortcut); friendly names survive only as _aliases_. Know one command and you can guess the next: the editor is `nano` (`^O` saves, `^X` exits), the prompt is `user@pia:~$`, settings live in a `.pia/` dotfile.
 
 ![A broad command register that follows Unix convention — real names and flags, friendly aliases secondary.](06-command-register.png "A broad command register that follows Unix convention — real names and flags, friendly aliases secondary.")
 
@@ -57,7 +61,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 ![A terminal session — pipes, then theme amber and theme ice recolour everything from five colour tokens.](10-terminal-tour.mp4 "A terminal session — pipes, then theme switches recolour everything from five tokens.")
 
-*A looping recreation of the saved `tour` session — real commands and output, animated (not a screen recording).*
+_A looping recreation of the saved `tour` session — real commands and output, animated (not a screen recording)._
 
 **The editor is really `nano`.** Full-screen apps inherit the theme for free and keep the idiom: `^O` saves, `^X` exits, line and column in the status bar.
 
@@ -65,7 +69,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 ![Full-screen apps are "just another screen app" — games inherit the theme for free.](05-game-2048.png "Full-screen apps are just another screen app — games inherit the theme for free.")
 
-**The touch bar is context-aware — a web deviation, on purpose.** With a physical keyboard it's hidden; Tab, arrows and pipe are already there. On touch it appears in clusters — *completion · navigation · punctuation · control* — and the control group is one `ctrl` button that unfolds the full readline set (`^A ^E ^U ^K ^W …`), so the bar stays clean as it grows.
+**The touch bar is context-aware — a web deviation, on purpose.** With a physical keyboard it's hidden; Tab, arrows and pipe are already there. On touch it appears in clusters — _completion · navigation · punctuation · control_ — and the control group is one `ctrl` button that unfolds the full readline set (`^A ^E ^U ^K ^W …`), so the bar stays clean as it grows.
 
 ![The same computer in your thumb — left, the touch bar; right, the ctrl button unfolded to the full readline set. The bar only appears on a touchscreen.](07-mobile-mockup.png "The same computer in your thumb — left, the touch bar; right, the ctrl button unfolded to the full readline set. The bar only appears on a touchscreen.")
 
@@ -73,7 +77,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 ### Quality: the test that reads like a tour
 
-**The whole product is verified through one scripted session** in the real terminal, saved as a transcript ("the tour"). Add a feature, add lines, review the diff against the saved copy — that diff *is* the test. The clock is frozen and volatile output masked, so only real behaviour moves.
+**The whole product is verified through one scripted session** in the real terminal, saved as a transcript ("the tour"). Add a feature, add lines, review the diff against the saved copy — that diff _is_ the test. The clock is frozen and volatile output masked, so only real behaviour moves.
 
 ```diff
  guest@pia:~$ at now+5m echo remember
@@ -83,7 +87,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 +remind: reminders need a cloud account — run `login`
 ```
 
-*A real slice of the tour: adding `remind` appended the two green lines, and its honest guest declination is the behaviour under test. The reviewed diff is the verification.*
+_A real slice of the tour: adding `remind` appended the two green lines, and its honest guest declination is the behaviour under test. The reviewed diff is the verification._
 
 Under that: type checking, unit tests, and browser checks for what tests can't see (colours, WASM, PWA). Everything ships via branch → PR → CI → merge, with a preview URL per change.
 
