@@ -217,3 +217,44 @@ accent_step_dark = 10
 "10" = "oklch(70% 0.17 22)"
 "11" = "oklch(81% 0.11 22)"
 "12" = "oklch(90% 0.06 22)"
+
+# ── Cadence — a motion-system tool: neutral stock, glowing teal accent. ───────
+#    Accent-only model. The tool's identity is a glowing mint/teal easing curve
+#    on charcoal; on the portfolio that reads as neutral surface + teal accents
+#    (links, tags, buttons) — bright mint in dark mode, deep teal in light.
+[[themes]]
+id = "cadence"
+name = "Cadence"
+neutral_surface = true
+on_primary_step_light = 1
+on_primary_step_dark = 1
+accent_step_light = 9
+accent_step_dark = 10
+
+[themes.scale_light]
+"1" = "oklch(98.5% 0.008 180)"
+"2" = "oklch(97% 0.016 180)"
+"3" = "oklch(93% 0.032 180)"
+"4" = "oklch(88% 0.05 180)"
+"5" = "oklch(82% 0.07 180)"
+"6" = "oklch(74% 0.086 180)"
+"7" = "oklch(65% 0.096 180)"
+"8" = "oklch(57% 0.10 180)"
+"9" = "oklch(51% 0.10 180)"
+"10" = "oklch(45% 0.092 180)"
+"11" = "oklch(39% 0.08 180)"
+"12" = "oklch(24% 0.05 180)"
+
+[themes.scale_dark]
+"1" = "oklch(18% 0.03 180)"
+"2" = "oklch(22% 0.04 180)"
+"3" = "oklch(27% 0.055 180)"
+"4" = "oklch(31% 0.065 180)"
+"5" = "oklch(37% 0.075 180)"
+"6" = "oklch(44% 0.085 180)"
+"7" = "oklch(53% 0.095 180)"
+"8" = "oklch(64% 0.10 180)"
+"9" = "oklch(74% 0.10 180)"
+"10" = "oklch(82% 0.095 180)"
+"11" = "oklch(88% 0.078 180)"
+"12" = "oklch(94% 0.05 180)"
