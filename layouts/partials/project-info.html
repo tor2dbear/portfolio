@@ -58,7 +58,7 @@
 
     {{ if $hasClient }}
       <div class="project-info__section">
-        <h4 class="project-info__title">Client</h4>
+        <h4 class="project-info__title">{{ .Params.client_label | default "Client" }}</h4>
         {{ if ne $clientName "" }}
           <p class="project-info__text">{{ $clientName }}</p>
         {{ end }}

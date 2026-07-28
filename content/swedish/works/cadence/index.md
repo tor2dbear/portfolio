@@ -18,6 +18,7 @@ details:
   year: 2026
   platform: "Webbapp"
   scope: "Designsystem, UI, frontend-utveckling"
+client_label: "Type"
 client:
   name: "Eget initiativ"
   url: "https://cadence.tor2dbear.com"

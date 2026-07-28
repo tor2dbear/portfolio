@@ -18,8 +18,9 @@ details:
   year: 2026
   platform: "Web app"
   scope: "Design system, UI, front-end engineering"
+client_label: "Type"
 client:
-  name: "Self initiated project"
+  name: "Self-initiated"
   url: "https://cadence.tor2dbear.com"
   about: "A motion-system design tool exploring motion as layered design tokens — primitives and semantic intents — with an opinion layer that critiques the whole system."
 ---
