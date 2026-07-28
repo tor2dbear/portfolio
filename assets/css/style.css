@@ -930,6 +930,15 @@ p:empty {
     grid-template-columns: minmax(0, 1fr);
     grid-column-gap: var(--spacing-24);
   }
+
+  /* Stack every variant on mobile. The --cols-2 / --cols-1 rules above carry
+     higher specificity than the base rule, so without matching them here the
+     two-section layout (only PIA has Role + Details) would stay two columns
+     and read cramped on a phone. */
+  .content.post > .project-info.project-info--cols-2,
+  .content.post > .project-info.project-info--cols-1 {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* NOTE: Article card styles (related items, hover effects) moved to assets/css/components/article-card.css */
