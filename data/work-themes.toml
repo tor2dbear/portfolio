@@ -218,13 +218,13 @@ accent_step_dark = 10
 "11" = "oklch(81% 0.11 22)"
 "12" = "oklch(90% 0.06 22)"
 
-# ── Cadence — matches the live tool: a light beige page, deep navy accents. ──
-#    Duo model. The base (beige) scale paints the surface + text; the accent
-#    (navy/indigo) scale drives primary/links/tags/buttons — the same deep navy
-#    as the tool's "Start designing" button. surface-page (step 3) is kept a
-#    touch lighter than the real site so images keep an edge; surface-default
-#    (step 4, the project-info "fact box") is set to the real site's own beige
-#    background, so the fact box reads at the tool's actual paper tone.
+# ── Cadence — the live tool's exact "Sand / Ink-navy" palette. ───────────────
+#    Duo model, using Cadence's own tokens: beige base + deep navy accent.
+#    surface-page (step 3) = Cadence --panel (its lighter warm), so the page is a
+#    touch lighter than the site's --bg; surface-default (step 4, the fact box) =
+#    Cadence --bg exactly, so the fact box reads at the tool's own paper tone and
+#    the case-study images keep an edge. accent step 9 = Cadence --accent (the
+#    "Start designing" button); on-primary = Cadence --on-accent.
 [[themes]]
 id = "cadence"
 name = "Cadence"
@@ -235,61 +235,66 @@ on_primary_step_dark = 1
 accent_step_light = 9
 accent_step_dark = 10
 
-# Beige — the paper. step 3 = page (lighter than the site); step 4 = fact box
-# (the site's own bg beige); dark = a warm near-black.
+# Beige — Cadence Sand. step3 = --panel (page), step4 = --bg (fact box),
+# step5 = --line, step12 = --ink.
 [themes.scale_light]
-"1" = "oklch(99.2% 0.006 88)"
-"2" = "oklch(98% 0.011 88)"
-"3" = "oklch(96.5% 0.016 88)"
-"4" = "oklch(90.6% 0.017 90)"
-"5" = "oklch(85% 0.03 88)"
-"6" = "oklch(79% 0.038 88)"
-"7" = "oklch(72% 0.044 88)"
-"8" = "oklch(64% 0.05 88)"
-"9" = "oklch(55% 0.05 88)"
-"10" = "oklch(45% 0.045 88)"
-"11" = "oklch(34% 0.035 88)"
-"12" = "oklch(20% 0.02 88)"
+"1" = "#fdfbf6"
+"2" = "#faf6ec"
+"3" = "#f6f1e6"
+"4" = "#ece5d6"
+"5" = "#e0d6c1"
+"6" = "#d0c3a8"
+"7" = "#b8a883"
+"8" = "#9a8a62"
+"9" = "#7c6f4e"
+"10" = "#655f51"
+"11" = "#3d3830"
+"12" = "#211d15"
 
+# Ink-navy dark counterpart. step3 = --bg, step4 = --panel, step6 = --line,
+# step12 = --ink.
 [themes.scale_dark]
-"1" = "oklch(17% 0.008 88)"
-"2" = "oklch(19% 0.011 88)"
-"3" = "oklch(23% 0.015 88)"
-"4" = "oklch(27% 0.02 88)"
-"5" = "oklch(32% 0.024 88)"
-"6" = "oklch(38% 0.028 88)"
-"7" = "oklch(46% 0.032 88)"
-"8" = "oklch(56% 0.036 88)"
-"9" = "oklch(66% 0.04 88)"
-"10" = "oklch(74% 0.04 88)"
-"11" = "oklch(85% 0.03 88)"
-"12" = "oklch(93% 0.02 88)"
+"1" = "#100e0b"
+"2" = "#15130f"
+"3" = "#191712"
+"4" = "#221e17"
+"5" = "#2b271d"
+"6" = "#39332a"
+"7" = "#4a4235"
+"8" = "#5f5544"
+"9" = "#79705f"
+"10" = "#a79d8a"
+"11" = "#c9c0ae"
+"12" = "#ece5d6"
 
-# Navy/indigo — the accent. step 9 (primary) = the button's deep navy.
+# Navy — Cadence Ink-navy accent. step1 = --on-accent, step3 = --accent-soft,
+# step9 = --accent (button/links).
 [themes.accent_scale_light]
-"1" = "oklch(97% 0.01 272)"
-"2" = "oklch(94.5% 0.02 272)"
-"3" = "oklch(90% 0.035 272)"
-"4" = "oklch(85% 0.05 272)"
-"5" = "oklch(76% 0.07 272)"
-"6" = "oklch(65% 0.09 272)"
-"7" = "oklch(54% 0.10 272)"
-"8" = "oklch(43% 0.105 272)"
-"9" = "oklch(33% 0.10 272)"
-"10" = "oklch(29% 0.09 272)"
-"11" = "oklch(26% 0.075 272)"
-"12" = "oklch(20% 0.055 272)"
+"1" = "#f6f1e6"
+"2" = "#eceaf7"
+"3" = "#e6e4f6"
+"4" = "#dcd9f2"
+"5" = "#c3c1e8"
+"6" = "#9a9fd4"
+"7" = "#6b73b0"
+"8" = "#414f8f"
+"9" = "#22356e"
+"10" = "#1e2f60"
+"11" = "#1a2a56"
+"12" = "#141f40"
 
+# Light-navy for dark mode. step1 = --on-accent, step10 = --accent,
+# step11 = --accent-hi.
 [themes.accent_scale_dark]
-"1" = "oklch(17% 0.03 272)"
-"2" = "oklch(21% 0.045 272)"
-"3" = "oklch(26% 0.06 272)"
-"4" = "oklch(30% 0.075 272)"
-"5" = "oklch(36% 0.095 272)"
-"6" = "oklch(44% 0.115 272)"
-"7" = "oklch(53% 0.13 272)"
-"8" = "oklch(62% 0.14 272)"
-"9" = "oklch(70% 0.14 272)"
-"10" = "oklch(76% 0.125 272)"
-"11" = "oklch(84% 0.10 272)"
-"12" = "oklch(91% 0.06 272)"
+"1" = "#191712"
+"2" = "#20222e"
+"3" = "#262a3c"
+"4" = "#2f3550"
+"5" = "#3b4266"
+"6" = "#4b5488"
+"7" = "#5e69a8"
+"8" = "#7182c8"
+"9" = "#8294e0"
+"10" = "#8ea2e8"
+"11" = "#a6b6ef"
+"12" = "#c9d3f6"
