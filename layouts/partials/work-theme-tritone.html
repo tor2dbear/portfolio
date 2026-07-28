@@ -1,0 +1,57 @@
+{{- /* Per-theme static tritone image treatment (test).
+
+  A work theme with tritone stops in data/work-tritone.toml gets a grayscale →
+  3-stop luminance mapping on its images, the same shape as Pantone's
+  #pantone-tritone but baked static (the stops never change, so no JS): shadows
+  → stop 1, midtones → stop 2, highlights → stop 3.
+
+  Applied to every image on the themed page, gated by the blend toggle
+  (data-effect-blend) and yielding to Pantone (:not([data-palette="pantone"])) —
+  the same principle as Pantone's own blend. One filter per mode (the scale
+  flips), swapped by data-mode. Emitted only on themed works pages. */
+-}}
+{{- $id := "" -}}
+{{- with .Params.worktheme -}}{{- $id = .color -}}{{- end -}}
+{{- $t := index (index .Site.Data "work-tritone") $id -}}
+{{- with $t -}}
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    style="position:absolute;width:0;height:0;overflow:hidden"
+  >
+    <defs>
+      <filter id="wt-{{ $id }}-light" color-interpolation-filters="sRGB">
+        <feColorMatrix type="saturate" values="0" result="g" />
+        <feComponentTransfer in="g">
+          <feFuncR type="table" tableValues="{{ .light.r }}" />
+          <feFuncG type="table" tableValues="{{ .light.g }}" />
+          <feFuncB type="table" tableValues="{{ .light.b }}" />
+        </feComponentTransfer>
+      </filter>
+      <filter id="wt-{{ $id }}-dark" color-interpolation-filters="sRGB">
+        <feColorMatrix type="saturate" values="0" result="g" />
+        <feComponentTransfer in="g">
+          <feFuncR type="table" tableValues="{{ .dark.r }}" />
+          <feFuncG type="table" tableValues="{{ .dark.g }}" />
+          <feFuncB type="table" tableValues="{{ .dark.b }}" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+<style>
+  /* Hide the duotone overlays and swap in the tritone filter, mirroring how
+     Pantone's tritone takes over. Gated by blend; Pantone still wins. */
+  :root[data-effect-blend="on"]:not([data-palette="pantone"]) picture::before,
+  :root[data-effect-blend="on"]:not([data-palette="pantone"]) picture::after,
+  :root[data-effect-blend="on"]:not([data-palette="pantone"]) .video-wrapper::before,
+  :root[data-effect-blend="on"]:not([data-palette="pantone"]) .video-wrapper::after {
+    display: none;
+  }
+  :root[data-effect-blend="on"]:not([data-palette="pantone"]):not([data-mode="dark"]) :is(img, video) {
+    filter: url(#wt-{{ $id }}-light);
+  }
+  :root[data-effect-blend="on"][data-mode="dark"]:not([data-palette="pantone"]) :is(img, video) {
+    filter: url(#wt-{{ $id }}-dark);
+  }
+</style>
+{{- end -}}
