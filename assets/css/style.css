@@ -696,6 +696,140 @@ video {
   filter: none;
 }
 
+/*
+ * Hero embed (an <iframe> animation, e.g. the Cadence works hero) opts into the
+ * same image-blend treatment as <img>/<video>: the tint overlays come from its
+ * .video-wrapper, and these three rules mirror the grayscale / Pantone tri-tone
+ * / blend-off filter states so the hero tracks the active palette instead of
+ * standing outside it. Kept in lockstep with the img/video rules above.
+ */
+.hero-embed__frame {
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .hero-embed__frame {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .hero-embed__frame {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
+/*
+ * Full-bleed body image (the `media-full` shortcode). Lives in the body for a
+ * closing "here's the actual product" beat. The works single template lifts the
+ * figure out of the prose column and re-emits it as a direct .use-subgrid child
+ * with .place-full, so it spans the full content width (see works/single.html).
+ * The caption is pulled back to a readable measure and centred on the column.
+ */
+.media-full figcaption {
+  max-width: 68ch;
+  margin-inline: 0;
+}
+
+/*
+ * Optional true-colour media (opt-in via `plain_media` front matter): a works
+ * entry whose media is colour-critical (product screenshots, an infographic, a
+ * colour-coded motion hero) can opt its own figures OUT of the site's grayscale
+ * / duotone image blend. Blend stays the default everywhere else; this is the
+ * per-project escape hatch. Scoped to the case body — summary cards in listings
+ * keep the unified blend.
+ */
+.works-post--plain-media > figure picture::before,
+.works-post--plain-media > figure picture::after,
+.works-post--plain-media > figure .video-wrapper::before,
+.works-post--plain-media > figure .video-wrapper::after {
+  display: none;
+}
+
+.works-post--plain-media > figure img,
+.works-post--plain-media > figure video,
+.works-post--plain-media > figure .hero-embed__frame {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
+/*
+ * Inline infographic (the `infographic` shortcode inlines an SVG). Drawn with
+ * currentColor for ink and CSS custom properties for accents, so it follows the
+ * manual light/dark theme; being inline SVG it's exempt from the image blend and
+ * keeps its colours. Role accents deepen on the light parchment and brighten on
+ * dark — the same pairs the motion hero uses.
+ */
+.infographic {
+  color: var(--text-default);
+  /* default max display width; the shortcode's `max` param overrides it inline */
+  --ig-max: 640px;
+  --ig-enter: #177f70;
+  --ig-exit: #b0402a;
+  --ig-move: #9a5e23;
+}
+
+:root[data-mode="dark"] .infographic {
+  --ig-enter: #8ad0c6;
+  --ig-exit: #e08b7f;
+  --ig-move: #e9b872;
+}
+
+.infographic svg {
+  display: block;
+  width: 100%;
+  max-width: var(--ig-max, 640px);
+  height: auto;
+  margin-inline: auto;
+  /* Support the image blend: the inline SVG desaturates with the rest of the
+     page media when blend is on. Transparency rules out the duotone tint
+     overlay (it would re-add a background box), so this is the grayscale half of
+     the treatment — enough to keep it consistent with the blended screenshots. */
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .infographic
+  svg {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .infographic svg,
+.works-post--plain-media > figure .infographic svg {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
+/*
+ * Logomark: the one inline SVG that keeps its brand colour (Cadence navy,
+ * theme-aware) and opts out of the image blend — a logo shows in its own colour,
+ * not desaturated with the screenshots. Drawn with var(--lm-ink)/var(--lm-head).
+ */
+.infographic--logomark {
+  --lm-ink: #22356e;
+  --lm-head: #33468f;
+}
+
+:root[data-mode="dark"] .infographic--logomark {
+  --lm-ink: #8ea2e8;
+  --lm-head: #a6b6ef;
+}
+
+.infographic--logomark svg {
+  -webkit-filter: none !important;
+  -moz-filter: none !important;
+  filter: none !important;
+}
+
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
   --image-grayscale: 100%;
   --image-shadow-blend-mode: multiply;

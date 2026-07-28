@@ -1,66 +1,103 @@
 {{/* Header / summary-card image. Used for summary cards (home featured,
-     related, taxonomy lists) and the contact portrait — never a full-bleed
-     hero, so resolution-switching (srcset width descriptors + sizes) is the
-     right tool, not art-direction. */}}
+  related, taxonomy lists) and the contact portrait — never a full-bleed
+  hero, so resolution-switching (srcset width descriptors + sizes) is the
+  right tool, not art-direction.
+*/}}
 {{ $page := . }}
-{{ $src := .Resources.GetMatch (printf "%s*" .Params.header_image) }}
 
-{{/* Pages may legitimately have no header image (empty header_image / no
-     resource in the bundle); render nothing rather than dereferencing nil. */}}
-{{ with $src }}
-
-{{/* Check file format. Originally from: https://hugomodo.github.io/blog/image-processing-and-svgs/ */}}
-{{ $pathArr := split $src "." }}
-{{ $pathLen := len $pathArr }}
-{{ $ext := index $pathArr (sub $pathLen 1) }}
-
-{{/* IF mp4 */}}
-{{ if eq $ext "mp4" }}
-  <div class="video-wrapper">
-    <video width="100%" height="auto" autoplay muted loop playsinline>
-      <source src="{{ $src.Permalink }}" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+{{/* Live hero embed as the card: a work with `hero_embed` set (a same-origin
+  HTML animation, e.g. /cadence-hero.html) shows the ACTUAL animation in every
+  summary-card context — home featured, /works, taxonomy, related — instead of
+  a still. It's decorative here (the card's title carries the real link), so
+  aria-hidden + tabindex -1, and pointer-events:none so the click falls
+  through to the wrapping <a>. Theme + palette/blend are handled exactly like
+  the in-page hero: hero-embed.js mirrors data-mode into it, and the
+  .video-wrapper / .hero-embed__frame hooks pull in the image-blend effect.
+  header_image (a still) is still set for the OG/social preview, which can't
+  animate.
+*/}}
+{{ with .Params.hero_embed }}
+  <div class="video-wrapper hero-embed-card">
+    <iframe
+      class="hero-embed__frame"
+      src="{{ . | relURL }}"
+      title="{{ $page.Title }}"
+      loading="lazy"
+      scrolling="no"
+      tabindex="-1"
+      aria-hidden="true"
+      style="width:100%;aspect-ratio:16/10;border:0;display:block;pointer-events:none"
+    ></iframe>
   </div>
 {{ else }}
-  {{/* Resolution-switching: one webp srcset with width descriptors, the
-       browser picks the smallest candidate that satisfies (sizes-width × DPR).
-       Skip candidates wider than the original so Hugo never upscales. */}}
-  {{ $widths := slice 500 800 1200 1500 2000 }}
-  {{ $srcset := slice }}
-  {{ range $widths }}
-    {{ if ge $src.Width . }}
-      {{ $img := $src.Resize (printf "%dx webp" .) }}
-      {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink .) }}
+  {{ $src := $page.Resources.GetMatch (printf "%s*" $page.Params.header_image) }}
+
+  {{/* Pages may legitimately have no header image (empty header_image / no
+    resource in the bundle); render nothing rather than dereferencing nil.
+  */}}
+  {{ with $src }}
+
+    {{/* Check file format. Originally from: https://hugomodo.github.io/blog/image-processing-and-svgs/ */}}
+    {{ $pathArr := split $src "." }}
+    {{ $pathLen := len $pathArr }}
+    {{ $ext := index $pathArr (sub $pathLen 1) }}
+
+    {{/* IF mp4 */}}
+    {{ if eq $ext "mp4" }}
+      <div class="video-wrapper">
+        <video width="100%" height="auto" autoplay muted loop playsinline>
+          <source src="{{ $src.Permalink }}" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    {{ else }}
+      {{/* Resolution-switching: one webp srcset with width descriptors, the
+        browser picks the smallest candidate that satisfies (sizes-width × DPR).
+        Skip candidates wider than the original so Hugo never upscales.
+      */}}
+      {{ $widths := slice 500 800 1200 1500 2000 }}
+      {{ $srcset := slice }}
+      {{ range $widths }}
+        {{ if ge $src.Width . }}
+          {{ $img := $src.Resize (printf "%dx webp" .) }}
+          {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink .) }}
+        {{ end }}
+      {{ end }}
+      {{/* If the original is narrower than the smallest candidate, offer it as-is. */}}
+      {{ if not $srcset }}
+        {{ $img := $src.Resize (printf "%dx webp" $src.Width) }}
+        {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink $src.Width) }}
+      {{ end }}
+
+      {{/* sizes mirrors the real layout: full width on mobile (all cards stack to
+        span-4 ≤767px), and at most the wide card's ~66vw on larger screens.
+        Mobile is what Lighthouse audits, where 100vw is exact.
+      */}}
+      {{ $sizes := "(max-width: 767px) 100vw, 66vw" }}
+
+      {{ $fallbackWidth := cond (lt $src.Width 1200) $src.Width 1200 }}
+      {{ $fallback := $src.Resize (printf "%dx jpg" $fallbackWidth) }}
+
+
+      <picture>
+        <source
+          type="image/webp"
+          srcset="{{ delimit $srcset ", " }}"
+          sizes="{{ $sizes }}"
+        />
+        <img
+          alt="{{ $page.Title }}"
+          title="{{ $page.Title }}"
+          src="{{ $fallback.RelPermalink }}"
+          height="{{ $src.Height }}"
+          width="{{ $src.Width }}"
+          loading="lazy"
+          decoding="async"
+          class="img-fluid"
+        />
+      </picture>
     {{ end }}
+
   {{ end }}
-  {{/* If the original is narrower than the smallest candidate, offer it as-is. */}}
-  {{ if not $srcset }}
-    {{ $img := $src.Resize (printf "%dx webp" $src.Width) }}
-    {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink $src.Width) }}
-  {{ end }}
-
-  {{/* sizes mirrors the real layout: full width on mobile (all cards stack to
-       span-4 ≤767px), and at most the wide card's ~66vw on larger screens.
-       Mobile is what Lighthouse audits, where 100vw is exact. */}}
-  {{ $sizes := "(max-width: 767px) 100vw, 66vw" }}
-
-  {{ $fallbackWidth := cond (lt $src.Width 1200) $src.Width 1200 }}
-  {{ $fallback := $src.Resize (printf "%dx jpg" $fallbackWidth) }}
-
-  <picture>
-    <source type="image/webp" srcset="{{ delimit $srcset ", " }}" sizes="{{ $sizes }}" />
-    <img
-      alt="{{ $page.Title }}"
-      title="{{ $page.Title }}"
-      src="{{ $fallback.RelPermalink }}"
-      height="{{ $src.Height }}"
-      width="{{ $src.Width }}"
-      loading="lazy"
-      decoding="async"
-      class="img-fluid"
-    />
-  </picture>
-{{ end }}
 
 {{ end }}

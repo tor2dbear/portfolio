@@ -281,6 +281,7 @@
         var file = btn.getAttribute("data-image-file") || "image";
         var src = btn.getAttribute("data-image-src");
         var alt = btn.getAttribute("data-image-alt");
+        var imageType = btn.getAttribute("data-image-type");
         printTerminalLine(
           "open " + file,
           "terminal-session__cmd",
@@ -298,7 +299,10 @@
           window.TerminalLightbox &&
           typeof window.TerminalLightbox.openSrc === "function"
         ) {
-          window.TerminalLightbox.openSrc(src, alt);
+          window.TerminalLightbox.openSrc(src, alt, {
+            embed: imageType === "embed",
+            title: btn.getAttribute("data-image-title") || alt,
+          });
         }
         window.requestAnimationFrame(function () {
           window.scrollTo(0, document.body.scrollHeight);
@@ -1050,12 +1054,21 @@
               src = lbSrc;
             }
           }
+          // A figure can open a live embed rather than a still (the hero-embed
+          // shortcode: data-lightbox-type="embed", data-lightbox is a same-origin
+          // page). Carry that through so the token opens the iframe, not a broken
+          // <img> pointed at an HTML URL.
+          var isEmbed =
+            tag === "figure" &&
+            el.getAttribute("data-lightbox-type") === "embed";
           tokens.push({
             image: true,
             n: imageN,
             file: file,
             src: src,
             alt: label,
+            embed: isEmbed,
+            title: (isEmbed && el.getAttribute("data-lightbox-title")) || label,
           });
           continue;
         }
@@ -3603,6 +3616,10 @@
       btn.setAttribute("data-image-src", tok.src || "");
       btn.setAttribute("data-image-file", tok.file || "");
       btn.setAttribute("data-image-alt", tok.alt || "");
+      if (tok.embed) {
+        btn.setAttribute("data-image-type", "embed");
+        btn.setAttribute("data-image-title", tok.title || tok.alt || "");
+      }
       line.appendChild(btn);
       terminalSession.appendChild(line);
     }

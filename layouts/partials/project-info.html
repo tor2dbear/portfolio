@@ -27,8 +27,13 @@
   {{ if $hasClient }}{{ $scratch.Add "count" 1 }}{{ end }}
   {{ $sectionCount := $scratch.Get "count" }}
   {{ $columnsClass := "" }}
-  {{ if eq $sectionCount 2 }}{{ $columnsClass = "project-info--cols-2" }}{{ end }}
-  {{ if eq $sectionCount 1 }}{{ $columnsClass = "project-info--cols-1" }}{{ end }}
+  {{ if eq $sectionCount 2 }}
+    {{ $columnsClass = "project-info--cols-2" }}
+  {{ end }}
+  {{ if eq $sectionCount 1 }}
+    {{ $columnsClass = "project-info--cols-1" }}
+  {{ end }}
+
 
   <section class="project-info {{ $columnsClass }}">
     {{ if $hasRole }}
@@ -58,16 +63,29 @@
 
     {{ if $hasClient }}
       <div class="project-info__section">
-        <h4 class="project-info__title">Client</h4>
+        <h4 class="project-info__title">
+          {{ .Params.client_label | default "Client" }}
+        </h4>
         {{ if ne $clientName "" }}
           <p class="project-info__text">{{ $clientName }}</p>
         {{ end }}
         {{ if ne $clientUrl "" }}
           <p class="project-info__text">
-            <a class="project-info__link" href="{{ $clientUrl }}" target="_blank" rel="noopener">
+            <a
+              class="project-info__link"
+              href="{{ $clientUrl }}"
+              target="_blank"
+              rel="noopener"
+            >
               {{ $clientUrl | replaceRE "^https?://(www\\.)?" "" | replaceRE "/$" "" }}
-              <svg class="icon icon--sm project-info__icon" aria-hidden="true" focusable="false">
-                <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-new-window"></use>
+              <svg
+                class="icon icon--sm project-info__icon"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <use
+                  href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-new-window"
+                ></use>
               </svg>
             </a>
           </p>

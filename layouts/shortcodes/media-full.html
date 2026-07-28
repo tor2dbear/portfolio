@@ -1,0 +1,56 @@
+{{- /*
+  media-full — a full-bleed image figure. The works single template lifts a
+  figure with the `media-full` class out of the prose column and re-emits it as
+  a direct .use-subgrid child with .place-full, so it spans the full content
+  width edge to edge (see layouts/works/single.html). Used for a closing
+  "here's the actual product" beat.
+
+  It mirrors the render-image hook: a responsive <picture> (webp + jpg
+  fallback) that participates in the site's image blend (via picture::before/
+  ::after + img grayscale) and is a data-lightbox image target. The caption is
+  pulled back to a readable measure by ".media-full figcaption" in style.css.
+
+  Params:
+  src       (required) bundle image resource, e.g. "cadence-start.jpg"
+  alt       (optional) alt text
+  caption   (optional) figure caption
+  lightbox  (optional) "false" to make it non-clickable, default true
+  */
+-}}
+{{- $src := .Get "src" -}}
+{{- $res := .Page.Resources.GetMatch $src -}}
+{{- if not $res -}}
+  {{- errorf "media-full: resource %q not found (%s)" $src .Position -}}
+{{- end -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $caption := .Get "caption" -}}
+{{- $lightbox := ne (.Get "lightbox") "false" -}}
+{{- $large := $res.Resize "1200x webp" -}}
+{{- $xlarge := $res.Resize "1600x webp" -}}
+{{- $xxlarge := $res.Resize "2000x webp" -}}
+{{- $fallback := $res.Resize "1600x jpg" -}}
+<figure
+  class="reveal media-full"
+  {{ if $lightbox }}data-lightbox="{{ $xxlarge.RelPermalink }}"{{ end }}
+>
+  <picture>
+    <source
+      type="image/webp"
+      srcset="
+        {{ $large.RelPermalink }} 1200w,
+        {{ $xlarge.RelPermalink }} 1600w,
+        {{ $xxlarge.RelPermalink }} 2000w
+      "
+      sizes="100vw"
+    />
+    <img
+      alt="{{ $alt }}"
+      src="{{ $fallback.RelPermalink }}"
+      width="{{ $fallback.Width }}"
+      height="{{ $fallback.Height }}"
+      class="img-fluid"
+      loading="lazy"
+    />
+  </picture>
+  {{- with $caption }}<figcaption>{{ . }}</figcaption>{{ end -}}
+</figure>

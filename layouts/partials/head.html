@@ -896,6 +896,8 @@
   {{ $js20 := resources.Get "js/tabs.js" }}
   {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
+  {{ $js_hero_embed := resources.Get "js/hero-embed.js" }}
+  {{ $js_reduced_motion_media := resources.Get "js/reduced-motion-media.js" }}
   {{ $js_terminal_data := resources.Get "js/terminal-data.js" }}
   {{ $js_terminal_fs := resources.Get "js/terminal-fs.js" }}
   {{ $js_terminal := resources.Get "js/terminal.js" }}
@@ -959,12 +961,14 @@
       <script src="{{ $js21.RelPermalink }}" defer></script>
     {{ end }}
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
+    <script src="{{ $js_hero_embed.RelPermalink }}" defer></script>
+    <script src="{{ $js_reduced_motion_media.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_nav.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_ai_data.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal_data $js_terminal_fs $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal_data $js_terminal_fs $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_hero_embed $js_reduced_motion_media $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

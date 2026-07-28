@@ -15,7 +15,9 @@
   {{- end -}}
 {{- end -}}
 <div
-  class="content post works-post use-subgrid"
+  class="content post works-post use-subgrid{{ if .Params.plain_media }}
+    works-post--plain-media
+  {{ end }}"
   {{ with $projectTypography }}data-project-typography="{{ . }}"{{ end }}
 >
   <nav
@@ -153,10 +155,25 @@
       {{ $summary | safeHTML }}
     </div>
     {{ partial "project-info.html" . }}
-    {{ $rest := replace .Content .Summary "" }}
-    <div class="post-content prose place-prose">
-      {{ $rest | replaceRE "<p>\\s*</p>" "" | safeHTML }}
-    </div>
+    {{ $rest := replace .Content .Summary "" | replaceRE "<p>\\s*</p>" "" }}
+    {{ $embedMatch := findRE "(?s)<figure class=\"reveal media-full[\\s\\S]*?</figure>" $rest 1 }}
+    {{ if gt (len $embedMatch) 0 }}
+      {{ $embed := index $embedMatch 0 }}
+      {{ $parts := split $rest $embed }}
+      <div class="post-content prose place-prose">
+        {{ (index $parts 0) | safeHTML }}
+      </div>
+      {{ ($embed | replaceRE "<figure class=\"reveal media-full" "<figure class=\"reveal media-full place-full") | safeHTML }}
+      {{ if gt (len $parts) 1 }}
+        <div class="post-content prose place-prose">
+          {{ (index $parts 1) | safeHTML }}
+        </div>
+      {{ end }}
+    {{ else }}
+      <div class="post-content prose place-prose">
+        {{ $rest | safeHTML }}
+      </div>
+    {{ end }}
   {{ else }}
     {{ $content := .Content | replaceRE "<p>\\s*</p>" "" }}
     {{ $heroMatch := findRE "(?s)<figure[\\s\\S]*?</figure>" $content 1 }}
@@ -168,10 +185,24 @@
       {{ $hero | safeHTML }}
     {{ end }}
 
-
-    <div class="post-content prose place-prose">
-      {{ $content | safeHTML }}
-    </div>
+    {{ $embedMatch := findRE "(?s)<figure class=\"reveal media-full[\\s\\S]*?</figure>" $content 1 }}
+    {{ if gt (len $embedMatch) 0 }}
+      {{ $embed := index $embedMatch 0 }}
+      {{ $parts := split $content $embed }}
+      <div class="post-content prose place-prose">
+        {{ (index $parts 0) | safeHTML }}
+      </div>
+      {{ ($embed | replaceRE "<figure class=\"reveal media-full" "<figure class=\"reveal media-full place-full") | safeHTML }}
+      {{ if gt (len $parts) 1 }}
+        <div class="post-content prose place-prose">
+          {{ (index $parts 1) | safeHTML }}
+        </div>
+      {{ end }}
+    {{ else }}
+      <div class="post-content prose place-prose">
+        {{ $content | safeHTML }}
+      </div>
+    {{ end }}
     {{ partial "project-info.html" . }}
   {{ end }}
 
