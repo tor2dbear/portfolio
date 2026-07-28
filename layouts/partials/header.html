@@ -21,6 +21,7 @@
        is reserved by Hugo for template selection. */ -}}
 {{- $workTheme := "" -}}
 {{- $workLayout := "" -}}
+{{- $workTags := "" -}}
 {{- if eq .Type "works" -}}
   {{- with .Params.worktheme -}}
     {{- with .color -}}
@@ -34,9 +35,15 @@
         {{- $workLayout = . -}}
       {{- end -}}
     {{- end -}}
+    {{- /* Opt-in filled tag chips (worktheme.tags: filled): the project's own
+           tags take the theme's primary fill + on-primary text, matching the
+           CTA button. Only meaningful alongside a color theme. */ -}}
+    {{- if and (eq .tags "filled") (ne $workTheme "") -}}
+      {{- $workTags = "filled" -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
-<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}{{ with $workTheme }} data-work-theme="{{ . }}"{{ end }}{{ with $workLayout }} data-work-layout="{{ . }}"{{ end }}>
+<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}{{ with $workTheme }} data-work-theme="{{ . }}"{{ end }}{{ with $workLayout }} data-work-layout="{{ . }}"{{ end }}{{ with $workTags }} data-work-tags="{{ . }}"{{ end }}>
   {{ partial "head.html" . }}
 
 

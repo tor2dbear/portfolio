@@ -11,6 +11,7 @@ clients: []
 description: The last unsystematised corner of a design system is motion. Cadence tokenises it — and gives it an opinion.
 worktheme:
   color: cadence
+  tags: filled
 header_image: cadence-poster.jpg
 hero_embed: /cadence-hero.html
 featured: true

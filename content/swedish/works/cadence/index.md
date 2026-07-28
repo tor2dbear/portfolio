@@ -11,6 +11,7 @@ clients: []
 description: Det sista osystematiserade hörnet av ett designsystem är rörelse. Cadence tokeniserar den – och ger den en åsikt.
 worktheme:
   color: cadence
+  tags: filled
 header_image: cadence-poster.jpg
 hero_embed: /cadence-hero.html
 featured: true
