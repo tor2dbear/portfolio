@@ -9,7 +9,7 @@
     '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
     "</button>" +
     '<picture class="lightbox__picture"><img class="lightbox__img" src="" alt="" /></picture>' +
-    '<div class="lightbox__embed-wrap video-wrapper" hidden><iframe class="lightbox__embed hero-embed__frame" title="" scrolling="no" loading="lazy"></iframe></div>' +
+    '<div class="lightbox__embed-wrap video-wrapper" hidden><iframe class="lightbox__embed hero-embed__frame" title="" scrolling="no" loading="lazy" tabindex="-1"></iframe></div>' +
     '<div class="lightbox__nav" hidden>' +
     '<button class="lightbox__nav-btn lightbox__nav-btn--prev" aria-label="Previous image">‹</button>' +
     '<span class="lightbox__counter" aria-live="polite"></span>' +
@@ -38,8 +38,18 @@
     return image ? image.alt : "";
   }
 
-  // Mirror the host's manual theme (data-mode on <html>) into the embedded
-  // animation, exactly like the in-page hero-embed shortcode does.
+  function reduceMotion() {
+    return (
+      document.documentElement.getAttribute("data-effect-reduced-motion") ===
+        "on" ||
+      (window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    );
+  }
+
+  // Mirror the host's manual theme (data-mode on <html>) and reduced-motion
+  // state into the embedded animation, exactly like the in-page hero-embed
+  // shortcode does.
   function postEmbedTheme() {
     try {
       embed.contentWindow.postMessage(
@@ -48,12 +58,25 @@
             document.documentElement.getAttribute("data-mode") === "dark"
               ? "dark"
               : "light",
+          reduce: reduceMotion(),
         },
         "*"
       );
     } catch (e) {}
   }
   embed.addEventListener("load", postEmbedTheme);
+
+  // If the host theme or reduced-motion setting changes while the embed
+  // lightbox is open, re-post so the enlarged animation tracks it (the general
+  // observer in hero-embed.js excludes this dynamically-created frame).
+  new MutationObserver(function () {
+    if (overlay.classList.contains("is-open") && !embedWrap.hidden) {
+      postEmbedTheme();
+    }
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-mode", "data-effect-reduced-motion"],
+  });
 
   function show(index) {
     if (index < 0 || index >= gallery.length) {

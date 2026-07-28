@@ -336,14 +336,15 @@
     applyIntent(INTENTS[idx],idx);   // recolour --role, the active curve/orb + caption dot
   }
   if(mq && mq.addEventListener) mq.addEventListener('change', function(){ if(mode==='auto') retheme(); });
-  window.addEventListener('message', function(e){
-    var t=e && e.data && e.data.theme;
-    if(t==='light'||t==='dark'||t==='auto'){ mode=t; retheme(); }
-  });
+  // ---- motion loops: a full (travel) loop and a CALM opacity-only fallback.
+  // The active one can switch at runtime so the embed honours the host's
+  // reduced-motion setting (posted from hero-embed.js / lightbox.js), not just
+  // the OS media query it was born with.
+  var rafId=null, running=null;
+  function stopLoop(){ if(rafId!=null){ cancelAnimationFrame(rafId); rafId=null; } }
 
-  // ---- reduced motion: a CALM opacity-only loop (not a freeze) ---------
-  var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
-  if(reduce){
+  function startCalm(){
+    running='calm';
     trailC.forEach(function(c){c.style.opacity=0;});
     chip.style.opacity=0;
     curve.style.transition=curveGlow.style.transition="opacity .8s ease";
@@ -364,57 +365,78 @@
         cross.style.opacity=0; handles.style.opacity=0;
         setTimeout(function(){ idx=(idx+1)%INTENTS.length; showCalm(idx); }, FADE);
       }
-      requestAnimationFrame(calm);
+      rafId=requestAnimationFrame(calm);
     };
-    requestAnimationFrame(calm);
-    return;
+    rafId=requestAnimationFrame(calm);
   }
 
-  // ---- animation loop --------------------------------------------------
-  var SLOT=3600, DRAW=600, RIDE_IN=980;
-  var t0=null, lastChipX=X0, tGlobal=0;
+  function startFull(){
+    running='full';
+    // clear any calm transitions so the per-frame opacity changes aren't eased
+    curve.style.transition=curveGlow.style.transition=orb.style.transition=orbGlow.style.transition=cross.style.transition="";
+    chip.style.opacity="";
+    var SLOT=3600, DRAW=600, RIDE_IN=980;
+    var t0=null, lastChipX=X0, tGlobal=0;
+    var frame=function(now){
+      if(t0===null){ t0=now; applyIntent(INTENTS[idx],idx); }
+      var e=now-t0;
+      if(e>=SLOT){ t0=now; idx=(idx+1)%INTENTS.length; applyIntent(INTENTS[idx],idx); e=0; lastChipX=X0; }
+      var it=INTENTS[idx];
+      tGlobal+=1;
 
-  function frame(now){
-    if(t0===null){ t0=now; applyIntent(INTENTS[idx],idx); }
-    var e=now-t0;
-    if(e>=SLOT){ t0=now; idx=(idx+1)%INTENTS.length; applyIntent(INTENTS[idx],idx); e=0; lastChipX=X0; }
-    var it=INTENTS[idx];
-    tGlobal+=1;
+      var dp=Math.min(1,e/DRAW), dEase=1-Math.pow(1-dp,3), off=(it.len*(1-dEase)).toFixed(2);
+      curve.style.strokeDashoffset=off; curveGlow.style.strokeDashoffset=off;
+      handles.style.opacity=(it.h?dEase*.9:0).toString();
 
-    var dp=Math.min(1,e/DRAW), dEase=1-Math.pow(1-dp,3), off=(it.len*(1-dEase)).toFixed(2);
-    curve.style.strokeDashoffset=off; curveGlow.style.strokeDashoffset=off;
-    handles.style.opacity=(it.h?dEase*.9:0).toString();
+      washRect.style.opacity=(0.85+0.15*Math.sin(tGlobal/42)).toFixed(3);
 
-    washRect.style.opacity=(0.85+0.15*Math.sin(tGlobal/42)).toFixed(3);
+      var rideEnd=RIDE_IN+it.dur, visible=e>=RIDE_IN-40;
+      orb.style.opacity=orbGlow.style.opacity=visible?1:0;
+      cross.style.opacity=visible?".6":0;
+      var p = e<RIDE_IN?placeOrb(0) : e<rideEnd?placeOrb((e-RIDE_IN)/it.dur) : placeOrb(1);
 
-    var rideEnd=RIDE_IN+it.dur, visible=e>=RIDE_IN-40;
-    orb.style.opacity=orbGlow.style.opacity=visible?1:0;
-    cross.style.opacity=visible?".6":0;
-    var p = e<RIDE_IN?placeOrb(0) : e<rideEnd?placeOrb((e-RIDE_IN)/it.dur) : placeOrb(1);
+      hist.unshift({x:p.px,y:p.py}); if(hist.length>TRAILN) hist.pop();
+      var moving=e>=RIDE_IN&&e<rideEnd;
+      for(var i=0;i<TRAILN;i++){
+        var h=hist[i], c=trailC[i];
+        if(h&&moving){
+          c.setAttribute("cx",h.x);c.setAttribute("cy",h.y);
+          c.setAttribute("r",(3*(1-i/TRAILN)).toFixed(2));
+          c.setAttribute("fill",it.color);
+          c.style.opacity=(0.5*(1-i/TRAILN)).toFixed(3);
+        }else c.style.opacity=0;
+      }
 
-    hist.unshift({x:p.px,y:p.py}); if(hist.length>TRAILN) hist.pop();
-    var moving=e>=RIDE_IN&&e<rideEnd;
-    for(var i=0;i<TRAILN;i++){
-      var h=hist[i], c=trailC[i];
-      if(h&&moving){
-        c.setAttribute("cx",h.x);c.setAttribute("cy",h.y);
-        c.setAttribute("r",(3*(1-i/TRAILN)).toFixed(2));
-        c.setAttribute("fill",it.color);
-        c.style.opacity=(0.5*(1-i/TRAILN)).toFixed(3);
-      }else c.style.opacity=0;
-    }
+      // demo chip: LEFT EDGE = X0 at start, RIGHT EDGE = X1 at stop (clamped within
+      // the track so spring/anticipate overshoot never spills past the ends)
+      var cp = e<RIDE_IN?0 : e<rideEnd?(e-RIDE_IN)/it.dur : 1;
+      var chipX=Math.max(X0,Math.min(X1-CHIPW, X0+it.ease(cp)*(W-CHIPW)));
+      var vel=Math.abs(chipX-lastChipX); lastChipX=chipX;
+      chip.setAttribute("x",chipX); chip.setAttribute("fill",it.color);
+      mblurG.setAttribute("stdDeviation",Math.min(8,vel*1.7).toFixed(2)+" 0");
 
-    // demo chip: LEFT EDGE = X0 at start, RIGHT EDGE = X1 at stop (clamped within
-    // the track so spring/anticipate overshoot never spills past the ends)
-    var cp = e<RIDE_IN?0 : e<rideEnd?(e-RIDE_IN)/it.dur : 1;
-    var chipX=Math.max(X0,Math.min(X1-CHIPW, X0+it.ease(cp)*(W-CHIPW)));
-    var vel=Math.abs(chipX-lastChipX); lastChipX=chipX;
-    chip.setAttribute("x",chipX); chip.setAttribute("fill",it.color);
-    mblurG.setAttribute("stdDeviation",Math.min(8,vel*1.7).toFixed(2)+" 0");
-
-    requestAnimationFrame(frame);
+      rafId=requestAnimationFrame(frame);
+    };
+    rafId=requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+
+  function osReduce(){ return !!(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches); }
+  var reduceState=osReduce();
+  function applyMotion(r){
+    if(running!==null && r===reduceState) return;
+    reduceState=r; stopLoop();
+    if(r) startCalm(); else startFull();
+  }
+
+  window.addEventListener('message', function(e){
+    var d=(e&&e.data)||{};
+    if(d.theme==='light'||d.theme==='dark'||d.theme==='auto'){ mode=d.theme; retheme(); }
+    if(typeof d.reduce==='boolean'){ applyMotion(d.reduce || osReduce()); }
+  });
+  var rmq=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)");
+  if(rmq&&rmq.addEventListener){ rmq.addEventListener('change', function(){ applyMotion(osReduce()); }); }
+
+  applyMotion(reduceState);
 })();
 </script>
 </body>

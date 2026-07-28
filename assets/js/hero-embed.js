@@ -24,9 +24,18 @@
       : "light";
   }
 
+  function reduce() {
+    return (
+      document.documentElement.getAttribute("data-effect-reduced-motion") ===
+        "on" ||
+      (window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    );
+  }
+
   function post(f) {
     try {
-      f.contentWindow.postMessage({ theme: mode() }, "*");
+      f.contentWindow.postMessage({ theme: mode(), reduce: reduce() }, "*");
     } catch (e) {}
   }
 
@@ -54,18 +63,30 @@
     wireAll();
   }
 
-  // Re-post to every embed whenever the site theme flips.
+  // Re-post to every embed whenever the site theme or reduced-motion setting
+  // flips (manual toggles on <html>)...
   new MutationObserver(function (muts) {
     for (var i = 0; i < muts.length; i++) {
-      if (muts[i].attributeName === "data-mode") {
+      var a = muts[i].attributeName;
+      if (a === "data-mode" || a === "data-effect-reduced-motion") {
         frames().forEach(post);
         break;
       }
     }
   }).observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ["data-mode"],
+    attributeFilter: ["data-mode", "data-effect-reduced-motion"],
   });
+
+  // ...and whenever the OS reduced-motion preference itself changes.
+  if (window.matchMedia) {
+    var rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (rmq.addEventListener) {
+      rmq.addEventListener("change", function () {
+        frames().forEach(post);
+      });
+    }
+  }
 
   // Terminal in-place nav swaps #main, bringing in fresh cards; expose an
   // (idempotent) re-wire so terminal-nav.js can call it after a swap.

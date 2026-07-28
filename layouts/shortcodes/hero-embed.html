@@ -40,6 +40,6 @@
 <figure class="reveal hero-embed"{{ if $lightbox }} data-lightbox="{{ $src | relURL }}" data-lightbox-type="embed" data-lightbox-title="{{ $title }}" aria-label="{{ $title }}"{{ end }}>
   <div class="video-wrapper">
     <iframe class="hero-embed__frame" src="{{ $src | relURL }}" title="{{ $title }}" loading="lazy"
-            scrolling="no" style="{{ $style | safeCSS }}"></iframe>
+            scrolling="no"{{ if $lightbox }} tabindex="-1"{{ end }} style="{{ $style | safeCSS }}"></iframe>
   </div>
 </figure>
