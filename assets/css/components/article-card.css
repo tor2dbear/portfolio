@@ -203,6 +203,20 @@ article {
   height: auto;
 }
 
+/* Live hero-embed cards keep their own aspect ratio (16:10) here too: the fixed
+   4/3 cover thumb the index layout uses for photos (below, >=48em) would
+   letterbox the animation, so opt these cards out and let the iframe drive the
+   height. Mirrors the .summary-card__image rules in summary-card.css. */
+.related-items__image .hero-embed-card,
+.related-items__image .hero-embed-card .hero-embed__frame {
+  display: block;
+  width: 100%;
+}
+
+:root[data-layout="index"] .related-items__image:has(.hero-embed-card) {
+  aspect-ratio: auto;
+}
+
 :root[data-layout="index"] .related-items__header .type-headline-4 {
   grid-column: 2;
   min-width: 0;
