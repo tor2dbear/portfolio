@@ -1,19 +1,22 @@
 {{- /*
   terminal-art: render preformatted ASCII (e.g. a diagram drawn with box
-  characters) as a terminal-styled, selectable, screen-reader-readable block —
+  characters) as a terminal-styled, selectable, screen-reader-described block —
   a text-based alternative to a diagram image. Always the dark "terminal"
   surface (like the case-study screenshots), independent of the page theme.
-  Usage:
-  {{< terminal-art caption="…"
+
+  The hyphen-trims around .Inner are load-bearing: they strip the surrounding
+  whitespace/newlines (including any the formatter reflows in) so the <pre>
+  content starts exactly at the first ASCII character, with no leading blank
+  line. Usage: {{</* terminal-art caption="…" */
 >}}
 …ascii…
-{{< /terminal-art >}}
+{{< /* /terminal-art */ >}}
 */ -}}
 {{- $caption := .Get "caption" -}}
 <figure class="reveal terminal-art">
   <div class="terminal-art__scroll">
     <pre class="terminal-art__pre" role="img" aria-label="{{ $caption }}">
-{{ .Inner | strings.TrimSpace }}</pre
+{{- .Inner | strings.TrimSpace -}}</pre
     >
   </div>
   {{- with $caption }}
