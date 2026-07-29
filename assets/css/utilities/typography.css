@@ -428,6 +428,17 @@ figcaption {
   line-height: var(--line-height-normal);
 }
 
+/* A caption for a fenced code block. A code block is a bare <pre>, not a
+   <figure>, so it can't carry a <figcaption>; this styles the paragraph that
+   follows it (tagged `{.code-caption}` in markdown) to read like one — small,
+   muted, tucked up under the block. */
+.content.post .prose p.code-caption {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: var(--spacing-12);
+}
+
 /* ==========================================================================
    PROSE CONTENT
    ========================================================================== */

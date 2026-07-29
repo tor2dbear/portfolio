@@ -105,6 +105,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 ```
 
 _A real slice of the tour: adding `remind` appended the two green lines, and its honest guest declination is the behaviour under test. The reviewed diff is the verification._
+{.code-caption}
 
 Under that: type checking, unit tests, and browser checks for what tests can't see (colours, WASM, PWA). Everything ships via branch → PR → CI → merge, with a preview URL per change.
 

@@ -105,6 +105,7 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 ```
 
 _Ett äkta utdrag ur touren: att lägga till `remind` la till de två gröna raderna, och den ärliga gäst-avböjningen är beteendet som testas. Den granskade diffen är verifieringen._
+{.code-caption}
 
 Utöver det: typkontroll, enhetstester och kontroller i en riktig webbläsare för det testerna inte kan se (färger, WASM, PWA). Allt landar via gren → PR → CI → merge, med en förhandsvisnings-URL per ändring.
 
