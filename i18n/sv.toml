@@ -436,12 +436,6 @@ other = "Nästa inlägg"
 [breadcrumb_label]
 other = "Brödsmulor"
 
-[terminal_settings_expand]
-other = "… +6 rader (klicka för att visa)"
-
-[terminal_settings_collapse]
-other = "(dölj)"
-
 [terminal_boot_ok]
 other = "[ ok ] palett · typografi · layout laddade"
 
@@ -478,7 +472,7 @@ kommandon:
   echo      skriv text
   neofetch  sessionsinfo
   dark|light|system  läge
-  pantone   [on|off|YYYY]
+  pantone   [on|off|play|pause|random|YYYY]
   grain|blend|motion on/off
   grid      rutnät
   set [k v] visa/ändra inställn.

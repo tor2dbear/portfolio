@@ -19,6 +19,36 @@
     content="#18181b"
     media="(prefers-color-scheme: dark)"
   />
+  <!-- While a cross-document view transition runs, flag the document (so CSS can
+       pause the scroll-reveal entry animation for that moment) and expose the
+       transition so progressbar.js can retract the wordmark once it finishes.
+       Registered in <head> so it's in place before pagereveal fires; a no-op in
+       browsers without cross-document view transitions. -->
+  <script>
+    window.addEventListener("pagereveal", function (event) {
+      if (!event.viewTransition) return;
+      var root = document.documentElement;
+      root.classList.add("is-view-transition");
+      window.__pageViewTransition = event.viewTransition;
+      var clear = function () {
+        // Before dropping the flag, lock in every .reveal element that's
+        // currently in view as revealed. The transition already showed it, so it
+        // must not blink back to opacity:0 if reveal-on-scroll.js is still
+        // waiting on its images. Below-fold elements are left to reveal on scroll.
+        try {
+          var reveals = document.querySelectorAll(".reveal:not(.is-revealed)");
+          for (var i = 0; i < reveals.length; i++) {
+            var box = reveals[i].getBoundingClientRect();
+            if (box.top < window.innerHeight && box.bottom > 0) {
+              reveals[i].classList.add("is-revealed");
+            }
+          }
+        } catch (e) {}
+        root.classList.remove("is-view-transition");
+      };
+      event.viewTransition.finished.then(clear, clear);
+    });
+  </script>
   <script>
     (function () {
       try {
@@ -659,6 +689,38 @@
         document.documentElement.setAttribute("data-mode", storedMode);
       }
 
+      // Seed the iOS status-bar colour (theme-color) before first paint. The
+      // static metas below are keyed on prefers-color-scheme, which iOS
+      // resolves by the *system* appearance — so a visitor running the site in
+      // dark while their phone is light gets a white status-bar flash on every
+      // navigation until theme.js catches up. Set both metas to the resolved
+      // colour now: prefer the exact colour theme.js cached for this exact
+      // theme combo, else the mode's base surface.
+      try {
+        var resolvedMode =
+          document.documentElement.getAttribute("data-mode") || "light";
+        // Key the cache by every dimension that moves --surface-page: mode,
+        // palette, and (for Pantone) the COTY year. Keying by mode alone let a
+        // palette switch — e.g. a shared ?theme= URL applied above — seed the
+        // status bar with the previous palette's colour, recreating the flash.
+        // An unknown combo just falls back to the mode's base surface.
+        var tcPalette = localStorage.getItem("theme-palette") || "standard";
+        var tcYear = localStorage.getItem("theme-coty-year") || "2026";
+        var tcKey =
+          "theme-color-cache-" +
+          resolvedMode +
+          "-" +
+          tcPalette +
+          (tcPalette === "pantone" ? "-" + tcYear : "");
+        var seedColor =
+          localStorage.getItem(tcKey) ||
+          (resolvedMode === "dark" ? "#18181b" : "#ffffff");
+        var tcMetas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var tci = 0; tci < tcMetas.length; tci++) {
+          tcMetas[tci].setAttribute("content", seedColor);
+        }
+      } catch (e) {}
+
       // Set palette (standard/pantone)
       var storedPalette = localStorage.getItem("theme-palette") || "standard";
       document.documentElement.setAttribute("data-palette", storedPalette);
@@ -731,6 +793,17 @@
         storedGrain === "1" ? "on" : "off"
       );
 
+      // Reduce-motion is set here too (not just by theme.js on DOMContentLoaded)
+      // so it's in place before the pagereveal handler and progressbar.js run —
+      // both of which decide whether to animate the navigation/wordmark from this
+      // attribute. Without it, a returning visitor who enabled the site's Reduce
+      // motion (but whose OS reports no-preference) would still get the animation.
+      var storedMotion = localStorage.getItem("theme-effect-reduced-motion");
+      document.documentElement.setAttribute(
+        "data-effect-reduced-motion",
+        storedMotion === "1" ? "on" : "off"
+      );
+
       // CotyScale (Pantone engine) is lazy-loaded. Expose its URL for
       // theme.js, and when Pantone is already active inject it now — before
       // the deferred bundle — so returning Pantone users get their scale with
@@ -791,6 +864,8 @@
   {{ $js20 := resources.Get "js/tabs.js" }}
   {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
+  {{ $js_hero_embed := resources.Get "js/hero-embed.js" }}
+  {{ $js_reduced_motion_media := resources.Get "js/reduced-motion-media.js" }}
   {{ $js_terminal_data := resources.Get "js/terminal-data.js" }}
   {{ $js_terminal_fs := resources.Get "js/terminal-fs.js" }}
   {{ $js_terminal := resources.Get "js/terminal.js" }}
@@ -854,12 +929,14 @@
       <script src="{{ $js21.RelPermalink }}" defer></script>
     {{ end }}
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
+    <script src="{{ $js_hero_embed.RelPermalink }}" defer></script>
+    <script src="{{ $js_reduced_motion_media.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_nav.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_ai_data.RelPermalink }}" defer></script>
     <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal_data $js_terminal_fs $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal_data $js_terminal_fs $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_hero_embed $js_reduced_motion_media $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

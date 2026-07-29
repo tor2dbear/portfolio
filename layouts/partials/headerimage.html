@@ -3,7 +3,33 @@
      hero, so resolution-switching (srcset width descriptors + sizes) is the
      right tool, not art-direction. */}}
 {{ $page := . }}
-{{ $src := .Resources.GetMatch (printf "%s*" .Params.header_image) }}
+
+{{/* Live hero embed as the card: a work with `hero_embed` set (a same-origin
+     HTML animation, e.g. /cadence-hero.html) shows the ACTUAL animation in every
+     summary-card context — home featured, /works, taxonomy, related — instead of
+     a still. It's decorative here (the card's title carries the real link), so
+     aria-hidden + tabindex -1, and pointer-events:none so the click falls
+     through to the wrapping <a>. Theme + palette/blend are handled exactly like
+     the in-page hero: hero-embed.js mirrors data-mode into it, and the
+     .video-wrapper / .hero-embed__frame hooks pull in the image-blend effect.
+     header_image (a still) is still set for the OG/social preview, which can't
+     animate. */}}
+{{ with .Params.hero_embed }}
+  <div class="video-wrapper hero-embed-card">
+    <iframe
+      class="hero-embed__frame"
+      src="{{ . | relURL }}"
+      title="{{ $page.Title }}"
+      loading="lazy"
+      scrolling="no"
+      tabindex="-1"
+      aria-hidden="true"
+      style="width:100%;aspect-ratio:16/10;border:0;display:block;pointer-events:none"
+    ></iframe>
+  </div>
+{{ else }}
+
+{{ $src := $page.Resources.GetMatch (printf "%s*" $page.Params.header_image) }}
 
 {{/* Pages may legitimately have no header image (empty header_image / no
      resource in the bundle); render nothing rather than dereferencing nil. */}}
@@ -61,6 +87,8 @@
       class="img-fluid"
     />
   </picture>
+{{ end }}
+
 {{ end }}
 
 {{ end }}

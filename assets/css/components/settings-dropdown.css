@@ -52,6 +52,11 @@
 
 .settings-panel {
   --theme-control-size: var(--size-40);
+  /* Drag-to-dismiss progress (0 = at rest, 1 = pulled its full height). Set by
+     settings-dropdown.js during a drag and read by ::backdrop to fade the
+     scrim/blur in step with the pull; declared here so the value is always
+     defined (0) before JS runs. */
+  --sheet-drag: 0;
   position: fixed;
   bottom: var(--spacing-8);
   left: var(--spacing-8);
@@ -67,15 +72,121 @@
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
-    transform var(--motion-duration-base) var(--motion-ease-standard),
-    visibility var(--motion-duration-base) var(--motion-ease-standard);
+  /* `display` is animated with allow-discrete so the panel — which toggles
+     display:none via [hidden] — stays displayed until the slide-out finishes
+     instead of vanishing instantly. See the @starting-style block below for the
+     slide-in. */
+  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    transform var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    display var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete,
+    overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete;
 }
 
-.settings-panel:not([hidden]) {
+/* Legacy (non-popover) open state — gated with :not([popover]) so it doesn't
+   collide with the popover path, which never sets [hidden]. */
+.settings-panel:not([hidden]):not([popover]) {
   transform: translateY(0);
   opacity: 1;
   visibility: visible;
+}
+
+/* The enter animation needs an explicit "from" state, because the panel goes
+   from display:none ([hidden]) to shown — without this it would jump to the
+   open state. Mobile: slide up from below the viewport. */
+@starting-style {
+  .settings-panel:not([hidden]):not([popover]) {
+    opacity: 0;
+    transform: translateY(calc(100% + var(--spacing-16)));
+  }
+}
+
+/* --- Popover prototype (top-layer) ------------------------------------------
+   settings-dropdown.js upgrades the panel to a native popover where supported;
+   it then toggles via the top layer (:popover-open) rather than [hidden], and
+   ::backdrop is the scrim. Closed styles come from the base .settings-panel
+   rule above. */
+.settings-panel[popover] {
+  margin: 0; /* override the UA popover centering default */
+  /* Mobile bottom sheet stretches to the (base) left/right insets; the UA
+     popover default is width: fit-content, so set it back to auto. Desktop
+     overrides this with a fixed width below. */
+  width: auto;
+  /* The sheet has no internal scroll on mobile, so claim single-finger vertical
+     gestures for the drag-to-dismiss handler instead of letting the browser
+     start a pan (which would steal the gesture and cancel our pointer events).
+     `pinch-zoom` (not `none`) still lets low-vision users magnify the settings.
+     Desktop resets this below. */
+  touch-action: pinch-zoom;
+}
+
+/* Lock background scroll while the mobile bottom sheet is open. Desktop keeps
+   scrolling (the dropdown repositions to follow), so gate to the sheet range. */
+@media (max-width: 29.9375em) {
+  html[data-settings-panel-open="true"] {
+    overflow: hidden;
+  }
+}
+
+.settings-panel[popover]:popover-open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+@starting-style {
+  .settings-panel[popover]:popover-open {
+    opacity: 0;
+    transform: translateY(calc(100% + var(--spacing-16)));
+  }
+}
+
+.settings-panel::backdrop {
+  /* Scrim, plus a solid → transparent gradient at the very top that fades to
+     the page bg to hide the sheet/edge under the status bar (this replaces the
+     old .settings-overlay::before). */
+  background: linear-gradient(
+      to bottom,
+      var(--surface-page) 90px,
+      transparent 130px
+    ),
+    color-mix(in srgb, var(--surface-page) 55%, transparent);
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+  backdrop-filter: blur(0) saturate(100%);
+  opacity: 0;
+  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    -webkit-backdrop-filter var(--motion-duration-sheet)
+      var(--motion-ease-emphasized),
+    backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    display var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete,
+    overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
+      allow-discrete;
+}
+
+.settings-panel:popover-open::backdrop {
+  /* --sheet-drag (0 → 1) is set by the drag handler and inherited from the
+     panel; it fades the scrim/blur out as the sheet is pulled down. Falls back
+     to 0 (full scrim) when unset or where ::backdrop doesn't inherit vars. */
+  opacity: calc(1 - var(--sheet-drag, 0));
+  -webkit-backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px))
+    saturate(120%);
+  backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
+}
+
+/* While the finger is down, the scrim must track the drag with no lag. */
+.settings-panel.is-dragging::backdrop {
+  transition: none;
+}
+
+@starting-style {
+  .settings-panel:popover-open::backdrop {
+    opacity: 0;
+    -webkit-backdrop-filter: blur(0) saturate(100%);
+    backdrop-filter: blur(0) saturate(100%);
+  }
 }
 
 .settings-panel::before {
@@ -98,13 +209,19 @@
   right: 0;
   bottom: 0;
   background: color-mix(in srgb, var(--surface-page) 55%, transparent);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  backdrop-filter: blur(14px) saturate(120%);
+  /* Closed = no blur; it ramps to blur(14px) on open (below) so the frost
+     visibly builds instead of appearing at full strength the moment opacity
+     lifts. */
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+  backdrop-filter: blur(0) saturate(100%);
   z-index: 999;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--motion-duration-base) var(--motion-ease-standard),
-    visibility var(--motion-duration-base) var(--motion-ease-standard);
+  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    -webkit-backdrop-filter var(--motion-duration-sheet)
+      var(--motion-ease-emphasized),
+    backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized);
 }
 
 .settings-overlay::before {
@@ -120,7 +237,7 @@
 
 @supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay {
-    backdrop-filter: url(#liquid-glass) blur(14px) saturate(120%);
+    backdrop-filter: url(#liquid-glass) blur(0) saturate(100%);
     background: color-mix(in srgb, var(--surface-page) 40%, transparent);
   }
 }
@@ -128,6 +245,16 @@
 .settings-overlay:not([hidden]) {
   opacity: 1;
   visibility: visible;
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  backdrop-filter: blur(14px) saturate(120%);
+}
+
+/* Open state for the liquid-glass variant — declared after the base open rule
+   so it wins in supporting browsers, and so the blur ramps rather than snaps. */
+@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
+  .settings-overlay:not([hidden]) {
+    backdrop-filter: url(#liquid-glass) blur(14px) saturate(120%);
+  }
 }
 
 /* ≥ 30em: render as an anchored dropdown popover (not a bottom sheet).
@@ -152,8 +279,50 @@
     transform: translateY(calc(var(--spacing-8) * -1));
   }
 
-  .settings-panel:not([hidden]) {
+  .settings-panel:not([hidden]):not([popover]) {
     transform: translateY(0);
+  }
+
+  /* Desktop dropdown enters by sliding down from just above the toggle. */
+  @starting-style {
+    .settings-panel:not([hidden]):not([popover]) {
+      opacity: 0;
+      transform: translateY(calc(var(--spacing-8) * -1));
+    }
+  }
+
+  /* Popover path on desktop: a top-layer element positioned under the toggle by
+     JS (fixed), fixed 304px width (the UA popover default is fit-content), no
+     full-screen scrim. */
+  .settings-panel[popover] {
+    position: fixed;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    width: var(--theme-panel-width);
+    min-width: var(--theme-panel-width);
+    max-width: var(--theme-panel-width);
+    touch-action: auto;
+  }
+
+  .settings-panel[popover]:popover-open {
+    transform: translateY(0);
+  }
+
+  @starting-style {
+    .settings-panel[popover]:popover-open {
+      opacity: 0;
+      transform: translateY(calc(var(--spacing-8) * -1));
+    }
+  }
+
+  /* Target the open state so it beats .settings-panel:popover-open::backdrop
+     (equal specificity, later in source) — no scrim/blur on the desktop
+     dropdown. */
+  .settings-panel:popover-open::backdrop {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   /* No mobile-sheet drag handle or full-screen scrim on desktop. */

@@ -523,6 +523,25 @@
         themeColorAnimFrame = requestAnimationFrame(tick);
       } else {
         themeColorAnimFrame = null;
+        // Cache the settled colour keyed by the resolved mode so the early
+        // inline <head> script can pre-seed the status-bar meta before paint on
+        // the next navigation — avoiding the white flash on iOS. Keyed by every
+        // dimension that moves --surface-page (mode, palette, and the COTY year
+        // for Pantone) so a different theme combo never seeds a stale colour.
+        try {
+          var settledMode =
+            document.documentElement.getAttribute("data-mode") || "light";
+          var settledPalette =
+            document.documentElement.getAttribute("data-palette") || "standard";
+          var settledYear = localStorage.getItem("theme-coty-year") || "2026";
+          var settledKey =
+            "theme-color-cache-" +
+            settledMode +
+            "-" +
+            settledPalette +
+            (settledPalette === "pantone" ? "-" + settledYear : "");
+          localStorage.setItem(settledKey, resolvePageColor());
+        } catch (e) {}
       }
     }
     themeColorAnimFrame = requestAnimationFrame(tick);
@@ -746,11 +765,6 @@
     syncCustomPaletteOptionVisibility();
     applyPalette(initialPalette);
     applyTypography(storedTypography);
-    // Record the Pantone controls' authored (floating) home before applyLayout
-    // can move them, so returning from the terminal restores them correctly.
-    if (window.ThemePantone) {
-      window.ThemePantone.rememberTransportHome();
-    }
     applyLayout(storedLayout);
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,

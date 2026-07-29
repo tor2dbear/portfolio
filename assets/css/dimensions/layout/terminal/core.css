@@ -26,8 +26,8 @@
    - topmenu.html: .terminal-boot banner, .terminal-prompt rows and the
      quick-toggle/home li's exist only for this layout (hidden elsewhere by
      navigation.css); footer.html: .terminal-tail with data-exit-hint.
-   - settings-dropdown.html: data-terminal-expand/-collapse on
-     .settings-toggle carry the expander labels; effect buttons label
+   - settings-dropdown.html: the .settings-toggle gear is hidden here —
+     settings are edited via the `set` command; effect buttons label
      themselves via data-toast-title/aria-label.
    - summary templates: .summary-card__year spans (hidden in other layouts)
      become the ls-row year column.
@@ -273,11 +273,6 @@
 :root[data-layout="terminal"] .terminal-boot__exit,
 :root[data-layout="terminal"] .footer-newsletter__submit,
 :root[data-layout="terminal"] #main .button,
-:root[data-layout="terminal"] .settings-panel .theme-option,
-:root[data-layout="terminal"] .settings-panel .theme-effect-button,
-:root[data-layout="terminal"] .settings-panel .language-option,
-:root[data-layout="terminal"] .coty-transport__trigger,
-:root[data-layout="terminal"] .coty-player__button,
 :root[data-layout="terminal"] .contact-form__submit {
   background: transparent;
   border: none;
@@ -290,15 +285,6 @@
   font-family: inherit;
   color: var(--text-link, var(--text-default));
   cursor: pointer;
-}
-
-:root[data-layout="terminal"] .settings-panel .theme-option,
-:root[data-layout="terminal"] .settings-panel .theme-effect-button,
-:root[data-layout="terminal"] .coty-transport__trigger,
-:root[data-layout="terminal"] .coty-player__button {
-  width: auto;
-  height: auto;
-  flex: 0 0 auto;
 }
 
 /* Text inputs join the stream: borderless, inheriting the buffer's face. */
@@ -336,10 +322,6 @@
 :root[data-layout="terminal"] .tag:hover,
 :root[data-layout="terminal"] .footer-newsletter__submit:hover,
 :root[data-layout="terminal"] #main .button:hover,
-:root[data-layout="terminal"] .settings-panel .theme-option:hover,
-:root[data-layout="terminal"] .settings-panel .theme-effect-button:hover,
-:root[data-layout="terminal"] .coty-transport__trigger:hover,
-:root[data-layout="terminal"] .coty-player__button:hover,
 :root[data-layout="terminal"] .contact-form__submit:hover {
   background: transparent;
   background-image: none;
@@ -352,11 +334,6 @@
 :root[data-layout="terminal"] .terminal-quick--lang::before,
 :root[data-layout="terminal"] .footer-newsletter__submit::before,
 :root[data-layout="terminal"] #main .button::before,
-:root[data-layout="terminal"] .settings-panel .theme-option.active::before,
-:root[data-layout="terminal"]
-  .settings-panel
-  .language-option--current
-  .language-name::before,
 :root[data-layout="terminal"] .contact-form__submit::before {
   content: "[";
   font-family: var(--font-mono);
@@ -365,11 +342,6 @@
 :root[data-layout="terminal"] .terminal-quick--lang::after,
 :root[data-layout="terminal"] .footer-newsletter__submit::after,
 :root[data-layout="terminal"] #main .button::after,
-:root[data-layout="terminal"] .settings-panel .theme-option.active::after,
-:root[data-layout="terminal"]
-  .settings-panel
-  .language-option--current
-  .language-name::after,
 :root[data-layout="terminal"] .contact-form__submit::after {
   content: "]";
   font-family: var(--font-mono);

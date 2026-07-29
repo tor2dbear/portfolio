@@ -433,25 +433,13 @@
   display: contents;
 }
 
-/* The toggle is the collapsed-output marker: "… +6 lines (click to expand)",
-   dimmed like elided output; the i18n'd labels ride on data attributes. */
+/* Settings in the terminal layout are edited via the `set` command — its
+   clickable value buttons (printed by `set`/at boot) and typed `set <k> <v>`.
+   The statusbar gear opened a second, DOM-panel settings surface (bottom
+   sheet/dropdown machinery that doesn't belong in the buffer), so hide it here
+   rather than duplicate the settings UI. */
 :root[data-layout="terminal"] .settings-toggle {
-  order: 21;
-  color: var(--text-muted, var(--text-default));
-}
-
-:root[data-layout="terminal"] .settings-icon {
   display: none;
-}
-
-/* One pseudo carries the whole label: whitespace nodes left by the hidden
-   icon span would otherwise render as stray gaps. */
-:root[data-layout="terminal"] .settings-toggle::before {
-  content: attr(data-terminal-expand);
-}
-
-:root[data-layout="terminal"] .settings-toggle[aria-expanded="true"]::before {
-  content: attr(data-terminal-collapse);
 }
 
 /* ============================================================================
