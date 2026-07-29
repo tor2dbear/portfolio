@@ -1021,7 +1021,11 @@
           blockBreak("p");
           var ctaText = (el.textContent || "").replace(/\s+/g, " ").trim();
           var ctaHref = el.getAttribute("href") || "";
-          tokens.push({ text: ctaText + (ctaHref ? " — " + ctaHref : "") });
+          // Emit Markdown link syntax so printTerminalProseLine renders it as a
+          // real clickable/keyboard-activatable link, not inert text.
+          tokens.push({
+            text: ctaHref ? "[" + ctaText + "](" + ctaHref + ")" : ctaText,
+          });
           continue;
         }
         if (tag === "figure" || tag === "img") {
