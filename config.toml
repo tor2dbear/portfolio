@@ -122,6 +122,15 @@ DefaultContentLanguage = "en"
       weight = 6
       identifier = "contact"
       url = "/sv/kontakt"
+    # Swedish smart quotes: both marks are the right double/single quote (”…”,
+    # ’…’), so a quotation opens and closes with the same glyph — unlike the
+    # English directional pair set at the root [markup...] above.
+    [languages.sv.markup.goldmark.extensions.typographer]
+      disable = false
+      leftDoubleQuote = "&rdquo;"
+      rightDoubleQuote = "&rdquo;"
+      leftSingleQuote = "&rsquo;"
+      rightSingleQuote = "&rsquo;"
 
 [permalinks]
   works = '/:slug/:title/'
@@ -162,7 +171,15 @@ DefaultContentLanguage = "en"
       strikethrough = true
       table = true
       taskList = true
-      typographer = true
+      # Smart-quote substitutions. These are the English defaults ("..." with
+      # directional marks); Swedish overrides the quote keys below so both marks
+      # face the same way ("..."). See [languages.sv.markup...].
+      [markup.goldmark.extensions.typographer]
+        disable = false
+        leftDoubleQuote = "&ldquo;"
+        rightDoubleQuote = "&rdquo;"
+        leftSingleQuote = "&lsquo;"
+        rightSingleQuote = "&rsquo;"
     [markup.goldmark.parser]
       autoHeadingID = false
       autoHeadingIDType = 'github'
