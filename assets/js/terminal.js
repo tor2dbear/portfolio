@@ -1033,10 +1033,11 @@
           if (tag === "img" && el.closest("figure")) {
             continue;
           }
-          // A video figure has no <img> to open — emit it as a Markdown link to
-          // the clip (▶ + its aria-label description) so it's clickable in the
-          // cat view, instead of a dead [image] token or inert text. (No square
-          // brackets in the label: they'd break the [label](url) link parse.)
+          // A video figure has no <img> to open, and the cat view is text —
+          // there's no way to play a clip here (a same-origin link would just be
+          // dispatched to `cat the-file`, which 404s). Emit a labelled ▶ line
+          // (its aria-label / caption carries the described sequence) so it
+          // reads as intentional media, not a dead [image] token.
           if (tag === "figure" && el.querySelector("video")) {
             blockBreak("figure");
             var vid = el.querySelector("video");
@@ -1045,23 +1046,7 @@
               var vFcap = el.querySelector("figcaption");
               vLabel = vFcap ? vFcap.textContent.trim() : "";
             }
-            var vSource = vid.querySelector("source");
-            var vRaw =
-              (vSource && vSource.getAttribute("src")) ||
-              vid.getAttribute("src") ||
-              "";
-            var vSrc = "";
-            if (vRaw) {
-              try {
-                vSrc = new URL(vRaw, baseUrl).href;
-              } catch (e) {
-                vSrc = vRaw;
-              }
-            }
-            var vText = "▶ " + (vLabel || "clip");
-            tokens.push({
-              text: vSrc ? "[" + vText + "](" + vSrc + ")" : vText,
-            });
+            tokens.push({ text: "▶ " + (vLabel || "clip") });
             continue;
           }
           blockBreak("figure");

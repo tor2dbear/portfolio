@@ -33,9 +33,7 @@ I wanted to see how far "a computer in a tab" goes if you refuse to cheat — no
 
 That means two worlds collide. The terminal is keyboard, text and 1970s convention; the web is touch, share links, email sign-in and home-screen apps. **The whole project is one rule — _terminal idiom first_ — pushed all the way into the architecture.** It's the clearest argument I can make for how I build products: pick one principle and let structure, not willpower, hold things together as they grow.
 
-![PIA running end to end: identity, a real filesystem, the nano editor, real Python via `brew install`, and a package or two — one continuous session.](02-tour.mp4 "PIA running: identity, filesystem, the nano editor, Python, and packages — one continuous session.")
-
-_A looping, self-running tour — the built-in `demo` command replays a scripted session (deterministic, identical every take — not a screen recording)._
+![A looping, self-running tour — PIA's built-in demo command runs identity, a filesystem, the nano editor, Python and packages; deterministic, not a screen recording.](02-tour.mp4 "A looping, self-running tour — PIA's built-in demo command runs identity, a filesystem, the nano editor, Python and packages; deterministic, not a screen recording.")
 
 ### The design principle: terminal idiom first
 
@@ -64,8 +62,6 @@ available commands (excerpt — 59 in all):
 type `help <command>` for usage.
 ```
 
-_The register in full: 59 commands, each a real Unix name with flags — friendly aliases stay secondary._
-
 The hard part is what to do when there's no terminal equivalent. Email and confirmation mails are pure web; `share` returning a URL has no shell counterpart; touch buttons likewise. Instead of dressing them up as something they aren't, the rule is blunt:
 
 > Flag the deviation and make it a deliberate, documented decision — not a slip.
@@ -82,9 +78,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 **Themes are five tokens, not a re-skin.** Four CRT palettes (green phosphor, amber, ice, mono) each set only five colour tokens; the rest follows. In the clip below, `theme amber` and `theme ice` recolour the whole screen at once — nothing is restyled per theme, the tokens simply cascade. The typeface is self-hosted JetBrains Mono, shared with this portfolio.
 
-![A terminal session — pipes, then theme amber and theme ice recolour everything from five colour tokens.](10-terminal-tour.mp4 "A terminal session — pipes, then theme switches recolour everything from five tokens.")
-
-_A looping recreation of the saved `tour` session — real commands and output, animated (not a screen recording)._
+![A looping recreation of the saved tour — pipes, then theme amber and theme ice recolour the whole screen from five tokens; not a screen recording.](10-terminal-tour.mp4 "A looping recreation of the saved tour — pipes, then theme amber and theme ice recolour the whole screen from five tokens; not a screen recording.")
 
 **The editor is really `nano`.** Full-screen apps inherit the theme for free and keep the idiom: `^O` saves, `^X` exits, line and column in the status bar.
 

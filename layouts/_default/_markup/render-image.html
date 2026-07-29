@@ -69,6 +69,7 @@
         Your browser does not support the video tag.
       </video>
     </div>
+    {{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}
   </figure>
   {{/* So for posts that aren't setup in the page bundles, it doesn't fail */}}
 {{ else }}

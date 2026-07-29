@@ -33,9 +33,7 @@ Jag ville se hur långt "en dator i en flik" går om man vägrar att fuska — i
 
 Det gör att två världar krockar. Terminalen är tangentbord, text och 1970-talskonvention; webben är touch, delningslänkar, e-postinlogg och hemskärms-appar. **Hela projektet är en enda regel — _terminal-idiom först_ — tryckt hela vägen in i arkitekturen.** Det är det tydligaste argument jag kan ge för hur jag bygger produkter: välj en princip och låt strukturen, inte viljestyrkan, hålla ihop det hela när det växer.
 
-![PIA från början till slut: identitet, ett riktigt filsystem, nano-editorn, riktig Python via `brew install`, och ett par paket — en enda sammanhängande session.](02-tour.mp4 "PIA i drift: identitet, filsystem, nano-editorn, Python och paket — en enda sammanhängande session.")
-
-_En loopande, självspelande rundtur — det inbyggda `demo`-kommandot spelar upp en scriptad session (deterministisk, identisk varje tagning — inte en skärminspelning)._
+![En loopande, självspelande rundtur — PIA:s inbyggda demo-kommando kör identitet, filsystem, nano-editorn, Python och paket; deterministisk, inte en skärminspelning.](02-tour.mp4 "En loopande, självspelande rundtur — PIA:s inbyggda demo-kommando kör identitet, filsystem, nano-editorn, Python och paket; deterministisk, inte en skärminspelning.")
 
 ### Designprincipen: terminal-idiom först
 
@@ -64,8 +62,6 @@ available commands (excerpt — 59 in all):
 type `help <command>` for usage.
 ```
 
-_Hela registret: 59 kommandon, var och en ett riktigt Unix-namn med flaggor — vänliga alias förblir sekundära._
-
 Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-post och bekräftelsemejl är ren webb; `share` som returnerar en URL har ingen skal-motsvarighet; touch-knappar likaså. I stället för att klä upp dem till något de inte är är regeln rak:
 
 > Flagga avvikelsen och gör den till ett medvetet, dokumenterat beslut — inte en glidning.
@@ -82,9 +78,7 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 
 **Teman är fem tokens, inte ett omskal.** Fyra CRT-paletter (grön fosfor, bärnsten, is, mono) sätter var och en bara fem färg-tokens; resten följer med. I klippet nedan färgar `theme amber` och `theme ice` om hela skärmen på en gång — inget stylas om per tema, tokens kaskaderar bara. Typsnittet är självhostat JetBrains Mono, delat med den här portfolion.
 
-![En terminalsession — pipes, sedan färgar theme amber och theme ice om allt från fem färg-tokens.](10-terminal-tour.mp4 "En terminalsession — pipes, sedan färgar tema-byten om allt från fem tokens.")
-
-_En loopande återgivning av den sparade `tour`-sessionen — äkta kommandon och utdata, animerat (inte en skärminspelning)._
+![En loopande återgivning av den sparade tour-sessionen — pipes, sedan färgar theme amber och theme ice om allt från fem tokens; inte en skärminspelning.](10-terminal-tour.mp4 "En loopande återgivning av den sparade tour-sessionen — pipes, sedan färgar theme amber och theme ice om allt från fem tokens; inte en skärminspelning.")
 
 **Editorn är `nano` på riktigt.** Fullskärmsappar ärver temat gratis och håller idiomet: `^O` sparar, `^X` avslutar, rad och kolumn i statusraden.
 
