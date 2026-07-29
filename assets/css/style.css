@@ -1170,3 +1170,44 @@ p:empty {
 .grecaptcha-badge {
   visibility: hidden;
 }
+
+/* -- Terminal art (ASCII diagrams via the terminal-art shortcode) -----------
+   A text-based alternative to a diagram image: real, selectable, screen-reader
+   readable text, styled as the dark "terminal" surface so it matches the
+   case-study screenshots and video. Deliberately theme-independent (always
+   green-on-near-black), like an embedded terminal. Fixed-width ASCII scrolls
+   horizontally on very narrow screens rather than wrapping (which would break
+   the alignment). */
+.terminal-art {
+  margin: 0 0 var(--layout-block-gap);
+}
+
+.terminal-art__scroll {
+  overflow-x: auto;
+  background: #0b0f0a;
+  border-radius: var(--spacing-12);
+  padding: var(--spacing-24) var(--spacing-20);
+  -webkit-overflow-scrolling: touch;
+}
+
+.terminal-art__pre {
+  margin: 0;
+  width: max-content;
+  min-width: 100%;
+  font-family: var(--font-mono);
+  /* Scales down on small screens so the ~50-column diagram fits before it has
+     to scroll; caps at a comfortable reading size on desktop. */
+  font-size: clamp(10px, 2.5vw, 15px);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: #8fdfa3;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.terminal-art__caption {
+  margin-top: var(--spacing-8);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  color: var(--text-muted);
+}

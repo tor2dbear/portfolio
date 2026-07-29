@@ -1,0 +1,22 @@
+{{- /*
+  terminal-art: render preformatted ASCII (e.g. a diagram drawn with box
+  characters) as a terminal-styled, selectable, screen-reader-readable block —
+  a text-based alternative to a diagram image. Always the dark "terminal"
+  surface (like the case-study screenshots), independent of the page theme.
+  Usage:
+  {{< terminal-art caption="…"
+>}}
+…ascii…
+{{< /terminal-art >}}
+*/ -}}
+{{- $caption := .Get "caption" -}}
+<figure class="reveal terminal-art">
+  <div class="terminal-art__scroll">
+    <pre class="terminal-art__pre" role="img" aria-label="{{ $caption }}">
+{{ .Inner | strings.TrimSpace }}</pre
+    >
+  </div>
+  {{- with $caption }}
+    <figcaption class="terminal-art__caption">{{ . }}</figcaption>
+  {{- end }}
+</figure>
