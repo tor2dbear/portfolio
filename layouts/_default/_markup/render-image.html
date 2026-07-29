@@ -62,6 +62,7 @@
         loop
         playsinline
         preload="metadata"
+        {{ with $alt }}aria-label="{{ . }}"{{ end }}
         {{ with $poster }}poster="{{ .RelPermalink }}"{{ end }}
       >
         <source src="{{ $src.RelPermalink }}" type="video/mp4" />

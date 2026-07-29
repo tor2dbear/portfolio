@@ -1007,7 +1007,7 @@
         prevBlock = kind;
       };
       var nodes = root.querySelectorAll(
-        "h1, h2, h3, h4, p, blockquote, li, figure, img"
+        "h1, h2, h3, h4, p, blockquote, li, figure, img, .works-post__cta a"
       );
       for (var i = 0; i < nodes.length; i++) {
         var el = nodes[i];
@@ -1015,9 +1015,32 @@
           continue;
         }
         var tag = el.tagName.toLowerCase();
+        // The works masthead's live CTA (a bare anchor) — carry it as a
+        // labelled link line so the terminal `cat` view keeps the demo link.
+        if (tag === "a") {
+          blockBreak("p");
+          var ctaText = (el.textContent || "").replace(/\s+/g, " ").trim();
+          var ctaHref = el.getAttribute("href") || "";
+          tokens.push({ text: ctaText + (ctaHref ? " — " + ctaHref : "") });
+          continue;
+        }
         if (tag === "figure" || tag === "img") {
           // A bare img inside a figure is already counted by the figure.
           if (tag === "img" && el.closest("figure")) {
+            continue;
+          }
+          // A video figure has no <img> to open — emit a labelled [video]
+          // placeholder (its aria-label carries the described sequence) instead
+          // of a dead [image] token with an empty source.
+          if (tag === "figure" && el.querySelector("video")) {
+            blockBreak("figure");
+            var vid = el.querySelector("video");
+            var vLabel = vid.getAttribute("aria-label") || "";
+            if (!vLabel) {
+              var vFcap = el.querySelector("figcaption");
+              vLabel = vFcap ? vFcap.textContent.trim() : "";
+            }
+            tokens.push({ text: "[video] " + (vLabel || "clip") });
             continue;
           }
           blockBreak("figure");
