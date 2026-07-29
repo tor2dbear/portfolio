@@ -1201,8 +1201,11 @@ p:empty {
   /* cqi = 1% of the container's width. The ~50-column diagram fits the column
      down to small phones; it only scrolls on the very narrowest widths. */
   font-size: clamp(9px, 2.35cqi, 14px);
-  line-height: 1.5;
-  letter-spacing: 0.02em;
+  /* Box-drawing characters must sit flush to join into continuous lines:
+     letter-spacing pushes ─── apart (gaps at the corners) and a loose
+     line-height leaves gaps between the vertical │ from row to row. */
+  line-height: 1.1;
+  letter-spacing: normal;
   color: #8fdfa3;
   white-space: pre;
 }
