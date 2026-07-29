@@ -570,20 +570,20 @@
   counter-reset: terminal-image;
 }
 
-:root[data-layout="terminal"] .content figure:not(.terminal-art) {
+:root[data-layout="terminal"] .content figure {
   counter-increment: terminal-image;
   display: inline-block;
   width: auto;
   margin: 0;
 }
 
-:root[data-layout="terminal"] .content figure:not(.terminal-art) picture,
-:root[data-layout="terminal"] .content figure:not(.terminal-art) .video-wrapper,
-:root[data-layout="terminal"] .content figure:not(.terminal-art) figcaption {
+:root[data-layout="terminal"] .content figure picture,
+:root[data-layout="terminal"] .content figure .video-wrapper,
+:root[data-layout="terminal"] .content figure figcaption {
   display: none;
 }
 
-:root[data-layout="terminal"] .content figure:not(.terminal-art)::before {
+:root[data-layout="terminal"] .content figure::before {
   content: var(--terminal-image-label, "[image ") counter(terminal-image) "]";
   font-family: var(--font-mono);
   font-size: var(--terminal-font-size);

@@ -468,12 +468,12 @@ footer > * {
 :root[data-layout="index"]
   .content.post.works-post
   > .post-content.place-prose
-  > figure:not(.terminal-art),
+  > figure,
 :root[data-layout="index"]
   .content.post.works-post
   > .post-content.place-prose
   .gallery
-  > figure:not(.terminal-art) {
+  > figure {
   grid-column: auto / span 1;
   margin: 0;
 }
@@ -1169,51 +1169,4 @@ p:empty {
 /* reCAPTCHA */
 .grecaptcha-badge {
   visibility: hidden;
-}
-
-/* -- Terminal art (ASCII diagrams via the terminal-art shortcode) -----------
-   A text-based alternative to a diagram image: real, selectable, screen-reader
-   readable text, styled as the dark "terminal" surface so it matches the
-   case-study screenshots and video. Deliberately theme-independent (always
-   green-on-near-black), like an embedded terminal. Fixed-width ASCII scrolls
-   horizontally on very narrow screens rather than wrapping (which would break
-   the alignment). */
-.terminal-art {
-  margin: 0 0 var(--layout-block-gap);
-}
-
-.terminal-art__scroll {
-  overflow-x: auto;
-  background: #0b0f0a;
-  padding: var(--spacing-16) var(--spacing-16) var(--spacing-12);
-  -webkit-overflow-scrolling: touch;
-  /* Size the diagram to THIS block's width, not the viewport — the block sits
-     in a prose column that is narrower than the screen, so a vw-based size
-     overflowed it. */
-  container-type: inline-size;
-}
-
-.terminal-art__pre {
-  margin: 0;
-  width: max-content;
-  min-width: 100%;
-  font-family: var(--font-mono);
-  /* cqi = 1% of the container's width. The ~50-column diagram fits the column
-     down to small phones; it only scrolls on the very narrowest widths. */
-  font-size: clamp(9px, 2.35cqi, 14px);
-  /* Box-drawing characters must sit flush to join into continuous lines:
-     letter-spacing pushes ─── apart (gaps at the corners) and any line-height
-     above 1 leaves gaps between the vertical │ from row to row — iOS Safari is
-     strict about this, so the rows must abut exactly (line-height: 1). */
-  line-height: 1;
-  letter-spacing: normal;
-  color: #8fdfa3;
-  white-space: pre;
-}
-
-.terminal-art__caption {
-  margin-top: var(--spacing-8);
-  font-size: var(--text-sm);
-  font-family: var(--font-body);
-  color: var(--text-muted);
 }

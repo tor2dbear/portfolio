@@ -53,30 +53,7 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 
 **Så en stor ändring blir ett byte, inte en omskrivning.** Gäster kör lokala adaptrar; inloggade kör moln-adaptrar (Supabase) bakom samma gränssnitt. Fullskärmsappar — editorn, spelen — tar över via samma mekanism, så nya verktyg kostar nästan ingenting. Struktur är det som gör att produkten kan växa utan att förfalla.
 
-{{< terminal-art caption="Adaptersömmen — terminalen ser bara gränssnitt; gäst kör lokalt, inloggad kör moln (Supabase), bakom samma kontrakt." >}}
-┌────────────────────────────────────────────────┐
-│ Terminal · kommandon, pipes │
-└────────────────────────┬───────────────────────┘
-│ rör aldrig lagring, auth
-│ eller DOM:en direkt
-┌────────────────────────▼───────────────────────┐
-│ CommandContext │
-│ print · filsystem · auth · stdin … │
-└────────────────────────┬───────────────────────┘
-│ sömmen — ser bara
-│ gränssnitt
-┌────────────────────────▼───────────────────────┐
-│ StorageAdapter · AuthAdapter · ShareStore │
-└────────────┬────────────────────────┬──────────┘
-│ │
-┌───────────▼──────────┐ ┌───────────▼──────────┐
-│ Lokal körning │ │ Moln │
-│ webbläsare · gäst │ │ Supabase · inloggad │
-└──────────────────────┘ └──────────────────────┘
-
-ett gränssnitt, två implementationer —
-en stor ändring är ett byte, inte en omskrivning.
-{{< /terminal-art >}}
+![Adaptersömmen — terminalen ser bara gränssnitt; gäst kör lokalt, inloggad kör moln (Supabase), bakom samma kontrakt.](09-architecture.svg "Adaptersömmen — terminalen ser bara gränssnitt; gäst kör lokalt, inloggad kör moln (Supabase), bakom samma kontrakt.")
 
 ### Utvalda designbeslut
 

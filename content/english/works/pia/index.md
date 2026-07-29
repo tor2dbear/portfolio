@@ -53,30 +53,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 **So a big change is a swap, not a rewrite.** Guests run local adapters; signed-in users run cloud adapters (Supabase) behind the same interface. Full-screen apps — the editor, the games — take over through the same mechanism, so new tools cost almost nothing. Structure is what lets a product grow without decaying.
 
-{{< terminal-art caption="The adapter seam — the terminal only ever sees interfaces; guest runs local, signed-in runs cloud (Supabase), behind the same contract." >}}
-┌────────────────────────────────────────────────┐
-│ Terminal · commands, pipes │
-└────────────────────────┬───────────────────────┘
-│ never touches storage, auth
-│ or the DOM directly
-┌────────────────────────▼───────────────────────┐
-│ CommandContext │
-│ print · filesystem · auth · stdin … │
-└────────────────────────┬───────────────────────┘
-│ the seam — only ever
-│ sees interfaces
-┌────────────────────────▼───────────────────────┐
-│ StorageAdapter · AuthAdapter · ShareStore │
-└────────────┬────────────────────────┬──────────┘
-│ │
-┌───────────▼──────────┐ ┌───────────▼──────────┐
-│ Local runtime │ │ Cloud │
-│ browser · guest │ │ Supabase · signed in │
-└──────────────────────┘ └──────────────────────┘
-
-one interface, two implementations —
-a big change is a swap, not a rewrite.
-{{< /terminal-art >}}
+![The adapter seam — the terminal only ever sees interfaces; guest runs local, signed-in runs cloud (Supabase), behind the same contract.](09-architecture.svg "The adapter seam — the terminal only ever sees interfaces; guest runs local, signed-in runs cloud (Supabase), behind the same contract.")
 
 ### Selected design decisions
 
