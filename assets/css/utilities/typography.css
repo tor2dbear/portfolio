@@ -400,7 +400,12 @@ code {
 }
 
 .prose :not(pre) > code {
-  background-color: var(--surface-subtle);
+  /* Match the code block (.highlight pre): a --gray-2 fill plus a
+     --border-subtle hairline. --surface-subtle alone is invisible in light
+     mode, where it mixes down to the white page colour; the fill+border reads
+     in both modes and keeps inline and block code consistent. */
+  background-color: var(--gray-2);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-2);
   padding-inline: 0.3em;
   padding-block: 0.1em;
