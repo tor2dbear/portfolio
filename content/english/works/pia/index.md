@@ -41,7 +41,30 @@ _A looping, self-running tour — the built-in `demo` command replays a scripted
 
 Every command follows Unix convention — **name, flags and behaviour.** The real name (`nano`, `useradd`, `grep -n`) wins over a friendly web invention (`edit`, `register`, a GUI shortcut); friendly names survive only as _aliases_. Know one command and you can guess the next: the editor is `nano` (`^O` saves, `^X` exits), the prompt is `user@pia:~$`, settings live in a `.pia/` dotfile.
 
-![A broad command register that follows Unix convention — real names and flags, friendly aliases secondary.](06-command-register.png "A broad command register that follows Unix convention — real names and flags, friendly aliases secondary.")
+```text
+available commands (excerpt — 59 in all):
+
+  ls         list the contents of a directory
+  cd         change the current directory
+  mv         move or rename a file or directory
+  rm         remove files or directories (-r for directories)
+  grep       print lines matching a pattern (from files or piped input)
+  sort       sort lines of text
+  uniq       collapse adjacent duplicate lines (needs sorted input)
+  wc         count lines, words, and characters
+  nano       edit text files in a full-screen editor
+  brew       install optional command packages (brew install <name>)
+  share      share a file or folder, or `share <file> <email>` to co-edit
+  publish    publish a folder as a shareable link
+  remind     schedule a push reminder (-l list, -r <n> cancel)
+  crontab    recurring scheduled jobs (-e edit, -l list, -r remove)
+  useradd    create an account and log in
+  theme      switch colour theme (theme <name>, or list them)
+
+type `help <command>` for usage.
+```
+
+_The register in full: 59 commands, each a real Unix name with flags — friendly aliases stay secondary._
 
 The hard part is what to do when there's no terminal equivalent. Email and confirmation mails are pure web; `share` returning a URL has no shell counterpart; touch buttons likewise. Instead of dressing them up as something they aren't, the rule is blunt:
 

@@ -41,7 +41,30 @@ _En loopande, självspelande rundtur — det inbyggda `demo`-kommandot spelar up
 
 Varje kommando följer Unix-konvention — **namn, flaggor och beteende.** Det riktiga namnet (`nano`, `useradd`, `grep -n`) vinner över en vänlig webb-uppfinning (`edit`, `register`, en GUI-genväg); vänliga namn överlever bara som _alias_. Kan man ett kommando kan man gissa nästa: editorn är `nano` (`^O` sparar, `^X` avslutar), prompten är `user@pia:~$`, inställningar bor i en `.pia/`-dotfil.
 
-![Ett brett kommandoregister som följer Unix-konvention — riktiga namn och flaggor, vänliga alias sekundära.](06-command-register.png "Ett brett kommandoregister som följer Unix-konvention — riktiga namn och flaggor, vänliga alias sekundära.")
+```text
+available commands (excerpt — 59 in all):
+
+  ls         list the contents of a directory
+  cd         change the current directory
+  mv         move or rename a file or directory
+  rm         remove files or directories (-r for directories)
+  grep       print lines matching a pattern (from files or piped input)
+  sort       sort lines of text
+  uniq       collapse adjacent duplicate lines (needs sorted input)
+  wc         count lines, words, and characters
+  nano       edit text files in a full-screen editor
+  brew       install optional command packages (brew install <name>)
+  share      share a file or folder, or `share <file> <email>` to co-edit
+  publish    publish a folder as a shareable link
+  remind     schedule a push reminder (-l list, -r <n> cancel)
+  crontab    recurring scheduled jobs (-e edit, -l list, -r remove)
+  useradd    create an account and log in
+  theme      switch colour theme (theme <name>, or list them)
+
+type `help <command>` for usage.
+```
+
+_Hela registret: 59 kommandon, var och en ett riktigt Unix-namn med flaggor — vänliga alias förblir sekundära._
 
 Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-post och bekräftelsemejl är ren webb; `share` som returnerar en URL har ingen skal-motsvarighet; touch-knappar likaså. I stället för att klä upp dem till något de inte är är regeln rak:
 
