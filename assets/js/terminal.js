@@ -1033,9 +1033,10 @@
           if (tag === "img" && el.closest("figure")) {
             continue;
           }
-          // A video figure has no <img> to open — emit a labelled [video]
-          // placeholder (its aria-label carries the described sequence) instead
-          // of a dead [image] token with an empty source.
+          // A video figure has no <img> to open — emit it as a Markdown link to
+          // the clip (▶ + its aria-label description) so it's clickable in the
+          // cat view, instead of a dead [image] token or inert text. (No square
+          // brackets in the label: they'd break the [label](url) link parse.)
           if (tag === "figure" && el.querySelector("video")) {
             blockBreak("figure");
             var vid = el.querySelector("video");
@@ -1044,7 +1045,23 @@
               var vFcap = el.querySelector("figcaption");
               vLabel = vFcap ? vFcap.textContent.trim() : "";
             }
-            tokens.push({ text: "[video] " + (vLabel || "clip") });
+            var vSource = vid.querySelector("source");
+            var vRaw =
+              (vSource && vSource.getAttribute("src")) ||
+              vid.getAttribute("src") ||
+              "";
+            var vSrc = "";
+            if (vRaw) {
+              try {
+                vSrc = new URL(vRaw, baseUrl).href;
+              } catch (e) {
+                vSrc = vRaw;
+              }
+            }
+            var vText = "▶ " + (vLabel || "clip");
+            tokens.push({
+              text: vSrc ? "[" + vText + "](" + vSrc + ")" : vText,
+            });
             continue;
           }
           blockBreak("figure");
