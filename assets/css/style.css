@@ -1202,9 +1202,10 @@ p:empty {
      down to small phones; it only scrolls on the very narrowest widths. */
   font-size: clamp(9px, 2.35cqi, 14px);
   /* Box-drawing characters must sit flush to join into continuous lines:
-     letter-spacing pushes ─── apart (gaps at the corners) and a loose
-     line-height leaves gaps between the vertical │ from row to row. */
-  line-height: 1.1;
+     letter-spacing pushes ─── apart (gaps at the corners) and any line-height
+     above 1 leaves gaps between the vertical │ from row to row — iOS Safari is
+     strict about this, so the rows must abut exactly (line-height: 1). */
+  line-height: 1;
   letter-spacing: normal;
   color: #8fdfa3;
   white-space: pre;
