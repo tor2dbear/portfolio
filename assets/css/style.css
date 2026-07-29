@@ -468,12 +468,12 @@ footer > * {
 :root[data-layout="index"]
   .content.post.works-post
   > .post-content.place-prose
-  > figure,
+  > figure:not(.terminal-art),
 :root[data-layout="index"]
   .content.post.works-post
   > .post-content.place-prose
   .gallery
-  > figure {
+  > figure:not(.terminal-art) {
   grid-column: auto / span 1;
   margin: 0;
 }
@@ -1186,7 +1186,7 @@ p:empty {
   overflow-x: auto;
   background: #0b0f0a;
   border-radius: var(--spacing-12);
-  padding: var(--spacing-24) var(--spacing-20);
+  padding: var(--spacing-24) var(--spacing-16);
   -webkit-overflow-scrolling: touch;
 }
 
