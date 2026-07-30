@@ -4,7 +4,7 @@ date: 2026-07-15
 linktitle: PIA
 title: "PIA — a little computer in the browser"
 slug: works
-weight: 16
+weight: 1
 tags: ["Digital Product"]
 clients: []
 employers: []
