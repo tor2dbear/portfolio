@@ -778,8 +778,28 @@
     // theme-section-title headings), so `ls settings` names things the panel
     // really has: "mode" (not "theme"), no standalone "palette" (pantone lives
     // under effects), and "share".
+    // A works page can hard-lock its colour mode (data-work-mode, set
+    // server-side). Returns the locked value ("dark"/"light") or "" — the
+    // terminal drops `mode` from `set` and rejects mode commands when set.
+    function terminalModeLocked() {
+      return document.documentElement.getAttribute("data-work-mode") || "";
+    }
+
     function terminalSettingsEntries() {
-      return ["mode", "layout", "typography", "effects", "share", "language"];
+      var entries = [
+        "mode",
+        "layout",
+        "typography",
+        "effects",
+        "share",
+        "language",
+      ];
+      if (terminalModeLocked()) {
+        entries = entries.filter(function (e) {
+          return e !== "mode";
+        });
+      }
+      return entries;
     }
 
     // The settable keys, their options, and the current value — the model both
@@ -792,12 +812,19 @@
         return root.getAttribute(attr) === "on";
       };
       var gridAttr = root.getAttribute("data-grid-overlay");
-      return [
-        {
-          key: "mode",
-          options: ["light", "dark", "system"],
-          current: localStorage.getItem("theme-mode") || "system",
-        },
+      // On a mode-locked page the mode row is dropped from `set` — it can't be
+      // changed here (see the dark/light/system guard), so listing it as an
+      // editable chip would misrepresent the locked state.
+      var modeRow = terminalModeLocked()
+        ? []
+        : [
+            {
+              key: "mode",
+              options: ["light", "dark", "system"],
+              current: localStorage.getItem("theme-mode") || "system",
+            },
+          ];
+      return modeRow.concat([
         {
           key: "layout",
           options: TERMINAL_LAYOUTS,
@@ -837,7 +864,7 @@
           options: ["on", "off"],
           current: effOn("data-effect-reduced-motion") ? "off" : "on",
         },
-      ];
+      ]);
     }
 
     // Typography values `set typography <value>` accepts (mirrors the menu).
@@ -1725,12 +1752,24 @@
           return { echo: "", lines: [], action: { type: "clear" } };
         case "dark":
         case "light":
-        case "system":
+        case "system": {
+          // Reject on a mode-locked page (data-work-mode): the toggle is hidden
+          // and the change would silently no-op, so report the lock instead of a
+          // false "mode → …". Covers `set mode …` too — it delegates here.
+          var lockedMode = terminalModeLocked();
+          if (lockedMode) {
+            return {
+              echo: input,
+              lines: ["mode: locked to " + lockedMode + " on this page"],
+              action: null,
+            };
+          }
           return {
             echo: input,
             lines: ["mode → " + cmd],
             action: { type: "mode", mode: cmd },
           };
+        }
         case "pantone": {
           var sub = (args[0] || "").toLowerCase();
           if (sub === "off" || sub === "stop") {

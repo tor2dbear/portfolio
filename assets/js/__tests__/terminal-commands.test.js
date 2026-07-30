@@ -94,6 +94,7 @@ describe("terminal command line", () => {
       "data-terminal-replaying",
       "data-terminal-exempt",
       "data-terminal-booted",
+      "data-work-mode",
       "lang",
     ].forEach((attr) => document.documentElement.removeAttribute(attr));
     // A test may pushState to a deeper path; reset so location-derived logic
@@ -254,6 +255,26 @@ describe("terminal command line", () => {
     expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
     typeCommand("set typography technical");
     expect(localStorage.getItem("theme-typography")).toBe("technical");
+  });
+
+  test("a mode-locked page (data-work-mode) rejects mode commands and drops mode from set", () => {
+    document.documentElement.setAttribute("data-work-mode", "dark");
+    document.documentElement.setAttribute("data-mode", "dark");
+    loadModule();
+    typeCommand("light");
+    // The lock holds — no flip — and the terminal says so instead of "mode → …".
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+    expect(sessionText()).toContain("locked");
+    expect(sessionText()).not.toContain("mode → light");
+    // `set mode …` delegates to the same guard.
+    typeCommand("set mode light");
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+    // localStorage is never touched by the rejected change.
+    expect(localStorage.getItem("theme-mode")).toBe(null);
+    // `set` no longer lists mode as an editable axis.
+    typeCommand("set");
+    expect(sessionText()).toContain("layout");
+    expect(sessionText()).not.toMatch(/\bmode\b\s+·/);
   });
 
   test("set with no args previews the main axes and folds the rest under a pager", () => {

@@ -664,7 +664,14 @@
             var i = pair.indexOf(":");
             if (i > 0) { kv[pair.slice(0, i).trim()] = pair.slice(i + 1).trim(); }
           });
+          // On a mode-locked works page (data-work-mode), don't let a shared
+          // ?theme=…mode:… payload write theme-mode: the page shows its locked
+          // mode regardless, but persisting the payload would silently change
+          // the visitor's global preference — breaking the promise that their
+          // stored mode resumes unchanged after they leave.
+          var sharedModeLocked = document.documentElement.getAttribute("data-work-mode");
           Object.keys(map).forEach(function (k) {
+            if (k === "mode" && sharedModeLocked) { return; }
             if (kv[k] && allow[k].indexOf(kv[k]) > -1) {
               localStorage.setItem(map[k], kv[k]);
             }
