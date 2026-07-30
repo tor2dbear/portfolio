@@ -31,13 +31,12 @@ mkdirSync(videoDir, { recursive: true });
 
 console.log("Recording `demo` from", URL, "…");
 const browser = await launch();
-const { ctx, page } = await openScreen(browser, {
+const { ctx, page, videoT0: t0 } = await openScreen(browser, {
   width: VW,
   height: VH,
   font: FONT,
   record: videoDir,
 });
-const t0 = Date.now(); // ≈ video t=0 (recording started at context/newPage)
 await page.keyboard.type("demo", { delay: 30 });
 await page.keyboard.press("Enter");
 

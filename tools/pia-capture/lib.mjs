@@ -52,6 +52,12 @@ export async function openScreen(
       : {}),
   });
   const page = await ctx.newPage();
+  // Playwright starts recording when the page is created, so THIS is the video's
+  // zero point — capture it here and return it. Marker timestamps must be
+  // measured against this, not against a clock read after the ~1.75s of setup
+  // below (which would shift them off the video timeline, especially on a slow
+  // remote load, and push frames out of the seam/poster search windows).
+  const videoT0 = Date.now();
   // "load", not "networkidle": the live app holds a Supabase websocket open, so
   // the network never goes idle. #screen + the settle wait below gate readiness.
   await page.goto(URL, { waitUntil: "load" });
@@ -66,7 +72,7 @@ export async function openScreen(
   await page.waitForTimeout(1600);
   await page.click("#screen");
   await page.waitForTimeout(150);
-  return { ctx, page };
+  return { ctx, page, videoT0 };
 }
 
 // Type a command line and press Enter.
