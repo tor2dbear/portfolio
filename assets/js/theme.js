@@ -172,6 +172,20 @@
     });
   }
 
+  // Restore the stored colour mode to the default (system). The terminal
+  // `reset` command needs this: setMode is a no-op on a work-mode-locked page,
+  // so a plain setMode("system") would leave the visitor's old preference in
+  // place despite reset's "restored to defaults" message. This clears the
+  // preference and re-applies — applyMode keeps a locked page on its forced
+  // mode, so the display doesn't flip, but the global default is genuinely
+  // restored (and takes effect once the visitor leaves the locked page).
+  function resetMode() {
+    localStorage.setItem("theme-mode", "system");
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
+    applyMode("system");
+    updateModeUI("system");
+  }
+
   // ==========================================================================
   // PALETTE MANAGEMENT (standard/pantone)
   // ==========================================================================
@@ -1067,6 +1081,7 @@
   window.Theme = {
     // Setters
     setMode: setMode,
+    resetMode: resetMode,
     setTypography: setTypography,
     setLayout: setLayout,
     restoreLayoutAfterTerminal: restoreLayoutAfterTerminal,

@@ -277,6 +277,18 @@ describe("terminal command line", () => {
     expect(sessionText()).not.toMatch(/\bmode\b\s+·/);
   });
 
+  test("reset restores the stored mode default even on a mode-locked page", () => {
+    document.documentElement.setAttribute("data-work-mode", "dark");
+    document.documentElement.setAttribute("data-mode", "dark");
+    localStorage.setItem("theme-mode", "light");
+    loadModule();
+    typeCommand("reset");
+    // The stored preference is genuinely reset to the default…
+    expect(localStorage.getItem("theme-mode")).toBe("system");
+    // …but the locked page keeps its forced dark display.
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+  });
+
   test("set with no args previews the main axes and folds the rest under a pager", () => {
     loadModule();
     typeCommand("set");
@@ -1484,6 +1496,26 @@ describe("terminal command line", () => {
     expect(iA).toBeGreaterThanOrEqual(0);
     // The two image lines are adjacent — no empty separator line between.
     expect(iB).toBe(iA + 1);
+  });
+
+  test("a fenced code block is serialized into cat output, not dropped", () => {
+    window.history.pushState({}, "", "/works/pia/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      "<p>Before the block.</p>" +
+      '<div class="highlight"><pre><code class="language-diff"> guest@pia:~$ ok\n+added line\n</code></pre></div>' +
+      "<p>After the block.</p>" +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat pia.md");
+    const txt = sessionText();
+    expect(txt).toContain("Before the block.");
+    expect(txt).toContain("+added line"); // the code survived serialization
+    expect(txt).toContain("```diff"); // fenced with its language
+    expect(txt).toContain("After the block.");
   });
 
   test("cat of a post lands the reader at the top and marks the new content", () => {

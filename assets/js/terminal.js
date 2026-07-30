@@ -32,6 +32,7 @@
   // ==========================================================================
   var Theme = window.Theme || {};
   var setMode = Theme.setMode;
+  var resetMode = Theme.resetMode;
   var setTypography = Theme.setTypography;
   var setLayout = Theme.setLayout;
   var restoreLayoutAfterTerminal = Theme.restoreLayoutAfterTerminal;
@@ -1055,7 +1056,7 @@
         prevBlock = kind;
       };
       var nodes = root.querySelectorAll(
-        "h1, h2, h3, h4, p, blockquote, li, figure, img, .works-post__cta a"
+        "h1, h2, h3, h4, p, blockquote, li, figure, img, .highlight, .works-post__cta a"
       );
       for (var i = 0; i < nodes.length; i++) {
         var el = nodes[i];
@@ -1074,6 +1075,35 @@
           tokens.push({
             text: ctaHref ? "[" + ctaText + "](" + ctaHref + ")" : ctaText,
           });
+          continue;
+        }
+        // A fenced code block (chroma wraps it in .highlight > pre > code). Emit
+        // it as a fenced block — the ``` lines + one token per code line — so
+        // the boot transcript and `cat` keep the command excerpt / diff instead
+        // of dropping them and printing only the surrounding prose. textContent
+        // strips the syntax-highlight spans but keeps the raw text, prefixes and
+        // indentation.
+        if (el.classList && el.classList.contains("highlight")) {
+          var codePre = el.querySelector("pre");
+          if (!codePre) {
+            continue;
+          }
+          blockBreak("pre");
+          var codeEl = codePre.querySelector("code");
+          var langMatch = codeEl
+            ? (codeEl.className || "").match(/language-(\S+)/)
+            : null;
+          var codeLang = langMatch
+            ? langMatch[1]
+            : (codeEl && codeEl.getAttribute("data-lang")) || "";
+          tokens.push({ text: "```" + codeLang });
+          (codePre.textContent || "")
+            .replace(/\n+$/, "")
+            .split("\n")
+            .forEach(function (line) {
+              tokens.push({ text: line });
+            });
+          tokens.push({ text: "```" });
           continue;
         }
         if (tag === "figure" || tag === "img") {
@@ -3327,7 +3357,16 @@
           ) {
             stopPantone();
           }
-          setMode("system");
+          // resetMode (not setMode) so a mode-locked page still restores the
+          // stored preference to the default: setMode no-ops under the lock, so
+          // reset would otherwise leave the visitor's old mode in place despite
+          // the "restored to defaults" message. The locked page keeps its
+          // forced display; the default takes effect once they leave.
+          if (resetMode) {
+            resetMode();
+          } else {
+            setMode("system");
+          }
           commitPaletteSelection("standard", { toast: false });
           setTypography("editorial");
           setGrainEnabled(false, { silent: true });

@@ -752,19 +752,25 @@ video {
  * per-project escape hatch. Scoped to the case body — summary cards in listings
  * keep the unified blend.
  */
-.works-post--plain-media > figure picture::before,
-.works-post--plain-media > figure picture::after,
-.works-post--plain-media > figure .video-wrapper::before,
-.works-post--plain-media > figure .video-wrapper::after {
+.works-post--plain-media figure picture::before,
+.works-post--plain-media figure picture::after,
+.works-post--plain-media figure .video-wrapper::before,
+.works-post--plain-media figure .video-wrapper::after {
   display: none;
 }
 
-.works-post--plain-media > figure img,
-.works-post--plain-media > figure video,
-.works-post--plain-media > figure .hero-embed__frame {
-  -webkit-filter: none;
-  -moz-filter: none;
-  filter: none;
+.works-post--plain-media figure img,
+.works-post--plain-media figure video,
+.works-post--plain-media figure .hero-embed__frame {
+  /* Descendant, not `> figure`: the hero is a direct child of .works-post but
+     every body figure is nested under .post-content, so a child combinator
+     opted out only the hero and left the body screenshots grayscale. And
+     !important because the escape hatch must beat every treatment state,
+     including the higher-specificity Pantone tri-tone — plain media is exempt
+     regardless of palette or blend. */
+  -webkit-filter: none !important;
+  -moz-filter: none !important;
+  filter: none !important;
 }
 
 /*
@@ -813,7 +819,7 @@ video {
 }
 
 :root[data-effect-blend="off"] .infographic svg,
-.works-post--plain-media > figure .infographic svg {
+.works-post--plain-media figure .infographic svg {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
