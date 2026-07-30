@@ -115,6 +115,15 @@
   }
 
   function applyMode(mode) {
+    // A works page can hard-lock its mode (data-work-mode, set server-side).
+    // Enforce it at this single choke point so every caller keeps the lock —
+    // including the OS-appearance listener that calls applyMode("system")
+    // directly while the page is open, which setMode's guard doesn't cover.
+    var lockedWorkMode =
+      document.documentElement.getAttribute("data-work-mode");
+    if (lockedWorkMode) {
+      mode = lockedWorkMode;
+    }
     var requestedMode = mode;
     if (mode === "system") {
       const systemMode = window.matchMedia("(prefers-color-scheme: dark)")

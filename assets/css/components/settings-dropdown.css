@@ -8,9 +8,11 @@
 }
 
 /* A works page can hard-lock its colour mode (worktheme.mode → data-work-mode
-   on <html>, forced in the head pre-paint). Hide the mode toggle there: the
-   choice is fixed for that page, so a live control would be a no-op. */
-:root[data-work-mode] .theme-section--mode {
+   on <html>, forced in the head pre-paint). Hide every mode control there — the
+   settings-panel section and the terminal layout's quick toggle — since the
+   choice is fixed for that page and a live control would be a no-op. */
+:root[data-work-mode] .theme-section--mode,
+:root[data-work-mode] .terminal-quick--mode {
   display: none;
 }
 
