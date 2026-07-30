@@ -186,6 +186,22 @@
     updateModeUI("system");
   }
 
+  // Terminal in-place navigation swaps #main without reloading <html>, so the
+  // server-set data-work-mode lock doesn't move on its own — terminal-nav.js
+  // syncs the attribute from the destination, then calls this to reconcile the
+  // actual mode. Mirrors init: a locked destination forces its mode, an
+  // unlocked one restores the visitor's stored (or system) preference.
+  // applyMode enforces the lock at its choke point and the mode controls
+  // hide/show via the [data-work-mode] CSS gate, so entering a locked work
+  // installs the lock and leaving it frees the following pages.
+  function reconcileWorkMode() {
+    var locked = document.documentElement.getAttribute("data-work-mode");
+    var mode = locked || localStorage.getItem("theme-mode") || "system";
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
+    applyMode(mode);
+    updateModeUI(mode);
+  }
+
   // ==========================================================================
   // PALETTE MANAGEMENT (standard/pantone)
   // ==========================================================================
@@ -1082,6 +1098,7 @@
     // Setters
     setMode: setMode,
     resetMode: resetMode,
+    reconcileWorkMode: reconcileWorkMode,
     setTypography: setTypography,
     setLayout: setLayout,
     restoreLayoutAfterTerminal: restoreLayoutAfterTerminal,

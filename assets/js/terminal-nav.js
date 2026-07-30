@@ -260,9 +260,16 @@
     // otherwise navigating out of a themed work keeps its colours/tags, and
     // navigating into one misses them. (data-project-typography rides inside the
     // swapped #main on .works-post, so it needs no sync here.)
-    ["data-work-theme", "data-work-tags", "data-work-layout"].forEach(function (
-      attr
-    ) {
+    // data-work-mode is included: it's a hard mode lock, so entering a locked
+    // work (e.g. PIA) must install it and leaving one must clear it — otherwise
+    // the lock never arrives on nav-in, or lingers on nav-out and pins every
+    // later page dark with its mode controls hidden.
+    [
+      "data-work-theme",
+      "data-work-tags",
+      "data-work-layout",
+      "data-work-mode",
+    ].forEach(function (attr) {
       var value = doc.documentElement.getAttribute(attr);
       if (value) {
         document.documentElement.setAttribute(attr, value);
@@ -270,6 +277,11 @@
         document.documentElement.removeAttribute(attr);
       }
     });
+    // The attribute alone only styles; reconcile the actual mode from the
+    // now-synced lock (or the visitor's stored preference when unlocked).
+    if (window.Theme && typeof window.Theme.reconcileWorkMode === "function") {
+      window.Theme.reconcileWorkMode();
+    }
     // A work theme moves --surface-page, so refresh the status-bar meta colour
     // (and repopulate its cache key) for the destination — the attribute swap
     // alone won't trigger it.
