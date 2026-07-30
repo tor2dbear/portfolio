@@ -70,7 +70,7 @@ describe("hero-embed", () => {
     const lb = makeFrame("hero-embed__frame lightbox__embed");
     load();
     expect(hero.posts.length).toBeGreaterThan(0);
-    expect(lb.posts.length).toBe(0);
+    expect(lb.posts).toHaveLength(0);
   });
 
   test("posts dark when the site is in dark mode", () => {
@@ -137,7 +137,7 @@ describe("hero-embed", () => {
     window.HeroEmbed.refresh();
     // the new frame gets wired + posted; the existing one is not re-posted
     expect(f2.posts.length).toBeGreaterThan(0);
-    expect(f1.posts.length).toBe(before);
+    expect(f1.posts).toHaveLength(before);
     expect(f1.dataset.heroWired).toBe("1");
   });
 });

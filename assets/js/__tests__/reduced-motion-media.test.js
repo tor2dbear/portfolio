@@ -19,7 +19,9 @@ describe("reduced-motion-media", () => {
       },
       media: query,
       addEventListener: (evt, cb) => {
-        if (evt === "change") { mmChangeHandlers.push(cb); }
+        if (evt === "change") {
+          mmChangeHandlers.push(cb);
+        }
       },
       removeEventListener: jest.fn(),
     }));
@@ -42,15 +44,19 @@ describe("reduced-motion-media", () => {
   beforeEach(() => {
     document.documentElement.removeAttribute("data-effect-reduced-motion");
     document.body.innerHTML =
-      '<video autoplay></video>' +
+      "<video autoplay></video>" +
       '<svg id="anim"><animate attributeName="x" /></svg>' +
       '<svg id="static"></svg>';
     mmReduce = false;
     setupMatchMedia();
     setupMutationObserver();
 
-    jest.spyOn(window.HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
-    jest.spyOn(window.HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
+    jest
+      .spyOn(window.HTMLMediaElement.prototype, "play")
+      .mockResolvedValue(undefined);
+    jest
+      .spyOn(window.HTMLMediaElement.prototype, "pause")
+      .mockImplementation(() => {});
 
     animSvg = document.getElementById("anim");
     staticSvg = document.getElementById("static");

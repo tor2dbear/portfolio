@@ -8,6 +8,11 @@ slug: arbeten
 weight: 10
 tags: ["Redaktionellt"]
 description: Redaktionell design för Utblicks 2015-nummer som utforskar afrikansk politik och identitet.
+worktheme:
+  color: africa
+  tags: filled
+  typography: refined
+  layout: editorial
 header_image: utblick_africa-0005.jpg
 featured: true
 role: "Art Direction, Illustration"
@@ -24,11 +29,13 @@ client:
 ![Framsida av publikationen](utblick_africa-0005.jpg)
 
 ### Om
+
 Utblick nr.4 "Africa?" utforskar komplexiteten hos en kontinent som ofta reduceras till singulära berättelser. Den redaktionella designen speglar detta tema genom kraftfulla geometriska mönster och varma jordfärger, vilket skapar visuell rytm samtidigt som den strukturerade tydlighet som krävs för politisk journalistik bibehålls.
 
 Genom att arbeta med en begränsad palett—varm orange och svart på obestruket papper—betonar designen materialitet och hantverk. Handritade kartelement och geometriska motiv ger visuella pauser mellan artiklar utan att överväldigas innehållet. Det typografiska systemet balanserar tät politisk analys med andrum, genom att använda tydliga hierarkier för artikeltext, redaktörers anteckningar och citerat material.
 
 Detta nummer visar hur redaktionell design kan stödja komplext ämnesinnehåll—skapa ett konsekvent visuellt språk samtidigt som innehållets nyansering förblir central.
+
 <!--more-->
 
 {{< gallery layout="1+1" >}}

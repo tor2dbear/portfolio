@@ -304,28 +304,36 @@
         })
       )
         .then(function () {
-          applyTypography(typography);
+          applyTypography(typography, true);
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         })
         .catch(function () {
           // Font loading failed; apply anyway (CSS fallback stack kicks in)
-          applyTypography(typography);
+          applyTypography(typography, true);
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         });
     } else {
-      applyTypography(typography);
+      applyTypography(typography, true);
       if (window.Toast) {
         window.Toast.show(typoCategoryLabel, typoLabel);
       }
     }
   }
 
-  function applyTypography(typography) {
+  function applyTypography(typography, dropProjectTypeset) {
     document.documentElement.setAttribute("data-typography", typography);
+    // An explicit user choice wins everywhere, including a per-project typeset.
+    // Drop the gate in the SAME frame the chosen preset is applied (after any
+    // async font load), so the project body never flashes the old preset first.
+    // Only on user action — init keeps the gate so a no-choice visitor still
+    // sees the project's typeset.
+    if (dropProjectTypeset) {
+      document.documentElement.removeAttribute("data-project-typeset");
+    }
     updateFooterTypographyLabel(typography);
   }
 
@@ -373,6 +381,7 @@
   }
 
   function setLayout(layout) {
+    var storedLayout = localStorage.getItem("theme-layout");
     // A visual tool (ui-library, palette generator) can't be a terminal, and it
     // isn't part of the terminal filesystem. Picking terminal here honours the
     // choice by storing it and going to the home terminal — this page has none
@@ -382,6 +391,10 @@
       document.documentElement.hasAttribute("data-terminal-exempt")
     ) {
       localStorage.setItem("theme-layout-previous", "column");
+      localStorage.setItem(
+        "theme-layout-previous-stored",
+        storedLayout ? "1" : "0"
+      );
       localStorage.setItem("theme-layout", "terminal");
       var homeUrl =
         document.documentElement.getAttribute("data-home-url") || "/";
@@ -395,9 +408,21 @@
     // Entering terminal snapshots where the user came from, so exit (ESC,
     // typing "exit", the boot [exit] button) can return there — including
     // the typography the pairing is about to replace.
-    var currentLayout = localStorage.getItem("theme-layout") || "column";
+    var currentLayout = storedLayout || "column";
     if (layout === "terminal" && currentLayout !== "terminal") {
-      localStorage.setItem("theme-layout-previous", currentLayout);
+      // Snapshot the EFFECTIVE pre-terminal layout — a per-project
+      // data-work-layout default counts, not just the global fallback — and
+      // whether it was the visitor's own stored choice, so restoreLayoutAfterTerminal()
+      // can bring back a transient project default without persisting it.
+      var effectiveLayout =
+        storedLayout ||
+        document.documentElement.getAttribute("data-work-layout") ||
+        "column";
+      localStorage.setItem("theme-layout-previous", effectiveLayout);
+      localStorage.setItem(
+        "theme-layout-previous-stored",
+        storedLayout ? "1" : "0"
+      );
       localStorage.setItem(
         "theme-typography-previous",
         localStorage.getItem("theme-typography") || "editorial"
@@ -437,6 +462,35 @@
 
     if (window.Toast) {
       window.Toast.show(layoutCategoryLabel, layoutLabel);
+    }
+  }
+
+  // Restore the pre-terminal layout on terminal exit. If the visitor had a real
+  // stored choice, re-apply it (persisted). If they didn't — the snapshot was a
+  // transient per-project default — clear the stored key and apply the effective
+  // layout without persisting, so leaving terminal returns to the "no choice"
+  // state and the project's data-work-layout default keeps applying elsewhere.
+  function restoreLayoutAfterTerminal() {
+    var prev = localStorage.getItem("theme-layout-previous") || "column";
+    if (prev === "terminal") {
+      prev = "column";
+    }
+    var wasStored =
+      localStorage.getItem("theme-layout-previous-stored") !== "0";
+    if (wasStored) {
+      // A real stored choice is page-independent — restore it (persisted).
+      setLayout(prev);
+    } else {
+      // No stored choice: the layout is a per-project default. Derive it from
+      // the CURRENT page's data-work-layout (terminal typed-nav may have moved
+      // to a different work since entry, so the entry snapshot can be stale) and
+      // apply without persisting, keeping the "no choice" state.
+      localStorage.removeItem("theme-layout");
+      var effective =
+        document.documentElement.getAttribute("data-work-layout") || "column";
+      updateLayoutUI(effective);
+      applyLayout(effective);
+      applyLayoutPairings(effective);
     }
   }
 
@@ -534,12 +588,21 @@
           var settledPalette =
             document.documentElement.getAttribute("data-palette") || "standard";
           var settledYear = localStorage.getItem("theme-coty-year") || "2026";
+          // A work theme moves --surface-page too (on the standard palette), so
+          // it must be part of the key — otherwise the next page seeds the bar
+          // with the previous project's colour. Mirror the head.html seed key.
+          var settledWork =
+            document.documentElement.getAttribute("data-work-theme") || "";
           var settledKey =
             "theme-color-cache-" +
             settledMode +
             "-" +
             settledPalette +
-            (settledPalette === "pantone" ? "-" + settledYear : "");
+            (settledPalette === "pantone"
+              ? "-" + settledYear
+              : settledWork
+              ? "-wt-" + settledWork
+              : "");
           localStorage.setItem(settledKey, resolvePageColor());
         } catch (e) {}
       }
@@ -743,9 +806,19 @@
     // Load stored preferences or use defaults
     const storedMode = localStorage.getItem("theme-mode") || "system";
     const storedPalette = localStorage.getItem("theme-palette") || "standard";
+    // Typography is purely the visitor's own preference (or the site default);
+    // a per-project typeset is content-scoped and gated by data-project-typeset
+    // (set pre-paint in head.html), not by this global attribute.
     const storedTypography =
       localStorage.getItem("theme-typography") || "editorial";
-    const storedLayout = localStorage.getItem("theme-layout") || "column";
+    // Layout may take a per-project default (data-work-layout, set server-side)
+    // when the visitor has no explicit stored choice — mirrors the pre-paint
+    // script so init doesn't clobber the server default. applyLayout below
+    // doesn't persist, so this default never becomes the visitor's choice.
+    const storedLayout =
+      localStorage.getItem("theme-layout") ||
+      document.documentElement.getAttribute("data-work-layout") ||
+      "column";
     const normalizedStoredPalette =
       storedPalette === "coty" ? "pantone" : storedPalette;
     let initialPalette =
@@ -975,6 +1048,7 @@
     setMode: setMode,
     setTypography: setTypography,
     setLayout: setLayout,
+    restoreLayoutAfterTerminal: restoreLayoutAfterTerminal,
     commitPaletteSelection: commitPaletteSelection,
     setGrainEnabled: setGrainEnabled,
     setBlendEnabled: setBlendEnabled,

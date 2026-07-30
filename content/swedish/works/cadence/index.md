@@ -9,6 +9,9 @@ weight: 1
 tags: ["Digitala Produkter", "Experimentellt"]
 clients: []
 description: Det sista osystematiserade hörnet av ett designsystem är rörelse. Cadence tokeniserar den – och ger den en åsikt.
+worktheme:
+  color: cadence
+  tags: filled
 header_image: cadence-poster.jpg
 hero_embed: /cadence-hero.html
 featured: true
@@ -31,7 +34,7 @@ Rörelse är det sista osystematiserade hörnet av ett designsystem. Färg har t
 
 ![Två easings ur uppsättningen – kurvor ritade för hand.](cadence-easing-set.jpg "Easing-uppsättningen – varje kurva ritad för hand, sedan namngiven. Den råa vokabulär som resten av systemet refererar tillbaka till.")
 
-Två lager, lånade från hur vi redan hanterar färg. *Primitiver* är den råa vokabulären: en varaktighetsstege och en uppsättning easings du ritar för hand. *Intents* är meningen – `enter`, `exit`, `move` – komponerade från primitiverna by reference. Du namnger vad rörelse är *till för*, inte vad den *är*; ändra en primitiv och hela systemet tajmar om.
+Två lager, lånade från hur vi redan hanterar färg. _Primitiver_ är den råa vokabulären: en varaktighetsstege och en uppsättning easings du ritar för hand. _Intents_ är meningen – `enter`, `exit`, `move` – komponerade från primitiverna by reference. Du namnger vad rörelse är _till för_, inte vad den _är_; ändra en primitiv och hela systemet tajmar om.
 
 {{< infographic src="cadence-two-layer-model.svg" caption="Varje intent är en namngiven komposition av primitiver – ändra en primitiv så tajmar varje intent som refererar den om." >}}
 
@@ -39,7 +42,7 @@ Två lager, lånade från hur vi redan hanterar färg. *Primitiver* är den råa
 
 Beslutet jag är mest nöjd med var att sluta designa kring komponenter. En tidig version låste fyra roller till fyra demokomponenter och föll ihop i samma stund jag föreställde mig en femte. Så komponenter blev en bänk av instrument – var och en en lins på en enda egenskap hos en token, aldrig en skärm att återuppföra. Organisera ett system kring sina egna tokens, så kan inget hamna utanför.
 
-De flesta verktyg genererar; de dömer inte. Den del jag är stoltast över är den med en synvinkel: den läser hela uppsättningen och säger var det skaver – en easing som i hemlighet är två, ett exit som är långsammare än sitt entré, en stege som haltar – och *vad den skulle ändra*, inte bara vad som är fel. Att koda in det omdömet – en art directors öga som en handfull checkar – är hela idén.
+De flesta verktyg genererar; de dömer inte. Den del jag är stoltast över är den med en synvinkel: den läser hela uppsättningen och säger var det skaver – en easing som i hemlighet är två, ett exit som är långsammare än sitt entré, en stege som haltar – och _vad den skulle ändra_, inte bara vad som är fel. Att koda in det omdömet – en art directors öga som en handfull checkar – är hela idén.
 
 Inget av det stannar i verktyget. Cadence exporterar den CSS du skulle ha skrivit för hand, och driver en riktig produktyta så att du kan känna systemet snarare än bara läsa det.
 

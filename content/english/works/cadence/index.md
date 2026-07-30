@@ -9,6 +9,9 @@ weight: 1
 tags: ["Digital Product", "Experimental"]
 clients: []
 description: The last unsystematised corner of a design system is motion. Cadence tokenises it — and gives it an opinion.
+worktheme:
+  color: cadence
+  tags: filled
 header_image: cadence-poster.jpg
 hero_embed: /cadence-hero.html
 featured: true
@@ -31,7 +34,7 @@ Motion is the last unsystematised corner of a design system. Colour has tokens; 
 
 ![Two easings from the set — curves drawn by hand.](cadence-easing-set.jpg "The easing set — each curve drawn by hand, then named. The raw vocabulary the rest of the system refers back to.")
 
-Two layers, borrowed from how we already handle colour. *Primitives* are the raw vocabulary: a duration ladder and a set of easings you draw by hand. *Intents* are the meaning — `enter`, `exit`, `move` — composed from the primitives by reference. You name what motion is *for*, not what it *is*; change a primitive and the whole system re-times.
+Two layers, borrowed from how we already handle colour. _Primitives_ are the raw vocabulary: a duration ladder and a set of easings you draw by hand. _Intents_ are the meaning — `enter`, `exit`, `move` — composed from the primitives by reference. You name what motion is _for_, not what it _is_; change a primitive and the whole system re-times.
 
 {{< infographic src="cadence-two-layer-model.svg" caption="Each intent is a named composition of primitives — change a primitive and every intent that references it re-times." >}}
 
@@ -39,7 +42,7 @@ Two layers, borrowed from how we already handle colour. *Primitives* are the raw
 
 The decision I'm happiest with was to stop designing around components. An early version pinned four roles to four demo components and fell apart the moment I imagined a fifth. So components became a bench of instruments — each a lens on a single quality of a token, never a screen to restage. Organise a system around its own tokens and nothing can fall outside it.
 
-Most tools generate; they don't judge. The part I'm proudest of is the one with a point of view: it reads the whole set and says where it's off — an easing that's secretly two, an exit slower than its entrance, a ladder that limps — and *what it would change*, not only what's wrong. Encoding that judgement — an art director's eye as a handful of checks — is the whole idea.
+Most tools generate; they don't judge. The part I'm proudest of is the one with a point of view: it reads the whole set and says where it's off — an easing that's secretly two, an exit slower than its entrance, a ladder that limps — and _what it would change_, not only what's wrong. Encoding that judgement — an art director's eye as a handful of checks — is the whole idea.
 
 None of it stays in the tool. Cadence exports the CSS you'd have written by hand, and drives a real product surface so you can feel the system rather than just read it.
 

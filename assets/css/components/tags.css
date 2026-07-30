@@ -32,6 +32,16 @@
   );
 }
 
+/* Per-project opt-in (worktheme.tags: filled → data-work-tags on <html>): the
+   project's own tag chips take the theme's primary fill + on-primary text, so
+   they read like the CTA button. Scoped to the works post's header tags —
+   related-item tags and the language chip are left as-is. */
+:root[data-work-tags="filled"] .works-post__tags .tag:not(.tag--lang),
+:root[data-work-tags="filled"] .works-post__tags .tag:not(.tag--lang):visited {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+
 .tag:active {
   background-image: linear-gradient(
     var(--state-tag-active, transparent),
