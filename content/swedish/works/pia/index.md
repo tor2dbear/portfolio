@@ -3,7 +3,7 @@ author: "Torbjörn Hedberg"
 date: 2026-07-15
 linktitle: PIA
 title: "PIA — en liten dator i webbläsaren"
-slug: works
+slug: arbeten
 weight: 1
 tags: ["Digitala Produkter"]
 clients: []
