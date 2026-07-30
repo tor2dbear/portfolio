@@ -5,13 +5,23 @@
    clean Switzer body.
    ============================================================================ */
 
-:root[data-typography="refined"] {
-  --font-display:     "Playfair Display", ui-serif, Georgia, serif;
-  --font-heading:     "Playfair Display", ui-serif, Georgia, serif;
-  --font-body:        var(--font-sans);
-  --font-ui:          var(--font-sans);
-  --display-weight:   400;
-  --heading-weight:   400;
+:root[data-typography="refined"],
+:root[data-project-typeset="on"]
+  .works-post[data-project-typography="refined"]
+  :is(
+    .works-post__title,
+    .works-post__description,
+    .works-post__meta,
+    .works-post__tags,
+    .post-content,
+    .project-info
+  ) {
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-heading: "Playfair Display", ui-serif, Georgia, serif;
+  --font-body: var(--font-sans);
+  --font-ui: var(--font-sans);
+  --display-weight: 400;
+  --heading-weight: 400;
   --heading-tracking: var(--tracking-tight);
   --headline-tracking: var(--tracking-tight);
   --display-tracking: -0.02em;

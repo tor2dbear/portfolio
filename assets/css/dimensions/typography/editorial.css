@@ -5,7 +5,17 @@
    Freight Text Pro + Neue Haas Grotesk.
    ============================================================================ */
 
-:root[data-typography="editorial"] {
+:root[data-typography="editorial"],
+:root[data-project-typeset="on"]
+  .works-post[data-project-typography="editorial"]
+  :is(
+    .works-post__title,
+    .works-post__description,
+    .works-post__meta,
+    .works-post__tags,
+    .post-content,
+    .project-info
+  ) {
   --font-display: var(--font-serif);
   --font-heading: var(--font-sans);
   --font-body: var(--font-serif);

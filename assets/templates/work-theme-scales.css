@@ -1,0 +1,194 @@
+{{- /*
+  Work project color themes → static CSS.
+
+  One theme = a named color identity applied to a single works/ page. Each
+  theme emits a light and a dark block, keyed on data-work-theme (set
+  server-side in header.html from the page's front matter). The selectors are
+  scoped to [data-palette="standard"] — the default palette — so ANY explicit
+  palette choice (Pantone or a user-authored custom palette) wins with no flash:
+  the pre-paint script sets data-palette before first paint, so a non-standard
+  palette simply never matches these rules (custom-palette tokens then load
+  without a themed intermediate frame).
+
+  Mirrors the role logic of assets/templates/coty-scales.css, but the semantic
+  token mappings (which pantone.css supplies for COTY) are inlined here so a
+  work theme is fully self-contained.
+
+  Three models:
+    - Single scale — role_mode "surface" (page takes a tint, primary from step 9)
+      or "primary" (accent-led, surface from step 4).
+    - Duo — a theme with an `accent_scale_*` uses TWO hues: the base scale paints
+      the surface/text (like a surface theme) while the accent scale drives every
+      accent role (primary, links, tags, action). Models a two-spot-colour print
+      piece, e.g. the `utblick` theme's rose paper + green ink.
+    - Accent-only — a theme with `neutral_surface = true` leaves the surface,
+      body text and borders as the site default (neutral gray/white) and recolours
+      only the accent roles from its single scale. Models a piece printed on plain
+      stock with one spot colour, e.g. the `africa` theme's neutral page + red ink.
+*/ -}}
+{{- range .themes -}}
+{{- $id := .id -}}
+{{- $isDuo := .accent_scale_light -}}
+{{- $isNeutral := .neutral_surface -}}
+{{- $isSurface := or $isDuo (eq .role_mode "surface") -}}
+
+{{- if .scale_light }}
+:root[data-palette="standard"][data-work-theme="{{ $id }}"] {
+{{ range $step, $value := .scale_light -}}  --work-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- if $isDuo -}}
+{{ range $step, $value := .accent_scale_light }}  --work-accent-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- end }}
+{{- if $isNeutral }}
+  --work-role-primary: var(--work-{{ .accent_step_light }});
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_light }});
+  --surface-accent: var(--work-4);
+{{- else if $isDuo }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-accent-{{ .accent_step_light }});
+  --work-role-primary-strong: var(--work-accent-11);
+  --work-role-on-primary: var(--work-accent-{{ .on_primary_step_light }});
+  --surface-accent: var(--work-accent-4);
+{{- else if $isSurface }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-9);
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_light }});
+  --surface-accent: var(--work-{{ if eq .anchor_step 5 }}4{{ else }}5{{ end }});
+{{- else }}
+  --work-role-primary: var(--work-{{ .anchor_step }});
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_light }});
+  --work-role-surface: var(--work-4);
+  --work-role-surface-strong: var(--work-5);
+  --surface-accent: var(--work-5);
+{{- end }}
+
+  --primary: var(--work-role-primary);
+  --primary-strong: var(--work-role-primary-strong);
+  --on-primary: var(--work-role-on-primary);
+  --secondary: var(--work-{{ if $isDuo }}accent-4{{ else }}4{{ end }});
+  --secondary-strong: var(--work-{{ if $isDuo }}accent-8{{ else }}8{{ end }});
+  --on-secondary: var(--work-12);
+  --accent-primary: var(--primary);
+  --accent-primary-strong: var(--primary-strong);
+  --accent-secondary: var(--secondary);
+  --accent-secondary-strong: var(--secondary-strong);
+  --text-accent: var(--primary-strong);
+  --text-link: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
+  --text-link-hover: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
+  --action: var(--work-role-primary);
+  --on-action: var(--work-role-on-primary);
+{{- if not $isNeutral }}
+  --text-default: var(--work-12);
+  --surface-ink-strong: var(--work-11);
+  --surface-page: var(--work-role-surface);
+  --surface-default: var(--work-role-surface-strong);
+  --border-subtle: var(--work-5);
+  --border-default: var(--work-6);
+  --border-strong: var(--work-8);
+  --component-form-bg: var(--work-role-surface);
+  --component-form-placeholder: var(--text-muted);
+{{- else }}
+  /* Accent-only: pin surface/text/borders to the neutral gray scale so the page
+     reads as neutral stock rather than the iris-tinted standard-palette default. */
+  --text-default: var(--gray-12);
+  --surface-ink-strong: var(--gray-12);
+  --surface-page: var(--gray-1);
+  --surface-default: var(--gray-2);
+  --border-subtle: var(--gray-4);
+  --border-default: var(--gray-6);
+  --border-strong: var(--gray-8);
+  --component-form-bg: var(--gray-2);
+  --component-form-placeholder: var(--text-muted);
+{{- end }}
+{{- range $key, $val := .overrides_light }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
+}
+{{ end -}}
+
+{{- if .scale_dark }}
+:root[data-mode="dark"][data-palette="standard"][data-work-theme="{{ $id }}"] {
+{{ range $step, $value := .scale_dark -}}  --work-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- if $isDuo -}}
+{{ range $step, $value := .accent_scale_dark }}  --work-accent-{{ $step }}: {{ $value }};
+{{ end -}}
+{{- end }}
+{{- if $isNeutral }}
+  --work-role-primary: var(--work-{{ .accent_step_dark }});
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_dark }});
+  --surface-accent: var(--work-4);
+{{- else if $isDuo }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-accent-{{ .accent_step_dark }});
+  --work-role-primary-strong: var(--work-accent-11);
+  --work-role-on-primary: var(--work-accent-{{ .on_primary_step_dark }});
+  --surface-accent: var(--work-accent-4);
+{{- else if $isSurface }}
+  --work-role-surface: var(--work-{{ .anchor_step }});
+  --work-role-surface-strong: var(--work-{{ add .anchor_step 1 }});
+  --work-role-primary: var(--work-9);
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_dark }});
+  --surface-accent: var(--work-{{ if ge .anchor_step 5 }}3{{ else }}5{{ end }});
+{{- else }}
+  --work-role-primary: var(--work-{{ .source_step_dark }});
+  --work-role-primary-strong: var(--work-11);
+  --work-role-on-primary: var(--work-{{ .on_primary_step_dark }});
+  --work-role-surface: var(--work-4);
+  --work-role-surface-strong: var(--work-5);
+  --surface-accent: var(--work-5);
+{{- end }}
+
+  --primary: var(--work-role-primary);
+  --primary-strong: var(--work-role-primary-strong);
+  --on-primary: var(--work-role-on-primary);
+  --secondary: var(--work-{{ if $isDuo }}accent-4{{ else }}4{{ end }});
+  --secondary-strong: var(--work-{{ if $isDuo }}accent-8{{ else }}8{{ end }});
+  --on-secondary: var(--work-12);
+  --accent-primary: var(--primary);
+  --accent-primary-strong: var(--primary-strong);
+  --accent-secondary: var(--secondary);
+  --accent-secondary-strong: var(--secondary-strong);
+  --text-accent: var(--primary-strong);
+  --text-link: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
+  --text-link-hover: var(--work-{{ if $isDuo }}accent-11{{ else }}11{{ end }});
+  --action: var(--work-role-primary);
+  --on-action: var(--work-role-on-primary);
+{{- if not $isNeutral }}
+  --text-default: var(--work-12);
+  --surface-ink-strong: var(--work-11);
+  --surface-page: var(--work-role-surface);
+  --surface-default: var(--work-role-surface-strong);
+  --border-subtle: var(--work-5);
+  --border-default: var(--work-6);
+  --border-strong: var(--work-8);
+  --component-form-bg: var(--work-role-surface);
+  --component-form-placeholder: var(--text-muted);
+{{- else }}
+  /* Accent-only: pin surface/text/borders to the neutral gray scale so the page
+     reads as neutral stock rather than the iris-tinted standard-palette default. */
+  --text-default: var(--gray-12);
+  --surface-ink-strong: var(--gray-12);
+  --surface-page: var(--gray-1);
+  --surface-default: var(--gray-2);
+  --border-subtle: var(--gray-4);
+  --border-default: var(--gray-6);
+  --border-strong: var(--gray-8);
+  --component-form-bg: var(--gray-2);
+  --component-form-placeholder: var(--text-muted);
+{{- end }}
+{{- range $key, $val := .overrides_dark }}
+  --{{ replace $key "_" "-" }}: var({{ $val }});
+{{- end }}
+}
+{{ end -}}
+{{- end -}}

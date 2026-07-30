@@ -73,18 +73,16 @@ body {
   animation-duration: var(--motion-duration-view-transition);
 }
 
-/* The header is on every page: give it its own group and hold it static instead
-   of cross-fading it (its content differs per page — active link, the
-   scroll-progress wordmark — so a plain cross-fade flickers). Its icons are
-   inlined in topmenu.html so they render in the snapshot rather than blinking. */
-.top-menu {
-  view-transition-name: top-menu;
-}
-::view-transition-group(top-menu),
-::view-transition-old(top-menu),
-::view-transition-new(top-menu) {
-  animation: none;
-}
+/* The header rides the root cross-fade (it has no view-transition-name of its
+   own), so its background and CTA button fade in sync with the rest of the page
+   surface. It used to be isolated in its own group and held static, but the work
+   themes change the header colours (--surface-page / --primary), and a held
+   snapshot snaps to the new colours instead of blending — read as a blink of the
+   header bg + button when navigating to/from a themed works page. Letting it
+   share the page's cross-fade turns that snap into a smooth, synchronised
+   dissolve. Trade-off: the per-page bits (active-link state, scroll-progress
+   wordmark) now cross-dissolve too; if that shimmer is distracting, give just
+   those elements their own held-static view-transition-name. */
 
 /* Pause the scroll-reveal entry animation while the transition runs, so content
    doesn't slide in over the cross-fade. The flag is set/cleared by a head
@@ -797,7 +795,8 @@ video {
 }
 
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .infographic svg {
+  .infographic
+  svg {
   -webkit-filter: url(#pantone-tritone);
   -moz-filter: url(#pantone-tritone);
   filter: url(#pantone-tritone);

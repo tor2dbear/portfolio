@@ -169,6 +169,13 @@
   {{ $cotyData := index .Site.Data "pantone-coty" }}
   {{ $coty_scales_tmpl := resources.Get "templates/coty-scales.css" }}
   {{ $coty_scales := $coty_scales_tmpl | resources.ExecuteAsTemplate "css/coty-scales-generated.css" $cotyData }}
+  {{/* Per-project color themes (works pages). Generated from data/work-themes.toml
+       and bundled after the palette dimensions so a work theme overrides the
+       standard palette; the :not([data-palette="pantone"]) guard in the template
+       keeps Pantone winning. */}}
+  {{ $workThemesData := index .Site.Data "work-themes" }}
+  {{ $work_theme_scales_tmpl := resources.Get "templates/work-theme-scales.css" }}
+  {{ $work_theme_scales := $work_theme_scales_tmpl | resources.ExecuteAsTemplate "css/work-theme-scales-generated.css" $workThemesData }}
 
   <!-- CSS dimensions (typography) -->
   {{ $dimensions_typo_editorial := resources.Get "css/dimensions/typography/editorial.css" }}
@@ -442,6 +449,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_previews.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $work_theme_scales.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $coty_scales.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_editorial.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_refined.RelPermalink }}" />
@@ -505,7 +513,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $work_theme_scales $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -706,12 +714,21 @@
         // An unknown combo just falls back to the mode's base surface.
         var tcPalette = localStorage.getItem("theme-palette") || "standard";
         var tcYear = localStorage.getItem("theme-coty-year") || "2026";
+        // A work theme (standard palette only) moves --surface-page too, so it
+        // is part of the key — the <html> tag with data-work-theme is already
+        // parsed when this runs. Mirror theme.js's settled key exactly.
+        var tcWork =
+          document.documentElement.getAttribute("data-work-theme") || "";
         var tcKey =
           "theme-color-cache-" +
           resolvedMode +
           "-" +
           tcPalette +
-          (tcPalette === "pantone" ? "-" + tcYear : "");
+          (tcPalette === "pantone"
+            ? "-" + tcYear
+            : tcWork
+              ? "-wt-" + tcWork
+              : "");
         var seedColor =
           localStorage.getItem(tcKey) ||
           (resolvedMode === "dark" ? "#18181b" : "#ffffff");
@@ -728,28 +745,52 @@
       var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
       document.documentElement.setAttribute("data-coty-year", storedCotyYear);
 
-      // Set typography
-      var storedTypography = localStorage.getItem("theme-typography") || "editorial";
-      document.documentElement.setAttribute("data-typography", storedTypography);
+      // Set typography (global). This is purely the visitor's own preference
+      // (or the site default) — it governs the whole page chrome and never
+      // reflects a per-project typeset.
+      var storedTypography = localStorage.getItem("theme-typography");
+      document.documentElement.setAttribute(
+        "data-typography",
+        storedTypography || "editorial"
+      );
 
-      // Set layout (column/editorial/index/terminal). Visual tool pages
-      // opt out of terminal (data-terminal-exempt on <html>): they render
-      // column here while the stored preference stays untouched.
-      var storedLayout = localStorage.getItem("theme-layout") || "column";
+      // Per-project typeset gate. A works page may typeset its own content
+      // (data-project-typography on .works-post) in a preset that differs from
+      // the chrome. It's a DEFAULT: it applies only while the visitor has made
+      // no explicit typography choice of their own — their pick then wins
+      // everywhere, including the project body. Decided here, pre-paint, from
+      // the root (the .works-post element isn't in the DOM yet), so the gated
+      // CSS resolves before first paint. theme.js drops the gate the moment the
+      // visitor picks a font at runtime.
+      if (!storedTypography) {
+        document.documentElement.setAttribute("data-project-typeset", "on");
+      }
+
+      // Set layout (column/editorial/index/terminal). A works page may declare
+      // a default (data-work-layout: column/editorial/index — terminal is
+      // excluded as it's a session-wide mode); it applies only when the visitor
+      // has no explicit stored choice. Visual tool pages opt out of terminal
+      // (data-terminal-exempt on <html>): they render column here while the
+      // stored preference stays untouched.
+      var storedLayout = localStorage.getItem("theme-layout");
+      var effectiveLayout =
+        storedLayout ||
+        document.documentElement.getAttribute("data-work-layout") ||
+        "column";
       if (
-        storedLayout === "terminal" &&
+        effectiveLayout === "terminal" &&
         document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
-        storedLayout = "column";
+        effectiveLayout = "column";
       }
-      document.documentElement.setAttribute("data-layout", storedLayout);
+      document.documentElement.setAttribute("data-layout", effectiveLayout);
 
       // Terminal boot banner is a login MOTD: shown once per session. If the
       // boot already played, mark the document so the ASCII art + status line
       // are hidden pre-paint on this (subsequent) page — no flash.
       try {
         if (
-          storedLayout === "terminal" &&
+          effectiveLayout === "terminal" &&
           sessionStorage.getItem("terminal-boot-played")
         ) {
           document.documentElement.setAttribute("data-terminal-booted", "1");
@@ -771,7 +812,7 @@
         !document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
         document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
-        if (storedLayout === "terminal") {
+        if (effectiveLayout === "terminal") {
           document.documentElement.setAttribute("data-terminal-transcript", "1");
           // Withhold the live prompt from the first frame; terminal.js clears
           // this once the replay finishes (or immediately, for reduced motion),

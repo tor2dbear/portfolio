@@ -1,0 +1,75 @@
+{{- /* Per-theme static tritone image treatment.
+
+  A work theme with tritone stops in data/work-tritone.toml gets a grayscale →
+  3-stop luminance mapping on its images, the same shape as Pantone's
+  #pantone-tritone but baked static (the stops never change, so no JS): shadows
+  → stop 1, midtones → stop 2, highlights → stop 3.
+
+  Applied to every image on the themed page, gated by the blend toggle
+  (data-effect-blend) and scoped to the standard palette so Pantone and custom
+  palettes keep their own image treatment with no flash — the same principle as
+  Pantone's own blend. One filter per mode (the scale flips), swapped by
+  data-mode. Emitted only on themed works pages. */
+-}}
+{{- $id := "" -}}
+{{- with .Params.worktheme -}}{{- $id = .color -}}{{- end -}}
+{{- $t := index (index .Site.Data "work-tritone") $id -}}
+{{- with $t -}}
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    style="position:absolute;width:0;height:0;overflow:hidden"
+  >
+    <defs>
+      <filter id="wt-{{ $id }}-light" color-interpolation-filters="sRGB">
+        <feColorMatrix type="saturate" values="0" result="g" />
+        <feComponentTransfer in="g">
+          <feFuncR type="table" tableValues="{{ .light.r }}" />
+          <feFuncG type="table" tableValues="{{ .light.g }}" />
+          <feFuncB type="table" tableValues="{{ .light.b }}" />
+        </feComponentTransfer>
+      </filter>
+      <filter id="wt-{{ $id }}-dark" color-interpolation-filters="sRGB">
+        <feColorMatrix type="saturate" values="0" result="g" />
+        <feComponentTransfer in="g">
+          <feFuncR type="table" tableValues="{{ .dark.r }}" />
+          <feFuncG type="table" tableValues="{{ .dark.g }}" />
+          <feFuncB type="table" tableValues="{{ .dark.b }}" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+<style>
+  /* Hide the duotone overlays and swap in the tritone filter, mirroring how
+     Pantone's tritone takes over: same target set (img, video and the hero-embed
+     iframe) and gated by blend. Scoped to the case body and skipping
+     .works-post--plain-media, so the `plain_media` true-colour opt-out is
+     honoured; Pantone/custom palettes still win via the standard-palette gate. */
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) picture::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) picture::after,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) .video-wrapper::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) .video-wrapper::after {
+    display: none;
+  }
+  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) .works-post:not(.works-post--plain-media) :is(img, video, .hero-embed__frame) {
+    filter: url(#wt-{{ $id }}-light);
+  }
+  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post:not(.works-post--plain-media) :is(img, video, .hero-embed__frame) {
+    filter: url(#wt-{{ $id }}-dark);
+  }
+{{- if not $.Params.plain_media }}
+  /* The lightbox is appended to document.body, outside .works-post, so the
+     scoped rules above miss it. Mirror the same treatment on the lightbox
+     media directly — matching how Pantone recolours .lightbox__img — so an
+     opened image or hero embed keeps the themed tritone. Emitted only when the
+     page hasn't opted out via plain_media (there's no .works-post ancestor on
+     the body-level lightbox to carry that exclusion). */
+  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) :is(.lightbox__img, .lightbox__embed) {
+    filter: url(#wt-{{ $id }}-light);
+  }
+  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] :is(.lightbox__img, .lightbox__embed) {
+    filter: url(#wt-{{ $id }}-dark);
+  }
+{{- end }}
+</style>
+{{- end -}}
