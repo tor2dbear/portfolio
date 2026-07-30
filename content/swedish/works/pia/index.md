@@ -17,7 +17,6 @@ worktheme:
   color: phosphor
   tags: filled
   mode: dark
-plain_media: true
 role: "Idé, design och utveckling (solo)"
 details:
   year: 2026
