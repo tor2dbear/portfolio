@@ -631,6 +631,14 @@ picture,
   display: block;
 }
 
+/* Block, not the default inline: an inline <video> sits on the text baseline and
+   leaves a ~2px descender gap below it inside the block wrapper. The wrapper's
+   ::before/::after blend overlays fill that gap, so under a work-theme blend it
+   showed as a thin coloured line along the video's bottom edge. */
+.video-wrapper video {
+  display: block;
+}
+
 picture::before,
 picture::after,
 .video-wrapper::before,
