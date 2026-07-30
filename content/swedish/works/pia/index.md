@@ -19,7 +19,7 @@ details:
   platform: "Webb · installerbar PWA"
   stack: "TypeScript · Vite · Vitest · Supabase · Cloudflare Pages"
   scope: "Idé, design, arkitektur & utveckling"
-client_label: "Type"
+client_label: "Typ"
 client:
   name: "Eget initiativ"
   url: "https://pia.tor2dbear.com"

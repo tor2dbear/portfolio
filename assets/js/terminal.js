@@ -927,6 +927,15 @@
           if (texts.length) {
             var joined = Array.prototype.map
               .call(texts, function (t) {
+                // A link row (the live/client URL) becomes markdown so the cat
+                // view renders it clickable — printTerminalProseLine turns
+                // [text](url) into an `open <url>` button — instead of the
+                // flattened, inert textContent it would otherwise emit.
+                var a = t.querySelector("a[href]");
+                if (a) {
+                  var linkText = a.textContent.trim().replace(/\s+/g, " ");
+                  return "[" + linkText + "](" + a.getAttribute("href") + ")";
+                }
                 return t.textContent.trim().replace(/\s+/g, " ");
               })
               .filter(Boolean)
