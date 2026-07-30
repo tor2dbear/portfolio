@@ -270,6 +270,15 @@
         document.documentElement.removeAttribute(attr);
       }
     });
+    // A work theme moves --surface-page, so refresh the status-bar meta colour
+    // (and repopulate its cache key) for the destination — the attribute swap
+    // alone won't trigger it.
+    if (
+      window.Theme &&
+      typeof window.Theme.animateThemeColorMeta === "function"
+    ) {
+      window.Theme.animateThemeColorMeta();
+    }
     refreshContentInit(doc);
     settleScroll();
     return true;

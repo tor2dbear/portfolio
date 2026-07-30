@@ -276,10 +276,6 @@
 
   function setTypography(typography) {
     localStorage.setItem("theme-typography", typography);
-    // An explicit choice wins everywhere, including a per-project typeset: drop
-    // the gate so the chosen font applies to the project body too (it was set
-    // pre-paint when no stored choice existed).
-    document.documentElement.removeAttribute("data-project-typeset");
     // Highlight the selected option immediately for instant feedback
     updateTypographyUI(typography);
 
@@ -308,28 +304,36 @@
         })
       )
         .then(function () {
-          applyTypography(typography);
+          applyTypography(typography, true);
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         })
         .catch(function () {
           // Font loading failed; apply anyway (CSS fallback stack kicks in)
-          applyTypography(typography);
+          applyTypography(typography, true);
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         });
     } else {
-      applyTypography(typography);
+      applyTypography(typography, true);
       if (window.Toast) {
         window.Toast.show(typoCategoryLabel, typoLabel);
       }
     }
   }
 
-  function applyTypography(typography) {
+  function applyTypography(typography, dropProjectTypeset) {
     document.documentElement.setAttribute("data-typography", typography);
+    // An explicit user choice wins everywhere, including a per-project typeset.
+    // Drop the gate in the SAME frame the chosen preset is applied (after any
+    // async font load), so the project body never flashes the old preset first.
+    // Only on user action — init keeps the gate so a no-choice visitor still
+    // sees the project's typeset.
+    if (dropProjectTypeset) {
+      document.documentElement.removeAttribute("data-project-typeset");
+    }
     updateFooterTypographyLabel(typography);
   }
 
@@ -474,12 +478,19 @@
     var wasStored =
       localStorage.getItem("theme-layout-previous-stored") !== "0";
     if (wasStored) {
+      // A real stored choice is page-independent — restore it (persisted).
       setLayout(prev);
     } else {
+      // No stored choice: the layout is a per-project default. Derive it from
+      // the CURRENT page's data-work-layout (terminal typed-nav may have moved
+      // to a different work since entry, so the entry snapshot can be stale) and
+      // apply without persisting, keeping the "no choice" state.
       localStorage.removeItem("theme-layout");
-      updateLayoutUI(prev);
-      applyLayout(prev);
-      applyLayoutPairings(prev);
+      var effective =
+        document.documentElement.getAttribute("data-work-layout") || "column";
+      updateLayoutUI(effective);
+      applyLayout(effective);
+      applyLayoutPairings(effective);
     }
   }
 
