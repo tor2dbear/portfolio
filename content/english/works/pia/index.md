@@ -47,7 +47,7 @@ That means two worlds collide. The terminal is keyboard, text and 1970s conventi
 Every command follows Unix convention — **name, flags and behaviour.** The real name (`nano`, `useradd`, `grep -n`) wins over a friendly web invention (`edit`, `register`, a GUI shortcut); friendly names survive only as _aliases_. Know one command and you can guess the next: the editor is `nano` (`^O` saves, `^X` exits), the prompt is `user@pia:~$`, settings live in a `.pia/` dotfile.
 
 ```text
-available commands (excerpt — 59 in all):
+available commands (excerpt):
 
   ls         list the contents of a directory
   cd         change the current directory
@@ -83,7 +83,7 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 ### Selected design decisions
 
-**Themes are five tokens, not a re-skin.** Four CRT palettes (green phosphor, amber, ice, mono) each set only five colour tokens; the rest follows. In the clip below, `theme amber` and `theme ice` recolour the whole screen at once — nothing is restyled per theme, the tokens simply cascade. The typeface is self-hosted JetBrains Mono, shared with this portfolio.
+**Themes are five tokens, not a re-skin.** Each CRT palette — green phosphor, amber, ice, mono — sets only five colour tokens; the rest follows. In the clip below, `theme amber` and `theme ice` recolour the whole screen at once — nothing is restyled per theme, the tokens simply cascade. The typeface is self-hosted JetBrains Mono, shared with this portfolio.
 
 ![A looping recreation of the saved tour — pipes, then theme amber and theme ice recolour the whole screen from five tokens; not a screen recording.](10-terminal-tour.mp4 "A looping recreation of the saved tour — pipes, then theme amber and theme ice recolour the whole screen from five tokens; not a screen recording.")
 
@@ -122,4 +122,4 @@ Under that: type checking, unit tests, and browser checks for what tests can't s
 
 **The cost is real:** idiom-first taxes the web-native parts — every deviation (`share`, uploads, the touch bar, push) had to be argued and written down. That discipline is what gives PIA a point of view; it also makes anything that doesn't fit the metaphor slower to add.
 
-Today it's a deployed, installable PWA — command register, editor, real-time shared checklists, a package system with games and tools, Python, themes, push. **The best way to judge it is to press some keys yourself.**
+Today it's a deployed, installable PWA — command register, editor, window tabs, real-time shared checklists, a package system with games and tools, Python, themes, push — and still growing. **The best way to judge it is to press some keys yourself.**

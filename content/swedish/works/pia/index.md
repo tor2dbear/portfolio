@@ -47,7 +47,7 @@ Det gör att två världar krockar. Terminalen är tangentbord, text och 1970-ta
 Varje kommando följer Unix-konvention — **namn, flaggor och beteende.** Det riktiga namnet (`nano`, `useradd`, `grep -n`) vinner över en vänlig webb-uppfinning (`edit`, `register`, en GUI-genväg); vänliga namn överlever bara som _alias_. Kan man ett kommando kan man gissa nästa: editorn är `nano` (`^O` sparar, `^X` avslutar), prompten är `user@pia:~$`, inställningar bor i en `.pia/`-dotfil.
 
 ```text
-available commands (excerpt — 59 in all):
+available commands (excerpt):
 
   ls         list the contents of a directory
   cd         change the current directory
@@ -83,7 +83,7 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 
 ### Utvalda designbeslut
 
-**Teman är fem tokens, inte ett omskal.** Fyra CRT-paletter (grön fosfor, bärnsten, is, mono) sätter var och en bara fem färg-tokens; resten följer med. I klippet nedan färgar `theme amber` och `theme ice` om hela skärmen på en gång — inget stylas om per tema, tokens kaskaderar bara. Typsnittet är självhostat JetBrains Mono, delat med den här portfolion.
+**Teman är fem tokens, inte ett omskal.** Varje CRT-palett — grön fosfor, bärnsten, is, mono — sätter bara fem färg-tokens; resten följer med. I klippet nedan färgar `theme amber` och `theme ice` om hela skärmen på en gång — inget stylas om per tema, tokens kaskaderar bara. Typsnittet är självhostat JetBrains Mono, delat med den här portfolion.
 
 ![En loopande återgivning av den sparade tour-sessionen — pipes, sedan färgar theme amber och theme ice om allt från fem tokens; inte en skärminspelning.](10-terminal-tour.mp4 "En loopande återgivning av den sparade tour-sessionen — pipes, sedan färgar theme amber och theme ice om allt från fem tokens; inte en skärminspelning.")
 
@@ -122,4 +122,4 @@ Utöver det: typkontroll, enhetstester och kontroller i en riktig webbläsare f�
 
 **Kostnaden är verklig:** idiom-först beskattar de webb-inhemska delarna — varje avvikelse (`share`, uppladdning, touch-baren, push) måste argumenteras och skrivas ner. Just den disciplinen är vad som ger PIA sin åsikt; den gör också allt som inte passar metaforen långsammare att lägga till.
 
-I dag är den en deployad, installerbar PWA — kommandoregister, editor, delade checklistor i realtid, ett paketsystem med spel och verktyg, Python, teman, push. **Bästa sättet att bedöma den är att trycka på några tangenter själv.**
+I dag är den en deployad, installerbar PWA — kommandoregister, editor, fönsterflikar, delade checklistor i realtid, ett paketsystem med spel och verktyg, Python, teman, push — och växer fortfarande. **Bästa sättet att bedöma den är att trycka på några tangenter själv.**
