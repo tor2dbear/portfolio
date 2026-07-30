@@ -66,6 +66,10 @@ git add content/*/works/pia && git commit
 - **`10-terminal-tour.mp4`** — a bespoke clip (pipes, then `theme amber` /
   `theme ice`), not the `demo` reel. If you want it scripted too, copy
   `record-demo.mjs` and swap the command sequence + marker.
+- **`11-crt-overlay.mp4`** — a bespoke seamless loop of the CRT overlay
+  (`crt on` over the neofetch identity). The held screen's only motion is the
+  4s phosphor breathe and the 1s cursor blink, so a ~4s window loops cleanly;
+  reproduce by copying `record-demo.mjs` and holding the `crt on` screen.
 - **`07-mobile-mockup.png`** — a hand-composited device mock, not an app
   screenshot. Reproduce it in the design tool.
 

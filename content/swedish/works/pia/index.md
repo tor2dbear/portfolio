@@ -87,6 +87,10 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 
 ![En loopande återgivning av den sparade tour-sessionen — pipes, sedan färgar theme amber och theme ice om allt från fem tokens; inte en skärminspelning.](10-terminal-tour.mp4 "En loopande återgivning av den sparade tour-sessionen — pipes, sedan färgar theme amber och theme ice om allt från fem tokens; inte en skärminspelning.")
 
+**Ett valfritt CRT-overlay — ren dekoration, aldrig i vägen.** `crt on` lägger ett riktigt katodstråle-utseende över vilket tema som helst: ett mjukt fosforsken på varje tecken, fina scanlines och en bildrörs-vinjett som andas långsamt. Det är enbart kosmetiskt — avstängt som standard, ett kommando bort, och lagt ovanpå samma tokens som paletterna, så inget under det stylas om eller rörs.
+
+![`crt on` — ett mjukt fosforsken, fina scanlines och en långsamt andande bildrörs-vinjett, lagt över det gröna temat.](11-crt-overlay.mp4 "crt on — ett mjukt fosforsken, fina scanlines och en långsamt andande bildrörs-vinjett, lagt över det gröna temat.")
+
 **Editorn är `nano` på riktigt.** Fullskärmsappar ärver temat gratis och håller idiomet: `^O` sparar, `^X` avslutar, rad och kolumn i statusraden.
 
 ![Editorn är `nano` på riktigt: `^O` sparar, `^X` avslutar, rad/kolumn i statusraden.](04-editor-nano.png "Editorn är nano på riktigt: ^O sparar, ^X avslutar, rad/kolumn i statusraden.")

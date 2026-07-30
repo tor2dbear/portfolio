@@ -87,6 +87,10 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 ![A looping recreation of the saved tour — pipes, then theme amber and theme ice recolour the whole screen from five tokens; not a screen recording.](10-terminal-tour.mp4 "A looping recreation of the saved tour — pipes, then theme amber and theme ice recolour the whole screen from five tokens; not a screen recording.")
 
+**An optional CRT overlay — pure decoration, never in the way.** `crt on` lays a real cathode-ray look over any theme: a soft phosphor bloom on every glyph, fine scanlines, and a tube vignette that slowly breathes. It's cosmetic only — off by default, one command away, and layered on top of the same tokens as the palettes, so nothing underneath is restyled or touched.
+
+![`crt on` — a soft phosphor bloom, fine scanlines and a slowly breathing tube vignette, layered over the green theme.](11-crt-overlay.mp4 "crt on — a soft phosphor bloom, fine scanlines and a slowly breathing tube vignette, layered over the green theme.")
+
 **The editor is really `nano`.** Full-screen apps inherit the theme for free and keep the idiom: `^O` saves, `^X` exits, line and column in the status bar.
 
 ![The editor is really nano: `^O` saves, `^X` exits, line/column in the status bar.](04-editor-nano.png "The editor is really nano: ^O saves, ^X exits, line/column in the status bar.")
