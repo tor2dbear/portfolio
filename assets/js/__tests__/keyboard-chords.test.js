@@ -14,6 +14,7 @@ describe("keyboard chords", () => {
 
   beforeEach(() => {
     jest.resetModules();
+    document.documentElement.removeAttribute("data-work-mode");
     document.body.innerHTML = `
       <div data-shortcut="M"></div>
       <div data-shortcut="T"></div>
@@ -52,6 +53,25 @@ describe("keyboard chords", () => {
     pressKey("d");
 
     expect(window.ThemeActions.setMode).toHaveBeenCalledWith("dark");
+  });
+
+  test("mode chord is gated on a work-mode-locked page", () => {
+    // On a hard-locked page (data-work-mode) the mode chord must not arm — the
+    // visible toggle is hidden, so M + L/D/S can't silently no-op. Pressing M
+    // flashes a "Mode locked" notice and the follow-up key is inert.
+    document.documentElement.setAttribute("data-work-mode", "dark");
+    loadModule();
+
+    pressKey("m");
+    pressKey("d"); // inert: the chord never armed, so D is not a mode selector
+
+    expect(window.ThemeActions.setMode).not.toHaveBeenCalled();
+    const hud = document.querySelector(".chord-hud");
+    expect(hud).not.toBeNull();
+    expect(hud.hasAttribute("hidden")).toBe(false);
+    expect(hud.textContent).toContain("Mode locked");
+
+    document.documentElement.removeAttribute("data-work-mode");
   });
 
   test("typography chord uses semantic letters", () => {
