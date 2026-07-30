@@ -444,6 +444,13 @@ figcaption {
   margin-top: var(--spacing-12);
 }
 
+/* Give a code block room before the paragraph that follows it — that paragraph
+   has no top margin of its own, so the two sat too close. The caption paragraph
+   (```diff + {.code-caption}) is excluded so it stays tucked under its block. */
+.content.post .prose .highlight + p:not(.code-caption) {
+  margin-top: var(--spacing-24);
+}
+
 /* ==========================================================================
    PROSE CONTENT
    ========================================================================== */

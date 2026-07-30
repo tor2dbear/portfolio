@@ -5,6 +5,12 @@ body {
 
 html {
   scroll-padding-top: calc(var(--size-header-height) + var(--spacing-16));
+  /* Stop iOS Safari inflating text inside wide/overflowing blocks (a <pre>
+     that scrolls horizontally triggers it): the auto-inflation scales lines
+     unevenly, so a monospace code block came out with mixed font sizes. Pin it
+     to the authored size in both orientations. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -801,7 +807,8 @@ video {
 }
 
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .infographic svg {
+  .infographic
+  svg {
   -webkit-filter: url(#pantone-tritone);
   -moz-filter: url(#pantone-tritone);
   filter: url(#pantone-tritone);

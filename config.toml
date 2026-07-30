@@ -122,15 +122,44 @@ DefaultContentLanguage = "en"
       weight = 6
       identifier = "contact"
       url = "/sv/kontakt"
-    # Swedish smart quotes: both marks are the right double/single quote (”…”,
-    # ’…’), so a quotation opens and closes with the same glyph — unlike the
-    # English directional pair set at the root [markup...] above.
-    [languages.sv.markup.goldmark.extensions.typographer]
-      disable = false
-      leftDoubleQuote = "&rdquo;"
-      rightDoubleQuote = "&rdquo;"
-      leftSingleQuote = "&rsquo;"
-      rightSingleQuote = "&rsquo;"
+    # Per-language markup for Swedish. Hugo does NOT deep-merge the root
+    # [markup] into a language that defines its own [languages.sv.markup] — the
+    # language's markup is taken whole — so this must MIRROR the root [markup]
+    # block below in full (noClasses, block attributes, hardWraps …). The only
+    # intended difference is the typographer quote glyphs: Swedish opens and
+    # closes with the same mark (”…”, ’…’), unlike the English directional pair.
+    # Keep this in sync with [markup] if that ever changes.
+    [languages.sv.markup]
+      [languages.sv.markup.goldmark]
+        [languages.sv.markup.goldmark.extensions]
+          definitionList = true
+          footnote = true
+          linkify = true
+          linkifyProtocol = 'https'
+          strikethrough = true
+          table = true
+          taskList = true
+          [languages.sv.markup.goldmark.extensions.typographer]
+            disable = false
+            leftDoubleQuote = "&rdquo;"
+            rightDoubleQuote = "&rdquo;"
+            leftSingleQuote = "&rsquo;"
+            rightSingleQuote = "&rsquo;"
+        [languages.sv.markup.goldmark.parser]
+          autoHeadingID = false
+          autoHeadingIDType = 'github'
+          wrapStandAloneImageWithinParagraph = false
+          [languages.sv.markup.goldmark.parser.attribute]
+            block = true
+            title = true
+        [languages.sv.markup.goldmark.renderer]
+          hardWraps = true
+          unsafe = false
+          xhtml = false
+      [languages.sv.markup.highlight]
+        noClasses = false
+        lineNos = false
+        guessSyntax = false
 
 [permalinks]
   works = '/:slug/:title/'
