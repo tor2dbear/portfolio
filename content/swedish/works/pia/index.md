@@ -13,6 +13,10 @@ header_image: 01-hero-session
 featured: true
 draft: false
 hidden: false
+worktheme:
+  color: phosphor
+  tags: filled
+plain_media: true
 role: "Idé, design och utveckling (solo)"
 details:
   year: 2026
