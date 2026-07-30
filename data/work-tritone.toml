@@ -3,17 +3,17 @@
 # the SVG filter. Hex shown in comments; values are precomputed so Hugo
 # needs no hex parsing.
 
-# utblick light: #184426 #c9b0ac #f6dde6
+# utblick light: #0a2c14 #c1a7a3 #f6dde6
 [utblick.light]
-r = "0.094 0.788 0.965"
-g = "0.267 0.690 0.867"
-b = "0.149 0.675 0.902"
+r = "0.039 0.757 0.965"
+g = "0.173 0.655 0.867"
+b = "0.078 0.639 0.902"
 
-# utblick dark: #0f2a19 #8f7278 #e6c6d3
+# utblick dark: #06190c #8a6d73 #e6c6d3
 [utblick.dark]
-r = "0.059 0.561 0.902"
-g = "0.165 0.447 0.776"
-b = "0.098 0.471 0.827"
+r = "0.024 0.541 0.902"
+g = "0.098 0.427 0.776"
+b = "0.047 0.451 0.827"
 
 # cadence light: #1a2a56 #5566a0 #f2ece0
 [cadence.light]
