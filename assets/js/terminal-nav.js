@@ -255,6 +255,21 @@
     } else {
       document.documentElement.removeAttribute("data-terminal-home");
     }
+    // Per-project theme flags also live on <html> (set server-side) and don't
+    // survive a #main swap, so sync or clear them from the fetched page —
+    // otherwise navigating out of a themed work keeps its colours/tags, and
+    // navigating into one misses them. (data-project-typography rides inside the
+    // swapped #main on .works-post, so it needs no sync here.)
+    ["data-work-theme", "data-work-tags", "data-work-layout"].forEach(function (
+      attr
+    ) {
+      var value = doc.documentElement.getAttribute(attr);
+      if (value) {
+        document.documentElement.setAttribute(attr, value);
+      } else {
+        document.documentElement.removeAttribute(attr);
+      }
+    });
     refreshContentInit(doc);
     settleScroll();
     return true;

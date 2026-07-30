@@ -714,12 +714,21 @@
         // An unknown combo just falls back to the mode's base surface.
         var tcPalette = localStorage.getItem("theme-palette") || "standard";
         var tcYear = localStorage.getItem("theme-coty-year") || "2026";
+        // A work theme (standard palette only) moves --surface-page too, so it
+        // is part of the key — the <html> tag with data-work-theme is already
+        // parsed when this runs. Mirror theme.js's settled key exactly.
+        var tcWork =
+          document.documentElement.getAttribute("data-work-theme") || "";
         var tcKey =
           "theme-color-cache-" +
           resolvedMode +
           "-" +
           tcPalette +
-          (tcPalette === "pantone" ? "-" + tcYear : "");
+          (tcPalette === "pantone"
+            ? "-" + tcYear
+            : tcWork
+              ? "-wt-" + tcWork
+              : "");
         var seedColor =
           localStorage.getItem(tcKey) ||
           (resolvedMode === "dark" ? "#18181b" : "#ffffff");

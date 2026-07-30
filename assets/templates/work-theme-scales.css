@@ -93,6 +93,18 @@
   --border-strong: var(--work-8);
   --component-form-bg: var(--work-role-surface);
   --component-form-placeholder: var(--text-muted);
+{{- else }}
+  /* Accent-only: pin surface/text/borders to the neutral gray scale so the page
+     reads as neutral stock rather than the iris-tinted standard-palette default. */
+  --text-default: var(--gray-12);
+  --surface-ink-strong: var(--gray-12);
+  --surface-page: var(--gray-1);
+  --surface-default: var(--gray-2);
+  --border-subtle: var(--gray-4);
+  --border-default: var(--gray-6);
+  --border-strong: var(--gray-8);
+  --component-form-bg: var(--gray-2);
+  --component-form-placeholder: var(--text-muted);
 {{- end }}
 {{- range $key, $val := .overrides_light }}
   --{{ replace $key "_" "-" }}: var({{ $val }});
@@ -160,6 +172,18 @@
   --border-default: var(--work-6);
   --border-strong: var(--work-8);
   --component-form-bg: var(--work-role-surface);
+  --component-form-placeholder: var(--text-muted);
+{{- else }}
+  /* Accent-only: pin surface/text/borders to the neutral gray scale so the page
+     reads as neutral stock rather than the iris-tinted standard-palette default. */
+  --text-default: var(--gray-12);
+  --surface-ink-strong: var(--gray-12);
+  --surface-page: var(--gray-1);
+  --surface-default: var(--gray-2);
+  --border-subtle: var(--gray-4);
+  --border-default: var(--gray-6);
+  --border-strong: var(--gray-8);
+  --component-form-bg: var(--gray-2);
   --component-form-placeholder: var(--text-muted);
 {{- end }}
 {{- range $key, $val := .overrides_dark }}

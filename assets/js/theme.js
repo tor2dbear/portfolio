@@ -377,6 +377,7 @@
   }
 
   function setLayout(layout) {
+    var storedLayout = localStorage.getItem("theme-layout");
     // A visual tool (ui-library, palette generator) can't be a terminal, and it
     // isn't part of the terminal filesystem. Picking terminal here honours the
     // choice by storing it and going to the home terminal — this page has none
@@ -386,6 +387,10 @@
       document.documentElement.hasAttribute("data-terminal-exempt")
     ) {
       localStorage.setItem("theme-layout-previous", "column");
+      localStorage.setItem(
+        "theme-layout-previous-stored",
+        storedLayout ? "1" : "0"
+      );
       localStorage.setItem("theme-layout", "terminal");
       var homeUrl =
         document.documentElement.getAttribute("data-home-url") || "/";
@@ -399,9 +404,21 @@
     // Entering terminal snapshots where the user came from, so exit (ESC,
     // typing "exit", the boot [exit] button) can return there — including
     // the typography the pairing is about to replace.
-    var currentLayout = localStorage.getItem("theme-layout") || "column";
+    var currentLayout = storedLayout || "column";
     if (layout === "terminal" && currentLayout !== "terminal") {
-      localStorage.setItem("theme-layout-previous", currentLayout);
+      // Snapshot the EFFECTIVE pre-terminal layout — a per-project
+      // data-work-layout default counts, not just the global fallback — and
+      // whether it was the visitor's own stored choice, so restoreLayoutAfterTerminal()
+      // can bring back a transient project default without persisting it.
+      var effectiveLayout =
+        storedLayout ||
+        document.documentElement.getAttribute("data-work-layout") ||
+        "column";
+      localStorage.setItem("theme-layout-previous", effectiveLayout);
+      localStorage.setItem(
+        "theme-layout-previous-stored",
+        storedLayout ? "1" : "0"
+      );
       localStorage.setItem(
         "theme-typography-previous",
         localStorage.getItem("theme-typography") || "editorial"
@@ -441,6 +458,28 @@
 
     if (window.Toast) {
       window.Toast.show(layoutCategoryLabel, layoutLabel);
+    }
+  }
+
+  // Restore the pre-terminal layout on terminal exit. If the visitor had a real
+  // stored choice, re-apply it (persisted). If they didn't — the snapshot was a
+  // transient per-project default — clear the stored key and apply the effective
+  // layout without persisting, so leaving terminal returns to the "no choice"
+  // state and the project's data-work-layout default keeps applying elsewhere.
+  function restoreLayoutAfterTerminal() {
+    var prev = localStorage.getItem("theme-layout-previous") || "column";
+    if (prev === "terminal") {
+      prev = "column";
+    }
+    var wasStored =
+      localStorage.getItem("theme-layout-previous-stored") !== "0";
+    if (wasStored) {
+      setLayout(prev);
+    } else {
+      localStorage.removeItem("theme-layout");
+      updateLayoutUI(prev);
+      applyLayout(prev);
+      applyLayoutPairings(prev);
     }
   }
 
@@ -538,12 +577,21 @@
           var settledPalette =
             document.documentElement.getAttribute("data-palette") || "standard";
           var settledYear = localStorage.getItem("theme-coty-year") || "2026";
+          // A work theme moves --surface-page too (on the standard palette), so
+          // it must be part of the key — otherwise the next page seeds the bar
+          // with the previous project's colour. Mirror the head.html seed key.
+          var settledWork =
+            document.documentElement.getAttribute("data-work-theme") || "";
           var settledKey =
             "theme-color-cache-" +
             settledMode +
             "-" +
             settledPalette +
-            (settledPalette === "pantone" ? "-" + settledYear : "");
+            (settledPalette === "pantone"
+              ? "-" + settledYear
+              : settledWork
+              ? "-wt-" + settledWork
+              : "");
           localStorage.setItem(settledKey, resolvePageColor());
         } catch (e) {}
       }
@@ -989,6 +1037,7 @@
     setMode: setMode,
     setTypography: setTypography,
     setLayout: setLayout,
+    restoreLayoutAfterTerminal: restoreLayoutAfterTerminal,
     commitPaletteSelection: commitPaletteSelection,
     setGrainEnabled: setGrainEnabled,
     setBlendEnabled: setBlendEnabled,

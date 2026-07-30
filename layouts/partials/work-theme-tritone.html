@@ -1,4 +1,4 @@
-{{- /* Per-theme static tritone image treatment (test).
+{{- /* Per-theme static tritone image treatment.
 
   A work theme with tritone stops in data/work-tritone.toml gets a grayscale →
   3-stop luminance mapping on its images, the same shape as Pantone's
@@ -41,17 +41,20 @@
   </svg>
 <style>
   /* Hide the duotone overlays and swap in the tritone filter, mirroring how
-     Pantone's tritone takes over. Gated by blend; Pantone still wins. */
-  :root[data-effect-blend="on"][data-palette="standard"] picture::before,
-  :root[data-effect-blend="on"][data-palette="standard"] picture::after,
-  :root[data-effect-blend="on"][data-palette="standard"] .video-wrapper::before,
-  :root[data-effect-blend="on"][data-palette="standard"] .video-wrapper::after {
+     Pantone's tritone takes over: same target set (img, video and the hero-embed
+     iframe) and gated by blend. Scoped to the case body and skipping
+     .works-post--plain-media, so the `plain_media` true-colour opt-out is
+     honoured; Pantone/custom palettes still win via the standard-palette gate. */
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) picture::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) picture::after,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) .video-wrapper::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) .video-wrapper::after {
     display: none;
   }
-  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) :is(img, video) {
+  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) .works-post:not(.works-post--plain-media) :is(img, video, .hero-embed__frame) {
     filter: url(#wt-{{ $id }}-light);
   }
-  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] :is(img, video) {
+  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post:not(.works-post--plain-media) :is(img, video, .hero-embed__frame) {
     filter: url(#wt-{{ $id }}-dark);
   }
 </style>

@@ -34,6 +34,7 @@
   var setMode = Theme.setMode;
   var setTypography = Theme.setTypography;
   var setLayout = Theme.setLayout;
+  var restoreLayoutAfterTerminal = Theme.restoreLayoutAfterTerminal;
   var commitPaletteSelection = Theme.commitPaletteSelection;
   var setGrainEnabled = Theme.setGrainEnabled;
   var setBlendEnabled = Theme.setBlendEnabled;
@@ -132,13 +133,20 @@
     if (terminalFlowReset) {
       terminalFlowReset();
     }
-    var previousLayout =
-      localStorage.getItem("theme-layout-previous") || "column";
-    if (previousLayout === "terminal") {
-      previousLayout = "column";
-    }
     var previousTypography = localStorage.getItem("theme-typography-previous");
-    setLayout(previousLayout);
+    // Restore the pre-terminal layout. The theme module owns the logic so a
+    // transient per-project default is restored without being persisted; fall
+    // back to a plain setLayout for older seams (and tests that mock Theme).
+    if (typeof restoreLayoutAfterTerminal === "function") {
+      restoreLayoutAfterTerminal();
+    } else {
+      var previousLayout =
+        localStorage.getItem("theme-layout-previous") || "column";
+      if (previousLayout === "terminal") {
+        previousLayout = "column";
+      }
+      setLayout(previousLayout);
+    }
     if (localStorage.getItem("theme-typography") === "technical") {
       if (previousTypography && previousTypography !== "technical") {
         setTypography(previousTypography);
