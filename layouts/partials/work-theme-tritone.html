@@ -57,6 +57,26 @@
   :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post:not(.works-post--plain-media) :is(img, video, .hero-embed__frame) {
     filter: url(#wt-{{ $id }}-dark);
   }
+  /* Related-project cards are thumbnails of OTHER works, not this project's own
+     media, so the plain_media true-colour opt-out (which skips the whole
+     .works-post--plain-media subtree above) shouldn't strip their blend — a
+     plain-media page would otherwise leave its related cards on the standard
+     base duotone while every other themed page tints them with its own theme.
+     Re-apply this project's tritone inside the related sections so their cards
+     carry the page's blend, exactly like related cards on a non-plain themed
+     page. (No-op off plain_media: nothing matches the class.) */
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image picture::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image picture::after,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image .video-wrapper::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image .video-wrapper::after {
+    display: none;
+  }
+  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) .works-post--plain-media .related-items__image :is(img, video, .hero-embed__frame) {
+    filter: url(#wt-{{ $id }}-light);
+  }
+  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post--plain-media .related-items__image :is(img, video, .hero-embed__frame) {
+    filter: url(#wt-{{ $id }}-dark);
+  }
 {{- if not $.Params.plain_media }}
   /* The lightbox is appended to document.body, outside .works-post, so the
      scoped rules above miss it. Mirror the same treatment on the lightbox
