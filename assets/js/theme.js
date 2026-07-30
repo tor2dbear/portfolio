@@ -94,6 +94,12 @@
   // ==========================================================================
 
   function setMode(mode) {
+    // A works page can hard-lock its mode (data-work-mode, set server-side).
+    // Ignore any request to change it — the toggle is hidden there, but the
+    // keyboard shortcut and programmatic callers still route through here.
+    if (document.documentElement.getAttribute("data-work-mode")) {
+      return;
+    }
     localStorage.setItem("theme-mode", mode);
     runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
     applyMode(mode);
@@ -803,8 +809,14 @@
       '[data-js="effect-motion-toggle"]'
     );
 
-    // Load stored preferences or use defaults
-    const storedMode = localStorage.getItem("theme-mode") || "system";
+    // Load stored preferences or use defaults. A works page may HARD-LOCK its
+    // mode (data-work-mode, set server-side + forced in the head pre-paint); on
+    // such a page the locked value wins over the stored/system choice and the
+    // toggle is hidden. localStorage is not touched, so the stored mode resumes
+    // on the next page.
+    const lockedMode = document.documentElement.getAttribute("data-work-mode");
+    const storedMode =
+      lockedMode || localStorage.getItem("theme-mode") || "system";
     const storedPalette = localStorage.getItem("theme-palette") || "standard";
     // Typography is purely the visitor's own preference (or the site default);
     // a per-project typeset is content-scoped and gated by data-project-typeset

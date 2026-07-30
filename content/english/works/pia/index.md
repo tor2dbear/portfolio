@@ -16,6 +16,7 @@ hidden: false
 worktheme:
   color: phosphor
   tags: filled
+  mode: dark
 plain_media: true
 role: "Concept, design and development (solo)"
 details:

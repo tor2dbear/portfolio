@@ -697,6 +697,18 @@
         document.documentElement.setAttribute("data-mode", storedMode);
       }
 
+      // A works page can HARD-LOCK its colour mode (worktheme.mode → the
+      // data-work-mode attribute already parsed on <html>). Unlike the layout
+      // default this overrides the visitor's stored/system choice for this page
+      // only — the terminal case study stays in its dark identity no matter the
+      // global setting. localStorage is left untouched, so their real mode
+      // resumes on the next page; theme.js reads the same attribute to keep the
+      // lock (and hide the mode toggle) at runtime.
+      var lockedWorkMode = document.documentElement.getAttribute("data-work-mode");
+      if (lockedWorkMode === "dark" || lockedWorkMode === "light") {
+        document.documentElement.setAttribute("data-mode", lockedWorkMode);
+      }
+
       // Seed the iOS status-bar colour (theme-color) before first paint. The
       // static metas below are keyed on prefers-color-scheme, which iOS
       // resolves by the *system* appearance — so a visitor running the site in
