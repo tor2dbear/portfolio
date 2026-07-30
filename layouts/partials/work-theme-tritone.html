@@ -41,40 +41,29 @@
   </svg>
 <style>
   /* Hide the duotone overlays and swap in the tritone filter, mirroring how
-     Pantone's tritone takes over: same target set (img, video and the hero-embed
-     iframe) and gated by blend. Scoped to the case body and skipping
-     .works-post--plain-media, so the `plain_media` true-colour opt-out is
-     honoured; Pantone/custom palettes still win via the standard-palette gate. */
+     Pantone's tritone takes over, gated by blend. Scoped to the case body and
+     skipping .works-post--plain-media, so the `plain_media` true-colour opt-out
+     is honoured; Pantone/custom palettes still win via the standard-palette
+     gate.
+
+     Filter <picture> images directly, but video and the hero-embed iframe via
+     their .video-wrapper CONTAINER, not the element: WebKit (iOS Safari) does
+     not paint an SVG reference filter (`filter: url(#…)`) on a <video> or
+     <iframe>, only on a regular element, so filtering the element leaves the
+     tour videos untinted. The inner media keeps the base `grayscale()`
+     shorthand (which WebKit does paint), so the pipeline stays
+     grayscale → tritone → phosphor green. Chromium paints either way; the
+     wrapper form is the cross-browser one. */
   :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) picture::before,
   :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) picture::after,
   :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) .video-wrapper::before,
   :root[data-effect-blend="on"][data-palette="standard"] .works-post:not(.works-post--plain-media) .video-wrapper::after {
     display: none;
   }
-  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) .works-post:not(.works-post--plain-media) :is(img, video, .hero-embed__frame) {
+  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) .works-post:not(.works-post--plain-media) :is(img, .video-wrapper) {
     filter: url(#wt-{{ $id }}-light);
   }
-  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post:not(.works-post--plain-media) :is(img, video, .hero-embed__frame) {
-    filter: url(#wt-{{ $id }}-dark);
-  }
-  /* Related-project cards are thumbnails of OTHER works, not this project's own
-     media, so the plain_media true-colour opt-out (which skips the whole
-     .works-post--plain-media subtree above) shouldn't strip their blend — a
-     plain-media page would otherwise leave its related cards on the standard
-     base duotone while every other themed page tints them with its own theme.
-     Re-apply this project's tritone inside the related sections so their cards
-     carry the page's blend, exactly like related cards on a non-plain themed
-     page. (No-op off plain_media: nothing matches the class.) */
-  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image picture::before,
-  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image picture::after,
-  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image .video-wrapper::before,
-  :root[data-effect-blend="on"][data-palette="standard"] .works-post--plain-media .related-items__image .video-wrapper::after {
-    display: none;
-  }
-  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) .works-post--plain-media .related-items__image :is(img, video, .hero-embed__frame) {
-    filter: url(#wt-{{ $id }}-light);
-  }
-  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post--plain-media .related-items__image :is(img, video, .hero-embed__frame) {
+  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post:not(.works-post--plain-media) :is(img, .video-wrapper) {
     filter: url(#wt-{{ $id }}-dark);
   }
 {{- if not $.Params.plain_media }}
