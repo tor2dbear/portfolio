@@ -23,12 +23,11 @@
   swallowed by the iframe document.
 
   Params:
-  src       (required) same-origin URL of the page to embed, e.g. "/cadence-hero.html"
-  ratio     (optional) CSS aspect-ratio, default "16 / 9"
-  title     (optional) accessible name for the iframe / lightbox
-  lightbox  (optional) "false" to make the hero non-clickable, default true
-  */
--}}
+    src       (required) same-origin URL of the page to embed, e.g. "/cadence-hero.html"
+    ratio     (optional) CSS aspect-ratio, default "16 / 9"
+    title     (optional) accessible name for the iframe / lightbox
+    lightbox  (optional) "false" to make the hero non-clickable, default true
+*/ -}}
 {{- $src := .Get "src" -}}
 {{- $ratio := .Get "ratio" | default "16 / 9" -}}
 {{- $title := .Get "title" | default "Interactive embed" -}}
@@ -37,25 +36,10 @@
   {{- errorf "hero-embed: 'src' is required (%s)" .Position -}}
 {{- end -}}
 {{- $style := printf "width:100%%;aspect-ratio:%s;border:0;display:block" $ratio -}}
-{{- if $lightbox -}}
-  {{- $style = printf "%s;pointer-events:none" $style -}}
-{{- end -}}
-<figure
-  class="reveal hero-embed"
-  {{ if $lightbox }}
-    data-lightbox="{{ $src | relURL }}" data-lightbox-type="embed"
-    data-lightbox-title="{{ $title }}" aria-label="{{ $title }}"
-  {{ end }}
->
+{{- if $lightbox -}}{{- $style = printf "%s;pointer-events:none" $style -}}{{- end -}}
+<figure class="reveal hero-embed"{{ if $lightbox }} data-lightbox="{{ $src | relURL }}" data-lightbox-type="embed" data-lightbox-title="{{ $title }}" aria-label="{{ $title }}"{{ end }}>
   <div class="video-wrapper">
-    <iframe
-      class="hero-embed__frame"
-      src="{{ $src | relURL }}"
-      title="{{ $title }}"
-      loading="lazy"
-      scrolling="no"
-      {{ if $lightbox }}tabindex="-1"{{ end }}
-      style="{{ $style | safeCSS }}"
-    ></iframe>
+    <iframe class="hero-embed__frame" src="{{ $src | relURL }}" title="{{ $title }}" loading="lazy"
+            scrolling="no"{{ if $lightbox }} tabindex="-1"{{ end }} style="{{ $style | safeCSS }}"></iframe>
   </div>
 </figure>

@@ -3,11 +3,12 @@
 
   One theme = a named color identity applied to a single works/ page. Each
   theme emits a light and a dark block, keyed on data-work-theme (set
-  server-side in header.html from the page's front matter). The selectors carry
-  :not([data-palette="pantone"]) so an explicitly chosen Pantone palette always
-  wins; on the default palette the work theme paints the page. Specificity of
-  :root:not([...])[data-work-theme] is (0,3,0) — above standard's [data-palette]
-  (0,2,0), below Pantone's COTY-year block (0,3,0/0,4,0) via the :not() guard.
+  server-side in header.html from the page's front matter). The selectors are
+  scoped to [data-palette="standard"] — the default palette — so ANY explicit
+  palette choice (Pantone or a user-authored custom palette) wins with no flash:
+  the pre-paint script sets data-palette before first paint, so a non-standard
+  palette simply never matches these rules (custom-palette tokens then load
+  without a themed intermediate frame).
 
   Mirrors the role logic of assets/templates/coty-scales.css, but the semantic
   token mappings (which pantone.css supplies for COTY) are inlined here so a
@@ -32,7 +33,7 @@
 {{- $isSurface := or $isDuo (eq .role_mode "surface") -}}
 
 {{- if .scale_light }}
-:root:not([data-palette="pantone"])[data-work-theme="{{ $id }}"] {
+:root[data-palette="standard"][data-work-theme="{{ $id }}"] {
 {{ range $step, $value := .scale_light -}}  --work-{{ $step }}: {{ $value }};
 {{ end -}}
 {{- if $isDuo -}}
@@ -100,7 +101,7 @@
 {{ end -}}
 
 {{- if .scale_dark }}
-:root[data-mode="dark"]:not([data-palette="pantone"])[data-work-theme="{{ $id }}"] {
+:root[data-mode="dark"][data-palette="standard"][data-work-theme="{{ $id }}"] {
 {{ range $step, $value := .scale_dark -}}  --work-{{ $step }}: {{ $value }};
 {{ end -}}
 {{- if $isDuo -}}

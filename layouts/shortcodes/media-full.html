@@ -11,12 +11,11 @@
   pulled back to a readable measure by ".media-full figcaption" in style.css.
 
   Params:
-  src       (required) bundle image resource, e.g. "cadence-start.jpg"
-  alt       (optional) alt text
-  caption   (optional) figure caption
-  lightbox  (optional) "false" to make it non-clickable, default true
-  */
--}}
+    src       (required) bundle image resource, e.g. "cadence-start.jpg"
+    alt       (optional) alt text
+    caption   (optional) figure caption
+    lightbox  (optional) "false" to make it non-clickable, default true
+*/ -}}
 {{- $src := .Get "src" -}}
 {{- $res := .Page.Resources.GetMatch $src -}}
 {{- if not $res -}}
@@ -29,28 +28,14 @@
 {{- $xlarge := $res.Resize "1600x webp" -}}
 {{- $xxlarge := $res.Resize "2000x webp" -}}
 {{- $fallback := $res.Resize "1600x jpg" -}}
-<figure
-  class="reveal media-full"
-  {{ if $lightbox }}data-lightbox="{{ $xxlarge.RelPermalink }}"{{ end }}
->
+<figure class="reveal media-full"{{ if $lightbox }} data-lightbox="{{ $xxlarge.RelPermalink }}"{{ end }}>
   <picture>
-    <source
-      type="image/webp"
-      srcset="
-        {{ $large.RelPermalink }} 1200w,
-        {{ $xlarge.RelPermalink }} 1600w,
-        {{ $xxlarge.RelPermalink }} 2000w
-      "
-      sizes="100vw"
-    />
-    <img
-      alt="{{ $alt }}"
-      src="{{ $fallback.RelPermalink }}"
-      width="{{ $fallback.Width }}"
-      height="{{ $fallback.Height }}"
-      class="img-fluid"
-      loading="lazy"
-    />
+    <source type="image/webp"
+            srcset="{{ $large.RelPermalink }} 1200w, {{ $xlarge.RelPermalink }} 1600w, {{ $xxlarge.RelPermalink }} 2000w"
+            sizes="100vw" />
+    <img alt="{{ $alt }}" src="{{ $fallback.RelPermalink }}"
+         width="{{ $fallback.Width }}" height="{{ $fallback.Height }}"
+         class="img-fluid" loading="lazy" />
   </picture>
   {{- with $caption }}<figcaption>{{ . }}</figcaption>{{ end -}}
 </figure>

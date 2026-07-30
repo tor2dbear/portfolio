@@ -6,9 +6,10 @@
   → stop 1, midtones → stop 2, highlights → stop 3.
 
   Applied to every image on the themed page, gated by the blend toggle
-  (data-effect-blend) and yielding to Pantone (:not([data-palette="pantone"])) —
-  the same principle as Pantone's own blend. One filter per mode (the scale
-  flips), swapped by data-mode. Emitted only on themed works pages. */
+  (data-effect-blend) and scoped to the standard palette so Pantone and custom
+  palettes keep their own image treatment with no flash — the same principle as
+  Pantone's own blend. One filter per mode (the scale flips), swapped by
+  data-mode. Emitted only on themed works pages. */
 -}}
 {{- $id := "" -}}
 {{- with .Params.worktheme -}}{{- $id = .color -}}{{- end -}}
@@ -41,16 +42,16 @@
 <style>
   /* Hide the duotone overlays and swap in the tritone filter, mirroring how
      Pantone's tritone takes over. Gated by blend; Pantone still wins. */
-  :root[data-effect-blend="on"]:not([data-palette="pantone"]) picture::before,
-  :root[data-effect-blend="on"]:not([data-palette="pantone"]) picture::after,
-  :root[data-effect-blend="on"]:not([data-palette="pantone"]) .video-wrapper::before,
-  :root[data-effect-blend="on"]:not([data-palette="pantone"]) .video-wrapper::after {
+  :root[data-effect-blend="on"][data-palette="standard"] picture::before,
+  :root[data-effect-blend="on"][data-palette="standard"] picture::after,
+  :root[data-effect-blend="on"][data-palette="standard"] .video-wrapper::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .video-wrapper::after {
     display: none;
   }
-  :root[data-effect-blend="on"]:not([data-palette="pantone"]):not([data-mode="dark"]) :is(img, video) {
+  :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) :is(img, video) {
     filter: url(#wt-{{ $id }}-light);
   }
-  :root[data-effect-blend="on"][data-mode="dark"]:not([data-palette="pantone"]) :is(img, video) {
+  :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] :is(img, video) {
     filter: url(#wt-{{ $id }}-dark);
   }
 </style>

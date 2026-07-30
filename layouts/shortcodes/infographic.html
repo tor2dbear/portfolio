@@ -8,10 +8,9 @@
   assets/css/style.css.
 
   Params:
-  src      (required) bundle resource name, e.g. "cadence-two-layer-model.svg"
-  caption  (optional) figure caption
-  */
--}}
+    src      (required) bundle resource name, e.g. "cadence-two-layer-model.svg"
+    caption  (optional) figure caption
+*/ -}}
 {{- $src := .Get "src" -}}
 {{- $res := .Page.Resources.GetMatch $src -}}
 {{- if not $res -}}
@@ -21,10 +20,7 @@
 {{- /* class: optional extra class on the figure (e.g. "infographic--logomark") */ -}}
 {{- $max := .Get "max" -}}
 {{- $class := .Get "class" -}}
-<figure
-  class="reveal infographic{{ with $class }}{{ . }}{{ end }}"
-  {{ with $max }}style="--ig-max:{{ . }}px"{{ end }}
->
+<figure class="reveal infographic{{ with $class }} {{ . }}{{ end }}"{{ with $max }} style="--ig-max:{{ . }}px"{{ end }}>
   {{ $res.Content | safeHTML }}
   {{- with .Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end -}}
 </figure>

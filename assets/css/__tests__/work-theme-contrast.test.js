@@ -20,7 +20,6 @@ const path = require("path");
 
 const TOML_PATH = path.resolve(__dirname, "../../../data/work-themes.toml");
 const WCAG_AA = 4.5;
-const WCAG_AA_LARGE = 3.0;
 
 // ─── Color math (shared with coty-contrast.test.js) ─────────────────────────
 
@@ -310,10 +309,13 @@ describe("Work Theme Contrast Ratios", () => {
               min: WCAG_AA,
             },
             {
+              // Primary/action fills carry small text (nav CTA is --text-sm,
+              // filled tags --text-xs), so the label must meet normal-text AA,
+              // not the large-text allowance.
               name: "primary button (--on-primary on --primary)",
               fg: "--on-primary",
               bg: "--primary",
-              min: WCAG_AA_LARGE,
+              min: WCAG_AA,
             },
             {
               name: "accent link (--text-accent on --surface-page)",
