@@ -13,14 +13,17 @@ header_image: 01-hero-session
 featured: true
 draft: false
 hidden: false
-live_url: "https://pia.tor2dbear.com"
-live_label: "Öppna PIA"
 role: "Idé, design och utveckling (solo)"
 details:
   year: 2026
   platform: "Webb · installerbar PWA"
   stack: "TypeScript · Vite · Vitest · Supabase · Cloudflare Pages"
   scope: "Idé, design, arkitektur & utveckling"
+client_label: "Type"
+client:
+  name: "Eget initiativ"
+  url: "https://pia.tor2dbear.com"
+  about: "En webbterminal byggd från grunden — filsystem, skal, texteditor och små appar, allt i en flik och installerbar som app på hemskärmen."
 ---
 
 ![Det första PIA gör är att presentera sig vid prompten.](01-hero-session.png "Det första PIA gör är att presentera sig vid prompten.")

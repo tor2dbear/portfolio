@@ -13,14 +13,17 @@ header_image: 01-hero-session
 featured: true
 draft: false
 hidden: false
-live_url: "https://pia.tor2dbear.com"
-live_label: "Try PIA live"
 role: "Concept, design and development (solo)"
 details:
   year: 2026
   platform: "Web · installable PWA"
   stack: "TypeScript · Vite · Vitest · Supabase · Cloudflare Pages"
   scope: "Concept, design, architecture & development"
+client_label: "Type"
+client:
+  name: "Self-initiated"
+  url: "https://pia.tor2dbear.com"
+  about: "A web terminal built from scratch — filesystem, shell, text editor and small apps, all in one tab and installable as a home-screen app."
 ---
 
 ![The first thing PIA does is introduce itself at the prompt.](01-hero-session.png "The first thing PIA does is introduce itself at the prompt.")
