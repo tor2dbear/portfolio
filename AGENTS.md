@@ -518,7 +518,12 @@ client:
 
 - `role` is a single string (comma-separated if multiple roles).
 - `details` keys use `snake_case` for consistent labels.
-- Omit `client` for self-initiated/personal projects.
+- `client` names the client on commissioned work. For a self-initiated or
+  personal project, either omit it, or repurpose the block as a project
+  **type** line: set `client_label` to override the heading (e.g. "Type" /
+  "Typ") with `client.name` = "Self-initiated" / "Eget initiativ" and
+  `client.url` = the live link. cadence and PIA use this to carry the live URL
+  in the project-info sidebar. Localise `client_label` per language.
 
 ### Client Applications (`/clients/`)
 
