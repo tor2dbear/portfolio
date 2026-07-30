@@ -64,6 +64,16 @@
      opened image or hero embed keeps the themed tritone. Emitted only when the
      page hasn't opted out via plain_media (there's no .works-post ancestor on
      the body-level lightbox to carry that exclusion). */
+  :root[data-effect-blend="on"][data-palette="standard"] .lightbox__picture::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .lightbox__picture::after,
+  :root[data-effect-blend="on"][data-palette="standard"] .lightbox__embed-wrap::before,
+  :root[data-effect-blend="on"][data-palette="standard"] .lightbox__embed-wrap::after {
+    /* The global blend overlays (style.css) also land on the lightbox's own
+       <picture> / .video-wrapper; hide them here as the .works-post-scoped
+       rule above can't reach the body-level lightbox, else the standard
+       duotone would stack over the tritone filter below. */
+    display: none;
+  }
   :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) :is(.lightbox__img, .lightbox__embed) {
     filter: url(#wt-{{ $id }}-light);
   }
