@@ -126,24 +126,30 @@
     display: inline-flex;
     align-items: center;
     min-height: var(--size-40);
-    padding: var(--spacing-8) var(--spacing-12);
+    /* 8px inline padding lines the first link's text up with the section
+       headings (which also inset 8px); vertical padding 0 + line-height 1 keeps
+       the row height at the 40px min so it doesn't tower over the mode tab. */
+    padding: 0 var(--spacing-8);
     border-radius: var(--radius-8);
     color: var(--text-default);
     font-size: var(--text-base);
+    line-height: 1;
     text-decoration: none;
     white-space: nowrap;
-    transition: background var(--motion-duration-base)
-        var(--motion-ease-standard),
-      color var(--motion-duration-base) var(--motion-ease-standard);
+    transition: color var(--motion-duration-base) var(--motion-ease-standard);
   }
 
   .settings-nav__link:hover,
   .settings-nav__link:focus-visible {
-    background: var(--state-surface-hover);
+    color: var(--state-selected);
   }
 
+  /* Active = iris text + medium weight (matches the mode options' selected
+     colour). A background fill was invisible on light — --surface-default
+     (iris-2) is near-white there against the elevated panel — and boxed the
+     link taller than its neighbours. Colour reads in both modes. */
   .settings-nav__link.active {
-    background: var(--surface-default);
+    color: var(--state-selected);
     font-weight: var(--sans-weight-medium);
   }
 }
