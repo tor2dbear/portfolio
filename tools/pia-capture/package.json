@@ -1,0 +1,17 @@
+{
+  "name": "pia-capture",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Regenerate the PIA case-study media (demo video, poster, screenshots) from the running PIA app.",
+  "scripts": {
+    "demo": "node record-demo.mjs",
+    "shots": "node capture-shots.mjs",
+    "postinstall": "echo 'Run: npx playwright install chromium (once) — see README.md'"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0"
+  }
+}

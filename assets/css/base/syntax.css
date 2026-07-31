@@ -23,6 +23,21 @@
   padding: 0;
 }
 
+/* PIA's code blocks are terminal output (the command list, the tour diff), so
+   under the phosphor work theme give them the product's own look — phosphor
+   green text on a near-black green panel — instead of the neutral gray they'd
+   otherwise inherit, which read washed-out against the green identity. Scoped
+   to the standard palette, where the --work-* scale is defined; the diff's
+   +/- keep their own red/green (those set an explicit colour). */
+:root[data-palette="standard"][data-work-theme="phosphor"] .highlight pre {
+  background: var(--work-2);
+  border-color: var(--work-4);
+}
+
+:root[data-palette="standard"][data-work-theme="phosphor"] .highlight code {
+  color: var(--work-11);
+}
+
 /* --- Token colors mapped to design tokens --- */
 
 /* Keywords (if, else, return, class, function, etc.) */

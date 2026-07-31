@@ -94,6 +94,12 @@
   // ==========================================================================
 
   function setMode(mode) {
+    // A works page can hard-lock its mode (data-work-mode, set server-side).
+    // Ignore any request to change it — the toggle is hidden there, but the
+    // keyboard shortcut and programmatic callers still route through here.
+    if (document.documentElement.getAttribute("data-work-mode")) {
+      return;
+    }
     localStorage.setItem("theme-mode", mode);
     runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
     applyMode(mode);
@@ -109,6 +115,15 @@
   }
 
   function applyMode(mode) {
+    // A works page can hard-lock its mode (data-work-mode, set server-side).
+    // Enforce it at this single choke point so every caller keeps the lock —
+    // including the OS-appearance listener that calls applyMode("system")
+    // directly while the page is open, which setMode's guard doesn't cover.
+    var lockedWorkMode =
+      document.documentElement.getAttribute("data-work-mode");
+    if (lockedWorkMode) {
+      mode = lockedWorkMode;
+    }
     var requestedMode = mode;
     if (mode === "system") {
       const systemMode = window.matchMedia("(prefers-color-scheme: dark)")
@@ -155,6 +170,36 @@
         option.removeAttribute("aria-current");
       }
     });
+  }
+
+  // Restore the stored colour mode to the default (system). The terminal
+  // `reset` command needs this: setMode is a no-op on a work-mode-locked page,
+  // so a plain setMode("system") would leave the visitor's old preference in
+  // place despite reset's "restored to defaults" message. This clears the
+  // preference and re-applies — applyMode keeps a locked page on its forced
+  // mode, so the display doesn't flip, but the global default is genuinely
+  // restored (and takes effect once the visitor leaves the locked page).
+  function resetMode() {
+    localStorage.setItem("theme-mode", "system");
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
+    applyMode("system");
+    updateModeUI("system");
+  }
+
+  // Terminal in-place navigation swaps #main without reloading <html>, so the
+  // server-set data-work-mode lock doesn't move on its own — terminal-nav.js
+  // syncs the attribute from the destination, then calls this to reconcile the
+  // actual mode. Mirrors init: a locked destination forces its mode, an
+  // unlocked one restores the visitor's stored (or system) preference.
+  // applyMode enforces the lock at its choke point and the mode controls
+  // hide/show via the [data-work-mode] CSS gate, so entering a locked work
+  // installs the lock and leaving it frees the following pages.
+  function reconcileWorkMode() {
+    var locked = document.documentElement.getAttribute("data-work-mode");
+    var mode = locked || localStorage.getItem("theme-mode") || "system";
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
+    applyMode(mode);
+    updateModeUI(mode);
   }
 
   // ==========================================================================
@@ -803,8 +848,14 @@
       '[data-js="effect-motion-toggle"]'
     );
 
-    // Load stored preferences or use defaults
-    const storedMode = localStorage.getItem("theme-mode") || "system";
+    // Load stored preferences or use defaults. A works page may HARD-LOCK its
+    // mode (data-work-mode, set server-side + forced in the head pre-paint); on
+    // such a page the locked value wins over the stored/system choice and the
+    // toggle is hidden. localStorage is not touched, so the stored mode resumes
+    // on the next page.
+    const lockedMode = document.documentElement.getAttribute("data-work-mode");
+    const storedMode =
+      lockedMode || localStorage.getItem("theme-mode") || "system";
     const storedPalette = localStorage.getItem("theme-palette") || "standard";
     // Typography is purely the visitor's own preference (or the site default);
     // a per-project typeset is content-scoped and gated by data-project-typeset
@@ -1046,6 +1097,8 @@
   window.Theme = {
     // Setters
     setMode: setMode,
+    resetMode: resetMode,
+    reconcileWorkMode: reconcileWorkMode,
     setTypography: setTypography,
     setLayout: setLayout,
     restoreLayoutAfterTerminal: restoreLayoutAfterTerminal,

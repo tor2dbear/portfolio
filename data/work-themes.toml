@@ -298,3 +298,48 @@ accent_step_dark = 10
 "10" = "#8ea2e8"
 "11" = "#a6b6ef"
 "12" = "#c9d3f6"
+
+# ── Phosphor — PIA's CRT green, accent-only on a neutral page. ───────────────
+#    Same model as Africa (neutral_surface): the page/body-text/borders stay the
+#    site default (neutral), only the accents recolour. Hue 144 and the dark
+#    accent step are anchored on PIA's real phosphor token (accent #7cf27c =
+#    oklch(86% 0.19 144), bg #0b0f0a = step 1 dark), so the theme reads as the
+#    product's own green. The green glow is brightest in dark mode (a filled
+#    button/tag is the glow with near-black ink); light mode carries the same hue
+#    at reading-legible depth (a mid-green fill with dark ink, deep-green links).
+[[themes]]
+id = "phosphor"
+name = "Phosphor"
+neutral_surface = true
+on_primary_step_light = 12
+on_primary_step_dark = 1
+accent_step_light = 7
+accent_step_dark = 10
+
+[themes.scale_light]
+"1" = "oklch(98.5% 0.01 144)"
+"2" = "oklch(97% 0.022 144)"
+"3" = "oklch(93% 0.045 144)"
+"4" = "oklch(89% 0.075 144)"
+"5" = "oklch(83% 0.11 144)"
+"6" = "oklch(75% 0.145 144)"
+"7" = "oklch(70% 0.17 144)"
+"8" = "oklch(62% 0.16 144)"
+"9" = "oklch(55% 0.15 144)"
+"10" = "oklch(49% 0.135 144)"
+"11" = "oklch(40% 0.11 144)"
+"12" = "oklch(26% 0.065 144)"
+
+[themes.scale_dark]
+"1" = "oklch(16% 0.012 144)"
+"2" = "oklch(20% 0.035 144)"
+"3" = "oklch(25% 0.055 144)"
+"4" = "oklch(30% 0.075 144)"
+"5" = "oklch(37% 0.10 144)"
+"6" = "oklch(45% 0.13 144)"
+"7" = "oklch(55% 0.16 144)"
+"8" = "oklch(66% 0.185 144)"
+"9" = "oklch(77% 0.20 144)"
+"10" = "oklch(86% 0.19 144)"
+"11" = "oklch(90% 0.075 144)"
+"12" = "oklch(94% 0.045 144)"

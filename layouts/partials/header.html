@@ -22,6 +22,7 @@
 {{- $workTheme := "" -}}
 {{- $workLayout := "" -}}
 {{- $workTags := "" -}}
+{{- $workMode := "" -}}
 {{- if eq .Type "works" -}}
   {{- with .Params.worktheme -}}
     {{- with .color -}}
@@ -35,6 +36,17 @@
         {{- $workLayout = . -}}
       {{- end -}}
     {{- end -}}
+    {{- /* Hard-lock the page's colour mode (data-work-mode on <html>): the
+           pre-paint script forces data-mode to this and the mode toggle is
+           hidden, so the project always renders in its own light/dark identity
+           regardless of the visitor's global choice. Unlike layout/typography
+           this is NOT an overridable default — it's a lock. The visitor's
+           stored mode is left untouched and resumes on the next page. */ -}}
+    {{- with .mode -}}
+      {{- if in (slice "dark" "light") . -}}
+        {{- $workMode = . -}}
+      {{- end -}}
+    {{- end -}}
     {{- /* Opt-in filled tag chips (worktheme.tags: filled): the project's own
            tags take the theme's primary fill + on-primary text, matching the
            CTA button. Only meaningful alongside a color theme. */ -}}
@@ -43,7 +55,7 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
-<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}{{ with $workTheme }} data-work-theme="{{ . }}"{{ end }}{{ with $workLayout }} data-work-layout="{{ . }}"{{ end }}{{ with $workTags }} data-work-tags="{{ . }}"{{ end }}>
+<html lang="{{ .Language.Lang }}" data-brand-ready="false" data-home-url="{{ .Site.Home.RelPermalink }}"{{ if $terminalExempt }} data-terminal-exempt="true"{{ end }}{{ if .IsHome }} data-terminal-home="true"{{ end }}{{ with $workTheme }} data-work-theme="{{ . }}"{{ end }}{{ with $workLayout }} data-work-layout="{{ . }}"{{ end }}{{ with $workTags }} data-work-tags="{{ . }}"{{ end }}{{ with $workMode }} data-work-mode="{{ . }}"{{ end }}>
   {{ partial "head.html" . }}
 
 

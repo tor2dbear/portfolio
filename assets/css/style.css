@@ -5,6 +5,12 @@ body {
 
 html {
   scroll-padding-top: calc(var(--size-header-height) + var(--spacing-16));
+  /* Stop iOS Safari inflating text inside wide/overflowing blocks (a <pre>
+     that scrolls horizontally triggers it): the auto-inflation scales lines
+     unevenly, so a monospace code block came out with mixed font sizes. Pin it
+     to the authored size in both orientations. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -436,6 +442,10 @@ footer > * {
   margin-bottom: var(--spacing-16);
 }
 
+.works-post__cta {
+  margin-bottom: var(--spacing-24);
+}
+
 /* Works content AD mapping: keep prose text narrow but allow full-width media blocks */
 .content.post.works-post > .post-content.place-prose {
   display: contents;
@@ -621,6 +631,14 @@ picture,
   display: block;
 }
 
+/* Block, not the default inline: an inline <video> sits on the text baseline and
+   leaves a ~2px descender gap below it inside the block wrapper. The wrapper's
+   ::before/::after blend overlays fill that gap, so under a work-theme blend it
+   showed as a thin coloured line along the video's bottom edge. */
+.video-wrapper video {
+  display: block;
+}
+
 picture::before,
 picture::after,
 .video-wrapper::before,
@@ -735,29 +753,6 @@ video {
 }
 
 /*
- * Optional true-colour media (opt-in via `plain_media` front matter): a works
- * entry whose media is colour-critical (product screenshots, an infographic, a
- * colour-coded motion hero) can opt its own figures OUT of the site's grayscale
- * / duotone image blend. Blend stays the default everywhere else; this is the
- * per-project escape hatch. Scoped to the case body — summary cards in listings
- * keep the unified blend.
- */
-.works-post--plain-media > figure picture::before,
-.works-post--plain-media > figure picture::after,
-.works-post--plain-media > figure .video-wrapper::before,
-.works-post--plain-media > figure .video-wrapper::after {
-  display: none;
-}
-
-.works-post--plain-media > figure img,
-.works-post--plain-media > figure video,
-.works-post--plain-media > figure .hero-embed__frame {
-  -webkit-filter: none;
-  -moz-filter: none;
-  filter: none;
-}
-
-/*
  * Inline infographic (the `infographic` shortcode inlines an SVG). Drawn with
  * currentColor for ink and CSS custom properties for accents, so it follows the
  * manual light/dark theme; being inline SVG it's exempt from the image blend and
@@ -802,8 +797,7 @@ video {
   filter: url(#pantone-tritone);
 }
 
-:root[data-effect-blend="off"] .infographic svg,
-.works-post--plain-media > figure .infographic svg {
+:root[data-effect-blend="off"] .infographic svg {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
@@ -1114,6 +1108,15 @@ p:empty {
   .content.post > .project-info {
     grid-template-columns: minmax(0, 1fr);
     grid-column-gap: var(--spacing-24);
+  }
+
+  /* Stack every variant on mobile. The --cols-2 / --cols-1 rules above carry
+     higher specificity than the base rule, so without matching them here the
+     two-section layout (only PIA has Role + Details) would stay two columns
+     and read cramped on a phone. */
+  .content.post > .project-info.project-info--cols-2,
+  .content.post > .project-info.project-info--cols-1 {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
