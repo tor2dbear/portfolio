@@ -25,9 +25,19 @@
     aria-haspopup="true"
     data-js="settings-toggle"
   >
-    <span class="settings-icon" aria-hidden="true">
+    {{/* The panel is settings-only on desktop (gear), but on phones it also
+      carries the primary nav (see the .settings-nav block below), so the
+      trigger becomes a menu glyph there. CSS swaps the two at the nav
+      breakpoint — settings-dropdown.css.
+    */}}
+    <span class="settings-icon settings-icon--gear" aria-hidden="true">
       <svg class="icon" aria-hidden="true">
         <use href="#icon-settings"></use>
+      </svg>
+    </span>
+    <span class="settings-icon settings-icon--menu" aria-hidden="true">
+      <svg class="icon" aria-hidden="true">
+        <use href="#icon-menu"></use>
       </svg>
     </span>
   </button>
@@ -45,6 +55,51 @@
       the body scrolls when content overflows a detent.
     */}}
     <div class="settings-panel__body" data-js="settings-panel-body">
+      {{/* Mobile navigation. On phones the header drops the primary nav links
+        (no room beside the brand + controls), so they live here at the top of
+        the sheet. Shown only where the header nav is hidden (<=47.9375em) — see
+        settings-dropdown.css; hidden in the desktop dropdown, which sits under a
+        header that already carries the nav. Plain links: a tap navigates and the
+        sheet closes with the page. Active-link + client/employer scoping mirror
+        the header's top nav. Inside .settings-panel__body so it rides the sheet's
+        internal scroll / detents.
+      */}}
+      <nav class="settings-nav" aria-label="{{ i18n "menu_title" }}">
+        <div class="theme-section-heading">
+          <h3 class="theme-section-title">{{ i18n "navigation" }}</h3>
+        </div>
+        <ul class="settings-nav__list">
+          {{- $urltop := .RelPermalink -}}
+          <li class="settings-nav__item" data-menu-id="home">
+            <a
+              class="settings-nav__link {{ if .IsHome }}active{{ end }}"
+              href="{{ "/" | relLangURL }}"
+              {{ if .IsHome }}aria-current="page"{{ end }}
+              >{{ i18n "home" }}</a
+            >
+          </li>
+          {{- range .Site.Menus.top -}}
+            {{- $nameLower := lower .Name -}}
+            {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}
+            {{- if not $isContact -}}
+              {{- $linkURL := .URL | relLangURL -}}
+              <li class="settings-nav__item" data-menu-id="{{ .Identifier }}">
+                <a
+                  class="settings-nav__link {{ if eq $urltop $linkURL }}
+                    active
+                  {{ end }}"
+                  href="{{ $linkURL }}"
+                  {{ if eq $urltop $linkURL }}aria-current="page"{{ end }}
+                  >{{ .Name }}</a
+                >
+              </li>
+            {{- end -}}
+          {{- end -}}
+        </ul>
+      </nav>
+
+      <div class="theme-divider settings-nav__divider"></div>
+
       <div class="theme-section theme-section--mode">
         <div class="theme-section-heading">
           <h3 class="theme-section-title">{{ i18n "mode" }}</h3>

@@ -59,6 +59,95 @@
   display: block;
 }
 
+/* Gear on desktop (settings-only panel), menu glyph on phones where the panel
+   also holds the nav. Swapped at the same breakpoint as .settings-nav. */
+.settings-icon--menu {
+  display: none;
+}
+
+@media (max-width: 47.9375em) {
+  .settings-icon--gear {
+    display: none;
+  }
+
+  .settings-icon--menu {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation in the panel
+   The header drops its primary nav links on phones, so they live at the top of
+   this panel there (inside .settings-panel__body, so they ride the sheet's
+   internal scroll / detents). Hidden by default: the desktop dropdown sits
+   under a header that still shows the nav, so it would be redundant. Revealed
+   at the same breakpoint the header nav disappears (<=47.9375em) — spanning
+   both the tablet dropdown (>=30em) and the phone bottom sheet (<30em).
+   --------------------------------------------------------------------------- */
+.settings-nav,
+.settings-nav__divider {
+  display: none;
+}
+
+@media (max-width: 47.9375em) {
+  .settings-nav {
+    display: block;
+  }
+
+  .settings-nav__divider {
+    display: block;
+  }
+
+  /* One horizontal row, never wrapping — keeps nav to a single line so it adds
+     minimal height to the sheet's resting detent. Overflows sideways if the
+     links ever exceed the width; a horizontal swipe here doesn't collide with
+     the sheet's vertical drag / scroll. */
+  .settings-nav__list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--spacing-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .settings-nav__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .settings-nav__item {
+    flex: 0 0 auto;
+  }
+
+  .settings-nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--size-40);
+    padding: var(--spacing-8) var(--spacing-12);
+    border-radius: var(--radius-8);
+    color: var(--text-default);
+    font-size: var(--text-base);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background var(--motion-duration-base)
+        var(--motion-ease-standard),
+      color var(--motion-duration-base) var(--motion-ease-standard);
+  }
+
+  .settings-nav__link:hover,
+  .settings-nav__link:focus-visible {
+    background: var(--state-surface-hover);
+  }
+
+  .settings-nav__link.active {
+    background: var(--surface-default);
+    font-weight: var(--sans-weight-medium);
+  }
+}
+
 .settings-panel {
   --theme-control-size: var(--size-40);
   /* Drag-to-dismiss progress (0 = at rest, 1 = pulled its full height). Set by
