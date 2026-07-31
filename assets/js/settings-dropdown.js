@@ -6,6 +6,28 @@
 (function () {
   "use strict";
 
+  // Pure decision for where a released detent drag settles, from the sheet's
+  // proposed outer height (px) after following the finger and the two detent
+  // heights. Kept DOM-free for unit testing (see settings-sheet.test.js).
+  //   - pulled well below the resting height (past dismissThreshold) → dismiss;
+  //   - at or above the midpoint between rest and full → expand;
+  //   - otherwise settle at rest ("rest" covers both a snap-back from rest and
+  //     a collapse from expanded).
+  function decideSheetTarget(proposedPx, restPx, fullPx, dismissThreshold) {
+    if (proposedPx <= restPx - dismissThreshold) {
+      return "dismiss";
+    }
+    if (proposedPx >= (restPx + fullPx) / 2) {
+      return "expand";
+    }
+    return "rest";
+  }
+
+  // Testing seam.
+  window.__settingsSheetInternals = {
+    decideSheetTarget: decideSheetTarget,
+  };
+
   document.addEventListener("DOMContentLoaded", function () {
     const toggle = document.querySelector('[data-js="settings-toggle"]');
     const panel = document.querySelector('[data-js="settings-panel"]');
@@ -23,7 +45,10 @@
     // without popover fall through to the legacy implementation unchanged.
     var supportsPopover =
       typeof panel.showPopover === "function" &&
-      Object.prototype.hasOwnProperty.call(window.HTMLElement.prototype, "popover");
+      Object.prototype.hasOwnProperty.call(
+        window.HTMLElement.prototype,
+        "popover"
+      );
 
     function inTerminalLayout() {
       return (
@@ -86,12 +111,64 @@
         panel.style.top = Math.round(r.bottom + 8) + "px";
       }
 
+      // The mobile sheet's internal scroll container; the detent drag grows/
+      // shrinks the sheet around it. Absent on the desktop dropdown path.
+      var panelBody = panel.querySelector('[data-js="settings-panel-body"]');
+      var sheetExpanded = false;
+      // The resting outer height (px), measured while the sheet is actually at
+      // rest (on open, and at the start of a rest drag). Reused when a drag
+      // starts from the expanded state, where the flex-stretched body can no
+      // longer report the content-hugging height.
+      var restHeightPx = 0;
+      // Bumped on every open/close so a deferred callback armed for one open
+      // (e.g. the drag-dismiss fallback) can detect it now belongs to a stale
+      // instance and bail instead of acting on a freshly reopened panel.
+      var openGeneration = 0;
+
       panel.addEventListener("toggle", function (e) {
         var open = e.newState === "open";
+        openGeneration++;
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         setSettingsPanelOpenState(open);
         if (open) {
           positionPanel();
+          // Capture the true resting height now, while the sheet hugs its
+          // content (before any expand stretches the body).
+          restHeightPx = Math.round(panel.getBoundingClientRect().height);
+          updateClipCue();
+        } else {
+          // Reset to the resting detent so the next open starts collapsed, and
+          // rewind the body to the top — the resting sheet doesn't scroll, so a
+          // stale scrollTop would leave the first controls clipped on reopen.
+          // Cancel any in-flight settle and clear its inline sizing too, so a
+          // reopen before the fallback fires doesn't render at (and cache) a
+          // stale detent height, then snap when the old cleanup runs.
+          sheetExpanded = false;
+          panel.classList.remove("is-expanded");
+          panel.classList.remove("is-clipped");
+          cancelPendingSizeCleanup();
+          // Release an in-flight drag too (Escape / grid-switch can close the
+          // sheet mid-drag); otherwise a stuck dragPointerId rejects every
+          // pointerdown after reopening and the detent interaction is dead.
+          if (dragPointerId !== null) {
+            try {
+              panel.releasePointerCapture(dragPointerId);
+            } catch (err) {
+              /* not captured */
+            }
+            dragPointerId = null;
+          }
+          dragEngaged = false;
+          dragDelta = 0;
+          panel.classList.remove("is-dragging");
+          panel.style.height = "";
+          panel.style.maxHeight = "";
+          panel.style.transform = "";
+          panel.style.transition = "";
+          panel.style.removeProperty("--sheet-drag");
+          if (panelBody) {
+            panelBody.scrollTop = 0;
+          }
         }
       });
 
@@ -103,17 +180,44 @@
       window.addEventListener("resize", reposition);
       window.addEventListener("scroll", reposition, { passive: true });
 
-      // --- Drag-to-dismiss for the mobile bottom sheet ---------------------
+      // A viewport change (e.g. rotation) makes the cached resting height stale.
+      // Re-measure it when the sheet is at rest; when it's expanded the resting
+      // height can't be measured, so invalidate it and let restingHeight()
+      // recompute from content on the next collapse.
+      window.addEventListener("resize", function () {
+        if (!panel.matches(":popover-open")) {
+          return;
+        }
+        restHeightPx = sheetExpanded
+          ? 0
+          : Math.round(panel.getBoundingClientRect().height);
+        updateClipCue();
+      });
+
+      // --- Detent drag for the mobile bottom sheet -------------------------
       // Only the sheet layout (< 30em, open) is draggable; the desktop
-      // dropdown is left alone. A downward drag from the top handle zone
-      // follows the finger; releasing past a threshold hides the popover,
-      // otherwise it snaps back.
-      var DRAG_ZONE = 56; // px from the top of the panel that starts a drag
+      // dropdown is left alone. The resting sheet is a single drag surface
+      // (its body doesn't scroll), so a drag ANYWHERE drives the detents: a
+      // downward pull follows the finger and dismisses past a threshold, an
+      // upward pull expands the sheet toward full height (when there's overflow
+      // to reveal). Once expanded the body scrolls; only a downward pull that
+      // starts at the very top (scrollTop 0) is reclaimed to collapse back to
+      // rest — mid-scroll gestures are left to the browser. Expand/collapse
+      // snap on release; only the dismiss pull tracks the finger. A drag that
+      // engages suppresses the click it would otherwise fire on a control.
       var DRAG_ENGAGE = 6; // px of travel before we treat it as a drag
       var dragPointerId = null;
       var dragStartY = 0;
       var dragDelta = 0;
       var dragEngaged = false;
+      var dragCanExpand = false; // is there overflow to reveal by expanding?
+      var suppressNextClick = false;
+      // Geometry snapshot taken when a drag engages, so the live resize and the
+      // release decision share one coordinate frame.
+      var dragStartMax = 0; // sheet outer height at engage (px)
+      var dragRestPx = 0; // resting detent height (px)
+      var dragFullPx = 0; // expanded detent height (px)
+      var dragStartedExpanded = false; // did this drag begin from fullscreen?
 
       function isMobileSheet() {
         return (
@@ -122,8 +226,151 @@
         );
       }
 
+      // Panel padding + borders (px) — the chrome around the scrollable body.
+      function panelChromeV() {
+        var cs = getComputedStyle(panel);
+        return (
+          parseFloat(cs.paddingTop) +
+          parseFloat(cs.paddingBottom) +
+          parseFloat(cs.borderTopWidth) +
+          parseFloat(cs.borderBottomWidth)
+        );
+      }
+
+      // The body's intrinsic content height (px), reliable even while the body
+      // is flex-stretched to the expanded detent (where scrollHeight reports the
+      // stretched client height, not the content). Measures the last child's
+      // extent from the body's content top instead.
+      function bodyContentHeight() {
+        if (!panelBody) {
+          return 0;
+        }
+        var last = panelBody.lastElementChild;
+        if (!last) {
+          return panelBody.scrollHeight;
+        }
+        var bottom =
+          last.getBoundingClientRect().bottom -
+          panelBody.getBoundingClientRect().top +
+          panelBody.scrollTop +
+          (parseFloat(getComputedStyle(last).marginBottom) || 0);
+        return Math.round(bottom);
+      }
+
+      // The resting outer height (px): the sheet hugs its content up to the rest
+      // cap (82dvh). Prefer the value measured while actually at rest; fall back
+      // to the intrinsic content height (used when the cache was invalidated,
+      // e.g. after a resize while expanded). Both are clamped to the cap.
+      function restingHeight() {
+        var cap = sheetBounds().rest;
+        if (restHeightPx > 0) {
+          return Math.min(restHeightPx, cap);
+        }
+        return Math.min(bodyContentHeight() + panelChromeV(), cap);
+      }
+
+      // Resolve a CSS length token to pixels. getPropertyValue on a custom
+      // property returns the raw token (e.g. "1.5rem", not "24px"), so a rem
+      // value must be scaled by the root font size rather than parseFloat'd
+      // straight — otherwise "1.5rem" reads as 1.5px.
+      function tokenToPx(prop, fallback) {
+        var raw = getComputedStyle(document.documentElement)
+          .getPropertyValue(prop)
+          .trim();
+        var n = parseFloat(raw);
+        if (isNaN(n)) {
+          return fallback;
+        }
+        if (raw.indexOf("rem") !== -1) {
+          var root =
+            parseFloat(getComputedStyle(document.documentElement).fontSize) ||
+            16;
+          return n * root;
+        }
+        return n;
+      }
+
+      // The two detent heights (px) the CSS caps the sheet at: rest = 82dvh,
+      // full = 100dvh - --spacing-24. innerHeight stands in for dvh. Keep the
+      // 0.82 rest fraction in sync with --sheet-max in settings-dropdown.css.
+      function sheetBounds() {
+        var vh = window.innerHeight || 0;
+        var gap = tokenToPx("--spacing-24", 24);
+        return { rest: Math.round(vh * 0.82), full: Math.round(vh - gap) };
+      }
+
+      // Show the bottom-fade overflow cue only when the resting sheet still has
+      // content below the fold — i.e. not expanded, not mid-drag, and there's
+      // room left to scroll (a mouse/keyboard user can scroll the resting body,
+      // so drop the cue once they reach the end). Re-run on body scroll.
+      function updateClipCue() {
+        var clipped = false;
+        if (panelBody && panel.matches(":popover-open")) {
+          // Purely whether there's more content below the fold right now — not
+          // tied to the detent flag, so it tracks a live resize drag (the flag
+          // only flips at release). Fades in/out via the ::after opacity.
+          var remaining =
+            panelBody.scrollHeight -
+            panelBody.clientHeight -
+            panelBody.scrollTop;
+          clipped = remaining > 1;
+        }
+        panel.classList.toggle("is-clipped", clipped);
+      }
+
       function setDragTransition(on) {
         panel.style.transition = on ? "" : "none";
+      }
+
+      // Teardown for the in-flight settle cleanup (below), so a new drag can
+      // cancel the previous settle's pending listener + fallback timer before
+      // they fire mid-gesture and wipe the live inline size.
+      var pendingSizeCleanup = null;
+
+      function cancelPendingSizeCleanup() {
+        if (pendingSizeCleanup) {
+          pendingSizeCleanup();
+        }
+      }
+
+      // After a detent settle animates, clear the inline height/max-height so
+      // CSS controls the sheet again (the resting cap hugs content; .is-expanded
+      // holds the full height) — otherwise a stale inline px would survive a
+      // rotation or content change.
+      function clearInlineSizeAfterTransition() {
+        cancelPendingSizeCleanup(); // supersede any previous settle
+        var done = false;
+        var teardown = function () {
+          if (done) {
+            return;
+          }
+          done = true;
+          panel.removeEventListener("transitionend", onHeightEnd);
+          window.clearTimeout(timer);
+          if (pendingSizeCleanup === teardown) {
+            pendingSizeCleanup = null;
+          }
+        };
+        var clear = function () {
+          if (done) {
+            return;
+          }
+          teardown();
+          panel.style.height = "";
+          panel.style.maxHeight = "";
+          // Layout is final now — re-evaluate whether the resting sheet clips.
+          updateClipCue();
+        };
+        var onHeightEnd = function (ev) {
+          if (ev.target === panel && ev.propertyName === "height") {
+            clear();
+          }
+        };
+        panel.addEventListener("transitionend", onHeightEnd);
+        var timer = window.setTimeout(clear, 500); // fallback if end is missed
+        // A superseding drag calls this to drop the listener/timer WITHOUT
+        // clearing (the new gesture now owns the inline size).
+        pendingSizeCleanup = teardown;
       }
 
       function onDragMove(e) {
@@ -132,27 +379,74 @@
         }
         var delta = e.clientY - dragStartY;
         if (!dragEngaged) {
-          if (delta < DRAG_ENGAGE) {
-            // Ignore upward / tiny moves; let them stay a tap or scroll.
+          // Engage on travel in either direction (down = dismiss/collapse,
+          // up = expand); a tiny move stays a tap.
+          if (Math.abs(delta) < DRAG_ENGAGE) {
+            return;
+          }
+          // Expanded + upward from the top means the user is scrolling into the
+          // content — release the gesture back to the browser rather than drag.
+          if (sheetExpanded && delta < 0) {
+            dragPointerId = null;
             return;
           }
           dragEngaged = true;
+          // A settle from a previous drag may still be animating — drop its
+          // pending cleanup so its fallback timer can't wipe this drag's size.
+          cancelPendingSizeCleanup();
+          // Keep the overflow fade through the drag (it re-evaluates on settle)
+          // so it doesn't blink out the moment you touch the sheet.
           setDragTransition(false);
           panel.classList.add("is-dragging"); // freezes the ::backdrop transition
+          // Snapshot the geometry the live resize + release decision work in:
+          // the outer height at grab, the full detent, and the resting height
+          // (measured when already at rest, computed from content otherwise).
+          dragStartMax = Math.round(panel.getBoundingClientRect().height);
+          dragFullPx = sheetBounds().full;
+          dragStartedExpanded = sheetExpanded;
+          // Whether expanding would actually reveal anything: measured now, while
+          // the body is still at its resting layout (before the resize below).
+          // Already expanded → the body scrolls, so treat as expandable.
+          dragCanExpand =
+            sheetExpanded ||
+            (!!panelBody &&
+              panelBody.scrollHeight > panelBody.clientHeight + 1);
+          if (!sheetExpanded) {
+            // At rest the measured height IS the resting height — keep it fresh
+            // for a later collapse that starts from the expanded state.
+            restHeightPx = dragStartMax;
+          }
+          dragRestPx = sheetExpanded ? restingHeight() : dragStartMax;
           try {
             panel.setPointerCapture(dragPointerId);
           } catch (err) {
             /* capture unsupported */
           }
         }
-        // Clamp so an upward drag can't lift the sheet above its resting spot.
-        dragDelta = Math.max(0, delta);
+        dragDelta = delta;
         e.preventDefault();
-        panel.style.transform = "translateY(" + dragDelta + "px)";
-        // Fade the scrim/blur out in step with the pull (0 at rest → 1 when the
-        // sheet has travelled its full height).
-        var progress = Math.min(1, dragDelta / (panel.offsetHeight || 1));
-        panel.style.setProperty("--sheet-drag", String(progress));
+        // Follow the finger with an explicit height (not max-height, which
+        // wouldn't stretch past the content): pulling up grows the sheet toward
+        // full, pulling down shrinks it toward rest; below rest it becomes the
+        // dismiss track (hold at rest height + slide down, fading the scrim).
+        var proposed = dragStartMax - delta;
+        panel.style.maxHeight = "none";
+        if (proposed >= dragRestPx) {
+          panel.style.transform = "";
+          panel.style.height = Math.min(proposed, dragFullPx) + "px";
+          panel.style.setProperty("--sheet-drag", "0");
+        } else {
+          panel.style.height = dragRestPx + "px";
+          var off = dragRestPx - proposed;
+          panel.style.transform = "translateY(" + off + "px)";
+          panel.style.setProperty(
+            "--sheet-drag",
+            String(Math.min(1, off / (dragRestPx || 1)))
+          );
+        }
+        // Re-evaluate the overflow fade against the sheet's new live height, so
+        // it fades in as a collapse crosses into overflow (not only on release).
+        updateClipCue();
       }
 
       function endDrag(e) {
@@ -172,22 +466,51 @@
         if (!wasEngaged) {
           return;
         }
-        var threshold = Math.min(120, panel.offsetHeight * 0.25);
+        // The gesture became a drag, not a tap — swallow the click it would
+        // otherwise synthesize on the control it started on. Only a pointerup
+        // synthesizes that click; a pointercancel doesn't, so don't leave the
+        // flag armed to swallow the user's next real click/keyboard activation.
+        suppressNextClick = e.type === "pointerup";
+        var dismissThreshold = Math.min(120, (dragRestPx || 480) * 0.25);
+        var action = decideSheetTarget(
+          dragStartMax - delta,
+          dragRestPx,
+          dragFullPx,
+          dismissThreshold
+        );
+        // The drag follows the finger, but don't SETTLE expanded when there's
+        // nothing to reveal — otherwise a compact sheet rests as a near-empty
+        // fullscreen. Fall back to rest instead.
+        if (action === "expand" && !dragCanExpand) {
+          action = "rest";
+        }
+        // Dismissal is reserved for drags that begin at rest; a long pull that
+        // starts from fullscreen collapses to rest rather than closing.
+        if (action === "dismiss" && dragStartedExpanded) {
+          action = "rest";
+        }
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
         panel.classList.remove("is-dragging");
         setDragTransition(true);
         void panel.offsetHeight; // flush so the dragged position is the start
-        if (delta > threshold) {
+        if (action === "dismiss") {
           // Slide the rest of the way down from the finger position and fade the
           // scrim fully out in sync, then close.
           var settled = false;
+          var dismissGen = openGeneration;
           var finish = function () {
             if (settled) {
               return;
             }
             settled = true;
             panel.removeEventListener("transitionend", onEnd);
+            // If the panel was closed and reopened since this dismiss armed, the
+            // callback belongs to a stale instance — don't hidePopover() (which
+            // would close the new one) or touch its inline styles.
+            if (openGeneration !== dismissGen) {
+              return;
+            }
             try {
               panel.hidePopover();
             } catch (err) {
@@ -197,6 +520,8 @@
             // (::backdrop + @starting-style drive the enter animation).
             panel.style.transform = "";
             panel.style.transition = "";
+            panel.style.height = "";
+            panel.style.maxHeight = "";
             panel.style.removeProperty("--sheet-drag");
           };
           var onEnd = function (ev) {
@@ -208,11 +533,33 @@
           window.setTimeout(finish, 500); // fallback if transitionend is missed
           panel.style.transform = "translateY(100%)";
           panel.style.setProperty("--sheet-drag", "1");
-        } else {
-          // Snap back to the resting position and restore the full scrim.
-          panel.style.transform = "";
-          panel.style.setProperty("--sheet-drag", "0");
+          return;
         }
+        panel.style.transform = "";
+        panel.style.setProperty("--sheet-drag", "0");
+        // Leave max-height unconstrained (it's "none" from the drag) through the
+        // height transition — a none→length max-height isn't interpolated, so
+        // reapplying the cap now would clamp a high dragged height to rest before
+        // the height can animate (a snap). clearInlineSizeAfterTransition clears
+        // both once the height settles.
+        if (action === "expand") {
+          sheetExpanded = true;
+          panel.classList.add("is-expanded");
+          // Animate the explicit height the rest of the way to full, then hand
+          // it back to the class (which holds the full height).
+          panel.style.height = dragFullPx + "px";
+        } else {
+          // "rest": snap-back from rest, or collapse from expanded. Reset the
+          // body to the top, animate to the hug height, then hand back to the
+          // resting cap.
+          sheetExpanded = false;
+          panel.classList.remove("is-expanded");
+          if (panelBody) {
+            panelBody.scrollTop = 0;
+          }
+          panel.style.height = restingHeight() + "px";
+        }
+        clearInlineSizeAfterTransition();
       }
 
       panel.addEventListener("pointerdown", function (e) {
@@ -222,9 +569,18 @@
         if (e.pointerType === "mouse") {
           return; // touch/pen only — mouse users have light-dismiss
         }
-        var r = panel.getBoundingClientRect();
-        if (e.clientY - r.top > DRAG_ZONE) {
-          return; // grabbed below the handle zone — leave scrolling alone
+        suppressNextClick = false; // fresh gesture — drop any stale suppression
+        // Expanded + scrolled: leave a gesture that starts INSIDE the scrollable
+        // body to the browser (it's scrolling). But the pinned handle/top
+        // padding (target is the panel, not the body) must always be able to
+        // collapse the sheet, even when the content is scrolled down.
+        if (
+          sheetExpanded &&
+          panelBody &&
+          panelBody.scrollTop > 0 &&
+          panelBody.contains(e.target)
+        ) {
+          return;
         }
         dragPointerId = e.pointerId;
         dragStartY = e.clientY;
@@ -234,6 +590,27 @@
       panel.addEventListener("pointermove", onDragMove);
       panel.addEventListener("pointerup", endDrag);
       panel.addEventListener("pointercancel", endDrag);
+
+      // A mouse/keyboard user can scroll the resting body; re-evaluate the
+      // overflow cue so it lifts once they reach the end.
+      if (panelBody) {
+        panelBody.addEventListener("scroll", updateClipCue, { passive: true });
+      }
+
+      // A drag that engaged (moved past the threshold) must not also fire a
+      // click on whatever control it started on — swallow the synthesized click
+      // in the capture phase before it reaches the button/radio.
+      panel.addEventListener(
+        "click",
+        function (e) {
+          if (suppressNextClick) {
+            suppressNextClick = false;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        true
+      );
 
       window.addEventListener("theme:layout-changed", function (e) {
         if (e && e.detail && e.detail.layout === "terminal") {

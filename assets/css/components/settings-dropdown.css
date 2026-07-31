@@ -67,15 +67,17 @@
      defined (0) before JS runs. */
   --sheet-drag: 0;
   position: fixed;
-  bottom: var(--spacing-8);
-  left: var(--spacing-8);
-  right: var(--spacing-8);
+  /* Mobile bottom sheet: edge-to-edge, flush to the bottom (no inset margin).
+     Desktop (≥30em) re-anchors this as a dropdown below the toggle. */
+  bottom: 0;
+  left: 0;
+  right: 0;
   top: auto;
   min-width: unset;
   background: var(--surface-elevated);
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-12) var(--spacing-12) 0 0;
-  padding: var(--spacing-32) var(--spacing-12) var(--spacing-24);
+  padding: var(--spacing-32) var(--spacing-12) 0;
   transform: translateY(calc(100% + var(--spacing-16)));
   box-shadow: var(--shadow-03);
   z-index: 1000;
@@ -88,6 +90,8 @@
   transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
     transform var(--motion-duration-sheet) var(--motion-ease-emphasized),
     visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    max-height var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    height var(--motion-duration-sheet) var(--motion-ease-emphasized),
     display var(--motion-duration-sheet) var(--motion-ease-emphasized)
       allow-discrete,
     overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
@@ -123,12 +127,97 @@
      popover default is width: fit-content, so set it back to auto. Desktop
      overrides this with a fixed width below. */
   width: auto;
-  /* The sheet has no internal scroll on mobile, so claim single-finger vertical
-     gestures for the drag-to-dismiss handler instead of letting the browser
-     start a pan (which would steal the gesture and cancel our pointer events).
-     `pinch-zoom` (not `none`) still lets low-vision users magnify the settings.
-     Desktop resets this below. */
+  /* The top handle zone drives the detent drag (settings-dropdown.js), so claim
+     single-finger vertical gestures there instead of letting the browser pan —
+     which would steal the gesture and cancel our pointer events. The scrollable
+     body below (.settings-panel__body) overrides this with `pan-y` so its
+     overflow still scrolls. `pinch-zoom` (not `none`) keeps magnify for
+     low-vision users. Desktop resets this below. */
   touch-action: pinch-zoom;
+}
+
+/* --- Mobile bottom-sheet detents (rest ⇄ expanded) -------------------------
+   The sheet rests at --sheet-max (a partial height) and expands toward full
+   height when dragged up by the handle (settings-dropdown.js toggles
+   .is-expanded). The body is the internal scroll container, so content that
+   overflows either detent stays reachable: the handle zone drives the detents,
+   panning the body scrolls it. Scoped to the sheet range so the desktop
+   dropdown (which scrolls at the panel level) is untouched. */
+@media (max-width: 29.9375em) {
+  .settings-panel[popover] {
+    display: flex;
+    flex-direction: column;
+    /* Edge-to-edge sheet: keep the border on the top + sides (it defines the
+       rounded top edge), but drop only the bottom border — flush at the screen
+       edge it drew a hairline that flickered as iOS Safari's toolbar
+       showed/hid. Desktop keeps its full border. */
+    border-bottom: none;
+    /* Resting height cap. Keep the 0.82 fraction in sync with sheetBounds()
+       in settings-dropdown.js (used for the collapse-from-expanded fallback). */
+    --sheet-max: 82dvh;
+    /* border-box so --sheet-max is the whole sheet's height, padding + border
+       included. Without it the 56px vertical padding is added on top of the cap,
+       pushing the expanded sheet's top (and the collapse handle) off-screen. */
+    box-sizing: border-box;
+    max-height: var(--sheet-max);
+    /* The panel clips; the body below is what scrolls. */
+    overflow: hidden;
+  }
+
+  .settings-panel[popover].is-expanded {
+    --sheet-max: calc(100dvh - var(--spacing-24));
+    /* Explicit full height so the sheet reaches fullscreen even when its
+       content is shorter (the drag interpolates this height live). */
+    height: calc(100dvh - var(--spacing-24));
+  }
+
+  .settings-panel[popover] .settings-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    /* At rest a single-finger touch can't scroll the body — touch-action allows
+       only pinch-zoom, not pan — so a touch drag drives the detent instead of
+       scrolling (content "doesn't scroll until fullscreen" on touch). The body
+       is still a scroll container, though, so mouse-wheel, keyboard focus and
+       pinch-zoom can reach content that overflows the resting detent. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pinch-zoom;
+    /* Air below the last row lives *inside* the scroll container so it trails
+       the content (revealed once you scroll to the end) instead of being a
+       fixed band at the panel's bottom that eats into the visible viewport and
+       clips the last row. Honors the iOS home indicator on the flush edge. */
+    padding-bottom: max(var(--spacing-16), env(safe-area-inset-bottom));
+  }
+
+  .settings-panel[popover].is-expanded .settings-panel__body {
+    /* Expanded: let touch pan the content too; the JS reclaims a downward pull
+       that starts at the top (scrollTop 0) to collapse the sheet. */
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* Overflow cue: a soft gradient over the sheet's bottom edge (the sheet has no
+     bottom padding, so it sits over real content) that dissolves the last of the
+     content — reads as "there's more — drag up to expand". Its opacity is
+     transitioned so it fades in/out rather than popping when .is-clipped toggles.
+     JS toggles .is-clipped only at rest while the body overflows, and lifts it
+     once scrolled to the end or expanded. pointer-events:none so it never blocks
+     the control underneath. */
+  .settings-panel[popover]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--spacing-40) + var(--spacing-16));
+    background: linear-gradient(to top, var(--surface-elevated), transparent);
+    opacity: 0;
+    transition: opacity var(--motion-duration-base) var(--motion-ease-standard);
+    pointer-events: none;
+  }
+
+  .settings-panel[popover].is-clipped::after {
+    opacity: 1;
+  }
 }
 
 /* Lock background scroll while the mobile bottom sheet is open. Desktop keeps
