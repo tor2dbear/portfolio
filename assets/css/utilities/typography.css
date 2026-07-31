@@ -400,7 +400,12 @@ code {
 }
 
 .prose :not(pre) > code {
-  background-color: var(--surface-subtle);
+  /* Match the code block (.highlight pre): a --gray-2 fill plus a
+     --border-subtle hairline. --surface-subtle alone is invisible in light
+     mode, where it mixes down to the white page colour; the fill+border reads
+     in both modes and keeps inline and block code consistent. */
+  background-color: var(--gray-2);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-2);
   padding-inline: 0.3em;
   padding-block: 0.1em;
@@ -424,6 +429,26 @@ figcaption {
   font-size: var(--text-sm);
   color: var(--text-muted);
   font-style: italic;
+  margin-top: var(--spacing-12);
+  line-height: var(--line-height-normal);
+}
+
+/* A caption for a fenced code block. A code block is a bare <pre>, not a
+   <figure>, so it can't carry a <figcaption>; this styles the paragraph that
+   follows it (tagged `{.code-caption}` in markdown) to read like one — small,
+   muted, tucked up under the block. */
+.content.post .prose p.code-caption {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: var(--spacing-12);
+}
+
+/* Give a code block room before the paragraph that follows it — that paragraph
+   has no top margin of its own, so the two sat too close. The caption paragraph
+   (```diff + {.code-caption}) is excluded so it stays tucked under its block. */
+.content.post .prose .highlight + p:not(.code-caption) {
+  margin-top: var(--spacing-32);
 }
 
 /* ==========================================================================

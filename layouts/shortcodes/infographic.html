@@ -1,0 +1,26 @@
+{{- /*
+  infographic — inline a bundle SVG into the page (rather than an <img>), so it
+  participates in the page's CSS: it follows the site's manual light/dark theme
+  via currentColor + theme variables, and it isn't touched by the image-blend
+  effect (which targets <img>/<video>), so a colour-coded diagram keeps its
+  colours. Draw the SVG with fill/stroke="currentColor" for ink and CSS custom
+  properties (e.g. var(--ig-enter)) for accents — see the .infographic rules in
+  assets/css/style.css.
+
+  Params:
+    src      (required) bundle resource name, e.g. "cadence-two-layer-model.svg"
+    caption  (optional) figure caption
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- $res := .Page.Resources.GetMatch $src -}}
+{{- if not $res -}}
+  {{- errorf "infographic: resource %q not found (%s)" $src .Position -}}
+{{- end -}}
+{{- /* max: optional max display width in px (e.g. a small logomark vs a wide diagram) */ -}}
+{{- /* class: optional extra class on the figure (e.g. "infographic--logomark") */ -}}
+{{- $max := .Get "max" -}}
+{{- $class := .Get "class" -}}
+<figure class="reveal infographic{{ with $class }} {{ . }}{{ end }}"{{ with $max }} style="--ig-max:{{ . }}px"{{ end }}>
+  {{ $res.Content | safeHTML }}
+  {{- with .Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end -}}
+</figure>

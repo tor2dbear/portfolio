@@ -107,6 +107,12 @@ button:disabled,
   color: var(--on-primary);
 }
 
+/* Icons inside buttons inherit the button's text colour (the base .icon rule
+   otherwise pins color to --text-default, so currentColor wouldn't match). */
+.button .icon {
+  color: inherit;
+}
+
 .button--primary:hover {
   background-image: linear-gradient(
     var(--state-primary-hover),

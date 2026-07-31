@@ -94,6 +94,7 @@ describe("terminal command line", () => {
       "data-terminal-replaying",
       "data-terminal-exempt",
       "data-terminal-booted",
+      "data-work-mode",
       "lang",
     ].forEach((attr) => document.documentElement.removeAttribute(attr));
     // A test may pushState to a deeper path; reset so location-derived logic
@@ -254,6 +255,38 @@ describe("terminal command line", () => {
     expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
     typeCommand("set typography technical");
     expect(localStorage.getItem("theme-typography")).toBe("technical");
+  });
+
+  test("a mode-locked page (data-work-mode) rejects mode commands and drops mode from set", () => {
+    document.documentElement.setAttribute("data-work-mode", "dark");
+    document.documentElement.setAttribute("data-mode", "dark");
+    loadModule();
+    typeCommand("light");
+    // The lock holds — no flip — and the terminal says so instead of "mode → …".
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+    expect(sessionText()).toContain("locked");
+    expect(sessionText()).not.toContain("mode → light");
+    // `set mode …` delegates to the same guard.
+    typeCommand("set mode light");
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
+    // localStorage is never touched by the rejected change.
+    expect(localStorage.getItem("theme-mode")).toBe(null);
+    // `set` no longer lists mode as an editable axis.
+    typeCommand("set");
+    expect(sessionText()).toContain("layout");
+    expect(sessionText()).not.toMatch(/\bmode\b\s+·/);
+  });
+
+  test("reset restores the stored mode default even on a mode-locked page", () => {
+    document.documentElement.setAttribute("data-work-mode", "dark");
+    document.documentElement.setAttribute("data-mode", "dark");
+    localStorage.setItem("theme-mode", "light");
+    loadModule();
+    typeCommand("reset");
+    // The stored preference is genuinely reset to the default…
+    expect(localStorage.getItem("theme-mode")).toBe("system");
+    // …but the locked page keeps its forced dark display.
+    expect(document.documentElement.getAttribute("data-mode")).toBe("dark");
   });
 
   test("set with no args previews the main axes and folds the rest under a pager", () => {
@@ -1463,6 +1496,26 @@ describe("terminal command line", () => {
     expect(iA).toBeGreaterThanOrEqual(0);
     // The two image lines are adjacent — no empty separator line between.
     expect(iB).toBe(iA + 1);
+  });
+
+  test("a fenced code block is serialized into cat output, not dropped", () => {
+    window.history.pushState({}, "", "/works/pia/");
+    const main = document.createElement("main");
+    main.id = "main";
+    main.innerHTML =
+      '<div class="content post">' +
+      "<p>Before the block.</p>" +
+      '<div class="highlight"><pre><code class="language-diff"> guest@pia:~$ ok\n+added line\n</code></pre></div>' +
+      "<p>After the block.</p>" +
+      "</div>";
+    document.body.appendChild(main);
+    loadModule();
+    typeCommand("cat pia.md");
+    const txt = sessionText();
+    expect(txt).toContain("Before the block.");
+    expect(txt).toContain("+added line"); // the code survived serialization
+    expect(txt).toContain("```diff"); // fenced with its language
+    expect(txt).toContain("After the block.");
   });
 
   test("cat of a post lands the reader at the top and marks the new content", () => {

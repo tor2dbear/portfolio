@@ -5,6 +5,12 @@ body {
 
 html {
   scroll-padding-top: calc(var(--size-header-height) + var(--spacing-16));
+  /* Stop iOS Safari inflating text inside wide/overflowing blocks (a <pre>
+     that scrolls horizontally triggers it): the auto-inflation scales lines
+     unevenly, so a monospace code block came out with mixed font sizes. Pin it
+     to the authored size in both orientations. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -73,18 +79,16 @@ body {
   animation-duration: var(--motion-duration-view-transition);
 }
 
-/* The header is on every page: give it its own group and hold it static instead
-   of cross-fading it (its content differs per page — active link, the
-   scroll-progress wordmark — so a plain cross-fade flickers). Its icons are
-   inlined in topmenu.html so they render in the snapshot rather than blinking. */
-.top-menu {
-  view-transition-name: top-menu;
-}
-::view-transition-group(top-menu),
-::view-transition-old(top-menu),
-::view-transition-new(top-menu) {
-  animation: none;
-}
+/* The header rides the root cross-fade (it has no view-transition-name of its
+   own), so its background and CTA button fade in sync with the rest of the page
+   surface. It used to be isolated in its own group and held static, but the work
+   themes change the header colours (--surface-page / --primary), and a held
+   snapshot snaps to the new colours instead of blending — read as a blink of the
+   header bg + button when navigating to/from a themed works page. Letting it
+   share the page's cross-fade turns that snap into a smooth, synchronised
+   dissolve. Trade-off: the per-page bits (active-link state, scroll-progress
+   wordmark) now cross-dissolve too; if that shimmer is distracting, give just
+   those elements their own held-static view-transition-name. */
 
 /* Pause the scroll-reveal entry animation while the transition runs, so content
    doesn't slide in over the cross-fade. The flag is set/cleared by a head
@@ -438,6 +442,10 @@ footer > * {
   margin-bottom: var(--spacing-16);
 }
 
+.works-post__cta {
+  margin-bottom: var(--spacing-24);
+}
+
 /* Works content AD mapping: keep prose text narrow but allow full-width media blocks */
 .content.post.works-post > .post-content.place-prose {
   display: contents;
@@ -623,6 +631,14 @@ picture,
   display: block;
 }
 
+/* Block, not the default inline: an inline <video> sits on the text baseline and
+   leaves a ~2px descender gap below it inside the block wrapper. The wrapper's
+   ::before/::after blend overlays fill that gap, so under a work-theme blend it
+   showed as a thin coloured line along the video's bottom edge. */
+.video-wrapper video {
+  display: block;
+}
+
 picture::before,
 picture::after,
 .video-wrapper::before,
@@ -696,6 +712,116 @@ video {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
+}
+
+/*
+ * Hero embed (an <iframe> animation, e.g. the Cadence works hero) opts into the
+ * same image-blend treatment as <img>/<video>: the tint overlays come from its
+ * .video-wrapper, and these three rules mirror the grayscale / Pantone tri-tone
+ * / blend-off filter states so the hero tracks the active palette instead of
+ * standing outside it. Kept in lockstep with the img/video rules above.
+ */
+.hero-embed__frame {
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .hero-embed__frame {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .hero-embed__frame {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
+/*
+ * Full-bleed body image (the `media-full` shortcode). Lives in the body for a
+ * closing "here's the actual product" beat. The works single template lifts the
+ * figure out of the prose column and re-emits it as a direct .use-subgrid child
+ * with .place-full, so it spans the full content width (see works/single.html).
+ * The caption is pulled back to a readable measure and centred on the column.
+ */
+.media-full figcaption {
+  max-width: 68ch;
+  margin-inline: 0;
+}
+
+/*
+ * Inline infographic (the `infographic` shortcode inlines an SVG). Drawn with
+ * currentColor for ink and CSS custom properties for accents, so it follows the
+ * manual light/dark theme; being inline SVG it's exempt from the image blend and
+ * keeps its colours. Role accents deepen on the light parchment and brighten on
+ * dark — the same pairs the motion hero uses.
+ */
+.infographic {
+  color: var(--text-default);
+  /* default max display width; the shortcode's `max` param overrides it inline */
+  --ig-max: 640px;
+  --ig-enter: #177f70;
+  --ig-exit: #b0402a;
+  --ig-move: #9a5e23;
+}
+
+:root[data-mode="dark"] .infographic {
+  --ig-enter: #8ad0c6;
+  --ig-exit: #e08b7f;
+  --ig-move: #e9b872;
+}
+
+.infographic svg {
+  display: block;
+  width: 100%;
+  max-width: var(--ig-max, 640px);
+  height: auto;
+  margin-inline: auto;
+  /* Support the image blend: the inline SVG desaturates with the rest of the
+     page media when blend is on. Transparency rules out the duotone tint
+     overlay (it would re-add a background box), so this is the grayscale half of
+     the treatment — enough to keep it consistent with the blended screenshots. */
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .infographic
+  svg {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .infographic svg {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
+/*
+ * Logomark: the one inline SVG that keeps its brand colour (Cadence navy,
+ * theme-aware) and opts out of the image blend — a logo shows in its own colour,
+ * not desaturated with the screenshots. Drawn with var(--lm-ink)/var(--lm-head).
+ */
+.infographic--logomark {
+  --lm-ink: #22356e;
+  --lm-head: #33468f;
+}
+
+:root[data-mode="dark"] .infographic--logomark {
+  --lm-ink: #8ea2e8;
+  --lm-head: #a6b6ef;
+}
+
+.infographic--logomark svg {
+  -webkit-filter: none !important;
+  -moz-filter: none !important;
+  filter: none !important;
 }
 
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
@@ -982,6 +1108,15 @@ p:empty {
   .content.post > .project-info {
     grid-template-columns: minmax(0, 1fr);
     grid-column-gap: var(--spacing-24);
+  }
+
+  /* Stack every variant on mobile. The --cols-2 / --cols-1 rules above carry
+     higher specificity than the base rule, so without matching them here the
+     two-section layout (only PIA has Role + Details) would stay two columns
+     and read cramped on a phone. */
+  .content.post > .project-info.project-info--cols-2,
+  .content.post > .project-info.project-info--cols-1 {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

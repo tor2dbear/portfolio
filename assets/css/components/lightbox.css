@@ -31,6 +31,31 @@ html.lightbox-open {
   display: block;
 }
 
+/* Live-embed variant: a big 16:9 frame that letterboxes into the viewport,
+   mirroring how .lightbox__img is capped at 90vw/90vh. The wrapper is a
+   .video-wrapper so the image-blend tint overlays reach it, and the iframe
+   carries .hero-embed__frame so the grayscale / tri-tone filter applies too —
+   the enlarged view stays consistent with the in-page hero and the palette. */
+.lightbox__embed-wrap {
+  width: min(90vw, calc(90vh * 16 / 10));
+  max-width: 90vw;
+  max-height: 90vh;
+  aspect-ratio: 16 / 10;
+  cursor: default;
+}
+
+.lightbox__embed-wrap[hidden] {
+  display: none;
+}
+
+.lightbox__embed {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: transparent;
+}
+
 .lightbox__close {
   position: absolute;
   top: 1rem;

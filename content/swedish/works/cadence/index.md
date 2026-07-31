@@ -1,0 +1,61 @@
+---
+author: "Torbjörn Hedberg"
+date: 2026-07-26
+linktitle: Cadence
+title: Cadence
+subtitle: Verktyg för rörelsesystem
+slug: arbeten
+weight: 1
+tags: ["Digitala Produkter", "Experimentellt"]
+clients: []
+description: Det sista osystematiserade hörnet av ett designsystem är rörelse. Cadence tokeniserar den – och ger den en åsikt.
+worktheme:
+  color: cadence
+  tags: filled
+header_image: cadence-poster.jpg
+hero_embed: /cadence-hero.html
+featured: true
+draft: false
+role: "Koncept, design & utveckling"
+details:
+  year: 2026
+  platform: "Webbapp"
+  scope: "Designsystem, UI, frontend-utveckling"
+client_label: "Type"
+client:
+  name: "Eget initiativ"
+  url: "https://cadence.tor2dbear.com"
+  about: "Ett designverktyg för rörelsesystem som utforskar rörelse som lager av design-tokens – primitiver och semantiska intents – med ett åsiktslager som kritiserar hela systemet."
+---
+
+{{< hero-embed src="/cadence-hero.html#label" ratio="16 / 10" title="Cadence – ett rörelsesystem, utan ord: fyra semantiska intents som en solfjäder av easing-kurvor, var och en märkt med sina intent-, kompositions- och varaktighetstokens" >}}
+
+Rörelse är det sista osystematiserade hörnet av ett designsystem. Färg har tokens; typografi har en skala. Rörelse är fortfarande magiska siffror – en `cubic-bezier` intrimmad på känsla, inklistrad ur minnet, aldrig nedskriven. **Cadence** behandlar den som resten av systemet, och ger den en åsikt.
+
+![Två easings ur uppsättningen – kurvor ritade för hand.](cadence-easing-set.jpg "Easing-uppsättningen – varje kurva ritad för hand, sedan namngiven. Den råa vokabulär som resten av systemet refererar tillbaka till.")
+
+Två lager, lånade från hur vi redan hanterar färg. _Primitiver_ är den råa vokabulären: en varaktighetsstege och en uppsättning easings du ritar för hand. _Intents_ är meningen – `enter`, `exit`, `move` – komponerade från primitiverna by reference. Du namnger vad rörelse är _till för_, inte vad den _är_; ändra en primitiv och hela systemet tajmar om.
+
+{{< infographic src="cadence-two-layer-model.svg" caption="Varje intent är en namngiven komposition av primitiver – ändra en primitiv så tajmar varje intent som refererar den om." >}}
+
+![enter-intentet, komponerat från primitiver.](cadence-intent.jpg "Samma modell i verktyget – enter lånar varaktigheten base och easingen emphasized, och löses upp till en riktig kurva.")
+
+Beslutet jag är mest nöjd med var att sluta designa kring komponenter. En tidig version låste fyra roller till fyra demokomponenter och föll ihop i samma stund jag föreställde mig en femte. Så komponenter blev en bänk av instrument – var och en en lins på en enda egenskap hos en token, aldrig en skärm att återuppföra. Organisera ett system kring sina egna tokens, så kan inget hamna utanför.
+
+De flesta verktyg genererar; de dömer inte. Den del jag är stoltast över är den med en synvinkel: den läser hela uppsättningen och säger var det skaver – en easing som i hemlighet är två, ett exit som är långsammare än sitt entré, en stege som haltar – och _vad den skulle ändra_, inte bara vad som är fel. Att koda in det omdömet – en art directors öga som en handfull checkar – är hela idén.
+
+Inget av det stannar i verktyget. Cadence exporterar den CSS du skulle ha skrivit för hand, och driver en riktig produktyta så att du kan känna systemet snarare än bara läsa det.
+
+![Systemet som driver riktiga komponenter, tajmar om live.](cadence-demo.mp4)
+
+Det verkliga testet var att vända det mot mig själv.
+
+![Cadence som läser den här sajtens egna rörelse-tokens.](cadence-portfolio-read.jpg "Vänt mot sig självt – läser den här portföljens egna rörelse-tokens.")
+
+Jag klistrade in den här sajtens egna rörelse-tokens. Den gillade rytmen – och ertappade mig med att vara lat: två av mina easings är, i tysthet, samma kurva. Ett verktyg värt att lansera ska kunna genera sin skapare. Det här gjorde det.
+
+{{< infographic src="cadence-logomark.svg" max="120" class="infographic--logomark" caption="Även identiteten är en rörelse-token – logotypmärket är en punkt som rör sig längs en easing-kurva." >}}
+
+{{< media-full src="cadence-start.jpg" alt="Cadences startsida – ett verktyg för rörelsesystem." caption="Cadence självt – verktyget är en länk bort." >}}
+
+**Live:** [cadence.tor2dbear.com](https://cadence.tor2dbear.com) · **Källkod:** [github.com/tor2dbear/cadence](https://github.com/tor2dbear/cadence)

@@ -518,7 +518,12 @@ client:
 
 - `role` is a single string (comma-separated if multiple roles).
 - `details` keys use `snake_case` for consistent labels.
-- Omit `client` for self-initiated/personal projects.
+- `client` names the client on commissioned work. For a self-initiated or
+  personal project, either omit it, or repurpose the block as a project
+  **type** line: set `client_label` to override the heading (e.g. "Type" /
+  "Typ") with `client.name` = "Self-initiated" / "Eget initiativ" and
+  `client.url` = the live link. cadence and PIA use this to carry the live URL
+  in the project-info sidebar. Localise `client_label` per language.
 
 ### Client Applications (`/clients/`)
 
@@ -580,6 +585,26 @@ Supported layouts: `full`, `1+1`, `2x2` (default: `full`).
 - `assets/css/dimensions/mode/*.css` - Mode overrides (`light`, `dark`)
 - `assets/css/dimensions/palette/*.css` - Palette overrides (`standard`, `forest`, `mesa`, `pantone`, `coty`)
 - `assets/css/dimensions/palette/previews.css` - Palette preview tokens for dropdown (mode-aware, not tied to active palette)
+- **Per-project style (works pages)** — a work project can pin its own color theme, typography preset, reading layout and colour mode via a `worktheme:` front matter map, set server-side in `header.html` (no FOUC, no localStorage), validated (unknown values ignored):
+
+  ```yaml
+  worktheme:
+    color: rose # theme id from data/work-themes.toml
+    typography: refined # editorial | refined | expressive | technical | system
+    layout: editorial # column | editorial | index  (terminal excluded — session-wide mode)
+    mode: dark # dark | light  — HARD-LOCKS the page's colour mode (see below)
+    tags: filled # opt in to filled tag chips (theme primary fill), needs a color
+  ```
+
+  `layout` sits inside the map on purpose: a top-level `layout` key is reserved by Hugo for template selection.
+
+  Each is independent and applies differently:
+
+  - **Color** (`data-work-theme` on `<html>`) — `assets/templates/work-theme-scales.css` + `data/work-themes.toml` generate light + dark token blocks per theme. A **base layer**: selectors carry `:not([data-palette="pantone"])` so an explicit Pantone palette wins (a custom palette's inline styles win too); on the default palette the work theme paints the page. Each theme is a full 12-step light + dark scale. Three models: single scale (`role_mode` `surface` or `primary`); **duo** — add an `accent_scale_*` for a two-hue identity where the base scale paints the surface/text and the accent scale drives every accent role (primary, links, tags, action), e.g. the `utblick` theme's rose paper + green ink; **accent-only** — set `neutral_surface = true` to leave the surface/body-text/borders as the site default (neutral gray/white) and recolour only the accents from the theme's scale, e.g. the `africa` theme's neutral page + red ink (one scale, no neutral scale needed). Contrast-gated in both modes by `assets/css/__tests__/work-theme-contrast.test.js`.
+  - **Typography** (`data-project-typography` on `.works-post`, in `works/single.html`) — **content-scoped**: it typesets only the project body (title, description, meta, tags, `.post-content`, `.project-info`), never the chrome, breadcrumbs, related items or footer. Implemented by extending each `dimensions/typography/*.css` preset's selector to a second, scoped variant — one source of truth, no duplication. It's an **overridable default**: the scoped variant is gated by `:root[data-project-typeset="on"]`, which the `head.html` pre-paint script sets only when the visitor has no stored typography choice (and `theme.js`'s `setTypography` drops the moment they pick a font). So a visitor's own font choice wins everywhere, including the project body; with no choice, the chrome stays on the site default while the project body shows its preset.
+  - **Layout** (`data-work-layout` on `<html>`) — a page-wide **overridable default**. The `head.html` pre-paint script and `theme.js` init read it only when the visitor has no explicit stored choice, and never persist it — so a visitor's own selection wins and leaving the page reverts to the global default (`column`). `terminal` is excluded (session-wide mode).
+  - **Mode** (`data-work-mode` on `<html>`) — unlike the others this is a **hard lock**, not an overridable default: the `head.html` pre-paint forces `data-mode` to it (overriding the visitor's stored/system choice) and `theme.js` keeps it (both `init` and `setMode` bail out when the attribute is present), so the page always renders in its own light/dark identity. The mode toggle is hidden on the page (`:root[data-work-mode] .theme-section--mode`). `localStorage` is never written, so the visitor's real mode resumes on the next page. Use sparingly — for a project whose identity _is_ a mode (e.g. PIA, a terminal, is always dark). Both theme scales still ship and stay contrast-gated.
+
 - `assets/css/utilities/typography.css` - Typography utilities
 - `assets/css/utilities/layout.css` - Layout utilities
 - `assets/css/utilities/grid.css` - 12-column subgrid + art-direction placement API

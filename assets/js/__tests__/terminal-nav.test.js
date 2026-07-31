@@ -37,9 +37,18 @@ describe("terminal in-place navigation", () => {
           '<div class="content"><article class="article-card">' +
             '<a href="/writing/a/">Post A</a></article></div>') +
         "</main>";
+    var htmlAttrs = opts.exempt ? ' data-terminal-exempt="true"' : "";
+    // Per-project theme flags the server sets on the fetched page's <html>.
+    ["work-theme", "work-tags", "work-layout", "work-mode"].forEach(function (
+      key
+    ) {
+      if (opts[key]) {
+        htmlAttrs += " data-" + key + '="' + opts[key] + '"';
+      }
+    });
     return (
       '<!doctype html><html lang="en"' +
-      (opts.exempt ? ' data-terminal-exempt="true"' : "") +
+      htmlAttrs +
       "><head>" +
       head +
       "</head><body>" +
@@ -145,6 +154,60 @@ describe("terminal in-place navigation", () => {
     expect(document.documentElement.getAttribute("data-terminal-booted")).toBe(
       "1"
     );
+  });
+
+  test("go() syncs the per-project theme flags from the fetched page", async () => {
+    // Entering a themed work in place installs its colour/tags/layout/mode; the
+    // attributes live on <html>, which a #main swap doesn't reload.
+    mockFetch(
+      pageHtml({
+        "work-theme": "phosphor",
+        "work-tags": "filled",
+        "work-layout": "column",
+        "work-mode": "dark",
+      })
+    );
+    loadModule();
+
+    await window.TerminalNav.go("/works/pia/", { cwd: "~/works/pia" });
+
+    const html = document.documentElement;
+    expect(html.getAttribute("data-work-theme")).toBe("phosphor");
+    expect(html.getAttribute("data-work-tags")).toBe("filled");
+    expect(html.getAttribute("data-work-mode")).toBe("dark");
+  });
+
+  test("go() installs a destination mode lock and reconciles the mode", async () => {
+    // Navigating INTO a mode-locked work (e.g. PIA) must both set the lock
+    // attribute and reconcile the actual mode via the Theme seam — the
+    // attribute alone only gates styling.
+    window.Theme = { reconcileWorkMode: jest.fn() };
+    mockFetch(pageHtml({ "work-mode": "dark" }));
+    loadModule();
+
+    await window.TerminalNav.go("/works/pia/", { cwd: "~/works/pia" });
+
+    expect(document.documentElement.getAttribute("data-work-mode")).toBe(
+      "dark"
+    );
+    expect(window.Theme.reconcileWorkMode).toHaveBeenCalled();
+    delete window.Theme;
+  });
+
+  test("go() clears the mode lock when leaving a locked work", async () => {
+    // Leaving PIA for an unlocked page must drop data-work-mode so the lock
+    // doesn't linger and pin later pages dark with their mode controls hidden;
+    // reconcile then restores the visitor's stored preference.
+    window.Theme = { reconcileWorkMode: jest.fn() };
+    document.documentElement.setAttribute("data-work-mode", "dark");
+    mockFetch(pageHtml()); // destination <html> has no data-work-mode
+    loadModule();
+
+    await window.TerminalNav.go("/writing/", { cwd: "~/writing" });
+
+    expect(document.documentElement.hasAttribute("data-work-mode")).toBe(false);
+    expect(window.Theme.reconcileWorkMode).toHaveBeenCalled();
+    delete window.Theme;
   });
 
   test("go() patches SEO meta from the fetched head", async () => {

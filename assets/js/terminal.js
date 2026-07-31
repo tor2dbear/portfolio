@@ -32,8 +32,10 @@
   // ==========================================================================
   var Theme = window.Theme || {};
   var setMode = Theme.setMode;
+  var resetMode = Theme.resetMode;
   var setTypography = Theme.setTypography;
   var setLayout = Theme.setLayout;
+  var restoreLayoutAfterTerminal = Theme.restoreLayoutAfterTerminal;
   var commitPaletteSelection = Theme.commitPaletteSelection;
   var setGrainEnabled = Theme.setGrainEnabled;
   var setBlendEnabled = Theme.setBlendEnabled;
@@ -132,13 +134,20 @@
     if (terminalFlowReset) {
       terminalFlowReset();
     }
-    var previousLayout =
-      localStorage.getItem("theme-layout-previous") || "column";
-    if (previousLayout === "terminal") {
-      previousLayout = "column";
-    }
     var previousTypography = localStorage.getItem("theme-typography-previous");
-    setLayout(previousLayout);
+    // Restore the pre-terminal layout. The theme module owns the logic so a
+    // transient per-project default is restored without being persisted; fall
+    // back to a plain setLayout for older seams (and tests that mock Theme).
+    if (typeof restoreLayoutAfterTerminal === "function") {
+      restoreLayoutAfterTerminal();
+    } else {
+      var previousLayout =
+        localStorage.getItem("theme-layout-previous") || "column";
+      if (previousLayout === "terminal") {
+        previousLayout = "column";
+      }
+      setLayout(previousLayout);
+    }
     if (localStorage.getItem("theme-typography") === "technical") {
       if (previousTypography && previousTypography !== "technical") {
         setTypography(previousTypography);
@@ -281,6 +290,7 @@
         var file = btn.getAttribute("data-image-file") || "image";
         var src = btn.getAttribute("data-image-src");
         var alt = btn.getAttribute("data-image-alt");
+        var imageType = btn.getAttribute("data-image-type");
         printTerminalLine(
           "open " + file,
           "terminal-session__cmd",
@@ -298,7 +308,10 @@
           window.TerminalLightbox &&
           typeof window.TerminalLightbox.openSrc === "function"
         ) {
-          window.TerminalLightbox.openSrc(src, alt);
+          window.TerminalLightbox.openSrc(src, alt, {
+            embed: imageType === "embed",
+            title: btn.getAttribute("data-image-title") || alt,
+          });
         }
         window.requestAnimationFrame(function () {
           window.scrollTo(0, document.body.scrollHeight);
@@ -766,8 +779,28 @@
     // theme-section-title headings), so `ls settings` names things the panel
     // really has: "mode" (not "theme"), no standalone "palette" (pantone lives
     // under effects), and "share".
+    // A works page can hard-lock its colour mode (data-work-mode, set
+    // server-side). Returns the locked value ("dark"/"light") or "" — the
+    // terminal drops `mode` from `set` and rejects mode commands when set.
+    function terminalModeLocked() {
+      return document.documentElement.getAttribute("data-work-mode") || "";
+    }
+
     function terminalSettingsEntries() {
-      return ["mode", "layout", "typography", "effects", "share", "language"];
+      var entries = [
+        "mode",
+        "layout",
+        "typography",
+        "effects",
+        "share",
+        "language",
+      ];
+      if (terminalModeLocked()) {
+        entries = entries.filter(function (e) {
+          return e !== "mode";
+        });
+      }
+      return entries;
     }
 
     // The settable keys, their options, and the current value — the model both
@@ -780,12 +813,19 @@
         return root.getAttribute(attr) === "on";
       };
       var gridAttr = root.getAttribute("data-grid-overlay");
-      return [
-        {
-          key: "mode",
-          options: ["light", "dark", "system"],
-          current: localStorage.getItem("theme-mode") || "system",
-        },
+      // On a mode-locked page the mode row is dropped from `set` — it can't be
+      // changed here (see the dark/light/system guard), so listing it as an
+      // editable chip would misrepresent the locked state.
+      var modeRow = terminalModeLocked()
+        ? []
+        : [
+            {
+              key: "mode",
+              options: ["light", "dark", "system"],
+              current: localStorage.getItem("theme-mode") || "system",
+            },
+          ];
+      return modeRow.concat([
         {
           key: "layout",
           options: TERMINAL_LAYOUTS,
@@ -825,7 +865,7 @@
           options: ["on", "off"],
           current: effOn("data-effect-reduced-motion") ? "off" : "on",
         },
-      ];
+      ]);
     }
 
     // Typography values `set typography <value>` accepts (mirrors the menu).
@@ -915,6 +955,15 @@
           if (texts.length) {
             var joined = Array.prototype.map
               .call(texts, function (t) {
+                // A link row (the live/client URL) becomes markdown so the cat
+                // view renders it clickable — printTerminalProseLine turns
+                // [text](url) into an `open <url>` button — instead of the
+                // flattened, inert textContent it would otherwise emit.
+                var a = t.querySelector("a[href]");
+                if (a) {
+                  var linkText = a.textContent.trim().replace(/\s+/g, " ");
+                  return "[" + linkText + "](" + a.getAttribute("href") + ")";
+                }
                 return t.textContent.trim().replace(/\s+/g, " ");
               })
               .filter(Boolean)
@@ -1007,7 +1056,7 @@
         prevBlock = kind;
       };
       var nodes = root.querySelectorAll(
-        "h1, h2, h3, h4, p, blockquote, li, figure, img"
+        "h1, h2, h3, h4, p, blockquote, li, figure, img, .highlight, .works-post__cta a"
       );
       for (var i = 0; i < nodes.length; i++) {
         var el = nodes[i];
@@ -1015,9 +1064,67 @@
           continue;
         }
         var tag = el.tagName.toLowerCase();
+        // The works masthead's live CTA (a bare anchor) — carry it as a
+        // labelled link line so the terminal `cat` view keeps the demo link.
+        if (tag === "a") {
+          blockBreak("p");
+          var ctaText = (el.textContent || "").replace(/\s+/g, " ").trim();
+          var ctaHref = el.getAttribute("href") || "";
+          // Emit Markdown link syntax so printTerminalProseLine renders it as a
+          // real clickable/keyboard-activatable link, not inert text.
+          tokens.push({
+            text: ctaHref ? "[" + ctaText + "](" + ctaHref + ")" : ctaText,
+          });
+          continue;
+        }
+        // A fenced code block (chroma wraps it in .highlight > pre > code). Emit
+        // it as a fenced block — the ``` lines + one token per code line — so
+        // the boot transcript and `cat` keep the command excerpt / diff instead
+        // of dropping them and printing only the surrounding prose. textContent
+        // strips the syntax-highlight spans but keeps the raw text, prefixes and
+        // indentation.
+        if (el.classList && el.classList.contains("highlight")) {
+          var codePre = el.querySelector("pre");
+          if (!codePre) {
+            continue;
+          }
+          blockBreak("pre");
+          var codeEl = codePre.querySelector("code");
+          var langMatch = codeEl
+            ? (codeEl.className || "").match(/language-(\S+)/)
+            : null;
+          var codeLang = langMatch
+            ? langMatch[1]
+            : (codeEl && codeEl.getAttribute("data-lang")) || "";
+          tokens.push({ text: "```" + codeLang });
+          (codePre.textContent || "")
+            .replace(/\n+$/, "")
+            .split("\n")
+            .forEach(function (line) {
+              tokens.push({ text: line });
+            });
+          tokens.push({ text: "```" });
+          continue;
+        }
         if (tag === "figure" || tag === "img") {
           // A bare img inside a figure is already counted by the figure.
           if (tag === "img" && el.closest("figure")) {
+            continue;
+          }
+          // A video figure has no <img> to open, and the cat view is text —
+          // there's no way to play a clip here (a same-origin link would just be
+          // dispatched to `cat the-file`, which 404s). Emit a labelled ▶ line
+          // (its aria-label / caption carries the described sequence) so it
+          // reads as intentional media, not a dead [image] token.
+          if (tag === "figure" && el.querySelector("video")) {
+            blockBreak("figure");
+            var vid = el.querySelector("video");
+            var vLabel = vid.getAttribute("aria-label") || "";
+            if (!vLabel) {
+              var vFcap = el.querySelector("figcaption");
+              vLabel = vFcap ? vFcap.textContent.trim() : "";
+            }
+            tokens.push({ text: "▶ " + (vLabel || "clip") });
             continue;
           }
           blockBreak("figure");
@@ -1050,12 +1157,21 @@
               src = lbSrc;
             }
           }
+          // A figure can open a live embed rather than a still (the hero-embed
+          // shortcode: data-lightbox-type="embed", data-lightbox is a same-origin
+          // page). Carry that through so the token opens the iframe, not a broken
+          // <img> pointed at an HTML URL.
+          var isEmbed =
+            tag === "figure" &&
+            el.getAttribute("data-lightbox-type") === "embed";
           tokens.push({
             image: true,
             n: imageN,
             file: file,
             src: src,
             alt: label,
+            embed: isEmbed,
+            title: (isEmbed && el.getAttribute("data-lightbox-title")) || label,
           });
           continue;
         }
@@ -1666,12 +1782,24 @@
           return { echo: "", lines: [], action: { type: "clear" } };
         case "dark":
         case "light":
-        case "system":
+        case "system": {
+          // Reject on a mode-locked page (data-work-mode): the toggle is hidden
+          // and the change would silently no-op, so report the lock instead of a
+          // false "mode → …". Covers `set mode …` too — it delegates here.
+          var lockedMode = terminalModeLocked();
+          if (lockedMode) {
+            return {
+              echo: input,
+              lines: ["mode: locked to " + lockedMode + " on this page"],
+              action: null,
+            };
+          }
           return {
             echo: input,
             lines: ["mode → " + cmd],
             action: { type: "mode", mode: cmd },
           };
+        }
         case "pantone": {
           var sub = (args[0] || "").toLowerCase();
           if (sub === "off" || sub === "stop") {
@@ -3229,7 +3357,16 @@
           ) {
             stopPantone();
           }
-          setMode("system");
+          // resetMode (not setMode) so a mode-locked page still restores the
+          // stored preference to the default: setMode no-ops under the lock, so
+          // reset would otherwise leave the visitor's old mode in place despite
+          // the "restored to defaults" message. The locked page keeps its
+          // forced display; the default takes effect once they leave.
+          if (resetMode) {
+            resetMode();
+          } else {
+            setMode("system");
+          }
           commitPaletteSelection("standard", { toast: false });
           setTypography("editorial");
           setGrainEnabled(false, { silent: true });
@@ -3603,6 +3740,10 @@
       btn.setAttribute("data-image-src", tok.src || "");
       btn.setAttribute("data-image-file", tok.file || "");
       btn.setAttribute("data-image-alt", tok.alt || "");
+      if (tok.embed) {
+        btn.setAttribute("data-image-type", "embed");
+        btn.setAttribute("data-image-title", tok.title || tok.alt || "");
+      }
       line.appendChild(btn);
       terminalSession.appendChild(line);
     }
