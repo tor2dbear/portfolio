@@ -153,16 +153,72 @@
         }
       }
       function clearSheetDrag() {
+        // Panel only — the overlay's --sheet-drag is owned by openOverlay /
+        // closeOverlay (and the live drag). Clearing it here would undo the
+        // fade-out closeOverlay sets, snapping the scrim back to full opacity.
         panel.style.removeProperty("--sheet-drag");
-        if (overlay) {
-          overlay.style.removeProperty("--sheet-drag");
-        }
       }
       function setSheetDragging(on) {
         panel.classList.toggle("is-dragging", on);
         if (overlay) {
           overlay.classList.toggle("is-dragging", on);
         }
+      }
+
+      // Open the scrim: un-hide and clear any closing/drag state so it fades in
+      // fresh (base opacity:0 -> open, via @starting-style in the CSS).
+      function openOverlay() {
+        if (!overlay) {
+          return;
+        }
+        overlay.classList.remove("is-dragging");
+        overlay.style.transition = "";
+        overlay.style.removeProperty("--sheet-drag");
+        overlay.removeAttribute("hidden");
+      }
+
+      // Close the scrim in step with the sheet's popover exit: fade it out first
+      // (opacity/blur -> 0 via --sheet-drag), then set [hidden] once the
+      // transition ends. Setting [hidden] immediately would display:none the
+      // element before its transition could run, snapping the wash away while the
+      // sheet is still sliding out. Guarded by openGeneration so a quick reopen
+      // doesn't hide the freshly reopened scrim.
+      function closeOverlay() {
+        if (!overlay || overlay.hasAttribute("hidden")) {
+          return;
+        }
+        overlay.classList.remove("is-dragging");
+        overlay.style.transition = "";
+        overlay.style.setProperty("--sheet-drag", "1");
+        var gen = openGeneration;
+        var done = false;
+        var timer = null;
+        var onEnd = null;
+        var finish = function () {
+          if (done) {
+            return;
+          }
+          done = true;
+          overlay.removeEventListener("transitionend", onEnd);
+          if (timer) {
+            window.clearTimeout(timer);
+          }
+          // Reopened since this close armed? leave the now-open scrim alone.
+          if (openGeneration !== gen) {
+            return;
+          }
+          overlay.setAttribute("hidden", "");
+          overlay.style.removeProperty("--sheet-drag");
+        };
+        onEnd = function (ev) {
+          if (ev.target === overlay && ev.propertyName === "opacity") {
+            finish();
+          }
+        };
+        overlay.addEventListener("transitionend", onEnd);
+        // Fallback if transitionend never arrives (desktop keeps the overlay
+        // display:none, reduced-motion, an interrupted close, etc.).
+        timer = window.setTimeout(finish, 500);
       }
 
       var sheetExpanded = false;
@@ -182,16 +238,11 @@
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         setSettingsPanelOpenState(open);
         // Show/hide the real scrim with the panel. On desktop the CSS keeps it
-        // display:none, so un-hiding it there is a no-op — no scrim on the
-        // anchored dropdown, only on the mobile bottom sheet.
-        if (overlay) {
-          if (open) {
-            overlay.removeAttribute("hidden");
-          } else {
-            overlay.setAttribute("hidden", "");
-          }
-        }
+        // display:none, so this is a no-op there — no scrim on the anchored
+        // dropdown, only on the mobile bottom sheet. Close fades out first (see
+        // closeOverlay) instead of snapping [hidden] on mid-slide.
         if (open) {
+          openOverlay();
           positionPanel();
           // Capture the true resting height now, while the sheet hugs its
           // content (before any expand stretches the body).
@@ -227,9 +278,7 @@
           panel.style.transform = "";
           panel.style.transition = "";
           clearSheetDrag();
-          if (overlay) {
-            overlay.style.transition = "";
-          }
+          closeOverlay();
           if (panelBody) {
             panelBody.scrollTop = 0;
           }

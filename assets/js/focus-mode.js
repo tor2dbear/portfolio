@@ -115,9 +115,15 @@
 
     if (context.type === CONFIG.VIEW_CLIENT) {
       layout.classList.add(CONFIG.CLASS_CLIENTPAGE);
+      // Mirror the state on :root too. The class on #layout drives most focus
+      // styling, but the settings sheet can be portaled out of #layout (the
+      // legacy no-Popover fallback moves it under <body>), so its nav scoping
+      // keys off this root attribute, which stays an ancestor in both paths.
+      document.documentElement.setAttribute('data-focus-view', 'client');
       console.log('Focus mode: Client mode activated', context.ref || '');
     } else if (context.type === CONFIG.VIEW_EMPLOYER) {
       layout.classList.add(CONFIG.CLASS_EMPLOYERPAGE);
+      document.documentElement.setAttribute('data-focus-view', 'employer');
       console.log('Focus mode: Employer mode activated');
     }
   }
