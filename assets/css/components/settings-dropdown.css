@@ -98,24 +98,19 @@
     display: block;
   }
 
-  /* One horizontal row, never wrapping — keeps nav to a single line so it adds
-     minimal height to the sheet's resting detent. Overflows sideways if the
-     links ever exceed the width; a horizontal swipe here doesn't collide with
-     the sheet's vertical drag / scroll. */
+  /* A plain flex row — same as the other sections' option rows, and crucially
+     NOT a scroll container. An earlier overflow-x:auto turned this into a
+     horizontal scroller, which on iOS swallowed a vertical drag (the sheet's
+     detent/dismiss gesture) instead of letting it through. The links (Works /
+     Writing / About me) fit, and wrap rather than clip in the rare case they
+     don't. */
   .settings-nav__list {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: var(--spacing-4);
     margin: 0;
     padding: 0;
     list-style: none;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .settings-nav__list::-webkit-scrollbar {
-    display: none;
   }
 
   .settings-nav__item {
