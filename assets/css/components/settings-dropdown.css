@@ -317,6 +317,30 @@
       transparent
     );
   }
+
+  /* Fallback (no Popover API): the legacy [hidden] path gets no detents, but the
+     panel still must fit the viewport. It's anchored to the bottom, so without a
+     cap a panel taller than the screen pushes its top — now the nav — off the top
+     edge with no way to reach it. Cap the height and let the body scroll, the
+     same overflow model the popover sheet uses (minus the drag detents). vh
+     first for old engines that predate both Popover and dvh; dvh overrides where
+     supported. */
+  .settings-panel:not([hidden]):not([popover]) {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    max-height: calc(100vh - var(--spacing-24));
+    max-height: calc(100dvh - var(--spacing-24));
+    overflow: hidden;
+  }
+
+  .settings-panel:not([hidden]):not([popover]) .settings-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: max(var(--spacing-16), env(safe-area-inset-bottom));
+  }
 }
 
 /* Lock background scroll while the mobile bottom sheet is open. Desktop keeps
