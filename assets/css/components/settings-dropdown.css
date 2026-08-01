@@ -329,58 +329,15 @@
   }
 }
 
+/* The scrim is a real DOM element (.settings-overlay, wired up in
+   settings-dropdown.js) — not this pseudo-element. On iOS Safari a top-layer
+   ::backdrop recolours late on a light/dark swap: it isn't fed prompt
+   --surface-page updates, and its page-coloured top band was a background-IMAGE
+   gradient that can't transition at all — so the top bar fell out of step with
+   the page. A real element inherits normally and its colour transitions in
+   sync, so the popover's own ::backdrop stays fully transparent. */
 .settings-panel::backdrop {
-  /* Scrim: a page-coloured wash so the strip above the sheet matches the page
-     (the top bar looks the same whether the sheet is open or not). Split out as
-     background-color, not the `background` shorthand, so it can TRANSITION — on
-     a light/dark toggle it must recolour in step with the page (700ms), not
-     snap ahead of it. The duration comes from :root's --theme-transition-
-     duration (the same path --surface-page takes to reach this ::backdrop),
-     falling back to the sheet duration when no swap is running. The solid →
-     transparent top fade (hides the sheet/edge under the status bar; replaces
-     the old .settings-overlay::before) stays a background-image. */
-  background-color: color-mix(in srgb, var(--surface-page) 55%, transparent);
-  background-image: linear-gradient(
-    to bottom,
-    var(--surface-page) 90px,
-    transparent 130px
-  );
-  -webkit-backdrop-filter: blur(0) saturate(100%);
-  backdrop-filter: blur(0) saturate(100%);
-  opacity: 0;
-  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    -webkit-backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    background-color
-      var(--theme-transition-duration, var(--motion-duration-sheet))
-      var(--motion-ease-theme),
-    display var(--motion-duration-sheet) var(--motion-ease-emphasized)
-      allow-discrete,
-    overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
-      allow-discrete;
-}
-
-.settings-panel:popover-open::backdrop {
-  /* --sheet-drag (0 → 1) is set by the drag handler and inherited from the
-     panel; it fades the scrim/blur out as the sheet is pulled down. Falls back
-     to 0 (full scrim) when unset or where ::backdrop doesn't inherit vars. */
-  opacity: calc(1 - var(--sheet-drag, 0));
-  -webkit-backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px))
-    saturate(120%);
-  backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
-}
-
-/* While the finger is down, the scrim must track the drag with no lag. */
-.settings-panel.is-dragging::backdrop {
-  transition: none;
-}
-
-@starting-style {
-  .settings-panel:popover-open::backdrop {
-    opacity: 0;
-    -webkit-backdrop-filter: blur(0) saturate(100%);
-    backdrop-filter: blur(0) saturate(100%);
-  }
+  background: transparent;
 }
 
 .settings-panel::before {
@@ -395,14 +352,20 @@
   border-radius: calc(var(--spacing-2) * 1.5);
 }
 
+/* ---------------------------------------------------------------------------
+   Bottom-sheet scrim — a REAL DOM element (restored), not the popover
+   ::backdrop. See settings-dropdown.js: the popover path moves this to <body>
+   and toggles it with the sheet. The element carries only the frost
+   (backdrop-filter); the page-coloured wash lives on ::before as a solid,
+   transitionable background-color revealed through a colour-less mask — so it
+   recolours in lockstep with the page on a light/dark swap, which the
+   ::backdrop pseudo could not do on iOS Safari.
+   --------------------------------------------------------------------------- */
 .settings-overlay {
   display: block;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: color-mix(in srgb, var(--surface-page) 55%, transparent);
+  inset: 0;
+  background: transparent;
   /* Closed = no blur; it ramps to blur(14px) on open (below) so the frost
      visibly builds instead of appearing at full strength the moment opacity
      lifts. */
@@ -417,30 +380,54 @@
     backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized);
 }
 
+/* The page-coloured wash + opaque top band, in ONE solid background-color so it
+   can transition (a gradient / ::backdrop couldn't). The mask carries the shape
+   — opaque 0–90px (the "top bar", identical to the page), 55% wash from 130px
+   down — and carries no colour, so it's correct in every mode. The transition
+   mirrors the page's own theme-swap timing (--theme-transition-duration, set on
+   :root during a swap; --motion-duration-xslow fallback) and easing, so the top
+   bar recolours in exact sync with the rest of the page. */
 .settings-overlay::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 130px;
-  background: linear-gradient(to bottom, var(--surface-page) 90px, transparent);
+  inset: 0;
+  background-color: var(--surface-page);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 90px,
+    rgba(0, 0, 0, 0.55) 130px,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 90px,
+    rgba(0, 0, 0, 0.55) 130px,
+    rgba(0, 0, 0, 0.55) 100%
+  );
   pointer-events: none;
+  transition: background-color
+    var(--theme-transition-duration, var(--motion-duration-xslow))
+    var(--motion-ease-theme);
 }
 
 @supports (backdrop-filter: url(#x)) and
   (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay {
     backdrop-filter: url(#liquid-glass) blur(0) saturate(100%);
-    background: color-mix(in srgb, var(--surface-page) 40%, transparent);
   }
 }
 
+/* Open: fade in, and fade back out as the sheet is dragged down — --sheet-drag
+   (0 → 1) is set on this element by the drag handler in step with the panel.
+   Parent opacity fades the ::before wash along with it; the blur melts too. */
 .settings-overlay:not([hidden]) {
-  opacity: 1;
   visibility: visible;
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  backdrop-filter: blur(14px) saturate(120%);
+  opacity: calc(1 - var(--sheet-drag, 0));
+  -webkit-backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px))
+    saturate(120%);
+  backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
 }
 
 /* Open state for the liquid-glass variant — declared after the base open rule
@@ -448,8 +435,14 @@
 @supports (backdrop-filter: url(#x)) and
   (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay:not([hidden]) {
-    backdrop-filter: url(#liquid-glass) blur(14px) saturate(120%);
+    backdrop-filter: url(#liquid-glass)
+      blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
   }
+}
+
+/* While the finger is down, the scrim tracks the drag with no lag. */
+.settings-overlay.is-dragging {
+  transition: none;
 }
 
 /* ≥ 30em: render as an anchored dropdown popover (not a bottom sheet).
@@ -509,15 +502,6 @@
       opacity: 0;
       transform: translateY(calc(var(--spacing-8) * -1));
     }
-  }
-
-  /* Target the open state so it beats .settings-panel:popover-open::backdrop
-     (equal specificity, later in source) — no scrim/blur on the desktop
-     dropdown. */
-  .settings-panel:popover-open::backdrop {
-    background: transparent;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
   }
 
   /* No mobile-sheet drag handle or full-screen scrim on desktop. */

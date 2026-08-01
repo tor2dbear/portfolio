@@ -57,9 +57,15 @@
     }
 
     function initPopoverPanel() {
-      // The custom overlay is replaced by ::backdrop.
-      if (overlay && overlay.parentNode) {
-        overlay.parentNode.removeChild(overlay);
+      // The scrim is this real .settings-overlay element, NOT the popover
+      // ::backdrop: on iOS Safari a top-layer pseudo-element recolours late on a
+      // light/dark swap, so its page-coloured top bar fell out of step with the
+      // page. A real element inherits normally and transitions in sync. Move it
+      // to <body> so its fixed positioning is viewport-relative (no header
+      // ancestor transform can trap it) and it stacks predictably beneath the
+      // top-layer panel (which always paints above normal DOM).
+      if (overlay && overlay.parentNode !== document.body) {
+        document.body.appendChild(overlay);
       }
 
       function enablePopover() {
@@ -114,6 +120,30 @@
       // The mobile sheet's internal scroll container; the detent drag grows/
       // shrinks the sheet around it. Absent on the desktop dropdown path.
       var panelBody = panel.querySelector('[data-js="settings-panel-body"]');
+
+      // The scrim lives on a sibling element now (see above), so its drag state
+      // has to be driven in lockstep with the panel's: --sheet-drag fades the
+      // scrim/blur as the sheet is pulled down, and .is-dragging freezes its
+      // transition while the finger is down. Mirror every set onto the overlay.
+      function setSheetDrag(value) {
+        panel.style.setProperty("--sheet-drag", value);
+        if (overlay) {
+          overlay.style.setProperty("--sheet-drag", value);
+        }
+      }
+      function clearSheetDrag() {
+        panel.style.removeProperty("--sheet-drag");
+        if (overlay) {
+          overlay.style.removeProperty("--sheet-drag");
+        }
+      }
+      function setSheetDragging(on) {
+        panel.classList.toggle("is-dragging", on);
+        if (overlay) {
+          overlay.classList.toggle("is-dragging", on);
+        }
+      }
+
       var sheetExpanded = false;
       // The resting outer height (px), measured while the sheet is actually at
       // rest (on open, and at the start of a rest drag). Reused when a drag
@@ -130,6 +160,16 @@
         openGeneration++;
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         setSettingsPanelOpenState(open);
+        // Show/hide the real scrim with the panel. On desktop the CSS keeps it
+        // display:none, so un-hiding it there is a no-op — no scrim on the
+        // anchored dropdown, only on the mobile bottom sheet.
+        if (overlay) {
+          if (open) {
+            overlay.removeAttribute("hidden");
+          } else {
+            overlay.setAttribute("hidden", "");
+          }
+        }
         if (open) {
           positionPanel();
           // Capture the true resting height now, while the sheet hugs its
@@ -160,12 +200,15 @@
           }
           dragEngaged = false;
           dragDelta = 0;
-          panel.classList.remove("is-dragging");
+          setSheetDragging(false);
           panel.style.height = "";
           panel.style.maxHeight = "";
           panel.style.transform = "";
           panel.style.transition = "";
-          panel.style.removeProperty("--sheet-drag");
+          clearSheetDrag();
+          if (overlay) {
+            overlay.style.transition = "";
+          }
           if (panelBody) {
             panelBody.scrollTop = 0;
           }
@@ -396,7 +439,7 @@
           // Keep the overflow fade through the drag (it re-evaluates on settle)
           // so it doesn't blink out the moment you touch the sheet.
           setDragTransition(false);
-          panel.classList.add("is-dragging"); // freezes the ::backdrop transition
+          setSheetDragging(true); // freezes the scrim's transition too
           // Snapshot the geometry the live resize + release decision work in:
           // the outer height at grab, the full detent, and the resting height
           // (measured when already at rest, computed from content otherwise).
@@ -432,15 +475,12 @@
         if (proposed >= dragRestPx) {
           panel.style.transform = "";
           panel.style.height = Math.min(proposed, dragFullPx) + "px";
-          panel.style.setProperty("--sheet-drag", "0");
+          setSheetDrag("0");
         } else {
           panel.style.height = dragRestPx + "px";
           var off = dragRestPx - proposed;
           panel.style.transform = "translateY(" + off + "px)";
-          panel.style.setProperty(
-            "--sheet-drag",
-            String(Math.min(1, off / (dragRestPx || 1)))
-          );
+          setSheetDrag(String(Math.min(1, off / (dragRestPx || 1))));
         }
         // Re-evaluate the overflow fade against the sheet's new live height, so
         // it fades in as a collapse crosses into overflow (not only on release).
@@ -489,7 +529,7 @@
         // just settles at rest).
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
-        panel.classList.remove("is-dragging");
+        setSheetDragging(false);
         setDragTransition(true);
         void panel.offsetHeight; // flush so the dragged position is the start
         if (action === "dismiss") {
@@ -520,7 +560,7 @@
             panel.style.transition = "";
             panel.style.height = "";
             panel.style.maxHeight = "";
-            panel.style.removeProperty("--sheet-drag");
+            clearSheetDrag();
           };
           var onEnd = function (ev) {
             if (ev.target === panel && ev.propertyName === "transform") {
@@ -530,11 +570,11 @@
           panel.addEventListener("transitionend", onEnd);
           window.setTimeout(finish, 500); // fallback if transitionend is missed
           panel.style.transform = "translateY(100%)";
-          panel.style.setProperty("--sheet-drag", "1");
+          setSheetDrag("1");
           return;
         }
         panel.style.transform = "";
-        panel.style.setProperty("--sheet-drag", "0");
+        setSheetDrag("0");
         // Leave max-height unconstrained (it's "none" from the drag) through the
         // height transition — a none→length max-height isn't interpolated, so
         // reapplying the cap now would clamp a high dragged height to rest before
