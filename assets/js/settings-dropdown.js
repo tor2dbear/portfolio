@@ -956,77 +956,11 @@
       attributeFilter: ["data-grid-overlay"],
     });
 
-    // Touch support for swipe-to-close on mobile bottom sheet
-    let touchStartY = 0;
-    let touchCurrentY = 0;
-    // Whether this gesture has engaged the dismiss drag (vs. scrolling the body).
-    let swipeDragging = false;
-    // Whether this gesture is even eligible to become a dismiss — latched once,
-    // at touchstart, from the body's scroll position.
-    let swipeCanDismiss = false;
-
-    if (panel && overlay) {
-      const legacyBody = panel.querySelector('[data-js="settings-panel-body"]');
-
-      panel.addEventListener("touchstart", function (e) {
-        touchStartY = e.changedTouches[0].screenY;
-        touchCurrentY = touchStartY;
-        swipeDragging = false;
-        // Decide dismiss eligibility ONCE, here — only a gesture that begins
-        // with the body already at the top may become a dismiss. A gesture that
-        // starts scrolled stays a scroll for its whole duration, so reaching the
-        // top mid-swipe can't hijack it (and jump the sheet by the whole delta
-        // measured from touchstart) into a close.
-        swipeCanDismiss = !legacyBody || legacyBody.scrollTop <= 0;
-        panel.style.transition = "none";
-        overlay.style.transition = "none";
-      });
-
-      panel.addEventListener("touchmove", function (e) {
-        touchCurrentY = e.changedTouches[0].screenY;
-        const deltaY = touchCurrentY - touchStartY;
-
-        // Engage the dismiss drag only on a downward pull, and only when this
-        // gesture was eligible from the start (body at the top). Otherwise it's
-        // the user scrolling the body — leave it to the browser.
-        if (!swipeDragging) {
-          if (swipeCanDismiss && deltaY > 0) {
-            swipeDragging = true;
-          } else {
-            return;
-          }
-        }
-
-        e.preventDefault();
-        panel.style.transform = `translateY(${deltaY}px)`;
-
-        // Update overlay opacity based on drag distance
-        const panelHeight = panel.getBoundingClientRect().height;
-        const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
-        const opacity = 1 - deltaY / maxDeltaY;
-        overlay.style.opacity = Math.max(opacity, 0);
-      });
-
-      panel.addEventListener("touchend", function (_e) {
-        const deltaY = touchCurrentY - touchStartY;
-
-        panel.style.transition = "transform 0.3s ease-in-out";
-        overlay.style.transition = "opacity 0.3s ease-in-out";
-
-        // Close only if this gesture actually engaged the dismiss drag and
-        // travelled past the threshold — a scroll-up release must never close.
-        if (swipeDragging && deltaY > 50) {
-          closePanel();
-        } else {
-          // Return to original position
-          panel.style.transform = "translateY(0)";
-          overlay.style.opacity = "1";
-        }
-
-        swipeDragging = false;
-        touchStartY = 0;
-        touchCurrentY = 0;
-      });
-    }
+    // No touch swipe-to-close on the legacy (no-Popover) fallback: it fought the
+    // sheet's own body scroll — a downward swipe to scroll back up toward the
+    // nav read as a dismiss — and the fallback already closes via the overlay,
+    // Escape, and an outside click. The modern popover path keeps its full
+    // drag-to-dismiss / expand detents (initPopoverPanel); this swipe only ever
+    // ran where the Popover API is absent, which is effectively nowhere now.
   });
 })();
