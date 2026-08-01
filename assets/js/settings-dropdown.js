@@ -37,6 +37,27 @@
       return;
     }
 
+    // Keep the trigger's accessible name in step with what it opens: the primary
+    // menu at the nav breakpoint (where the panel also carries the nav), plain
+    // settings above it. CSS swaps the glyph at the same width but can't touch
+    // aria-label, so mirror it here — on load and on width changes — for both
+    // the popover and legacy paths.
+    var navMedia = window.matchMedia("(max-width: 47.9375em)");
+    function syncToggleLabel() {
+      var label = navMedia.matches
+        ? toggle.getAttribute("data-label-menu")
+        : toggle.getAttribute("data-label-settings");
+      if (label) {
+        toggle.setAttribute("aria-label", label);
+      }
+    }
+    syncToggleLabel();
+    if (navMedia.addEventListener) {
+      navMedia.addEventListener("change", syncToggleLabel);
+    } else if (navMedia.addListener) {
+      navMedia.addListener(syncToggleLabel);
+    }
+
     // --- Popover prototype (progressive enhancement) ---------------------
     // Where the Popover API is supported, upgrade the panel to a native
     // top-layer popover: native open/close/light-dismiss/focus, ::backdrop as

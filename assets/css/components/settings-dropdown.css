@@ -147,6 +147,17 @@
     color: var(--state-selected);
     font-weight: var(--sans-weight-medium);
   }
+
+  /* Focus mode (a client/employer page) drops Works + About from the primary
+     nav — mirror the header's .top-menu__item--nav scoping (navigation.css) so
+     the sheet nav doesn't diverge from desktop and re-expose them. The panel
+     stays inside #layout in the popover path, so this ancestor selector holds. */
+  #layout.clientpage .settings-nav__item[data-menu-id="works"],
+  #layout.clientpage .settings-nav__item[data-menu-id="about"],
+  #layout.employerpage .settings-nav__item[data-menu-id="works"],
+  #layout.employerpage .settings-nav__item[data-menu-id="about"] {
+    display: none;
+  }
 }
 
 .settings-panel {

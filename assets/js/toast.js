@@ -24,6 +24,12 @@
   var titleEl = null;
   var valueEl = null;
   var hideTimer = null;
+  // Pending teardown from the last hide() — tracked so a superseding show() can
+  // cancel it before it fires. Otherwise the stale animationend listener / 400ms
+  // fallback would hidePopover() the reused element out from under a new toast,
+  // leaving it flagged visible but removed from the top layer (so, invisible).
+  var hideListener = null;
+  var hideFallbackTimer = null;
   var spriteBase = '';
   var swipeStartX = 0;
   var swipeStartY = 0;
@@ -165,18 +171,30 @@
     var iconId = (options && options.icon) || '';
     var toast = getOrCreate();
 
-    // Reset any in-progress animation
+    // Reset any in-progress animation, and cancel a pending hide() teardown so
+    // its stale animationend/fallback can't hidePopover() this element after we
+    // reopen it below.
     clearTimeout(hideTimer);
+    cancelPendingHide();
     toast.classList.remove('toast--hiding', 'toast--visible');
+
+    // Reveal in the top layer BEFORE writing the text. A closed popover is
+    // display:none, so a polite live-region update made while it's hidden is
+    // skipped by screen readers; opening first puts the region in the a11y tree
+    // so the confirmation is announced. Re-show even when already open: a
+    // settings sheet closed and reopened after this toast would sit above it in
+    // the top layer, so drop and re-add to re-promote it to the top.
+    if (toast.hasAttribute('popover')) {
+      try {
+        if (toast.matches(':popover-open')) { toast.hidePopover(); }
+        toast.showPopover();
+      } catch (e) { /* unsupported / race */ }
+    }
 
     titleEl.textContent = title || '';
     valueEl.textContent = value || '';
     setIcon(iconId);
 
-    // Reveal in the top layer before animating in (popover starts display:none).
-    if (toast.hasAttribute('popover') && !toast.matches(':popover-open')) {
-      try { toast.showPopover(); } catch (e) { /* already open / unsupported */ }
-    }
     // Force reflow so the browser sees the class change
     void toast.offsetWidth;
     toast.classList.add('toast--visible');
@@ -186,14 +204,29 @@
     }, duration);
   }
 
+  // Cancel a pending hide() teardown (its animationend listener + fallback
+  // timer) so it can't run after a superseding show() has reopened the toast.
+  function cancelPendingHide() {
+    if (hideFallbackTimer) {
+      clearTimeout(hideFallbackTimer);
+      hideFallbackTimer = null;
+    }
+    if (el && hideListener) {
+      el.removeEventListener('animationend', hideListener);
+    }
+    hideListener = null;
+  }
+
   function hide() {
     if (!el) {return;}
     clearTimeout(hideTimer);
+    cancelPendingHide();
 
     el.classList.remove('toast--visible');
     el.classList.add('toast--hiding');
 
     var afterHide = function () {
+      cancelPendingHide();
       el.classList.remove('toast--hiding');
       // Drop it back out of the top layer once faded out.
       if (el.hasAttribute('popover') && el.matches(':popover-open')) {
@@ -201,9 +234,10 @@
       }
     };
 
+    hideListener = afterHide;
     el.addEventListener('animationend', afterHide, { once: true });
     // Safety fallback
-    setTimeout(afterHide, 400);
+    hideFallbackTimer = setTimeout(afterHide, 400);
   }
 
   /**

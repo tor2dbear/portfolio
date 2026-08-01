@@ -18,9 +18,18 @@
 
 
 <div class="settings-dropdown">
+  {{/* The trigger opens a settings-only panel on desktop (gear) but the primary
+    menu on phones, where it also carries the nav (see .settings-nav). Its
+    accessible name follows suit: "Settings" on desktop, the main-menu label at
+    the nav breakpoint — settings-dropdown.js swaps aria-label to data-label-menu
+    there so screen-reader users find the navigation, not just settings. The
+    static aria-label is the desktop default (correct before JS runs).
+  */}}
   <button
     class="settings-toggle"
     aria-label="{{ i18n "Settings" }}"
+    data-label-settings="{{ i18n "Settings" }}"
+    data-label-menu="{{ i18n "menu_title" }}"
     aria-expanded="false"
     aria-haspopup="true"
     data-js="settings-toggle"
