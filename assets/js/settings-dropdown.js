@@ -961,6 +961,9 @@
     let touchCurrentY = 0;
     // Whether this gesture has engaged the dismiss drag (vs. scrolling the body).
     let swipeDragging = false;
+    // Whether this gesture is even eligible to become a dismiss — latched once,
+    // at touchstart, from the body's scroll position.
+    let swipeCanDismiss = false;
 
     if (panel && overlay) {
       const legacyBody = panel.querySelector('[data-js="settings-panel-body"]');
@@ -969,6 +972,12 @@
         touchStartY = e.changedTouches[0].screenY;
         touchCurrentY = touchStartY;
         swipeDragging = false;
+        // Decide dismiss eligibility ONCE, here — only a gesture that begins
+        // with the body already at the top may become a dismiss. A gesture that
+        // starts scrolled stays a scroll for its whole duration, so reaching the
+        // top mid-swipe can't hijack it (and jump the sheet by the whole delta
+        // measured from touchstart) into a close.
+        swipeCanDismiss = !legacyBody || legacyBody.scrollTop <= 0;
         panel.style.transition = "none";
         overlay.style.transition = "none";
       });
@@ -977,12 +986,11 @@
         touchCurrentY = e.changedTouches[0].screenY;
         const deltaY = touchCurrentY - touchStartY;
 
-        // Engage the dismiss drag only on a downward pull while the scroll
-        // container is at the top. When the body is scrolled down, a downward
-        // pull is the user scrolling back up toward the nav / earlier settings —
-        // leave it to the browser instead of hijacking it to close the sheet.
+        // Engage the dismiss drag only on a downward pull, and only when this
+        // gesture was eligible from the start (body at the top). Otherwise it's
+        // the user scrolling the body — leave it to the browser.
         if (!swipeDragging) {
-          if (deltaY > 0 && (!legacyBody || legacyBody.scrollTop <= 0)) {
+          if (swipeCanDismiss && deltaY > 0) {
             swipeDragging = true;
           } else {
             return;
