@@ -330,21 +330,30 @@
 }
 
 .settings-panel::backdrop {
-  /* Scrim, plus a solid → transparent gradient at the very top that fades to
-     the page bg to hide the sheet/edge under the status bar (this replaces the
-     old .settings-overlay::before). */
-  background: linear-gradient(
-      to bottom,
-      var(--surface-page) 90px,
-      transparent 130px
-    ),
-    color-mix(in srgb, var(--surface-page) 55%, transparent);
+  /* Scrim: a page-coloured wash so the strip above the sheet matches the page
+     (the top bar looks the same whether the sheet is open or not). Split out as
+     background-color, not the `background` shorthand, so it can TRANSITION — on
+     a light/dark toggle it must recolour in step with the page (700ms), not
+     snap ahead of it. The duration comes from :root's --theme-transition-
+     duration (the same path --surface-page takes to reach this ::backdrop),
+     falling back to the sheet duration when no swap is running. The solid →
+     transparent top fade (hides the sheet/edge under the status bar; replaces
+     the old .settings-overlay::before) stays a background-image. */
+  background-color: color-mix(in srgb, var(--surface-page) 55%, transparent);
+  background-image: linear-gradient(
+    to bottom,
+    var(--surface-page) 90px,
+    transparent 130px
+  );
   -webkit-backdrop-filter: blur(0) saturate(100%);
   backdrop-filter: blur(0) saturate(100%);
   opacity: 0;
   transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
     -webkit-backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
     backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    background-color
+      var(--theme-transition-duration, var(--motion-duration-sheet))
+      var(--motion-ease-theme),
     display var(--motion-duration-sheet) var(--motion-ease-emphasized)
       allow-discrete,
     overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
