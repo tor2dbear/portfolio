@@ -124,6 +124,14 @@
     textWrap.appendChild(valueEl);
     el.appendChild(iconWrap);
     el.appendChild(textWrap);
+    // The settings sheet is a top-layer popover; a plain z-indexed toast would
+    // sit behind it (and its backdrop). Promote the toast to the top layer too
+    // (manual = no light-dismiss, we auto-hide) where supported, so it always
+    // shows above the sheet. Browsers without popover keep the z-index path —
+    // there the sheet isn't a popover either, so nothing renders above it.
+    if (typeof el.showPopover === 'function') {
+      el.setAttribute('popover', 'manual');
+    }
     document.body.appendChild(el);
     el.addEventListener('touchstart', onTouchStart, { passive: true });
     el.addEventListener('touchmove', onTouchMove, { passive: false });
@@ -165,6 +173,10 @@
     valueEl.textContent = value || '';
     setIcon(iconId);
 
+    // Reveal in the top layer before animating in (popover starts display:none).
+    if (toast.hasAttribute('popover') && !toast.matches(':popover-open')) {
+      try { toast.showPopover(); } catch (e) { /* already open / unsupported */ }
+    }
     // Force reflow so the browser sees the class change
     void toast.offsetWidth;
     toast.classList.add('toast--visible');
@@ -183,6 +195,10 @@
 
     var afterHide = function () {
       el.classList.remove('toast--hiding');
+      // Drop it back out of the top layer once faded out.
+      if (el.hasAttribute('popover') && el.matches(':popover-open')) {
+        try { el.hidePopover(); } catch (e) { /* already closed */ }
+      }
     };
 
     el.addEventListener('animationend', afterHide, { once: true });
