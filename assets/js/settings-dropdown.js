@@ -959,10 +959,16 @@
     // Touch support for swipe-to-close on mobile bottom sheet
     let touchStartY = 0;
     let touchCurrentY = 0;
+    // Whether this gesture has engaged the dismiss drag (vs. scrolling the body).
+    let swipeDragging = false;
 
     if (panel && overlay) {
+      const legacyBody = panel.querySelector('[data-js="settings-panel-body"]');
+
       panel.addEventListener("touchstart", function (e) {
         touchStartY = e.changedTouches[0].screenY;
+        touchCurrentY = touchStartY;
+        swipeDragging = false;
         panel.style.transition = "none";
         overlay.style.transition = "none";
       });
@@ -971,17 +977,26 @@
         touchCurrentY = e.changedTouches[0].screenY;
         const deltaY = touchCurrentY - touchStartY;
 
-        // Only allow dragging downwards
-        if (deltaY > 0) {
-          e.preventDefault();
-          panel.style.transform = `translateY(${deltaY}px)`;
-
-          // Update overlay opacity based on drag distance
-          const panelHeight = panel.getBoundingClientRect().height;
-          const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
-          const opacity = 1 - deltaY / maxDeltaY;
-          overlay.style.opacity = Math.max(opacity, 0);
+        // Engage the dismiss drag only on a downward pull while the scroll
+        // container is at the top. When the body is scrolled down, a downward
+        // pull is the user scrolling back up toward the nav / earlier settings —
+        // leave it to the browser instead of hijacking it to close the sheet.
+        if (!swipeDragging) {
+          if (deltaY > 0 && (!legacyBody || legacyBody.scrollTop <= 0)) {
+            swipeDragging = true;
+          } else {
+            return;
+          }
         }
+
+        e.preventDefault();
+        panel.style.transform = `translateY(${deltaY}px)`;
+
+        // Update overlay opacity based on drag distance
+        const panelHeight = panel.getBoundingClientRect().height;
+        const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
+        const opacity = 1 - deltaY / maxDeltaY;
+        overlay.style.opacity = Math.max(opacity, 0);
       });
 
       panel.addEventListener("touchend", function (_e) {
@@ -990,8 +1005,9 @@
         panel.style.transition = "transform 0.3s ease-in-out";
         overlay.style.transition = "opacity 0.3s ease-in-out";
 
-        // Close if dragged down more than 50px
-        if (deltaY > 50) {
+        // Close only if this gesture actually engaged the dismiss drag and
+        // travelled past the threshold — a scroll-up release must never close.
+        if (swipeDragging && deltaY > 50) {
           closePanel();
         } else {
           // Return to original position
@@ -999,6 +1015,7 @@
           overlay.style.opacity = "1";
         }
 
+        swipeDragging = false;
         touchStartY = 0;
         touchCurrentY = 0;
       });
