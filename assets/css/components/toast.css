@@ -43,12 +43,19 @@
 }
 
 /* Promoted to the top layer (JS sets popover="manual") so it shows above the
-   settings sheet. Neutralise the UA popover box — its inset:0 + margin:auto
-   would fight the toast's own top/centre positioning — while keeping the
-   toast's own border, background and top offset. */
+   settings sheet. Fully re-assert the toast's own fixed, top-centred,
+   content-sized box: the UA popover defaults (inset:0 + margin:auto + fit
+   sizing) otherwise stretch it to nearly fill the screen on iOS. */
 .toast[popover] {
+  inset: auto;
+  top: var(--spacing-24);
+  left: 0;
+  right: 0;
   bottom: auto;
-  margin-block: 0;
+  width: fit-content;
+  max-width: calc(100% - var(--spacing-32));
+  height: auto;
+  margin: 0 auto;
   overflow: visible;
 }
 
