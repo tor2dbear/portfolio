@@ -49,7 +49,13 @@
     var duration = Number(durationMs) || THEME_SWAP_TRANSITION_DEFAULT_MS;
     stopThemeTransitionTimer();
     document.body.classList.remove("darkmodeTransition");
-    document.body.style.setProperty(
+    // Set the duration on :root, not <body>. Safari inherits top-layer elements
+    // (the open settings sheet is a popover) from :root rather than their DOM
+    // parent, so a var on <body> never reached the sheet — it fell back to
+    // --motion-duration-xslow (1000ms) while the page used this 700ms, and the
+    // sheet's colour swap lagged behind the rest of the page. On :root the sheet
+    // inherits it too (same path --surface-page already takes), so they sync.
+    document.documentElement.style.setProperty(
       "--theme-transition-duration",
       duration + "ms"
     );
@@ -57,7 +63,9 @@
     document.body.classList.add("darkmodeTransition");
     themeTransitionTimer = window.setTimeout(function () {
       document.body.classList.remove("darkmodeTransition");
-      document.body.style.removeProperty("--theme-transition-duration");
+      document.documentElement.style.removeProperty(
+        "--theme-transition-duration"
+      );
       themeTransitionTimer = null;
     }, duration);
   }

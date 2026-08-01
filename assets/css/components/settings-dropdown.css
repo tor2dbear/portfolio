@@ -374,35 +374,6 @@
   }
 }
 
-/* The scrim + top fade use var(--surface-page). Safari doesn't reliably update
-   a mode-scoped custom property inside a top-layer ::backdrop, so on a
-   light/dark toggle the top band kept the old colour and fell out of sync with
-   the page (a regression from moving the fade off .settings-overlay::before
-   into ::backdrop). Selector matching DOES reach the ::backdrop, so pin the
-   colour per mode with concrete values (mirroring the computed --surface-page).
-   Scoped to the bottom-sheet range — the desktop dropdown has no scrim. Custom
-   palettes fall back to the base rule's var(); the standard light/dark toggle
-   (the visible case) is now correct. */
-@media (max-width: 29.9375em) {
-  :root[data-mode="light"] .settings-panel[popover]:popover-open::backdrop {
-    background: linear-gradient(
-        to bottom,
-        hsl(240, 100%, 99.6%) 90px,
-        transparent 130px
-      ),
-      color-mix(in srgb, hsl(240, 100%, 99.6%) 55%, transparent);
-  }
-
-  :root[data-mode="dark"] .settings-panel[popover]:popover-open::backdrop {
-    background: linear-gradient(
-        to bottom,
-        hsl(240, 22.4%, 9.6%) 90px,
-        transparent 130px
-      ),
-      color-mix(in srgb, hsl(240, 22.4%, 9.6%) 55%, transparent);
-  }
-}
-
 .settings-panel::before {
   content: "";
   position: absolute;
