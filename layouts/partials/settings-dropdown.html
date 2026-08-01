@@ -68,16 +68,12 @@
         <div class="theme-section-heading">
           <h3 class="theme-section-title">{{ i18n "navigation" }}</h3>
         </div>
+        {{/* No Home entry: like the desktop header nav, home is the brand
+          wordmark (top-left, links to /), which is present on mobile too — an
+          explicit Home here would duplicate it and diverge from desktop.
+        */}}
         <ul class="settings-nav__list">
           {{- $urltop := .RelPermalink -}}
-          <li class="settings-nav__item" data-menu-id="home">
-            <a
-              class="settings-nav__link {{ if .IsHome }}active{{ end }}"
-              href="{{ "/" | relLangURL }}"
-              {{ if .IsHome }}aria-current="page"{{ end }}
-              >{{ i18n "home" }}</a
-            >
-          </li>
           {{- range .Site.Menus.top -}}
             {{- $nameLower := lower .Name -}}
             {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}

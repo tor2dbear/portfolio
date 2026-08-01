@@ -132,7 +132,7 @@
     padding: 0 var(--spacing-8);
     border-radius: var(--radius-8);
     color: var(--text-default);
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     line-height: 1;
     text-decoration: none;
     white-space: nowrap;
