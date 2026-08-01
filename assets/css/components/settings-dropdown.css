@@ -290,28 +290,26 @@
     touch-action: pan-y pinch-zoom;
   }
 
-  /* Overflow cue: a soft gradient over the sheet's bottom edge (the sheet has no
-     bottom padding, so it sits over real content) that dissolves the last of the
-     content — reads as "there's more — drag up to expand". Its opacity is
-     transitioned so it fades in/out rather than popping when .is-clipped toggles.
-     JS toggles .is-clipped only at rest while the body overflows, and lifts it
-     once scrolled to the end or expanded. pointer-events:none so it never blocks
-     the control underneath. */
-  .settings-panel[popover]::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: calc(var(--spacing-40) + var(--spacing-16));
-    background: linear-gradient(to top, var(--surface-elevated), transparent);
-    opacity: 0;
-    transition: opacity var(--motion-duration-base) var(--motion-ease-standard);
-    pointer-events: none;
-  }
-
-  .settings-panel[popover].is-clipped::after {
-    opacity: 1;
+  /* Overflow cue: fade the body's bottom edge when it overflows the resting
+     detent — reads as "there's more — drag up to expand". A mask (dissolving the
+     content to transparent, revealing the panel colour behind) rather than a
+     colour overlay: the old fade painted var(--surface-elevated), but this is a
+     top-layer popover and Safari doesn't reliably pass the mode-scoped custom
+     property into it, so in dark mode the overlay fell back to the light base
+     value and the cue looked light on dark. A mask carries no colour, so it's
+     correct in every mode. JS toggles .is-clipped only at rest while the body
+     overflows, and clears it once scrolled to the end or expanded. */
+  .settings-panel[popover].is-clipped .settings-panel__body {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - var(--spacing-40) - var(--spacing-16)),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - var(--spacing-40) - var(--spacing-16)),
+      transparent
+    );
   }
 }
 

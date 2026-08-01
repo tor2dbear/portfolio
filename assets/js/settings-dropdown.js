@@ -217,7 +217,6 @@
       var dragStartMax = 0; // sheet outer height at engage (px)
       var dragRestPx = 0; // resting detent height (px)
       var dragFullPx = 0; // expanded detent height (px)
-      var dragStartedExpanded = false; // did this drag begin from fullscreen?
 
       function isMobileSheet() {
         return (
@@ -403,7 +402,6 @@
           // (measured when already at rest, computed from content otherwise).
           dragStartMax = Math.round(panel.getBoundingClientRect().height);
           dragFullPx = sheetBounds().full;
-          dragStartedExpanded = sheetExpanded;
           // Whether expanding would actually reveal anything: measured now, while
           // the body is still at its resting layout (before the resize below).
           // Already expanded → the body scrolls, so treat as expandable.
@@ -484,11 +482,11 @@
         if (action === "expand" && !dragCanExpand) {
           action = "rest";
         }
-        // Dismissal is reserved for drags that begin at rest; a long pull that
-        // starts from fullscreen collapses to rest rather than closing.
-        if (action === "dismiss" && dragStartedExpanded) {
-          action = "rest";
-        }
+        // A downward pull past the dismiss threshold closes the sheet from
+        // either detent: from rest directly, and from fullscreen once it has
+        // been dragged all the way down through rest (decideSheetTarget already
+        // requires clearing rest − dismissThreshold, so a small collapse still
+        // just settles at rest).
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
         panel.classList.remove("is-dragging");
