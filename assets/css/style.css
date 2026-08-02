@@ -676,17 +676,18 @@ picture::after,
    a <video> — the filtered video just shows base grayscale (black-and-white,
    no blend). So <video> keeps the mix-blend-mode overlay pipeline instead,
    which composites on video everywhere; its overlays stay visible and read the
-   Pantone --image-* stops as a duotone. The hero-embed <iframe> card is a
-   .video-wrapper too but takes the filter path (see .hero-embed__frame below),
-   so its overlays are hidden here to avoid stacking filter + overlay. */
+   Pantone --image-* stops as a duotone. Every hero-embed <iframe> — the in-page
+   hero, the summary card, and the lightbox — sits in a .video-wrapper but takes
+   the filter path (see .hero-embed__frame below), so suppress its overlays via
+   :has(.hero-embed__frame) to avoid stacking filter + overlay (double-tint). */
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
   picture::before,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
   picture::after,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .hero-embed-card::before,
+  .video-wrapper:has(.hero-embed__frame)::before,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .hero-embed-card::after {
+  .video-wrapper:has(.hero-embed__frame)::after {
   display: none;
 }
 
@@ -831,6 +832,20 @@ video {
   -webkit-filter: none !important;
   -moz-filter: none !important;
   filter: none !important;
+}
+
+/* Under a Pantone palette the logomark joins the palette like every other image
+   and the sibling infographic on the page: take the same #pantone-tritone map
+   instead of holding the Cadence navy, so the mark reads as part of the theme
+   rather than a stray blue dot. The mark's own ink is already mode-appropriate
+   (dark in light mode, light in dark), so the luminance map keeps it legible.
+   !important + the higher specificity override the brand-colour opt-out above;
+   the standard palette still shows the navy identity. */
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .infographic--logomark svg {
+  -webkit-filter: url(#pantone-tritone) !important;
+  -moz-filter: url(#pantone-tritone) !important;
+  filter: url(#pantone-tritone) !important;
 }
 
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
