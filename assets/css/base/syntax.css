@@ -38,6 +38,16 @@
   color: var(--work-11);
 }
 
+/* Under a Pantone palette the neutral --gray-2 fill reads as an un-themed
+   near-white/near-black slab against the tinted page (the block "isn't
+   pantone"). Point the surface at the Color-of-the-Year scale so the code
+   panel joins the palette — coty-3 mirrors the tinted input surface, and the
+   --border-subtle hairline already resolves to coty-5 here. Text (coty-12) and
+   the diff +/- semantic colours are untouched. */
+:root[data-palette="pantone"] .highlight pre {
+  background: var(--coty-3);
+}
+
 /* --- Token colors mapped to design tokens --- */
 
 /* Keywords (if, else, return, class, function, etc.) */

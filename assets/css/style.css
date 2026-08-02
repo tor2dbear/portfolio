@@ -670,14 +670,23 @@ picture::after,
   mix-blend-mode: var(--image-highlight-blend-mode, var(--image-blend-mode));
 }
 
+/* <picture> images take the SVG tri-tone filter (url() reference filters paint
+   reliably on <img>), so their duotone overlays are hidden. A real <video> is
+   the exception: WebKit (iOS Safari) does NOT paint an SVG reference filter on
+   a <video> — the filtered video just shows base grayscale (black-and-white,
+   no blend). So <video> keeps the mix-blend-mode overlay pipeline instead,
+   which composites on video everywhere; its overlays stay visible and read the
+   Pantone --image-* stops as a duotone. The hero-embed <iframe> card is a
+   .video-wrapper too but takes the filter path (see .hero-embed__frame below),
+   so its overlays are hidden here to avoid stacking filter + overlay. */
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
   picture::before,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
   picture::after,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .video-wrapper::before,
+  .hero-embed-card::before,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .video-wrapper::after {
+  .hero-embed-card::after {
   display: none;
 }
 
@@ -691,10 +700,10 @@ video {
   filter: grayscale(var(--image-grayscale));
 }
 
+/* Only <img> takes the SVG tri-tone filter; <video> is left on grayscale + the
+   overlay duotone above (WebKit won't filter a video). */
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  img,
-:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  video {
+  img {
   -webkit-filter: url(#pantone-tritone);
   -moz-filter: url(#pantone-tritone);
   filter: url(#pantone-tritone);

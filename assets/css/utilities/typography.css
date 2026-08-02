@@ -412,6 +412,14 @@ code {
   font-size: 0.875em;
 }
 
+/* Under a Pantone palette the neutral --gray-2 chip stayed un-tinted (a white
+   pill on the tinted page). Follow the Color-of-the-Year scale so inline code
+   tracks the theme, matching the code block above; the border already resolves
+   to coty-5 and the text to coty-12 under Pantone. */
+:root[data-palette="pantone"] .prose :not(pre) > code {
+  background-color: var(--coty-3);
+}
+
 .taxonomy-header,
 .post-header {
   white-space: nowrap;
