@@ -413,15 +413,18 @@ code {
 }
 
 /* Under a Pantone palette the neutral --gray-2 chip stayed un-tinted (a white
-   pill on the tinted page). Tint it toward the palette instead — but relative
-   to the page surface, not a fixed scale step: each Pantone year anchors
-   --surface-page at a different step, so a fixed step (e.g. coty-3) reads loud
-   on years anchored dark/saturated (Greenery) and flat on light/desaturated
-   ones (Rose Quartz). Mixing a small amount of ink into the surface keeps the
-   same subtle contrast in every palette and mode; the border resolves to coty-5
-   and the text to coty-12 under Pantone. */
+   pill on the tinted page). Tint it toward the palette instead, relative to the
+   page surface rather than a fixed scale step (each year anchors --surface-page
+   differently, so a fixed step reads loud on some years and flat on others).
+   Mix toward coty-1, the light/neutral end of the scale — NOT toward the ink:
+   the code text is coty-12, so nudging the fill toward coty-12 shrinks the
+   text/background contrast and drops small code text below AA on years whose
+   base pair already sits near 4.5:1 (e.g. Tangerine Tango). coty-1 is the
+   opposite extreme from the ink, so the fill always lands farther from the text
+   than the page does — code-text contrast stays at or above the page baseline
+   in every palette and mode. Border resolves to coty-5, text to coty-12. */
 :root[data-palette="pantone"] .prose :not(pre) > code {
-  background-color: color-mix(in oklab, var(--surface-page), var(--text-default) 10%);
+  background-color: color-mix(in oklab, var(--surface-page), var(--coty-1) 16%);
 }
 
 .taxonomy-header,
