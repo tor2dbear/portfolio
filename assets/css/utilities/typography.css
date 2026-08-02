@@ -413,11 +413,15 @@ code {
 }
 
 /* Under a Pantone palette the neutral --gray-2 chip stayed un-tinted (a white
-   pill on the tinted page). Follow the Color-of-the-Year scale so inline code
-   tracks the theme, matching the code block above; the border already resolves
-   to coty-5 and the text to coty-12 under Pantone. */
+   pill on the tinted page). Tint it toward the palette instead — but relative
+   to the page surface, not a fixed scale step: each Pantone year anchors
+   --surface-page at a different step, so a fixed step (e.g. coty-3) reads loud
+   on years anchored dark/saturated (Greenery) and flat on light/desaturated
+   ones (Rose Quartz). Mixing a small amount of ink into the surface keeps the
+   same subtle contrast in every palette and mode; the border resolves to coty-5
+   and the text to coty-12 under Pantone. */
 :root[data-palette="pantone"] .prose :not(pre) > code {
-  background-color: var(--coty-3);
+  background-color: color-mix(in oklab, var(--surface-page), var(--text-default) 10%);
 }
 
 .taxonomy-header,
