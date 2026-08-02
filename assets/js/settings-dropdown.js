@@ -37,6 +37,27 @@
       return;
     }
 
+    // Keep the trigger's accessible name in step with what it opens: the primary
+    // menu at the nav breakpoint (where the panel also carries the nav), plain
+    // settings above it. CSS swaps the glyph at the same width but can't touch
+    // aria-label, so mirror it here — on load and on width changes — for both
+    // the popover and legacy paths.
+    var navMedia = window.matchMedia("(max-width: 47.9375em)");
+    function syncToggleLabel() {
+      var label = navMedia.matches
+        ? toggle.getAttribute("data-label-menu")
+        : toggle.getAttribute("data-label-settings");
+      if (label) {
+        toggle.setAttribute("aria-label", label);
+      }
+    }
+    syncToggleLabel();
+    if (navMedia.addEventListener) {
+      navMedia.addEventListener("change", syncToggleLabel);
+    } else if (navMedia.addListener) {
+      navMedia.addListener(syncToggleLabel);
+    }
+
     // --- Popover prototype (progressive enhancement) ---------------------
     // Where the Popover API is supported, upgrade the panel to a native
     // top-layer popover: native open/close/light-dismiss/focus, ::backdrop as
@@ -57,9 +78,15 @@
     }
 
     function initPopoverPanel() {
-      // The custom overlay is replaced by ::backdrop.
-      if (overlay && overlay.parentNode) {
-        overlay.parentNode.removeChild(overlay);
+      // The scrim is this real .settings-overlay element, NOT the popover
+      // ::backdrop: on iOS Safari a top-layer pseudo-element recolours late on a
+      // light/dark swap, so its page-coloured top bar fell out of step with the
+      // page. A real element inherits normally and transitions in sync. Move it
+      // to <body> so its fixed positioning is viewport-relative (no header
+      // ancestor transform can trap it) and it stacks predictably beneath the
+      // top-layer panel (which always paints above normal DOM).
+      if (overlay && overlay.parentNode !== document.body) {
+        document.body.appendChild(overlay);
       }
 
       function enablePopover() {
@@ -114,6 +141,86 @@
       // The mobile sheet's internal scroll container; the detent drag grows/
       // shrinks the sheet around it. Absent on the desktop dropdown path.
       var panelBody = panel.querySelector('[data-js="settings-panel-body"]');
+
+      // The scrim lives on a sibling element now (see above), so its drag state
+      // has to be driven in lockstep with the panel's: --sheet-drag fades the
+      // scrim/blur as the sheet is pulled down, and .is-dragging freezes its
+      // transition while the finger is down. Mirror every set onto the overlay.
+      function setSheetDrag(value) {
+        panel.style.setProperty("--sheet-drag", value);
+        if (overlay) {
+          overlay.style.setProperty("--sheet-drag", value);
+        }
+      }
+      function clearSheetDrag() {
+        // Panel only — the overlay's --sheet-drag is owned by openOverlay /
+        // closeOverlay (and the live drag). Clearing it here would undo the
+        // fade-out closeOverlay sets, snapping the scrim back to full opacity.
+        panel.style.removeProperty("--sheet-drag");
+      }
+      function setSheetDragging(on) {
+        panel.classList.toggle("is-dragging", on);
+        if (overlay) {
+          overlay.classList.toggle("is-dragging", on);
+        }
+      }
+
+      // Open the scrim: un-hide and clear any closing/drag state so it fades in
+      // fresh (base opacity:0 -> open, via @starting-style in the CSS).
+      function openOverlay() {
+        if (!overlay) {
+          return;
+        }
+        overlay.classList.remove("is-dragging");
+        overlay.style.transition = "";
+        overlay.style.removeProperty("--sheet-drag");
+        overlay.removeAttribute("hidden");
+      }
+
+      // Close the scrim in step with the sheet's popover exit: fade it out first
+      // (opacity/blur -> 0 via --sheet-drag), then set [hidden] once the
+      // transition ends. Setting [hidden] immediately would display:none the
+      // element before its transition could run, snapping the wash away while the
+      // sheet is still sliding out. Guarded by openGeneration so a quick reopen
+      // doesn't hide the freshly reopened scrim.
+      function closeOverlay() {
+        if (!overlay || overlay.hasAttribute("hidden")) {
+          return;
+        }
+        overlay.classList.remove("is-dragging");
+        overlay.style.transition = "";
+        overlay.style.setProperty("--sheet-drag", "1");
+        var gen = openGeneration;
+        var done = false;
+        var timer = null;
+        var onEnd = null;
+        var finish = function () {
+          if (done) {
+            return;
+          }
+          done = true;
+          overlay.removeEventListener("transitionend", onEnd);
+          if (timer) {
+            window.clearTimeout(timer);
+          }
+          // Reopened since this close armed? leave the now-open scrim alone.
+          if (openGeneration !== gen) {
+            return;
+          }
+          overlay.setAttribute("hidden", "");
+          overlay.style.removeProperty("--sheet-drag");
+        };
+        onEnd = function (ev) {
+          if (ev.target === overlay && ev.propertyName === "opacity") {
+            finish();
+          }
+        };
+        overlay.addEventListener("transitionend", onEnd);
+        // Fallback if transitionend never arrives (desktop keeps the overlay
+        // display:none, reduced-motion, an interrupted close, etc.).
+        timer = window.setTimeout(finish, 500);
+      }
+
       var sheetExpanded = false;
       // The resting outer height (px), measured while the sheet is actually at
       // rest (on open, and at the start of a rest drag). Reused when a drag
@@ -130,7 +237,12 @@
         openGeneration++;
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         setSettingsPanelOpenState(open);
+        // Show/hide the real scrim with the panel. On desktop the CSS keeps it
+        // display:none, so this is a no-op there — no scrim on the anchored
+        // dropdown, only on the mobile bottom sheet. Close fades out first (see
+        // closeOverlay) instead of snapping [hidden] on mid-slide.
         if (open) {
+          openOverlay();
           positionPanel();
           // Capture the true resting height now, while the sheet hugs its
           // content (before any expand stretches the body).
@@ -160,12 +272,13 @@
           }
           dragEngaged = false;
           dragDelta = 0;
-          panel.classList.remove("is-dragging");
+          setSheetDragging(false);
           panel.style.height = "";
           panel.style.maxHeight = "";
           panel.style.transform = "";
           panel.style.transition = "";
-          panel.style.removeProperty("--sheet-drag");
+          clearSheetDrag();
+          closeOverlay();
           if (panelBody) {
             panelBody.scrollTop = 0;
           }
@@ -217,7 +330,6 @@
       var dragStartMax = 0; // sheet outer height at engage (px)
       var dragRestPx = 0; // resting detent height (px)
       var dragFullPx = 0; // expanded detent height (px)
-      var dragStartedExpanded = false; // did this drag begin from fullscreen?
 
       function isMobileSheet() {
         return (
@@ -397,13 +509,12 @@
           // Keep the overflow fade through the drag (it re-evaluates on settle)
           // so it doesn't blink out the moment you touch the sheet.
           setDragTransition(false);
-          panel.classList.add("is-dragging"); // freezes the ::backdrop transition
+          setSheetDragging(true); // freezes the scrim's transition too
           // Snapshot the geometry the live resize + release decision work in:
           // the outer height at grab, the full detent, and the resting height
           // (measured when already at rest, computed from content otherwise).
           dragStartMax = Math.round(panel.getBoundingClientRect().height);
           dragFullPx = sheetBounds().full;
-          dragStartedExpanded = sheetExpanded;
           // Whether expanding would actually reveal anything: measured now, while
           // the body is still at its resting layout (before the resize below).
           // Already expanded → the body scrolls, so treat as expandable.
@@ -434,15 +545,12 @@
         if (proposed >= dragRestPx) {
           panel.style.transform = "";
           panel.style.height = Math.min(proposed, dragFullPx) + "px";
-          panel.style.setProperty("--sheet-drag", "0");
+          setSheetDrag("0");
         } else {
           panel.style.height = dragRestPx + "px";
           var off = dragRestPx - proposed;
           panel.style.transform = "translateY(" + off + "px)";
-          panel.style.setProperty(
-            "--sheet-drag",
-            String(Math.min(1, off / (dragRestPx || 1)))
-          );
+          setSheetDrag(String(Math.min(1, off / (dragRestPx || 1))));
         }
         // Re-evaluate the overflow fade against the sheet's new live height, so
         // it fades in as a collapse crosses into overflow (not only on release).
@@ -484,14 +592,14 @@
         if (action === "expand" && !dragCanExpand) {
           action = "rest";
         }
-        // Dismissal is reserved for drags that begin at rest; a long pull that
-        // starts from fullscreen collapses to rest rather than closing.
-        if (action === "dismiss" && dragStartedExpanded) {
-          action = "rest";
-        }
+        // A downward pull past the dismiss threshold closes the sheet from
+        // either detent: from rest directly, and from fullscreen once it has
+        // been dragged all the way down through rest (decideSheetTarget already
+        // requires clearing rest − dismissThreshold, so a small collapse still
+        // just settles at rest).
         // Re-enable the CSS transitions (both the panel's and, via removing the
         // class, the ::backdrop's) so the tail motion animates.
-        panel.classList.remove("is-dragging");
+        setSheetDragging(false);
         setDragTransition(true);
         void panel.offsetHeight; // flush so the dragged position is the start
         if (action === "dismiss") {
@@ -522,7 +630,7 @@
             panel.style.transition = "";
             panel.style.height = "";
             panel.style.maxHeight = "";
-            panel.style.removeProperty("--sheet-drag");
+            clearSheetDrag();
           };
           var onEnd = function (ev) {
             if (ev.target === panel && ev.propertyName === "transform") {
@@ -532,11 +640,11 @@
           panel.addEventListener("transitionend", onEnd);
           window.setTimeout(finish, 500); // fallback if transitionend is missed
           panel.style.transform = "translateY(100%)";
-          panel.style.setProperty("--sheet-drag", "1");
+          setSheetDrag("1");
           return;
         }
         panel.style.transform = "";
-        panel.style.setProperty("--sheet-drag", "0");
+        setSheetDrag("0");
         // Leave max-height unconstrained (it's "none" from the drag) through the
         // height transition — a none→length max-height isn't interpolated, so
         // reapplying the cap now would clamp a high dragged height to rest before
@@ -848,52 +956,11 @@
       attributeFilter: ["data-grid-overlay"],
     });
 
-    // Touch support for swipe-to-close on mobile bottom sheet
-    let touchStartY = 0;
-    let touchCurrentY = 0;
-
-    if (panel && overlay) {
-      panel.addEventListener("touchstart", function (e) {
-        touchStartY = e.changedTouches[0].screenY;
-        panel.style.transition = "none";
-        overlay.style.transition = "none";
-      });
-
-      panel.addEventListener("touchmove", function (e) {
-        touchCurrentY = e.changedTouches[0].screenY;
-        const deltaY = touchCurrentY - touchStartY;
-
-        // Only allow dragging downwards
-        if (deltaY > 0) {
-          e.preventDefault();
-          panel.style.transform = `translateY(${deltaY}px)`;
-
-          // Update overlay opacity based on drag distance
-          const panelHeight = panel.getBoundingClientRect().height;
-          const maxDeltaY = window.innerHeight - panelHeight - 8; // 8px from bottom
-          const opacity = 1 - deltaY / maxDeltaY;
-          overlay.style.opacity = Math.max(opacity, 0);
-        }
-      });
-
-      panel.addEventListener("touchend", function (_e) {
-        const deltaY = touchCurrentY - touchStartY;
-
-        panel.style.transition = "transform 0.3s ease-in-out";
-        overlay.style.transition = "opacity 0.3s ease-in-out";
-
-        // Close if dragged down more than 50px
-        if (deltaY > 50) {
-          closePanel();
-        } else {
-          // Return to original position
-          panel.style.transform = "translateY(0)";
-          overlay.style.opacity = "1";
-        }
-
-        touchStartY = 0;
-        touchCurrentY = 0;
-      });
-    }
+    // No touch swipe-to-close on the legacy (no-Popover) fallback: it fought the
+    // sheet's own body scroll — a downward swipe to scroll back up toward the
+    // nav read as a dismiss — and the fallback already closes via the overlay,
+    // Escape, and an outside click. The modern popover path keeps its full
+    // drag-to-dismiss / expand detents (initPopoverPanel); this swipe only ever
+    // ran where the Popover API is absent, which is effectively nowhere now.
   });
 })();
