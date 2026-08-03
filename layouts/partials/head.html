@@ -113,7 +113,16 @@
        Twitter so pages that had an og:image finally get a twitter:image too. */}}
   {{ $ogImage := "" }}
   {{ with .Params.header_image }}
-    {{ $ogImage = (printf "%s%s" $.RelPermalink .) | absURL }}
+    {{/* header_image is often an extensionless bundle-resource stem (PIA, About)
+         and on some pages is an mp4 (videotest). Resolve the real page resource
+         the way headerimage.html does — GetMatch on the stem glob — and use its
+         permalink only when it is actually an image, so the card URL is never a
+         404 and Twitter never gets a video. */}}
+    {{ with $.Resources.GetMatch (printf "%s*" .) }}
+      {{ if eq .MediaType.MainType "image" }}
+        {{ $ogImage = .Permalink }}
+      {{ end }}
+    {{ end }}
   {{ else }}
     {{ with $.Site.Params.og_image }}
       {{ $ogImage = . | absURL }}

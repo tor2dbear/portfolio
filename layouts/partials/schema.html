@@ -50,9 +50,17 @@
   {{ $schemas = $schemas | append $profile }}
 {{ end }}
 
+{{/* Resolve header_image to a real bundle resource (it may be an extensionless
+  stem, or an mp4) and only treat it as a structured-data image when it is
+  actually an image — same resolution headerimage.html / head.html use.
+*/}}
 {{ $imageUrl := "" }}
 {{ with .Params.header_image }}
-  {{ $imageUrl = (printf "%s%s" $.RelPermalink .) | absURL }}
+  {{ with $.Resources.GetMatch (printf "%s*" .) }}
+    {{ if eq .MediaType.MainType "image" }}
+      {{ $imageUrl = .Permalink }}
+    {{ end }}
+  {{ end }}
 {{ end }}
 
 {{ if eq .Type "works" }}
