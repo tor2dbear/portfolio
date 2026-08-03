@@ -934,18 +934,21 @@
       }
 
       // Terminal engine is code-split (see $terminalJs above). Expose its URL
-      // for theme.js's ensureTerminalLoaded, and when the page is loading
-      // already in the terminal layout, inject it now. The terminal CSS ships
-      // globally so the chrome is already correct — this only brings in the boot
-      // + interactivity, with no layout flash. terminal.js's onReady guard runs
-      // its init on DOMContentLoaded here (injected while the document is still
-      // parsing), matching the old deferred-bundle behaviour.
+      // for theme.js's ensureTerminalLoaded. We do NOT execute it here: terminal.js
+      // captures the window.Theme seam at its own eval (per AGENTS.md the load
+      // order theme.js → terminal.js is a contract), and an async classic script
+      // injected here could win the race against the deferred js.js that publishes
+      // window.Theme, snapshotting an empty seam and breaking the terminal. So the
+      // page instead PRELOADs the bundle now (early download, no execution, no
+      // race) and theme.js's init runs it once window.Theme exists. The terminal
+      // CSS ships globally, so the layout is already correct meanwhile — no flash.
       window.__terminalSrc = "{{ $terminalJs.RelPermalink }}";
       if (effectiveLayout === "terminal") {
-        var terminalScript = document.createElement("script");
-        terminalScript.src = window.__terminalSrc;
-        terminalScript.setAttribute("data-terminal-bundle", "");
-        document.head.appendChild(terminalScript);
+        var terminalPreload = document.createElement("link");
+        terminalPreload.rel = "preload";
+        terminalPreload.as = "script";
+        terminalPreload.href = window.__terminalSrc;
+        document.head.appendChild(terminalPreload);
       }
 
       // Suppress CSS transitions during initial paint so permanent transitions

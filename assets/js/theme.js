@@ -970,6 +970,16 @@
     applyPalette(initialPalette);
     applyTypography(storedTypography);
     applyLayout(storedLayout);
+    // The terminal engine is code-split. If this page opened in the terminal
+    // layout (data-layout was resolved pre-paint by the head script — work
+    // defaults / exemptions included, so read it rather than storedLayout), load
+    // the engine now. This runs AFTER theme.js has published window.Theme, which
+    // terminal.js captures at its own eval — the load order the head script's
+    // preload can't guarantee on its own. ensureTerminalLoaded self-boots via
+    // terminal.js's init (no enterLayout callback on a fresh load).
+    if (document.documentElement.getAttribute("data-layout") === "terminal") {
+      ensureTerminalLoaded();
+    }
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
     });
