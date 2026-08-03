@@ -19,11 +19,16 @@
       return null;
     }
   }
+  // Returns true when the value was actually persisted, false when storage
+  // threw — callers that branch on persistence (e.g. setLayout's redirect to
+  // the home terminal) need to know the write didn't stick.
   function safeSet(key, value) {
     try {
       localStorage.setItem(key, value);
+      return true;
     } catch (e) {
       /* storage unavailable — the preference simply isn't persisted */
+      return false;
     }
   }
   function safeRemove(key) {
@@ -469,7 +474,13 @@
     ) {
       safeSet("theme-layout-previous", "column");
       safeSet("theme-layout-previous-stored", storedLayout ? "1" : "0");
-      safeSet("theme-layout", "terminal");
+      // The redirect only makes sense if the terminal choice actually persisted:
+      // the home page reads theme-layout on load to open in terminal. If storage
+      // threw, that write is lost, so home would open in column and we'd have
+      // navigated the visitor away from this page for nothing — stay put instead.
+      if (!safeSet("theme-layout", "terminal")) {
+        return;
+      }
       var homeUrl =
         document.documentElement.getAttribute("data-home-url") || "/";
       try {

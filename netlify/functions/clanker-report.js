@@ -37,7 +37,12 @@ function originAllowed(event) {
       host === "tor-bjorn.com" ||
       host === "localhost" ||
       host === "127.0.0.1" ||
-      host.endsWith(".netlify.app")
+      // Only THIS site's Netlify hosts — the production subdomain and its
+      // deploy-preview/branch-deploy hosts (deploy-preview-N--tor-bjorn.netlify.app,
+      // <branch>--tor-bjorn.netlify.app). A bare ".netlify.app" suffix would let
+      // any attacker-controlled Netlify site through.
+      host === "tor-bjorn.netlify.app" ||
+      host.endsWith("--tor-bjorn.netlify.app")
     );
   } catch (e) {
     return false;
