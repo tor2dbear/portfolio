@@ -1,14 +1,18 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="{{ if .IsNode }}
-      {{ with .Site.Params.description }}{{ . }}{{ end }}
-    {{ else }}
-      {{ with .Description }}{{ . }}{{ end }}
-    {{ end }}"
-  />
+  {{/* One source of truth for the meta description, reused by the OG and
+       Twitter tags below. Computed as a plain string so the attribute never
+       carries the stray newlines/indentation the old multi-line {{ if }} inside
+       content="…" emitted (the OG/Twitter variants were already collapsed, so
+       they diverged from this one). */}}
+  {{ $desc := "" }}
+  {{ if .IsNode }}
+    {{ $desc = .Site.Params.description }}
+  {{ else }}
+    {{ $desc = .Description }}
+  {{ end }}
+  <meta name="description" content="{{ $desc }}" />
   <meta
     name="theme-color"
     content="#FFFFFF"
@@ -95,7 +99,7 @@
 
   {{/* Open Graph meta tags for better search/social appearance */}}
   <meta property="og:title" content="{{ $pageTitle }}" />
-  <meta property="og:description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}" />
+  <meta property="og:description" content="{{ $desc }}" />
   <meta property="og:url" content="{{ .Permalink }}" />
   <meta property="og:site_name" content="{{ .Site.Params.title }}" />
   {{ if .IsHome }}
@@ -103,15 +107,38 @@
   {{ else }}
   <meta property="og:type" content="article" />
   {{ end }}
-  {{/* OG Image - use header_image if available, otherwise site default */}}
+  {{/* Social share image: the page's own header_image if it has one, else the
+       site-wide default (Site.Params.og_image, empty by default — set it to a
+       ~1200x630 asset to give image-less pages a card). Emitted for both OG and
+       Twitter so pages that had an og:image finally get a twitter:image too. */}}
+  {{ $ogImage := "" }}
   {{ with .Params.header_image }}
-  <meta property="og:image" content="{{ (printf "%s%s" $.RelPermalink .) | absURL }}" />
+    {{/* header_image is often an extensionless bundle-resource stem (PIA, About)
+         and on some pages is an mp4 (videotest). Resolve the real page resource
+         the way headerimage.html does — GetMatch on the stem glob — and use its
+         permalink only when it is actually an image, so the card URL is never a
+         404 and Twitter never gets a video. */}}
+    {{ with $.Resources.GetMatch (printf "%s*" .) }}
+      {{ if eq .MediaType.MainType "image" }}
+        {{ $ogImage = .Permalink }}
+      {{ end }}
+    {{ end }}
+  {{ else }}
+    {{ with $.Site.Params.og_image }}
+      {{ $ogImage = . | absURL }}
+    {{ end }}
+  {{ end }}
+  {{ with $ogImage }}
+  <meta property="og:image" content="{{ . }}" />
   {{ end }}
 
   {{/* Twitter Card meta tags */}}
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ $pageTitle }}" />
-  <meta name="twitter:description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}" />
+  <meta name="twitter:description" content="{{ $desc }}" />
+  {{ with $ogImage }}
+  <meta name="twitter:image" content="{{ . }}" />
+  {{ end }}
 
   {{ if .Params.canonical }}
     <link rel="canonical" href="{{ .Params.canonical }}" />
