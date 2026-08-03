@@ -8,3 +8,6 @@
 coverage/
 *.lcov
 worktrees/
+
+# macOS
+.DS_Store
