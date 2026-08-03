@@ -188,7 +188,21 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  // Run init on DOMContentLoaded, but if this module is loaded lazily (the
+  // terminal bundle is code-split and injected on demand when the visitor
+  // switches into the terminal layout — see theme.js ensureTerminalLoaded and
+  // the eager inject in head.html), the document is already parsed by the time
+  // we run, so DOMContentLoaded will never fire again. Run immediately in that
+  // case so a runtime switch still wires up.
+  function onReady(fn) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn);
+    } else {
+      fn();
+    }
+  }
+
+  onReady(function () {
     // First terminal page load of the session boots; navigations after
     // that print instantly, like a real terminal.
     if ((localStorage.getItem("theme-layout") || "column") === "terminal") {

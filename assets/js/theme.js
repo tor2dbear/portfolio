@@ -129,6 +129,48 @@
     return window.ThemePantone || null;
   }
 
+  // The terminal engine is code-split (see head.html): it is NOT in the global
+  // bundle, so on the first switch INTO the terminal layout we inject it on
+  // demand, mirroring theme-pantone.js's ensureCotyLoaded. window.__terminalSrc
+  // is published by the inline head script; the terminal CSS ships globally so
+  // the layout is already correct while the JS loads. The callback runs once the
+  // module is available (its onReady init has published window.Terminal).
+  var terminalLoadStarted = false;
+  function ensureTerminalLoaded(onAlreadyLoaded) {
+    // Already available — eager-injected on a terminal page load, or a prior
+    // switch already brought it in. The engine is present but its init has
+    // already run (as a no-op, or on a previous entry), so IT won't boot on this
+    // switch — the caller's enterLayout does. Run it now.
+    if (window.Terminal && typeof window.Terminal.enterLayout === "function") {
+      if (onAlreadyLoaded) {
+        onAlreadyLoaded();
+      }
+      return;
+    }
+    var src = window.__terminalSrc;
+    if (!src) {
+      // No bundle configured (shouldn't happen in a normal build) — fail soft.
+      return;
+    }
+    // Freshly loading the engine. Its own init() boots the terminal — by the
+    // time the async script runs, setLayout has already flipped data-layout to
+    // terminal (applyLayout runs synchronously right after this call), so the
+    // init's runTerminalBootTranscript() fires. We must therefore NOT also run
+    // enterLayout on load, or the boot transcript replays twice. So the callback
+    // is deliberately dropped here: a fresh load self-boots via init.
+    if (
+      terminalLoadStarted ||
+      document.querySelector("script[data-terminal-bundle]")
+    ) {
+      return;
+    }
+    terminalLoadStarted = true;
+    var script = document.createElement("script");
+    script.src = src;
+    script.setAttribute("data-terminal-bundle", "");
+    document.head.appendChild(script);
+  }
+
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
@@ -515,14 +557,18 @@
       window.scrollTo(0, 0);
       // Hand the boot theatre + transcript replay to the terminal module (it
       // owns playTerminalBoot and the boot-transcript runner now). Deferred
-      // internally so applyLayout below has flipped data-layout first. No-op
-      // when the terminal module isn't loaded or the page declares no sequence.
-      if (
-        window.Terminal &&
-        typeof window.Terminal.enterLayout === "function"
-      ) {
-        window.Terminal.enterLayout();
-      }
+      // internally so applyLayout below has flipped data-layout first. The
+      // engine is code-split, so ensure it's loaded first (a no-op once present)
+      // and enter on its callback — on a page that never had the terminal, this
+      // is the switch that pulls the bundle in.
+      ensureTerminalLoaded(function () {
+        if (
+          window.Terminal &&
+          typeof window.Terminal.enterLayout === "function"
+        ) {
+          window.Terminal.enterLayout();
+        }
+      });
     }
     safeSet("theme-layout", layout);
     updateLayoutUI(layout);
@@ -924,6 +970,16 @@
     applyPalette(initialPalette);
     applyTypography(storedTypography);
     applyLayout(storedLayout);
+    // The terminal engine is code-split. If this page opened in the terminal
+    // layout (data-layout was resolved pre-paint by the head script — work
+    // defaults / exemptions included, so read it rather than storedLayout), load
+    // the engine now. This runs AFTER theme.js has published window.Theme, which
+    // terminal.js captures at its own eval — the load order the head script's
+    // preload can't guarantee on its own. ensureTerminalLoaded self-boots via
+    // terminal.js's init (no enterLayout callback on a fresh load).
+    if (document.documentElement.getAttribute("data-layout") === "terminal") {
+      ensureTerminalLoaded();
+    }
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
     });
