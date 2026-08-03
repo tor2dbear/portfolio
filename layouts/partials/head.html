@@ -463,6 +463,28 @@
   {{ if not $isDevBuild }}
     {{ $cotyScaleJs = $cotyScaleJs | minify | fingerprint }}
   {{ end }}
+
+  {{/* Terminal engine (~306KB across 7 files) is code-split OUT of the global
+       js.js bundle — most visitors never enter the terminal layout, so shipping
+       it to every page was the bulk of the "unused JavaScript" weight. Built as
+       one bundle here so its URL is available both to the inline head script
+       (eager inject when the page already loads in terminal) and to theme.js
+       (ensureTerminalLoaded, on a runtime switch). The terminal CSS still ships
+       globally, so the layout is always correct — only the JS is deferred, which
+       means no layout flash. Concat order matches the old global order: the
+       sibling data/api modules precede terminal.js, whose init consumes them. */}}
+  {{ $terminalJs := (slice
+    (resources.Get "js/terminal-data.js")
+    (resources.Get "js/terminal-fs.js")
+    (resources.Get "js/terminal.js")
+    (resources.Get "js/terminal-flows.js")
+    (resources.Get "js/terminal-nav.js")
+    (resources.Get "js/terminal-ai-data.js")
+    (resources.Get "js/terminal-ai.js")
+    ) | resources.Concat "js/js-terminal.js" }}
+  {{ if not $isDevBuild }}
+    {{ $terminalJs = $terminalJs | minify | fingerprint }}
+  {{ end }}
   <!-- CSS loading -->
   {{ if $isDevBuild }}
     <!-- CSS development -->
@@ -911,6 +933,21 @@
         document.head.appendChild(cotyScript);
       }
 
+      // Terminal engine is code-split (see $terminalJs above). Expose its URL
+      // for theme.js's ensureTerminalLoaded, and when the page is loading
+      // already in the terminal layout, inject it now. The terminal CSS ships
+      // globally so the chrome is already correct — this only brings in the boot
+      // + interactivity, with no layout flash. terminal.js's onReady guard runs
+      // its init on DOMContentLoaded here (injected while the document is still
+      // parsing), matching the old deferred-bundle behaviour.
+      window.__terminalSrc = "{{ $terminalJs.RelPermalink }}";
+      if (effectiveLayout === "terminal") {
+        var terminalScript = document.createElement("script");
+        terminalScript.src = window.__terminalSrc;
+        terminalScript.setAttribute("data-terminal-bundle", "");
+        document.head.appendChild(terminalScript);
+      }
+
       // Suppress CSS transitions during initial paint so permanent transitions
       // on elements like .top-menu don't animate from the browser default to the
       // correct palette color. Lifted after init via double-rAF in theme.js.
@@ -953,16 +990,11 @@
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
   {{ $js_hero_embed := resources.Get "js/hero-embed.js" }}
   {{ $js_reduced_motion_media := resources.Get "js/reduced-motion-media.js" }}
-  {{ $js_terminal_data := resources.Get "js/terminal-data.js" }}
-  {{ $js_terminal_fs := resources.Get "js/terminal-fs.js" }}
-  {{ $js_terminal := resources.Get "js/terminal.js" }}
-  {{ $js_terminal_flows := resources.Get "js/terminal-flows.js" }}
-  {{ $js_terminal_nav := resources.Get "js/terminal-nav.js" }}
-  {{ $js_terminal_ai_data := resources.Get "js/terminal-ai-data.js" }}
-  {{ $js_terminal_ai := resources.Get "js/terminal-ai.js" }}
   {{/* theme.js owns the theme system (mode/palette/typography/layout/effects);
-       the terminal command engine lives in terminal.js (loaded after theme.js,
-       which publishes the window.Theme seam it consumes). */}}
+       the terminal command engine ($terminalJs, built above) is code-split and
+       lazy-loaded — eager-injected by the inline head script when the page loads
+       in the terminal layout, else on demand via theme.js ensureTerminalLoaded.
+       So it is intentionally NOT in the js.js bundle or the dev script list. */}}
 
   <!-- JavaScript loading -->
   {{/* Pantone engine: eager only where it is always needed (palette generator
@@ -982,10 +1014,6 @@
     <script src="{{ $js_custom_palette.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js_theme_pantone.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_data.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_fs.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_flows.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
     <script src="{{ $js8.RelPermalink }}" defer></script>
@@ -1018,12 +1046,9 @@
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
     <script src="{{ $js_hero_embed.RelPermalink }}" defer></script>
     <script src="{{ $js_reduced_motion_media.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_nav.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_ai_data.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal_data $js_terminal_fs $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_hero_embed $js_reduced_motion_media $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_hero_embed $js_reduced_motion_media }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

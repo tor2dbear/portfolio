@@ -129,6 +129,46 @@
     return window.ThemePantone || null;
   }
 
+  // The terminal engine is code-split (see head.html): it is NOT in the global
+  // bundle, so on the first switch INTO the terminal layout we inject it on
+  // demand, mirroring theme-pantone.js's ensureCotyLoaded. window.__terminalSrc
+  // is published by the inline head script; the terminal CSS ships globally so
+  // the layout is already correct while the JS loads. The callback runs once the
+  // module is available (its onReady init has published window.Terminal).
+  var terminalLoadStarted = false;
+  function ensureTerminalLoaded(callback) {
+    // Already available — eager-injected on a terminal page load, or a prior
+    // switch already brought it in.
+    if (window.Terminal && typeof window.Terminal.enterLayout === "function") {
+      if (callback) {
+        callback();
+      }
+      return;
+    }
+    var src = window.__terminalSrc;
+    if (!src) {
+      // No bundle configured (shouldn't happen in a normal build) — fail soft.
+      return;
+    }
+    var existing = document.querySelector("script[data-terminal-bundle]");
+    if (terminalLoadStarted || existing) {
+      // A load is already in flight (eager inject, or an earlier switch). Attach
+      // to it so the callback fires when it finishes.
+      if (existing && callback) {
+        existing.addEventListener("load", callback, { once: true });
+      }
+      return;
+    }
+    terminalLoadStarted = true;
+    var script = document.createElement("script");
+    script.src = src;
+    script.setAttribute("data-terminal-bundle", "");
+    if (callback) {
+      script.addEventListener("load", callback, { once: true });
+    }
+    document.head.appendChild(script);
+  }
+
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
@@ -515,14 +555,18 @@
       window.scrollTo(0, 0);
       // Hand the boot theatre + transcript replay to the terminal module (it
       // owns playTerminalBoot and the boot-transcript runner now). Deferred
-      // internally so applyLayout below has flipped data-layout first. No-op
-      // when the terminal module isn't loaded or the page declares no sequence.
-      if (
-        window.Terminal &&
-        typeof window.Terminal.enterLayout === "function"
-      ) {
-        window.Terminal.enterLayout();
-      }
+      // internally so applyLayout below has flipped data-layout first. The
+      // engine is code-split, so ensure it's loaded first (a no-op once present)
+      // and enter on its callback — on a page that never had the terminal, this
+      // is the switch that pulls the bundle in.
+      ensureTerminalLoaded(function () {
+        if (
+          window.Terminal &&
+          typeof window.Terminal.enterLayout === "function"
+        ) {
+          window.Terminal.enterLayout();
+        }
+      });
     }
     safeSet("theme-layout", layout);
     updateLayoutUI(layout);
