@@ -18,6 +18,32 @@
  */
 const GITHUB_API = "https://api.github.com";
 
+// Only accept requests that a browser made from one of the site's own origins.
+// A cross-site page doing fetch() to this endpoint always sends an Origin the
+// browser sets (it cannot forge it), so an off-site origin is rejected. Legit
+// same-origin POSTs send Origin and/or Referer; when neither is present (some
+// privacy tooling strips both) we allow, to avoid blocking real visitors — this
+// gate is about stopping drive-by browser abuse, not replacing rate limiting.
+function originAllowed(event) {
+  var h = event.headers || {};
+  var src = h.origin || h.Origin || h.referer || h.Referer || "";
+  if (!src) {
+    return true;
+  }
+  try {
+    var host = new URL(src).hostname;
+    return (
+      host === "www.tor-bjorn.com" ||
+      host === "tor-bjorn.com" ||
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host.endsWith(".netlify.app")
+    );
+  } catch (e) {
+    return false;
+  }
+}
+
 function ok(body) {
   return { statusCode: 200, body: JSON.stringify(body || { ok: true }) };
 }
@@ -122,6 +148,12 @@ async function addReaction(repo, token, number) {
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
+  }
+
+  // Reject cross-site browser abuse silently (an ok() keeps the chat unbroken
+  // and gives an off-site caller no signal), before spending any GitHub quota.
+  if (!originAllowed(event)) {
+    return ok();
   }
 
   var payload;
