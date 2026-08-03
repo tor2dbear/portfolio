@@ -173,6 +173,10 @@ DefaultContentLanguage = "en"
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
+  # Default social-share image (og:image / twitter:image) for pages that have no
+  # header_image of their own — home, the writing list, legal pages. Point it at
+  # a ~1200x630 asset (absolute path or full URL). Empty = emit no fallback image.
+  og_image = ""
   newsletter_action = "/.netlify/functions/newsletter-subscribe"
   newsletter_email_field = "EMAIL"
   dateFormat = "02 Jan 2006, 15:04"

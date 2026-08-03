@@ -406,11 +406,11 @@ other = "Palette Generator"
 [all_posts]
 other = "All posts"
 
-[lang_only_english]
-other = "This text has not been translated to Swedish yet."
+[related_title]
+other = "Related"
 
-[lang_browse_swedish]
-other = "Browse writing in Swedish →"
+[more_from_portfolio]
+other = "More from portfolio"
 
 [coty_show_controls]
 other = "Show Pantone controls"

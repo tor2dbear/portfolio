@@ -406,6 +406,12 @@ other = "Palettgenerator"
 [all_posts]
 other = "Alla inlägg"
 
+[related_title]
+other = "Relaterat"
+
+[more_from_portfolio]
+other = "Fler arbeten"
+
 [coty_show_controls]
 other = "Visa Pantone-kontroller"
 
