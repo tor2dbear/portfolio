@@ -136,12 +136,14 @@
   // the layout is already correct while the JS loads. The callback runs once the
   // module is available (its onReady init has published window.Terminal).
   var terminalLoadStarted = false;
-  function ensureTerminalLoaded(callback) {
+  function ensureTerminalLoaded(onAlreadyLoaded) {
     // Already available — eager-injected on a terminal page load, or a prior
-    // switch already brought it in.
+    // switch already brought it in. The engine is present but its init has
+    // already run (as a no-op, or on a previous entry), so IT won't boot on this
+    // switch — the caller's enterLayout does. Run it now.
     if (window.Terminal && typeof window.Terminal.enterLayout === "function") {
-      if (callback) {
-        callback();
+      if (onAlreadyLoaded) {
+        onAlreadyLoaded();
       }
       return;
     }
@@ -150,22 +152,22 @@
       // No bundle configured (shouldn't happen in a normal build) — fail soft.
       return;
     }
-    var existing = document.querySelector("script[data-terminal-bundle]");
-    if (terminalLoadStarted || existing) {
-      // A load is already in flight (eager inject, or an earlier switch). Attach
-      // to it so the callback fires when it finishes.
-      if (existing && callback) {
-        existing.addEventListener("load", callback, { once: true });
-      }
+    // Freshly loading the engine. Its own init() boots the terminal — by the
+    // time the async script runs, setLayout has already flipped data-layout to
+    // terminal (applyLayout runs synchronously right after this call), so the
+    // init's runTerminalBootTranscript() fires. We must therefore NOT also run
+    // enterLayout on load, or the boot transcript replays twice. So the callback
+    // is deliberately dropped here: a fresh load self-boots via init.
+    if (
+      terminalLoadStarted ||
+      document.querySelector("script[data-terminal-bundle]")
+    ) {
       return;
     }
     terminalLoadStarted = true;
     var script = document.createElement("script");
     script.src = src;
     script.setAttribute("data-terminal-bundle", "");
-    if (callback) {
-      script.addEventListener("load", callback, { once: true });
-    }
     document.head.appendChild(script);
   }
 
