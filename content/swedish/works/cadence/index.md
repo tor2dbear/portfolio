@@ -13,7 +13,7 @@ worktheme:
   color: cadence
   tags: filled
 header_image: cadence-poster.jpg
-hero_embed: /cadence-hero.html
+hero_embed: /cadence-hero.html#label
 featured: true
 draft: false
 role: "Koncept, design & utveckling"

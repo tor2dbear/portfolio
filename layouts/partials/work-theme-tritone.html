@@ -70,16 +70,37 @@
   }
   /* Recolour the video/hero-embed overlays to the theme scale. Blend modes and
      opacities are inherited from the root standard-blend rule (multiply/screen);
-     only the two colour stops change, mirroring the iris → theme swap. */
+     only the two colour stops change, mirroring the iris → theme swap.
+
+     Endpoints default to the base --work-* page scale, which matches the tritone
+     for single-scale themes (their image tint lives on the page colour). A DUO
+     theme like Cadence is the exception: its image tritone is authored on the
+     NAVY ACCENT scale, not the beige page scale, so the SVG-filtered <picture>
+     images come out navy while this overlay path (the only one WebKit can tint
+     on <video>/<iframe>) came out beige. Point Cadence's endpoints at the accent
+     scale so the hero-embed and videos join the same navy duotone as the images.
+     Per the root standard-blend note, the names are inverted vs the effect:
+     --image-shadow-background (multiply) tints highlights, --image-highlight-
+     background (screen) tints shadows — so the accent-11 navy lands in shadows. */
+  {{- $ovHiTintLight := "var(--work-5)" -}}
+  {{- $ovShadowTintLight := "var(--work-12)" -}}
+  {{- $ovHiTintDark := "var(--work-11)" -}}
+  {{- $ovShadowTintDark := "var(--work-1)" -}}
+  {{- if eq $id "cadence" -}}
+    {{- $ovHiTintLight = "var(--work-accent-1)" -}}
+    {{- $ovShadowTintLight = "var(--work-accent-11)" -}}
+    {{- $ovHiTintDark = "var(--work-accent-12)" -}}
+    {{- $ovShadowTintDark = "var(--work-accent-4)" -}}
+  {{- end -}}
   :root[data-effect-blend="on"][data-palette="standard"]:not([data-mode="dark"]) .works-post .video-wrapper {
-    --image-shadow-background: var(--work-5);
-    --image-highlight-background: var(--work-12);
-    --image-background: var(--work-12);
+    --image-shadow-background: {{ $ovHiTintLight | safeCSS }};
+    --image-highlight-background: {{ $ovShadowTintLight | safeCSS }};
+    --image-background: {{ $ovShadowTintLight | safeCSS }};
   }
   :root[data-effect-blend="on"][data-mode="dark"][data-palette="standard"] .works-post .video-wrapper {
-    --image-shadow-background: var(--work-11);
-    --image-highlight-background: var(--work-1);
-    --image-background: var(--work-1);
+    --image-shadow-background: {{ $ovHiTintDark | safeCSS }};
+    --image-highlight-background: {{ $ovShadowTintDark | safeCSS }};
+    --image-background: {{ $ovShadowTintDark | safeCSS }};
   }
   /* The lightbox is appended to document.body, outside .works-post, so the
      scoped rules above miss it. Mirror the same treatment on the lightbox

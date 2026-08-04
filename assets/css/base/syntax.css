@@ -38,6 +38,23 @@
   color: var(--work-11);
 }
 
+/* Under a Pantone palette the neutral --gray-2 fill reads as an un-themed
+   near-white/near-black slab against the tinted page (the block "isn't
+   pantone"). Tint it toward the palette instead, relative to the page surface
+   rather than a fixed scale step — each year anchors --surface-page differently,
+   so a fixed step reads loud on some years and flat on others. Mix toward coty-1
+   (the light/neutral end), NOT toward the ink: the code text is coty-12, so
+   nudging the fill toward coty-12 shrinks text/background contrast and drops
+   small code text below AA on years whose base pair already sits near 4.5:1.
+   coty-1 is the opposite extreme from the ink, so the fill stays farther from
+   the text than the page does and code-text contrast holds at or above the page
+   baseline in every palette and mode. A touch stronger than the inline chip so
+   the block reads as its own surface; border resolves to coty-5, and the text
+   (coty-12) and diff +/- semantic colours are untouched. */
+:root[data-palette="pantone"] .highlight pre {
+  background: color-mix(in oklab, var(--surface-page), var(--coty-1) 22%);
+}
+
 /* --- Token colors mapped to design tokens --- */
 
 /* Keywords (if, else, return, class, function, etc.) */
