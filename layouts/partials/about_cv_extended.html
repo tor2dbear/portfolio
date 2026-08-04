@@ -4,9 +4,15 @@
 <h3 class="about-cv__title type-headline-3">{{ if eq .Language.Lang "sv" }}Vad jag har gjort{{ else }}What I've been up to{{ end }}</h3>
 
 <div class="about-cv__columns">
+<div class="about-cv__timeline">
+<p class="about-cv__col-label">{{ if eq .Language.Lang "sv" }}Bana{{ else }}Path{{ end }}</p>
+{{ partial "about_cv_work.html" . }}
+</div>
+<aside class="about-cv__aside">
+<p class="about-cv__col-label">{{ if eq .Language.Lang "sv" }}Överblick{{ else }}Overview{{ end }}</p>
 
-{{/* Base sections (shared with about page) */}}
-{{ partial "about_cv_base.html" . }}
+{{/* Shared overview (skills, tools, clients, education) */}}
+{{ partial "about_cv_aside.html" . }}
 
 {{/* Extended sections (employer/client pages only) */}}
 
@@ -80,7 +86,6 @@
 </p>
 </div>
 
-
 <div class="about-cv__section reveal">
 <h4 class="about-cv__heading type-headline-small">{{ if eq .Language.Lang "sv" }}Mjukvara{{ else }}Software{{ end }}</h4>
 <p class="about-cv__text type-body-sm">
@@ -100,7 +105,7 @@ Figma · Adobe Creative Suite (Photoshop, Illustrator, InDesign, Lightroom, Prem
 <p class="about-cv__text type-body-sm">
 {{ if eq .Language.Lang "sv" }}
 <strong>Statistik och data</strong><br>
-Jag har arbetat mycket med att visualisera data, senast med Looker Studio och GA4, och med hjälp av diverse API-integrationer.<br>
+Jag har arbetat mycket med att visualisera data, senast med Data Studio och GA4, och med hjälp av diverse API-integrationer.<br>
 <br>
 <strong>E-post och kampanjutskick</strong><br>
 Jag har arbetat mycket med Mailchimp, där jag byggt templates, automatiseringar (Journeys) och diverse speciallösningar med t.ex. merge tags.<br>
@@ -115,7 +120,7 @@ Jag har varit med och tagit fram och drivit marknadsföringskampanjer för bl.a.
 Jag har ett privat intresse för foto och video, både att fånga material och arbeta med post-produktion. Jag har även använt mina färdigheter professionellt vid flera tillfällen, t.ex. på galor, mässor och reportage.
 {{ else }}
 <strong>Statistics and data</strong><br>
-I have extensive experience visualizing data, most recently with Looker Studio and GA4, including various API integrations.<br>
+I have extensive experience visualizing data, most recently with Data Studio and GA4, including various API integrations.<br>
 <br>
 <strong>Email and campaigns</strong><br>
 I have worked extensively with Mailchimp, building templates, automations (Journeys), and custom solutions using merge tags.<br>
@@ -167,5 +172,6 @@ Adlerbertska Premiestiftelsen
 </p>
 </div>
 
+</aside>
 </div>
 </div>

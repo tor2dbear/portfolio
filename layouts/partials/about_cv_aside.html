@@ -1,0 +1,38 @@
+{{/* CV "overview" column — skills, tools, clients, education. Shared by the
+     about page and the extended (employer/client) CV. */}}
+{{ $sv := eq site.Language.Lang "sv" }}
+
+<div class="about-cv__section reveal">
+  <h4 class="about-cv__heading type-headline-small">{{ if $sv }}Produktledning{{ else }}Product management{{ end }}</h4>
+  <p class="about-cv__text type-body-sm">{{ if $sv }}Backlogprioritering · User stories · Sprintplanering · Scrum · Intressenthantering · Analys (trafik &amp; konvertering){{ else }}Backlog prioritization · User stories · Sprint planning · Scrum · Stakeholder management · Analytics (traffic &amp; conversion){{ end }}</p>
+</div>
+
+<div class="about-cv__section reveal">
+  <h4 class="about-cv__heading type-headline-small">Design</h4>
+  <p class="about-cv__text type-body-sm">{{ if $sv }}UI/UX-design · Designsystem · Varumärkesidentitet · Wireframing · Prototyping{{ else }}UI/UX design · Design systems · Brand identity · Wireframing · Prototyping{{ end }}</p>
+</div>
+
+<div class="about-cv__section reveal">
+  <h4 class="about-cv__heading type-headline-small">{{ if $sv }}Verktyg{{ else }}Tools{{ end }}</h4>
+  <p class="about-cv__text type-body-sm">{{ if $sv }}Figma · Adobe Creative Suite · GA4 &amp; Data Studio · Notion <span class="about-cv__note">(byggt eget projekt- &amp; ärendehanteringssystem)</span>{{ else }}Figma · Adobe Creative Suite · GA4 &amp; Data Studio · Notion <span class="about-cv__note">(built a custom project &amp; issue-tracking system)</span>{{ end }}</p>
+</div>
+
+<div class="about-cv__section reveal">
+  <h4 class="about-cv__heading type-headline-small">{{ if $sv }}Nära koden{{ else }}Close to the code{{ end }}</h4>
+  <p class="about-cv__text type-body-sm">{{ if $sv }}GitHub &amp; GitLab · Cloudflare · Google Search Console · API-integrationer · AI-assisterad utveckling <span class="about-cv__note">(LLM:er, MCP)</span>{{ else }}GitHub &amp; GitLab · Cloudflare · Google Search Console · API integrations · AI-assisted development <span class="about-cv__note">(LLMs, MCP)</span>{{ end }}</p>
+</div>
+
+<div class="about-cv__section reveal">
+  <h4 class="about-cv__heading type-headline-small">{{ if $sv }}Utvalda kunder{{ else }}Selected clients{{ end }}</h4>
+  <p class="about-cv__text type-body-sm">Zentropa Sweden · Göteborgs Stad · Mecka · Forsify · Vårdporten · I-Racket AB</p>
+</div>
+
+<div class="about-cv__section reveal">
+  <h4 class="about-cv__heading type-headline-small">{{ if $sv }}Utbildning{{ else }}Education{{ end }}</h4>
+  <p class="about-cv__text type-body-sm">
+    <strong>2014 – 2016</strong><br />
+    {{ if $sv }}Master of Fine Arts in Design, Högskolan för Design och Konsthantverk, HDK{{ else }}Master of Fine Arts in Design, Academy of Design and Crafts, HDK{{ end }}<br />
+    <strong>2011 – 2014</strong><br />
+    {{ if $sv }}Bachelor of Fine Arts in Design, Högskolan för Design och Konsthantverk, HDK{{ else }}Bachelor of Fine Arts in Design, Academy of Design and Crafts, HDK{{ end }}
+  </p>
+</div>
