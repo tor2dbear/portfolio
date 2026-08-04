@@ -54,6 +54,13 @@ html.lightbox-open {
   border: 0;
   display: block;
   background: transparent;
+  /* The embed is a decorative animation (same as the in-page hero, which is
+     also pointer-events:none). Blocking pointer events stops a click from
+     focusing the iframe: a focused iframe becomes the parent's activeElement,
+     and Tab then fires inside the iframe document where the overlay's focus
+     trap can't see it — letting focus escape the modal. tabindex="-1" already
+     keeps it out of the Tab order; this closes the pointer-focus path too. */
+  pointer-events: none;
 }
 
 .lightbox__close {
