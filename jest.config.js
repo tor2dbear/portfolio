@@ -17,12 +17,16 @@ module.exports = {
   ],
 
   // Coverage thresholds (starting conservative, will increase over time)
+  // Ratchet floors, set a few points below the current numbers (statements ~45,
+  // branches ~37, functions ~51, lines ~45) so they don't fail today's suite but
+  // do catch a real regression — a PR that deletes tests or lands a chunk of
+  // untested code. Raise them as coverage climbs; don't lower them.
   coverageThreshold: {
     global: {
-      branches: 0,
-      functions: 0,
-      lines: 0,
-      statements: 0,
+      branches: 30,
+      functions: 45,
+      lines: 40,
+      statements: 40,
     },
   },
 
