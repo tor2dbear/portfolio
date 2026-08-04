@@ -1194,6 +1194,15 @@ p:empty {
   margin-bottom: var(--layout-block-gap);
 }
 
+/* About page (shortcode) stacks the two intro blocks. The gap is set here in
+   the global stylesheet — .about-content's own row-gap lives in the home-only
+   pages/home.css, so without this the blocks collapse together on /about. */
+.about-content--stacked {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-32) * var(--layout-prose-rhythm));
+}
+
 .about-cv__section {
   break-inside: avoid;
   /* flow-root (not inline-block): inline-block baseline-aligns the sections,

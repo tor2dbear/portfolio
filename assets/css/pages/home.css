@@ -307,13 +307,6 @@
   row-gap: calc(var(--spacing-32) * var(--layout-prose-rhythm));
 }
 
-/* About page (shortcode) reuses .about-content but stacks the two intro
-   blocks full-width instead of the home page's diagonal stepped-6-6. */
-.about-content--stacked {
-  display: flex;
-  flex-direction: column;
-}
-
 /* Placement now handled by .stepped-6-6 on parent (.about-content) */
 
 /* Contact Section */
