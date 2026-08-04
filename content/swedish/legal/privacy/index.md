@@ -15,7 +15,7 @@ I enlighet med GDPR och för att vara transparent beskriver jag här vilken data
 
 - Nyhetsbrev: e‑postadress som skickas via formuläret i sidfoten.
 - Kontaktformulär: namn, e‑postadress och meddelande.
-- Assistenten på sidan: om du använder den terminalliknande assistenten och rapporterar ett dåligt svar, eller ställer en fråga den inte kan besvara, loggas texten du skrev och assistentens svar.
+- Assistenten på sidan: om du använder den terminalliknande assistenten och rapporterar ett dåligt svar, eller ställer en fråga den inte kan besvara, loggas texten du skrev och assistentens svar — tillsammans med några av dina senaste frågor från samma session och grundläggande metadata (sidan du var på och sajtens språk).
 
 För övergripande besöksstatistik använder jag Cloudflare Web Analytics. Det är integritetsvänligt: det sätter inga cookies, fingeravtryckar dig inte och samlar inte in några personuppgifter — det registrerar endast anonym, aggregerad statistik som sidvisningar och hänvisande källor. Sajten sätter inga egna cookies, och tjänsterna som används för nyhetsbrevet och kontaktformuläret sätter inte heller några cookies. Skräppost i kontaktformuläret hanteras med ett dolt honeypot‑fält i stället för en captcha.
 
