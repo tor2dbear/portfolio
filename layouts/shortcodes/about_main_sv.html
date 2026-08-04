@@ -1,29 +1,6 @@
-{{ $enSite := index (where .Page.Site.Sites "Language.Lang" "en") 0 }}
-{{ $recentWriting := first 3 (sort (where (where $enSite.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
-
-<div class="about-content use-subgrid stepped-6-6 place-full">
-<div class="about-main__primary">
-  <h3 class="about-main__headline type-headline-3">
-    Hej, Torbjörn här. Designer baserad i Göteborg.
-  </h3>
-  <p class="about-main__text type-body">
-    Med tiden har mitt arbete gått från att rita skärmar till att avgöra vilka skärmar som ska ritas. Jag leder idag produktarbetet på Lokalguiden. Jobbet består till största del av backloggar, sprintar och samordning snarare än design — men jag tänker fortfarande som designer, och det präglar det mesta på den här sidan.
-  </p>
-</div>
-
-<div class="about-main__secondary">
-  <h3 class="about-main__headline type-headline-3">
-    Jag skriver också om design och försöker förstå hur arbetet förändras.
-  </h3>
-  {{ $links := slice }}
-  {{ range $recentWriting }}
-    {{ $links = $links | append (printf `<a href="%s">%s</a>` .RelPermalink .Title) }}
-  {{ end }}
-  <p class="about-main__text type-body">
-    Oftast om hur det fungerar i praktiken — verktyg, processer och hantverket runt omkring.{{ with $links }} På sistone har jag skrivit {{ delimit . ", " " och " | safeHTML }}.{{ end }}
-  </p>
-  <p class="about-main__text type-body">
-    Hör av dig om något här är intressant.
-  </p>
-</div>
+{{/* Single source of truth: renders the same intro as the home page
+     (layouts/partials/about_main_sv.html). Stacked full-width here rather
+     than the home page's diagonal stepped-6-6 layout. */}}
+<div class="about-content about-content--stacked place-full">
+{{ partial "about_main_sv.html" .Page }}
 </div>
