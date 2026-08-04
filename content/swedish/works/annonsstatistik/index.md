@@ -13,7 +13,7 @@ description: "En annonsör betalar för kontakt. Men gränssnittet gjorde det sv
 header_image:
 featured: true
 draft: true
-hidden: true
+hidden: false
 role: "Product Owner & designer"
 details:
   year: 2026
