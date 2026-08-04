@@ -174,6 +174,47 @@
     closeBtn.focus();
   }
 
+  // The overlay's focusable controls, in tab order. The close button is always
+  // present; prev/next only when a multi-image gallery is showing, and only
+  // while enabled (they disable at the gallery ends). The embed iframe is
+  // tabindex="-1", so it's intentionally excluded.
+  function overlayFocusables() {
+    var list = [closeBtn];
+    if (!nav.hidden) {
+      if (!prevBtn.disabled) {
+        list.push(prevBtn);
+      }
+      if (!nextBtn.disabled) {
+        list.push(nextBtn);
+      }
+    }
+    return list;
+  }
+
+  // Keep Tab inside the modal — aria-modal="true" promises the rest of the page
+  // is inert, so focus must not escape to the content behind the overlay. Wrap
+  // from last→first (Tab) and first→last (Shift+Tab), and pull focus back in if
+  // it has somehow landed outside while the overlay is open.
+  function trapFocus(e) {
+    var focusables = overlayFocusables();
+    if (!focusables.length) {
+      e.preventDefault();
+      return;
+    }
+    var first = focusables[0];
+    var last = focusables[focusables.length - 1];
+    var active = document.activeElement;
+    if (e.shiftKey) {
+      if (active === first || !overlay.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else if (active === last || !overlay.contains(active)) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   function close() {
     overlay.classList.remove("is-open");
     document.documentElement.classList.remove("lightbox-open");
@@ -255,6 +296,9 @@
       // which may run after us on this same keydown, doesn't also fire.
       e.preventDefault();
       close();
+    }
+    if (e.key === "Tab") {
+      trapFocus(e);
     }
     if (e.key === "ArrowLeft") {
       show(galleryIndex - 1);
