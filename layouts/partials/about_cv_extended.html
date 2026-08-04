@@ -5,11 +5,9 @@
 
 <div class="about-cv__columns">
 <div class="about-cv__timeline">
-<p class="about-cv__col-label">{{ if eq .Language.Lang "sv" }}Bana{{ else }}Path{{ end }}</p>
 {{ partial "about_cv_work.html" . }}
 </div>
 <aside class="about-cv__aside">
-<p class="about-cv__col-label">{{ if eq .Language.Lang "sv" }}Överblick{{ else }}Overview{{ end }}</p>
 
 {{/* Shared overview (skills, tools, clients, education) */}}
 {{ partial "about_cv_aside.html" . }}
