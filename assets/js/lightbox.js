@@ -203,13 +203,19 @@
     }
     var first = focusables[0];
     var last = focusables[focusables.length - 1];
-    var active = document.activeElement;
+    // Index of the active element WITHIN the focusable set — not just
+    // overlay.contains(). An element that's in the overlay but absent from the
+    // set (focus outside, or a control that just became disabled while focused —
+    // e.g. Next after it reaches the last image, which stays activeElement while
+    // disabled) counts as -1 and is treated as a boundary, so the next Tab wraps
+    // back in instead of traversing past the last live control into the page.
+    var index = focusables.indexOf(document.activeElement);
     if (e.shiftKey) {
-      if (active === first || !overlay.contains(active)) {
+      if (index <= 0) {
         e.preventDefault();
         last.focus();
       }
-    } else if (active === last || !overlay.contains(active)) {
+    } else if (index === -1 || index === focusables.length - 1) {
       e.preventDefault();
       first.focus();
     }

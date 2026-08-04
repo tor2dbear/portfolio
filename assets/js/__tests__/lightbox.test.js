@@ -82,6 +82,21 @@ describe("Lightbox focus trap", () => {
     expect(document.activeElement).toBe(nextBtn);
   });
 
+  test("gallery: Tab wraps back in when the focused control just became disabled", () => {
+    addFigures(2);
+    openFirst();
+    // Focus Next (enabled at index 0), then activate it to reach the last image
+    // — Next disables itself while staying activeElement.
+    nextBtn.focus();
+    nextBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+    expect(nextBtn.disabled).toBe(true);
+    expect(document.activeElement).toBe(nextBtn);
+    // A now-disabled active control is absent from the focusable set, so Tab
+    // must wrap back to the first control rather than escaping the modal.
+    pressTab(false);
+    expect(document.activeElement).toBe(closeBtn);
+  });
+
   test("Tab is ignored while the lightbox is closed", () => {
     addFigures(1);
     document.body.focus();
