@@ -13,16 +13,18 @@ In line with GDPR and to be transparent, this page explains what data I collect 
 ## What data I collect
 
 - Newsletter sign‑ups: email address submitted via the form in the footer.
-- Contact form: name, email address, subject, and message.
+- Contact form: name, email address, and message.
+- On‑page assistant: if you use the terminal‑style assistant and report a bad answer, or ask something it cannot answer, the text you typed and the assistant's reply are logged — along with a few of your most recent questions from the same session and basic metadata (the page you were on and the site language).
 
-For aggregate visitor statistics I use Cloudflare Web Analytics. It is privacy‑first: it sets no cookies, does not fingerprint you, and does not collect any personal data — it only records anonymous, aggregated metrics such as page views and referrers. This site uses no tracking cookies of its own. However, some third‑party services may set cookies, such as Google reCAPTCHA (used on the contact form).
+For aggregate visitor statistics I use Cloudflare Web Analytics. It is privacy‑first: it sets no cookies, does not fingerprint you, and does not collect any personal data — it only records anonymous, aggregated metrics such as page views and referrers. This site sets no cookies of its own, and the services it relies on for the newsletter and contact form do not set cookies either. Spam on the contact form is handled with a hidden honeypot field rather than a captcha.
 
 I also use Google Search Console to understand how visitors find the site via Google Search. This does not give me access to personal data about you.
 
 ## What I do with the data
 
-- Newsletter data is stored in Mailchimp and used only to send newsletters to people who have explicitly subscribed.
-- Contact form data is sent via Make.com to my email so I can respond to your message.
+- Newsletter data is stored in Brevo and used only to send newsletters to people who have explicitly subscribed.
+- Contact form submissions are handled by Netlify Forms and forwarded to my email so I can respond to your message.
+- Assistant logs are filed as issues in this site's GitHub repository, and used only to improve the assistant. Please don't type personal information into the assistant.
 
 I do not sell personal information or share it with third‑party data brokers.
 
