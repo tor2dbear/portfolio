@@ -31,7 +31,11 @@
 
   --sans-weight-regular: 400;
   --sans-weight-medium: 500;
-  --sans-weight-bold: 600;
+  /* Switzer ships only 400 and 500; 600 forced a synthetic faux-bold wherever
+     this token was used (tabs, toast, .font-semibold, ui-library). 500 is the
+     heaviest real weight. Load a Switzer 600/700 woff2 if a heavier bold is
+     needed. Guarded by assets/css/__tests__/font-weight-availability.test.js. */
+  --sans-weight-bold: 500;
   --serif-weight-regular: 400;
 
   /* ==========================================================================
