@@ -4,10 +4,13 @@
 <h3 class="about-cv__title type-headline-3">{{ if eq .Language.Lang "sv" }}Vad jag har gjort{{ else }}What I've been up to{{ end }}</h3>
 
 <div class="about-cv__columns">
+<p class="about-cv__seclabel">{{ if eq .Language.Lang "sv" }}Arbete{{ else }}Work{{ end }}</p>
 <div class="about-cv__timeline">
 {{ partial "about_cv_work.html" . }}
 </div>
-<aside class="about-cv__aside">
+
+<p class="about-cv__seclabel">{{ if eq .Language.Lang "sv" }}Överblick{{ else }}Overview{{ end }}</p>
+<div class="about-cv__overview">
 
 {{/* Shared overview (skills, tools, clients, education) */}}
 {{ partial "about_cv_aside.html" . }}
@@ -170,6 +173,6 @@ Adlerbertska Premiestiftelsen
 </p>
 </div>
 
-</aside>
+</div>
 </div>
 </div>

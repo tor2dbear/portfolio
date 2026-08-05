@@ -10,11 +10,14 @@
   </h3>
 
   <div class="about-cv__columns">
+    <p class="about-cv__seclabel">{{ if eq site.Language.Lang "sv" }}Arbete{{ else }}Work{{ end }}</p>
     <div class="about-cv__timeline">
       {{ partial "about_cv_work.html" . }}
     </div>
-    <aside class="about-cv__aside">
+
+    <p class="about-cv__seclabel">{{ if eq site.Language.Lang "sv" }}Överblick{{ else }}Overview{{ end }}</p>
+    <div class="about-cv__overview">
       {{ partial "about_cv_aside.html" . }}
-    </aside>
+    </div>
   </div>
 </div>

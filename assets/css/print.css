@@ -110,6 +110,10 @@
     display: block !important;
   }
 
+  .about-cv__overview {
+    display: block !important;
+  }
+
   .about-cv__entry {
     display: block;
     margin-bottom: 0.75rem;

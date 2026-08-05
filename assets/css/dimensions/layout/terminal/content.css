@@ -737,6 +737,10 @@
   display: block;
 }
 
+:root[data-layout="terminal"] .about-cv__overview {
+  display: block;
+}
+
 :root[data-layout="terminal"] .about-cv__text,
 :root[data-layout="terminal"] .about-cv__heading {
   font-size: var(--terminal-font-size);
