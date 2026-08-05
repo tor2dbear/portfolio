@@ -1231,7 +1231,8 @@ p:empty {
 
 .about-cv__role {
   font-family: var(--font-sans);
-  font-weight: 600;
+  /* Switzer ships only 400 and 500; 600 would be a synthetic faux-bold. */
+  font-weight: 500;
   font-size: var(--text-base);
   line-height: 1.3;
 }
