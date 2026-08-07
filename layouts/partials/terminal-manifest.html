@@ -5,8 +5,10 @@
   Each entry maps a logical path → {kind, url, title, tags?}:
   - Sections are `dir`s (works, writing, newsletter, legal).
   - Every post / standalone page is a `file`; a page overrides its kind via a
-  `terminal_kind` param (contact = action). `hidden`/`exempt` pages are left
-  OUT entirely — not listed by ls, not reachable by cd/open.
+  `terminal_kind` param (contact = action). Pages that are `terminal_kind`
+  hidden/exempt, OR carry front-matter `hidden: true` (the site-wide "not in the
+  portfolio" flag, e.g. client-only works), are left OUT entirely — not listed
+  by ls, not reachable by cd/open.
   - The `url` is the real RelPermalink (used to fetch a post's body); the key
   is the LOGICAL path, which can differ (works posts live at /englishwork/…
   but the terminal dir is `works/`). We rebuild the logical path from
@@ -47,7 +49,7 @@
   {{- else if eq (len $segs) 1 -}}
     {{- $include = true -}}
   {{- end -}}
-  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") -}}
+  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") (ne (.Params.hidden | default false) true) -}}
     {{- $k := "file" -}}
     {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
     {{/* Logical path: the section name (not its URL slug) + the URL tail, built

@@ -199,5 +199,14 @@ describeOrSkip("Hugo template rendering", () => {
       expect(m).not.toHaveProperty("tools"); // terminal_kind: exempt
       expect(m).not.toHaveProperty("hidden-page"); // terminal_kind: hidden
     });
+
+    test("a page hidden via front-matter `hidden: true` is left out (not only terminal_kind)", () => {
+      const m = manifest();
+      // employer-fixture/hidden-work sets `hidden: true` with no terminal_kind —
+      // the site-wide client-only flag. It must not leak into the filesystem,
+      // while its non-hidden sibling stays present.
+      expect(m).not.toHaveProperty("employer-fixture/hidden-work");
+      expect(m).toHaveProperty("employer-fixture/sample-work");
+    });
   });
 });
