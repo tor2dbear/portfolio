@@ -160,11 +160,14 @@ describeOrSkip("Hugo template rendering", () => {
   });
 
   describe("terminal-manifest.html section/page classification", () => {
-    // The manifest is site-global; read it off any rendered page.
-    function manifest() {
-      const doc = parse(readOutput("lang-visible/index.html"));
+    // The manifest is site-global (per language); read it off any rendered page.
+    function manifestOf(relPath) {
+      const doc = parse(readOutput(relPath));
       const el = doc.querySelector('[data-js="terminal-manifest"]');
       return JSON.parse(el.textContent);
+    }
+    function manifest() {
+      return manifestOf("lang-visible/index.html"); // English site
     }
 
     test("emits valid JSON mapping segments to {kind, url}", () => {
@@ -200,13 +203,23 @@ describeOrSkip("Hugo template rendering", () => {
       expect(m).not.toHaveProperty("hidden-page"); // terminal_kind: hidden
     });
 
-    test("a page hidden via front-matter `hidden: true` is left out (not only terminal_kind)", () => {
+    test("a hidden page with no visible translation is left out (client-only works)", () => {
       const m = manifest();
-      // employer-fixture/hidden-work sets `hidden: true` with no terminal_kind —
-      // the site-wide client-only flag. It must not leak into the filesystem,
-      // while its non-hidden sibling stays present.
+      // employer-fixture/hidden-work sets `hidden: true` with no terminal_kind
+      // and no translation — an orphan, like a client-only works project (hidden
+      // in both languages). It must not leak, while its sibling stays present.
       expect(m).not.toHaveProperty("employer-fixture/hidden-work");
       expect(m).toHaveProperty("employer-fixture/sample-work");
+    });
+
+    test("a hidden page WITH a visible translation is kept in that language's manifest", () => {
+      // sv/lang-hidden is hidden, but its English translation (en/lang-hidden)
+      // is public — the mirror of an English-only writing article whose Swedish
+      // stub is hidden. The /texter/ list surfaces such articles, so the Swedish
+      // terminal tree must keep them too; only translation-less hidden pages
+      // (client-only works) drop out.
+      const sv = manifestOf("sv/lang-visible/index.html");
+      expect(sv).toHaveProperty("lang-hidden");
     });
   });
 });

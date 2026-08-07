@@ -6,9 +6,12 @@
   - Sections are `dir`s (works, writing, newsletter, legal).
   - Every post / standalone page is a `file`; a page overrides its kind via a
   `terminal_kind` param (contact = action). Pages that are `terminal_kind`
-  hidden/exempt, OR carry front-matter `hidden: true` (the site-wide "not in the
-  portfolio" flag, e.g. client-only works), are left OUT entirely — not listed
-  by ls, not reachable by cd/open.
+  hidden/exempt are left OUT entirely. A front-matter `hidden: true` page is
+  left out ONLY when it has no visible translation in another language: a
+  client-only works project is hidden in both languages (an orphan → excluded),
+  but an English-only writing article keeps a hidden Swedish stub whose visible
+  English translation IS public — the /texter/ list surfaces it, so the terminal
+  tree must keep it too (see layouts/texter/list.html).
   - The `url` is the real RelPermalink (used to fetch a post's body); the key
   is the LOGICAL path, which can differ (works posts live at /englishwork/…
   but the terminal dir is `works/`). We rebuild the logical path from
@@ -49,7 +52,22 @@
   {{- else if eq (len $segs) 1 -}}
     {{- $include = true -}}
   {{- end -}}
-  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") (ne (.Params.hidden | default false) true) -}}
+  {{/* A `hidden: true` page is only dropped when it's an orphan — no visible
+    translation. A client-only works project is hidden in both languages, so it
+    drops out; an English-only article's hidden Swedish stub has a public
+    English translation, so it stays (mirrors layouts/texter/list.html).
+  */}}
+  {{- $hidden := eq (.Params.hidden | default false) true -}}
+  {{- $hasVisibleTranslation := false -}}
+  {{- if $hidden -}}
+    {{- range .Translations -}}
+      {{- if ne (.Params.hidden | default false) true -}}
+        {{ $hasVisibleTranslation = true }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $hiddenOrphan := and $hidden (not $hasVisibleTranslation) -}}
+  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") (not $hiddenOrphan) -}}
     {{- $k := "file" -}}
     {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
     {{/* Logical path: the section name (not its URL slug) + the URL tail, built
