@@ -147,6 +147,19 @@ describe("classify", () => {
     expect(ai.classify("qwertyuiop zxcvbnm").intent).toBeNull();
   });
 
+  test("'do you speak X?' is a question (languages), not a switch request", () => {
+    const ai = loadAi();
+    // All three language-ability questions route the same way — 'swedish' used
+    // to fall through to switch-swedish and silently change the site language.
+    expect(ai.classify("do you speak english?").intent.id).toBe("languages");
+    expect(ai.classify("do you speak swedish?").intent.id).toBe("languages");
+    expect(ai.classify("do you speak german?").intent.id).toBe("languages");
+    expect(ai.classify("talar du svenska?").intent.id).toBe("languages");
+    // But an imperative request still switches the site (not too greedy).
+    expect(ai.classify("swedish please").intent.id).toBe("switch-swedish");
+    expect(ai.classify("switch to swedish").intent.id).toBe("switch-swedish");
+  });
+
   test("routes a favourite question to the favourite intent", () => {
     const ai = loadAi();
     expect(ai.classify("any favourit essay?").intent.id).toBe("favourite");

@@ -1002,12 +1002,15 @@
           sv: [
             "vilka sprak",
             "talar du engelska",
+            "talar du svenska",
+            "pratar du svenska",
             "pratar du tyska",
             "sprakkunskaper",
           ],
           en: [
             "what languages",
             "do you speak english",
+            "do you speak swedish",
             "do you speak german",
             "languages you speak",
           ],
