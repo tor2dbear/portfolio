@@ -212,14 +212,21 @@ describeOrSkip("Hugo template rendering", () => {
       expect(m).toHaveProperty("employer-fixture/sample-work");
     });
 
-    test("a hidden page WITH a visible translation is kept in that language's manifest", () => {
-      // sv/lang-hidden is hidden, but its English translation (en/lang-hidden)
-      // is public — the mirror of an English-only writing article whose Swedish
-      // stub is hidden. The /texter/ list surfaces such articles, so the Swedish
-      // terminal tree must keep them too; only translation-less hidden pages
-      // (client-only works) drop out.
+    test("a hidden writing stub with a visible translation is kept in the sv manifest", () => {
+      // sv/texter/sv-note is hidden, but it's in the texter section and its
+      // English translation (en/writing/en-note) is public — an English-only
+      // article surfaced by the /texter/ list. The terminal tree must keep it.
       const sv = manifestOf("sv/lang-visible/index.html");
-      expect(sv).toHaveProperty("lang-hidden");
+      expect(sv).toHaveProperty("texter/sv-note");
+    });
+
+    test("the translation exception is scoped to writing — a hidden page in another section is still dropped", () => {
+      // sv/lang-hidden is hidden with a visible en translation, but it's NOT in
+      // writing/texter, so the /texter/ fallback doesn't apply. It must stay out
+      // — this is what keeps a works project hidden in only one language (whose
+      // works.html list also filters it) from reappearing in ls/tree.
+      const sv = manifestOf("sv/lang-visible/index.html");
+      expect(sv).not.toHaveProperty("lang-hidden");
     });
   });
 });

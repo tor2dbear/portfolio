@@ -6,12 +6,11 @@
   - Sections are `dir`s (works, writing, newsletter, legal).
   - Every post / standalone page is a `file`; a page overrides its kind via a
   `terminal_kind` param (contact = action). Pages that are `terminal_kind`
-  hidden/exempt are left OUT entirely. A front-matter `hidden: true` page is
-  left out ONLY when it has no visible translation in another language: a
-  client-only works project is hidden in both languages (an orphan → excluded),
-  but an English-only writing article keeps a hidden Swedish stub whose visible
-  English translation IS public — the /texter/ list surfaces it, so the terminal
-  tree must keep it too (see layouts/texter/list.html).
+  hidden/exempt are left OUT entirely, and so is a front-matter `hidden: true`
+  page — with ONE exception: a writing article (section `writing`/`texter`) with
+  a visible translation stays, because /texter/ surfaces the English article for
+  a hidden Swedish stub (layouts/texter/list.html). Works and every other
+  section treat hidden as hidden, so client-only works never leak.
   - The `url` is the real RelPermalink (used to fetch a post's body); the key
   is the LOGICAL path, which can differ (works posts live at /englishwork/…
   but the terminal dir is `works/`). We rebuild the logical path from
@@ -52,22 +51,26 @@
   {{- else if eq (len $segs) 1 -}}
     {{- $include = true -}}
   {{- end -}}
-  {{/* A `hidden: true` page is only dropped when it's an orphan — no visible
-    translation. A client-only works project is hidden in both languages, so it
-    drops out; an English-only article's hidden Swedish stub has a public
-    English translation, so it stays (mirrors layouts/texter/list.html).
+  {{/* A `hidden: true` page is dropped, with ONE exception: writing articles
+    have a cross-language fallback — the /texter/ list replaces a hidden Swedish
+    stub with its visible English article (layouts/texter/list.html) — so a
+    hidden writing page with a visible translation stays. Every other section,
+    works included, treats hidden as hidden: a client-only works project (hidden
+    in both languages) drops, and so does a works page hidden in just one
+    language (works.html filters it from that language's list too). Limiting the
+    exception to writing/texter is what keeps those works out of ls/tree.
   */}}
   {{- $hidden := eq (.Params.hidden | default false) true -}}
-  {{- $hasVisibleTranslation := false -}}
-  {{- if $hidden -}}
+  {{- $rescuable := false -}}
+  {{- if and $hidden (in (slice "writing" "texter") $section) -}}
     {{- range .Translations -}}
       {{- if ne (.Params.hidden | default false) true -}}
-        {{ $hasVisibleTranslation = true }}
+        {{ $rescuable = true }}
       {{- end -}}
     {{- end -}}
   {{- end -}}
-  {{- $hiddenOrphan := and $hidden (not $hasVisibleTranslation) -}}
-  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") (not $hiddenOrphan) -}}
+  {{- $drop := and $hidden (not $rescuable) -}}
+  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") (not $drop) -}}
     {{- $k := "file" -}}
     {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
     {{/* Logical path: the section name (not its URL slug) + the URL tail, built
