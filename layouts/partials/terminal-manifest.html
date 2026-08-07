@@ -7,10 +7,11 @@
   - Every post / standalone page is a `file`; a page overrides its kind via a
   `terminal_kind` param (contact = action). Pages that are `terminal_kind`
   hidden/exempt are left OUT entirely, and so is a front-matter `hidden: true`
-  page — with ONE exception: a writing article (section `writing`/`texter`) with
-  a visible translation stays, because /texter/ surfaces the English article for
-  a hidden Swedish stub (layouts/texter/list.html). Works and every other
-  section treat hidden as hidden, so client-only works never leak.
+  page — with ONE exception: a hidden Swedish `texter` stub with a visible
+  translation stays (resolved to that English article), because /texter/ is the
+  site's one cross-language fallback (layouts/texter/list.html). Every other
+  section — English `writing`, works, all of them — treats hidden as hidden, so
+  client-only works never leak.
   - The `url` is the real RelPermalink (used to fetch a post's body); the key
   is the LOGICAL path, which can differ (works posts live at /englishwork/…
   but the terminal dir is `works/`). We rebuild the logical path from
@@ -51,19 +52,19 @@
   {{- else if eq (len $segs) 1 -}}
     {{- $include = true -}}
   {{- end -}}
-  {{/* A `hidden: true` page is dropped, with ONE exception: writing articles
-    have a cross-language fallback — the /texter/ list replaces a hidden Swedish
-    stub with its visible English article (layouts/texter/list.html) — so a
-    hidden writing page with a visible translation stays. Every other section,
-    works included, treats hidden as hidden: a client-only works project (hidden
-    in both languages) drops, and so does a works page hidden in just one
-    language (works.html filters it from that language's list too). Limiting the
-    exception to writing/texter is what keeps those works out of ls/tree.
+  {{/* A `hidden: true` page is dropped, with ONE exception. The site has a single
+    cross-language fallback, and it's one-directional: the Swedish /texter/ list
+    replaces a hidden Swedish stub with its visible English article
+    (layouts/texter/list.html). So a hidden page in the Swedish `texter` section
+    with a visible translation stays (resolved to that English article below).
+    Everything else treats hidden as hidden — English `writing` has no reverse
+    fallback (layouts/writing/list.html just filters hidden pages), and works
+    hidden in one or both languages (works.html filters them) must not resurface.
   */}}
   {{- $hidden := eq (.Params.hidden | default false) true -}}
   {{- $rescuable := false -}}
   {{- $visibleTx := . -}}
-  {{- if and $hidden (in (slice "writing" "texter") $section) -}}
+  {{- if and $hidden (eq $section "texter") -}}
     {{- range .Translations -}}
       {{- if ne (.Params.hidden | default false) true -}}
         {{ $rescuable = true }}{{ $visibleTx = . }}

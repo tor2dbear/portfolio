@@ -234,5 +234,14 @@ describeOrSkip("Hugo template rendering", () => {
       const sv = manifestOf("sv/lang-visible/index.html");
       expect(sv).not.toHaveProperty("lang-hidden");
     });
+
+    test("the fallback is one-directional — a hidden English writing page is not rescued by a Swedish translation", () => {
+      // en/writing/en-hidden is hidden with a visible Swedish translation, but
+      // the only cross-language fallback is sv /texter/ → en article. English
+      // /writing/ has no reverse fallback, so a hidden English writing page must
+      // stay out of the English manifest.
+      const en = manifest();
+      expect(en).not.toHaveProperty("writing/en-hidden");
+    });
   });
 });
