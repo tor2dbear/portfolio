@@ -71,6 +71,57 @@ describe("clanker-report handler", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
+  // Origin gate: a browser sets the Origin/Referer it cannot forge, so an
+  // off-site page's cross-origin POST is rejected before any GitHub quota is
+  // spent. A too-wide suffix match (`*.netlify.app`) would let any
+  // attacker-controlled Netlify site through — this is that regression's guard.
+  describe("origin allowlist", () => {
+    function eventFrom(origin, payload = { type: "report", query: "hi" }) {
+      return { ...event(payload), headers: { origin } };
+    }
+
+    test("a foreign *.netlify.app host is rejected (no GitHub call)", async () => {
+      const res = await handler(eventFrom("https://attacker.netlify.app"));
+      expect(res.statusCode).toBe(200);
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    test("an arbitrary off-site origin is rejected", async () => {
+      const res = await handler(eventFrom("https://evil.example.com"));
+      expect(res.statusCode).toBe(200);
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    test("this site's deploy-preview host is allowed", async () => {
+      const res = await handler(
+        eventFrom("https://deploy-preview-5--tor-bjorn.netlify.app")
+      );
+      expect(res.statusCode).toBe(200);
+      expect(createIssueCall()).toBeTruthy();
+    });
+
+    test("the production origin is allowed", async () => {
+      const res = await handler(eventFrom("https://www.tor-bjorn.com"));
+      expect(res.statusCode).toBe(200);
+      expect(createIssueCall()).toBeTruthy();
+    });
+
+    test("a same-site Referer is honored when Origin is absent", async () => {
+      const res = await handler({
+        ...event({ type: "report", query: "hi" }),
+        headers: { referer: "https://tor-bjorn.com/terminal/" },
+      });
+      expect(res.statusCode).toBe(200);
+      expect(createIssueCall()).toBeTruthy();
+    });
+
+    test("a request with no Origin or Referer is allowed (privacy tooling)", async () => {
+      const res = await handler(event({ type: "report", query: "hi" }));
+      expect(res.statusCode).toBe(200);
+      expect(createIssueCall()).toBeTruthy();
+    });
+  });
+
   describe("type: report", () => {
     test("opens a clanker-report issue with the clamped query as title", async () => {
       const res = await handler(

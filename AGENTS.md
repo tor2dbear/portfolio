@@ -936,6 +936,15 @@ npm test -- darkmode        # Run specific test
 npm run test:coverage       # Generate coverage report
 ```
 
+### Review Lens (break-mode checklist)
+
+Before merging a diff, review it in **break mode** (assume it's broken; find
+how) against `docs/review-lens.md` — a short list of the bug _classes_ the
+Codex PR reviewer keeps finding (origin/trust boundaries, `async`/`defer`
+script races, focus/keyboard traps, storage-that-can-fail). Do it in a fresh
+context so you come at the change cold. When a review finds a category twice,
+push it left into a test so it stops recurring.
+
 ---
 
 ## Important Notes for AI Assistants
