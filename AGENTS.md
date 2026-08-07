@@ -360,6 +360,27 @@ git switch -c <type>/<slug>-<sessionId>
 2. **Scope**: Only modify files related to the current task branch.
 3. **Commits**: All `git add`, `git commit`, and `git push` commands must be executed from the repo root.
 
+### Review Before Push (v4)
+
+A separate **break-mode** review — a reviewer with a skeptic's mandate, coming
+at the diff cold — catches the second-order bugs the author (build mode) misses.
+This is advisory: it surfaces findings, it does not block. But every task
+includes it. Three layers, in order:
+
+1. **Independent pre-push review.** Before pushing, run a break-mode review of
+   the diff in a **fresh context** (a subagent, or `/code-review`) against
+   `docs/review-lens.md` — not a self-review from the building session, which is
+   anchored on its own assumptions. Report the riskiest edge cases and how each
+   is handled; fix or consciously accept each before pushing.
+2. **Codex backstop.** Codex reviews the PR on GitHub (see the
+   `codex-review-surface` / `codex-rereview` workflows). Keep it — two
+   independent reviewers with different training catch more than either. After
+   pushing fixes, re-request it with the `codex-review` label.
+3. **Convert-to-test (ratchet).** Every **P1/P2** finding — from the pre-push
+   review or from Codex — gets a regression test before the PR merges. If it's a
+   new failure _class_, add a category to `docs/review-lens.md` too. The debt
+   only goes down: a class caught by machinery can't be re-discovered by luck.
+
 ### Syncing & Updates
 
 To bring in latest changes from master:
