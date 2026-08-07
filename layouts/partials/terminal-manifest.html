@@ -5,8 +5,13 @@
   Each entry maps a logical path → {kind, url, title, tags?}:
   - Sections are `dir`s (works, writing, newsletter, legal).
   - Every post / standalone page is a `file`; a page overrides its kind via a
-  `terminal_kind` param (contact = action). `hidden`/`exempt` pages are left
-  OUT entirely — not listed by ls, not reachable by cd/open.
+  `terminal_kind` param (contact = action). Pages that are `terminal_kind`
+  hidden/exempt are left OUT entirely, and so is a front-matter `hidden: true`
+  page — with ONE exception: a hidden Swedish `texter` stub with a visible
+  translation stays (resolved to that English article), because /texter/ is the
+  site's one cross-language fallback (layouts/texter/list.html). Every other
+  section — English `writing`, works, all of them — treats hidden as hidden, so
+  client-only works never leak.
   - The `url` is the real RelPermalink (used to fetch a post's body); the key
   is the LOGICAL path, which can differ (works posts live at /englishwork/…
   but the terminal dir is `works/`). We rebuild the logical path from
@@ -47,7 +52,27 @@
   {{- else if eq (len $segs) 1 -}}
     {{- $include = true -}}
   {{- end -}}
-  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") -}}
+  {{/* A `hidden: true` page is dropped, with ONE exception. The site has a single
+    cross-language fallback, and it's one-directional: the Swedish /texter/ list
+    replaces a hidden Swedish stub with its visible English article
+    (layouts/texter/list.html). So a hidden page in the Swedish `texter` section
+    with a visible translation stays (resolved to that English article below).
+    Everything else treats hidden as hidden — English `writing` has no reverse
+    fallback (layouts/writing/list.html just filters hidden pages), and works
+    hidden in one or both languages (works.html filters them) must not resurface.
+  */}}
+  {{- $hidden := eq (.Params.hidden | default false) true -}}
+  {{- $rescuable := false -}}
+  {{- $visibleTx := . -}}
+  {{- if and $hidden (eq $section "texter") -}}
+    {{- range .Translations -}}
+      {{- if ne (.Params.hidden | default false) true -}}
+        {{ $rescuable = true }}{{ $visibleTx = . }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $drop := and $hidden (not $rescuable) -}}
+  {{- if and $include (ne $tk "hidden") (ne $tk "exempt") (not $drop) -}}
     {{- $k := "file" -}}
     {{- with .Params.terminal_kind }}{{ $k = . }}{{ end -}}
     {{/* Logical path: the section name (not its URL slug) + the URL tail, built
@@ -63,8 +88,13 @@
         {{- $key = $section -}}
       {{- end -}}
     {{- end -}}
-    {{- $entry := dict "kind" $k "url" .RelPermalink "title" .Title -}}
-    {{- with .Params.tags }}
+    {{/* The key stays the current-language logical path (so the node lives where
+      /sv/texter/ shows it), but url/title/tags come from $visibleTx — itself for
+      a normal page, or the visible translation for a rescued writing stub, so
+      cat/open fetch the public English article, not the unpublished stub body.
+    */}}
+    {{- $entry := dict "kind" $k "url" $visibleTx.RelPermalink "title" $visibleTx.Title -}}
+    {{- with $visibleTx.Params.tags }}
       {{ $entry = merge $entry (dict "tags" .) }}
     {{ end -}}
     {{- $kinds = merge $kinds (dict $key $entry) -}}
