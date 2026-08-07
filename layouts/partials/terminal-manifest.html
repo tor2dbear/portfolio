@@ -62,10 +62,11 @@
   */}}
   {{- $hidden := eq (.Params.hidden | default false) true -}}
   {{- $rescuable := false -}}
+  {{- $visibleTx := . -}}
   {{- if and $hidden (in (slice "writing" "texter") $section) -}}
     {{- range .Translations -}}
       {{- if ne (.Params.hidden | default false) true -}}
-        {{ $rescuable = true }}
+        {{ $rescuable = true }}{{ $visibleTx = . }}
       {{- end -}}
     {{- end -}}
   {{- end -}}
@@ -86,8 +87,13 @@
         {{- $key = $section -}}
       {{- end -}}
     {{- end -}}
-    {{- $entry := dict "kind" $k "url" .RelPermalink "title" .Title -}}
-    {{- with .Params.tags }}
+    {{/* The key stays the current-language logical path (so the node lives where
+      /sv/texter/ shows it), but url/title/tags come from $visibleTx — itself for
+      a normal page, or the visible translation for a rescued writing stub, so
+      cat/open fetch the public English article, not the unpublished stub body.
+    */}}
+    {{- $entry := dict "kind" $k "url" $visibleTx.RelPermalink "title" $visibleTx.Title -}}
+    {{- with $visibleTx.Params.tags }}
       {{ $entry = merge $entry (dict "tags" .) }}
     {{ end -}}
     {{- $kinds = merge $kinds (dict $key $entry) -}}

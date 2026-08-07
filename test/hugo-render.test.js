@@ -212,12 +212,18 @@ describeOrSkip("Hugo template rendering", () => {
       expect(m).toHaveProperty("employer-fixture/sample-work");
     });
 
-    test("a hidden writing stub with a visible translation is kept in the sv manifest", () => {
+    test("a hidden writing stub is kept under its sv key but points at the visible English article", () => {
       // sv/texter/sv-note is hidden, but it's in the texter section and its
       // English translation (en/writing/en-note) is public — an English-only
-      // article surfaced by the /texter/ list. The terminal tree must keep it.
+      // article surfaced by the /texter/ list. The node stays under the Swedish
+      // logical path, but url/title come from the English article so cat/open
+      // fetch the public content, not the unpublished Swedish stub body.
       const sv = manifestOf("sv/lang-visible/index.html");
-      expect(sv).toHaveProperty("texter/sv-note");
+      expect(sv["texter/sv-note"]).toMatchObject({
+        kind: "file",
+        url: "/writing/en-note/",
+        title: "EN Note",
+      });
     });
 
     test("the translation exception is scoped to writing — a hidden page in another section is still dropped", () => {
