@@ -33,7 +33,7 @@ client:
 
 1959 byggde **Jean Tinguely** maskiner som ritade abstrakt konst på löpande band — _Méta-Matics_, ett skämt om det spontana geniet. Méta-Matic ∞ är samma skämt, omställt för AI-eran. Maskinen ritar också. Men den _slumpar_ inte fram sina verk; den _hämtar_ dem ur ett kontinuerligt rum där varje möjlig teckning redan är en punkt. Att gå framåt är att interpolera. Frågan är inte längre Tinguelys "vad är konst när en maskin kan göra det?" utan: **oändligt många, aldrig något nytt — var finns originalet?**
 
-![Bandet rullar; grannrutorna morfar in i varandra.](meta-matic-belt.jpg "Bandet rullar; grannrutorna morfar in i varandra – varje verk är en punkt i det latenta rummet, aldrig en lösryckt bild.")
+![Nio verk samplade jämnt över det latenta rummet.](meta-matic-grid.jpg "Nio punkter samplade jämnt över det latenta rummet. Olika på ytan — öppna slingor, täta nystan — och ändå bara koordinater i samma rum. Ingen av dem är ny.")
 
 Varje verk ritas med staplade epicykler vars parametrar hämtas ur ett kontinuerligt brusfält — grannkoordinater ger nästan identiska teckningar, så bandet **morfar** snarare än hoppar. Och det drivs av väggklockan, inte av besökaren: serienumret är en funktion av tiden, alltså samma verk för alla just nu, helt utan server. Du kan titta bort, men inte stoppa maskinen — räknaren tickar vidare, och när du tittar tillbaka har den ritat utan dig. "Verk producerade" stiger. **Original förblir noll.**
 
