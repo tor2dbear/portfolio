@@ -10,7 +10,7 @@ tags: ["Digitala Produkter", "Experimentellt"]
 clients: []
 description: En digital ritmaskin efter Tinguely — ett löpande band genom ett latent rum som ritar oändligt många verk och aldrig något nytt.
 worktheme:
-  color: utblick        # TODO: byt till en egen röd "metamatic"-triton i data/work-tritone.toml (kör kontrast-testet efteråt)
+  color: metamatic
   tags: filled
 header_image: meta-matic-poster.jpg      # TODO: lägg till posterbild i den här mappen
 hero_embed: /meta-matic-hero.html#label  # TODO: lägg en trimmad embed i static/ (eller peka iframen mot live-sajten)
