@@ -3,7 +3,6 @@ author: "Torbjörn Hedberg"
 date: 2026-08-11
 linktitle: Méta-Matic ∞
 title: "Méta-Matic ∞"
-subtitle: En ritmaskin som gör originalet omöjligt
 slug: arbeten
 weight: 1
 tags: ["Digitala Produkter", "Experimentellt"]

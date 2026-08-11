@@ -3,7 +3,6 @@ author: "Torbjörn Hedberg"
 date: 2026-08-11
 linktitle: Méta-Matic ∞
 title: "Méta-Matic ∞"
-subtitle: A drawing machine that makes the original impossible
 slug: works
 weight: 1
 tags: ["Digital Product", "Experimental"]
