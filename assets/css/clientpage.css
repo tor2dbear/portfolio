@@ -112,9 +112,14 @@
     margin-top: 0;
 }
 
-/* CV: 2 columns instead of 3 to fit the 8-col main area */
+/* CV: stack the timeline + overview to fit the 8-col main area */
 #layout .content.application-page .about-cv__columns {
-    column-count: 2;
+    display: block;
+}
+
+/* Overview to a single column in the narrower application main area */
+#layout .content.application-page .about-cv__overview {
+    grid-template-columns: 1fr;
 }
 
 .content.application-page .about-cv .curl-icon {

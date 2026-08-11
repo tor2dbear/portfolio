@@ -1,28 +1,6 @@
-{{ $recentWriting := first 3 (sort (where (where .Page.Site.RegularPages "Section" "writing") ".Params.hidden" "!=" true) "Date" "desc") }}
-
-<div class="about-content use-subgrid stepped-6-6 place-full">
-<div class="about-main__primary">
-  <h3 class="about-main__headline type-headline-3">
-    Hi, Torbjörn here. A designer based in Gothenburg.
-  </h3>
-  <p class="about-main__text type-body">
-    These days I lead product at Lokalguiden. The job is mostly backlogs, sprints, and coordination rather than design — but I still think like a designer, and that shapes most of what's on this site. Over time the work has shifted from drawing screens to deciding which screens get drawn.
-  </p>
-</div>
-
-<div class="about-main__secondary">
-  <h3 class="about-main__headline type-headline-3">
-    I also write about design, and try to make sense of how the work is changing.
-  </h3>
-  {{ $links := slice }}
-  {{ range $recentWriting }}
-    {{ $links = $links | append (printf `<a href="%s">%s</a>` .RelPermalink .Title) }}
-  {{ end }}
-  <p class="about-main__text type-body">
-    Mostly about how it works in practice — tools, processes, the craft around it.{{ with $links }} Lately I've written {{ delimit . ", " " and " | safeHTML }}.{{ end }}
-  </p>
-  <p class="about-main__text type-body">
-    Get in touch if any of this is interesting.
-  </p>
-</div>
+{{/* Single source of truth: renders the same intro as the home page
+     (layouts/partials/about_main_en.html). Stacked full-width here rather
+     than the home page's diagonal stepped-6-6 layout. */}}
+<div class="about-content about-content--stacked place-full">
+{{ partial "about_main_en.html" .Page }}
 </div>

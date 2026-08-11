@@ -5,7 +5,9 @@
   <div class="post-header">
     <h1 class="type-headline-small">{{ .Title }}</h1>
   </div>
-  {{ range where .Data.Pages ".Params.hidden" "!=" true }}
+  {{/* .RegularPages excludes nested sections (e.g. works/tags/, whose
+       _index leaked in as a dateless "All works" card via .Data.Pages). */}}
+  {{ range where .RegularPages ".Params.hidden" "!=" true }}
     {{ .Render "summary" }}
   {{ end }}
 </div>

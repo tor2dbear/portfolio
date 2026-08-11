@@ -7,10 +7,17 @@
     {{ else }}
       What I've been up to
     {{ end }}
-
   </h3>
 
   <div class="about-cv__columns">
-    {{ partial "about_cv_base.html" . }}
+    <p class="about-cv__seclabel">{{ if eq site.Language.Lang "sv" }}Arbete{{ else }}Work{{ end }}</p>
+    <div class="about-cv__timeline">
+      {{ partial "about_cv_work.html" . }}
+    </div>
+
+    <p class="about-cv__seclabel">{{ if eq site.Language.Lang "sv" }}Överblick{{ else }}Overview{{ end }}</p>
+    <div class="about-cv__overview">
+      {{ partial "about_cv_aside.html" . }}
+    </div>
   </div>
 </div>

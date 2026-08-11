@@ -1,0 +1,63 @@
+{{/* Work timeline (Arbete) — one .about-cv__entry per role, date | detail. */}}
+{{ $sv := eq site.Language.Lang "sv" }}
+
+<div class="about-cv__entry reveal">
+  <p class="about-cv__date">2025 – {{ if $sv }}Nu{{ else }}Present{{ end }}</p>
+  <div class="about-cv__detail">
+    <p class="about-cv__role">Product Owner &amp; Art Director</p>
+    <p class="about-cv__org">Lokalguiden</p>
+    <ul class="about-cv__list type-body-sm">
+      {{ if $sv }}
+        <li>Äger och prioriterar produktbackloggen för lokalguiden.se</li>
+        <li>Designar och specificerar nya flöden och gränssnitt — från idé till user stories</li>
+        <li>Leder utvecklingsteamet i tvåveckorssprintar (Scrum)</li>
+        <li>Driver trafik- och intäktsökning genom datadrivna beslut</li>
+        <li>Äger designsystem och visuell identitet</li>
+      {{ else }}
+        <li>Owns and prioritizes the product backlog for lokalguiden.se</li>
+        <li>Designs and specs new flows and interfaces — from idea to user stories</li>
+        <li>Leads the development team in two-week sprints (Scrum)</li>
+        <li>Drives traffic and revenue growth through data-driven decisions</li>
+        <li>Owns the design system and visual identity</li>
+      {{ end }}
+    </ul>
+  </div>
+</div>
+
+<div class="about-cv__entry reveal">
+  <p class="about-cv__date">2016 – 2024</p>
+  <div class="about-cv__detail">
+    <p class="about-cv__role">Art Director</p>
+    <p class="about-cv__org">Lokalguiden</p>
+    <ul class="about-cv__list type-body-sm">
+      {{ if $sv }}
+        <li>Varumärkesidentitet, print- och webbdesign</li>
+        <li>Ledde omprofilering av Lokalguiden (2020) inkl. ny logotyp, riktlinjer, magasin och webbplats</li>
+        <li>Byggde Lokalguidens designsystem — design tokens, UI-kit och grid</li>
+        <li>Skapade varumärkesidentiteter för undervarumärken: Fastighetsgalan och Nylokal</li>
+        <li>Omstrukturerade och omdesignade centrala delar av produkten (IA &amp; UI/UX)</li>
+      {{ else }}
+        <li>Brand identity, print, and web design</li>
+        <li>Led the rebrand of Lokalguiden (2020) — new logo, guidelines, magazine, and website</li>
+        <li>Built Lokalguiden's design system — design tokens, UI kit, and grid</li>
+        <li>Created brand identities for sub-brands: Fastighetsgalan and Nylokal</li>
+        <li>Restructured and redesigned key parts of the product (IA &amp; UI/UX)</li>
+      {{ end }}
+    </ul>
+  </div>
+</div>
+
+<div class="about-cv__entry reveal">
+  <p class="about-cv__date">2014 – {{ if $sv }}Nu{{ else }}Present{{ end }}</p>
+  <div class="about-cv__detail">
+    <p class="about-cv__role">{{ if $sv }}Frilans / eget företag{{ else }}Freelance / own studio{{ end }}</p>
+  </div>
+</div>
+
+<div class="about-cv__entry reveal">
+  <p class="about-cv__date">2013</p>
+  <div class="about-cv__detail">
+    <p class="about-cv__role">{{ if $sv }}Praktik{{ else }}Internship{{ end }}</p>
+    <p class="about-cv__org">Mecka, Borås</p>
+  </div>
+</div>

@@ -107,9 +107,20 @@
   }
 
   .about-cv__columns {
-    column-count: 2 !important;
-    column-gap: 2rem;
-    column-fill: balance;
+    display: block !important;
+  }
+
+  .about-cv__overview {
+    display: block !important;
+  }
+
+  .about-cv__entry {
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-cv__date {
+    font-weight: bold;
   }
 
   .about-cv__section {
