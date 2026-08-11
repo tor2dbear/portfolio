@@ -38,7 +38,7 @@ Varje verk ritas med staplade epicykler vars parametrar hämtas ur ett kontinuer
 
 Det enda du kan göra är att _plocka_ ett verk: förstora det, granska det, signera det, spara det. Signaturen gör det till ditt — ingenting gör det till ett original. Grannpunkten går inte att skilja från din, och en minikarta visar hur din väg genom rummet ständigt korsar sig själv: inga kanter, allt återkommer.
 
-Där sitter åsiktslagret, och det är hela poängen. Du kan **signera med plånbok** — ett gratis intyg, utan blockkedja, om att just du signerade verket. Det pekar mot sin egen logiska ände: att prägla verket som NFT och betala riktiga pengar för ägande och knapphet åt något som aldrig var nytt. Signaturen räcker för att säga det. En global räknare visar hur många gånger _just det verket_ redan har signerats — det du nyss gjorde till ditt hade redan plockats av andra.
+Där sitter åsiktslagret, och det är hela poängen. Du kan **signera med plånbok** — ett gratis intyg, utan blockkedja, om att just du signerade verket. Det pekar mot sin egen logiska ände: att prägla verket som NFT och betala riktiga pengar för att tillverka ägande och konstlad knapphet åt något som aldrig var nytt. Signaturen räcker för att säga det. En räknare visar hur många som signerat totalt; och när du ska signera ett verk säger maskinen hur många gånger _just det_ redan har signerats — ditt unika plock var ofta redan andras.
 
 En ärlig fotnot, för den hör till verket: det "latenta rummet" är matematiskt simulerat, inte en riktig modell. Det spelar ingen roll för poängen — och att säga det högt är en del av den.
 
