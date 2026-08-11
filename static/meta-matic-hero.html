@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Méta-Matic ∞ — hero</title>
+    <meta
+      name="description"
+      content="A self-contained, text-free hero for Méta-Matic ∞: a conveyor belt of machine-drawn works morphing through a latent field, wall-clock synced with the live piece. Fixed 16:10 frame that scales like a video."
+    />
+    <!--
+  Méta-Matic ∞ — standalone hero animation.
+
+  ONE file, ZERO dependencies, no external requests — true to the piece itself
+  (a single static index.html, Canvas, no framework). Drop it in a portfolio
+  hero band or <iframe> it.
+
+  VIDEO-LIKE, NOT RESPONSIVE: everything is drawn into a fixed 1600×1000 logical
+  frame, so it scales UNIFORMLY (letterboxed) to any container — it never
+  reflows. Behaves like a <video>, not a responsive layout.
+
+  What it shows (the piece's CORE, wordlessly): the conveyor belt of works, each
+  a stack of epicycles fetched from a continuous latent field, morphing into its
+  neighbours as the belt scrolls. Driven by the wall clock (rate 1 work / 4 s,
+  since 2026), so it is literally in lockstep with the live machine — the same
+  serial numbers, the same works, for everyone, right now.
+
+  Modes (via URL hash, combinable e.g. #light,label):
+    • default   — text-free, follows the OS light/dark preference
+    • #light / #dark — hard-lock the palette
+    • #label    — reveal a minimal mono caption (serial + originals-stay-zero)
+
+  The host page can drive theme + reduced-motion at runtime via
+  postMessage({ theme: 'light'|'dark'|'auto', reduce: bool }).
+  prefers-reduced-motion (or a posted reduce) freezes to a single still frame.
+-->
+    <style>
+      :root {
+        --paper: #e4e2da;
+        --ink: #1a1c20;
+        --muted: #6b6f78;
+        --line: #c6c4ba;
+        --signal: #d1402c;
+      }
+      html[data-mm="dark"] {
+        --paper: #121317;
+        --ink: #e7e4da;
+        --muted: #83868f;
+        --line: #2a2c32;
+        --signal: #ef5a44;
+      }
+      * { margin: 0; box-sizing: border-box; }
+      html, body { height: 100%; background: var(--paper); }
+      body {
+        display: grid; place-items: center; overflow: hidden;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      }
+      /* fixed 16:10 stage, scales uniformly to the container */
+      .stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 100%; }
+      canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="stage"><canvas id="c"></canvas></div>
+    <script>
+      (() => {
+        "use strict";
+        const TAU = Math.PI * 2;
+
+        /* ---- deterministic smooth noise (Math.imul — same engine as the piece) ---- */
+        function h1(i){let n=Math.imul(i|0,374761393)+2654435761;n=Math.imul(n^(n>>>13),1274126177);n=(n^(n>>>16))>>>0;return n/4294967296;}
+        function h2(i,j){let n=Math.imul(i|0,374761393)+Math.imul(j|0,668265263)+2246822519;n=Math.imul(n^(n>>>13),1274126177);n=(n^(n>>>16))>>>0;return n/4294967296;}
+        const sm = t => t*t*(3-2*t);
+        function value1(x){const i=Math.floor(x),f=x-i;return h1(i)*(1-sm(f))+h1(i+1)*sm(f);}
+        function value2(x,y){const i=Math.floor(x),j=Math.floor(y),fx=sm(x-i),fy=sm(y-j);
+          const a=h2(i,j),b=h2(i+1,j),c=h2(i,j+1),d=h2(i+1,j+1);
+          return (a*(1-fx)+b*fx)*(1-fy)+(c*(1-fx)+d*fx)*fy;}
+
+        const WALK = 0.135;
+        const coordFor = g => ({ u: value1(g*WALK+40.5), v: value1(g*WALK+913.7) });
+
+        const N = 5;
+        function genesFor(u,v){
+          const S=6.0, g=k=>value2(u*S+k*3.13, v*S+k*5.71);
+          const harm=[]; let wsum=0;
+          for(let i=0;i<N;i++){const w=0.30+0.70*g(i+1);wsum+=w;
+            harm.push({w,fx:0.5+5.5*g(i+21),fy:0.5+5.5*g(i+47),px:g(i+71)*TAU,py:g(i+97)*TAU});}
+          for(const hh of harm) hh.w/=wsum;
+          return {harm,rot:g(200)*TAU,cycles:5+7*g(213),scale:0.82+0.24*g(229),lw:0.8+0.9*g(241)};
+        }
+        function drawWork(ctx,cx,cy,size,u,v,color,lwMul){
+          const G=genesFor(u,v), amp=size*0.44*G.scale, T=TAU*G.cycles, steps=900;
+          const cr=Math.cos(G.rot), sr=Math.sin(G.rot);
+          ctx.beginPath();
+          for(let s=0;s<=steps;s++){const t=(s/steps)*T; let X=0,Y=0;
+            for(const h of G.harm){X+=h.w*Math.cos(h.fx*t+h.px);Y+=h.w*Math.sin(h.fy*t+h.py);}
+            const rx=(X*cr-Y*sr)*amp, ry=(X*sr+Y*cr)*amp;
+            if(s===0)ctx.moveTo(cx+rx,cy+ry);else ctx.lineTo(cx+rx,cy+ry);}
+          ctx.strokeStyle=color; ctx.lineWidth=G.lw*(lwMul||1);
+          ctx.lineJoin="round"; ctx.lineCap="round"; ctx.globalAlpha=0.92; ctx.stroke(); ctx.globalAlpha=1;
+        }
+
+        /* ---- wall-clock: in lockstep with the live machine ---- */
+        const BIRTH_S = Date.UTC(2026,0,1,0,0,0)/1000, RATE_S = 4;
+        const machineSerial = () => (Date.now()/1000 - BIRTH_S)/RATE_S;
+
+        /* ---- fixed logical world ---- */
+        const WORLD_W = 1600, WORLD_H = 1000, STRIDE = 372, PLATE = 300;
+        const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+        const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+        let dpr = 1;
+        function resize(){
+          dpr = Math.min(window.devicePixelRatio||1, 2);
+          canvas.width = Math.round(WORLD_W*dpr); canvas.height = Math.round(WORLD_H*dpr);
+          ctx.setTransform(dpr,0,0,dpr,0,0);
+        }
+        window.addEventListener("resize", resize);
+
+        const showLabel = /(^|[#,])label($|,)/.test(location.hash);
+
+        function render(){
+          const paper=css("--paper"), ink=css("--ink"), muted=css("--muted"), line=css("--line"), signal=css("--signal");
+          ctx.fillStyle = paper; ctx.fillRect(0,0,WORLD_W,WORLD_H);
+
+          const cy = WORLD_H*0.46;
+          const baseF = machineSerial(), base = Math.floor(baseF), frac = baseF - base;
+          const cxCenter = WORLD_W/2;
+
+          // conveyor rail + moving perforations
+          const railY = cy + PLATE/2 + 44;
+          ctx.strokeStyle = line; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.moveTo(0,railY); ctx.lineTo(WORLD_W,railY); ctx.stroke();
+          const perf = (baseF*STRIDE) % 40;
+          ctx.fillStyle = muted; ctx.globalAlpha = 0.5;
+          for(let x=-40;x<WORLD_W+40;x+=40) ctx.fillRect(x-perf,railY+9,13,3);
+          ctx.globalAlpha = 1;
+
+          // plates
+          const half = Math.ceil((WORLD_W/2)/STRIDE)+1;
+          let bestD = Infinity, bestSerial = base;
+          ctx.font = "16px ui-monospace, Menlo, monospace"; ctx.textAlign = "center";
+          for(let i=-half;i<=half;i++){
+            const serial = base+i;
+            const cx = cxCenter + i*STRIDE - frac*STRIDE;
+            if(cx < -STRIDE || cx > WORLD_W+STRIDE) continue;
+            const {u,v} = coordFor(serial), h2p = PLATE/2;
+            ctx.strokeStyle = line; ctx.lineWidth = 1.25;
+            ctx.strokeRect(cx-h2p, cy-h2p, PLATE, PLATE);
+            drawWork(ctx, cx, cy, PLATE, u, v, ink, 1.4);
+            ctx.fillStyle = muted;
+            ctx.fillText("№ " + serial.toLocaleString("en-US"), cx, cy + h2p + 26);
+            const d = Math.abs(cx - cxCenter);
+            if(d < bestD){ bestD = d; bestSerial = serial; }
+          }
+          ctx.textAlign = "left";
+
+          // signing point: red highlight on the centred plate + hairline + marker
+          const cxC = cxCenter + (bestSerial-base)*STRIDE - frac*STRIDE, h2p = PLATE/2;
+          ctx.strokeStyle = signal; ctx.lineWidth = 2;
+          ctx.strokeRect(cxC-h2p-6, cy-h2p-6, PLATE+12, PLATE+12);
+          ctx.save(); ctx.setLineDash([6,7]); ctx.globalAlpha = 0.6;
+          ctx.beginPath(); ctx.moveTo(cxCenter, 40); ctx.lineTo(cxCenter, railY); ctx.stroke(); ctx.restore();
+          ctx.fillStyle = signal; ctx.textAlign = "center";
+          ctx.beginPath(); ctx.moveTo(cxCenter-9,44); ctx.lineTo(cxCenter+9,44); ctx.lineTo(cxCenter,58); ctx.closePath(); ctx.fill();
+          ctx.textAlign = "left";
+
+          if(showLabel){
+            const pad = 40;
+            ctx.fillStyle = ink; ctx.font = "700 30px system-ui, sans-serif";
+            ctx.fillText("MÉTA-MATIC ∞", pad, WORLD_H - 62);
+            ctx.fillStyle = muted; ctx.font = "18px ui-monospace, Menlo, monospace";
+            ctx.fillText(base.toLocaleString("en-US") + " works produced · 0 originals", pad, WORLD_H - 34);
+            ctx.fillStyle = muted; ctx.textAlign = "right";
+            ctx.fillText("infinitely many · never anything new", WORLD_W - pad, WORLD_H - 34);
+            ctx.textAlign = "left";
+          }
+        }
+
+        /* ---- theme + reduced motion (hash, OS, host postMessage) ---- */
+        let forced = null; // 'light' | 'dark' | null(auto)
+        if(/(^|[#,])light($|,)/.test(location.hash)) forced = "light";
+        if(/(^|[#,])dark($|,)/.test(location.hash)) forced = "dark";
+        const osDark = () => window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+        function applyTheme(){
+          const dark = forced ? forced === "dark" : osDark();
+          document.documentElement.setAttribute("data-mm", dark ? "dark" : "light");
+          document.body.style.background = css("--paper");
+        }
+        let reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let raf = 0;
+        function loop(){ render(); raf = requestAnimationFrame(loop); }
+        function run(){
+          cancelAnimationFrame(raf);
+          applyTheme();
+          if(reduced) render(); else loop();
+        }
+        window.addEventListener("message", e => {
+          const d = e.data || {};
+          if(typeof d.theme === "string"){ forced = d.theme === "auto" ? null : (d.theme === "dark" ? "dark" : "light"); }
+          if(typeof d.reduce === "boolean") reduced = d.reduce;
+          run();
+        });
+        if(window.matchMedia){
+          const md = matchMedia("(prefers-color-scheme: dark)");
+          (md.addEventListener ? md.addEventListener.bind(md,"change") : md.addListener.bind(md))(() => { if(!forced) run(); });
+          const rm = matchMedia("(prefers-reduced-motion: reduce)");
+          (rm.addEventListener ? rm.addEventListener.bind(rm,"change") : rm.addListener.bind(rm))(e => { reduced = e.matches; run(); });
+        }
+
+        resize(); run();
+      })();
+    </script>
+  </body>
+</html>
