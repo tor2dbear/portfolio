@@ -1,0 +1,46 @@
+---
+author: "Torbjörn Hedberg"
+date: 2026-08-11
+linktitle: Méta-Matic ∞
+title: "Méta-Matic ∞"
+subtitle: A drawing machine that makes the original impossible
+slug: works
+weight: 1
+tags: ["Digital Product", "Experimental"]
+clients: []
+description: A digital drawing machine after Tinguely — a conveyor belt through a latent space that draws infinitely many works and never anything new.
+worktheme:
+  color: metamatic
+  tags: filled
+header_image: meta-matic-poster.jpg
+hero_embed: /meta-matic-hero.html#label
+featured: true
+draft: true
+role: "Concept, Design & Engineering (solo)"
+details:
+  year: 2026
+  platform: "Web · static site on Cloudflare"
+  stack: "Canvas · vanilla JS · Cloudflare Worker + KV"
+  scope: "Concept, framing, design & front-end"
+client_label: "Type"
+client:
+  name: "Self-initiated"
+  url: "https://meta-matic.tor2dbear.com"
+  about: "A digital drawing machine after Jean Tinguely, reframed for the AI era: a conveyor belt through a latent space where every possible drawing is already a point."
+---
+
+{{< hero-embed src="/meta-matic-hero.html#label" ratio="16 / 10" title="Méta-Matic ∞ — the belt scrolls and glides in real time; each frame is a point in a latent space." >}}
+
+In 1959 **Jean Tinguely** built machines that drew abstract art on a conveyor belt — the _Méta-Matics_, a joke about the spontaneous genius. Méta-Matic ∞ is the same joke, moved to the AI era. This machine draws too. But it doesn't _randomise_ its works; it _retrieves_ them from a continuous space where every possible drawing is already a point. To move forward is to interpolate. The question is no longer Tinguely's "what is art when a machine can make it?" but: **infinitely many, never anything new — where is the original?**
+
+![Nine works from the machine, each with its coordinate.](meta-matic-grid.jpg "Nine works from the machine, each with its coordinate. Different on the surface — open loops, dense tangles — and still only points in one space. None of them is new.")
+
+Each work is drawn with stacked epicycles whose parameters are fetched from a continuous noise field — neighbouring coordinates give near-identical drawings, so the belt glides rather than jumps. And it runs on the wall clock, not the visitor: the serial number is a function of time, so it's the same work for everyone right now, with no server. You can look away, but you can't stop the machine — the counter keeps ticking, and when you look back it has drawn without you. "Works produced" climbs. **The originals stay zero.**
+
+The only thing you can do is _pick_ a work: enlarge it, inspect it, sign it, save it. The signature makes it yours — nothing makes it an original. Its neighbour can't be told apart from yours, and a minimap shows how your path through the space keeps crossing itself: no edges, everything recurs.
+
+That's where the opinion layer sits, and it's the whole point. You can sign with a wallet, or — in the full version — turn the work into an NFT. It doesn't undermine the piece; it _completes_ the satire: paying real money to manufacture ownership and scarcity for something that was never new. A global counter shows how many times _that exact work_ has already been signed. What you just made yours had already been picked by others.
+
+An honest footnote, because it belongs to the work: the "latent space" is mathematically simulated, not a real model. It doesn't matter to the point — and saying so out loud is part of it.
+
+**Live:** [meta-matic.tor2dbear.com](https://meta-matic.tor2dbear.com) · **Source:** [github.com/tor2dbear/meta-matic](https://github.com/tor2dbear/meta-matic)
