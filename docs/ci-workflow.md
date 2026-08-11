@@ -8,6 +8,31 @@ Guiding idea: findings should show up **where the work happens** — in the PR
 conversation and the events an agent already watches — not buried in a green
 job's logs.
 
+## Working convention: draft-first (standard)
+
+**Open PRs as _drafts_ and keep them draft while iterating; mark them
+"Ready for review" only when the change is done.** This is the default for
+everyone (humans and agents) working in this repo.
+
+Why it's the standard, and what CI does with it (`.github/workflows/pr-checks.yml`):
+
+- **Draft PR** → each push runs only the fast **`quick`** job
+  (lint + test + coverage + build — seconds). The heavy Lighthouse/axe sweep is
+  skipped, so WIP iteration stays cheap and fast.
+- **Ready for review** (draft → ready, and pushes to a ready PR) → the full
+  **`quality`** job runs the Lighthouse + axe sweep and posts the sticky
+  _CI Quality Report_. Gated on `github.event.pull_request.draft == false`.
+- **`concurrency`** cancels a superseded run when you push again to the same
+  branch/PR, so rapid pushes don't stack up parallel runs.
+
+Practical flow: branch → push (fast checks) → open as **draft** → keep pushing
+fixes (fast checks, superseded runs auto-cancel) → **mark ready for review**
+when done (full perf/a11y sweep runs) → merge.
+
+Note: this keeps Actions usage low. It matters on a private repo (2 000
+included Actions-minutes/month); on a public repo Actions is free, so the
+convention is then about faster feedback and less noise rather than cost.
+
 ## What we have (all live on `master`)
 
 ### 1. `npm audit` in the sticky PR comment
