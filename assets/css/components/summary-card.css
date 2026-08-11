@@ -127,6 +127,20 @@
   height: auto;
 }
 
+/* Live hero-embed cards keep their own aspect ratio (16:10) wherever they
+   render: the fixed 4/3 cover thumb the index layout uses for photos (below,
+   >=48em) would letterbox the animation, so opt these cards out and let the
+   iframe drive the height. */
+.summary-card__image .hero-embed-card,
+.summary-card__image .hero-embed-card .hero-embed__frame {
+  display: block;
+  width: 100%;
+}
+
+:root[data-layout="index"] .summary-card__image:has(.hero-embed-card) {
+  aspect-ratio: auto;
+}
+
 /* Title / meta / tags stack in column 2. Title truncates to a single line so
    every row stays the same height and long titles don't wrap. */
 :root[data-layout="index"] .summary-card__title {

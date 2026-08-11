@@ -160,11 +160,14 @@ describeOrSkip("Hugo template rendering", () => {
   });
 
   describe("terminal-manifest.html section/page classification", () => {
-    // The manifest is site-global; read it off any rendered page.
-    function manifest() {
-      const doc = parse(readOutput("lang-visible/index.html"));
+    // The manifest is site-global (per language); read it off any rendered page.
+    function manifestOf(relPath) {
+      const doc = parse(readOutput(relPath));
       const el = doc.querySelector('[data-js="terminal-manifest"]');
       return JSON.parse(el.textContent);
+    }
+    function manifest() {
+      return manifestOf("lang-visible/index.html"); // English site
     }
 
     test("emits valid JSON mapping segments to {kind, url}", () => {
@@ -198,6 +201,47 @@ describeOrSkip("Hugo template rendering", () => {
       const m = manifest();
       expect(m).not.toHaveProperty("tools"); // terminal_kind: exempt
       expect(m).not.toHaveProperty("hidden-page"); // terminal_kind: hidden
+    });
+
+    test("a hidden page with no visible translation is left out (client-only works)", () => {
+      const m = manifest();
+      // employer-fixture/hidden-work sets `hidden: true` with no terminal_kind
+      // and no translation — an orphan, like a client-only works project (hidden
+      // in both languages). It must not leak, while its sibling stays present.
+      expect(m).not.toHaveProperty("employer-fixture/hidden-work");
+      expect(m).toHaveProperty("employer-fixture/sample-work");
+    });
+
+    test("a hidden writing stub is kept under its sv key but points at the visible English article", () => {
+      // sv/texter/sv-note is hidden, but it's in the texter section and its
+      // English translation (en/writing/en-note) is public — an English-only
+      // article surfaced by the /texter/ list. The node stays under the Swedish
+      // logical path, but url/title come from the English article so cat/open
+      // fetch the public content, not the unpublished Swedish stub body.
+      const sv = manifestOf("sv/lang-visible/index.html");
+      expect(sv["texter/sv-note"]).toMatchObject({
+        kind: "file",
+        url: "/writing/en-note/",
+        title: "EN Note",
+      });
+    });
+
+    test("the translation exception is scoped to writing — a hidden page in another section is still dropped", () => {
+      // sv/lang-hidden is hidden with a visible en translation, but it's NOT in
+      // writing/texter, so the /texter/ fallback doesn't apply. It must stay out
+      // — this is what keeps a works project hidden in only one language (whose
+      // works.html list also filters it) from reappearing in ls/tree.
+      const sv = manifestOf("sv/lang-visible/index.html");
+      expect(sv).not.toHaveProperty("lang-hidden");
+    });
+
+    test("the fallback is one-directional — a hidden English writing page is not rescued by a Swedish translation", () => {
+      // en/writing/en-hidden is hidden with a visible Swedish translation, but
+      // the only cross-language fallback is sv /texter/ → en article. English
+      // /writing/ has no reverse fallback, so a hidden English writing page must
+      // stay out of the English manifest.
+      const en = manifest();
+      expect(en).not.toHaveProperty("writing/en-hidden");
     });
   });
 });

@@ -122,6 +122,44 @@ DefaultContentLanguage = "en"
       weight = 6
       identifier = "contact"
       url = "/sv/kontakt"
+    # Per-language markup for Swedish. Hugo does NOT deep-merge the root
+    # [markup] into a language that defines its own [languages.sv.markup] — the
+    # language's markup is taken whole — so this must MIRROR the root [markup]
+    # block below in full (noClasses, block attributes, hardWraps …). The only
+    # intended difference is the typographer quote glyphs: Swedish opens and
+    # closes with the same mark (”…”, ’…’), unlike the English directional pair.
+    # Keep this in sync with [markup] if that ever changes.
+    [languages.sv.markup]
+      [languages.sv.markup.goldmark]
+        [languages.sv.markup.goldmark.extensions]
+          definitionList = true
+          footnote = true
+          linkify = true
+          linkifyProtocol = 'https'
+          strikethrough = true
+          table = true
+          taskList = true
+          [languages.sv.markup.goldmark.extensions.typographer]
+            disable = false
+            leftDoubleQuote = "&rdquo;"
+            rightDoubleQuote = "&rdquo;"
+            leftSingleQuote = "&rsquo;"
+            rightSingleQuote = "&rsquo;"
+        [languages.sv.markup.goldmark.parser]
+          autoHeadingID = false
+          autoHeadingIDType = 'github'
+          wrapStandAloneImageWithinParagraph = false
+          [languages.sv.markup.goldmark.parser.attribute]
+            block = true
+            title = true
+        [languages.sv.markup.goldmark.renderer]
+          hardWraps = true
+          unsafe = false
+          xhtml = false
+      [languages.sv.markup.highlight]
+        noClasses = false
+        lineNos = false
+        guessSyntax = false
 
 [permalinks]
   works = '/:slug/:title/'
@@ -135,6 +173,10 @@ DefaultContentLanguage = "en"
   # Shown in the home page
   subtitle = "Portfolio"
   brand = "tor-bjorn.com"
+  # Default social-share image (og:image / twitter:image) for pages that have no
+  # header_image of their own — home, the writing list, legal pages. Point it at
+  # a ~1200x630 asset (absolute path or full URL). Empty = emit no fallback image.
+  og_image = ""
   newsletter_action = "/.netlify/functions/newsletter-subscribe"
   newsletter_email_field = "EMAIL"
   dateFormat = "02 Jan 2006, 15:04"
@@ -162,7 +204,15 @@ DefaultContentLanguage = "en"
       strikethrough = true
       table = true
       taskList = true
-      typographer = true
+      # Smart-quote substitutions. These are the English defaults ("..." with
+      # directional marks); Swedish overrides the quote keys below so both marks
+      # face the same way ("..."). See [languages.sv.markup...].
+      [markup.goldmark.extensions.typographer]
+        disable = false
+        leftDoubleQuote = "&ldquo;"
+        rightDoubleQuote = "&rdquo;"
+        leftSingleQuote = "&lsquo;"
+        rightSingleQuote = "&rsquo;"
     [markup.goldmark.parser]
       autoHeadingID = false
       autoHeadingIDType = 'github'

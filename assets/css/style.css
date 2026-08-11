@@ -5,6 +5,12 @@ body {
 
 html {
   scroll-padding-top: calc(var(--size-header-height) + var(--spacing-16));
+  /* Stop iOS Safari inflating text inside wide/overflowing blocks (a <pre>
+     that scrolls horizontally triggers it): the auto-inflation scales lines
+     unevenly, so a monospace code block came out with mixed font sizes. Pin it
+     to the authored size in both orientations. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -73,18 +79,16 @@ body {
   animation-duration: var(--motion-duration-view-transition);
 }
 
-/* The header is on every page: give it its own group and hold it static instead
-   of cross-fading it (its content differs per page — active link, the
-   scroll-progress wordmark — so a plain cross-fade flickers). Its icons are
-   inlined in topmenu.html so they render in the snapshot rather than blinking. */
-.top-menu {
-  view-transition-name: top-menu;
-}
-::view-transition-group(top-menu),
-::view-transition-old(top-menu),
-::view-transition-new(top-menu) {
-  animation: none;
-}
+/* The header rides the root cross-fade (it has no view-transition-name of its
+   own), so its background and CTA button fade in sync with the rest of the page
+   surface. It used to be isolated in its own group and held static, but the work
+   themes change the header colours (--surface-page / --primary), and a held
+   snapshot snaps to the new colours instead of blending — read as a blink of the
+   header bg + button when navigating to/from a themed works page. Letting it
+   share the page's cross-fade turns that snap into a smooth, synchronised
+   dissolve. Trade-off: the per-page bits (active-link state, scroll-progress
+   wordmark) now cross-dissolve too; if that shimmer is distracting, give just
+   those elements their own held-static view-transition-name. */
 
 /* Pause the scroll-reveal entry animation while the transition runs, so content
    doesn't slide in over the cross-fade. The flag is set/cleared by a head
@@ -438,6 +442,10 @@ footer > * {
   margin-bottom: var(--spacing-16);
 }
 
+.works-post__cta {
+  margin-bottom: var(--spacing-24);
+}
+
 /* Works content AD mapping: keep prose text narrow but allow full-width media blocks */
 .content.post.works-post > .post-content.place-prose {
   display: contents;
@@ -623,6 +631,14 @@ picture,
   display: block;
 }
 
+/* Block, not the default inline: an inline <video> sits on the text baseline and
+   leaves a ~2px descender gap below it inside the block wrapper. The wrapper's
+   ::before/::after blend overlays fill that gap, so under a work-theme blend it
+   showed as a thin coloured line along the video's bottom edge. */
+.video-wrapper video {
+  display: block;
+}
+
 picture::before,
 picture::after,
 .video-wrapper::before,
@@ -654,14 +670,24 @@ picture::after,
   mix-blend-mode: var(--image-highlight-blend-mode, var(--image-blend-mode));
 }
 
+/* <picture> images take the SVG tri-tone filter (url() reference filters paint
+   reliably on <img>), so their duotone overlays are hidden. A real <video> is
+   the exception: WebKit (iOS Safari) does NOT paint an SVG reference filter on
+   a <video> — the filtered video just shows base grayscale (black-and-white,
+   no blend). So <video> keeps the mix-blend-mode overlay pipeline instead,
+   which composites on video everywhere; its overlays stay visible and read the
+   Pantone --image-* stops as a duotone. Every hero-embed <iframe> — the in-page
+   hero, the summary card, and the lightbox — sits in a .video-wrapper but takes
+   the filter path (see .hero-embed__frame below), so suppress its overlays via
+   :has(.hero-embed__frame) to avoid stacking filter + overlay (double-tint). */
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
   picture::before,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
   picture::after,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .video-wrapper::before,
+  .video-wrapper:has(.hero-embed__frame)::before,
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  .video-wrapper::after {
+  .video-wrapper:has(.hero-embed__frame)::after {
   display: none;
 }
 
@@ -675,10 +701,10 @@ video {
   filter: grayscale(var(--image-grayscale));
 }
 
+/* Only <img> takes the SVG tri-tone filter; <video> is left on grayscale + the
+   overlay duotone above (WebKit won't filter a video). */
 :root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  img,
-:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
-  video {
+  img {
   -webkit-filter: url(#pantone-tritone);
   -moz-filter: url(#pantone-tritone);
   filter: url(#pantone-tritone);
@@ -696,6 +722,130 @@ video {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
+}
+
+/*
+ * Hero embed (an <iframe> animation, e.g. the Cadence works hero) opts into the
+ * same image-blend treatment as <img>/<video>: the tint overlays come from its
+ * .video-wrapper, and these three rules mirror the grayscale / Pantone tri-tone
+ * / blend-off filter states so the hero tracks the active palette instead of
+ * standing outside it. Kept in lockstep with the img/video rules above.
+ */
+.hero-embed__frame {
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .hero-embed__frame {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .hero-embed__frame {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
+/*
+ * Full-bleed body image (the `media-full` shortcode). Lives in the body for a
+ * closing "here's the actual product" beat. The works single template lifts the
+ * figure out of the prose column and re-emits it as a direct .use-subgrid child
+ * with .place-full, so it spans the full content width (see works/single.html).
+ * The caption is pulled back to a readable measure and centred on the column.
+ */
+.media-full figcaption {
+  max-width: 68ch;
+  margin-inline: 0;
+}
+
+/*
+ * Inline infographic (the `infographic` shortcode inlines an SVG). Drawn with
+ * currentColor for ink and CSS custom properties for accents, so it follows the
+ * manual light/dark theme; being inline SVG it's exempt from the image blend and
+ * keeps its colours. Role accents deepen on the light parchment and brighten on
+ * dark — the same pairs the motion hero uses.
+ */
+.infographic {
+  color: var(--text-default);
+  /* default max display width; the shortcode's `max` param overrides it inline */
+  --ig-max: 640px;
+  --ig-enter: #177f70;
+  --ig-exit: #b0402a;
+  --ig-move: #9a5e23;
+}
+
+:root[data-mode="dark"] .infographic {
+  --ig-enter: #8ad0c6;
+  --ig-exit: #e08b7f;
+  --ig-move: #e9b872;
+}
+
+.infographic svg {
+  display: block;
+  width: 100%;
+  max-width: var(--ig-max, 640px);
+  height: auto;
+  margin-inline: auto;
+  /* Support the image blend: the inline SVG desaturates with the rest of the
+     page media when blend is on. Transparency rules out the duotone tint
+     overlay (it would re-add a background box), so this is the grayscale half of
+     the treatment — enough to keep it consistent with the blended screenshots. */
+  -webkit-filter: grayscale(var(--image-grayscale));
+  -moz-filter: grayscale(var(--image-grayscale));
+  filter: grayscale(var(--image-grayscale));
+}
+
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .infographic
+  svg {
+  -webkit-filter: url(#pantone-tritone);
+  -moz-filter: url(#pantone-tritone);
+  filter: url(#pantone-tritone);
+}
+
+:root[data-effect-blend="off"] .infographic svg {
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+
+/*
+ * Logomark: the one inline SVG that keeps its brand colour (Cadence navy,
+ * theme-aware) and opts out of the image blend — a logo shows in its own colour,
+ * not desaturated with the screenshots. Drawn with var(--lm-ink)/var(--lm-head).
+ */
+.infographic--logomark {
+  --lm-ink: #22356e;
+  --lm-head: #33468f;
+}
+
+:root[data-mode="dark"] .infographic--logomark {
+  --lm-ink: #8ea2e8;
+  --lm-head: #a6b6ef;
+}
+
+.infographic--logomark svg {
+  -webkit-filter: none !important;
+  -moz-filter: none !important;
+  filter: none !important;
+}
+
+/* Under a Pantone palette the logomark joins the palette like every other image
+   and the sibling infographic on the page: take the same #pantone-tritone map
+   instead of holding the Cadence navy, so the mark reads as part of the theme
+   rather than a stray blue dot. The mark's own ink is already mode-appropriate
+   (dark in light mode, light in dark), so the luminance map keeps it legible.
+   !important + the higher specificity override the brand-colour opt-out above;
+   the standard palette still shows the navy identity. */
+:root[data-effect-blend="on"][data-palette="pantone"][data-image-tone="tritone"]
+  .infographic--logomark svg {
+  -webkit-filter: url(#pantone-tritone) !important;
+  -moz-filter: url(#pantone-tritone) !important;
+  filter: url(#pantone-tritone) !important;
 }
 
 :root[data-effect-blend="on"]:not([data-palette="pantone"]) {
@@ -983,6 +1133,15 @@ p:empty {
     grid-template-columns: minmax(0, 1fr);
     grid-column-gap: var(--spacing-24);
   }
+
+  /* Stack every variant on mobile. The --cols-2 / --cols-1 rules above carry
+     higher specificity than the base rule, so without matching them here the
+     two-section layout (only PIA has Role + Details) would stay two columns
+     and read cramped on a phone. */
+  .content.post > .project-info.project-info--cols-2,
+  .content.post > .project-info.project-info--cols-1 {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* NOTE: Article card styles (related items, hover effects) moved to assets/css/components/article-card.css */
@@ -1042,9 +1201,121 @@ p:empty {
 }
 
 .about-cv__columns {
-  column-count: 3;
-  column-gap: var(--spacing-32);
-  column-fill: balance;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section divider label (Arbete / Överblick) */
+.about-cv__seclabel {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-default);
+  margin: var(--spacing-32) 0 var(--spacing-24);
+}
+
+.about-cv__seclabel:first-child {
+  margin-top: 0;
+}
+
+.about-cv__timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Overview: real 2-col grid so block tops align row-by-row */
+.about-cv__overview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--spacing-64);
+  row-gap: var(--spacing-32);
+}
+
+/* Work timeline: date | detail per entry */
+.about-cv__entry {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  column-gap: var(--spacing-24);
+  padding: var(--spacing-16) 0;
+}
+
+.about-cv__entry:first-of-type {
+  padding-top: 0;
+}
+
+.about-cv__date {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  padding-top: 0.15em;
+}
+
+.about-cv__role {
+  font-family: var(--font-sans);
+  /* Switzer ships only 400 and 500; 600 would be a synthetic faux-bold. */
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1.3;
+}
+
+.about-cv__org {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: 0.15em;
+}
+
+.about-cv__list {
+  list-style: none;
+  margin-top: var(--spacing-12);
+}
+
+.about-cv__list li {
+  position: relative;
+  padding-left: 1.1em;
+  margin-bottom: var(--spacing-8);
+}
+
+.about-cv__list li:last-child {
+  margin-bottom: 0;
+}
+
+.about-cv__list li::before {
+  content: "";
+  position: absolute;
+  left: 0.15em;
+  top: 0.6em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.about-cv__note {
+  color: var(--text-muted);
+}
+
+/* Overview blocks: uniform sentence-case muted label + value, no dividers.
+   The grid handles spacing, so no per-section margins. */
+.about-cv__overview .about-cv__section {
+  margin-bottom: 0;
+}
+
+.about-cv__overview .about-cv__heading {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-8);
+}
+
+.about-cv__overview .about-cv__text {
+  margin-bottom: 0;
 }
 
 .about-cv__icon {
@@ -1057,6 +1328,15 @@ p:empty {
 
 .about-main__headline {
   margin-bottom: var(--layout-block-gap);
+}
+
+/* About page (shortcode) stacks the two intro blocks. The gap is set here in
+   the global stylesheet — .about-content's own row-gap lives in the home-only
+   pages/home.css, so without this the blocks collapse together on /about. */
+.about-content--stacked {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-32) * var(--layout-prose-rhythm));
 }
 
 .about-cv__section {
@@ -1087,17 +1367,22 @@ p:empty {
   margin-bottom: var(--layout-block-gap);
 }
 
-/* md: <= 63.9375em */
+/* md: <= 63.9375em — overview collapses to one column */
 @media (max-width: 63.9375em) {
-  .about-cv__columns {
-    column-count: 2;
+  .about-cv__overview {
+    grid-template-columns: 1fr;
+    row-gap: var(--spacing-24);
   }
 }
 
-/* sm: <= 47.9375em */
+/* sm: <= 47.9375em — collapse the date column onto its own line */
 @media (max-width: 47.9375em) {
-  .about-cv__columns {
-    column-count: 1;
+  .about-cv__entry {
+    grid-template-columns: 1fr;
+    row-gap: var(--spacing-8);
+  }
+  .about-cv__date {
+    padding-top: 0;
   }
 }
 

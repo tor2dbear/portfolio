@@ -18,587 +18,664 @@
 
 
 <div class="settings-dropdown">
+  {{/* The trigger opens a settings-only panel on desktop (gear) but the primary
+    menu on phones, where it also carries the nav (see .settings-nav). Its
+    accessible name follows suit: "Settings" on desktop, the main-menu label at
+    the nav breakpoint — settings-dropdown.js swaps aria-label to data-label-menu
+    there so screen-reader users find the navigation, not just settings. The
+    static aria-label is the desktop default (correct before JS runs).
+  */}}
   <button
     class="settings-toggle"
     aria-label="{{ i18n "Settings" }}"
+    data-label-settings="{{ i18n "Settings" }}"
+    data-label-menu="{{ i18n "menu_title" }}"
     aria-expanded="false"
     aria-haspopup="true"
     data-js="settings-toggle"
   >
-    <span class="settings-icon" aria-hidden="true">
+    {{/* The panel is settings-only on desktop (gear), but on phones it also
+      carries the primary nav (see the .settings-nav block below), so the
+      trigger becomes a menu glyph there. CSS swaps the two at the nav
+      breakpoint — settings-dropdown.css.
+    */}}
+    <span class="settings-icon settings-icon--gear" aria-hidden="true">
       <svg class="icon" aria-hidden="true">
         <use href="#icon-settings"></use>
+      </svg>
+    </span>
+    <span class="settings-icon settings-icon--menu" aria-hidden="true">
+      <svg class="icon" aria-hidden="true">
+        <use href="#icon-menu"></use>
       </svg>
     </span>
   </button>
 
   <div class="settings-overlay" hidden data-js="settings-overlay"></div>
 
-  <div class="settings-panel" id="settings-panel" hidden data-js="settings-panel">
-    <div class="theme-section">
-      <div class="theme-section-heading">
-        <h3 class="theme-section-title">{{ i18n "mode" }}</h3>
-        <span class="toggle-switch__shortcut" data-shortcut="M">M</span>
-      </div>
-      <div
-        class="theme-options theme-options--segmented"
-        role="tablist"
-        aria-label="{{ i18n "mode" }}"
-      >
-        <button
-          class="theme-option"
-          data-mode="light"
-          data-js="mode-option"
-          role="tab"
-          aria-label="{{ i18n "light_mode" }}"
+  <div
+    class="settings-panel"
+    id="settings-panel"
+    hidden
+    data-js="settings-panel"
+  >
+    {{/* The body is the mobile sheet's internal scroll container (see
+      settings-dropdown.css detents): the handle zone up top drives the drag,
+      the body scrolls when content overflows a detent.
+    */}}
+    <div class="settings-panel__body" data-js="settings-panel-body">
+      {{/* Mobile navigation. On phones the header drops the primary nav links
+        (no room beside the brand + controls), so they live here at the top of
+        the sheet. Shown only where the header nav is hidden (<=47.9375em) — see
+        settings-dropdown.css; hidden in the desktop dropdown, which sits under a
+        header that already carries the nav. Plain links: a tap navigates and the
+        sheet closes with the page. Active-link + client/employer scoping mirror
+        the header's top nav. Inside .settings-panel__body so it rides the sheet's
+        internal scroll / detents.
+      */}}
+      <nav class="settings-nav" aria-label="{{ i18n "menu_title" }}">
+        <div class="theme-section-heading">
+          <h3 class="theme-section-title">{{ i18n "navigation" }}</h3>
+        </div>
+        {{/* No Home entry: like the desktop header nav, home is the brand
+          wordmark (top-left, links to /), which is present on mobile too — an
+          explicit Home here would duplicate it and diverge from desktop.
+        */}}
+        <ul class="settings-nav__list">
+          {{- $urltop := .RelPermalink -}}
+          {{- range .Site.Menus.top -}}
+            {{- $nameLower := lower .Name -}}
+            {{- $isContact := or (eq .Identifier "contact") (eq $nameLower "contact") (eq $nameLower "kontakt") -}}
+            {{- if not $isContact -}}
+              {{- $linkURL := .URL | relLangURL -}}
+              <li class="settings-nav__item" data-menu-id="{{ .Identifier }}">
+                <a
+                  class="settings-nav__link {{ if eq $urltop $linkURL }}
+                    active
+                  {{ end }}"
+                  href="{{ $linkURL }}"
+                  {{ if eq $urltop $linkURL }}aria-current="page"{{ end }}
+                  >{{ .Name }}</a
+                >
+              </li>
+            {{- end -}}
+          {{- end -}}
+        </ul>
+      </nav>
+
+      <div class="theme-divider settings-nav__divider"></div>
+
+      <div class="theme-section theme-section--mode">
+        <div class="theme-section-heading">
+          <h3 class="theme-section-title">{{ i18n "mode" }}</h3>
+          <span class="toggle-switch__shortcut" data-shortcut="M">M</span>
+        </div>
+        <div
+          class="theme-options theme-options--segmented"
+          role="tablist"
+          aria-label="{{ i18n "mode" }}"
         >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
+          <button
+            class="theme-option"
+            data-mode="light"
+            data-js="mode-option"
+            role="tab"
+            aria-label="{{ i18n "light_mode" }}"
           >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260222a" | relURL }}#icon-light"
-            ></use>
-          </svg>
-          <span>{{ i18n "light_mode" }}</span>
-        </button>
-
-        <button
-          class="theme-option"
-          data-mode="dark"
-          data-js="mode-option"
-          role="tab"
-          aria-label="{{ i18n "dark_mode" }}"
-        >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
-          >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260222a" | relURL }}#icon-dark"
-            ></use>
-          </svg>
-          <span>{{ i18n "dark_mode" }}</span>
-        </button>
-
-        <button
-          class="theme-option"
-          data-mode="system"
-          data-js="mode-option"
-          role="tab"
-          aria-label="{{ i18n "system_mode" }}"
-        >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
-          >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260222a" | relURL }}#icon-system-screen"
-            ></use>
-          </svg>
-          <span>{{ i18n "system_mode" }}</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="theme-divider"></div>
-
-    <div class="theme-section">
-      <div class="theme-section-heading">
-        <h3 class="theme-section-title">{{ i18n "layout" }}</h3>
-        {{/* No keyboard chord yet: "L" is taken by the language prefix. Pick a free mnemonic before adding a data-shortcut chip here. */}}
-      </div>
-      {{/* Layout options reuse the typography option styling for now; the inline SVGs are mini composition diagrams. */}}
-      <div class="theme-options theme-options--typography">
-        <button
-          class="theme-option theme-option--typography"
-          data-layout="column"
-          data-js="layout-option"
-          aria-label="Column"
-        >
-          <span class="typography-preview">
             <svg
+              class="theme-option-icon"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-              fill="none"
               aria-hidden="true"
             >
-              <path
-                d="M3 1.497h18s1.5 0 1.5 1.5v18s0 1.5 -1.5 1.5H3s-1.5 0 -1.5 -1.5v-18s0 -1.5 1.5 -1.5"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m1.5 7.497 21 0"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m12 22.497 0 -15"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m1.5 14.997 21 0"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260222a" | relURL }}#icon-light"
+              ></use>
             </svg>
-          </span>
-          <span class="typography-label">Column</span>
-        </button>
+            <span>{{ i18n "light_mode" }}</span>
+          </button>
 
-        <button
-          class="theme-option theme-option--typography"
-          data-layout="editorial"
-          data-js="layout-option"
-          aria-label="Editorial"
-        >
-          <span class="typography-preview">
+          <button
+            class="theme-option"
+            data-mode="dark"
+            data-js="mode-option"
+            role="tab"
+            aria-label="{{ i18n "dark_mode" }}"
+          >
             <svg
+              class="theme-option-icon"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-              fill="none"
               aria-hidden="true"
             >
-              <path
-                d="m22.5 21 0 -18c0 -0.82843 -0.6716 -1.5 -1.5 -1.5l-18 0c-0.82843 0 -1.5 0.67157 -1.5 1.5l0 18c0 0.8284 0.67157 1.5 1.5 1.5l18 0c0.8284 0 1.5 -0.6716 1.5 -1.5Z"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m22.5 12 -21 0"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260222a" | relURL }}#icon-dark"
+              ></use>
             </svg>
-          </span>
-          <span class="typography-label">Editorial</span>
-        </button>
+            <span>{{ i18n "dark_mode" }}</span>
+          </button>
 
-        <button
-          class="theme-option theme-option--typography"
-          data-layout="index"
-          data-js="layout-option"
-          aria-label="Index"
-        >
-          <span class="typography-preview">
+          <button
+            class="theme-option"
+            data-mode="system"
+            data-js="mode-option"
+            role="tab"
+            aria-label="{{ i18n "system_mode" }}"
+          >
             <svg
+              class="theme-option-icon"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-              fill="none"
               aria-hidden="true"
             >
-              <path
-                d="m3 22.5 18 0c0.8284 0 1.5 -0.6716 1.5 -1.5l0 -18c0 -0.82843 -0.6716 -1.5 -1.5 -1.5l-18 0c-0.82842 0 -1.5 0.67157 -1.5 1.5l0 18c0 0.8284 0.67157 1.5 1.5 1.5Z"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m15.5 22.5 0 -21"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m8.5 22.5 0 -21"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m1.5 12 21 0"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260222a" | relURL }}#icon-system-screen"
+              ></use>
             </svg>
-          </span>
-          <span class="typography-label">Index</span>
-        </button>
-
-        <button
-          class="theme-option theme-option--typography"
-          data-layout="terminal"
-          data-js="layout-option"
-          aria-label="Terminal"
-        >
-          <span class="typography-preview">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="m3 22.5 18 0c0.8284 0 1.5 -0.6716 1.5 -1.5l0 -18c0 -0.82843 -0.6716 -1.5 -1.5 -1.5l-18 0c-0.82842 0 -1.5 0.67157 -1.5 1.5l0 18c0 0.8284 0.67157 1.5 1.5 1.5Z"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m5 8 3.5 3 -3.5 3"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-              <path
-                d="m11 15.5 5 0"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              />
-            </svg>
-          </span>
-          <span class="typography-label">Terminal</span>
-        </button>
+            <span>{{ i18n "system_mode" }}</span>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="theme-divider"></div>
-
-    <div class="theme-section">
-      <div class="theme-section-heading">
-        <h3 class="theme-section-title">{{ i18n "typography" }}</h3>
-        <span class="toggle-switch__shortcut" data-shortcut="T">T</span>
-      </div>
-      <div class="theme-options theme-options--typography">
-        <button
-          class="theme-option theme-option--typography"
-          data-typography="editorial"
-          data-js="typography-option"
-          aria-label="Editorial"
-        >
-          <span class="typography-preview">Aa</span>
-          <span class="typography-label">Editorial</span>
-        </button>
-
-        <button
-          class="theme-option theme-option--typography"
-          data-typography="refined"
-          data-js="typography-option"
-          aria-label="Refined"
-        >
-          <span class="typography-preview typography-preview--refined">Aa</span>
-          <span class="typography-label">Refined</span>
-        </button>
-
-        <button
-          class="theme-option theme-option--typography"
-          data-typography="expressive"
-          data-js="typography-option"
-          aria-label="Expressive"
-        >
-          <span class="typography-preview typography-preview--expressive"
-            >Aa</span
-          >
-          <span class="typography-label">Expressive</span>
-        </button>
-
-        <button
-          class="theme-option theme-option--typography"
-          data-typography="technical"
-          data-js="typography-option"
-          aria-label="Technical"
-        >
-          <span class="typography-preview typography-preview--technical"
-            >Aa</span
-          >
-          <span class="typography-label">Technical</span>
-        </button>
-
-        <button
-          class="theme-option theme-option--typography"
-          data-typography="system"
-          data-js="typography-option"
-          aria-label="System"
-        >
-          <span class="typography-preview typography-preview--system">Aa</span>
-          <span class="typography-label">System</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="theme-divider"></div>
-
-    <div class="theme-section">
-      <div class="theme-section-heading">
-        <h3 class="theme-section-title">Effects</h3>
-        <span class="toggle-switch__shortcut" data-shortcut="E">E</span>
-      </div>
-      <div class="theme-effects">
-        <button
-          class="theme-effect-button"
-          data-js="coty-mode-toggle"
-          aria-label="{{ i18n "coty_activate" }}"
-          data-label-activate="{{ i18n "coty_activate" }}"
-          data-label-deactivate="{{ i18n "coty_deactivate" }}"
-        >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
-          >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-pantone-effect"
-            ></use>
-          </svg>
-        </button>
-        <button
-          class="theme-effect-button"
-          data-js="grid-toggle"
-          data-toast-title="{{ i18n "toast_grid_title" }}"
-          data-toast-on="{{ i18n "toast_grid_on" }}"
-          data-toast-off="{{ i18n "toast_grid_off" }}"
-          aria-pressed="false"
-          aria-label="Toggle grid overlay"
-        >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
-          >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-grid-effect"
-            ></use>
-          </svg>
-        </button>
-        <button
-          class="theme-effect-button"
-          data-js="effect-blend-toggle"
-          data-toast-title="{{ i18n "toast_blend_title" }}"
-          data-toast-on="{{ i18n "toast_effect_on" }}"
-          data-toast-off="{{ i18n "toast_effect_off" }}"
-          data-toast-icon="icon-blend-effect"
-          aria-pressed="false"
-          aria-label="Toggle image blend"
-        >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
-          >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260224a" | relURL }}#icon-blend-effect"
-            ></use>
-          </svg>
-        </button>
-        <button
-          class="theme-effect-button"
-          data-js="effect-grain-toggle"
-          data-toast-title="{{ i18n "toast_grain_title" }}"
-          data-toast-on="{{ i18n "toast_effect_on" }}"
-          data-toast-off="{{ i18n "toast_effect_off" }}"
-          data-toast-icon="icon-grain-effect"
-          aria-pressed="false"
-          aria-label="Toggle noise"
-        >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
-          >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-grain-effect"
-            ></use>
-          </svg>
-        </button>
-        <button
-          class="theme-effect-button"
-          data-js="effect-motion-toggle"
-          data-toast-title="{{ i18n "toast_motion_title" }}"
-          data-toast-on="{{ i18n "toast_effect_on" }}"
-          data-toast-off="{{ i18n "toast_effect_off" }}"
-          data-toast-icon="icon-motion-effect"
-          aria-pressed="false"
-          aria-label="Toggle reduce motion"
-        >
-          <svg
-            class="theme-option-icon"
-            width="20"
-            height="20"
-            aria-hidden="true"
-          >
-            <use
-              href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-motion-effect"
-            ></use>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <div class="theme-divider"></div>
-
-    <div class="theme-section">
-      <button
-        type="button"
-        class="settings-share"
-        data-js="theme-share"
-        data-toast-title="{{ i18n "toast_share_title" }}"
-        data-toast-copied="{{ i18n "toast_share_copied" }}"
-        data-toast-failed="{{ i18n "toast_share_failed" }}"
-        data-toast-icon="icon-share"
-      >
-        <svg
-          class="settings-share__icon"
-          width="20"
-          height="20"
-          aria-hidden="true"
-        >
-          <use
-            href="{{ "img/svg/sprite.svg?v=20260708a" | relURL }}#icon-share"
-          ></use>
-        </svg>
-        <span class="settings-share__label">{{ i18n "share_theme" }}</span>
-      </button>
-    </div>
-
-    {{- if gt $languageCount 1 -}}
       <div class="theme-divider"></div>
 
       <div class="theme-section">
         <div class="theme-section-heading">
-          <h3 class="theme-section-title">{{ i18n "lang_select_title" }}</h3>
+          <h3 class="theme-section-title">{{ i18n "layout" }}</h3>
+          {{/* No keyboard chord yet: "L" is taken by the language prefix. Pick a free mnemonic before adding a data-shortcut chip here. */}}
         </div>
-        <div
-          class="language-list"
-          role="radiogroup"
-          aria-label="{{ i18n "lang_select_title" }}"
-        >
-          {{- range $.Site.Languages -}}
-            {{- $isCurrent := eq .Lang $.Language.Lang -}}
-            {{- $target := index $translationsByLang .Lang -}}
-            {{- if $isCurrent -}}
-              <label
-                class="language-option radio language-option--current"
-                lang="{{ .Lang }}"
+        {{/* Layout options reuse the typography option styling for now; the inline SVGs are mini composition diagrams. */}}
+        <div class="theme-options theme-options--typography">
+          <button
+            class="theme-option theme-option--typography"
+            data-layout="column"
+            data-js="layout-option"
+            aria-label="Column"
+          >
+            <span class="typography-preview">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
               >
-                <input
-                  type="radio"
-                  name="language-selector-settings"
-                  value="{{ .Lang }}"
-                  data-language-code="{{ .Lang }}"
-                  data-language-name="{{ .LanguageName }}"
-                  checked
-                  aria-current="true"
+                <path
+                  d="M3 1.497h18s1.5 0 1.5 1.5v18s0 1.5 -1.5 1.5H3s-1.5 0 -1.5 -1.5v-18s0 -1.5 1.5 -1.5"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
                 />
-                <span class="radio__visual" aria-hidden="true"></span>
-                <span class="radio__label language-name"
-                  >{{ .LanguageName }}</span
-                >
-                {{- if eq .Lang "en" -}}
-                  <span
-                    class="toggle-switch__shortcut language-option__shortcut"
-                    data-shortcut="L E"
-                    >L E</span
-                  >
-                {{- end -}}
-                {{- if eq .Lang "sv" -}}
-                  <span
-                    class="toggle-switch__shortcut language-option__shortcut"
-                    data-shortcut="L S"
-                    >L S</span
-                  >
-                {{- end -}}
-              </label>
-            {{- else if $target -}}
-              <label
-                class="language-option radio"
-                lang="{{ .Lang }}"
-                data-language-href="{{ $target.RelPermalink }}"
+                <path
+                  d="m1.5 7.497 21 0"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="m12 22.497 0 -15"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="m1.5 14.997 21 0"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </span>
+            <span class="typography-label">Column</span>
+          </button>
+
+          <button
+            class="theme-option theme-option--typography"
+            data-layout="editorial"
+            data-js="layout-option"
+            aria-label="Editorial"
+          >
+            <span class="typography-preview">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
               >
-                <input
-                  type="radio"
-                  name="language-selector-settings"
-                  value="{{ .Lang }}"
-                  data-language-code="{{ .Lang }}"
-                  data-language-name="{{ .LanguageName }}"
-                  data-language-href="{{ $target.RelPermalink }}"
+                <path
+                  d="m22.5 21 0 -18c0 -0.82843 -0.6716 -1.5 -1.5 -1.5l-18 0c-0.82843 0 -1.5 0.67157 -1.5 1.5l0 18c0 0.8284 0.67157 1.5 1.5 1.5l18 0c0.8284 0 1.5 -0.6716 1.5 -1.5Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
                 />
-                <span class="radio__visual" aria-hidden="true"></span>
-                <span class="radio__label language-name"
-                  >{{ .LanguageName }}</span
-                >
-                {{- if eq .Lang "en" -}}
-                  <span
-                    class="toggle-switch__shortcut language-option__shortcut"
-                    data-shortcut="L E"
-                    >L E</span
-                  >
-                {{- end -}}
-                {{- if eq .Lang "sv" -}}
-                  <span
-                    class="toggle-switch__shortcut language-option__shortcut"
-                    data-shortcut="L S"
-                    >L S</span
-                  >
-                {{- end -}}
-              </label>
-            {{- else -}}
-              {{/* No usable translation of this page in this language: link to
-                that language's home page. relLangURL only resolves against
-                the current language, so look up the target language's own
-                site and use its home permalink.
-              */}}
-              {{- $langHome := (index (where $.Site.Sites "Language.Lang" .Lang) 0).Home.RelPermalink -}}
-              <label
-                class="language-option radio language-option--fallback"
-                lang="{{ .Lang }}"
-                title="{{ i18n "also_on_homepage" }}"
-                data-language-href="{{ $langHome }}"
+                <path
+                  d="m22.5 12 -21 0"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </span>
+            <span class="typography-label">Editorial</span>
+          </button>
+
+          <button
+            class="theme-option theme-option--typography"
+            data-layout="index"
+            data-js="layout-option"
+            aria-label="Index"
+          >
+            <span class="typography-preview">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
               >
-                <input
-                  type="radio"
-                  name="language-selector-settings"
-                  value="{{ .Lang }}"
-                  data-language-code="{{ .Lang }}"
-                  data-language-name="{{ .LanguageName }}"
-                  data-language-href="{{ $langHome }}"
+                <path
+                  d="m3 22.5 18 0c0.8284 0 1.5 -0.6716 1.5 -1.5l0 -18c0 -0.82843 -0.6716 -1.5 -1.5 -1.5l-18 0c-0.82842 0 -1.5 0.67157 -1.5 1.5l0 18c0 0.8284 0.67157 1.5 1.5 1.5Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
                 />
-                <span class="radio__visual" aria-hidden="true"></span>
-                <span class="radio__label language-name"
-                  >{{ .LanguageName }}</span
-                >
-                <span class="fallback-indicator">{{ i18n "to_homepage" }}</span>
-              </label>
-            {{- end -}}
-          {{- end -}}
+                <path
+                  d="m15.5 22.5 0 -21"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="m8.5 22.5 0 -21"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="m1.5 12 21 0"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </span>
+            <span class="typography-label">Index</span>
+          </button>
+
+          <button
+            class="theme-option theme-option--typography"
+            data-layout="terminal"
+            data-js="layout-option"
+            aria-label="Terminal"
+          >
+            <span class="typography-preview">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="m3 22.5 18 0c0.8284 0 1.5 -0.6716 1.5 -1.5l0 -18c0 -0.82843 -0.6716 -1.5 -1.5 -1.5l-18 0c-0.82842 0 -1.5 0.67157 -1.5 1.5l0 18c0 0.8284 0.67157 1.5 1.5 1.5Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="m5 8 3.5 3 -3.5 3"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="m11 15.5 5 0"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </span>
+            <span class="typography-label">Terminal</span>
+          </button>
         </div>
       </div>
-    {{- end -}}
+
+      <div class="theme-divider"></div>
+
+      <div class="theme-section">
+        <div class="theme-section-heading">
+          <h3 class="theme-section-title">{{ i18n "typography" }}</h3>
+          <span class="toggle-switch__shortcut" data-shortcut="T">T</span>
+        </div>
+        <div class="theme-options theme-options--typography">
+          <button
+            class="theme-option theme-option--typography"
+            data-typography="editorial"
+            data-js="typography-option"
+            aria-label="Editorial"
+          >
+            <span class="typography-preview">Aa</span>
+            <span class="typography-label">Editorial</span>
+          </button>
+
+          <button
+            class="theme-option theme-option--typography"
+            data-typography="refined"
+            data-js="typography-option"
+            aria-label="Refined"
+          >
+            <span class="typography-preview typography-preview--refined"
+              >Aa</span
+            >
+            <span class="typography-label">Refined</span>
+          </button>
+
+          <button
+            class="theme-option theme-option--typography"
+            data-typography="expressive"
+            data-js="typography-option"
+            aria-label="Expressive"
+          >
+            <span class="typography-preview typography-preview--expressive"
+              >Aa</span
+            >
+            <span class="typography-label">Expressive</span>
+          </button>
+
+          <button
+            class="theme-option theme-option--typography"
+            data-typography="technical"
+            data-js="typography-option"
+            aria-label="Technical"
+          >
+            <span class="typography-preview typography-preview--technical"
+              >Aa</span
+            >
+            <span class="typography-label">Technical</span>
+          </button>
+
+          <button
+            class="theme-option theme-option--typography"
+            data-typography="system"
+            data-js="typography-option"
+            aria-label="System"
+          >
+            <span class="typography-preview typography-preview--system"
+              >Aa</span
+            >
+            <span class="typography-label">System</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="theme-divider"></div>
+
+      <div class="theme-section">
+        <div class="theme-section-heading">
+          <h3 class="theme-section-title">Effects</h3>
+          <span class="toggle-switch__shortcut" data-shortcut="E">E</span>
+        </div>
+        <div class="theme-effects">
+          <button
+            class="theme-effect-button"
+            data-js="coty-mode-toggle"
+            aria-label="{{ i18n "coty_activate" }}"
+            data-label-activate="{{ i18n "coty_activate" }}"
+            data-label-deactivate="{{ i18n "coty_deactivate" }}"
+          >
+            <svg
+              class="theme-option-icon"
+              width="20"
+              height="20"
+              aria-hidden="true"
+            >
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-pantone-effect"
+              ></use>
+            </svg>
+          </button>
+          <button
+            class="theme-effect-button"
+            data-js="grid-toggle"
+            data-toast-title="{{ i18n "toast_grid_title" }}"
+            data-toast-on="{{ i18n "toast_grid_on" }}"
+            data-toast-off="{{ i18n "toast_grid_off" }}"
+            aria-pressed="false"
+            aria-label="Toggle grid overlay"
+          >
+            <svg
+              class="theme-option-icon"
+              width="20"
+              height="20"
+              aria-hidden="true"
+            >
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-grid-effect"
+              ></use>
+            </svg>
+          </button>
+          <button
+            class="theme-effect-button"
+            data-js="effect-blend-toggle"
+            data-toast-title="{{ i18n "toast_blend_title" }}"
+            data-toast-on="{{ i18n "toast_effect_on" }}"
+            data-toast-off="{{ i18n "toast_effect_off" }}"
+            data-toast-icon="icon-blend-effect"
+            aria-pressed="false"
+            aria-label="Toggle image blend"
+          >
+            <svg
+              class="theme-option-icon"
+              width="20"
+              height="20"
+              aria-hidden="true"
+            >
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260224a" | relURL }}#icon-blend-effect"
+              ></use>
+            </svg>
+          </button>
+          <button
+            class="theme-effect-button"
+            data-js="effect-grain-toggle"
+            data-toast-title="{{ i18n "toast_grain_title" }}"
+            data-toast-on="{{ i18n "toast_effect_on" }}"
+            data-toast-off="{{ i18n "toast_effect_off" }}"
+            data-toast-icon="icon-grain-effect"
+            aria-pressed="false"
+            aria-label="Toggle noise"
+          >
+            <svg
+              class="theme-option-icon"
+              width="20"
+              height="20"
+              aria-hidden="true"
+            >
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-grain-effect"
+              ></use>
+            </svg>
+          </button>
+          <button
+            class="theme-effect-button"
+            data-js="effect-motion-toggle"
+            data-toast-title="{{ i18n "toast_motion_title" }}"
+            data-toast-on="{{ i18n "toast_effect_on" }}"
+            data-toast-off="{{ i18n "toast_effect_off" }}"
+            data-toast-icon="icon-motion-effect"
+            aria-pressed="false"
+            aria-label="Toggle reduce motion"
+          >
+            <svg
+              class="theme-option-icon"
+              width="20"
+              height="20"
+              aria-hidden="true"
+            >
+              <use
+                href="{{ "img/svg/sprite.svg?v=20260223b" | relURL }}#icon-motion-effect"
+              ></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="theme-divider"></div>
+
+      <div class="theme-section">
+        <button
+          type="button"
+          class="settings-share"
+          data-js="theme-share"
+          data-toast-title="{{ i18n "toast_share_title" }}"
+          data-toast-copied="{{ i18n "toast_share_copied" }}"
+          data-toast-failed="{{ i18n "toast_share_failed" }}"
+          data-toast-icon="icon-share"
+        >
+          <svg
+            class="settings-share__icon"
+            width="20"
+            height="20"
+            aria-hidden="true"
+          >
+            <use
+              href="{{ "img/svg/sprite.svg?v=20260708a" | relURL }}#icon-share"
+            ></use>
+          </svg>
+          <span class="settings-share__label">{{ i18n "share_theme" }}</span>
+        </button>
+      </div>
+
+      {{- if gt $languageCount 1 -}}
+        <div class="theme-divider"></div>
+
+        <div class="theme-section">
+          <div class="theme-section-heading">
+            <h3 class="theme-section-title">{{ i18n "lang_select_title" }}</h3>
+          </div>
+          <div
+            class="language-list"
+            role="radiogroup"
+            aria-label="{{ i18n "lang_select_title" }}"
+          >
+            {{- range $.Site.Languages -}}
+              {{- $isCurrent := eq .Lang $.Language.Lang -}}
+              {{- $target := index $translationsByLang .Lang -}}
+              {{- if $isCurrent -}}
+                <label
+                  class="language-option radio language-option--current"
+                  lang="{{ .Lang }}"
+                >
+                  <input
+                    type="radio"
+                    name="language-selector-settings"
+                    value="{{ .Lang }}"
+                    data-language-code="{{ .Lang }}"
+                    data-language-name="{{ .LanguageName }}"
+                    checked
+                    aria-current="true"
+                  />
+                  <span class="radio__visual" aria-hidden="true"></span>
+                  <span class="radio__label language-name"
+                    >{{ .LanguageName }}</span
+                  >
+                  {{- if eq .Lang "en" -}}
+                    <span
+                      class="toggle-switch__shortcut language-option__shortcut"
+                      data-shortcut="L E"
+                      >L E</span
+                    >
+                  {{- end -}}
+                  {{- if eq .Lang "sv" -}}
+                    <span
+                      class="toggle-switch__shortcut language-option__shortcut"
+                      data-shortcut="L S"
+                      >L S</span
+                    >
+                  {{- end -}}
+                </label>
+              {{- else if $target -}}
+                <label
+                  class="language-option radio"
+                  lang="{{ .Lang }}"
+                  data-language-href="{{ $target.RelPermalink }}"
+                >
+                  <input
+                    type="radio"
+                    name="language-selector-settings"
+                    value="{{ .Lang }}"
+                    data-language-code="{{ .Lang }}"
+                    data-language-name="{{ .LanguageName }}"
+                    data-language-href="{{ $target.RelPermalink }}"
+                  />
+                  <span class="radio__visual" aria-hidden="true"></span>
+                  <span class="radio__label language-name"
+                    >{{ .LanguageName }}</span
+                  >
+                  {{- if eq .Lang "en" -}}
+                    <span
+                      class="toggle-switch__shortcut language-option__shortcut"
+                      data-shortcut="L E"
+                      >L E</span
+                    >
+                  {{- end -}}
+                  {{- if eq .Lang "sv" -}}
+                    <span
+                      class="toggle-switch__shortcut language-option__shortcut"
+                      data-shortcut="L S"
+                      >L S</span
+                    >
+                  {{- end -}}
+                </label>
+              {{- else -}}
+                {{/* No usable translation of this page in this language: link to
+                  that language's home page. relLangURL only resolves against
+                  the current language, so look up the target language's own
+                  site and use its home permalink.
+                */}}
+                {{- $langHome := (index (where $.Site.Sites "Language.Lang" .Lang) 0).Home.RelPermalink -}}
+                <label
+                  class="language-option radio language-option--fallback"
+                  lang="{{ .Lang }}"
+                  title="{{ i18n "also_on_homepage" }}"
+                  data-language-href="{{ $langHome }}"
+                >
+                  <input
+                    type="radio"
+                    name="language-selector-settings"
+                    value="{{ .Lang }}"
+                    data-language-code="{{ .Lang }}"
+                    data-language-name="{{ .LanguageName }}"
+                    data-language-href="{{ $langHome }}"
+                  />
+                  <span class="radio__visual" aria-hidden="true"></span>
+                  <span class="radio__label language-name"
+                    >{{ .LanguageName }}</span
+                  >
+                  <span class="fallback-indicator"
+                    >{{ i18n "to_homepage" }}</span
+                  >
+                </label>
+              {{- end -}}
+            {{- end -}}
+          </div>
+        </div>
+      {{- end -}}
+    </div>
   </div>
 </div>

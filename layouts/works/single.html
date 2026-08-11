@@ -1,65 +1,144 @@
 {{ partial "header.html" . }}
 
-<div class="content post works-post use-subgrid">
-  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb show-on-client">
+{{ partial "work-theme-tritone.html" . }}
+
+{{/* Per-project typeset: `worktheme.typography` sets the font preset for the
+  PROJECT BODY only (title, description, prose, project-info) — not the
+  chrome, breadcrumbs or related items. Scoped via data-project-typography
+  on .works-post; the typography dimension files pick it up (gated by
+  data-project-typeset) so a visitor's own font choice still wins.
+*/}}
+{{- $projectTypography := "" -}}
+{{- with .Params.worktheme -}}
+  {{- with .typography -}}
+    {{- if in (slice "editorial" "refined" "expressive" "technical" "system") . -}}
+      {{- $projectTypography = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+<div
+  class="content post works-post use-subgrid"
+  {{ with $projectTypography }}data-project-typography="{{ . }}"{{ end }}
+>
+  <nav
+    aria-label="{{ i18n "breadcrumb_label" }}"
+    class="application-breadcrumb show-on-client"
+  >
     <ul>
       <li class="application-breadcrumb__item">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+        <a
+          class="application-breadcrumb__link"
+          href="{{ .Site.BaseURL | relLangURL }}"
+        >
           <svg class="icon icon--sm" aria-hidden="true">
-            <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
+            <use
+              href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"
+            ></use>
           </svg>
           <span>Start</span>
-          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
+          <span class="sr-only"
+            >{{ if eq .Language.Lang "sv" }}
+              till startsidan
+            {{ else }}
+              to start page
+            {{ end }}</span
+          >
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back">
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--caps"
+        data-js="application-breadcrumb-back"
+      >
         <a class="application-breadcrumb__link"></a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--muted"
+      >
+        {{ .Title }}
+      </li>
     </ul>
   </nav>
-  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb show-on-employer">
+  <nav
+    aria-label="{{ i18n "breadcrumb_label" }}"
+    class="application-breadcrumb show-on-employer"
+  >
     <ul>
       <li class="application-breadcrumb__item">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+        <a
+          class="application-breadcrumb__link"
+          href="{{ .Site.BaseURL | relLangURL }}"
+        >
           <svg class="icon icon--sm" aria-hidden="true">
-            <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
+            <use
+              href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"
+            ></use>
           </svg>
           <span>Start</span>
-          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
+          <span class="sr-only"
+            >{{ if eq .Language.Lang "sv" }}
+              till startsidan
+            {{ else }}
+              to start page
+            {{ end }}</span
+          >
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back-employer">
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--caps"
+        data-js="application-breadcrumb-back-employer"
+      >
         <a class="application-breadcrumb__link"></a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--muted"
+      >
+        {{ .Title }}
+      </li>
     </ul>
   </nav>
-  <h1 class="type-headline-1 works-post__title reveal place-wide">{{ .Title }}{{ if isset .Params "subtitle" }} – {{ end }}{{ .Params.subtitle }}</h1>
-  <h2 class="type-preamble works-post__description reveal place-prose">{{ .Description }}</h2>
-  <div class="type-information is-muted works-post__meta reveal place-prose"> {{ partial "date.html" . }}</div>
-  <div class="works-post__tags reveal place-prose"> {{ partial "post_tags.html" . }}</div>
- 
+  <h1 class="type-headline-1 works-post__title reveal place-wide">
+    {{ .Title }}{{ if isset .Params "subtitle" }}
+      –
+    {{ end }}{{ .Params.subtitle }}
+  </h1>
+  <h2 class="type-preamble works-post__description reveal place-prose">
+    {{ .Description }}
+  </h2>
+  <div class="type-information is-muted works-post__meta reveal place-prose">
+    {{ partial "date.html" . }}
+  </div>
+  <div class="works-post__tags reveal place-prose">
+    {{ partial "post_tags.html" . }}
+  </div>
+
   {{ if .Truncated }}
     {{ $summary := .Summary | replaceRE "<p>\\s*</p>" "" }}
     {{ $heroMatch := findRE "(?s)<figure[\\s\\S]*?</figure>" $summary 1 }}
@@ -71,14 +150,30 @@
       {{ $hero | safeHTML }}
     {{ end }}
 
+
     <div class="post-content prose place-prose">
       {{ $summary | safeHTML }}
     </div>
     {{ partial "project-info.html" . }}
-    {{ $rest := replace .Content .Summary "" }}
-    <div class="post-content prose place-prose">
-      {{ $rest | replaceRE "<p>\\s*</p>" "" | safeHTML }}
-    </div>
+    {{ $rest := replace .Content .Summary "" | replaceRE "<p>\\s*</p>" "" }}
+    {{ $embedMatch := findRE "(?s)<figure class=\"reveal media-full[\\s\\S]*?</figure>" $rest 1 }}
+    {{ if gt (len $embedMatch) 0 }}
+      {{ $embed := index $embedMatch 0 }}
+      {{ $parts := split $rest $embed }}
+      <div class="post-content prose place-prose">
+        {{ (index $parts 0) | safeHTML }}
+      </div>
+      {{ ($embed | replaceRE "<figure class=\"reveal media-full" "<figure class=\"reveal media-full place-full") | safeHTML }}
+      {{ if gt (len $parts) 1 }}
+        <div class="post-content prose place-prose">
+          {{ (index $parts 1) | safeHTML }}
+        </div>
+      {{ end }}
+    {{ else }}
+      <div class="post-content prose place-prose">
+        {{ $rest | safeHTML }}
+      </div>
+    {{ end }}
   {{ else }}
     {{ $content := .Content | replaceRE "<p>\\s*</p>" "" }}
     {{ $heroMatch := findRE "(?s)<figure[\\s\\S]*?</figure>" $content 1 }}
@@ -90,64 +185,130 @@
       {{ $hero | safeHTML }}
     {{ end }}
 
-    <div class="post-content prose place-prose">
-      {{ $content | safeHTML }}
-    </div>
+    {{ $embedMatch := findRE "(?s)<figure class=\"reveal media-full[\\s\\S]*?</figure>" $content 1 }}
+    {{ if gt (len $embedMatch) 0 }}
+      {{ $embed := index $embedMatch 0 }}
+      {{ $parts := split $content $embed }}
+      <div class="post-content prose place-prose">
+        {{ (index $parts 0) | safeHTML }}
+      </div>
+      {{ ($embed | replaceRE "<figure class=\"reveal media-full" "<figure class=\"reveal media-full place-full") | safeHTML }}
+      {{ if gt (len $parts) 1 }}
+        <div class="post-content prose place-prose">
+          {{ (index $parts 1) | safeHTML }}
+        </div>
+      {{ end }}
+    {{ else }}
+      <div class="post-content prose place-prose">
+        {{ $content | safeHTML }}
+      </div>
+    {{ end }}
     {{ partial "project-info.html" . }}
   {{ end }}
 
-  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb application-breadcrumb--footer show-on-client">
+
+  <nav
+    aria-label="{{ i18n "breadcrumb_label" }}"
+    class="application-breadcrumb application-breadcrumb--footer show-on-client"
+  >
     <ul>
       <li class="application-breadcrumb__item">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+        <a
+          class="application-breadcrumb__link"
+          href="{{ .Site.BaseURL | relLangURL }}"
+        >
           <svg class="icon icon--sm" aria-hidden="true">
-            <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
+            <use
+              href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"
+            ></use>
           </svg>
           <span>Start</span>
-          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
+          <span class="sr-only"
+            >{{ if eq .Language.Lang "sv" }}
+              till startsidan
+            {{ else }}
+              to start page
+            {{ end }}</span
+          >
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back">
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--caps"
+        data-js="application-breadcrumb-back"
+      >
         <a class="application-breadcrumb__link"></a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--muted"
+      >
+        {{ .Title }}
+      </li>
     </ul>
   </nav>
-  <nav aria-label="{{ i18n "breadcrumb_label" }}" class="application-breadcrumb application-breadcrumb--footer show-on-employer">
+  <nav
+    aria-label="{{ i18n "breadcrumb_label" }}"
+    class="application-breadcrumb application-breadcrumb--footer show-on-employer"
+  >
     <ul>
       <li class="application-breadcrumb__item">
-        <a class="application-breadcrumb__link" href="{{ .Site.BaseURL | relLangURL }}">
+        <a
+          class="application-breadcrumb__link"
+          href="{{ .Site.BaseURL | relLangURL }}"
+        >
           <svg class="icon icon--sm" aria-hidden="true">
-            <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"></use>
+            <use
+              href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-home"
+            ></use>
           </svg>
           <span>Start</span>
-          <span class="sr-only">{{ if eq .Language.Lang "sv" }}till startsidan{{ else }}to start page{{ end }}</span>
+          <span class="sr-only"
+            >{{ if eq .Language.Lang "sv" }}
+              till startsidan
+            {{ else }}
+              to start page
+            {{ end }}</span
+          >
         </a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--caps" data-js="application-breadcrumb-back-employer">
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--caps"
+        data-js="application-breadcrumb-back-employer"
+      >
         <a class="application-breadcrumb__link"></a>
       </li>
       <li class="application-breadcrumb__separator" aria-hidden="true">
         <svg class="icon icon--xs">
-          <use href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"></use>
+          <use
+            href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-arrow-right-micro"
+          ></use>
         </svg>
       </li>
-      <li class="application-breadcrumb__item application-breadcrumb__item--muted">{{ .Title }}</li>
+      <li
+        class="application-breadcrumb__item application-breadcrumb__item--muted"
+      >
+        {{ .Title }}
+      </li>
     </ul>
   </nav>
   {{ partial "related.html" . }}

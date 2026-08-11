@@ -79,10 +79,35 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
+    # SAMEORIGIN (not DENY) so the site can frame its own pages same-origin —
+    # e.g. the self-contained works hero animation (/cadence-hero.html) embedded
+    # via the hero-embed shortcode. Cross-origin framing stays blocked, which is
+    # the clickjacking protection that matters. frame-ancestors 'self' in the CSP
+    # below is the modern equivalent; both are kept for older-browser coverage.
+    X-Frame-Options = "SAMEORIGIN"
+    # The legacy XSS auditor is deprecated and can itself introduce bugs in old
+    # browsers; disable it and rely on the Content-Security-Policy instead.
+    X-XSS-Protection = "0"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    # Force HTTPS for a year (with preload eligibility). The site is HTTPS-only
+    # on Netlify, so this has no downside and prevents SSL-strip downgrades.
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    # Lock down powerful features the site never uses.
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+    # Content-Security-Policy. Enumerated from an audit of every runtime origin:
+    #   - script:  self + inline (many pre-hydration <head> scripts + the
+    #              preload onload= handler) + the Cloudflare Web Analytics beacon.
+    #   - style:   self + inline (@font-face block, critical hero CSS, the
+    #              theme-no-trans style injected by the head script).
+    #   - font:    self (self-hosted woff2 only).
+    #   - img:     self + data: (inline SVG sprites / data-URI icons).
+    #   - connect: self (Netlify functions, same-origin nav prefetch, contact +
+    #              newsletter POST) + the Cloudflare beacon endpoint.
+    #   - frame:   self (the hero-embed <iframe> is always same-origin).
+    # No eval/new Function anywhere, so 'unsafe-eval' is intentionally omitted.
+    # Kept on one line — Netlify header values do not support continuation.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com https://static.cloudflareinsights.com; frame-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
 
 [[headers]]
   for = "/fonts/*"

@@ -59,9 +59,13 @@ jobs:
       - name: Build
         run: hugo --minify
 
-      - name: Security audit
-        run: npm audit --audit-level=high
-        continue-on-error: true
+      # Block only on CRITICAL advisories — genuinely serious and rare, so this
+      # never false-fails an unrelated PR on a dev-only high advisory (the PR
+      # `quality` job still reports every level into the sticky comment via
+      # audit-summary.mjs). This matches the repo's "only real blockers fail CI"
+      # policy while making the gate actually enforce something.
+      - name: Security audit (block on critical)
+        run: npm audit --audit-level=critical
 
   quality:
     # Only run the heavy Lighthouse/axe sweep once the PR is ready for review

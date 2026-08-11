@@ -7,6 +7,15 @@
   position: relative;
 }
 
+/* A works page can hard-lock its colour mode (worktheme.mode → data-work-mode
+   on <html>, forced in the head pre-paint). Hide every mode control there — the
+   settings-panel section and the terminal layout's quick toggle — since the
+   choice is fixed for that page and a live control would be a no-op. */
+:root[data-work-mode] .theme-section--mode,
+:root[data-work-mode] .terminal-quick--mode {
+  display: none;
+}
+
 .settings-toggle {
   display: inline-flex;
   align-items: center;
@@ -50,6 +59,109 @@
   display: block;
 }
 
+/* Gear on desktop (settings-only panel), menu glyph on phones where the panel
+   also holds the nav. Swapped at the same breakpoint as .settings-nav. */
+.settings-icon--menu {
+  display: none;
+}
+
+@media (max-width: 47.9375em) {
+  .settings-icon--gear {
+    display: none;
+  }
+
+  .settings-icon--menu {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation in the panel
+   The header drops its primary nav links on phones, so they live at the top of
+   this panel there (inside .settings-panel__body, so they ride the sheet's
+   internal scroll / detents). Hidden by default: the desktop dropdown sits
+   under a header that still shows the nav, so it would be redundant. Revealed
+   at the same breakpoint the header nav disappears (<=47.9375em) — spanning
+   both the tablet dropdown (>=30em) and the phone bottom sheet (<30em).
+   --------------------------------------------------------------------------- */
+.settings-nav,
+.settings-nav__divider {
+  display: none;
+}
+
+@media (max-width: 47.9375em) {
+  .settings-nav {
+    display: block;
+  }
+
+  .settings-nav__divider {
+    display: block;
+  }
+
+  /* A plain flex row — same as the other sections' option rows, and crucially
+     NOT a scroll container. An earlier overflow-x:auto turned this into a
+     horizontal scroller, which on iOS swallowed a vertical drag (the sheet's
+     detent/dismiss gesture) instead of letting it through. The links (Works /
+     Writing / About me) fit, and wrap rather than clip in the rare case they
+     don't. */
+  .settings-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .settings-nav__item {
+    flex: 0 0 auto;
+  }
+
+  .settings-nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--size-40);
+    /* 8px inline padding lines the first link's text up with the section
+       headings (which also inset 8px); vertical padding 0 + line-height 1 keeps
+       the row height at the 40px min so it doesn't tower over the mode tab. */
+    padding: 0 var(--spacing-8);
+    border-radius: var(--radius-8);
+    color: var(--text-default);
+    font-size: var(--text-sm);
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--motion-duration-base) var(--motion-ease-standard);
+  }
+
+  .settings-nav__link:hover,
+  .settings-nav__link:focus-visible {
+    color: var(--state-selected);
+  }
+
+  /* Active = iris text + medium weight (matches the mode options' selected
+     colour). A background fill was invisible on light — --surface-default
+     (iris-2) is near-white there against the elevated panel — and boxed the
+     link taller than its neighbours. Colour reads in both modes. */
+  .settings-nav__link.active {
+    color: var(--state-selected);
+    font-weight: var(--sans-weight-medium);
+  }
+
+  /* Focus mode (a client/employer page) drops Works + About from the primary
+     nav — mirror the header's .top-menu__item--nav scoping (navigation.css) so
+     the sheet nav doesn't diverge from desktop and re-expose them. Keyed off
+     :root (data-focus-view, mirrored there by focus-mode.js), NOT #layout: the
+     legacy fallback portals the panel out to <body>, so an #layout ancestor
+     selector wouldn't reach it — :root always does, in both paths. */
+  :root[data-focus-view="client"] .settings-nav__item[data-menu-id="works"],
+  :root[data-focus-view="client"] .settings-nav__item[data-menu-id="about"],
+  :root[data-focus-view="employer"] .settings-nav__item[data-menu-id="works"],
+  :root[data-focus-view="employer"] .settings-nav__item[data-menu-id="about"] {
+    display: none;
+  }
+}
+
 .settings-panel {
   --theme-control-size: var(--size-40);
   /* Drag-to-dismiss progress (0 = at rest, 1 = pulled its full height). Set by
@@ -58,15 +170,17 @@
      defined (0) before JS runs. */
   --sheet-drag: 0;
   position: fixed;
-  bottom: var(--spacing-8);
-  left: var(--spacing-8);
-  right: var(--spacing-8);
+  /* Mobile bottom sheet: edge-to-edge, flush to the bottom (no inset margin).
+     Desktop (≥30em) re-anchors this as a dropdown below the toggle. */
+  bottom: 0;
+  left: 0;
+  right: 0;
   top: auto;
   min-width: unset;
   background: var(--surface-elevated);
   border: calc(var(--spacing-2) / 2) solid var(--border-default);
   border-radius: var(--spacing-12) var(--spacing-12) 0 0;
-  padding: var(--spacing-32) var(--spacing-12) var(--spacing-24);
+  padding: var(--spacing-32) var(--spacing-12) 0;
   transform: translateY(calc(100% + var(--spacing-16)));
   box-shadow: var(--shadow-03);
   z-index: 1000;
@@ -79,6 +193,8 @@
   transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
     transform var(--motion-duration-sheet) var(--motion-ease-emphasized),
     visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    max-height var(--motion-duration-sheet) var(--motion-ease-emphasized),
+    height var(--motion-duration-sheet) var(--motion-ease-emphasized),
     display var(--motion-duration-sheet) var(--motion-ease-emphasized)
       allow-discrete,
     overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
@@ -114,12 +230,119 @@
      popover default is width: fit-content, so set it back to auto. Desktop
      overrides this with a fixed width below. */
   width: auto;
-  /* The sheet has no internal scroll on mobile, so claim single-finger vertical
-     gestures for the drag-to-dismiss handler instead of letting the browser
-     start a pan (which would steal the gesture and cancel our pointer events).
-     `pinch-zoom` (not `none`) still lets low-vision users magnify the settings.
-     Desktop resets this below. */
+  /* The top handle zone drives the detent drag (settings-dropdown.js), so claim
+     single-finger vertical gestures there instead of letting the browser pan —
+     which would steal the gesture and cancel our pointer events. The scrollable
+     body below (.settings-panel__body) overrides this with `pan-y` so its
+     overflow still scrolls. `pinch-zoom` (not `none`) keeps magnify for
+     low-vision users. Desktop resets this below. */
   touch-action: pinch-zoom;
+}
+
+/* --- Mobile bottom-sheet detents (rest ⇄ expanded) -------------------------
+   The sheet rests at --sheet-max (a partial height) and expands toward full
+   height when dragged up by the handle (settings-dropdown.js toggles
+   .is-expanded). The body is the internal scroll container, so content that
+   overflows either detent stays reachable: the handle zone drives the detents,
+   panning the body scrolls it. Scoped to the sheet range so the desktop
+   dropdown (which scrolls at the panel level) is untouched. */
+@media (max-width: 29.9375em) {
+  .settings-panel[popover] {
+    display: flex;
+    flex-direction: column;
+    /* Edge-to-edge sheet: keep the border on the top + sides (it defines the
+       rounded top edge), but drop only the bottom border — flush at the screen
+       edge it drew a hairline that flickered as iOS Safari's toolbar
+       showed/hid. Desktop keeps its full border. */
+    border-bottom: none;
+    /* Resting height cap. Keep the 0.82 fraction in sync with sheetBounds()
+       in settings-dropdown.js (used for the collapse-from-expanded fallback). */
+    --sheet-max: 82dvh;
+    /* border-box so --sheet-max is the whole sheet's height, padding + border
+       included. Without it the 56px vertical padding is added on top of the cap,
+       pushing the expanded sheet's top (and the collapse handle) off-screen. */
+    box-sizing: border-box;
+    max-height: var(--sheet-max);
+    /* The panel clips; the body below is what scrolls. */
+    overflow: hidden;
+  }
+
+  .settings-panel[popover].is-expanded {
+    --sheet-max: calc(100dvh - var(--spacing-24));
+    /* Explicit full height so the sheet reaches fullscreen even when its
+       content is shorter (the drag interpolates this height live). */
+    height: calc(100dvh - var(--spacing-24));
+  }
+
+  .settings-panel[popover] .settings-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    /* At rest a single-finger touch can't scroll the body — touch-action allows
+       only pinch-zoom, not pan — so a touch drag drives the detent instead of
+       scrolling (content "doesn't scroll until fullscreen" on touch). The body
+       is still a scroll container, though, so mouse-wheel, keyboard focus and
+       pinch-zoom can reach content that overflows the resting detent. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pinch-zoom;
+    /* Air below the last row lives *inside* the scroll container so it trails
+       the content (revealed once you scroll to the end) instead of being a
+       fixed band at the panel's bottom that eats into the visible viewport and
+       clips the last row. Honors the iOS home indicator on the flush edge. */
+    padding-bottom: max(var(--spacing-16), env(safe-area-inset-bottom));
+  }
+
+  .settings-panel[popover].is-expanded .settings-panel__body {
+    /* Expanded: let touch pan the content too; the JS reclaims a downward pull
+       that starts at the top (scrollTop 0) to collapse the sheet. */
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* Overflow cue: fade the body's bottom edge when it overflows the resting
+     detent — reads as "there's more — drag up to expand". A mask (dissolving the
+     content to transparent, revealing the panel colour behind) rather than a
+     colour overlay: the old fade painted var(--surface-elevated), but this is a
+     top-layer popover and Safari doesn't reliably pass the mode-scoped custom
+     property into it, so in dark mode the overlay fell back to the light base
+     value and the cue looked light on dark. A mask carries no colour, so it's
+     correct in every mode. JS toggles .is-clipped only at rest while the body
+     overflows, and clears it once scrolled to the end or expanded. */
+  .settings-panel[popover].is-clipped .settings-panel__body {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - var(--spacing-40) - var(--spacing-16)),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - var(--spacing-40) - var(--spacing-16)),
+      transparent
+    );
+  }
+
+  /* Fallback (no Popover API): the legacy [hidden] path gets no detents, but the
+     panel still must fit the viewport. It's anchored to the bottom, so without a
+     cap a panel taller than the screen pushes its top — now the nav — off the top
+     edge with no way to reach it. Cap the height and let the body scroll, the
+     same overflow model the popover sheet uses (minus the drag detents). vh
+     first for old engines that predate both Popover and dvh; dvh overrides where
+     supported. */
+  .settings-panel:not([hidden]):not([popover]) {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    max-height: calc(100vh - var(--spacing-24));
+    max-height: calc(100dvh - var(--spacing-24));
+    overflow: hidden;
+  }
+
+  .settings-panel:not([hidden]):not([popover]) .settings-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: max(var(--spacing-16), env(safe-area-inset-bottom));
+  }
 }
 
 /* Lock background scroll while the mobile bottom sheet is open. Desktop keeps
@@ -143,50 +366,15 @@
   }
 }
 
+/* The scrim is a real DOM element (.settings-overlay, wired up in
+   settings-dropdown.js) — not this pseudo-element. On iOS Safari a top-layer
+   ::backdrop recolours late on a light/dark swap: it isn't fed prompt
+   --surface-page updates, and its page-coloured top band was a background-IMAGE
+   gradient that can't transition at all — so the top bar fell out of step with
+   the page. A real element inherits normally and its colour transitions in
+   sync, so the popover's own ::backdrop stays fully transparent. */
 .settings-panel::backdrop {
-  /* Scrim, plus a solid → transparent gradient at the very top that fades to
-     the page bg to hide the sheet/edge under the status bar (this replaces the
-     old .settings-overlay::before). */
-  background: linear-gradient(
-      to bottom,
-      var(--surface-page) 90px,
-      transparent 130px
-    ),
-    color-mix(in srgb, var(--surface-page) 55%, transparent);
-  -webkit-backdrop-filter: blur(0) saturate(100%);
-  backdrop-filter: blur(0) saturate(100%);
-  opacity: 0;
-  transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    -webkit-backdrop-filter var(--motion-duration-sheet)
-      var(--motion-ease-emphasized),
-    backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    display var(--motion-duration-sheet) var(--motion-ease-emphasized)
-      allow-discrete,
-    overlay var(--motion-duration-sheet) var(--motion-ease-emphasized)
-      allow-discrete;
-}
-
-.settings-panel:popover-open::backdrop {
-  /* --sheet-drag (0 → 1) is set by the drag handler and inherited from the
-     panel; it fades the scrim/blur out as the sheet is pulled down. Falls back
-     to 0 (full scrim) when unset or where ::backdrop doesn't inherit vars. */
-  opacity: calc(1 - var(--sheet-drag, 0));
-  -webkit-backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px))
-    saturate(120%);
-  backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
-}
-
-/* While the finger is down, the scrim must track the drag with no lag. */
-.settings-panel.is-dragging::backdrop {
-  transition: none;
-}
-
-@starting-style {
-  .settings-panel:popover-open::backdrop {
-    opacity: 0;
-    -webkit-backdrop-filter: blur(0) saturate(100%);
-    backdrop-filter: blur(0) saturate(100%);
-  }
+  background: transparent;
 }
 
 .settings-panel::before {
@@ -201,14 +389,20 @@
   border-radius: calc(var(--spacing-2) * 1.5);
 }
 
+/* ---------------------------------------------------------------------------
+   Bottom-sheet scrim — a REAL DOM element (restored), not the popover
+   ::backdrop. See settings-dropdown.js: the popover path moves this to <body>
+   and toggles it with the sheet. The element carries only the frost
+   (backdrop-filter); the page-coloured wash lives on ::before as a solid,
+   transitionable background-color revealed through a colour-less mask — so it
+   recolours in lockstep with the page on a light/dark swap, which the
+   ::backdrop pseudo could not do on iOS Safari.
+   --------------------------------------------------------------------------- */
 .settings-overlay {
   display: block;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: color-mix(in srgb, var(--surface-page) 55%, transparent);
+  inset: 0;
+  background: transparent;
   /* Closed = no blur; it ramps to blur(14px) on open (below) so the frost
      visibly builds instead of appearing at full strength the moment opacity
      lifts. */
@@ -219,42 +413,84 @@
   visibility: hidden;
   transition: opacity var(--motion-duration-sheet) var(--motion-ease-emphasized),
     visibility var(--motion-duration-sheet) var(--motion-ease-emphasized),
-    -webkit-backdrop-filter var(--motion-duration-sheet)
-      var(--motion-ease-emphasized),
+    -webkit-backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized),
     backdrop-filter var(--motion-duration-sheet) var(--motion-ease-emphasized);
 }
 
+/* The page-coloured wash + opaque top band, in ONE solid background-color so it
+   can transition (a gradient / ::backdrop couldn't). The mask carries the shape
+   — opaque 0–90px (the "top bar", identical to the page), 55% wash from 130px
+   down — and carries no colour, so it's correct in every mode. The transition
+   mirrors the page's own theme-swap timing (--theme-transition-duration, set on
+   :root during a swap; --motion-duration-xslow fallback) and easing, so the top
+   bar recolours in exact sync with the rest of the page. */
 .settings-overlay::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 130px;
-  background: linear-gradient(to bottom, var(--surface-page) 90px, transparent);
+  inset: 0;
+  background-color: var(--surface-page);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 90px,
+    rgba(0, 0, 0, 0.55) 130px,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 90px,
+    rgba(0, 0, 0, 0.55) 130px,
+    rgba(0, 0, 0, 0.55) 100%
+  );
   pointer-events: none;
+  transition: background-color
+    var(--theme-transition-duration, var(--motion-duration-xslow))
+    var(--motion-ease-theme);
 }
 
-@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
+@supports (backdrop-filter: url(#x)) and
+  (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay {
     backdrop-filter: url(#liquid-glass) blur(0) saturate(100%);
-    background: color-mix(in srgb, var(--surface-page) 40%, transparent);
   }
 }
 
+/* Open: fade in, and fade back out as the sheet is dragged down — --sheet-drag
+   (0 → 1) is set on this element by the drag handler in step with the panel.
+   Parent opacity fades the ::before wash along with it; the blur melts too. */
 .settings-overlay:not([hidden]) {
-  opacity: 1;
   visibility: visible;
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  backdrop-filter: blur(14px) saturate(120%);
+  opacity: calc(1 - var(--sheet-drag, 0));
+  -webkit-backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px))
+    saturate(120%);
+  backdrop-filter: blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
+}
+
+/* Enter from transparent/no-blur so the scrim fades IN when un-hidden (a real
+   element going display:none -> block otherwise snaps to the open state). The
+   exit is handled in JS (closeOverlay fades opacity/blur out before [hidden]). */
+@starting-style {
+  .settings-overlay:not([hidden]) {
+    opacity: 0;
+    -webkit-backdrop-filter: blur(0) saturate(100%);
+    backdrop-filter: blur(0) saturate(100%);
+  }
 }
 
 /* Open state for the liquid-glass variant — declared after the base open rule
    so it wins in supporting browsers, and so the blur ramps rather than snaps. */
-@supports (backdrop-filter: url(#x)) and (not (-webkit-appearance: -apple-pay-button)) {
+@supports (backdrop-filter: url(#x)) and
+  (not (-webkit-appearance: -apple-pay-button)) {
   .settings-overlay:not([hidden]) {
-    backdrop-filter: url(#liquid-glass) blur(14px) saturate(120%);
+    backdrop-filter: url(#liquid-glass)
+      blur(calc((1 - var(--sheet-drag, 0)) * 14px)) saturate(120%);
   }
+}
+
+/* While the finger is down, the scrim tracks the drag with no lag. */
+.settings-overlay.is-dragging {
+  transition: none;
 }
 
 /* ≥ 30em: render as an anchored dropdown popover (not a bottom sheet).
@@ -314,15 +550,6 @@
       opacity: 0;
       transform: translateY(calc(var(--spacing-8) * -1));
     }
-  }
-
-  /* Target the open state so it beats .settings-panel:popover-open::backdrop
-     (equal specificity, later in source) — no scrim/blur on the desktop
-     dropdown. */
-  .settings-panel:popover-open::backdrop {
-    background: transparent;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
   }
 
   /* No mobile-sheet drag handle or full-screen scrim on desktop. */

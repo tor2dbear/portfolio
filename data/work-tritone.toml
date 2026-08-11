@@ -1,0 +1,52 @@
+# Static tritone stops per work theme (shadow / mid / highlight → sRGB
+# 0-1 tableValues). Consumed by partials/work-theme-tritone.html to build
+# the SVG filter. Hex shown in comments; values are precomputed so Hugo
+# needs no hex parsing.
+
+# utblick light: #0a2c14 #c1a7a3 #f6dde6
+[utblick.light]
+r = "0.039 0.757 0.965"
+g = "0.173 0.655 0.867"
+b = "0.078 0.639 0.902"
+
+# utblick dark: #06190c #8a6d73 #e6c6d3
+[utblick.dark]
+r = "0.024 0.541 0.902"
+g = "0.098 0.427 0.776"
+b = "0.047 0.451 0.827"
+
+# cadence light: #1a2a56 #5566a0 #f2ece0
+[cadence.light]
+r = "0.102 0.333 0.949"
+g = "0.165 0.400 0.925"
+b = "0.337 0.627 0.878"
+
+# cadence dark: #141f40 #5e69a8 #e6e8f2
+[cadence.dark]
+r = "0.078 0.369 0.902"
+g = "0.122 0.412 0.910"
+b = "0.251 0.659 0.949"
+
+# africa light: #5a1712 #c0392b #f7eae7
+[africa.light]
+r = "0.353 0.753 0.969"
+g = "0.090 0.224 0.918"
+b = "0.071 0.169 0.906"
+
+# africa dark: #3a0f0c #c8483a #f0dcd7
+[africa.dark]
+r = "0.227 0.784 0.941"
+g = "0.059 0.282 0.863"
+b = "0.047 0.227 0.843"
+
+# phosphor light: #0a2414 #4a9a5c #eef8ea
+[phosphor.light]
+r = "0.039 0.290 0.933"
+g = "0.141 0.604 0.973"
+b = "0.078 0.361 0.918"
+
+# phosphor dark: #08160e #4f9d63 #d8f2d0
+[phosphor.dark]
+r = "0.031 0.310 0.847"
+g = "0.086 0.616 0.949"
+b = "0.055 0.388 0.816"

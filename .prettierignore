@@ -13,7 +13,15 @@ layouts/partials/header.html
 layouts/partials/header-client.html
 # Hugo CSS template — contains Go template syntax, not valid CSS
 assets/templates/coty-scales.css
+assets/templates/work-theme-scales.css
 # UI-library tab partials: their {{ highlight }} blocks hold literal code
 # samples whose whitespace IS the rendered output — reformatting them changes
 # the page. Keep them byte-stable.
 layouts/partials/ui-library/
+# Works shortcodes whose opening <figure> tag is matched verbatim by the
+# extractor in layouts/works/single.html (findRE "<figure class=\"reveal …").
+# Prettier splits the tag across lines and drops a template-expression space,
+# which breaks the match and the infographic class. Keep them single-line.
+layouts/shortcodes/hero-embed.html
+layouts/shortcodes/media-full.html
+layouts/shortcodes/infographic.html

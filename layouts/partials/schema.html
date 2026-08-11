@@ -21,10 +21,10 @@
   {{ $workLocation := slice
     (dict "@type" "Place" "name" "Remote")
     (dict "@type" "Place" "address" (dict
-      "@type" "PostalAddress"
-      "addressLocality" "Gothenburg"
-      "addressRegion" "Västra Götaland"
-      "addressCountry" "SE"
+    "@type" "PostalAddress"
+    "addressLocality" "Gothenburg"
+    "addressRegion" "Västra Götaland"
+    "addressCountry" "SE"
     ))
   }}
   {{ $person := dict
@@ -33,11 +33,12 @@
     "url" $siteUrl
     "jobTitle" $roles
     "description" $siteDesc
+    "sameAs" (slice "https://www.linkedin.com/in/tbhedberg/")
     "address" (dict
-      "@type" "PostalAddress"
-      "addressLocality" "Gothenburg"
-      "addressRegion" "Västra Götaland"
-      "addressCountry" "SE"
+    "@type" "PostalAddress"
+    "addressLocality" "Gothenburg"
+    "addressRegion" "Västra Götaland"
+    "addressCountry" "SE"
     )
     "workLocation" $workLocation
   }}
@@ -49,9 +50,17 @@
   {{ $schemas = $schemas | append $profile }}
 {{ end }}
 
+{{/* Resolve header_image to a real bundle resource (it may be an extensionless
+  stem, or an mp4) and only treat it as a structured-data image when it is
+  actually an image — same resolution headerimage.html / head.html use.
+*/}}
 {{ $imageUrl := "" }}
 {{ with .Params.header_image }}
-  {{ $imageUrl = (printf "%s%s" $.RelPermalink .) | absURL }}
+  {{ with $.Resources.GetMatch (printf "%s*" .) }}
+    {{ if eq .MediaType.MainType "image" }}
+      {{ $imageUrl = .Permalink }}
+    {{ end }}
+  {{ end }}
 {{ end }}
 
 {{ if eq .Type "works" }}
@@ -104,9 +113,9 @@
     "url" .Permalink
     "description" (or .Description .Summary $siteDesc)
     "mainEntity" (dict
-      "@type" "Person"
-      "name" $personName
-      "url" $siteUrl
+    "@type" "Person"
+    "name" $personName
+    "url" $siteUrl
     )
   }}
   {{ $schemas = $schemas | append $contactPage }}

@@ -15,18 +15,18 @@
  * - No localStorage/sessionStorage required
  */
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
   // Configuration
   const CONFIG = {
-    PARAM_VIEW: 'view',
-    PARAM_REF: 'ref',
-    VIEW_CLIENT: 'client',
-    VIEW_EMPLOYER: 'employer',
-    LAYOUT_ID: 'layout',
-    CLASS_CLIENTPAGE: 'clientpage',
-    CLASS_EMPLOYERPAGE: 'employerpage'
+    PARAM_VIEW: "view",
+    PARAM_REF: "ref",
+    VIEW_CLIENT: "client",
+    VIEW_EMPLOYER: "employer",
+    LAYOUT_ID: "layout",
+    CLASS_CLIENTPAGE: "clientpage",
+    CLASS_EMPLOYERPAGE: "employerpage",
   };
 
   /**
@@ -36,7 +36,7 @@
     try {
       return new URLSearchParams(window.location.search);
     } catch (error) {
-      console.error('Focus mode: Error parsing URL parameters', error);
+      console.error("Focus mode: Error parsing URL parameters", error);
       return new URLSearchParams();
     }
   }
@@ -49,21 +49,26 @@
     const view = params.get(CONFIG.PARAM_VIEW);
 
     // Backward compatibility: check for old ?source=client parameter
-    const legacySource = params.get('source');
+    const legacySource = params.get("source");
 
     // Also detect from URL path
     const path = window.location.pathname;
-    const isClientPath = path.includes('/clients/');
-    const isEmployerPath = path.includes('/employer') || path.includes('/arbetsgivare');
+    const isClientPath = path.includes("/clients/");
+    const isEmployerPath =
+      path.includes("/employer") || path.includes("/arbetsgivare");
 
     // Check for client context (new param, legacy param, or path)
-    if (view === CONFIG.VIEW_CLIENT || legacySource === 'client' || isClientPath) {
+    if (
+      view === CONFIG.VIEW_CLIENT ||
+      legacySource === "client" ||
+      isClientPath
+    ) {
       return {
         type: CONFIG.VIEW_CLIENT,
         ref:
           params.get(CONFIG.PARAM_REF) ||
-          extractRefFromPath(path, 'clients') ||
-          extractRefFromReferrer('clients')
+          extractRefFromPath(path, "clients") ||
+          extractRefFromReferrer("clients"),
       };
     }
 
@@ -72,8 +77,8 @@
         type: CONFIG.VIEW_EMPLOYER,
         ref:
           params.get(CONFIG.PARAM_REF) ||
-          extractRefFromPath(path, 'employers') ||
-          extractRefFromReferrer('employers')
+          extractRefFromPath(path, "employers") ||
+          extractRefFromReferrer("employers"),
       };
     }
 
@@ -94,9 +99,13 @@
    */
   function extractRefFromReferrer(segment) {
     try {
-      if (!document.referrer) {return null;}
+      if (!document.referrer) {
+        return null;
+      }
       const referrerUrl = new URL(document.referrer);
-      if (referrerUrl.origin !== window.location.origin) {return null;}
+      if (referrerUrl.origin !== window.location.origin) {
+        return null;
+      }
       return extractRefFromPath(referrerUrl.pathname, segment);
     } catch (_error) {
       return null;
@@ -109,16 +118,20 @@
   function applyFocusMode(context) {
     const layout = document.getElementById(CONFIG.LAYOUT_ID);
     if (!layout) {
-      console.warn('Focus mode: Layout element not found');
+      console.warn("Focus mode: Layout element not found");
       return;
     }
 
     if (context.type === CONFIG.VIEW_CLIENT) {
       layout.classList.add(CONFIG.CLASS_CLIENTPAGE);
-      console.log('Focus mode: Client mode activated', context.ref || '');
+      // Mirror the state on :root too. The class on #layout drives most focus
+      // styling, but the settings sheet can be portaled out of #layout (the
+      // legacy no-Popover fallback moves it under <body>), so its nav scoping
+      // keys off this root attribute, which stays an ancestor in both paths.
+      document.documentElement.setAttribute("data-focus-view", "client");
     } else if (context.type === CONFIG.VIEW_EMPLOYER) {
       layout.classList.add(CONFIG.CLASS_EMPLOYERPAGE);
-      console.log('Focus mode: Employer mode activated');
+      document.documentElement.setAttribute("data-focus-view", "employer");
     }
   }
 
@@ -126,43 +139,54 @@
    * Update top menu contact button for focus mode
    */
   function updateContactButton(context) {
-    if (!context || !context.ref) {return;}
-    const contactButton = document.querySelector('.top-menu__item--contact .top-menu__link--button');
-    if (!contactButton) {return;}
+    if (!context || !context.ref) {
+      return;
+    }
+    const contactButton = document.querySelector(
+      ".top-menu__item--contact .top-menu__link--button"
+    );
+    if (!contactButton) {
+      return;
+    }
 
     const path = window.location.pathname;
-    const langPrefix = path.startsWith('/sv/') ? '/sv' : '';
-    const baseSegment = context.type === CONFIG.VIEW_EMPLOYER ? 'employers' : 'clients';
-    const targetPath = `${langPrefix}/${baseSegment}/${encodeURIComponent(context.ref)}/`;
+    const langPrefix = path.startsWith("/sv/") ? "/sv" : "";
+    const baseSegment =
+      context.type === CONFIG.VIEW_EMPLOYER ? "employers" : "clients";
+    const targetPath = `${langPrefix}/${baseSegment}/${encodeURIComponent(
+      context.ref
+    )}/`;
     const params = buildFocusParams(context);
     const isRootContext = path.startsWith(targetPath);
 
     if (isRootContext) {
-      contactButton.setAttribute('href', `${targetPath}?${params}#contact`);
+      contactButton.setAttribute("href", `${targetPath}?${params}#contact`);
     } else {
-      contactButton.setAttribute('href', `${targetPath}?${params}`);
+      contactButton.setAttribute("href", `${targetPath}?${params}`);
     }
 
-    const label = contactButton.querySelector('.top-menu__label--long');
+    const label = contactButton.querySelector(".top-menu__label--long");
 
     if (label) {
       if (isRootContext) {
         label.textContent =
-          label.getAttribute('data-focus-label') ||
-          label.getAttribute('data-focus-label-default') ||
+          label.getAttribute("data-focus-label") ||
+          label.getAttribute("data-focus-label-default") ||
           label.textContent;
       } else {
-        const template = label.getAttribute('data-focus-label-template');
-        const rawName = decodeURIComponent(context.ref).replace(/-/g, ' ');
+        const template = label.getAttribute("data-focus-label-template");
+        const rawName = decodeURIComponent(context.ref).replace(/-/g, " ");
         const name = rawName.charAt(0).toUpperCase() + rawName.slice(1);
-        label.textContent = template ? template.replace('%s', name) : label.textContent;
+        label.textContent = template
+          ? template.replace("%s", name)
+          : label.textContent;
       }
     }
 
     if (isRootContext) {
-      contactButton.classList.remove('is-focus-subpage');
+      contactButton.classList.remove("is-focus-subpage");
     } else {
-      contactButton.classList.add('is-focus-subpage');
+      contactButton.classList.add("is-focus-subpage");
     }
   }
 
@@ -183,18 +207,18 @@
    */
   function propagateToLinks(context) {
     // Find all internal links (relative, root-relative, or same-origin absolute)
-    const links = document.querySelectorAll('a[href]');
+    const links = document.querySelectorAll("a[href]");
 
-    links.forEach(link => {
+    links.forEach((link) => {
       try {
-        const href = link.getAttribute('href');
+        const href = link.getAttribute("href");
 
         // Skip anchor links and already processed links
         if (
           !href ||
-          href.startsWith('#') ||
-          link.hasAttribute('data-focus-processed') ||
-          link.hasAttribute('data-focus-ignore') ||
+          href.startsWith("#") ||
+          link.hasAttribute("data-focus-processed") ||
+          link.hasAttribute("data-focus-ignore") ||
           link.closest('[data-focus-ignore="true"]')
         ) {
           return;
@@ -217,8 +241,8 @@
 
         // Update the link
         url.search = params.toString();
-        link.setAttribute('href', url.pathname + url.search + url.hash);
-        link.setAttribute('data-focus-processed', 'true');
+        link.setAttribute("href", url.pathname + url.search + url.hash);
+        link.setAttribute("data-focus-processed", "true");
       } catch (_error) {
         // Skip links that can't be parsed (external, mailto, etc.)
       }
@@ -244,26 +268,28 @@
     const breadcrumbElements = document.querySelectorAll(
       '[data-js="application-breadcrumb-back"]'
     );
-    const fallbackElement = document.getElementById('client-breadcrumb-back');
+    const fallbackElement = document.getElementById("client-breadcrumb-back");
     const elements = breadcrumbElements.length
       ? Array.from(breadcrumbElements)
       : fallbackElement
       ? [fallbackElement]
       : [];
-    if (!elements.length) {return;}
+    if (!elements.length) {
+      return;
+    }
 
     // Build client page URL
     const clientPath = `/clients/${encodeURIComponent(clientRef)}/`;
-    const clientName = decodeURIComponent(clientRef).replace(/-/g, ' ');
+    const clientName = decodeURIComponent(clientRef).replace(/-/g, " ");
 
     elements.forEach((breadcrumbElement) => {
       while (breadcrumbElement.firstChild) {
         breadcrumbElement.removeChild(breadcrumbElement.firstChild);
       }
 
-      const link = document.createElement('a');
-      link.setAttribute('href', clientPath);
-      link.setAttribute('class', 'application-breadcrumb__link');
+      const link = document.createElement("a");
+      link.setAttribute("href", clientPath);
+      link.setAttribute("class", "application-breadcrumb__link");
       link.textContent = clientName;
       breadcrumbElement.appendChild(link);
     });
@@ -276,25 +302,27 @@
     const breadcrumbElements = document.querySelectorAll(
       '[data-js="application-breadcrumb-back-employer"]'
     );
-    const fallbackElement = document.getElementById('employer-breadcrumb-back');
+    const fallbackElement = document.getElementById("employer-breadcrumb-back");
     const elements = breadcrumbElements.length
       ? Array.from(breadcrumbElements)
       : fallbackElement
       ? [fallbackElement]
       : [];
-    if (!elements.length) {return;}
+    if (!elements.length) {
+      return;
+    }
 
     const employerPath = `/employers/${encodeURIComponent(employerRef)}/`;
-    const employerName = decodeURIComponent(employerRef).replace(/-/g, ' ');
+    const employerName = decodeURIComponent(employerRef).replace(/-/g, " ");
 
     elements.forEach((breadcrumbElement) => {
       while (breadcrumbElement.firstChild) {
         breadcrumbElement.removeChild(breadcrumbElement.firstChild);
       }
 
-      const link = document.createElement('a');
-      link.setAttribute('href', employerPath);
-      link.setAttribute('class', 'application-breadcrumb__link');
+      const link = document.createElement("a");
+      link.setAttribute("href", employerPath);
+      link.setAttribute("class", "application-breadcrumb__link");
       link.textContent = employerName;
       breadcrumbElement.appendChild(link);
     });
@@ -304,21 +332,23 @@
    * Update "back to client" links in table of contents
    */
   function updateTableOfContents(context) {
-    if (context.type !== CONFIG.VIEW_CLIENT || !context.ref) {return;}
+    if (context.type !== CONFIG.VIEW_CLIENT || !context.ref) {
+      return;
+    }
 
     const clientPath = `/clients/${encodeURIComponent(context.ref)}/`;
     const tocLinks = {
-      'application-toc-letter': `${clientPath}#letter`,
-      'application-toc-portfolio': `${clientPath}#portfolio`,
-      'application-toc-cv': `${clientPath}#cv`,
-      'application-toc-download': `${clientPath}#download`,
-      'application-toc-contact': `${clientPath}#contact`
+      "application-toc-letter": `${clientPath}#letter`,
+      "application-toc-portfolio": `${clientPath}#portfolio`,
+      "application-toc-cv": `${clientPath}#cv`,
+      "application-toc-download": `${clientPath}#download`,
+      "application-toc-contact": `${clientPath}#contact`,
     };
 
     Object.entries(tocLinks).forEach(([key, href]) => {
       const element = document.querySelector(`[data-js="${key}"]`);
       if (element) {
-        element.setAttribute('href', href);
+        element.setAttribute("href", href);
       }
     });
   }
@@ -327,41 +357,55 @@
    * Filter related items by active client/employer ref
    */
   function filterRelatedItems(context) {
-    if (!context || !context.ref) {return;}
+    if (!context || !context.ref) {
+      return;
+    }
 
     if (context.type === CONFIG.VIEW_CLIENT) {
-      const items = document.querySelectorAll('.related-items__item.show-on-client');
-      const title = document.querySelector('.related-items__title.show-on-client');
+      const items = document.querySelectorAll(
+        ".related-items__item.show-on-client"
+      );
+      const title = document.querySelector(
+        ".related-items__title.show-on-client"
+      );
       let visibleCount = 0;
       items.forEach((item) => {
-        const clients = (item.getAttribute('data-clients') || '')
-          .split(',')
+        const clients = (item.getAttribute("data-clients") || "")
+          .split(",")
           .map((value) => value.trim())
           .filter(Boolean);
         const matches = clients.includes(context.ref);
-        item.style.display = matches ? '' : 'none';
-        if (matches) {visibleCount += 1;}
+        item.style.display = matches ? "" : "none";
+        if (matches) {
+          visibleCount += 1;
+        }
       });
       if (title) {
-        title.style.display = visibleCount > 0 ? '' : 'none';
+        title.style.display = visibleCount > 0 ? "" : "none";
       }
     }
 
     if (context.type === CONFIG.VIEW_EMPLOYER) {
-      const items = document.querySelectorAll('.related-items__item.show-on-employer');
-      const title = document.querySelector('.related-items__title.show-on-employer');
+      const items = document.querySelectorAll(
+        ".related-items__item.show-on-employer"
+      );
+      const title = document.querySelector(
+        ".related-items__title.show-on-employer"
+      );
       let visibleCount = 0;
       items.forEach((item) => {
-        const employers = (item.getAttribute('data-employers') || '')
-          .split(',')
+        const employers = (item.getAttribute("data-employers") || "")
+          .split(",")
           .map((value) => value.trim())
           .filter(Boolean);
         const matches = employers.includes(context.ref);
-        item.style.display = matches ? '' : 'none';
-        if (matches) {visibleCount += 1;}
+        item.style.display = matches ? "" : "none";
+        if (matches) {
+          visibleCount += 1;
+        }
       });
       if (title) {
-        title.style.display = visibleCount > 0 ? '' : 'none';
+        title.style.display = visibleCount > 0 ? "" : "none";
       }
     }
   }
@@ -373,7 +417,6 @@
     const context = getViewContext();
 
     if (!context) {
-      console.log('Focus mode: Standard mode (no focus context)');
       return;
     }
 
@@ -381,13 +424,13 @@
     applyFocusMode(context);
 
     // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => {
         propagateToLinks(context);
-    updateBreadcrumbs(context);
-    updateTableOfContents(context);
-    filterRelatedItems(context);
-    updateContactButton(context);
+        updateBreadcrumbs(context);
+        updateTableOfContents(context);
+        filterRelatedItems(context);
+        updateContactButton(context);
       });
     } else {
       propagateToLinks(context);
@@ -404,6 +447,6 @@
   // Export for potential external use
   window.FocusMode = {
     getContext: getViewContext,
-    refresh: init
+    refresh: init,
   };
 })();

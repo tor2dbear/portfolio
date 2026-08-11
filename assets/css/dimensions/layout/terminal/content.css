@@ -734,7 +734,11 @@
 }
 
 :root[data-layout="terminal"] .about-cv__columns {
-  column-count: 1;
+  display: block;
+}
+
+:root[data-layout="terminal"] .about-cv__overview {
+  display: block;
 }
 
 :root[data-layout="terminal"] .about-cv__text,

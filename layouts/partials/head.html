@@ -1,14 +1,18 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="{{ if .IsNode }}
-      {{ with .Site.Params.description }}{{ . }}{{ end }}
-    {{ else }}
-      {{ with .Description }}{{ . }}{{ end }}
-    {{ end }}"
-  />
+  {{/* One source of truth for the meta description, reused by the OG and
+       Twitter tags below. Computed as a plain string so the attribute never
+       carries the stray newlines/indentation the old multi-line {{ if }} inside
+       content="…" emitted (the OG/Twitter variants were already collapsed, so
+       they diverged from this one). */}}
+  {{ $desc := "" }}
+  {{ if .IsNode }}
+    {{ $desc = .Site.Params.description }}
+  {{ else }}
+    {{ $desc = .Description }}
+  {{ end }}
+  <meta name="description" content="{{ $desc }}" />
   <meta
     name="theme-color"
     content="#FFFFFF"
@@ -95,7 +99,7 @@
 
   {{/* Open Graph meta tags for better search/social appearance */}}
   <meta property="og:title" content="{{ $pageTitle }}" />
-  <meta property="og:description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}" />
+  <meta property="og:description" content="{{ $desc }}" />
   <meta property="og:url" content="{{ .Permalink }}" />
   <meta property="og:site_name" content="{{ .Site.Params.title }}" />
   {{ if .IsHome }}
@@ -103,15 +107,38 @@
   {{ else }}
   <meta property="og:type" content="article" />
   {{ end }}
-  {{/* OG Image - use header_image if available, otherwise site default */}}
+  {{/* Social share image: the page's own header_image if it has one, else the
+       site-wide default (Site.Params.og_image, empty by default — set it to a
+       ~1200x630 asset to give image-less pages a card). Emitted for both OG and
+       Twitter so pages that had an og:image finally get a twitter:image too. */}}
+  {{ $ogImage := "" }}
   {{ with .Params.header_image }}
-  <meta property="og:image" content="{{ (printf "%s%s" $.RelPermalink .) | absURL }}" />
+    {{/* header_image is often an extensionless bundle-resource stem (PIA, About)
+         and on some pages is an mp4 (videotest). Resolve the real page resource
+         the way headerimage.html does — GetMatch on the stem glob — and use its
+         permalink only when it is actually an image, so the card URL is never a
+         404 and Twitter never gets a video. */}}
+    {{ with $.Resources.GetMatch (printf "%s*" .) }}
+      {{ if eq .MediaType.MainType "image" }}
+        {{ $ogImage = .Permalink }}
+      {{ end }}
+    {{ end }}
+  {{ else }}
+    {{ with $.Site.Params.og_image }}
+      {{ $ogImage = . | absURL }}
+    {{ end }}
+  {{ end }}
+  {{ with $ogImage }}
+  <meta property="og:image" content="{{ . }}" />
   {{ end }}
 
   {{/* Twitter Card meta tags */}}
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ $pageTitle }}" />
-  <meta name="twitter:description" content="{{ if .IsNode }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}" />
+  <meta name="twitter:description" content="{{ $desc }}" />
+  {{ with $ogImage }}
+  <meta name="twitter:image" content="{{ . }}" />
+  {{ end }}
 
   {{ if .Params.canonical }}
     <link rel="canonical" href="{{ .Params.canonical }}" />
@@ -169,6 +196,13 @@
   {{ $cotyData := index .Site.Data "pantone-coty" }}
   {{ $coty_scales_tmpl := resources.Get "templates/coty-scales.css" }}
   {{ $coty_scales := $coty_scales_tmpl | resources.ExecuteAsTemplate "css/coty-scales-generated.css" $cotyData }}
+  {{/* Per-project color themes (works pages). Generated from data/work-themes.toml
+       and bundled after the palette dimensions so a work theme overrides the
+       standard palette; the :not([data-palette="pantone"]) guard in the template
+       keeps Pantone winning. */}}
+  {{ $workThemesData := index .Site.Data "work-themes" }}
+  {{ $work_theme_scales_tmpl := resources.Get "templates/work-theme-scales.css" }}
+  {{ $work_theme_scales := $work_theme_scales_tmpl | resources.ExecuteAsTemplate "css/work-theme-scales-generated.css" $workThemesData }}
 
   <!-- CSS dimensions (typography) -->
   {{ $dimensions_typo_editorial := resources.Get "css/dimensions/typography/editorial.css" }}
@@ -429,6 +463,28 @@
   {{ if not $isDevBuild }}
     {{ $cotyScaleJs = $cotyScaleJs | minify | fingerprint }}
   {{ end }}
+
+  {{/* Terminal engine (~306KB across 7 files) is code-split OUT of the global
+       js.js bundle — most visitors never enter the terminal layout, so shipping
+       it to every page was the bulk of the "unused JavaScript" weight. Built as
+       one bundle here so its URL is available both to the inline head script
+       (eager inject when the page already loads in terminal) and to theme.js
+       (ensureTerminalLoaded, on a runtime switch). The terminal CSS still ships
+       globally, so the layout is always correct — only the JS is deferred, which
+       means no layout flash. Concat order matches the old global order: the
+       sibling data/api modules precede terminal.js, whose init consumes them. */}}
+  {{ $terminalJs := (slice
+    (resources.Get "js/terminal-data.js")
+    (resources.Get "js/terminal-fs.js")
+    (resources.Get "js/terminal.js")
+    (resources.Get "js/terminal-flows.js")
+    (resources.Get "js/terminal-nav.js")
+    (resources.Get "js/terminal-ai-data.js")
+    (resources.Get "js/terminal-ai.js")
+    ) | resources.Concat "js/js-terminal.js" }}
+  {{ if not $isDevBuild }}
+    {{ $terminalJs = $terminalJs | minify | fingerprint }}
+  {{ end }}
   <!-- CSS loading -->
   {{ if $isDevBuild }}
     <!-- CSS development -->
@@ -442,6 +498,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_standard.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_pantone.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_palette_previews.RelPermalink }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $work_theme_scales.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $coty_scales.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_editorial.RelPermalink }}" />
     <link rel="stylesheet" type="text/css" href="{{ $dimensions_typo_refined.RelPermalink }}" />
@@ -505,7 +562,7 @@
     <link rel="stylesheet" type="text/css" href="{{ $print.RelPermalink }}" />
   {{ else }}
     <!-- CSS production -->
-    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
+    {{ $css := slice $base_reset $base_syntax $tokens_primitives $tokens_semantic $tokens_components $dimensions_mode_light $dimensions_mode_dark $dimensions_palette_standard $dimensions_palette_pantone $dimensions_palette_previews $work_theme_scales $dimensions_typo_editorial $dimensions_typo_refined $dimensions_typo_expressive $dimensions_typo_technical $dimensions_typo_system $dimensions_layout_column $dimensions_layout_editorial $dimensions_layout_index $terminal_core $terminal_content $terminal_boot $terminal_input $terminal_panels $utilities_typography $utilities_layout $utilities_grid $utilities_display $utilities_status_messages $utilities_icons $components_button $components_form $components_footer $components_theme_dropdown $components_language_dropdown $components_settings_dropdown $components_article_card $components_summary_card $components_navigation $components_pagination $components_breadcrumb $components_tags $components_tooltip $components_download_card $components_table_of_contents }}
     {{ with $components_gallery }}
       {{ $css = $css | append . }}
     {{ end }}
@@ -656,7 +713,14 @@
             var i = pair.indexOf(":");
             if (i > 0) { kv[pair.slice(0, i).trim()] = pair.slice(i + 1).trim(); }
           });
+          // On a mode-locked works page (data-work-mode), don't let a shared
+          // ?theme=…mode:… payload write theme-mode: the page shows its locked
+          // mode regardless, but persisting the payload would silently change
+          // the visitor's global preference — breaking the promise that their
+          // stored mode resumes unchanged after they leave.
+          var sharedModeLocked = document.documentElement.getAttribute("data-work-mode");
           Object.keys(map).forEach(function (k) {
+            if (k === "mode" && sharedModeLocked) { return; }
             if (kv[k] && allow[k].indexOf(kv[k]) > -1) {
               localStorage.setItem(map[k], kv[k]);
             }
@@ -689,6 +753,18 @@
         document.documentElement.setAttribute("data-mode", storedMode);
       }
 
+      // A works page can HARD-LOCK its colour mode (worktheme.mode → the
+      // data-work-mode attribute already parsed on <html>). Unlike the layout
+      // default this overrides the visitor's stored/system choice for this page
+      // only — the terminal case study stays in its dark identity no matter the
+      // global setting. localStorage is left untouched, so their real mode
+      // resumes on the next page; theme.js reads the same attribute to keep the
+      // lock (and hide the mode toggle) at runtime.
+      var lockedWorkMode = document.documentElement.getAttribute("data-work-mode");
+      if (lockedWorkMode === "dark" || lockedWorkMode === "light") {
+        document.documentElement.setAttribute("data-mode", lockedWorkMode);
+      }
+
       // Seed the iOS status-bar colour (theme-color) before first paint. The
       // static metas below are keyed on prefers-color-scheme, which iOS
       // resolves by the *system* appearance — so a visitor running the site in
@@ -706,12 +782,21 @@
         // An unknown combo just falls back to the mode's base surface.
         var tcPalette = localStorage.getItem("theme-palette") || "standard";
         var tcYear = localStorage.getItem("theme-coty-year") || "2026";
+        // A work theme (standard palette only) moves --surface-page too, so it
+        // is part of the key — the <html> tag with data-work-theme is already
+        // parsed when this runs. Mirror theme.js's settled key exactly.
+        var tcWork =
+          document.documentElement.getAttribute("data-work-theme") || "";
         var tcKey =
           "theme-color-cache-" +
           resolvedMode +
           "-" +
           tcPalette +
-          (tcPalette === "pantone" ? "-" + tcYear : "");
+          (tcPalette === "pantone"
+            ? "-" + tcYear
+            : tcWork
+              ? "-wt-" + tcWork
+              : "");
         var seedColor =
           localStorage.getItem(tcKey) ||
           (resolvedMode === "dark" ? "#18181b" : "#ffffff");
@@ -728,28 +813,52 @@
       var storedCotyYear = localStorage.getItem("theme-coty-year") || "2026";
       document.documentElement.setAttribute("data-coty-year", storedCotyYear);
 
-      // Set typography
-      var storedTypography = localStorage.getItem("theme-typography") || "editorial";
-      document.documentElement.setAttribute("data-typography", storedTypography);
+      // Set typography (global). This is purely the visitor's own preference
+      // (or the site default) — it governs the whole page chrome and never
+      // reflects a per-project typeset.
+      var storedTypography = localStorage.getItem("theme-typography");
+      document.documentElement.setAttribute(
+        "data-typography",
+        storedTypography || "editorial"
+      );
 
-      // Set layout (column/editorial/index/terminal). Visual tool pages
-      // opt out of terminal (data-terminal-exempt on <html>): they render
-      // column here while the stored preference stays untouched.
-      var storedLayout = localStorage.getItem("theme-layout") || "column";
+      // Per-project typeset gate. A works page may typeset its own content
+      // (data-project-typography on .works-post) in a preset that differs from
+      // the chrome. It's a DEFAULT: it applies only while the visitor has made
+      // no explicit typography choice of their own — their pick then wins
+      // everywhere, including the project body. Decided here, pre-paint, from
+      // the root (the .works-post element isn't in the DOM yet), so the gated
+      // CSS resolves before first paint. theme.js drops the gate the moment the
+      // visitor picks a font at runtime.
+      if (!storedTypography) {
+        document.documentElement.setAttribute("data-project-typeset", "on");
+      }
+
+      // Set layout (column/editorial/index/terminal). A works page may declare
+      // a default (data-work-layout: column/editorial/index — terminal is
+      // excluded as it's a session-wide mode); it applies only when the visitor
+      // has no explicit stored choice. Visual tool pages opt out of terminal
+      // (data-terminal-exempt on <html>): they render column here while the
+      // stored preference stays untouched.
+      var storedLayout = localStorage.getItem("theme-layout");
+      var effectiveLayout =
+        storedLayout ||
+        document.documentElement.getAttribute("data-work-layout") ||
+        "column";
       if (
-        storedLayout === "terminal" &&
+        effectiveLayout === "terminal" &&
         document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
-        storedLayout = "column";
+        effectiveLayout = "column";
       }
-      document.documentElement.setAttribute("data-layout", storedLayout);
+      document.documentElement.setAttribute("data-layout", effectiveLayout);
 
       // Terminal boot banner is a login MOTD: shown once per session. If the
       // boot already played, mark the document so the ASCII art + status line
       // are hidden pre-paint on this (subsequent) page — no flash.
       try {
         if (
-          storedLayout === "terminal" &&
+          effectiveLayout === "terminal" &&
           sessionStorage.getItem("terminal-boot-played")
         ) {
           document.documentElement.setAttribute("data-terminal-booted", "1");
@@ -771,7 +880,7 @@
         !document.documentElement.hasAttribute("data-terminal-exempt")
       ) {
         document.documentElement.setAttribute("data-terminal-boot", terminalBoot);
-        if (storedLayout === "terminal") {
+        if (effectiveLayout === "terminal") {
           document.documentElement.setAttribute("data-terminal-transcript", "1");
           // Withhold the live prompt from the first frame; terminal.js clears
           // this once the replay finishes (or immediately, for reduced motion),
@@ -824,6 +933,24 @@
         document.head.appendChild(cotyScript);
       }
 
+      // Terminal engine is code-split (see $terminalJs above). Expose its URL
+      // for theme.js's ensureTerminalLoaded. We do NOT execute it here: terminal.js
+      // captures the window.Theme seam at its own eval (per AGENTS.md the load
+      // order theme.js → terminal.js is a contract), and an async classic script
+      // injected here could win the race against the deferred js.js that publishes
+      // window.Theme, snapshotting an empty seam and breaking the terminal. So the
+      // page instead PRELOADs the bundle now (early download, no execution, no
+      // race) and theme.js's init runs it once window.Theme exists. The terminal
+      // CSS ships globally, so the layout is already correct meanwhile — no flash.
+      window.__terminalSrc = "{{ $terminalJs.RelPermalink }}";
+      if (effectiveLayout === "terminal") {
+        var terminalPreload = document.createElement("link");
+        terminalPreload.rel = "preload";
+        terminalPreload.as = "script";
+        terminalPreload.href = window.__terminalSrc;
+        document.head.appendChild(terminalPreload);
+      }
+
       // Suppress CSS transitions during initial paint so permanent transitions
       // on elements like .top-menu don't animate from the browser default to the
       // correct palette color. Lifted after init via double-rAF in theme.js.
@@ -864,16 +991,13 @@
   {{ $js20 := resources.Get "js/tabs.js" }}
   {{ $js21 := resources.Get "js/ui-library-pantone-scales.js" }}
   {{ $js_lightbox := resources.Get "js/lightbox.js" }}
-  {{ $js_terminal_data := resources.Get "js/terminal-data.js" }}
-  {{ $js_terminal_fs := resources.Get "js/terminal-fs.js" }}
-  {{ $js_terminal := resources.Get "js/terminal.js" }}
-  {{ $js_terminal_flows := resources.Get "js/terminal-flows.js" }}
-  {{ $js_terminal_nav := resources.Get "js/terminal-nav.js" }}
-  {{ $js_terminal_ai_data := resources.Get "js/terminal-ai-data.js" }}
-  {{ $js_terminal_ai := resources.Get "js/terminal-ai.js" }}
+  {{ $js_hero_embed := resources.Get "js/hero-embed.js" }}
+  {{ $js_reduced_motion_media := resources.Get "js/reduced-motion-media.js" }}
   {{/* theme.js owns the theme system (mode/palette/typography/layout/effects);
-       the terminal command engine lives in terminal.js (loaded after theme.js,
-       which publishes the window.Theme seam it consumes). */}}
+       the terminal command engine ($terminalJs, built above) is code-split and
+       lazy-loaded — eager-injected by the inline head script when the page loads
+       in the terminal layout, else on demand via theme.js ensureTerminalLoaded.
+       So it is intentionally NOT in the js.js bundle or the dev script list. */}}
 
   <!-- JavaScript loading -->
   {{/* Pantone engine: eager only where it is always needed (palette generator
@@ -893,10 +1017,6 @@
     <script src="{{ $js_custom_palette.RelPermalink }}" defer></script>
     <script src="{{ $js4.RelPermalink }}" defer></script>
     <script src="{{ $js_theme_pantone.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_data.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_fs.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_flows.RelPermalink }}" defer></script>
     <script src="{{ $js5.RelPermalink }}" defer></script>
     <script src="{{ $js6.RelPermalink }}" defer></script>
     <script src="{{ $js8.RelPermalink }}" defer></script>
@@ -927,12 +1047,11 @@
       <script src="{{ $js21.RelPermalink }}" defer></script>
     {{ end }}
     <script src="{{ $js_lightbox.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_nav.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_ai_data.RelPermalink }}" defer></script>
-    <script src="{{ $js_terminal_ai.RelPermalink }}" defer></script>
+    <script src="{{ $js_hero_embed.RelPermalink }}" defer></script>
+    <script src="{{ $js_reduced_motion_media.RelPermalink }}" defer></script>
   {{ else }}
     <!-- JavaScript production -->
-    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js_terminal_data $js_terminal_fs $js_terminal $js_terminal_flows $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_terminal_nav $js_terminal_ai_data $js_terminal_ai }}
+    {{ $js := slice $js1 $js2 $js3 $js_toast $js_theme_derive $js_custom_palette $js4 $js_theme_pantone $js5 $js6 $js8 $js11 $js_theme_share $js12 $js13 $js14 $js15 $js16 $js17 $js20 $js_lightbox $js_hero_embed $js_reduced_motion_media }}
     {{ $js = $js | resources.Concat "js.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" defer></script>
     {{ $pageJs := slice }}

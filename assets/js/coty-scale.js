@@ -477,8 +477,14 @@
     ) {
       return 0;
     }
+    // The inline --theme-transition-duration lives on <html> (documentElement),
+    // not <body>: theme.js sets it there so the top-layer settings sheet can
+    // inherit it on Safari. The darkmodeTransition class stays on <body> (guard
+    // above), but the property value must be read from the root.
     var val =
-      document.body.style.getPropertyValue("--theme-transition-duration") || "";
+      document.documentElement.style.getPropertyValue(
+        "--theme-transition-duration"
+      ) || "";
     var ms = parseFloat(val);
     return isNaN(ms) || ms <= 0 ? 0 : ms;
   }

@@ -156,7 +156,8 @@ html[data-grid-overlay] .top-menu {
 }
 
 .top-menu__item--nav .top-menu__link.active {
-  background: var(--surface-default);
+  color: var(--state-selected);
+  font-weight: var(--sans-weight-medium);
 }
 
 #layout.clientpage .top-menu__item--nav[data-menu-id="works"],

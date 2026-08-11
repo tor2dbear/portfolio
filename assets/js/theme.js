@@ -7,6 +7,38 @@
 (function () {
   "use strict";
 
+  // localStorage can throw — Safari private mode, storage disabled by policy,
+  // or QuotaExceededError. A bare setItem inside a click handler would abort the
+  // handler mid-way and leave mode/palette/layout in an inconsistent state, so
+  // every access to storage in this module goes through these guards. Reads fall
+  // back to null (caller supplies its own default); writes/removes are best-effort.
+  function safeGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+  // Returns true when the value was actually persisted, false when storage
+  // threw — callers that branch on persistence (e.g. setLayout's redirect to
+  // the home terminal) need to know the write didn't stick.
+  function safeSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch (e) {
+      /* storage unavailable — the preference simply isn't persisted */
+      return false;
+    }
+  }
+  function safeRemove(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      /* storage unavailable — no-op */
+    }
+  }
+
   // Theme dropdown selectors (will be initialized after DOM load)
   let themeIcon;
   let modeOptions;
@@ -49,7 +81,13 @@
     var duration = Number(durationMs) || THEME_SWAP_TRANSITION_DEFAULT_MS;
     stopThemeTransitionTimer();
     document.body.classList.remove("darkmodeTransition");
-    document.body.style.setProperty(
+    // Set the duration on :root, not <body>. Safari inherits top-layer elements
+    // (the open settings sheet is a popover) from :root rather than their DOM
+    // parent, so a var on <body> never reached the sheet — it fell back to
+    // --motion-duration-xslow (1000ms) while the page used this 700ms, and the
+    // sheet's colour swap lagged behind the rest of the page. On :root the sheet
+    // inherits it too (same path --surface-page already takes), so they sync.
+    document.documentElement.style.setProperty(
       "--theme-transition-duration",
       duration + "ms"
     );
@@ -57,7 +95,9 @@
     document.body.classList.add("darkmodeTransition");
     themeTransitionTimer = window.setTimeout(function () {
       document.body.classList.remove("darkmodeTransition");
-      document.body.style.removeProperty("--theme-transition-duration");
+      document.documentElement.style.removeProperty(
+        "--theme-transition-duration"
+      );
       themeTransitionTimer = null;
     }, duration);
   }
@@ -89,12 +129,60 @@
     return window.ThemePantone || null;
   }
 
+  // The terminal engine is code-split (see head.html): it is NOT in the global
+  // bundle, so on the first switch INTO the terminal layout we inject it on
+  // demand, mirroring theme-pantone.js's ensureCotyLoaded. window.__terminalSrc
+  // is published by the inline head script; the terminal CSS ships globally so
+  // the layout is already correct while the JS loads. The callback runs once the
+  // module is available (its onReady init has published window.Terminal).
+  var terminalLoadStarted = false;
+  function ensureTerminalLoaded(onAlreadyLoaded) {
+    // Already available — eager-injected on a terminal page load, or a prior
+    // switch already brought it in. The engine is present but its init has
+    // already run (as a no-op, or on a previous entry), so IT won't boot on this
+    // switch — the caller's enterLayout does. Run it now.
+    if (window.Terminal && typeof window.Terminal.enterLayout === "function") {
+      if (onAlreadyLoaded) {
+        onAlreadyLoaded();
+      }
+      return;
+    }
+    var src = window.__terminalSrc;
+    if (!src) {
+      // No bundle configured (shouldn't happen in a normal build) — fail soft.
+      return;
+    }
+    // Freshly loading the engine. Its own init() boots the terminal — by the
+    // time the async script runs, setLayout has already flipped data-layout to
+    // terminal (applyLayout runs synchronously right after this call), so the
+    // init's runTerminalBootTranscript() fires. We must therefore NOT also run
+    // enterLayout on load, or the boot transcript replays twice. So the callback
+    // is deliberately dropped here: a fresh load self-boots via init.
+    if (
+      terminalLoadStarted ||
+      document.querySelector("script[data-terminal-bundle]")
+    ) {
+      return;
+    }
+    terminalLoadStarted = true;
+    var script = document.createElement("script");
+    script.src = src;
+    script.setAttribute("data-terminal-bundle", "");
+    document.head.appendChild(script);
+  }
+
   // ==========================================================================
   // MODE MANAGEMENT (light/dark/system)
   // ==========================================================================
 
   function setMode(mode) {
-    localStorage.setItem("theme-mode", mode);
+    // A works page can hard-lock its mode (data-work-mode, set server-side).
+    // Ignore any request to change it — the toggle is hidden there, but the
+    // keyboard shortcut and programmatic callers still route through here.
+    if (document.documentElement.getAttribute("data-work-mode")) {
+      return;
+    }
+    safeSet("theme-mode", mode);
     runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
     applyMode(mode);
     updateModeUI(mode);
@@ -109,6 +197,15 @@
   }
 
   function applyMode(mode) {
+    // A works page can hard-lock its mode (data-work-mode, set server-side).
+    // Enforce it at this single choke point so every caller keeps the lock —
+    // including the OS-appearance listener that calls applyMode("system")
+    // directly while the page is open, which setMode's guard doesn't cover.
+    var lockedWorkMode =
+      document.documentElement.getAttribute("data-work-mode");
+    if (lockedWorkMode) {
+      mode = lockedWorkMode;
+    }
     var requestedMode = mode;
     if (mode === "system") {
       const systemMode = window.matchMedia("(prefers-color-scheme: dark)")
@@ -157,6 +254,36 @@
     });
   }
 
+  // Restore the stored colour mode to the default (system). The terminal
+  // `reset` command needs this: setMode is a no-op on a work-mode-locked page,
+  // so a plain setMode("system") would leave the visitor's old preference in
+  // place despite reset's "restored to defaults" message. This clears the
+  // preference and re-applies — applyMode keeps a locked page on its forced
+  // mode, so the display doesn't flip, but the global default is genuinely
+  // restored (and takes effect once the visitor leaves the locked page).
+  function resetMode() {
+    safeSet("theme-mode", "system");
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
+    applyMode("system");
+    updateModeUI("system");
+  }
+
+  // Terminal in-place navigation swaps #main without reloading <html>, so the
+  // server-set data-work-mode lock doesn't move on its own — terminal-nav.js
+  // syncs the attribute from the destination, then calls this to reconcile the
+  // actual mode. Mirrors init: a locked destination forces its mode, an
+  // unlocked one restores the visitor's stored (or system) preference.
+  // applyMode enforces the lock at its choke point and the mode controls
+  // hide/show via the [data-work-mode] CSS gate, so entering a locked work
+  // installs the lock and leaving it frees the following pages.
+  function reconcileWorkMode() {
+    var locked = document.documentElement.getAttribute("data-work-mode");
+    var mode = locked || safeGet("theme-mode") || "system";
+    runThemeTransition(THEME_SWAP_TRANSITION_DEFAULT_MS);
+    applyMode(mode);
+    updateModeUI(mode);
+  }
+
   // ==========================================================================
   // PALETTE MANAGEMENT (standard/pantone)
   // ==========================================================================
@@ -179,7 +306,7 @@
       if (!applyStoredCustomPalette()) {
         clearAppliedCustomTokens();
         palette = "standard";
-        localStorage.setItem("theme-palette", palette);
+        safeSet("theme-palette", palette);
       }
     } else {
       clearAppliedCustomTokens();
@@ -275,7 +402,7 @@
   };
 
   function setTypography(typography) {
-    localStorage.setItem("theme-typography", typography);
+    safeSet("theme-typography", typography);
     // Highlight the selected option immediately for instant feedback
     updateTypographyUI(typography);
 
@@ -304,28 +431,36 @@
         })
       )
         .then(function () {
-          applyTypography(typography);
+          applyTypography(typography, true);
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         })
         .catch(function () {
           // Font loading failed; apply anyway (CSS fallback stack kicks in)
-          applyTypography(typography);
+          applyTypography(typography, true);
           if (window.Toast) {
             window.Toast.show(typoCategoryLabel, typoLabel);
           }
         });
     } else {
-      applyTypography(typography);
+      applyTypography(typography, true);
       if (window.Toast) {
         window.Toast.show(typoCategoryLabel, typoLabel);
       }
     }
   }
 
-  function applyTypography(typography) {
+  function applyTypography(typography, dropProjectTypeset) {
     document.documentElement.setAttribute("data-typography", typography);
+    // An explicit user choice wins everywhere, including a per-project typeset.
+    // Drop the gate in the SAME frame the chosen preset is applied (after any
+    // async font load), so the project body never flashes the old preset first.
+    // Only on user action — init keeps the gate so a no-choice visitor still
+    // sees the project's typeset.
+    if (dropProjectTypeset) {
+      document.documentElement.removeAttribute("data-project-typeset");
+    }
     updateFooterTypographyLabel(typography);
   }
 
@@ -360,19 +495,17 @@
     }
     if (
       pairing.typography &&
-      localStorage.getItem("theme-typography") !== pairing.typography
+      safeGet("theme-typography") !== pairing.typography
     ) {
       setTypography(pairing.typography);
     }
-    if (
-      pairing.palette &&
-      localStorage.getItem("theme-palette") !== pairing.palette
-    ) {
+    if (pairing.palette && safeGet("theme-palette") !== pairing.palette) {
       setPalette(pairing.palette);
     }
   }
 
   function setLayout(layout) {
+    var storedLayout = safeGet("theme-layout");
     // A visual tool (ui-library, palette generator) can't be a terminal, and it
     // isn't part of the terminal filesystem. Picking terminal here honours the
     // choice by storing it and going to the home terminal — this page has none
@@ -381,8 +514,15 @@
       layout === "terminal" &&
       document.documentElement.hasAttribute("data-terminal-exempt")
     ) {
-      localStorage.setItem("theme-layout-previous", "column");
-      localStorage.setItem("theme-layout", "terminal");
+      safeSet("theme-layout-previous", "column");
+      safeSet("theme-layout-previous-stored", storedLayout ? "1" : "0");
+      // The redirect only makes sense if the terminal choice actually persisted:
+      // the home page reads theme-layout on load to open in terminal. If storage
+      // threw, that write is lost, so home would open in column and we'd have
+      // navigated the visitor away from this page for nothing — stay put instead.
+      if (!safeSet("theme-layout", "terminal")) {
+        return;
+      }
       var homeUrl =
         document.documentElement.getAttribute("data-home-url") || "/";
       try {
@@ -395,12 +535,21 @@
     // Entering terminal snapshots where the user came from, so exit (ESC,
     // typing "exit", the boot [exit] button) can return there — including
     // the typography the pairing is about to replace.
-    var currentLayout = localStorage.getItem("theme-layout") || "column";
+    var currentLayout = storedLayout || "column";
     if (layout === "terminal" && currentLayout !== "terminal") {
-      localStorage.setItem("theme-layout-previous", currentLayout);
-      localStorage.setItem(
+      // Snapshot the EFFECTIVE pre-terminal layout — a per-project
+      // data-work-layout default counts, not just the global fallback — and
+      // whether it was the visitor's own stored choice, so restoreLayoutAfterTerminal()
+      // can bring back a transient project default without persisting it.
+      var effectiveLayout =
+        storedLayout ||
+        document.documentElement.getAttribute("data-work-layout") ||
+        "column";
+      safeSet("theme-layout-previous", effectiveLayout);
+      safeSet("theme-layout-previous-stored", storedLayout ? "1" : "0");
+      safeSet(
         "theme-typography-previous",
-        localStorage.getItem("theme-typography") || "editorial"
+        safeGet("theme-typography") || "editorial"
       );
       // Snap to the top so the boot banner/animation plays in view — otherwise a
       // visitor part-way down the page enters the terminal mid-stream and misses
@@ -408,16 +557,20 @@
       window.scrollTo(0, 0);
       // Hand the boot theatre + transcript replay to the terminal module (it
       // owns playTerminalBoot and the boot-transcript runner now). Deferred
-      // internally so applyLayout below has flipped data-layout first. No-op
-      // when the terminal module isn't loaded or the page declares no sequence.
-      if (
-        window.Terminal &&
-        typeof window.Terminal.enterLayout === "function"
-      ) {
-        window.Terminal.enterLayout();
-      }
+      // internally so applyLayout below has flipped data-layout first. The
+      // engine is code-split, so ensure it's loaded first (a no-op once present)
+      // and enter on its callback — on a page that never had the terminal, this
+      // is the switch that pulls the bundle in.
+      ensureTerminalLoaded(function () {
+        if (
+          window.Terminal &&
+          typeof window.Terminal.enterLayout === "function"
+        ) {
+          window.Terminal.enterLayout();
+        }
+      });
     }
-    localStorage.setItem("theme-layout", layout);
+    safeSet("theme-layout", layout);
     updateLayoutUI(layout);
     applyLayout(layout);
     applyLayoutPairings(layout);
@@ -437,6 +590,34 @@
 
     if (window.Toast) {
       window.Toast.show(layoutCategoryLabel, layoutLabel);
+    }
+  }
+
+  // Restore the pre-terminal layout on terminal exit. If the visitor had a real
+  // stored choice, re-apply it (persisted). If they didn't — the snapshot was a
+  // transient per-project default — clear the stored key and apply the effective
+  // layout without persisting, so leaving terminal returns to the "no choice"
+  // state and the project's data-work-layout default keeps applying elsewhere.
+  function restoreLayoutAfterTerminal() {
+    var prev = safeGet("theme-layout-previous") || "column";
+    if (prev === "terminal") {
+      prev = "column";
+    }
+    var wasStored = safeGet("theme-layout-previous-stored") !== "0";
+    if (wasStored) {
+      // A real stored choice is page-independent — restore it (persisted).
+      setLayout(prev);
+    } else {
+      // No stored choice: the layout is a per-project default. Derive it from
+      // the CURRENT page's data-work-layout (terminal typed-nav may have moved
+      // to a different work since entry, so the entry snapshot can be stale) and
+      // apply without persisting, keeping the "no choice" state.
+      safeRemove("theme-layout");
+      var effective =
+        document.documentElement.getAttribute("data-work-layout") || "column";
+      updateLayoutUI(effective);
+      applyLayout(effective);
+      applyLayoutPairings(effective);
     }
   }
 
@@ -533,14 +714,23 @@
             document.documentElement.getAttribute("data-mode") || "light";
           var settledPalette =
             document.documentElement.getAttribute("data-palette") || "standard";
-          var settledYear = localStorage.getItem("theme-coty-year") || "2026";
+          var settledYear = safeGet("theme-coty-year") || "2026";
+          // A work theme moves --surface-page too (on the standard palette), so
+          // it must be part of the key — otherwise the next page seeds the bar
+          // with the previous project's colour. Mirror the head.html seed key.
+          var settledWork =
+            document.documentElement.getAttribute("data-work-theme") || "";
           var settledKey =
             "theme-color-cache-" +
             settledMode +
             "-" +
             settledPalette +
-            (settledPalette === "pantone" ? "-" + settledYear : "");
-          localStorage.setItem(settledKey, resolvePageColor());
+            (settledPalette === "pantone"
+              ? "-" + settledYear
+              : settledWork
+              ? "-wt-" + settledWork
+              : "");
+          safeSet(settledKey, resolvePageColor());
         } catch (e) {}
       }
     }
@@ -579,7 +769,7 @@
   }
 
   function readBooleanPreference(key, defaultValue) {
-    const raw = localStorage.getItem(key);
+    const raw = safeGet(key);
     if (raw === null) {
       return defaultValue;
     }
@@ -615,7 +805,7 @@
       "data-effect-blend",
       value ? "on" : "off"
     );
-    localStorage.setItem(EFFECT_BLEND_KEY, value ? "1" : "0");
+    safeSet(EFFECT_BLEND_KEY, value ? "1" : "0");
     syncEffectButtons(effectBlendButtons, value);
     if (!opts.silent) {
       showEffectToast(effectBlendButtons, value, "Blend");
@@ -629,7 +819,7 @@
       "data-effect-grain",
       value ? "on" : "off"
     );
-    localStorage.setItem(EFFECT_GRAIN_KEY, value ? "1" : "0");
+    safeSet(EFFECT_GRAIN_KEY, value ? "1" : "0");
     syncEffectButtons(effectGrainButtons, value);
     if (!opts.silent) {
       showEffectToast(effectGrainButtons, value, "Grain");
@@ -643,7 +833,7 @@
       "data-effect-reduced-motion",
       value ? "on" : "off"
     );
-    localStorage.setItem(EFFECT_MOTION_KEY, value ? "1" : "0");
+    safeSet(EFFECT_MOTION_KEY, value ? "1" : "0");
     syncEffectButtons(effectMotionButtons, value);
     if (!opts.silent) {
       showEffectToast(effectMotionButtons, value, "Reduce motion");
@@ -690,9 +880,9 @@
       return false;
     }
     if (palette !== "pantone") {
-      localStorage.setItem(LAST_NON_PANTONE_PALETTE_KEY, palette);
+      safeSet(LAST_NON_PANTONE_PALETTE_KEY, palette);
     }
-    localStorage.setItem("theme-palette", palette);
+    safeSet("theme-palette", palette);
     applyPalette(palette);
     updatePaletteUI(palette);
     if (opts.dispatch !== false) {
@@ -711,7 +901,7 @@
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", () => {
-      const storedMode = localStorage.getItem("theme-mode") || "system";
+      const storedMode = safeGet("theme-mode") || "system";
       if (storedMode === "system") {
         applyMode("system");
       }
@@ -740,12 +930,26 @@
       '[data-js="effect-motion-toggle"]'
     );
 
-    // Load stored preferences or use defaults
-    const storedMode = localStorage.getItem("theme-mode") || "system";
-    const storedPalette = localStorage.getItem("theme-palette") || "standard";
-    const storedTypography =
-      localStorage.getItem("theme-typography") || "editorial";
-    const storedLayout = localStorage.getItem("theme-layout") || "column";
+    // Load stored preferences or use defaults. A works page may HARD-LOCK its
+    // mode (data-work-mode, set server-side + forced in the head pre-paint); on
+    // such a page the locked value wins over the stored/system choice and the
+    // toggle is hidden. localStorage is not touched, so the stored mode resumes
+    // on the next page.
+    const lockedMode = document.documentElement.getAttribute("data-work-mode");
+    const storedMode = lockedMode || safeGet("theme-mode") || "system";
+    const storedPalette = safeGet("theme-palette") || "standard";
+    // Typography is purely the visitor's own preference (or the site default);
+    // a per-project typeset is content-scoped and gated by data-project-typeset
+    // (set pre-paint in head.html), not by this global attribute.
+    const storedTypography = safeGet("theme-typography") || "editorial";
+    // Layout may take a per-project default (data-work-layout, set server-side)
+    // when the visitor has no explicit stored choice — mirrors the pre-paint
+    // script so init doesn't clobber the server default. applyLayout below
+    // doesn't persist, so this default never becomes the visitor's choice.
+    const storedLayout =
+      safeGet("theme-layout") ||
+      document.documentElement.getAttribute("data-work-layout") ||
+      "column";
     const normalizedStoredPalette =
       storedPalette === "coty" ? "pantone" : storedPalette;
     let initialPalette =
@@ -766,6 +970,16 @@
     applyPalette(initialPalette);
     applyTypography(storedTypography);
     applyLayout(storedLayout);
+    // The terminal engine is code-split. If this page opened in the terminal
+    // layout (data-layout was resolved pre-paint by the head script — work
+    // defaults / exemptions included, so read it rather than storedLayout), load
+    // the engine now. This runs AFTER theme.js has published window.Theme, which
+    // terminal.js captures at its own eval — the load order the head script's
+    // preload can't guarantee on its own. ensureTerminalLoaded self-boots via
+    // terminal.js's init (no enterLayout callback on a fresh load).
+    if (document.documentElement.getAttribute("data-layout") === "terminal") {
+      ensureTerminalLoaded();
+    }
     setBlendEnabled(readBooleanPreference(EFFECT_BLEND_KEY, true), {
       silent: true,
     });
@@ -973,8 +1187,11 @@
   window.Theme = {
     // Setters
     setMode: setMode,
+    resetMode: resetMode,
+    reconcileWorkMode: reconcileWorkMode,
     setTypography: setTypography,
     setLayout: setLayout,
+    restoreLayoutAfterTerminal: restoreLayoutAfterTerminal,
     commitPaletteSelection: commitPaletteSelection,
     setGrainEnabled: setGrainEnabled,
     setBlendEnabled: setBlendEnabled,

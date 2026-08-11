@@ -14,16 +14,18 @@ I enlighet med GDPR och för att vara transparent beskriver jag här vilken data
 ## Vilken data jag samlar in
 
 - Nyhetsbrev: e‑postadress som skickas via formuläret i sidfoten.
-- Kontaktformulär: namn, e‑postadress, ämne och meddelande.
+- Kontaktformulär: namn, e‑postadress och meddelande.
+- Assistenten på sidan: om du använder den terminalliknande assistenten och rapporterar ett dåligt svar, eller ställer en fråga den inte kan besvara, loggas texten du skrev och assistentens svar — tillsammans med några av dina senaste frågor från samma session och grundläggande metadata (sidan du var på och sajtens språk).
 
-För övergripande besöksstatistik använder jag Cloudflare Web Analytics. Det är integritetsvänligt: det sätter inga cookies, fingeravtryckar dig inte och samlar inte in några personuppgifter — det registrerar endast anonym, aggregerad statistik som sidvisningar och hänvisande källor. Sajten använder inga egna spårningscookies. Däremot kan vissa tredjepartstjänster sätta cookies, till exempel Google reCAPTCHA (används i kontaktformuläret).
+För övergripande besöksstatistik använder jag Cloudflare Web Analytics. Det är integritetsvänligt: det sätter inga cookies, fingeravtryckar dig inte och samlar inte in några personuppgifter — det registrerar endast anonym, aggregerad statistik som sidvisningar och hänvisande källor. Sajten sätter inga egna cookies, och tjänsterna som används för nyhetsbrevet och kontaktformuläret sätter inte heller några cookies. Skräppost i kontaktformuläret hanteras med ett dolt honeypot‑fält i stället för en captcha.
 
 Jag använder även Google Search Console för att förstå hur besökare hittar hit via Google. Det ger mig inte tillgång till personuppgifter om dig.
 
 ## Hur data används
 
-- Nyhetsbrevsdata lagras i Mailchimp och används endast för att skicka nyhetsbrev till personer som aktivt har registrerat sig.
-- Data från kontaktformuläret skickas via Make.com till min e‑post så att jag kan svara på ditt meddelande.
+- Nyhetsbrevsdata lagras i Brevo och används endast för att skicka nyhetsbrev till personer som aktivt har registrerat sig.
+- Kontaktformulärets meddelanden hanteras av Netlify Forms och vidarebefordras till min e‑post så att jag kan svara på ditt meddelande.
+- Assistentloggar sparas som ärenden (issues) i sajtens GitHub‑repository och används endast för att förbättra assistenten. Skriv inte personuppgifter till assistenten.
 
 Jag säljer aldrig personuppgifter och delar inte information med data‑mäklare.
 
