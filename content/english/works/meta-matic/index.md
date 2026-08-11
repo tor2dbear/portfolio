@@ -39,7 +39,7 @@ Each work is drawn with stacked epicycles whose parameters are fetched from a co
 
 The only thing you can do is _pick_ a work: enlarge it, inspect it, sign it, save it. The signature makes it yours — nothing makes it an original. Its neighbour can't be told apart from yours, and a minimap shows how your path through the space keeps crossing itself: no edges, everything recurs.
 
-That's where the opinion layer sits, and it's the whole point. You can sign with a wallet, or — in the full version — turn the work into an NFT. It doesn't undermine the piece; it _completes_ the satire: paying real money to manufacture ownership and scarcity for something that was never new. A global counter shows how many times _that exact work_ has already been signed. What you just made yours had already been picked by others.
+That's where the opinion layer sits, and it's the whole point. You can **sign with a wallet** — a free, off-chain attestation that you, specifically, signed the work. It points to its own logical end: minting the work as an NFT and paying real money for ownership and scarcity of something that was never new. The signature is enough to say it. A global counter shows how many times _that exact work_ has already been signed — what you just made yours had already been picked by others.
 
 An honest footnote, because it belongs to the work: the "latent space" is mathematically simulated, not a real model. It doesn't matter to the point — and saying so out loud is part of it.
 
