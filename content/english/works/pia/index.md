@@ -73,6 +73,8 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 
 > Flag the deviation and make it a deliberate, documented decision — not a slip.
 
+The rule cuts both ways: where the metaphor _is_ Unix, PIA won't fake it either — `sudo` genuinely elevates, `/etc` is really write-protected, and a `permission denied` always means one.
+
 ### Architecture as a design decision
 
 **The most designed part isn't on screen: the adapters are the seam.** The terminal never touches storage or auth directly — only the `StorageAdapter` / `AuthAdapter` / `ShareStore` interfaces, reached through one small `CommandContext` (print, filesystem, auth, stdin …), never the DOM.
@@ -102,6 +104,8 @@ The hard part is what to do when there's no terminal equivalent. Email and confi
 ![The same computer in your thumb — left, the touch bar; right, the ctrl button unfolded to the full readline set. The bar only appears on a touchscreen.](07-mobile-mockup.png "The same computer in your thumb — left, the touch bar; right, the ctrl button unfolded to the full readline set. The bar only appears on a touchscreen.")
 
 **Same app, different home.** On the iOS home screen there's no browser chrome, so `display-mode: standalone` and real safe-area handling put everything edge to edge — while the browser stays untouched. Push is real too: `remind` and collaboration notices reach the phone via Web Push with the tab closed.
+
+**The terminal stays the source of truth — even for an AI.** PIA speaks MCP: an external AI client connects over OAuth and can read your files, writing only within a per-token scope you set from the prompt (`mcp scope claude --write docs` — the `chmod` of a token). Even the OAuth authorise step is a terminal prompt, not a web form; the idiom holds all the way into an auth flow. It's the app's first server-side piece — everything else stays static.
 
 ### Quality: the test that reads like a tour
 

@@ -5,7 +5,7 @@ linktitle: Méta-Matic ∞
 title: "Méta-Matic ∞"
 slug: works
 url: "/works/meta-matic/"
-weight: 1
+weight: 3
 tags: ["Digital Product", "Experimental"]
 clients: []
 description: A digital drawing machine after Tinguely — a conveyor belt through a latent space that draws infinitely many works and never anything new.

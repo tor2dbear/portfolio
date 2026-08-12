@@ -5,7 +5,7 @@ linktitle: Méta-Matic ∞
 title: "Méta-Matic ∞"
 slug: arbeten
 url: "/sv/arbeten/meta-matic/"
-weight: 1
+weight: 3
 tags: ["Digitala Produkter", "Experimentellt"]
 clients: []
 description: En digital ritmaskin efter Tinguely — ett löpande band genom ett latent rum som ritar oändligt många verk och aldrig något nytt.

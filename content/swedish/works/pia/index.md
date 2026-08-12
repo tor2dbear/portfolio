@@ -73,6 +73,8 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 
 > Flagga avvikelsen och gör den till ett medvetet, dokumenterat beslut — inte en glidning.
 
+Regeln skär åt båda håll: där metaforen _är_ Unix fejkar PIA inte den heller — `sudo` ger faktiskt förhöjd behörighet, `/etc` är verkligen skrivskyddat, och ett `permission denied` betyder alltid vad det säger.
+
 ### Arkitektur som designbeslut
 
 **Den mest designade delen syns inte på skärmen: adaptrarna är sömmen.** Terminalen rör aldrig lagring eller inloggning direkt — bara gränssnitten `StorageAdapter` / `AuthAdapter` / `ShareStore`, nådda genom ett litet `CommandContext` (skriv ut, filsystem, auth, stdin …), aldrig via DOM:en.
@@ -102,6 +104,8 @@ Det svåra är vad man gör när det inte finns någon terminal-motsvarighet. E-
 ![Samma dator i tummen — till vänster touch-baren, till höger ctrl-knappen utfälld till hela readline-uppsättningen. Baren dyker bara upp på pekskärm.](07-mobile-mockup.png "Samma dator i tummen — till vänster touch-baren, till höger ctrl-knappen utfälld till hela readline-uppsättningen. Baren dyker bara upp på pekskärm.")
 
 **Samma app, olika hem.** På iOS-hemskärmen finns ingen webbläsar-chrome, så `display-mode: standalone` och riktig hantering av "safe area" lägger allt kant-i-kant — medan webbläsarläget lämnas orört. Push är på riktigt också: `remind` och samarbets-notiser når telefonen via Web Push med fliken stängd.
+
+**Terminalen förblir den sanna källan — även för en AI.** PIA talar MCP: en extern AI-klient ansluter via OAuth och kan läsa dina filer, men skriver bara inom ett per-token-scope du sätter från prompten (`mcp scope claude --write docs` — en tokens `chmod`). Till och med OAuth-godkännandet är en terminal-prompt, inte ett webbformulär; idiomet håller hela vägen in i ett auth-flöde. Det är appens första server-sida-bit — allt annat förblir statiskt.
 
 ### Kvalitet: testet som läses som en rundtur
 
