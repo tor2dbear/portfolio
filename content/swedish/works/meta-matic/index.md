@@ -36,9 +36,11 @@ client:
 
 Varje verk ritas med staplade epicykler vars parametrar hämtas ur ett kontinuerligt brusfält — grannkoordinater ger nästan identiska teckningar, så bandet glider snarare än hoppar. Och det drivs av väggklockan, inte av besökaren: serienumret är en funktion av tiden, alltså samma verk för alla just nu, helt utan server. Du kan titta bort, men inte stoppa maskinen — räknaren tickar vidare, och när du tittar tillbaka har den ritat utan dig. "Verk producerade" stiger. **Originalen förblir noll.**
 
-Det enda du kan göra är att _plocka_ ett verk: förstora det, granska det, signera det, spara det. Signaturen gör det till ditt — ingenting gör det till ett original. Grannpunkten går inte att skilja från din, och en minikarta visar hur din väg genom rummet ständigt korsar sig själv: inga kanter, allt återkommer.
+Det enda du kan göra är att göra ett verk till ditt: granska det stort och **certifiera** det. Varje verk kan certifieras exakt en gång — först till kvarn, en enda ägare. Ett äkthetsbevis för något oändligt kopierbart. Det _är_ skämtet.
 
-Där sitter åsiktslagret, och det är hela poängen. Du kan **signera med plånbok** — ett gratis intyg, utan blockkedja, om att just du signerade verket. Det pekar mot sin egen logiska ände: att prägla verket som NFT och betala riktiga pengar för att tillverka ägande och konstlad knapphet åt något som aldrig var nytt. Signaturen räcker för att säga det. En räknare visar hur många som signerat totalt; och när du ska signera ett verk säger maskinen hur många gånger _just det_ redan har signerats — ditt unika plock var ofta redan andras.
+Och ironin överlever exklusiviteten: det du äger är det enda exemplaret, helt äkta — men grannpunkten, en nära-dubblett som ständigt återkommer, går inte att skilja från det. Ett original som ändå är visuellt banalt.
+
+Att certifiera går på två sätt, samma ägande oavsett vilket: direkt i webbläsaren, eller med en plånbokssignatur — gratis, ingen gas, en verifierbar och frivillig nick åt NFT, aldrig en grind. En räknare visar hur många som certifierats totalt, och _The Space_ ritar allas punkter jämte dina — inga kanter, allt återkommer; en väg, som alla går. Försöker två certifiera samma verk samtidigt vinner en; den andra får veta att det togs 40 ms tidigare — oändligt många andra återstår.
 
 En ärlig fotnot, för den hör till verket: det "latenta rummet" är matematiskt simulerat, inte en riktig modell. Det spelar ingen roll för poängen — och att säga det högt är en del av den.
 

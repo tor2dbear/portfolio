@@ -36,9 +36,11 @@ In 1959 **Jean Tinguely** built machines that drew abstract art on a conveyor be
 
 Each work is drawn with stacked epicycles whose parameters are fetched from a continuous noise field — neighbouring coordinates give near-identical drawings, so the belt glides rather than jumps. And it runs on the wall clock, not the visitor: the serial number is a function of time, so it's the same work for everyone right now, with no server. You can look away, but you can't stop the machine — the counter keeps ticking, and when you look back it has drawn without you. "Works produced" climbs. **The originals stay zero.**
 
-The only thing you can do is _pick_ a work: enlarge it, inspect it, sign it, save it. The signature makes it yours — nothing makes it an original. Its neighbour can't be told apart from yours, and a minimap shows how your path through the space keeps crossing itself: no edges, everything recurs.
+The only thing you can do is make a work yours: inspect it enlarged and **certify** it. Each work can be certified exactly once — first come, a single owner. A certificate of authenticity for something infinitely copyable. That _is_ the joke.
 
-That's where the opinion layer sits, and it's the whole point. You can **sign with a wallet** — a free, off-chain attestation that you, specifically, signed the work. It points to its own logical end: minting the work as an NFT and paying real money to manufacture ownership and artificial scarcity for something that was never new. The signature is enough to say it. One counter shows how many signatures there are in total; and when you go to sign a work, the machine tells you how many times _that exact one_ has already been signed — your unique pick was often already someone else's.
+And the irony outlives the exclusivity: what you own is the only copy, entirely genuine — yet its neighbour, a near-duplicate that keeps recurring, can't be told apart from it. An original that is nonetheless visually banal.
+
+You can certify straight in the browser, or with a wallet signature — free, no gas, a verifiable and optional nod to NFTs, never a gate. A counter shows how many have been certified in total, and _The Space_ plots everyone's points alongside yours — no edges, everything recurs; one path, everyone walks it. If two try to certify the same work at once, one wins; the other learns it was taken 40 ms earlier — and that infinitely many others remain.
 
 An honest footnote, because it belongs to the work: the "latent space" is mathematically simulated, not a real model. It doesn't matter to the point — and saying so out loud is part of it.
 
