@@ -4,6 +4,7 @@ date: 2026-08-11
 linktitle: Méta-Matic ∞
 title: "Méta-Matic ∞"
 slug: arbeten
+url: "/sv/arbeten/meta-matic/"
 weight: 1
 tags: ["Digitala Produkter", "Experimentellt"]
 clients: []
