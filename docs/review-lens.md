@@ -85,6 +85,21 @@ could reach this line that the author didn't test?"
   don't navigate or redirect on the assumption of a persisted value. Test the
   throwing-storage path explicitly.
 
+### 5. Canvas resize clears the only rendered frame
+
+- **Shape:** a canvas that paints on demand rather than in a continuous
+  `requestAnimationFrame` loop — under `prefers-reduced-motion`, or a paused /
+  static mode — forgets that assigning `canvas.width`/`height` in a resize
+  handler _clears_ the canvas. With no repaint after the resize, it is left
+  blank until some unrelated redraw fires.
+- **Seen:** PR #287 — the standalone Méta-Matic hero
+  (`static/meta-matic-hero.html`) went blank after an iframe/orientation resize
+  while reduced motion was active (rendered once, scheduled no frame).
+- **Catch:** repaint after every resize (a window `resize` listener _and_ a
+  `ResizeObserver` on the stage), not only inside the animation loop. Regression
+  test: run the embed in jsdom with reduced motion on and assert it repaints
+  after a resize — see `assets/js/__tests__/meta-matic-hero.test.js`.
+
 ---
 
 ## Adding a category
