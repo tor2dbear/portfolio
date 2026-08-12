@@ -169,12 +169,25 @@
         const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
         const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
         function resize(){
-          const d = Math.min(window.devicePixelRatio||1, 2);
-          canvas.width = Math.round(WORLD_W*d); canvas.height = Math.round(WORLD_H*d);
-          ctx.setTransform(d,0,0,d,0,0);
+          // Size the backing store to the DISPLAYED size, not a fixed 1600×1000×DPR.
+          // A small summary-card iframe then gets a small canvas instead of a
+          // 3200×2000 buffer. The fixed logical world is mapped on via setTransform,
+          // so all drawing code keeps working in 1600×1000 coordinates.
+          const rect = canvas.getBoundingClientRect();
+          const d = Math.min(window.devicePixelRatio || 1, 2);
+          const w = rect.width || WORLD_W, h = rect.height || (w * WORLD_H / WORLD_W);
+          const bw = Math.max(1, Math.round(w * d)), bh = Math.max(1, Math.round(h * d));
+          if (canvas.width !== bw) canvas.width = bw;
+          if (canvas.height !== bh) canvas.height = bh;
+          ctx.setTransform(bw / WORLD_W, 0, 0, bh / WORLD_H, 0, 0);
         }
-        window.addEventListener("resize", resize);
+        // A resize clears the canvas; when we're not animating (reduced motion) the
+        // hero would stay blank until the next theme/motion message — so repaint.
+        function onResize(){ resize(); render(); }
+        window.addEventListener("resize", onResize);
+        if (window.ResizeObserver) new ResizeObserver(onResize).observe(document.querySelector(".stage"));
         const showLabel = /(^|[#,])label($|,)/.test(location.hash);
+        const sv = /(^|[#,])sv($|,)/.test(location.hash);   // Swedish caption variant
         const ss = x => { x = x<0?0:x>1?1:x; return x*x*(3-2*x); };
 
         function render(){
@@ -248,9 +261,10 @@
             ctx.fillStyle = ink; ctx.font = "700 30px system-ui, sans-serif";
             ctx.fillText("MÉTA-MATIC ∞", pad, WORLD_H - 62);
             ctx.fillStyle = muted; ctx.font = "18px ui-monospace, Menlo, monospace";
-            ctx.fillText(base.toLocaleString("en-US") + " works produced · 0 originals", pad, WORLD_H - 34);
+            ctx.fillText(base.toLocaleString(sv ? "sv-SE" : "en-US")
+              + (sv ? " verk producerade · 0 original" : " works produced · 0 originals"), pad, WORLD_H - 34);
             ctx.textAlign = "right";
-            ctx.fillText("infinitely many · never anything new", WORLD_W - pad, WORLD_H - 34);
+            ctx.fillText(sv ? "oändligt många · aldrig något nytt" : "infinitely many · never anything new", WORLD_W - pad, WORLD_H - 34);
             ctx.textAlign = "left";
           }
         }

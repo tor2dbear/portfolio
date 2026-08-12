@@ -12,7 +12,7 @@ worktheme:
   color: metamatic
   tags: filled
 header_image: meta-matic-poster.jpg
-hero_embed: /meta-matic-hero.html#label
+hero_embed: /meta-matic-hero.html#label,sv
 featured: true
 draft: false
 role: "Koncept, design & utveckling (solo)"
@@ -28,7 +28,7 @@ client:
   about: "En digital ritmaskin efter Jean Tinguely, omtänkt för AI-eran: ett löpande band genom ett latent rum där varje möjlig teckning redan är en punkt."
 ---
 
-{{< hero-embed src="/meta-matic-hero.html#label" ratio="16 / 10" title="Méta-Matic ∞ — bandet rullar och glider fram i realtid; varje ruta är en punkt i ett latent rum." >}}
+{{< hero-embed src="/meta-matic-hero.html#label,sv" ratio="16 / 10" title="Méta-Matic ∞ — bandet rullar och glider fram i realtid; varje ruta är en punkt i ett latent rum." >}}
 
 1959 byggde **Jean Tinguely** maskiner som ritade abstrakt konst på löpande band — _Méta-Matics_, ett skämt om det spontana geniet. Méta-Matic ∞ är samma skämt, fast flyttat till AI-eran. Maskinen ritar också. Men den _slumpar_ inte fram sina verk; den _hämtar_ dem ur ett kontinuerligt rum där varje möjlig teckning redan är en punkt. Att gå framåt är att interpolera. Frågan är inte längre Tinguelys "vad är konst när en maskin kan göra det?" utan: **oändligt många, aldrig något nytt — var finns originalet?**
 
