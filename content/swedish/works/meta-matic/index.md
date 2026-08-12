@@ -14,7 +14,7 @@ worktheme:
 header_image: meta-matic-poster.jpg
 hero_embed: /meta-matic-hero.html#label
 featured: true
-draft: true
+draft: false
 role: "Koncept, design & utveckling (solo)"
 details:
   year: 2026
