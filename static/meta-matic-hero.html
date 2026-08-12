@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Méta-Matic ∞ — hero</title>
+    <meta
+      name="description"
+      content="A self-contained, text-free hero for Méta-Matic ∞: a conveyor belt of machine-drawn works, the future to the right dissolving out of noise and locking solid at the signing point. Wall-clock synced with the live piece. Fixed 16:10 frame that scales like a video."
+    />
+    <!--
+  Méta-Matic ∞ — standalone hero animation.
+
+  ONE file, ZERO dependencies, no external requests — true to the piece itself
+  (a single static index.html, Canvas, no framework). <iframe> it as a hero.
+
+  VIDEO-LIKE, NOT RESPONSIVE: drawn into a fixed 1600×1000 logical frame, so it
+  scales UNIFORMLY (letterboxed) to any container. Behaves like a <video>.
+
+  What it shows (the piece's CORE, wordlessly, and now with its signature
+  future visualization): the conveyor belt of works, wall-clock driven (rate
+  1 work / 4 s, since 2026) so it is in lockstep with the live machine — same
+  serials, same works. To the RIGHT of the signing point sits the FUTURE: works
+  grow from a point and resolve out of their own spectrum (low → high frequency,
+  band-limited coarse → fine), then LOCK — the ink sets from a uniform stroke to
+  a full variable-weight ribbon and the red ring SNAPS solid — exactly as each
+  work crosses "now". This is the same diffusion + lock the live piece uses,
+  ported verbatim; the interactive inspect/sign lives in the live version (open
+  it from the lightbox).
+
+  Modes (via URL hash, combinable e.g. #light,label):
+    • default   — text-free, follows the OS light/dark preference
+    • #light / #dark — hard-lock the palette
+    • #label    — reveal a minimal mono caption
+
+  Host can drive theme + reduced-motion at runtime via
+  postMessage({ theme: 'light'|'dark'|'auto', reduce: bool }).
+  prefers-reduced-motion (or a posted reduce) freezes to a single still frame.
+-->
+    <style>
+      :root {
+        --paper: #e4e2da;
+        --ink: #1a1c20;
+        --muted: #6b6f78;
+        --line: #c6c4ba;
+        --signal: #d1402c;
+      }
+      html[data-mm="dark"] {
+        --paper: #121317;
+        --ink: #e7e4da;
+        --muted: #83868f;
+        --line: #2a2c32;
+        --signal: #ef5a44;
+      }
+      * { margin: 0; box-sizing: border-box; }
+      html, body { height: 100%; background: var(--paper); }
+      body {
+        display: grid; place-items: center; overflow: hidden;
+        font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      }
+      .stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 100%; }
+      canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="stage"><canvas id="c"></canvas></div>
+    <script>
+      (() => {
+        "use strict";
+        const TAU = Math.PI * 2;
+
+        /* ---- deterministic smooth noise (Math.imul — the piece's engine) ---- */
+        function h1(i){let n=Math.imul(i|0,374761393)+2654435761;n=Math.imul(n^(n>>>13),1274126177);n=(n^(n>>>16))>>>0;return n/4294967296;}
+        function h2(i,j){let n=Math.imul(i|0,374761393)+Math.imul(j|0,668265263)+2246822519;n=Math.imul(n^(n>>>13),1274126177);n=(n^(n>>>16))>>>0;return n/4294967296;}
+        const sm = t => t*t*(3-2*t);
+        function value1(x){const i=Math.floor(x),f=x-i;return h1(i)*(1-sm(f))+h1(i+1)*sm(f);}
+        function value2(x,y){const i=Math.floor(x),j=Math.floor(y),fx=sm(x-i),fy=sm(y-j);
+          const a=h2(i,j),b=h2(i+1,j),c=h2(i,j+1),d=h2(i+1,j+1);
+          return (a*(1-fx)+b*fx)*(1-fy)+(c*(1-fx)+d*fx)*fy;}
+
+        const WALK = 0.135;
+        const coordFor = g => ({ u: value1(g*WALK+40.5), v: value1(g*WALK+913.7) });
+
+        /* ---- genes (latent space), generator v2 — matches the live machine ---- */
+        const GEN = 2, N = 5;
+        function genesV2(u, v) {
+          const S = 6.0, g = k => value2(u*S+k*3.13, v*S+k*5.71);
+          const density = Math.min(1, Math.max(0, 0.5 + (g(300)-0.5)*1.8));
+          const spread = 1.8 + 4.0*density, taper = 0.50 + 0.50*density;
+          const harm = []; let wsum = 0;
+          for(let i=0;i<N;i++){const w=(0.30+0.70*g(i+1))*Math.pow(taper,i); wsum+=w;
+            harm.push({w,fx:0.5+spread*g(i+21),fy:0.5+spread*g(i+47),px:g(i+71)*TAU,py:g(i+97)*TAU});}
+          for(const hh of harm) hh.w/=wsum;
+          return {harm,rot:g(200)*TAU,cycles:2.6+9.4*density,scale:0.82+0.24*g(229),lw:0.8+0.9*g(241)};
+        }
+        const genesFor = (u,v) => genesV2(u,v);
+
+        /* ---- draw one work — nu (0..1) = diffusion level (future = unresolved),
+           lockT (0..1) = ink set: uniform stroke -> full variable-weight ribbon. ---- */
+        function drawWork(ctx, cx, cy, size, u, v, color, lwMul, nu, lockT) {
+          nu = nu || 0;
+          const G = genesFor(u, v);
+          const amp = size*0.44*G.scale, T = TAU*G.cycles;
+          const ampF = nu > 0.01 ? amp*Math.pow(1-nu, 1.15) : amp;
+          if (nu > 0.01 && ampF < 7) {           // a far-future work IS a point
+            ctx.fillStyle = color; ctx.globalAlpha = 0.55 + 0.37*(1-nu);
+            ctx.beginPath(); ctx.arc(cx, cy, Math.max(1.1, ampF*0.55), 0, TAU); ctx.fill();
+            ctx.globalAlpha = 1; return;
+          }
+          const steps = Math.round(Math.max(560, Math.min(1200, 360 + G.cycles*70)));
+          const cr = Math.cos(G.rot), sr = Math.sin(G.rot);
+          ctx.save();
+          ctx.beginPath(); ctx.rect(cx-size/2, cy-size/2, size, size); ctx.clip();
+          // reveal harmonics LOW -> HIGH frequency as the work resolves (spectrum sharpening)
+          let gate = null, gnorm = 1;
+          if (nu > 0.01) {
+            const resolve = 1 - nu;
+            const order = G.harm.map((h,i)=>({i,fr:Math.max(Math.abs(h.fx),Math.abs(h.fy))})).sort((a,b)=>a.fr-b.fr);
+            gate = new Array(N).fill(0);
+            order.forEach((o,rank)=>{
+              if (rank <= 1) { gate[o.i] = 1; return; }
+              const c = 0.45 + (rank-2)*0.18;
+              let g = (resolve-c)/0.16; g = g<0?0:g>1?1:g;
+              gate[o.i] = g*g*(3-2*g);
+            });
+            let ws = 0; for (let i=0;i<N;i++) ws += G.harm[i].w*gate[i];
+            gnorm = 1/Math.max(0.4, ws);
+          }
+          const bx = new Float64Array(steps+1), by = new Float64Array(steps+1);
+          for (let s=0;s<=steps;s++){
+            const t = (s/steps)*T; let X=0,Y=0;
+            for (let hi=0;hi<G.harm.length;hi++){const h=G.harm[hi], w=gate?h.w*gate[hi]:h.w;
+              X += w*Math.cos(h.fx*t+h.px); Y += w*Math.sin(h.fy*t+h.py);}
+            X *= gnorm; Y *= gnorm;
+            bx[s] = cx + (X*cr - Y*sr)*ampF; by[s] = cy + (X*sr + Y*cr)*ampF;
+          }
+          // per-point ink weight from pen speed (thin fast, heavy slow) -> filled ribbon
+          const base = G.lw*(lwMul||1);
+          const sp = new Float64Array(steps+1); let mean = 0;
+          for (let s=1;s<=steps;s++){ sp[s]=Math.hypot(bx[s]-bx[s-1],by[s]-by[s-1]); mean+=sp[s]; }
+          sp[0]=sp[1]; mean = mean/steps || 1;
+          const hw = new Float64Array(steps+1);
+          for (let s=0;s<=steps;s++){ const m=Math.max(0,Math.min(1,1.35-0.7*(sp[s]/mean))); hw[s]=Math.max(0.28,base*(0.45+1.10*m))/2; }
+          ctx.fillStyle = color; ctx.strokeStyle = color;
+          const alpha = 0.55 + 0.37*(1-nu);
+          const ink = lockT != null ? lockT : 1;
+          if (ink < 0.02) {                       // pre-lock: cheap uniform stroke (morph runs smooth)
+            ctx.globalAlpha = alpha; ctx.lineJoin="round"; ctx.lineCap="round"; ctx.lineWidth = base*0.5;
+            ctx.beginPath(); ctx.moveTo(bx[0],by[0]); for(let s=1;s<=steps;s++) ctx.lineTo(bx[s],by[s]); ctx.stroke();
+          } else {                                // ink sets in: variable-weight ribbon
+            const uni = base*0.25; ctx.beginPath();
+            for (let s=0;s<steps;s++){
+              let dx=bx[s+1]-bx[s],dy=by[s+1]-by[s]; const L=Math.hypot(dx,dy)||1e-6; dx/=L;dy/=L;
+              const nx=-dy,ny=dx, wa=uni+(hw[s]-uni)*ink, wb=uni+(hw[s+1]-uni)*ink;
+              ctx.moveTo(bx[s]+nx*wa,by[s]+ny*wa); ctx.lineTo(bx[s+1]+nx*wb,by[s+1]+ny*wb);
+              ctx.lineTo(bx[s+1]-nx*wb,by[s+1]-ny*wb); ctx.lineTo(bx[s]-nx*wa,by[s]-ny*wa);
+            }
+            ctx.globalAlpha = alpha; ctx.fill();
+          }
+          ctx.globalAlpha = 1; ctx.restore();
+        }
+
+        /* ---- wall-clock: in lockstep with the live machine ---- */
+        const BIRTH_S = Date.UTC(2026,0,1,0,0,0)/1000, RATE_S = 4;
+        const machineSerial = () => (Date.now()/1000 - BIRTH_S)/RATE_S;
+
+        /* ---- fixed logical world ---- */
+        const WORLD_W = 1600, WORLD_H = 1000, STRIDE = 372, PLATE = 300;
+        const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+        const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+        function resize(){
+          // Size the backing store to the DISPLAYED size, not a fixed 1600×1000×DPR.
+          // A small summary-card iframe then gets a small canvas instead of a
+          // 3200×2000 buffer. The fixed logical world is mapped on via setTransform,
+          // so all drawing code keeps working in 1600×1000 coordinates.
+          const rect = canvas.getBoundingClientRect();
+          const d = Math.min(window.devicePixelRatio || 1, 2);
+          const w = rect.width || WORLD_W, h = rect.height || (w * WORLD_H / WORLD_W);
+          const bw = Math.max(1, Math.round(w * d)), bh = Math.max(1, Math.round(h * d));
+          if (canvas.width !== bw) canvas.width = bw;
+          if (canvas.height !== bh) canvas.height = bh;
+          ctx.setTransform(bw / WORLD_W, 0, 0, bh / WORLD_H, 0, 0);
+        }
+        // A resize clears the canvas; when we're not animating (reduced motion) the
+        // hero would stay blank until the next theme/motion message — so repaint.
+        function onResize(){ resize(); render(); }
+        window.addEventListener("resize", onResize);
+        if (window.ResizeObserver) new ResizeObserver(onResize).observe(document.querySelector(".stage"));
+        const showLabel = /(^|[#,])label($|,)/.test(location.hash);
+        const sv = /(^|[#,])sv($|,)/.test(location.hash);   // Swedish caption variant
+        const ss = x => { x = x<0?0:x>1?1:x; return x*x*(3-2*x); };
+
+        function render(){
+          const paper=css("--paper"), ink=css("--ink"), muted=css("--muted"), line=css("--line"), signal=css("--signal");
+          ctx.fillStyle = paper; ctx.fillRect(0,0,WORLD_W,WORLD_H);
+
+          const cy = WORLD_H*0.46, half2 = PLATE/2, cxCenter = WORLD_W/2;
+          const liveHeadF = machineSerial(), base = Math.floor(liveHeadF), frac = liveHeadF - base;
+
+          // conveyor rail + moving perforations
+          const railY = cy + half2 + 44;
+          ctx.strokeStyle = line; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.moveTo(0,railY); ctx.lineTo(WORLD_W,railY); ctx.stroke();
+          const perf = (liveHeadF*STRIDE) % 40; ctx.fillStyle = muted; ctx.globalAlpha = 0.5;
+          for(let x=-40;x<WORLD_W+40;x+=40) ctx.fillRect(x-perf, railY+9, 13, 3);
+          ctx.globalAlpha = 1;
+
+          // fixed signing-point hairline + marker at centre (= "now")
+          ctx.save(); ctx.setLineDash([6,7]); ctx.globalAlpha = 0.55; ctx.strokeStyle = signal; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.moveTo(cxCenter, 40); ctx.lineTo(cxCenter, railY); ctx.stroke(); ctx.restore();
+          ctx.fillStyle = signal; ctx.beginPath();
+          ctx.moveTo(cxCenter-9,44); ctx.lineTo(cxCenter+9,44); ctx.lineTo(cxCenter,58); ctx.closePath(); ctx.fill();
+
+          const NHZ = 1.15, SPAN = 3, LOCKPX = 22, W2 = STRIDE/2;
+          const half = Math.ceil((WORLD_W/2)/STRIDE) + 1;
+          ctx.font = "16px ui-monospace, Menlo, monospace";
+          for(let i=-half;i<=half;i++){
+            const serial = base + i;
+            const cx = cxCenter + i*STRIDE - frac*STRIDE;
+            if(cx < -STRIDE || cx > WORLD_W+STRIDE) continue;
+            const { u, v } = coordFor(serial);
+            const f = (serial - liveHeadF)/SPAN;               // 0 at now, >0 future, <0 past
+            let nu = 0;
+            if(f > 0) nu = 1 - ss(Math.pow(Math.max(0,(NHZ - f)/NHZ), 2.2));  // future: resolve full -> at now
+            const headDist = (serial - liveHeadF)*STRIDE;
+            const lockT = ss(Math.max(0, Math.min(1, (LOCKPX - headDist)/LOCKPX)));
+
+            ctx.strokeStyle = line; ctx.lineWidth = 1.25;
+            ctx.strokeRect(cx-half2, cy-half2, PLATE, PLATE);
+
+            if(f <= 0) drawWork(ctx, cx, cy, PLATE, u, v, ink, 1.4, 0, 1);      // past & now: resolved ribbon
+            else       drawWork(ctx, cx, cy, PLATE, u, v, ink, 1.4, nu, lockT); // future: diffusing
+
+            // serial label — fades in as the work resolves
+            ctx.fillStyle = muted; ctx.textAlign = "center";
+            ctx.globalAlpha = Math.max(0, 1 - 1.15*nu);
+            ctx.fillText("№ " + serial.toLocaleString("en-US"), cx, cy + half2 + 26);
+            ctx.globalAlpha = 1;
+
+            // signing ring at the head: faint hint on approach -> SNAP solid with a click pop
+            if(Math.abs(headDist) < W2){
+              const prox = 1 - Math.abs(headDist)/W2;
+              if(serial <= Math.round(liveHeadF)){
+                const snap = lockT, pop = ss((prox - 0.93)/0.07);
+                const a = headDist > 0 ? Math.max(0.2*prox, snap) : (prox > 0.3 ? 1 : prox/0.3);
+                const grow = pop*1.6;
+                ctx.strokeStyle = signal; ctx.globalAlpha = a; ctx.lineWidth = 1.6 + 0.9*snap + 1.2*pop;
+                ctx.strokeRect(cx-half2-6-grow, cy-half2-6-grow, PLATE+12+2*grow, PLATE+12+2*grow);
+                ctx.globalAlpha = 1;
+              } else {
+                ctx.strokeStyle = muted; ctx.globalAlpha = 0.55*prox; ctx.lineWidth = 1.25;
+                ctx.setLineDash([5,5]); ctx.strokeRect(cx-half2-6, cy-half2-6, PLATE+12, PLATE+12);
+                ctx.setLineDash([]); ctx.globalAlpha = 1;
+              }
+            }
+          }
+          ctx.textAlign = "left";
+
+          if(showLabel){
+            const pad = 40;
+            ctx.fillStyle = ink; ctx.font = "700 30px system-ui, sans-serif";
+            ctx.fillText("MÉTA-MATIC ∞", pad, WORLD_H - 62);
+            ctx.fillStyle = muted; ctx.font = "18px ui-monospace, Menlo, monospace";
+            ctx.fillText(base.toLocaleString(sv ? "sv-SE" : "en-US")
+              + (sv ? " verk producerade · 0 original" : " works produced · 0 originals"), pad, WORLD_H - 34);
+            ctx.textAlign = "right";
+            ctx.fillText(sv ? "oändligt många · aldrig något nytt" : "infinitely many · never anything new", WORLD_W - pad, WORLD_H - 34);
+            ctx.textAlign = "left";
+          }
+        }
+
+        /* ---- theme + reduced motion (hash, OS, host postMessage) ---- */
+        let forced = null;
+        if(/(^|[#,])light($|,)/.test(location.hash)) forced = "light";
+        if(/(^|[#,])dark($|,)/.test(location.hash)) forced = "dark";
+        const osDark = () => window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+        function applyTheme(){
+          const dark = forced ? forced === "dark" : osDark();
+          document.documentElement.setAttribute("data-mm", dark ? "dark" : "light");
+          document.body.style.background = css("--paper");
+        }
+        let reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let raf = 0;
+        function loop(){ render(); raf = requestAnimationFrame(loop); }
+        function run(){ cancelAnimationFrame(raf); applyTheme(); if(reduced) render(); else loop(); }
+        window.addEventListener("message", e => {
+          const d = e.data || {};
+          if(typeof d.theme === "string") forced = d.theme === "auto" ? null : (d.theme === "dark" ? "dark" : "light");
+          if(typeof d.reduce === "boolean") reduced = d.reduce;
+          run();
+        });
+        if(window.matchMedia){
+          const md = matchMedia("(prefers-color-scheme: dark)");
+          (md.addEventListener ? md.addEventListener.bind(md,"change") : md.addListener.bind(md))(() => { if(!forced) run(); });
+          const rm = matchMedia("(prefers-reduced-motion: reduce)");
+          (rm.addEventListener ? rm.addEventListener.bind(rm,"change") : rm.addListener.bind(rm))(e => { reduced = e.matches; run(); });
+        }
+
+        resize(); run();
+      })();
+    </script>
+  </body>
+</html>
