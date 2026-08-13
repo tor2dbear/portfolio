@@ -20,7 +20,7 @@ role: "Koncept, design & utveckling (solo)"
 details:
   year: 2026
   platform: "Webb · statisk sida på Cloudflare"
-  stack: "Canvas · vanilla JS · Cloudflare Worker + KV"
+  stack: "Canvas · vanilla JS · Cloudflare Worker + KV · Stripe + Prodigi print"
   scope: "Idé, konceptuell inramning, design & frontend"
 client_label: "Typ"
 client:
@@ -42,6 +42,8 @@ Det enda du kan göra är att göra ett verk till ditt: granska det stort och **
 Och ironin överlever exklusiviteten: det du äger är det enda exemplaret, helt äkta — men grannpunkten, en nära-dubblett som ständigt återkommer, går inte att skilja från det. Ett original som ändå är visuellt banalt.
 
 Att certifiera går på två sätt, samma ägande oavsett vilket: direkt i webbläsaren, eller med en plånbokssignatur — gratis, ingen gas, en verifierbar och frivillig nick åt NFT, aldrig en grind. En räknare visar hur många som certifierats totalt, och _The Space_, koordinatsystemet, ritar ut allas certifierade punkter jämte dina: inga kanter, allt återkommer; en väg, som alla går. Försöker två certifiera samma verk samtidigt vinner en; den andra får veta att det togs 40 ms tidigare — oändligt många andra återstår.
+
+Och till slut gör maskinen det Tinguelys gjorde först: den lämnar skärmen och blir papper. Ett verk kan beställas som fysisk print, direkt från sidan — den digitala kritiken av originalet landar i något man kan hålla i handen. Och ändå: det som hänger på väggen är inte mer unikt än koordinaten det kom ur; grannen kan trycka nära-dubbletten bredvid.
 
 En ärlig fotnot, för den hör till verket: det "latenta rummet" är matematiskt simulerat, inte en riktig modell. Det spelar ingen roll för poängen — och att säga det högt är en del av den.
 
