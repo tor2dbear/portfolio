@@ -20,7 +20,7 @@ role: "Concept, Design & Engineering (solo)"
 details:
   year: 2026
   platform: "Web · static site on Cloudflare"
-  stack: "Canvas · vanilla JS · Cloudflare Worker + KV"
+  stack: "Canvas · vanilla JS · Cloudflare Worker + KV · Stripe + Prodigi print"
   scope: "Concept, framing, design & front-end"
 client_label: "Type"
 client:
@@ -42,6 +42,8 @@ The only thing you can do is make a work yours: inspect it enlarged and **certif
 And the irony outlives the exclusivity: what you own is the only copy, entirely genuine — yet its neighbour, a near-duplicate that keeps recurring, can't be told apart from it. An original that is nonetheless visually banal.
 
 You can certify straight in the browser, or with a wallet signature — free, no gas, a verifiable and optional nod to NFTs, never a gate. A counter shows how many have been certified in total, and _The Space_, the coordinate map, plots everyone's certified points alongside yours: no edges, everything recurs; one path, everyone walks it. If two try to certify the same work at once, one wins; the other learns it was taken 40 ms earlier — and that infinitely many others remain.
+
+And in the end the machine does what Tinguely's did first: it leaves the screen and becomes paper. A work can be ordered as a physical print, straight from the page — the digital critique of the original lands in something you can hold. And still: what hangs on the wall is no more unique than the coordinate it came from; your neighbour can print the near-duplicate beside it.
 
 An honest footnote, because it belongs to the work: the "latent space" is mathematically simulated, not a real model. It doesn't matter to the point — and saying so out loud is part of it.
 
