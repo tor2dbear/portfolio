@@ -221,3 +221,17 @@ button.button--icon:hover:after,
 .button--icon:hover:after {
   transform: translateX(var(--spacing-4));
 }
+
+/* ==========================================================================
+   Case CTA
+   End-of-article "See it live" action on a works page. The button inherits
+   the project accent automatically (--primary is remapped to the worktheme
+   on works pages). The wrapper adds a prose-width divider above it; Source /
+   repo lives in the project-info block, so this stays a single action.
+   ========================================================================== */
+
+.case-cta {
+  margin-block-start: var(--spacing-8);
+  padding-block-start: var(--spacing-32);
+  border-block-start: 1px solid var(--border-subtle);
+}

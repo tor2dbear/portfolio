@@ -17,6 +17,7 @@ hero_embed: /meta-matic-hero.html#label
 featured: true
 draft: false
 role: "Concept, Design & Engineering (solo)"
+repo: "https://github.com/tor2dbear/meta-matic"
 details:
   year: 2026
   platform: "Web · static site on Cloudflare"
@@ -49,4 +50,4 @@ And in the end the machine does what Tinguely's did first: it leaves the screen 
 
 An honest footnote, because it belongs to the work: the "latent space" is mathematically simulated, not a real model. It doesn't matter to the point — and saying so out loud is part of it.
 
-**Live:** [meta-matic.tor2dbear.com](https://meta-matic.tor2dbear.com) · **Source:** [github.com/tor2dbear/meta-matic](https://github.com/tor2dbear/meta-matic)
+{{< live-cta url="https://meta-matic.tor2dbear.com" >}}

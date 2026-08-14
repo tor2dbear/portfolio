@@ -131,3 +131,5 @@ Utöver det: typkontroll, enhetstester och kontroller i en riktig webbläsare f�
 **Kostnaden är verklig:** idiom-först beskattar de webb-inhemska delarna — varje avvikelse (`share`, uppladdning, touch-baren, push) måste argumenteras och skrivas ner. Just den disciplinen är vad som ger PIA sin åsikt; den gör också allt som inte passar metaforen långsammare att lägga till.
 
 I dag är den en deployad, installerbar PWA — kommandoregister, editor, fönsterflikar, delade checklistor i realtid, ett paketsystem med spel och verktyg, Python, teman, push — och växer fortfarande. **Bästa sättet att bedöma den är att trycka på några tangenter själv.**
+
+{{< live-cta url="https://pia.tor2dbear.com" >}}

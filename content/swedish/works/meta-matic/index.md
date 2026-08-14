@@ -17,6 +17,7 @@ hero_embed: /meta-matic-hero.html#label,sv
 featured: true
 draft: false
 role: "Koncept, design & utveckling (solo)"
+repo: "https://github.com/tor2dbear/meta-matic"
 details:
   year: 2026
   platform: "Webb · statisk sida på Cloudflare"
@@ -49,4 +50,4 @@ Och till slut gör maskinen det Tinguelys gjorde först: den lämnar skärmen oc
 
 En ärlig fotnot, för den hör till verket: det "latenta rummet" är matematiskt simulerat, inte en riktig modell. Det spelar ingen roll för poängen — och att säga det högt är en del av den.
 
-**Live:** [meta-matic.tor2dbear.com](https://meta-matic.tor2dbear.com) · **Källkod:** [github.com/tor2dbear/meta-matic](https://github.com/tor2dbear/meta-matic)
+{{< live-cta url="https://meta-matic.tor2dbear.com" >}}

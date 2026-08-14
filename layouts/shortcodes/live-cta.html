@@ -1,0 +1,31 @@
+{{- /*
+  live-cta — end-of-case "See it live" action button.
+
+  Renders a single worktheme-tinted CTA (the button component inherits the
+  project accent via --primary on works pages). Source/repo lives in the
+  project-info block, not here — this is the action, not the reference.
+
+  Usage: {{< live-cta url="https://example.tor2dbear.com"
+>}}
+{{< live-cta url="…" label="Try it live" >}}
+*/ -}}
+{{- $url := .Get "url" -}}
+{{- $label := .Get "label" -}}
+{{- if not $label -}}
+  {{- if eq site.Language.Lang "sv" -}}
+    {{- $label = "Se den live" -}}
+  {{- else -}}
+    {{- $label = "See it live" -}}
+  {{- end -}}
+{{- end -}}
+{{- with $url -}}
+  <div class="case-cta">
+    <a
+      class="button button--primary button--icon"
+      href="{{ . }}"
+      target="_blank"
+      rel="noopener"
+      >{{ $label }}</a
+    >
+  </div>
+{{- end -}}

@@ -17,6 +17,7 @@ hero_embed: /cadence-hero.html#label
 featured: true
 draft: false
 role: "Concept, Design & Engineering"
+repo: "https://github.com/tor2dbear/cadence"
 details:
   year: 2026
   platform: "Web app"
@@ -58,4 +59,4 @@ I pasted this site's own motion tokens in. It liked the rhythm — and caught me
 
 {{< media-full src="cadence-start.jpg" alt="Cadence's start page — a motion system designer." caption="Cadence itself — the live tool is one link away." >}}
 
-**Live:** [cadence.tor2dbear.com](https://cadence.tor2dbear.com) · **Source:** [github.com/tor2dbear/cadence](https://github.com/tor2dbear/cadence)
+{{< live-cta url="https://cadence.tor2dbear.com" >}}

@@ -131,3 +131,5 @@ Under that: type checking, unit tests, and browser checks for what tests can't s
 **The cost is real:** idiom-first taxes the web-native parts — every deviation (`share`, uploads, the touch bar, push) had to be argued and written down. That discipline is what gives PIA a point of view; it also makes anything that doesn't fit the metaphor slower to add.
 
 Today it's a deployed, installable PWA — command register, editor, window tabs, real-time shared checklists, a package system with games and tools, Python, themes, push — and still growing. **The best way to judge it is to press some keys yourself.**
+
+{{< live-cta url="https://pia.tor2dbear.com" >}}

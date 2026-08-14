@@ -57,6 +57,36 @@
               <dd class="project-info__value">{{ .value }}</dd>
             </div>
           {{ end }}
+          {{ with .Params.repo }}
+            <div class="project-info__item">
+              <dt class="project-info__label">
+                {{- if eq site.Language.Lang "sv" }}
+                  Källkod
+                {{ else }}
+                  Source
+                {{ end -}}
+              </dt>
+              <dd class="project-info__value">
+                <a
+                  class="project-info__link"
+                  href="{{ . }}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {{ . | replaceRE "^https?://(www\\.)?" "" | replaceRE "/$" "" }}
+                  <svg
+                    class="icon icon--sm project-info__icon"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <use
+                      href="{{ "img/svg/sprite.svg?v=20260211b" | relURL }}#icon-new-window"
+                    ></use>
+                  </svg>
+                </a>
+              </dd>
+            </div>
+          {{ end }}
         </dl>
       </div>
     {{ end }}
