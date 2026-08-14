@@ -59,7 +59,13 @@
           {{ end }}
           {{ with .Params.repo }}
             <div class="project-info__item">
-              <dt class="project-info__label">Source</dt>
+              <dt class="project-info__label">
+                {{- if eq site.Language.Lang "sv" }}
+                  Källkod
+                {{ else }}
+                  Source
+                {{ end -}}
+              </dt>
               <dd class="project-info__value">
                 <a
                   class="project-info__link"
