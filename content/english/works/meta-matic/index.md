@@ -45,6 +45,8 @@ You can certify straight in the browser, or with a wallet signature — free, no
 
 And in the end the machine does what Tinguely's did first: it leaves the screen and becomes paper. A work can be ordered as a physical print, straight from the page — the digital critique of the original lands in something you can hold. And still: what hangs on the wall is no more unique than the coordinate it came from; your neighbour can print the near-duplicate beside it.
 
+![One work from the machine, printed and framed.](meta-matic-print.jpg "One work from the machine, printed and framed — as genuine, and as non-unique, as the coordinate it came from.")
+
 An honest footnote, because it belongs to the work: the "latent space" is mathematically simulated, not a real model. It doesn't matter to the point — and saying so out loud is part of it.
 
 **Live:** [meta-matic.tor2dbear.com](https://meta-matic.tor2dbear.com) · **Source:** [github.com/tor2dbear/meta-matic](https://github.com/tor2dbear/meta-matic)
