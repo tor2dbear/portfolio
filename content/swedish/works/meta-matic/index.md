@@ -45,6 +45,8 @@ Att certifiera går på två sätt, samma ägande oavsett vilket: direkt i webbl
 
 Och till slut gör maskinen det Tinguelys gjorde först: den lämnar skärmen och blir papper. Ett verk kan beställas som fysisk print, direkt från sidan — den digitala kritiken av originalet landar i något man kan hålla i handen. Och ändå: det som hänger på väggen är inte mer unikt än koordinaten det kom ur; grannen kan trycka nära-dubbletten bredvid.
 
+![Ett verk ur maskinen, tryckt och inramat.](meta-matic-print.jpg "Ett verk ur maskinen, tryckt och inramat — lika äkta, och lika icke-unikt, som koordinaten det kom ur.")
+
 En ärlig fotnot, för den hör till verket: det "latenta rummet" är matematiskt simulerat, inte en riktig modell. Det spelar ingen roll för poängen — och att säga det högt är en del av den.
 
 **Live:** [meta-matic.tor2dbear.com](https://meta-matic.tor2dbear.com) · **Källkod:** [github.com/tor2dbear/meta-matic](https://github.com/tor2dbear/meta-matic)
