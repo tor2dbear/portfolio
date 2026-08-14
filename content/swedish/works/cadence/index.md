@@ -17,6 +17,7 @@ hero_embed: /cadence-hero.html#label
 featured: true
 draft: false
 role: "Koncept, design & utveckling"
+repo: "https://github.com/tor2dbear/cadence"
 details:
   year: 2026
   platform: "Webbapp"
@@ -58,4 +59,4 @@ Jag klistrade in den här sajtens egna rörelse-tokens. Den gillade rytmen – o
 
 {{< media-full src="cadence-start.jpg" alt="Cadences startsida – ett verktyg för rörelsesystem." caption="Cadence självt – verktyget är en länk bort." >}}
 
-**Live:** [cadence.tor2dbear.com](https://cadence.tor2dbear.com) · **Källkod:** [github.com/tor2dbear/cadence](https://github.com/tor2dbear/cadence)
+{{< live-cta url="https://cadence.tor2dbear.com" >}}
