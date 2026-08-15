@@ -20,7 +20,7 @@ role: "Koncept, design & utveckling (solo)"
 details:
   year: 2026
   platform: "Webb · statisk sida på Cloudflare"
-  stack: "Canvas · vanilla JS · Cloudflare Worker + KV · Stripe + Prodigi print"
+  stack: "Canvas · vanilla JS · Cloudflare Worker + D1 + R2 · Stripe + Prodigi print"
   scope: "Idé, konceptuell inramning, design & frontend"
 client_label: "Typ"
 client:
