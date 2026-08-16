@@ -1,12 +1,12 @@
 ---
 title: UI-library-implementation
-status: now
+status: done
 tags: [components]
-updated: 2026-08-15
+updated: 2026-08-16
 ---
 
 ## Mål
 Bygga ut ett återanvändbart UI-bibliotek.
 
-## Research
-Pågår. Delsteg och beslut i `docs/features/ui-library-implementation.md`.
+## Levererat
+Klart. Delsteg och beslut i `docs/features/ui-library-implementation.md`.
