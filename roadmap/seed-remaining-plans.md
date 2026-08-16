@@ -1,16 +1,13 @@
 ---
 title: Migrera övriga docs/-planer till pucks
-status: inbox
+status: done
 tags: [roadmap]
-updated: 2026-08-15
+updated: 2026-08-16
 ---
 
 ## Mål
-Startpunkt: resten av `docs/features/` och `docs/migrations/` bör bli egna pucks
-när de aktualiseras.
+Startpunkt: göra egna pucks av resten av `docs/features/` och `docs/migrations/`-planerna.
 
-## Research
-Kvar att förädla till pucks: schema-org, breakpoints-update, footer-restructure,
-brand-mark-morph, dependency-refresh, gallery-shortcode (TODO), hero-seo-title
-(Fas A klar), project-info-block (klar), token_plan, content-markdown-cleanup.
-Skapa med `roadmap new` när de blir aktuella.
+## Levererat
+Klart — alla kvarvarande planer är nu egna pucks (7 done, 3 later för kvarvarande
+småjobb), med status verifierad mot både dokumenten och koden.
