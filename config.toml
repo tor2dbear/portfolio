@@ -52,7 +52,7 @@ DefaultContentLanguage = "en"
     contentDir = "content/english"
     [languages.en.params]
       title = "Torbjörn Hedberg · Designer"
-      description = "Designer based in Gothenburg. I lead product at Lokalguiden and write about design — how it works in practice, and how the work itself is changing."
+      description = "Designer and product owner based in Gothenburg. I draw the screens and help decide which ones get drawn, and write about how the work is changing."
     [[languages.en.menu.start]]
       name = "home"
       weight = 1
@@ -91,7 +91,7 @@ DefaultContentLanguage = "en"
     contentDir = "content/swedish"
     [languages.sv.params]
       title = "Torbjörn Hedberg · Designer"
-      description = "Designer baserad i Göteborg. Jag leder produktarbetet på Lokalguiden och skriver om design — hur det fungerar i praktiken och hur arbetet förändras."
+      description = "Designer och produktägare i Göteborg. Jag ritar skärmarna och är med och bestämmer vilka som ska ritas, och skriver om hur arbetet förändras."
     [[languages.sv.menu.start]]
       name = "hem"
       weight = 1

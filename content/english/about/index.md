@@ -5,7 +5,7 @@ slug: About
 url: "/about"
 sidemenu: true
 header_image: DSCF7894
-description: Product Owner & Art Director based in Gothenburg. I bridge design and product strategy.
+description: Designer and product owner based in Gothenburg. A designer at heart, a product owner in practice — and I write about how the work is changing.
 type: about
 ---
 
