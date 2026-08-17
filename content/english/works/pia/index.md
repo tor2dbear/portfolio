@@ -23,6 +23,7 @@ details:
   platform: "Web · installable PWA"
   stack: "TypeScript · Vite · Vitest · Supabase · Cloudflare Pages"
   scope: "Concept, design, architecture & development"
+repo: "https://github.com/tor2dbear/pia-terminal"
 client_label: "Type"
 client:
   name: "Self-initiated"

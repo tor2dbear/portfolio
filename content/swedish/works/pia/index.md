@@ -23,6 +23,7 @@ details:
   platform: "Webb · installerbar PWA"
   stack: "TypeScript · Vite · Vitest · Supabase · Cloudflare Pages"
   scope: "Idé, design, arkitektur & utveckling"
+repo: "https://github.com/tor2dbear/pia-terminal"
 client_label: "Typ"
 client:
   name: "Eget initiativ"
