@@ -232,11 +232,14 @@ html[data-grid-overlay] .top-menu {
   width: 1.5rem;
   color: var(--text-default);
   max-width: 100%;
+  /* One source of truth for the mark's stroke: the two lines and the loop
+     must never drift apart. */
+  --brand-mark-stroke: 2;
 }
 
 .brand__mark-line {
   stroke: currentColor;
-  stroke-width: 2;
+  stroke-width: var(--brand-mark-stroke);
   fill: none;
   stroke-linecap: round;
 }
@@ -245,13 +248,20 @@ html[data-grid-overlay] .top-menu {
   transform-origin: 12px 12px;
 }
 
+/* The loop must draw at the same weight as the two straight lines, so it
+   carries the same plain, scaling stroke. It used to opt out with
+   `vector-effect: non-scaling-stroke`, which pins the stroke to CSS pixels
+   while the lines keep scaling with the SVG viewport. The two only agree while
+   that viewport scale is exactly 1 — any page zoom, root font-size other than
+   16px, or `max-width` clamp pulls them apart, and the loop then renders
+   visibly thinner (or fatter) than the lines it joins. Nothing here scales the
+   loop group, so the opt-out bought nothing. */
 .brand__mark-loop-path {
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
-  vector-effect: non-scaling-stroke;
+  stroke-width: var(--brand-mark-stroke);
 }
 
 @media (prefers-reduced-motion: reduce) {
