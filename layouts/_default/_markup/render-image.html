@@ -74,156 +74,63 @@
   {{/* So for posts that aren't setup in the page bundles, it doesn't fail */}}
 {{ else }}
   {{ if $src }}
-    {{ $sizeSmall := "500x webp" }}
-    {{ $sizeMedium := "800x webp" }}
-    {{ $sizeLarge := "1200x webp" }}
-    {{ $sizeXLarge := "1600x webp" }}
-    {{ $sizeXXLarge := "2000x webp" }}
-    {{ $fallbackSize := "1200x jpg" }}
-    {{/* resize the src image to the given sizes */}}
-    {{/* We create a a temp scratch because it's not available in this context */}}
-    {{ $data := newScratch }}
-    {{ $data.Set "small" ($src.Resize $sizeSmall) }}
-    {{ $data.Set "medium" ($src.Resize $sizeMedium) }}
-    {{ $data.Set "large" ($src.Resize $sizeLarge) }}
-    {{ $data.Set "xlarge" ($src.Resize $sizeXLarge) }}
-    {{ $data.Set "xxlarge" ($src.Resize $sizeXXLarge) }}
-    {{ $data.Set "fallback" ($src.Resize $fallbackSize) }}
-    {{/* add the processed images to the scratch */}}
-    {{ $small := $data.Get "small" }}
-    {{ $medium := $data.Get "medium" }}
-    {{ $large := $data.Get "large" }}
-    {{ $xlarge := $data.Get "xlarge" }}
-    {{ $xxlarge := $data.Get "xxlarge" }}
-    {{ $fallback := $data.Get "fallback" }}
-    {{/* only use images smaller than or equal to the src (original)
-      image size, as Hugo will upscale small images
+    {{/* Resolution-switching webp srcset with WIDTH descriptors: the browser
+      picks the smallest candidate that satisfies (sizes-width × DPR). Only
+      widths ≤ the original are offered, so Hugo never upscales — the same
+      approach headerimage.html / media-full.html use. This replaces the old
+      hand-written 1x/2x <source>s keyed on hardcoded iPhone widths (which were
+      copy-pasted twice, upscaled small images, and served no real 2× at the top
+      breakpoint). No art-direction crops here — resolution switching is the
+      right tool.
     */}}
-    {{ $sizes := "100vw" }}
-    {{/* Size-based image breakpoints (performance). No art-direction crops here. */}}
-    {{ if .Title }}
-      <figure
-        class="reveal{{ if in $src "header-img" }}
-          header-img reveal--delay
-        {{ end }}"
-        data-lightbox="{{ $xxlarge.RelPermalink }}"
-      >
-        <picture>
-          <source
-            media="(max-width: 393px)"
-            srcset="
-              {{ with $small.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 393px) 100vw"
-          />
-          <source
-            media="(max-width: 430px)"
-            srcset="
-              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $large.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 430px) 100vw"
-          />
-          <source
-            media="(max-width: 768px)"
-            srcset="
-              {{ with $large.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 768px) 100vw"
-          />
-          <source
-            media="(max-width: 1400px)"
-            srcset="
-              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 1400px) 100vw"
-          />
-          <source
-            media="(min-width: 1401px)"
-            srcset="
-              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="100vw"
-          />
-          <img
-            alt="{{ $alt }}"
-            title="{{ .Title }}"
-            src="{{ $fallback.RelPermalink }}"
-            height="{{ $src.Height }}"
-            width="{{ $src.Width }}"
-            class="img-fluid"
-            loading="lazy"
-          />
-        </picture>
-        <figcaption>{{- .Title -}}</figcaption>
-      </figure>
-    {{ else }}
-      <figure
-        class="reveal{{ if in $src "header-img" }}
-          header-img reveal--delay
-        {{ end }}"
-        data-lightbox="{{ $xxlarge.RelPermalink }}"
-      >
-        <picture>
-          <source
-            media="(max-width: 393px)"
-            srcset="
-              {{ with $small.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 393px) 100vw"
-          />
-          <source
-            media="(max-width: 430px)"
-            srcset="
-              {{ with $medium.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $large.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 430px) 100vw"
-          />
-          <source
-            media="(max-width: 768px)"
-            srcset="
-              {{ with $large.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 768px) 100vw"
-          />
-          <source
-            media="(max-width: 1400px)"
-            srcset="
-              {{ with $xlarge.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="(max-width: 1400px) 100vw"
-          />
-          <source
-            media="(min-width: 1401px)"
-            srcset="
-              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 1x,
-              {{ with $xxlarge.RelPermalink }}{{ . }}{{ end }} 2x
-            "
-            sizes="100vw"
-          />
-          <img
-            alt="{{ $alt }}"
-            title="{{ $alt }}"
-            src="{{ $fallback.RelPermalink }}"
-            height="{{ $src.Height }}"
-            width="{{ $src.Width }}"
-            class="img-fluid"
-            loading="lazy"
-          />
-        </picture>
-      </figure>
-    {{- end -}}
-    {{/* Since I do image-response class, the only thing that really
-      matters is the height and width matches the image aspect ratio
+    {{ $widths := slice 500 800 1200 1500 2000 }}
+    {{ $srcset := slice }}
+    {{ range $widths }}
+      {{ if ge $src.Width . }}
+        {{ $img := $src.Resize (printf "%dx webp" .) }}
+        {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink .) }}
+      {{ end }}
+    {{ end }}
+    {{/* Original narrower than the smallest candidate — offer it as-is. */}}
+    {{ if not $srcset }}
+      {{ $img := $src.Resize (printf "%dx webp" $src.Width) }}
+      {{ $srcset = $srcset | append (printf "%s %dw" $img.RelPermalink $src.Width) }}
+    {{ end }}
+    {{/* Content media fills the column up to --content-max-width (1280px), and
+      the full viewport on narrower screens. Tune if the media column changes.
     */}}
+    {{ $sizes := "(max-width: 1280px) 100vw, 1280px" }}
+    {{/* jpg fallback for <picture>-less clients, guarded against upscaling. */}}
+    {{ $fallbackWidth := cond (lt $src.Width 1200) $src.Width 1200 }}
+    {{ $fallback := $src.Resize (printf "%dx jpg" $fallbackWidth) }}
+    {{/* Lightbox opens the largest variant (≤ original, capped at 2000). */}}
+    {{ $lightboxWidth := cond (lt $src.Width 2000) $src.Width 2000 }}
+    {{ $lightbox := $src.Resize (printf "%dx webp" $lightboxWidth) }}
+    <figure
+      class="reveal{{ if in $src "header-img" }}
+        header-img reveal--delay
+      {{ end }}"
+      data-lightbox="{{ $lightbox.RelPermalink }}"
+    >
+      <picture>
+        <source
+          type="image/webp"
+          srcset="{{ delimit $srcset ", " }}"
+          sizes="{{ $sizes }}"
+        />
+        <img
+          alt="{{ $alt }}"
+          {{ with .Title }}title="{{ . }}"{{ end }}
+          src="{{ $fallback.RelPermalink }}"
+          height="{{ $src.Height }}"
+          width="{{ $src.Width }}"
+          class="img-fluid"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+      {{ with .Title }}<figcaption>{{- . -}}</figcaption>{{ end }}
+    </figure>
   {{- end -}}
 {{- end -}}
 {{- /* This comment removes trailing newlines. */ -}}
